@@ -203,3 +203,4 @@ bullet points marked with (?) are not yet decided.
     - the documentation should clearly show where the code differs from the C++ standard library and why.
 - upload coding guidelines
 - use inline namespaces for versioning of the library
+- add natvis files for debugging
