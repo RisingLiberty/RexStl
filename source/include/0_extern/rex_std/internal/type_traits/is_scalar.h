@@ -1,0 +1,39 @@
+// ============================================ 
+//
+// REX - STANDARD LIBRARY IMPLEMENTATION
+//
+// Author: Nick De Breuck
+// Twitter: @nick_debreuck
+// 
+// File: is_scalar.h
+// Copyright (c) Nick De Breuck 2022
+//
+// ============================================
+
+#pragma once
+
+#include "rex_std/internal/type_traits/integral_constant.h"
+
+#include "rex_std/internal/type_traits/is_arithmetic.h"
+#include "rex_std/internal/type_traits/is_enum.h"
+#include "rex_std/internal/type_traits/is_pointer.h"
+#include "rex_std/internal/type_traits/is_member_pointer.h"
+#include "rex_std/internal/type_traits/is_null_pointer.h"
+
+namespace rsl
+{
+    template <typename T>
+    struct is_scalar : public bool_constant<is_arithmetic_v<T> || is_enum_v<T> || is_pointer_v<T> || is_member_pointer_v<T> || is_null_pointer_v<T>>
+    {};
+
+    template <typename T>
+    constexpr bool is_scalar_v = is_scalar<T>::value;
+
+#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
+    template <typename T>
+    using IsScalarStruct = is_scalar<T>;
+
+    template <typename T>
+    constexpr bool IsScalar = IsScalarStruct<T>::value;
+#endif
+}
