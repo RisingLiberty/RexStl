@@ -1,0 +1,54 @@
+// ============================================
+//
+// REX - STANDARD LIBRARY IMPLEMENTATION
+//
+// Author: Nick De Breuck
+// Twitter: @nick_debreuck
+// 
+// File: distance.h
+// Copyright (c) Nick De Breuck 2022
+//
+// ============================================
+
+#pragma once
+
+#include "rex_std/internal/iterator/iterator_tags.h"
+
+#include "rex_std/internal/type_traits/is_base_of.h"
+
+namespace rsl
+{
+    namespace internal
+    {
+        template <typename Iterator>
+        auto random_access_distance(Iterator lhs, Iterator rhs)
+        {
+            return rhs - lhs;
+        }
+
+        template <typename Iterator>
+        auto non_random_access_distance(Iterator lhs, Iterator rhs)
+        {
+            typename Iterator::difference_type result = 0;
+            while (lhs != rhs)
+            {
+                ++lhs;
+                ++result;
+            }
+            return result;
+        }
+    }
+
+    template <typename Iterator>
+    void distance(Iterator lhs, Iterator rhs)
+    {
+        if constexpr (is_base_of_v<random_access_iterator_tag, typename Iterator::iterator_tag>)
+        {
+            internal::random_access_distance(lhs, rhs);
+        }
+        else
+        {
+            internal::non_random_access_distance(lhs, rhs);
+        }
+    }
+}
