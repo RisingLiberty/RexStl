@@ -11,7 +11,7 @@ If you're familiar with C++ and with the standard library that comes with every 
 
 In theory you should be able to replace every "std" occurrence with "rsl" as it's the namespace used by this library. However due to some design differences, not everything is directly mappable to the C++ standard.
 
-We keep configuration to a minimum to avoid maintaining code that's rarely used. The code is free and publicly available at on [Github](https://github.com/RisingLiberty/RexStl).
+We keep configuration to a minimum to avoid maintaining code that's rarely used. The code is free and publicly available on [Github](https://github.com/RisingLiberty/RexStl).
 If the user would like to change some code for any reason whatsoever, he/she/they are free to do so.
 
 A pull request can always be made if you think it's useful for other people to know about your request.
