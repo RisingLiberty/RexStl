@@ -75,9 +75,6 @@ namespace rsl
     REX_STD_TEMPLATED_CLASS_ALIAS(ostream_iterator, T, CharT, Traits);
 
     template <typename CharT, typename Traits = char_traits<CharT>>
-    REX_STD_TEMPLATED_CLASS_ALIAS(istreambuf_iterator, CharT, Traits);
-
-    template <typename CharT, typename Traits = char_traits<CharT>>
     REX_STD_TEMPLATED_CLASS_ALIAS(ostreambuf_iterator, CharT, Traits);
 
     REX_STD_FUNC_ALIAS(front_inserter);

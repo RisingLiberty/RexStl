@@ -28,9 +28,12 @@
 #include "rex_std/internal/utility/in_place.h"
 #include "rex_std/internal/utility/move.h"
 #include "rex_std/internal/utility/forward.h"
+#include "rex_std/internal/utility/swap.h"
 
 #include "rex_std/cassert.h"
 #include "rex_std/initializer_list.h"
+
+#include "rex_std/bonus/functional/hash_result.h"
 
 namespace rsl
 {
@@ -52,7 +55,10 @@ namespace rsl
         public:
             using value_type = rsl::remove_const_t<T>;
 
-            constexpr OptionalStorage() = default;
+            constexpr OptionalStorage()
+              : m_has_value(false)
+              , m_val()
+            {}
 
             constexpr OptionalStorage(const value_type& v)
                 : m_has_value(true)
@@ -212,6 +218,7 @@ namespace rsl
         constexpr optional() = default;
         // constructs an object that does not contain a value
         constexpr optional(nullopt_t) 
+          : m_storage()
         {}
         // copy constructor, if other contains a value, it's copied in to this
         constexpr optional(const optional& other)

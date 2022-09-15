@@ -14,33 +14,37 @@
 
 #include "rex_std/internal/config.h"
 
-#include "rex_std/std_alias_defines.h"
-#include "rex_std/disable_std_checking.h"
-
-#include <ostream>
+#include "rex_std/internal/ostream/basic_ostream.h"
 
 namespace rsl
 {
-    template <typename CharT>
-    class char_traits;
+    using ostream = basic_ostream<char8>;
+    using wostream = basic_ostream<tchar>;
 
-    template <typename CharT, typename Traits = char_traits<CharT>>
-    REX_STD_TEMPLATED_CLASS_ALIAS(basic_ostream, CharT, Traits);
+    //template <typename ... Args>
+    //void print(ostream& os, fmt::format_string<Args...> fmt, Args&& ... args);
 
-    REX_STD_CLASS_ALIAS(ostream);
-    REX_STD_CLASS_ALIAS(wostream);
+    //template <typename ... Args>
+    //void println(ostream& os, fmt::format_string<Args...> fmt, Args&& ... args);
 
-    REX_STD_FUNC_ALIAS(operator<<);
+    //template <typename CharT, typename Traits>
+    //basic_ostream<CharT, Traits>& endl(basic_ostream<CharT, Traits>& os);
 
-    REX_STD_FUNC_ALIAS(endl);
-    REX_STD_FUNC_ALIAS(ends);
-    REX_STD_FUNC_ALIAS(flush);
+    //template <typename CharT, typename Traits>
+    //basic_ostream<CharT, Traits>& ends(basic_ostream<CharT, Traits>& os);
 
-#ifdef REX_ENABLE_WITH_CPP20
-    REX_STD_FUNC_ALIAS(emit_on_flush);
-    REX_STD_FUNC_ALIAS(noemit_on_flush);
-    REX_STD_FUNC_ALIAS(flush_emit);
-#endif // REX_ENABLE_WITH_CPP20
+    //template <typename CharT, typename Traits>
+    //basic_ostream<CharT, Traits>& flush(basic_ostream<CharT, Traits>& os);
+
+    //template <typename CharT, typename Traits>
+    //basic_ostream<CharT, Traits>& emit_on_flush(basic_ostream<CharT, Traits>& os);
+
+    //template <typename CharT, typename Traits>
+    //basic_ostream<CharT, Traits>& noemit_on_flush(basic_ostream<CharT, Traits>& os);
+
+    //template <typename CharT, typename Traits>
+    //basic_ostream<CharT, Traits>& flush_emit(basic_ostream<CharT, Traits>& os);
+
 }
 
 #include "rex_std/enable_std_checking.h"

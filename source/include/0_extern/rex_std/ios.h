@@ -10,60 +10,65 @@
 //
 // ============================================
 
+//-----------------------------------------------------------------------------
+// https://en.cppreference.com/w/cpp/header/ios
+//
+// Basic I/O header.
+//-----------------------------------------------------------------------------
+
 #pragma once
 
 #include "rex_std/internal/config.h"
 
 #include "rex_std/bonus/types.h"
 
-#include "rex_std/std_alias_defines.h"
-#include "rex_std/disable_std_checking.h"
-
-#include <ios>
+#include "rex_std/internal/ios/ios_base.h"
+#include "rex_std/internal/ios/basic_ios.h"
+#include "rex_std/internal/ios/fpos.h"
+#include "rex_std/internal/ios/io_errc.h"
+#include "rex_std/internal/ios/io_types.h"
+/// [06/Sep/2022] RSL Comment: missing is_error_code_enum specialization
 
 namespace rsl
 {
-    REX_STD_CLASS_ALIAS(ios_base);
+    using ios = basic_ios<char8>;
+    using wios = basic_ios<tchar>;
 
-    template <typename CharT, typename Traits = char_traits<CharT>>
-    REX_STD_TEMPLATED_CLASS_ALIAS(basic_ios, CharT, Traits);
+/// [06/Sep/2022] RSL Comment: iostream_category
+/// [06/Sep/2022] RSL Comment: make_error_code io_errc specialization
+/// [06/Sep/2022] RSL Comment: make_error_condition io_errc specialization    
 
-    REX_STD_CLASS_ALIAS(ios);
-    REX_STD_CLASS_ALIAS(wios);
+    ios_base& boolalpha(ios_base& stream);
+    ios_base& noboolalpha(ios_base& stream);
 
-    template <typename State>
-    REX_STD_TEMPLATED_CLASS_ALIAS(fpos, State);
+    ios_base& showbase(ios_base& stream);
+    ios_base& noshowbase(ios_base& stream);
 
-    REX_STD_CLASS_ALIAS(io_errc);
+    ios_base& showpoint(ios_base& stream);
+    ios_base& noshowpoint(ios_base& stream);
 
-    template <typename T>
-    REX_STD_TEMPLATED_CLASS_ALIAS(is_error_code_enum, T);
+    ios_base& showpos(ios_base& stream);
+    ios_base& noshowpos(ios_base& stream);
 
-    REX_STD_FUNC_ALIAS(iostream_category);
-    REX_STD_FUNC_ALIAS(make_error_code);
-    REX_STD_FUNC_ALIAS(make_error_condition);
-    REX_STD_FUNC_ALIAS(boolalpha);
-    REX_STD_FUNC_ALIAS(noboolalpha);
-    REX_STD_FUNC_ALIAS(showbase);
-    REX_STD_FUNC_ALIAS(noshowbase);
-    REX_STD_FUNC_ALIAS(showpoint);
-    REX_STD_FUNC_ALIAS(noshowpoint);
-    REX_STD_FUNC_ALIAS(skipws);
-    REX_STD_FUNC_ALIAS(noskipws);
-    REX_STD_FUNC_ALIAS(uppercase);
-    REX_STD_FUNC_ALIAS(nouppercase);
-    REX_STD_FUNC_ALIAS(unitbuf);
-    REX_STD_FUNC_ALIAS(nounitbuf);
-    //REX_STD_FUNC_ALIAS(internal); // this doesn't work due to the internal namespace
-    REX_STD_FUNC_ALIAS(left);
-    REX_STD_FUNC_ALIAS(right);
-    REX_STD_FUNC_ALIAS(dec);
-    REX_STD_FUNC_ALIAS(hex);
-    REX_STD_FUNC_ALIAS(oct);
-    REX_STD_FUNC_ALIAS(fixed);
-    REX_STD_FUNC_ALIAS(scientific);
-    REX_STD_FUNC_ALIAS(hexfloat);
-    REX_STD_FUNC_ALIAS(defaultfloat);
+    ios_base& skipws(ios_base& stream);
+    ios_base& noskipws(ios_base& stream);
+
+    ios_base& uppercase(ios_base& stream);
+    ios_base& nouppercase(ios_base& stream);
+
+    ios_base& unitbuf(ios_base& stream);
+    ios_base& nounitbuf(ios_base& stream);
+
+    //ios_base& internal(ios_base& stream); /// [08/Sep/2022] RSL Comment: collides with internal namespace
+    ios_base& left(ios_base& stream);
+    ios_base& right(ios_base& stream);
+
+    ios_base& dec(ios_base& stream);
+    ios_base& hex(ios_base& stream);
+    ios_base& oct(ios_base& stream);
+
+    ios_base& fixed(ios_base& stream);
+    ios_base& scientific(ios_base& stream);
+    ios_base& hexfloat(ios_base& stream);
+    ios_base& defaultfloat(ios_base& stream);
 }
-
-#include "rex_std/enable_std_checking.h"

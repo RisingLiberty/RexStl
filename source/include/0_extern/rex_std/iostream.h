@@ -19,23 +19,20 @@
 #include "rex_std/istream.h"
 #include "rex_std/ostream.h"
 
-#include "rex_std/disable_std_checking.h"
-
-#include <iostream>
-
 namespace rsl
 {
-    auto& cout = std::cout;
-    auto& wcout = std::wcout;
+    using iostream = basic_iostream<char8, char_traits<char8>>;
+    using wiostream = basic_iostream<tchar, char_traits<tchar>>;
 
-    auto& cin = std::cin;
-    auto& wcin = std::wcin;
+    extern rsl::istream cin;
+    // extern rsl::wistream wcin; /// [08/Sep/2022] RSL Comment: Wide character input not supported yet
 
-    auto& cerr = std::cerr;
-    auto& wcerr = std::wcerr;
+    extern rsl::ostream cout;
+    // extern rsl::wostream wcout; /// [08/Sep/2022] RSL Comment: Wide character output not supported yet
 
-    auto& clog = std::clog;
-    auto& wclog = std::wclog;
+    extern rsl::ostream cerr;
+    // extern rsl::wostream wcerr; /// [08/Sep/2022] RSL Comment: Wide character output not supported yet
+
+    extern rsl::ostream clog;
+    // extern rsl::wostream wclog; /// [08/Sep/2022] RSL Comment: Wide character output not supported yet
 }
-
-#include "rex_std/enable_std_checking.h"
