@@ -10,15 +10,15 @@
 
 #include <algorithm>
 #include <chrono>
-#include <cmath>    // std::isfinite
-#include <cstring>  // std::memcpy
+#include <cmath>    // rsl::isfinite
+#include <cstring>  // rsl::memcpy
 #include <ctime>
 #include <iterator>
 #include <locale>
 #include <ostream>
 #include <type_traits>
 
-#include "format.h"
+#include "rex_std/format.h"
 
 FMT_BEGIN_NAMESPACE
 
@@ -42,7 +42,7 @@ FMT_BEGIN_NAMESPACE
 #endif
 #if FMT_SAFE_DURATION_CAST
 
-// For conversion between std::chrono::durations without undefined
+// For conversion between rsl::chrono::durations without undefined
 // behaviour or erroneous results.
 // This is a stripped down version of duration_cast, for inclusion in fmt.
 // See https://github.com/pauldreik/safe_duration_cast
@@ -51,13 +51,13 @@ FMT_BEGIN_NAMESPACE
 namespace safe_duration_cast {
 
 template <typename To, typename From,
-          FMT_ENABLE_IF(!std::is_same<From, To>::value &&
-                        std::numeric_limits<From>::is_signed ==
-                            std::numeric_limits<To>::is_signed)>
+          FMT_ENABLE_IF(!rsl::is_same<From, To>::value &&
+                        rsl::numeric_limits<From>::is_signed ==
+                            rsl::numeric_limits<To>::is_signed)>
 FMT_CONSTEXPR To lossless_integral_conversion(const From from, int& ec) {
   ec = 0;
-  using F = std::numeric_limits<From>;
-  using T = std::numeric_limits<To>;
+  using F = rsl::numeric_limits<From>;
+  using T = rsl::numeric_limits<To>;
   static_assert(F::is_integer, "From must be integral");
   static_assert(T::is_integer, "To must be integral");
 
@@ -80,19 +80,19 @@ FMT_CONSTEXPR To lossless_integral_conversion(const From from, int& ec) {
  * can't be converted to To without loss, ec is set.
  */
 template <typename To, typename From,
-          FMT_ENABLE_IF(!std::is_same<From, To>::value &&
-                        std::numeric_limits<From>::is_signed !=
-                            std::numeric_limits<To>::is_signed)>
+          FMT_ENABLE_IF(!rsl::is_same<From, To>::value &&
+                        rsl::numeric_limits<From>::is_signed !=
+                            rsl::numeric_limits<To>::is_signed)>
 FMT_CONSTEXPR To lossless_integral_conversion(const From from, int& ec) {
   ec = 0;
-  using F = std::numeric_limits<From>;
-  using T = std::numeric_limits<To>;
+  using F = rsl::numeric_limits<From>;
+  using T = rsl::numeric_limits<To>;
   static_assert(F::is_integer, "From must be integral");
   static_assert(T::is_integer, "To must be integral");
 
   if (detail::const_check(F::is_signed && !T::is_signed)) {
     // From may be negative, not allowed!
-    if (fmt::detail::is_negative(from)) {
+    if (rsl ::detail::is_negative(from)) {
       ec = 1;
       return {};
     }
@@ -114,7 +114,7 @@ FMT_CONSTEXPR To lossless_integral_conversion(const From from, int& ec) {
 }
 
 template <typename To, typename From,
-          FMT_ENABLE_IF(std::is_same<From, To>::value)>
+          FMT_ENABLE_IF(rsl::is_same<From, To>::value)>
 FMT_CONSTEXPR To lossless_integral_conversion(const From from, int& ec) {
   ec = 0;
   return from;
@@ -135,15 +135,15 @@ FMT_CONSTEXPR To lossless_integral_conversion(const From from, int& ec) {
  */
 // clang-format on
 template <typename To, typename From,
-          FMT_ENABLE_IF(!std::is_same<From, To>::value)>
+          FMT_ENABLE_IF(!rsl::is_same<From, To>::value)>
 FMT_CONSTEXPR To safe_float_conversion(const From from, int& ec) {
   ec = 0;
-  using T = std::numeric_limits<To>;
-  static_assert(std::is_floating_point<From>::value, "From must be floating");
-  static_assert(std::is_floating_point<To>::value, "To must be floating");
+  using T = rsl::numeric_limits<To>;
+  static_assert(rsl::is_floating_point<From>::value, "From must be floating");
+  static_assert(rsl::is_floating_point<To>::value, "To must be floating");
 
   // catch the only happy case
-  if (std::isfinite(from)) {
+  if (rsl::isfinite(from)) {
     if (from >= T::lowest() && from <= (T::max)()) {
       return static_cast<To>(from);
     }
@@ -157,10 +157,10 @@ FMT_CONSTEXPR To safe_float_conversion(const From from, int& ec) {
 }  // function
 
 template <typename To, typename From,
-          FMT_ENABLE_IF(std::is_same<From, To>::value)>
+          FMT_ENABLE_IF(rsl::is_same<From, To>::value)>
 FMT_CONSTEXPR To safe_float_conversion(const From from, int& ec) {
   ec = 0;
-  static_assert(std::is_floating_point<From>::value, "From must be floating");
+  static_assert(rsl::is_floating_point<From>::value, "From must be floating");
   return from;
 }
 
@@ -168,16 +168,16 @@ FMT_CONSTEXPR To safe_float_conversion(const From from, int& ec) {
  * safe duration cast between integral durations
  */
 template <typename To, typename FromRep, typename FromPeriod,
-          FMT_ENABLE_IF(std::is_integral<FromRep>::value),
-          FMT_ENABLE_IF(std::is_integral<typename To::rep>::value)>
-To safe_duration_cast(std::chrono::duration<FromRep, FromPeriod> from,
+          FMT_ENABLE_IF(rsl::is_integral<FromRep>::value),
+          FMT_ENABLE_IF(rsl::is_integral<typename To::rep>::value)>
+To safe_duration_cast(rsl::chrono::duration<FromRep, FromPeriod> from,
                       int& ec) {
-  using From = std::chrono::duration<FromRep, FromPeriod>;
+  using From = rsl::chrono::duration<FromRep, FromPeriod>;
   ec = 0;
   // the basic idea is that we need to convert from count() in the from type
   // to count() in the To type, by multiplying it with this:
   struct Factor
-      : std::ratio_divide<typename From::period, typename To::period> {};
+      : rsl::ratio_divide<typename From::period, typename To::period> {};
 
   static_assert(Factor::num > 0, "num must be positive");
   static_assert(Factor::den > 0, "den must be positive");
@@ -187,7 +187,7 @@ To safe_duration_cast(std::chrono::duration<FromRep, FromPeriod> from,
   // overflow/underflow. let's start by finding a suitable type that can hold
   // both To, From and Factor::num
   using IntermediateRep =
-      typename std::common_type<typename From::rep, typename To::rep,
+      typename rsl::common_type<typename From::rep, typename To::rep,
                                 decltype(Factor::num)>::type;
 
   // safe conversion to IntermediateRep
@@ -202,8 +202,8 @@ To safe_duration_cast(std::chrono::duration<FromRep, FromPeriod> from,
       return {};
     }
     const auto min1 =
-        (std::numeric_limits<IntermediateRep>::min)() / Factor::num;
-    if (!std::is_unsigned<IntermediateRep>::value && count < min1) {
+        (rsl::numeric_limits<IntermediateRep>::min)() / Factor::num;
+    if (!rsl::is_unsigned<IntermediateRep>::value && count < min1) {
       ec = 1;
       return {};
     }
@@ -219,28 +219,28 @@ To safe_duration_cast(std::chrono::duration<FromRep, FromPeriod> from,
  * safe duration_cast between floating point durations
  */
 template <typename To, typename FromRep, typename FromPeriod,
-          FMT_ENABLE_IF(std::is_floating_point<FromRep>::value),
-          FMT_ENABLE_IF(std::is_floating_point<typename To::rep>::value)>
-To safe_duration_cast(std::chrono::duration<FromRep, FromPeriod> from,
+          FMT_ENABLE_IF(rsl::is_floating_point<FromRep>::value),
+          FMT_ENABLE_IF(rsl::is_floating_point<typename To::rep>::value)>
+To safe_duration_cast(rsl::chrono::duration<FromRep, FromPeriod> from,
                       int& ec) {
-  using From = std::chrono::duration<FromRep, FromPeriod>;
+  using From = rsl::chrono::duration<FromRep, FromPeriod>;
   ec = 0;
-  if (std::isnan(from.count())) {
+  if (rsl::isnan(from.count())) {
     // nan in, gives nan out. easy.
-    return To{std::numeric_limits<typename To::rep>::quiet_NaN()};
+    return To{rsl::numeric_limits<typename To::rep>::quiet_NaN()};
   }
   // maybe we should also check if from is denormal, and decide what to do about
   // it.
 
   // +-inf should be preserved.
-  if (std::isinf(from.count())) {
+  if (rsl::isinf(from.count())) {
     return To{from.count()};
   }
 
   // the basic idea is that we need to convert from count() in the from type
   // to count() in the To type, by multiplying it with this:
   struct Factor
-      : std::ratio_divide<typename From::period, typename To::period> {};
+      : rsl::ratio_divide<typename From::period, typename To::period> {};
 
   static_assert(Factor::num > 0, "num must be positive");
   static_assert(Factor::den > 0, "den must be positive");
@@ -250,7 +250,7 @@ To safe_duration_cast(std::chrono::duration<FromRep, FromPeriod> from,
   // overflow/underflow. let's start by finding a suitable type that can hold
   // both To, From and Factor::num
   using IntermediateRep =
-      typename std::common_type<typename From::rep, typename To::rep,
+      typename rsl::common_type<typename From::rep, typename To::rep,
                                 decltype(Factor::num)>::type;
 
   // force conversion of From::rep -> IntermediateRep to be safe,
@@ -269,7 +269,7 @@ To safe_duration_cast(std::chrono::duration<FromRep, FromPeriod> from,
       ec = 1;
       return {};
     }
-    constexpr auto min1 = std::numeric_limits<IntermediateRep>::lowest() /
+    constexpr auto min1 = rsl::numeric_limits<IntermediateRep>::lowest() /
                           static_cast<IntermediateRep>(Factor::num);
     if (count < min1) {
       ec = 1;
@@ -280,7 +280,7 @@ To safe_duration_cast(std::chrono::duration<FromRep, FromPeriod> from,
 
   // this can't go wrong, right? den>0 is checked earlier.
   if (detail::const_check(Factor::den != 1)) {
-    using common_t = typename std::common_type<IntermediateRep, intmax_t>::type;
+    using common_t = typename rsl::common_type<IntermediateRep, intmax_t>::type;
     count /= static_cast<common_t>(Factor::den);
   }
 
@@ -307,8 +307,8 @@ inline null<> localtime_s(...) { return null<>(); }
 inline null<> gmtime_r(...) { return null<>(); }
 inline null<> gmtime_s(...) { return null<>(); }
 
-inline const std::locale& get_classic_locale() {
-  static const auto& locale = std::locale::classic();
+inline const rsl::locale& get_classic_locale() {
+  static const auto& locale = rsl::locale::classic();
   return locale;
 }
 
@@ -322,25 +322,25 @@ constexpr const size_t codecvt_result<CodeUnit>::max_size;
 
 template <typename CodeUnit>
 void write_codecvt(codecvt_result<CodeUnit>& out, string_view in_buf,
-                   const std::locale& loc) {
+                   const rsl::locale& loc) {
 #if FMT_CLANG_VERSION
 #  pragma clang diagnostic push
 #  pragma clang diagnostic ignored "-Wdeprecated"
-  auto& f = std::use_facet<std::codecvt<CodeUnit, char, std::mbstate_t>>(loc);
+  auto& f = rsl::use_facet<rsl::codecvt<CodeUnit, char, rsl::mbstate_t>>(loc);
 #  pragma clang diagnostic pop
 #else
-  auto& f = std::use_facet<std::codecvt<CodeUnit, char, std::mbstate_t>>(loc);
+  auto& f = rsl::use_facet<rsl::codecvt<CodeUnit, char, rsl::mbstate_t>>(loc);
 #endif
-  auto mb = std::mbstate_t();
+  auto mb = rsl::mbstate_t();
   const char* from_next = nullptr;
   auto result = f.in(mb, in_buf.begin(), in_buf.end(), from_next,
-                     std::begin(out.buf), std::end(out.buf), out.end);
-  if (result != std::codecvt_base::ok)
+                     rsl::begin(out.buf), rsl::end(out.buf), out.end);
+  if (result != rsl::codecvt_base::ok)
     FMT_THROW(format_error("failed to format time"));
 }
 
 template <typename OutputIt>
-auto write_encoded_tm_str(OutputIt out, string_view in, const std::locale& loc)
+auto write_encoded_tm_str(OutputIt out, string_view in, const rsl::locale& loc)
     -> OutputIt {
   if (detail::is_utf8() && loc != get_classic_locale()) {
     // char16_t and char32_t codecvts are broken in MSVC (linkage errors) and
@@ -394,8 +394,8 @@ auto write_encoded_tm_str(OutputIt out, string_view in, const std::locale& loc)
 }
 
 template <typename Char, typename OutputIt,
-          FMT_ENABLE_IF(!std::is_same<Char, char>::value)>
-auto write_tm_str(OutputIt out, string_view sv, const std::locale& loc)
+          FMT_ENABLE_IF(!rsl::is_same<Char, char>::value)>
+auto write_tm_str(OutputIt out, string_view sv, const rsl::locale& loc)
     -> OutputIt {
   codecvt_result<Char> unit;
   write_codecvt(unit, sv, loc);
@@ -403,27 +403,27 @@ auto write_tm_str(OutputIt out, string_view sv, const std::locale& loc)
 }
 
 template <typename Char, typename OutputIt,
-          FMT_ENABLE_IF(std::is_same<Char, char>::value)>
-auto write_tm_str(OutputIt out, string_view sv, const std::locale& loc)
+          FMT_ENABLE_IF(rsl::is_same<Char, char>::value)>
+auto write_tm_str(OutputIt out, string_view sv, const rsl::locale& loc)
     -> OutputIt {
   return write_encoded_tm_str(out, sv, loc);
 }
 
 template <typename Char>
-inline void do_write(buffer<Char>& buf, const std::tm& time,
-                     const std::locale& loc, char format, char modifier) {
-  auto&& format_buf = formatbuf<std::basic_streambuf<Char>>(buf);
-  auto&& os = std::basic_ostream<Char>(&format_buf);
+inline void do_write(buffer<Char>& buf, const rsl::tm& time,
+                     const rsl::locale& loc, char format, char modifier) {
+  auto&& format_buf = formatbuf<rsl::basic_streambuf<Char>>(buf);
+  auto&& os = rsl::basic_ostream<Char>(&format_buf);
   os.imbue(loc);
-  using iterator = std::ostreambuf_iterator<Char>;
-  const auto& facet = std::use_facet<std::time_put<Char, iterator>>(loc);
+  using iterator = rsl::ostreambuf_iterator<Char>;
+  const auto& facet = rsl::use_facet<rsl::time_put<Char, iterator>>(loc);
   auto end = facet.put(os, os, Char(' '), &time, format, modifier);
   if (end.failed()) FMT_THROW(format_error("failed to format time"));
 }
 
 template <typename Char, typename OutputIt,
-          FMT_ENABLE_IF(!std::is_same<Char, char>::value)>
-auto write(OutputIt out, const std::tm& time, const std::locale& loc,
+          FMT_ENABLE_IF(!rsl::is_same<Char, char>::value)>
+auto write(OutputIt out, const rsl::tm& time, const rsl::locale& loc,
            char format, char modifier = 0) -> OutputIt {
   auto&& buf = get_buffer<Char>(out);
   do_write<Char>(buf, time, loc, format, modifier);
@@ -431,8 +431,8 @@ auto write(OutputIt out, const std::tm& time, const std::locale& loc,
 }
 
 template <typename Char, typename OutputIt,
-          FMT_ENABLE_IF(std::is_same<Char, char>::value)>
-auto write(OutputIt out, const std::tm& time, const std::locale& loc,
+          FMT_ENABLE_IF(rsl::is_same<Char, char>::value)>
+auto write(OutputIt out, const rsl::tm& time, const rsl::locale& loc,
            char format, char modifier = 0) -> OutputIt {
   auto&& buf = basic_memory_buffer<Char>();
   do_write<char>(buf, time, loc, format, modifier);
@@ -444,26 +444,26 @@ auto write(OutputIt out, const std::tm& time, const std::locale& loc,
 FMT_MODULE_EXPORT_BEGIN
 
 /**
-  Converts given time since epoch as ``std::time_t`` value into calendar time,
-  expressed in local time. Unlike ``std::localtime``, this function is
+  Converts given time since epoch as ``rsl::time_t`` value into calendar time,
+  expressed in local time. Unlike ``rsl::localtime``, this function is
   thread-safe on most platforms.
  */
-inline std::tm localtime(std::time_t time) {
+inline rsl::tm localtime(rsl::time_t time) {
   struct dispatcher {
-    std::time_t time_;
-    std::tm tm_;
+    rsl::time_t time_;
+    rsl::tm tm_;
 
-    dispatcher(std::time_t t) : time_(t) {}
+    dispatcher(rsl::time_t t) : time_(t) {}
 
     bool run() {
-      using namespace fmt::detail;
+      using namespace rsl::detail;
       return handle(localtime_r(&time_, &tm_));
     }
 
-    bool handle(std::tm* tm) { return tm != nullptr; }
+    bool handle(rsl::tm* tm) { return tm != nullptr; }
 
     bool handle(detail::null<>) {
-      using namespace fmt::detail;
+      using namespace rsl::detail;
       return fallback(localtime_s(&tm_, &time_));
     }
 
@@ -471,8 +471,8 @@ inline std::tm localtime(std::time_t time) {
 
 #if !FMT_MSC_VERSION
     bool fallback(detail::null<>) {
-      using namespace fmt::detail;
-      std::tm* tm = std::localtime(&time_);
+      using namespace rsl::detail;
+      rsl::tm* tm = rsl::localtime(&time_);
       if (tm) tm_ = *tm;
       return tm != nullptr;
     }
@@ -484,32 +484,32 @@ inline std::tm localtime(std::time_t time) {
   return lt.tm_;
 }
 
-inline std::tm localtime(
-    std::chrono::time_point<std::chrono::system_clock> time_point) {
-  return localtime(std::chrono::system_clock::to_time_t(time_point));
+inline rsl::tm localtime(
+    rsl::chrono::time_point<rsl::chrono::system_clock> time_point) {
+  return localtime(rsl::chrono::system_clock::to_time_t(time_point));
 }
 
 /**
-  Converts given time since epoch as ``std::time_t`` value into calendar time,
-  expressed in Coordinated Universal Time (UTC). Unlike ``std::gmtime``, this
+  Converts given time since epoch as ``rsl::time_t`` value into calendar time,
+  expressed in Coordinated Universal Time (UTC). Unlike ``rsl::gmtime``, this
   function is thread-safe on most platforms.
  */
-inline std::tm gmtime(std::time_t time) {
+inline rsl::tm gmtime(rsl::time_t time) {
   struct dispatcher {
-    std::time_t time_;
-    std::tm tm_;
+    rsl::time_t time_;
+    rsl::tm tm_;
 
-    dispatcher(std::time_t t) : time_(t) {}
+    dispatcher(rsl::time_t t) : time_(t) {}
 
     bool run() {
-      using namespace fmt::detail;
+      using namespace rsl::detail;
       return handle(gmtime_r(&time_, &tm_));
     }
 
-    bool handle(std::tm* tm) { return tm != nullptr; }
+    bool handle(rsl::tm* tm) { return tm != nullptr; }
 
     bool handle(detail::null<>) {
-      using namespace fmt::detail;
+      using namespace rsl::detail;
       return fallback(gmtime_s(&tm_, &time_));
     }
 
@@ -517,7 +517,7 @@ inline std::tm gmtime(std::time_t time) {
 
 #if !FMT_MSC_VERSION
     bool fallback(detail::null<>) {
-      std::tm* tm = std::gmtime(&time_);
+      rsl::tm* tm = rsl::gmtime(&time_);
       if (tm) tm_ = *tm;
       return tm != nullptr;
     }
@@ -529,9 +529,9 @@ inline std::tm gmtime(std::time_t time) {
   return gt.tm_;
 }
 
-inline std::tm gmtime(
-    std::chrono::time_point<std::chrono::system_clock> time_point) {
-  return gmtime(std::chrono::system_clock::to_time_t(time_point));
+inline rsl::tm gmtime(
+    rsl::chrono::time_point<rsl::chrono::system_clock> time_point) {
+  return gmtime(rsl::chrono::system_clock::to_time_t(time_point));
 }
 
 FMT_BEGIN_DETAIL_NAMESPACE
@@ -563,33 +563,33 @@ inline void write_digit2_separated(char* buf, unsigned a, unsigned b,
   constexpr const size_t len = 8;
   if (const_check(is_big_endian())) {
     char tmp[len];
-    std::memcpy(tmp, &digits, len);
-    std::reverse_copy(tmp, tmp + len, buf);
+    rsl::memcpy(tmp, &digits, len);
+    rsl::reverse_copy(tmp, tmp + len, buf);
   } else {
-    std::memcpy(buf, &digits, len);
+    rsl::memcpy(buf, &digits, len);
   }
 }
 
 template <typename Period> FMT_CONSTEXPR inline const char* get_units() {
-  if (std::is_same<Period, std::atto>::value) return "as";
-  if (std::is_same<Period, std::femto>::value) return "fs";
-  if (std::is_same<Period, std::pico>::value) return "ps";
-  if (std::is_same<Period, std::nano>::value) return "ns";
-  if (std::is_same<Period, std::micro>::value) return "µs";
-  if (std::is_same<Period, std::milli>::value) return "ms";
-  if (std::is_same<Period, std::centi>::value) return "cs";
-  if (std::is_same<Period, std::deci>::value) return "ds";
-  if (std::is_same<Period, std::ratio<1>>::value) return "s";
-  if (std::is_same<Period, std::deca>::value) return "das";
-  if (std::is_same<Period, std::hecto>::value) return "hs";
-  if (std::is_same<Period, std::kilo>::value) return "ks";
-  if (std::is_same<Period, std::mega>::value) return "Ms";
-  if (std::is_same<Period, std::giga>::value) return "Gs";
-  if (std::is_same<Period, std::tera>::value) return "Ts";
-  if (std::is_same<Period, std::peta>::value) return "Ps";
-  if (std::is_same<Period, std::exa>::value) return "Es";
-  if (std::is_same<Period, std::ratio<60>>::value) return "m";
-  if (std::is_same<Period, std::ratio<3600>>::value) return "h";
+  if (rsl::is_same<Period, rsl::atto>::value) return "as";
+  if (rsl::is_same<Period, rsl::femto>::value) return "fs";
+  if (rsl::is_same<Period, rsl::pico>::value) return "ps";
+  if (rsl::is_same<Period, rsl::nano>::value) return "ns";
+  if (rsl::is_same<Period, rsl::micro>::value) return "µs";
+  if (rsl::is_same<Period, rsl::milli>::value) return "ms";
+  if (rsl::is_same<Period, rsl::centi>::value) return "cs";
+  if (rsl::is_same<Period, rsl::deci>::value) return "ds";
+  if (rsl::is_same<Period, rsl::ratio<1>>::value) return "s";
+  if (rsl::is_same<Period, rsl::deca>::value) return "das";
+  if (rsl::is_same<Period, rsl::hecto>::value) return "hs";
+  if (rsl::is_same<Period, rsl::kilo>::value) return "ks";
+  if (rsl::is_same<Period, rsl::mega>::value) return "Ms";
+  if (rsl::is_same<Period, rsl::giga>::value) return "Gs";
+  if (rsl::is_same<Period, rsl::tera>::value) return "Ts";
+  if (rsl::is_same<Period, rsl::peta>::value) return "Ps";
+  if (rsl::is_same<Period, rsl::exa>::value) return "Es";
+  if (rsl::is_same<Period, rsl::ratio<60>>::value) return "m";
+  if (rsl::is_same<Period, rsl::ratio<3600>>::value) return "h";
   return nullptr;
 }
 
@@ -936,16 +936,16 @@ inline const char* tm_mon_short_name(int mon) {
 }
 
 template <typename T, typename = void>
-struct has_member_data_tm_gmtoff : std::false_type {};
+struct has_member_data_tm_gmtoff : rsl::false_type {};
 template <typename T>
 struct has_member_data_tm_gmtoff<T, void_t<decltype(T::tm_gmtoff)>>
-    : std::true_type {};
+    : rsl::true_type {};
 
 template <typename T, typename = void>
-struct has_member_data_tm_zone : std::false_type {};
+struct has_member_data_tm_zone : rsl::false_type {};
 template <typename T>
 struct has_member_data_tm_zone<T, void_t<decltype(T::tm_zone)>>
-    : std::true_type {};
+    : rsl::true_type {};
 
 #if FMT_USE_TZSET
 inline void tzset_once() {
@@ -961,10 +961,10 @@ template <typename OutputIt, typename Char> class tm_writer {
  private:
   static constexpr int days_per_week = 7;
 
-  const std::locale& loc_;
+  const rsl::locale& loc_;
   const bool is_classic_;
   OutputIt out_;
-  const std::tm& tm_;
+  const rsl::tm& tm_;
 
   auto tm_sec() const noexcept -> int {
     FMT_ASSERT(tm_.tm_sec >= 0 && tm_.tm_sec <= 61, "");
@@ -1062,7 +1062,7 @@ template <typename OutputIt, typename Char> class tm_writer {
     }
     uint32_or_64_or_128_t<long long> n = to_unsigned(year);
     const int num_digits = count_digits(n);
-    if (width > num_digits) out_ = std::fill_n(out_, width - num_digits, '0');
+    if (width > num_digits) out_ = rsl::fill_n(out_, width - num_digits, '0');
     out_ = format_decimal<Char>(out_, n, num_digits).end;
   }
   void write_year(long long year) {
@@ -1126,7 +1126,7 @@ template <typename OutputIt, typename Char> class tm_writer {
   }
 
  public:
-  tm_writer(const std::locale& loc, OutputIt out, const std::tm& tm)
+  tm_writer(const rsl::locale& loc, OutputIt out, const rsl::tm& tm)
       : loc_(loc),
         is_classic_(loc_ == get_classic_locale()),
         out_(out),
@@ -1208,7 +1208,7 @@ template <typename OutputIt, typename Char> class tm_writer {
     write_digit2_separated(buf, to_unsigned(tm_mon() + 1),
                            to_unsigned(tm_mday()),
                            to_unsigned(split_year_lower(tm_year())), '/');
-    out_ = copy_str<Char>(std::begin(buf), std::end(buf), out_);
+    out_ = copy_str<Char>(rsl::begin(buf), rsl::end(buf), out_);
   }
   void on_iso_date() {
     auto year = tm_year();
@@ -1224,7 +1224,7 @@ template <typename OutputIt, typename Char> class tm_writer {
     write_digit2_separated(buf + 2, static_cast<unsigned>(year % 100),
                            to_unsigned(tm_mon() + 1), to_unsigned(tm_mday()),
                            '-');
-    out_ = copy_str<Char>(std::begin(buf) + offset, std::end(buf), out_);
+    out_ = copy_str<Char>(rsl::begin(buf) + offset, rsl::end(buf), out_);
   }
 
   void on_utc_offset() { format_utc_offset_impl(tm_); }
@@ -1338,7 +1338,7 @@ template <typename OutputIt, typename Char> class tm_writer {
       char buf[8];
       write_digit2_separated(buf, to_unsigned(tm_hour12()),
                              to_unsigned(tm_min()), to_unsigned(tm_sec()), ':');
-      out_ = copy_str<Char>(std::begin(buf), std::end(buf), out_);
+      out_ = copy_str<Char>(rsl::begin(buf), rsl::end(buf), out_);
       *out_++ = ' ';
       on_am_pm();
     } else {
@@ -1354,7 +1354,7 @@ template <typename OutputIt, typename Char> class tm_writer {
     char buf[8];
     write_digit2_separated(buf, to_unsigned(tm_hour()), to_unsigned(tm_min()),
                            to_unsigned(tm_sec()), ':');
-    out_ = copy_str<Char>(std::begin(buf), std::end(buf), out_);
+    out_ = copy_str<Char>(rsl::begin(buf), rsl::end(buf), out_);
   }
 
   void on_am_pm() {
@@ -1388,51 +1388,51 @@ struct chrono_format_checker : null_chrono_spec_handler<chrono_format_checker> {
   FMT_CONSTEXPR void on_duration_unit() {}
 };
 
-template <typename T, FMT_ENABLE_IF(std::is_integral<T>::value)>
+template <typename T, FMT_ENABLE_IF(rsl::is_integral<T>::value)>
 inline bool isfinite(T) {
   return true;
 }
 
 // Converts value to Int and checks that it's in the range [0, upper).
-template <typename T, typename Int, FMT_ENABLE_IF(std::is_integral<T>::value)>
+template <typename T, typename Int, FMT_ENABLE_IF(rsl::is_integral<T>::value)>
 inline Int to_nonnegative_int(T value, Int upper) {
-  FMT_ASSERT(std::is_unsigned<Int>::value ||
+  FMT_ASSERT(rsl::is_unsigned<Int>::value ||
              (value >= 0 && to_unsigned(value) <= to_unsigned(upper)),
              "invalid value");
   (void)upper;
   return static_cast<Int>(value);
 }
-template <typename T, typename Int, FMT_ENABLE_IF(!std::is_integral<T>::value)>
+template <typename T, typename Int, FMT_ENABLE_IF(!rsl::is_integral<T>::value)>
 inline Int to_nonnegative_int(T value, Int upper) {
   if (value < 0 || value > static_cast<T>(upper))
     FMT_THROW(format_error("invalid value"));
   return static_cast<Int>(value);
 }
 
-template <typename T, FMT_ENABLE_IF(std::is_integral<T>::value)>
+template <typename T, FMT_ENABLE_IF(rsl::is_integral<T>::value)>
 inline T mod(T x, int y) {
   return x % static_cast<T>(y);
 }
-template <typename T, FMT_ENABLE_IF(std::is_floating_point<T>::value)>
+template <typename T, FMT_ENABLE_IF(rsl::is_floating_point<T>::value)>
 inline T mod(T x, int y) {
-  return std::fmod(x, static_cast<T>(y));
+  return rsl::fmod(x, static_cast<T>(y));
 }
 
 // If T is an integral type, maps T to its unsigned counterpart, otherwise
-// leaves it unchanged (unlike std::make_unsigned).
-template <typename T, bool INTEGRAL = std::is_integral<T>::value>
+// leaves it unchanged (unlike rsl::make_unsigned).
+template <typename T, bool INTEGRAL = rsl::is_integral<T>::value>
 struct make_unsigned_or_unchanged {
   using type = T;
 };
 
 template <typename T> struct make_unsigned_or_unchanged<T, true> {
-  using type = typename std::make_unsigned<T>::type;
+  using type = typename rsl::make_unsigned<T>::type;
 };
 
 #if FMT_SAFE_DURATION_CAST
 // throwing version of safe_duration_cast
 template <typename To, typename FromRep, typename FromPeriod>
-To fmt_safe_duration_cast(std::chrono::duration<FromRep, FromPeriod> from) {
+To fmt_safe_duration_cast(rsl::chrono::duration<FromRep, FromPeriod> from) {
   int ec;
   To to = safe_duration_cast::safe_duration_cast<To>(from, ec);
   if (ec) FMT_THROW(format_error("cannot format duration"));
@@ -1441,25 +1441,25 @@ To fmt_safe_duration_cast(std::chrono::duration<FromRep, FromPeriod> from) {
 #endif
 
 template <typename Rep, typename Period,
-          FMT_ENABLE_IF(std::is_integral<Rep>::value)>
-inline std::chrono::duration<Rep, std::milli> get_milliseconds(
-    std::chrono::duration<Rep, Period> d) {
+          FMT_ENABLE_IF(rsl::is_integral<Rep>::value)>
+inline rsl::chrono::duration<Rep, rsl::milli> get_milliseconds(
+    rsl::chrono::duration<Rep, Period> d) {
   // this may overflow and/or the result may not fit in the
   // target type.
 #if FMT_SAFE_DURATION_CAST
   using CommonSecondsType =
-      typename std::common_type<decltype(d), std::chrono::seconds>::type;
+      typename rsl::common_type<decltype(d), rsl::chrono::seconds>::type;
   const auto d_as_common = fmt_safe_duration_cast<CommonSecondsType>(d);
   const auto d_as_whole_seconds =
-      fmt_safe_duration_cast<std::chrono::seconds>(d_as_common);
+      fmt_safe_duration_cast<rsl::chrono::seconds>(d_as_common);
   // this conversion should be nonproblematic
   const auto diff = d_as_common - d_as_whole_seconds;
   const auto ms =
-      fmt_safe_duration_cast<std::chrono::duration<Rep, std::milli>>(diff);
+      fmt_safe_duration_cast<rsl::chrono::duration<Rep, rsl::milli>>(diff);
   return ms;
 #else
-  auto s = std::chrono::duration_cast<std::chrono::seconds>(d);
-  return std::chrono::duration_cast<std::chrono::milliseconds>(d - s);
+  auto s = rsl::chrono::duration_cast<rsl::chrono::seconds>(d);
+  return rsl::chrono::duration_cast<rsl::chrono::milliseconds>(d - s);
 #endif
 }
 
@@ -1480,14 +1480,14 @@ struct count_fractional_digits<Num, Den, N, false> {
   static constexpr int value = (Num % Den == 0) ? N : 6;
 };
 
-constexpr long long pow10(std::uint32_t n) {
+constexpr long long pow10(rsl::uint32_t n) {
   return n == 0 ? 1 : 10 * pow10(n - 1);
 }
 
 template <class Rep, class Period,
-          FMT_ENABLE_IF(std::numeric_limits<Rep>::is_signed)>
-constexpr std::chrono::duration<Rep, Period> abs(
-    std::chrono::duration<Rep, Period> d) {
+          FMT_ENABLE_IF(rsl::numeric_limits<Rep>::is_signed)>
+constexpr rsl::chrono::duration<Rep, Period> abs(
+    rsl::chrono::duration<Rep, Period> d) {
   // We need to compare the duration using the count() method directly
   // due to a compiler bug in clang-11 regarding the spaceship operator,
   // when -Wzero-as-null-pointer-constant is enabled.
@@ -1498,20 +1498,20 @@ constexpr std::chrono::duration<Rep, Period> abs(
 }
 
 template <class Rep, class Period,
-          FMT_ENABLE_IF(!std::numeric_limits<Rep>::is_signed)>
-constexpr std::chrono::duration<Rep, Period> abs(
-    std::chrono::duration<Rep, Period> d) {
+          FMT_ENABLE_IF(!rsl::numeric_limits<Rep>::is_signed)>
+constexpr rsl::chrono::duration<Rep, Period> abs(
+    rsl::chrono::duration<Rep, Period> d) {
   return d;
 }
 
 template <typename Char, typename Rep, typename OutputIt,
-          FMT_ENABLE_IF(std::is_integral<Rep>::value)>
+          FMT_ENABLE_IF(rsl::is_integral<Rep>::value)>
 OutputIt format_duration_value(OutputIt out, Rep val, int) {
   return write<Char>(out, val);
 }
 
 template <typename Char, typename Rep, typename OutputIt,
-          FMT_ENABLE_IF(std::is_floating_point<Rep>::value)>
+          FMT_ENABLE_IF(rsl::is_floating_point<Rep>::value)>
 OutputIt format_duration_value(OutputIt out, Rep val, int precision) {
   auto specs = basic_format_specs<Char>();
   specs.precision = precision;
@@ -1522,7 +1522,7 @@ OutputIt format_duration_value(OutputIt out, Rep val, int precision) {
 
 template <typename Char, typename OutputIt>
 OutputIt copy_unit(string_view unit, OutputIt out, Char) {
-  return std::copy(unit.begin(), unit.end(), out);
+  return rsl::copy(unit.begin(), unit.end(), out);
 }
 
 template <typename OutputIt>
@@ -1530,7 +1530,7 @@ OutputIt copy_unit(string_view unit, OutputIt out, wchar_t) {
   // This works when wchar_t is UTF-32 because units only contain characters
   // that have the same representation in UTF-16 and UTF-32.
   utf8_to_utf16 u(unit);
-  return std::copy(u.c_str(), u.c_str() + u.size(), out);
+  return rsl::copy(u.c_str(), u.c_str() + u.size(), out);
 }
 
 template <typename Char, typename Period, typename OutputIt>
@@ -1551,19 +1551,19 @@ OutputIt format_duration_unit(OutputIt out) {
 class get_locale {
  private:
   union {
-    std::locale locale_;
+    rsl::locale locale_;
   };
   bool has_locale_ = false;
 
  public:
   get_locale(bool localized, locale_ref loc) : has_locale_(localized) {
     if (localized)
-      ::new (&locale_) std::locale(loc.template get<std::locale>());
+      ::new (&locale_) rsl::locale(loc.template get<rsl::locale>());
   }
   ~get_locale() {
     if (has_locale_) locale_.~locale();
   }
-  operator const std::locale&() const {
+  operator const rsl::locale&() const {
     return has_locale_ ? locale_ : get_classic_locale();
   }
 };
@@ -1577,19 +1577,19 @@ struct chrono_formatter {
   bool localized = false;
   // rep is unsigned to avoid overflow.
   using rep =
-      conditional_t<std::is_integral<Rep>::value && sizeof(Rep) < sizeof(int),
+      conditional_t<rsl::is_integral<Rep>::value && sizeof(Rep) < sizeof(int),
                     unsigned, typename make_unsigned_or_unchanged<Rep>::type>;
   rep val;
-  using seconds = std::chrono::duration<rep>;
+  using seconds = rsl::chrono::duration<rep>;
   seconds s;
-  using milliseconds = std::chrono::duration<rep, std::milli>;
+  using milliseconds = rsl::chrono::duration<rep, rsl::milli>;
   bool negative;
 
   using char_type = typename FormatContext::char_type;
   using tm_writer_type = tm_writer<OutputIt, char_type>;
 
   chrono_formatter(FormatContext& ctx, OutputIt o,
-                   std::chrono::duration<Rep, Period> d)
+                   rsl::chrono::duration<Rep, Period> d)
       : context(ctx),
         out(o),
         val(static_cast<rep>(d.count())),
@@ -1603,11 +1603,11 @@ struct chrono_formatter {
     // target type.
 #if FMT_SAFE_DURATION_CAST
     // might need checked conversion (rep!=Rep)
-    auto tmpval = std::chrono::duration<rep, Period>(val);
+    auto tmpval = rsl::chrono::duration<rep, Period>(val);
     s = fmt_safe_duration_cast<seconds>(tmpval);
 #else
-    s = std::chrono::duration_cast<seconds>(
-        std::chrono::duration<rep, Period>(val));
+    s = rsl::chrono::duration_cast<seconds>(
+        rsl::chrono::duration<rep, Period>(val));
 #endif
   }
 
@@ -1639,8 +1639,8 @@ struct chrono_formatter {
   Rep minute() const { return static_cast<Rep>(mod((s.count() / 60), 60)); }
   Rep second() const { return static_cast<Rep>(mod(s.count(), 60)); }
 
-  std::tm time() const {
-    auto time = std::tm();
+  rsl::tm time() const {
+    auto time = rsl::tm();
     time.tm_hour = to_nonnegative_int(hour(), 24);
     time.tm_min = to_nonnegative_int(minute(), 60);
     time.tm_sec = to_nonnegative_int(second(), 60);
@@ -1660,43 +1660,43 @@ struct chrono_formatter {
     uint32_or_64_or_128_t<int> n =
         to_unsigned(to_nonnegative_int(value, max_value<int>()));
     int num_digits = detail::count_digits(n);
-    if (width > num_digits) out = std::fill_n(out, width - num_digits, '0');
+    if (width > num_digits) out = rsl::fill_n(out, width - num_digits, '0');
     out = format_decimal<char_type>(out, n, num_digits).end;
   }
 
   template <typename Duration> void write_fractional_seconds(Duration d) {
-    FMT_ASSERT(!std::is_floating_point<typename Duration::rep>::value, "");
+    FMT_ASSERT(!rsl::is_floating_point<typename Duration::rep>::value, "");
     constexpr auto num_fractional_digits =
         count_fractional_digits<Duration::period::num,
                                 Duration::period::den>::value;
 
-    using subsecond_precision = std::chrono::duration<
-        typename std::common_type<typename Duration::rep,
-                                  std::chrono::seconds::rep>::type,
-        std::ratio<1, detail::pow10(num_fractional_digits)>>;
-    if (std::ratio_less<typename subsecond_precision::period,
-                        std::chrono::seconds::period>::value) {
+    using subsecond_precision = rsl::chrono::duration<
+        typename rsl::common_type<typename Duration::rep,
+                                  rsl::chrono::seconds::rep>::type,
+        rsl::ratio<1, detail::pow10(num_fractional_digits)>>;
+    if (rsl::ratio_less<typename subsecond_precision::period,
+                        rsl::chrono::seconds::period>::value) {
       *out++ = '.';
       auto fractional =
-          detail::abs(d) - std::chrono::duration_cast<std::chrono::seconds>(d);
+          detail::abs(d) - rsl::chrono::duration_cast<rsl::chrono::seconds>(d);
       auto subseconds =
-          std::chrono::treat_as_floating_point<
+          rsl::chrono::treat_as_floating_point<
               typename subsecond_precision::rep>::value
               ? fractional.count()
-              : std::chrono::duration_cast<subsecond_precision>(fractional)
+              : rsl::chrono::duration_cast<subsecond_precision>(fractional)
                     .count();
       uint32_or_64_or_128_t<long long> n =
           to_unsigned(to_nonnegative_int(subseconds, max_value<long long>()));
       int num_digits = detail::count_digits(n);
       if (num_fractional_digits > num_digits)
-        out = std::fill_n(out, num_fractional_digits - num_digits, '0');
+        out = rsl::fill_n(out, num_fractional_digits - num_digits, '0');
       out = format_decimal<char_type>(out, n, num_digits).end;
     }
   }
 
-  void write_nan() { std::copy_n("nan", 3, out); }
-  void write_pinf() { std::copy_n("inf", 3, out); }
-  void write_ninf() { std::copy_n("-inf", 4, out); }
+  void write_nan() { rsl::copy_n("nan", 3, out); }
+  void write_pinf() { rsl::copy_n("inf", 3, out); }
+  void write_ninf() { rsl::copy_n("-inf", 4, out); }
 
   template <typename Callback, typename... Args>
   void format_tm(const tm& time, Callback cb, Args... args) {
@@ -1708,7 +1708,7 @@ struct chrono_formatter {
   }
 
   void on_text(const char_type* begin, const char_type* end) {
-    std::copy(begin, end, out);
+    rsl::copy(begin, end, out);
   }
 
   // These are not implemented because durations don't have date information.
@@ -1770,21 +1770,21 @@ struct chrono_formatter {
     if (handle_nan_inf()) return;
 
     if (ns == numeric_system::standard) {
-      if (std::is_floating_point<rep>::value) {
+      if (rsl::is_floating_point<rep>::value) {
         constexpr auto num_fractional_digits =
             count_fractional_digits<Period::num, Period::den>::value;
         auto buf = memory_buffer();
-        format_to(std::back_inserter(buf), runtime("{:.{}f}"),
-                  std::fmod(val * static_cast<rep>(Period::num) /
+        format_to(rsl::back_inserter(buf), runtime("{:.{}f}"),
+                  rsl::fmod(val * static_cast<rep>(Period::num) /
                                 static_cast<rep>(Period::den),
                             static_cast<rep>(60)),
                   num_fractional_digits);
         if (negative) *out++ = '-';
         if (buf.size() < 2 || buf[1] == '.') *out++ = '0';
-        out = std::copy(buf.begin(), buf.end(), out);
+        out = rsl::copy(buf.begin(), buf.end(), out);
       } else {
         write(second(), 2);
-        write_fractional_seconds(std::chrono::duration<rep, Period>(val));
+        write_fractional_seconds(rsl::chrono::duration<rep, Period>(val));
       }
       return;
     }
@@ -1836,7 +1836,7 @@ struct chrono_formatter {
 FMT_END_DETAIL_NAMESPACE
 
 #if defined(__cpp_lib_chrono) && __cpp_lib_chrono >= 201907
-using weekday = std::chrono::weekday;
+using weekday = rsl::chrono::weekday;
 #else
 // A fallback version of weekday.
 class weekday {
@@ -1871,7 +1871,7 @@ template <typename Char> struct formatter<weekday, Char> {
 
   template <typename FormatContext>
   auto format(weekday wd, FormatContext& ctx) const -> decltype(ctx.out()) {
-    auto time = std::tm();
+    auto time = rsl::tm();
     time.tm_wday = static_cast<int>(wd.c_encoding());
     detail::get_locale loc(localized, ctx.locale());
     auto w = detail::tm_writer<decltype(ctx.out()), Char>(loc, ctx.out(), time);
@@ -1881,7 +1881,7 @@ template <typename Char> struct formatter<weekday, Char> {
 };
 
 template <typename Rep, typename Period, typename Char>
-struct formatter<std::chrono::duration<Rep, Period>, Char> {
+struct formatter<rsl::chrono::duration<Rep, Period>, Char> {
  private:
   basic_format_specs<Char> specs;
   int precision = -1;
@@ -1890,7 +1890,7 @@ struct formatter<std::chrono::duration<Rep, Period>, Char> {
   arg_ref_type precision_ref;
   bool localized = false;
   basic_string_view<Char> format_str;
-  using duration = std::chrono::duration<Rep, Period>;
+  using duration = rsl::chrono::duration<Rep, Period>;
 
   struct spec_handler {
     formatter& f;
@@ -1946,7 +1946,7 @@ struct formatter<std::chrono::duration<Rep, Period>, Char> {
     begin = detail::parse_width(begin, end, handler);
     if (begin == end) return {begin, begin};
     if (*begin == '.') {
-      if (std::is_floating_point<Rep>::value)
+      if (rsl::is_floating_point<Rep>::value)
         begin = detail::parse_precision(begin, end, handler);
       else
         handler.on_error("precision not allowed for this argument type");
@@ -1978,7 +1978,7 @@ struct formatter<std::chrono::duration<Rep, Period>, Char> {
     // As a possible future optimization, we could avoid extra copying if width
     // is not specified.
     basic_memory_buffer<Char> buf;
-    auto out = std::back_inserter(buf);
+    auto out = rsl::back_inserter(buf);
     detail::handle_dynamic_spec<detail::width_checker>(specs_copy.width,
                                                        width_ref, ctx);
     detail::handle_dynamic_spec<detail::precision_checker>(precision_copy,
@@ -1999,8 +1999,8 @@ struct formatter<std::chrono::duration<Rep, Period>, Char> {
 };
 
 template <typename Char, typename Duration>
-struct formatter<std::chrono::time_point<std::chrono::system_clock, Duration>,
-                 Char> : formatter<std::tm, Char> {
+struct formatter<rsl::chrono::time_point<rsl::chrono::system_clock, Duration>,
+                 Char> : formatter<rsl::tm, Char> {
   FMT_CONSTEXPR formatter() {
     basic_string_view<Char> default_specs =
         detail::string_literal<Char, '%', 'F', ' ', '%', 'T'>{};
@@ -2008,13 +2008,13 @@ struct formatter<std::chrono::time_point<std::chrono::system_clock, Duration>,
   }
 
   template <typename FormatContext>
-  auto format(std::chrono::time_point<std::chrono::system_clock> val,
+  auto format(rsl::chrono::time_point<rsl::chrono::system_clock> val,
               FormatContext& ctx) const -> decltype(ctx.out()) {
-    return formatter<std::tm, Char>::format(localtime(val), ctx);
+    return formatter<rsl::tm, Char>::format(localtime(val), ctx);
   }
 };
 
-template <typename Char> struct formatter<std::tm, Char> {
+template <typename Char> struct formatter<rsl::tm, Char> {
  private:
   enum class spec {
     unknown,
@@ -2048,7 +2048,7 @@ template <typename Char> struct formatter<std::tm, Char> {
   }
 
   template <typename FormatContext>
-  auto format(const std::tm& tm, FormatContext& ctx) const
+  auto format(const rsl::tm& tm, FormatContext& ctx) const
       -> decltype(ctx.out()) {
     const auto loc_ref = ctx.locale();
     detail::get_locale loc(static_cast<bool>(loc_ref), loc_ref);

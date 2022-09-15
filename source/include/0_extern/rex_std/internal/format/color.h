@@ -387,7 +387,7 @@ template <typename Char> struct ansi_color_escape {
 
   FMT_CONSTEXPR const Char* begin() const noexcept { return buffer; }
   FMT_CONSTEXPR_CHAR_TRAITS const Char* end() const noexcept {
-    return buffer + std::char_traits<Char>::length(buffer);
+    return buffer + rsl::char_traits<Char>::length(buffer);
   }
 
  private:
@@ -424,13 +424,13 @@ FMT_CONSTEXPR ansi_color_escape<Char> make_emphasis(emphasis em) noexcept {
 }
 
 template <typename Char> inline void fputs(const Char* chars, FILE* stream) {
-  int result = std::fputs(chars, stream);
+  int result = rsl::fputs(chars, stream);
   if (result < 0)
     FMT_THROW(system_error(errno, FMT_STRING("cannot write to file")));
 }
 
 template <> inline void fputs<wchar_t>(const wchar_t* chars, FILE* stream) {
-  int result = std::fputws(chars, stream);
+  int result = rsl::fputws(chars, stream);
   if (result < 0)
     FMT_THROW(system_error(errno, FMT_STRING("cannot write to file")));
 }
@@ -480,7 +480,7 @@ void vformat_to(buffer<Char>& buf, const text_style& ts,
 FMT_END_DETAIL_NAMESPACE
 
 template <typename S, typename Char = char_t<S>>
-void vprint(std::FILE* f, const text_style& ts, const S& format,
+void vprint(rsl::FILE* f, const text_style& ts, const S& format,
             basic_format_args<buffer_context<type_identity_t<Char>>> args) {
   basic_memory_buffer<Char> buf;
   detail::vformat_to(buf, ts, detail::to_string_view(format), args);
@@ -505,10 +505,10 @@ void vprint(std::FILE* f, const text_style& ts, const S& format,
  */
 template <typename S, typename... Args,
           FMT_ENABLE_IF(detail::is_string<S>::value)>
-void print(std::FILE* f, const text_style& ts, const S& format_str,
+void print(rsl::FILE* f, const text_style& ts, const S& format_str,
            const Args&... args) {
   vprint(f, ts, format_str,
-         fmt::make_format_args<buffer_context<char_t<S>>>(args...));
+         rsl::make_format_args<buffer_context<char_t<S>>>(args...));
 }
 
 /**
@@ -529,7 +529,7 @@ void print(const text_style& ts, const S& format_str, const Args&... args) {
 }
 
 template <typename S, typename Char = char_t<S>>
-inline std::basic_string<Char> vformat(
+inline rsl::basic_string<Char> vformat(
     const text_style& ts, const S& format_str,
     basic_format_args<buffer_context<type_identity_t<Char>>> args) {
   basic_memory_buffer<Char> buf;
@@ -545,15 +545,15 @@ inline std::basic_string<Char> vformat(
   **Example**::
 
     #include <fmt/color.h>
-    std::string message = fmt::format(fmt::emphasis::bold | fg(fmt::color::red),
+    rsl::string message = fmt::format(fmt::emphasis::bold | fg(fmt::color::red),
                                       "The answer is {}", 42);
   \endrst
 */
 template <typename S, typename... Args, typename Char = char_t<S>>
-inline std::basic_string<Char> format(const text_style& ts, const S& format_str,
+inline rsl::basic_string<Char> format(const text_style& ts, const S& format_str,
                                       const Args&... args) {
-  return fmt::vformat(ts, detail::to_string_view(format_str),
-                      fmt::make_format_args<buffer_context<Char>>(args...));
+  return rsl::vformat(ts, detail::to_string_view(format_str),
+                      rsl::make_format_args<buffer_context<Char>>(args...));
 }
 
 /**
@@ -576,8 +576,8 @@ OutputIt vformat_to(
 
   **Example**::
 
-    std::vector<char> out;
-    fmt::format_to(std::back_inserter(out),
+    rsl::vector<char> out;
+    fmt::format_to(rsl::back_inserter(out),
                    fmt::emphasis::bold | fg(fmt::color::red), "{}", 42);
   \endrst
 */
@@ -586,9 +586,9 @@ template <typename OutputIt, typename S, typename... Args,
               detail::is_string<S>::value>
 inline auto format_to(OutputIt out, const text_style& ts, const S& format_str,
                       Args&&... args) ->
-    typename std::enable_if<enable, OutputIt>::type {
+    typename rsl::enable_if<enable, OutputIt>::type {
   return vformat_to(out, ts, detail::to_string_view(format_str),
-                    fmt::make_format_args<buffer_context<char_t<S>>>(args...));
+                    rsl::make_format_args<buffer_context<char_t<S>>>(args...));
 }
 
 template <typename T, typename Char>
@@ -604,24 +604,24 @@ struct formatter<detail::styled_arg<T>, Char> : formatter<T, Char> {
     if (ts.has_emphasis()) {
       has_style = true;
       auto emphasis = detail::make_emphasis<Char>(ts.get_emphasis());
-      out = std::copy(emphasis.begin(), emphasis.end(), out);
+      out = rsl::copy(emphasis.begin(), emphasis.end(), out);
     }
     if (ts.has_foreground()) {
       has_style = true;
       auto foreground =
           detail::make_foreground_color<Char>(ts.get_foreground());
-      out = std::copy(foreground.begin(), foreground.end(), out);
+      out = rsl::copy(foreground.begin(), foreground.end(), out);
     }
     if (ts.has_background()) {
       has_style = true;
       auto background =
           detail::make_background_color<Char>(ts.get_background());
-      out = std::copy(background.begin(), background.end(), out);
+      out = rsl::copy(background.begin(), background.end(), out);
     }
     out = formatter<T, Char>::format(value, ctx);
     if (has_style) {
       auto reset_color = string_view("\x1b[0m");
-      out = std::copy(reset_color.begin(), reset_color.end(), out);
+      out = rsl::copy(reset_color.begin(), reset_color.end(), out);
     }
     return out;
   }

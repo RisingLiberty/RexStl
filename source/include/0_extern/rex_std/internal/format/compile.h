@@ -8,7 +8,7 @@
 #ifndef FMT_COMPILE_H_
 #define FMT_COMPILE_H_
 
-#include "format.h"
+#include "rex_std/format.h"
 
 FMT_BEGIN_NAMESPACE
 namespace detail {
@@ -31,9 +31,9 @@ template <typename OutputIt> class truncating_iterator_base {
       : out_(out), limit_(limit) {}
 
  public:
-  using iterator_category = std::output_iterator_tag;
-  using value_type = typename std::iterator_traits<OutputIt>::value_type;
-  using difference_type = std::ptrdiff_t;
+  using iterator_category = rsl::output_iterator_tag;
+  using value_type = typename rsl::iterator_traits<OutputIt>::value_type;
+  using difference_type = rsl::ptrdiff_t;
   using pointer = void;
   using reference = void;
   FMT_UNCHECKED_ITERATOR(truncating_iterator_base);
@@ -45,12 +45,12 @@ template <typename OutputIt> class truncating_iterator_base {
 // An output iterator that truncates the output and counts the number of objects
 // written to it.
 template <typename OutputIt,
-          typename Enable = typename std::is_void<
-              typename std::iterator_traits<OutputIt>::value_type>::type>
+          typename Enable = typename rsl::is_void<
+              typename rsl::iterator_traits<OutputIt>::value_type>::type>
 class truncating_iterator;
 
 template <typename OutputIt>
-class truncating_iterator<OutputIt, std::false_type>
+class truncating_iterator<OutputIt, rsl::false_type>
     : public truncating_iterator_base<OutputIt> {
   mutable typename truncating_iterator_base<OutputIt>::value_type blackhole_;
 
@@ -79,7 +79,7 @@ class truncating_iterator<OutputIt, std::false_type>
 };
 
 template <typename OutputIt>
-class truncating_iterator<OutputIt, std::true_type>
+class truncating_iterator<OutputIt, rsl::true_type>
     : public truncating_iterator_base<OutputIt> {
  public:
   truncating_iterator() = default;
@@ -101,7 +101,7 @@ class truncating_iterator<OutputIt, std::true_type>
 class compiled_string {};
 
 template <typename S>
-struct is_compiled_string : std::is_base_of<compiled_string, S> {};
+struct is_compiled_string : rsl::is_base_of<compiled_string, S> {};
 
 /**
   \rst
@@ -111,21 +111,21 @@ struct is_compiled_string : std::is_base_of<compiled_string, S> {};
 
   **Example**::
 
-    // Converts 42 into std::string using the most efficient method and no
+    // Converts 42 into rsl::string using the most efficient method and no
     // runtime format string processing.
-    std::string s = fmt::format(FMT_COMPILE("{}"), 42);
+    rsl::string s = fmt::format(FMT_COMPILE("{}"), 42);
   \endrst
  */
 #if defined(__cpp_if_constexpr) && defined(__cpp_return_type_deduction)
 #  define FMT_COMPILE(s) \
-    FMT_STRING_IMPL(s, fmt::detail::compiled_string, explicit)
+    FMT_STRING_IMPL(s, rsl::detail::compiled_string, explicit)
 #else
 #  define FMT_COMPILE(s) FMT_STRING(s)
 #endif
 
 #if FMT_USE_NONTYPE_TEMPLATE_ARGS
 template <typename Char, size_t N,
-          fmt::detail_exported::fixed_string<Char, N> Str>
+          rsl::detail_exported::fixed_string<Char, N> Str>
 struct udl_compiled_string : compiled_string {
   using char_type = Char;
   explicit constexpr operator basic_string_view<char_type>() const {
@@ -163,13 +163,13 @@ template <int N, typename> struct get_type_impl;
 
 template <int N, typename... Args> struct get_type_impl<N, type_list<Args...>> {
   using type =
-      remove_cvref_t<decltype(detail::get<N>(std::declval<Args>()...))>;
+      remove_cvref_t<decltype(detail::get<N>(rsl::declval<Args>()...))>;
 };
 
 template <int N, typename T>
 using get_type = typename get_type_impl<N, T>::type;
 
-template <typename T> struct is_compiled_format : std::false_type {};
+template <typename T> struct is_compiled_format : rsl::false_type {};
 
 template <typename Char> struct text {
   basic_string_view<Char> data;
@@ -182,7 +182,7 @@ template <typename Char> struct text {
 };
 
 template <typename Char>
-struct is_compiled_format<text<Char>> : std::true_type {};
+struct is_compiled_format<text<Char>> : rsl::true_type {};
 
 template <typename Char>
 constexpr text<Char> make_text(basic_string_view<Char> s, size_t pos,
@@ -212,7 +212,7 @@ constexpr const T& get_arg_checked(const Args&... args) {
 }
 
 template <typename Char>
-struct is_compiled_format<code_unit<Char>> : std::true_type {};
+struct is_compiled_format<code_unit<Char>> : rsl::true_type {};
 
 // A replacement field that refers to argument N.
 template <typename Char, typename T, int N> struct field {
@@ -225,7 +225,7 @@ template <typename Char, typename T, int N> struct field {
 };
 
 template <typename Char, typename T, int N>
-struct is_compiled_format<field<Char, T, N>> : std::true_type {};
+struct is_compiled_format<field<Char, T, N>> : rsl::true_type {};
 
 // A replacement field that refers to argument with name.
 template <typename Char> struct runtime_named_field {
@@ -237,7 +237,7 @@ template <typename Char> struct runtime_named_field {
       OutputIt& out,
       // [[maybe_unused]] due to unused-but-set-parameter warning in GCC 7,8,9
       [[maybe_unused]] basic_string_view<Char> arg_name, const T& arg) {
-    if constexpr (is_named_arg<typename std::remove_cv<T>::type>::value) {
+    if constexpr (is_named_arg<typename rsl::remove_cv<T>::type>::value) {
       if (arg_name == arg.name) {
         out = write<Char>(out, arg.value);
         return true;
@@ -257,7 +257,7 @@ template <typename Char> struct runtime_named_field {
 };
 
 template <typename Char>
-struct is_compiled_format<runtime_named_field<Char>> : std::true_type {};
+struct is_compiled_format<runtime_named_field<Char>> : rsl::true_type {};
 
 // A replacement field that refers to argument N and has format specifiers.
 template <typename Char, typename T, int N> struct spec_field {
@@ -268,14 +268,14 @@ template <typename Char, typename T, int N> struct spec_field {
   constexpr FMT_INLINE OutputIt format(OutputIt out,
                                        const Args&... args) const {
     const auto& vargs =
-        fmt::make_format_args<basic_format_context<OutputIt, Char>>(args...);
+        rsl::make_format_args<basic_format_context<OutputIt, Char>>(args...);
     basic_format_context<OutputIt, Char> ctx(out, vargs);
     return fmt.format(get_arg_checked<T, N>(args...), ctx);
   }
 };
 
 template <typename Char, typename T, int N>
-struct is_compiled_format<spec_field<Char, T, N>> : std::true_type {};
+struct is_compiled_format<spec_field<Char, T, N>> : rsl::true_type {};
 
 template <typename L, typename R> struct concat {
   L lhs;
@@ -290,7 +290,7 @@ template <typename L, typename R> struct concat {
 };
 
 template <typename L, typename R>
-struct is_compiled_format<concat<L, R>> : std::true_type {};
+struct is_compiled_format<concat<L, R>> : rsl::true_type {};
 
 template <typename L, typename R>
 constexpr concat<L, R> make_concat(L lhs, R rhs) {
@@ -315,7 +315,7 @@ constexpr auto parse_tail(T head, S format_str) {
   if constexpr (POS !=
                 basic_string_view<typename S::char_type>(format_str).size()) {
     constexpr auto tail = compile_format_string<Args, POS, ID>(format_str);
-    if constexpr (std::is_same<remove_cvref_t<decltype(tail)>,
+    if constexpr (rsl::is_same<remove_cvref_t<decltype(tail)>,
                                unknown_format>())
       return tail;
     else
@@ -341,7 +341,7 @@ constexpr parse_specs_result<T, Char> parse_specs(basic_string_view<Char> str,
                                          next_arg_id);
   auto f = formatter<T, Char>();
   auto end = f.parse(ctx);
-  return {f, pos + fmt::detail::to_unsigned(end - str.data()),
+  return {f, pos + rsl::detail::to_unsigned(end - str.data()),
           next_arg_id == 0 ? manual_indexing_id : ctx.next_arg_id()};
 }
 
@@ -508,10 +508,10 @@ FMT_MODULE_EXPORT_BEGIN
 template <typename CompiledFormat, typename... Args,
           typename Char = typename CompiledFormat::char_type,
           FMT_ENABLE_IF(detail::is_compiled_format<CompiledFormat>::value)>
-FMT_INLINE std::basic_string<Char> format(const CompiledFormat& cf,
+FMT_INLINE rsl::basic_string<Char> format(const CompiledFormat& cf,
                                           const Args&... args) {
-  auto s = std::basic_string<Char>();
-  cf.format(std::back_inserter(s), args...);
+  auto s = rsl::basic_string<Char>();
+  cf.format(rsl::back_inserter(s), args...);
   return s;
 }
 
@@ -524,28 +524,28 @@ constexpr FMT_INLINE OutputIt format_to(OutputIt out, const CompiledFormat& cf,
 
 template <typename S, typename... Args,
           FMT_ENABLE_IF(detail::is_compiled_string<S>::value)>
-FMT_INLINE std::basic_string<typename S::char_type> format(const S&,
+FMT_INLINE rsl::basic_string<typename S::char_type> format(const S&,
                                                            Args&&... args) {
-  if constexpr (std::is_same<typename S::char_type, char>::value) {
+  if constexpr (rsl::is_same<typename S::char_type, char>::value) {
     constexpr auto str = basic_string_view<typename S::char_type>(S());
     if constexpr (str.size() == 2 && str[0] == '{' && str[1] == '}') {
       const auto& first = detail::first(args...);
       if constexpr (detail::is_named_arg<
                         remove_cvref_t<decltype(first)>>::value) {
-        return fmt::to_string(first.value);
+        return rsl::to_string(first.value);
       } else {
-        return fmt::to_string(first);
+        return rsl::to_string(first);
       }
     }
   }
   constexpr auto compiled = detail::compile<Args...>(S());
-  if constexpr (std::is_same<remove_cvref_t<decltype(compiled)>,
+  if constexpr (rsl::is_same<remove_cvref_t<decltype(compiled)>,
                              detail::unknown_format>()) {
-    return fmt::format(
+    return rsl::format(
         static_cast<basic_string_view<typename S::char_type>>(S()),
-        std::forward<Args>(args)...);
+        rsl::forward<Args>(args)...);
   } else {
-    return fmt::format(compiled, std::forward<Args>(args)...);
+    return rsl::format(compiled, rsl::forward<Args>(args)...);
   }
 }
 
@@ -553,13 +553,13 @@ template <typename OutputIt, typename S, typename... Args,
           FMT_ENABLE_IF(detail::is_compiled_string<S>::value)>
 FMT_CONSTEXPR OutputIt format_to(OutputIt out, const S&, Args&&... args) {
   constexpr auto compiled = detail::compile<Args...>(S());
-  if constexpr (std::is_same<remove_cvref_t<decltype(compiled)>,
+  if constexpr (rsl::is_same<remove_cvref_t<decltype(compiled)>,
                              detail::unknown_format>()) {
-    return fmt::format_to(
+    return rsl::format_to(
         out, static_cast<basic_string_view<typename S::char_type>>(S()),
-        std::forward<Args>(args)...);
+        rsl::forward<Args>(args)...);
   } else {
-    return fmt::format_to(out, compiled, std::forward<Args>(args)...);
+    return rsl::format_to(out, compiled, rsl::forward<Args>(args)...);
   }
 }
 #endif
@@ -568,8 +568,8 @@ template <typename OutputIt, typename S, typename... Args,
           FMT_ENABLE_IF(detail::is_compiled_string<S>::value)>
 format_to_n_result<OutputIt> format_to_n(OutputIt out, size_t n,
                                          const S& format_str, Args&&... args) {
-  auto it = fmt::format_to(detail::truncating_iterator<OutputIt>(out, n),
-                           format_str, std::forward<Args>(args)...);
+  auto it = rsl::format_to(detail::truncating_iterator<OutputIt>(out, n),
+                           format_str, rsl::forward<Args>(args)...);
   return {it.base(), it.count()};
 }
 
@@ -577,15 +577,15 @@ template <typename S, typename... Args,
           FMT_ENABLE_IF(detail::is_compiled_string<S>::value)>
 FMT_CONSTEXPR20 size_t formatted_size(const S& format_str,
                                       const Args&... args) {
-  return fmt::format_to(detail::counting_iterator(), format_str, args...)
+  return rsl::format_to(detail::counting_iterator(), format_str, args...)
       .count();
 }
 
 template <typename S, typename... Args,
           FMT_ENABLE_IF(detail::is_compiled_string<S>::value)>
-void print(std::FILE* f, const S& format_str, const Args&... args) {
+void print(rsl::FILE* f, const S& format_str, const Args&... args) {
   memory_buffer buffer;
-  fmt::format_to(std::back_inserter(buffer), format_str, args...);
+  rsl::format_to(rsl::back_inserter(buffer), format_str, args...);
   detail::print(f, {buffer.data(), buffer.size()});
 }
 

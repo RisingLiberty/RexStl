@@ -8,8 +8,8 @@
 #ifndef FMT_ARGS_H_
 #define FMT_ARGS_H_
 
-#include <functional>  // std::reference_wrapper
-#include <memory>      // std::unique_ptr
+#include <functional>  // rsl::reference_wrapper
+#include <memory>      // rsl::unique_ptr
 #include <vector>
 
 #include "core.h"
@@ -18,12 +18,12 @@ FMT_BEGIN_NAMESPACE
 
 namespace detail {
 
-template <typename T> struct is_reference_wrapper : std::false_type {};
+template <typename T> struct is_reference_wrapper : rsl::false_type {};
 template <typename T>
-struct is_reference_wrapper<std::reference_wrapper<T>> : std::true_type {};
+struct is_reference_wrapper<rsl::reference_wrapper<T>> : rsl::true_type {};
 
 template <typename T> const T& unwrap(const T& v) { return v; }
-template <typename T> const T& unwrap(const std::reference_wrapper<T>& v) {
+template <typename T> const T& unwrap(const rsl::reference_wrapper<T>& v) {
   return static_cast<const T&>(v);
 }
 
@@ -33,7 +33,7 @@ class dynamic_arg_list {
   // unit for placing vtable. So storage_node_base is made a fake template.
   template <typename = void> struct node {
     virtual ~node() = default;
-    std::unique_ptr<node<>> next;
+    rsl::unique_ptr<node<>> next;
   };
 
   template <typename T> struct typed_node : node<> {
@@ -47,14 +47,14 @@ class dynamic_arg_list {
         : value(arg.data(), arg.size()) {}
   };
 
-  std::unique_ptr<node<>> head_;
+  rsl::unique_ptr<node<>> head_;
 
  public:
   template <typename T, typename Arg> const T& push(const Arg& arg) {
-    auto new_node = std::unique_ptr<typed_node<T>>(new typed_node<T>(arg));
+    auto new_node = rsl::unique_ptr<typed_node<T>>(new typed_node<T>(arg));
     auto& value = new_node->value;
-    new_node->next = std::move(head_);
-    head_ = std::move(new_node);
+    new_node->next = rsl::move(head_);
+    head_ = rsl::move(new_node);
     return value;
   }
 };
@@ -86,8 +86,8 @@ class dynamic_format_arg_store
 
     enum {
       value = !(detail::is_reference_wrapper<T>::value ||
-                std::is_same<T, basic_string_view<char_type>>::value ||
-                std::is_same<T, detail::std_string_view<char_type>>::value ||
+                rsl::is_same<T, basic_string_view<char_type>>::value ||
+                rsl::is_same<T, detail::std_string_view<char_type>>::value ||
                 (mapped_type != detail::type::cstring_type &&
                  mapped_type != detail::type::string_type &&
                  mapped_type != detail::type::custom_type))
@@ -96,13 +96,13 @@ class dynamic_format_arg_store
 
   template <typename T>
   using stored_type = conditional_t<
-      std::is_convertible<T, std::basic_string<char_type>>::value &&
+      rsl::is_convertible<T, rsl::basic_string<char_type>>::value &&
           !detail::is_reference_wrapper<T>::value,
-      std::basic_string<char_type>, T>;
+      rsl::basic_string<char_type>, T>;
 
   // Storage of basic_format_arg must be contiguous.
-  std::vector<basic_format_arg<Context>> data_;
-  std::vector<detail::named_arg_info<char_type>> named_info_;
+  rsl::vector<basic_format_arg<Context>> data_;
+  rsl::vector<detail::named_arg_info<char_type>> named_info_;
 
   // Storage of arguments not fitting into basic_format_arg must grow
   // without relocation because items in data_ refer to it.
@@ -132,10 +132,10 @@ class dynamic_format_arg_store
       data_.insert(data_.begin(), {zero_ptr, 0});
     }
     data_.emplace_back(detail::make_arg<Context>(detail::unwrap(arg.value)));
-    auto pop_one = [](std::vector<basic_format_arg<Context>>* data) {
+    auto pop_one = [](rsl::vector<basic_format_arg<Context>>* data) {
       data->pop_back();
     };
-    std::unique_ptr<std::vector<basic_format_arg<Context>>, decltype(pop_one)>
+    rsl::unique_ptr<rsl::vector<basic_format_arg<Context>>, decltype(pop_one)>
         guard{&data_, pop_one};
     named_info_.push_back({arg.name, static_cast<int>(data_.size() - 2u)});
     data_[0].value_.named_args = {named_info_.data(), named_info_.size()};
@@ -159,7 +159,7 @@ class dynamic_format_arg_store
       store.push_back(42);
       store.push_back("abc");
       store.push_back(1.5f);
-      std::string result = fmt::vformat("{} and {} and {}", store);
+      rsl::string result = fmt::vformat("{} and {} and {}", store);
     \endrst
   */
   template <typename T> void push_back(const T& arg) {
@@ -178,13 +178,13 @@ class dynamic_format_arg_store
 
       fmt::dynamic_format_arg_store<fmt::format_context> store;
       char band[] = "Rolling Stones";
-      store.push_back(std::cref(band));
+      store.push_back(rsl::cref(band));
       band[9] = 'c'; // Changing str affects the output.
-      std::string result = fmt::vformat("{}", store);
+      rsl::string result = fmt::vformat("{}", store);
       // result == "Rolling Scones"
     \endrst
   */
-  template <typename T> void push_back(std::reference_wrapper<T> arg) {
+  template <typename T> void push_back(rsl::reference_wrapper<T> arg) {
     static_assert(
         need_copy<T>::value,
         "objects of built-in types and string views are always copied");
@@ -193,13 +193,13 @@ class dynamic_format_arg_store
 
   /**
     Adds named argument into the dynamic store for later passing to a formatting
-    function. ``std::reference_wrapper`` is supported to avoid copying of the
+    function. ``rsl::reference_wrapper`` is supported to avoid copying of the
     argument. The name is always copied into the store.
   */
   template <typename T>
   void push_back(const detail::named_arg<char_type, T>& arg) {
     const char_type* arg_name =
-        dynamic_args_.push<std::basic_string<char_type>>(arg.name).c_str();
+        dynamic_args_.push<rsl::basic_string<char_type>>(arg.name).c_str();
     if (detail::const_check(need_copy<T>::value)) {
       emplace_arg(
           fmt::arg(arg_name, dynamic_args_.push<stored_type<T>>(arg.value)));

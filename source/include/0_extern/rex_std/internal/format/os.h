@@ -11,7 +11,7 @@
 //#include <cerrno>
 //#include <cstddef>
 //#include <cstdio>
-//#include <system_error>  // std::system_error
+//#include <system_error>  // rsl::system_error
 //
 //#if defined __APPLE__ || defined(__FreeBSD__)
 //#  include <xlocale.h>  // for LC_NUMERIC_MASK on OS X
@@ -76,7 +76,7 @@
 ///**
 //  \rst
 //  A reference to a null-terminated string. It can be constructed from a C
-//  string or ``std::string``.
+//  string or ``rsl::string``.
 //
 //  You can use one of the following type aliases for common character types:
 //
@@ -92,10 +92,10 @@
 //  different types of strings to a function, for example::
 //
 //    template <typename... Args>
-//    std::string format(cstring_view format_str, const Args & ... args);
+//    rsl::string format(cstring_view format_str, const Args & ... args);
 //
 //    format("{}", 42);
-//    format(std::string("{}"), 42);
+//    format(rsl::string("{}"), 42);
 //  \endrst
 // */
 //template <typename Char> class basic_cstring_view {
@@ -108,10 +108,10 @@
 //
 //  /**
 //    \rst
-//    Constructs a string reference from an ``std::string`` object.
+//    Constructs a string reference from an ``rsl::string`` object.
 //    \endrst
 //   */
-//  basic_cstring_view(const std::basic_string<Char>& s) : data_(s.c_str()) {}
+//  basic_cstring_view(const rsl::basic_string<Char>& s) : data_(s.c_str()) {}
 //
 //  /** Returns the pointer to a C string. */
 //  const Char* c_str() const { return data_; }
@@ -120,14 +120,14 @@
 //using cstring_view = basic_cstring_view<char>;
 //using wcstring_view = basic_cstring_view<wchar_t>;
 //
-//template <typename Char> struct formatter<std::error_code, Char> {
+//template <typename Char> struct formatter<rsl::error_code, Char> {
 //  template <typename ParseContext>
 //  FMT_CONSTEXPR auto parse(ParseContext& ctx) -> decltype(ctx.begin()) {
 //    return ctx.begin();
 //  }
 //
 //  template <typename FormatContext>
-//  FMT_CONSTEXPR auto format(const std::error_code& ec, FormatContext& ctx) const
+//  FMT_CONSTEXPR auto format(const rsl::error_code& ec, FormatContext& ctx) const
 //      -> decltype(ctx.out()) {
 //    auto out = ctx.out();
 //    out = detail::write_bytes(out, ec.category().name(),
@@ -139,7 +139,7 @@
 //};
 //
 //#ifdef _WIN32
-//FMT_API const std::error_category& system_category() noexcept;
+//FMT_API const rsl::error_category& system_category() noexcept;
 //
 //FMT_BEGIN_DETAIL_NAMESPACE
 //// A converter from UTF-16 to UTF-8.
@@ -154,7 +154,7 @@
 //  operator string_view() const { return string_view(&buffer_[0], size()); }
 //  size_t size() const { return buffer_.size() - 1; }
 //  const char* c_str() const { return &buffer_[0]; }
-//  std::string str() const { return std::string(&buffer_[0], size()); }
+//  rsl::string str() const { return rsl::string(&buffer_[0], size()); }
 //
 //  // Performs conversion returning a system error code instead of
 //  // throwing exception on conversion error. This method may still throw
@@ -166,12 +166,12 @@
 //                                  const char* message) noexcept;
 //FMT_END_DETAIL_NAMESPACE
 //
-//FMT_API std::system_error vwindows_error(int error_code, string_view format_str,
+//FMT_API rsl::system_error vwindows_error(int error_code, string_view format_str,
 //                                         format_args args);
 //
 ///**
 // \rst
-// Constructs a :class:`std::system_error` object with the description
+// Constructs a :class:`rsl::system_error` object with the description
 // of the form
 //
 // .. parsed-literal::
@@ -198,7 +198,7 @@
 // \endrst
 //*/
 //template <typename... Args>
-//std::system_error windows_error(int error_code, string_view message,
+//rsl::system_error windows_error(int error_code, string_view message,
 //                                const Args&... args) {
 //  return vwindows_error(error_code, message, fmt::make_format_args(args...));
 //}
@@ -207,16 +207,16 @@
 //// Can be used to report errors from destructors.
 //FMT_API void report_windows_error(int error_code, const char* message) noexcept;
 //#else
-//inline const std::error_category& system_category() noexcept {
-//  return std::system_category();
+//inline const rsl::error_category& system_category() noexcept {
+//  return rsl::system_category();
 //}
 //#endif  // _WIN32
 //
-//// std::system is not available on some platforms such as iOS (#2248).
+//// rsl::system is not available on some platforms such as iOS (#2248).
 //#ifdef __OSX__
 //template <typename S, typename... Args, typename Char = char_t<S>>
 //void say(const S& format_str, Args&&... args) {
-//  std::system(format("say \"{}\"", format(format_str, args...)).c_str());
+//  rsl::system(format("say \"{}\"", format(format_str, args...)).c_str());
 //}
 //#endif
 //
@@ -346,7 +346,7 @@
 //
 //  // Makes fd be the copy of this file descriptor, closing fd first if
 //  // necessary.
-//  void dup2(int fd, std::error_code& ec) noexcept;
+//  void dup2(int fd, rsl::error_code& ec) noexcept;
 //
 //  // Creates a pipe setting up read_end and write_end file objects for reading
 //  // and writing respectively.
@@ -418,7 +418,7 @@
 // public:
 //  ostream(ostream&& other)
 //      : detail::buffer<char>(other.data(), other.size(), other.capacity()),
-//        file_(std::move(other.file_)) {
+//        file_(rsl::move(other.file_)) {
 //    other.clear();
 //    other.set(nullptr, 0);
 //  }

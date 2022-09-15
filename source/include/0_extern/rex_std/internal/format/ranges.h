@@ -16,7 +16,7 @@
 #include <tuple>
 #include <type_traits>
 
-#include "format.h"
+#include "rex_std/format.h"
 
 FMT_BEGIN_NAMESPACE
 
@@ -47,7 +47,7 @@ OutputIterator copy(wchar_t ch, OutputIterator out) {
   return out;
 }
 
-// Returns true if T has a std::string-like interface, like std::string_view.
+// Returns true if T has a rsl::string-like interface, like rsl::string_view.
 template <typename T> class is_std_string_like {
   template <typename U>
   static auto check(U* p)
@@ -57,12 +57,12 @@ template <typename T> class is_std_string_like {
  public:
   static constexpr const bool value =
       is_string<T>::value ||
-      std::is_convertible<T, std_string_view<char>>::value ||
-      !std::is_void<decltype(check<T>(nullptr))>::value;
+      rsl::is_convertible<T, std_string_view<char>>::value ||
+      !rsl::is_void<decltype(check<T>(nullptr))>::value;
 };
 
 template <typename Char>
-struct is_std_string_like<fmt::basic_string_view<Char>> : std::true_type {};
+struct is_std_string_like<rsl::basic_string_view<Char>> : rsl::true_type {};
 
 template <typename T> class is_map {
   template <typename U> static auto check(U*) -> typename U::mapped_type;
@@ -73,7 +73,7 @@ template <typename T> class is_map {
   static constexpr const bool value = false;
 #else
   static constexpr const bool value =
-      !std::is_void<decltype(check<T>(nullptr))>::value;
+      !rsl::is_void<decltype(check<T>(nullptr))>::value;
 #endif
 };
 
@@ -86,13 +86,13 @@ template <typename T> class is_set {
   static constexpr const bool value = false;
 #else
   static constexpr const bool value =
-      !std::is_void<decltype(check<T>(nullptr))>::value && !is_map<T>::value;
+      !rsl::is_void<decltype(check<T>(nullptr))>::value && !is_map<T>::value;
 #endif
 };
 
 template <typename... Ts> struct conditional_helper {};
 
-template <typename T, typename _ = void> struct is_range_ : std::false_type {};
+template <typename T, typename _ = void> struct is_range_ : rsl::false_type {};
 
 #if !FMT_MSC_VERSION || FMT_MSC_VERSION > 1800
 
@@ -103,22 +103,22 @@ template <typename T, typename _ = void> struct is_range_ : std::false_type {};
                    // macro, which helps clang-format handle the formatting.
 
 // C array overload
-template <typename T, std::size_t N>
+template <typename T, rsl::size_t N>
 auto range_begin(const T (&arr)[N]) -> const T* {
   return arr;
 }
-template <typename T, std::size_t N>
+template <typename T, rsl::size_t N>
 auto range_end(const T (&arr)[N]) -> const T* {
   return arr + N;
 }
 
 template <typename T, typename Enable = void>
-struct has_member_fn_begin_end_t : std::false_type {};
+struct has_member_fn_begin_end_t : rsl::false_type {};
 
 template <typename T>
-struct has_member_fn_begin_end_t<T, void_t<decltype(std::declval<T>().begin()),
-                                           decltype(std::declval<T>().end())>>
-    : std::true_type {};
+struct has_member_fn_begin_end_t<T, void_t<decltype(rsl::declval<T>().begin()),
+                                           decltype(rsl::declval<T>().end())>>
+    : rsl::true_type {};
 
 // Member function overload
 template <typename T>
@@ -141,28 +141,28 @@ auto range_end(T&& rng) -> enable_if_t<!has_member_fn_begin_end_t<T&&>::value,
 }
 
 template <typename T, typename Enable = void>
-struct has_const_begin_end : std::false_type {};
+struct has_const_begin_end : rsl::false_type {};
 template <typename T, typename Enable = void>
-struct has_mutable_begin_end : std::false_type {};
+struct has_mutable_begin_end : rsl::false_type {};
 
 template <typename T>
 struct has_const_begin_end<
     T,
     void_t<
-        decltype(detail::range_begin(std::declval<const remove_cvref_t<T>&>())),
-        decltype(detail::range_end(std::declval<const remove_cvref_t<T>&>()))>>
-    : std::true_type {};
+        decltype(detail::range_begin(rsl::declval<const remove_cvref_t<T>&>())),
+        decltype(detail::range_end(rsl::declval<const remove_cvref_t<T>&>()))>>
+    : rsl::true_type {};
 
 template <typename T>
 struct has_mutable_begin_end<
-    T, void_t<decltype(detail::range_begin(std::declval<T>())),
-              decltype(detail::range_end(std::declval<T>())),
-              enable_if_t<std::is_copy_constructible<T>::value>>>
-    : std::true_type {};
+    T, void_t<decltype(detail::range_begin(rsl::declval<T>())),
+              decltype(detail::range_end(rsl::declval<T>())),
+              enable_if_t<rsl::is_copy_constructible<T>::value>>>
+    : rsl::true_type {};
 
 template <typename T>
 struct is_range_<T, void>
-    : std::integral_constant<bool, (has_const_begin_end<T>::value ||
+    : rsl::integral_constant<bool, (has_const_begin_end<T>::value ||
                                     has_mutable_begin_end<T>::value)> {};
 #  undef FMT_DECLTYPE_RETURN
 #endif
@@ -170,20 +170,20 @@ struct is_range_<T, void>
 // tuple_size and tuple_element check.
 template <typename T> class is_tuple_like_ {
   template <typename U>
-  static auto check(U* p) -> decltype(std::tuple_size<U>::value, int());
+  static auto check(U* p) -> decltype(rsl::tuple_size<U>::value, int());
   template <typename> static void check(...);
 
  public:
   static constexpr const bool value =
-      !std::is_void<decltype(check<T>(nullptr))>::value;
+      !rsl::is_void<decltype(check<T>(nullptr))>::value;
 };
 
 // Check for integer_sequence
 #if defined(__cpp_lib_integer_sequence) || FMT_MSC_VERSION >= 1900
 template <typename T, T... N>
-using integer_sequence = std::integer_sequence<T, N...>;
-template <size_t... N> using index_sequence = std::index_sequence<N...>;
-template <size_t N> using make_index_sequence = std::make_index_sequence<N>;
+using integer_sequence = rsl::integer_sequence<T, N...>;
+template <size_t... N> using index_sequence = rsl::index_sequence<N...>;
+template <size_t N> using make_index_sequence = rsl::make_index_sequence<N>;
 #else
 template <typename T, T... N> struct integer_sequence {
   using value_type = T;
@@ -203,7 +203,7 @@ using make_index_sequence = make_integer_sequence<size_t, N>;
 #endif
 
 template <typename T>
-using tuple_index_sequence = make_index_sequence<std::tuple_size<T>::value>;
+using tuple_index_sequence = make_index_sequence<rsl::tuple_size<T>::value>;
 
 template <typename T, typename C, bool = is_tuple_like_<T>::value>
 class is_tuple_formattable_ {
@@ -211,15 +211,15 @@ class is_tuple_formattable_ {
   static constexpr const bool value = false;
 };
 template <typename T, typename C> class is_tuple_formattable_<T, C, true> {
-  template <std::size_t... I>
-  static std::true_type check2(index_sequence<I...>,
+  template <rsl::size_t... I>
+  static rsl::true_type check2(index_sequence<I...>,
                                integer_sequence<bool, (I == I)...>);
-  static std::false_type check2(...);
-  template <std::size_t... I>
+  static rsl::false_type check2(...);
+  template <rsl::size_t... I>
   static decltype(check2(
       index_sequence<I...>{},
       integer_sequence<
-          bool, (is_formattable<typename std::tuple_element<I, T>::type,
+          bool, (is_formattable<typename rsl::tuple_element<I, T>::type,
                                 C>::value)...>{})) check(index_sequence<I...>);
 
  public:
@@ -229,30 +229,30 @@ template <typename T, typename C> class is_tuple_formattable_<T, C, true> {
 
 template <class Tuple, class F, size_t... Is>
 void for_each(index_sequence<Is...>, Tuple&& tup, F&& f) noexcept {
-  using std::get;
+  using rsl::get;
   // using free function get<I>(T) now.
   const int _[] = {0, ((void)f(get<Is>(tup)), 0)...};
   (void)_;  // blocks warnings
 }
 
 template <class T>
-FMT_CONSTEXPR make_index_sequence<std::tuple_size<T>::value> get_indexes(
+FMT_CONSTEXPR make_index_sequence<rsl::tuple_size<T>::value> get_indexes(
     T const&) {
   return {};
 }
 
 template <class Tuple, class F> void for_each(Tuple&& tup, F&& f) {
   const auto indexes = get_indexes(tup);
-  for_each(indexes, std::forward<Tuple>(tup), std::forward<F>(f));
+  for_each(indexes, rsl::forward<Tuple>(tup), rsl::forward<F>(f));
 }
 
 #if FMT_MSC_VERSION && FMT_MSC_VERSION < 1920
 // Older MSVC doesn't get the reference type correctly for arrays.
 template <typename R> struct range_reference_type_impl {
-  using type = decltype(*detail::range_begin(std::declval<R&>()));
+  using type = decltype(*detail::range_begin(rsl::declval<R&>()));
 };
 
-template <typename T, std::size_t N> struct range_reference_type_impl<T[N]> {
+template <typename T, rsl::size_t N> struct range_reference_type_impl<T[N]> {
   using type = T&;
 };
 
@@ -261,7 +261,7 @@ using range_reference_type = typename range_reference_type_impl<T>::type;
 #else
 template <typename Range>
 using range_reference_type =
-    decltype(*detail::range_begin(std::declval<Range&>()));
+    decltype(*detail::range_begin(rsl::declval<Range&>()));
 #endif
 
 // We don't use the Range's value_type for anything, but we do need the Range's
@@ -271,11 +271,11 @@ using uncvref_type = remove_cvref_t<range_reference_type<Range>>;
 
 template <typename Range>
 using uncvref_first_type = remove_cvref_t<
-    decltype(std::declval<range_reference_type<Range>>().first)>;
+    decltype(rsl::declval<range_reference_type<Range>>().first)>;
 
 template <typename Range>
 using uncvref_second_type = remove_cvref_t<
-    decltype(std::declval<range_reference_type<Range>>().second)>;
+    decltype(rsl::declval<range_reference_type<Range>>().second)>;
 
 template <typename OutputIt> OutputIt write_delimiter(OutputIt out) {
   *out++ = ',';
@@ -289,22 +289,22 @@ auto write_range_entry(OutputIt out, basic_string_view<Char> str) -> OutputIt {
 }
 
 template <typename Char, typename OutputIt, typename T,
-          FMT_ENABLE_IF(std::is_convertible<T, std_string_view<char>>::value)>
+          FMT_ENABLE_IF(rsl::is_convertible<T, std_string_view<char>>::value)>
 inline auto write_range_entry(OutputIt out, const T& str) -> OutputIt {
   auto sv = std_string_view<Char>(str);
   return write_range_entry<Char>(out, basic_string_view<Char>(sv));
 }
 
 template <typename Char, typename OutputIt, typename Arg,
-          FMT_ENABLE_IF(std::is_same<Arg, Char>::value)>
+          FMT_ENABLE_IF(rsl::is_same<Arg, Char>::value)>
 OutputIt write_range_entry(OutputIt out, const Arg v) {
   return write_escaped_char(out, v);
 }
 
 template <
     typename Char, typename OutputIt, typename Arg,
-    FMT_ENABLE_IF(!is_std_string_like<typename std::decay<Arg>::type>::value &&
-                  !std::is_same<Arg, Char>::value)>
+    FMT_ENABLE_IF(!is_std_string_like<typename rsl::decay<Arg>::type>::value &&
+                  !rsl::is_same<Arg, Char>::value)>
 OutputIt write_range_entry(OutputIt out, const Arg& v) {
   return write<Char>(out, v);
 }
@@ -323,8 +323,8 @@ template <typename T, typename C> struct is_tuple_formattable {
 
 template <typename TupleT, typename Char>
 struct formatter<TupleT, Char,
-                 enable_if_t<fmt::is_tuple_like<TupleT>::value &&
-                             fmt::is_tuple_formattable<TupleT, Char>::value>> {
+                 enable_if_t<rsl::is_tuple_like<TupleT>::value &&
+  rsl::is_tuple_formattable<TupleT, Char>::value>> {
  private:
   basic_string_view<Char> separator_ = detail::string_literal<Char, ',', ' '>{};
   basic_string_view<Char> opening_bracket_ =
@@ -376,8 +376,8 @@ struct formatter<TupleT, Char,
 template <typename T, typename Char> struct is_range {
   static constexpr const bool value =
       detail::is_range_<T>::value && !detail::is_std_string_like<T>::value &&
-      !std::is_convertible<T, std::basic_string<Char>>::value &&
-      !std::is_constructible<detail::std_string_view<Char>, T>::value;
+      !rsl::is_convertible<T, rsl::basic_string<Char>>::value &&
+      !rsl::is_constructible<detail::std_string_view<Char>, T>::value;
 };
 
 namespace detail {
@@ -401,7 +401,7 @@ template <typename Char, typename Element>
 using range_formatter_type = conditional_t<
     is_formattable<Element, Char>::value,
     formatter<remove_cvref_t<decltype(range_mapper<buffer_context<Char>>{}.map(
-                  std::declval<Element>()))>,
+                  rsl::declval<Element>()))>,
               Char>,
     fallback_formatter<Element, Char>>;
 
@@ -427,7 +427,7 @@ template <typename T, typename Char>
 struct range_formatter<
     T, Char,
     enable_if_t<conjunction<
-        std::is_same<T, remove_cvref_t<T>>,
+        rsl::is_same<T, remove_cvref_t<T>>,
         disjunction<is_formattable<T, Char>,
                     detail::has_fallback_formatter<T, Char>>>::value>> {
  private:
@@ -521,7 +521,7 @@ enum class range_format { disabled, map, set, sequence, string, debug_string };
 
 namespace detail {
 template <typename T> struct range_format_kind_ {
-  static constexpr auto value = std::is_same<range_reference_type<T>, T>::value
+  static constexpr auto value = rsl::is_same<range_reference_type<T>, T>::value
                                     ? range_format::disabled
                                 : is_map<T>::value ? range_format::map
                                 : is_set<T>::value ? range_format::set
@@ -532,7 +532,7 @@ template <range_format K, typename R, typename Char, typename Enable = void>
 struct range_default_formatter;
 
 template <range_format K>
-using range_format_constant = std::integral_constant<range_format, K>;
+using range_format_constant = rsl::integral_constant<range_format, K>;
 
 template <range_format K, typename R, typename Char>
 struct range_default_formatter<
@@ -576,7 +576,7 @@ template <typename T, typename Char, typename Enable = void>
 struct range_format_kind
     : conditional_t<
           is_range<T, Char>::value, detail::range_format_kind_<T>,
-          std::integral_constant<range_format, range_format::disabled>> {};
+          rsl::integral_constant<range_format, range_format::disabled>> {};
 
 template <typename R, typename Char>
 struct formatter<
@@ -594,10 +594,10 @@ struct formatter<
 };
 
 template <typename Char, typename... T> struct tuple_join_view : detail::view {
-  const std::tuple<T...>& tuple;
+  const rsl::tuple<T...>& tuple;
   basic_string_view<Char> sep;
 
-  tuple_join_view(const std::tuple<T...>& t, basic_string_view<Char> s)
+  tuple_join_view(const rsl::tuple<T...>& t, basic_string_view<Char> s)
       : tuple(t), sep{s} {}
 };
 
@@ -615,35 +615,35 @@ template <typename Char, typename... T>
 struct formatter<tuple_join_view<Char, T...>, Char> {
   template <typename ParseContext>
   FMT_CONSTEXPR auto parse(ParseContext& ctx) -> decltype(ctx.begin()) {
-    return do_parse(ctx, std::integral_constant<size_t, sizeof...(T)>());
+    return do_parse(ctx, rsl::integral_constant<size_t, sizeof...(T)>());
   }
 
   template <typename FormatContext>
   auto format(const tuple_join_view<Char, T...>& value,
               FormatContext& ctx) const -> typename FormatContext::iterator {
     return do_format(value, ctx,
-                     std::integral_constant<size_t, sizeof...(T)>());
+                     rsl::integral_constant<size_t, sizeof...(T)>());
   }
 
  private:
-  std::tuple<formatter<typename std::decay<T>::type, Char>...> formatters_;
+  rsl::tuple<formatter<typename rsl::decay<T>::type, Char>...> formatters_;
 
   template <typename ParseContext>
   FMT_CONSTEXPR auto do_parse(ParseContext& ctx,
-                              std::integral_constant<size_t, 0>)
+                              rsl::integral_constant<size_t, 0>)
       -> decltype(ctx.begin()) {
     return ctx.begin();
   }
 
   template <typename ParseContext, size_t N>
   FMT_CONSTEXPR auto do_parse(ParseContext& ctx,
-                              std::integral_constant<size_t, N>)
+                              rsl::integral_constant<size_t, N>)
       -> decltype(ctx.begin()) {
     auto end = ctx.begin();
 #if FMT_TUPLE_JOIN_SPECIFIERS
-    end = std::get<sizeof...(T) - N>(formatters_).parse(ctx);
+    end = rsl::get<sizeof...(T) - N>(formatters_).parse(ctx);
     if (N > 1) {
-      auto end1 = do_parse(ctx, std::integral_constant<size_t, N - 1>());
+      auto end1 = do_parse(ctx, rsl::integral_constant<size_t, N - 1>());
       if (end != end1)
         FMT_THROW(format_error("incompatible format specs for tuple elements"));
     }
@@ -653,21 +653,21 @@ struct formatter<tuple_join_view<Char, T...>, Char> {
 
   template <typename FormatContext>
   auto do_format(const tuple_join_view<Char, T...>&, FormatContext& ctx,
-                 std::integral_constant<size_t, 0>) const ->
+                 rsl::integral_constant<size_t, 0>) const ->
       typename FormatContext::iterator {
     return ctx.out();
   }
 
   template <typename FormatContext, size_t N>
   auto do_format(const tuple_join_view<Char, T...>& value, FormatContext& ctx,
-                 std::integral_constant<size_t, N>) const ->
+                 rsl::integral_constant<size_t, N>) const ->
       typename FormatContext::iterator {
-    auto out = std::get<sizeof...(T) - N>(formatters_)
-                   .format(std::get<sizeof...(T) - N>(value.tuple), ctx);
+    auto out = rsl::get<sizeof...(T) - N>(formatters_)
+                   .format(rsl::get<sizeof...(T) - N>(value.tuple), ctx);
     if (N > 1) {
-      out = std::copy(value.sep.begin(), value.sep.end(), out);
+      out = rsl::copy(value.sep.begin(), value.sep.end(), out);
       ctx.advance_to(out);
-      return do_format(value, ctx, std::integral_constant<size_t, N - 1>());
+      return do_format(value, ctx, rsl::integral_constant<size_t, N - 1>());
     }
     return out;
   }
@@ -681,19 +681,19 @@ FMT_MODULE_EXPORT_BEGIN
 
   **Example**::
 
-    std::tuple<int, char> t = {1, 'a'};
+    rsl::tuple<int, char> t = {1, 'a'};
     fmt::print("{}", fmt::join(t, ", "));
     // Output: "1, a"
   \endrst
  */
 template <typename... T>
-FMT_CONSTEXPR auto join(const std::tuple<T...>& tuple, string_view sep)
+FMT_CONSTEXPR auto join(const rsl::tuple<T...>& tuple, string_view sep)
     -> tuple_join_view<char, T...> {
   return {tuple, sep};
 }
 
 template <typename... T>
-FMT_CONSTEXPR auto join(const std::tuple<T...>& tuple,
+FMT_CONSTEXPR auto join(const rsl::tuple<T...>& tuple,
                         basic_string_view<wchar_t> sep)
     -> tuple_join_view<wchar_t, T...> {
   return {tuple, sep};
@@ -711,9 +711,9 @@ FMT_CONSTEXPR auto join(const std::tuple<T...>& tuple,
   \endrst
  */
 template <typename T>
-auto join(std::initializer_list<T> list, string_view sep)
+auto join(rsl::initializer_list<T> list, string_view sep)
     -> join_view<const T*, const T*> {
-  return join(std::begin(list), std::end(list), sep);
+  return join(rsl::begin(list), rsl::end(list), sep);
 }
 
 FMT_MODULE_EXPORT_END
