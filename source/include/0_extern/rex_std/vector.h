@@ -17,16 +17,19 @@
 #include "rex_std/bonus/types.h"
 
 #include "rex_std/initializer_list.h"
-#include "rex_std/iterator.h"
 
 #include "rex_std/internal/memory/allocator.h"
 
 #include "rex_std/internal/algorithm/max.h"
 #include "rex_std/internal/algorithm/lexicographical_compare.h"
 
+#include "rex_std/internal/utility/move.h"
+#include "rex_std/internal/utility/forward.h"
+
 #include "rex_std/bonus/algorithm/in_range.h"
 
 #include "rex_std/bonus/utility/compressed_pair.h"
+
 
 namespace rsl
 {
@@ -476,6 +479,7 @@ namespace rsl
                 operator[](i) = rsl::move(operator[](i + 1));
             }
             --m_end;
+            m_end->~value_type();
             return begin() + idx;
         }
         // Removes the elements in the range [first, last).
@@ -494,6 +498,15 @@ namespace rsl
                 operator[](i) = rsl::move(operator[](src_idx));
             }
 
+            if constexpr (!rsl::is_trivially_destructible_v<value_type>)
+            {
+                auto it = begin() + dst_idx + count;
+                for (auto it_end = end(); it != it_end; ++it)
+                {
+                    get_allocator().destroy(rsl::iterator_to_pointer(it));
+                }
+            }
+            
             m_end -= count;
             return begin() + dst_idx;
         }
