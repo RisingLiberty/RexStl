@@ -68,6 +68,9 @@ namespace std // needs to be in std namespace
 
 namespace rsl
 {
+    template <typename T>
+    using initializer_list = std::initializer_list<T>;
+
     template<typename T>
     constexpr const T* begin(rsl::initializer_list<T> ilist) noexcept
     {
@@ -118,6 +121,7 @@ namespace rsl
 
 namespace rsl
 {
+    // needs to be defined again here, in case std::intializer_list is already included in another header
     template <typename T>
     using initializer_list = std::initializer_list<T>;
 
