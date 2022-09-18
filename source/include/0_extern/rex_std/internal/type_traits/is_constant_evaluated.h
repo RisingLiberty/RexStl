@@ -12,10 +12,11 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     constexpr bool is_constant_evaluated()
     {
         return __builtin_is_constant_evaluated();
     }
-}
+
+REX_RSL_END_NAMESPACE

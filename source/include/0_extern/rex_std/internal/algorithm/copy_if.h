@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
 	template <typename InputIterator, typename OutputIterator, typename Predicate>
 	OutputIterator copy_if(InputIterator first, InputIterator last, OutputIterator dst, Predicate predicate)
 	{
@@ -28,4 +28,5 @@ namespace rsl
 
 		return dst;
 	}
-}
+
+REX_RSL_END_NAMESPACE

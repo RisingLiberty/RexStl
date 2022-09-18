@@ -20,8 +20,8 @@
 #include "rex_std/internal/type_traits/remove_cv.h"
 #include "rex_std/internal/type_traits/remove_extent.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T>
     struct decay
     {
@@ -37,11 +37,4 @@ namespace rsl
     template <typename T>
     using decay_t = decay<T>::type;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using DecayStruct = decay<T>;
-
-    template <typename T>
-    using Decay = typename DecayStruct<T>::type;
-#endif
-}
+REX_RSL_END_NAMESPACE

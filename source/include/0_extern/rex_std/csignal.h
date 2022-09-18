@@ -12,8 +12,6 @@
 
 #pragma once
 
-#include "rex_std/internal/config.h"
-
 #include "rex_std/bonus/types.h"
 
 #include "rex_std/std_alias_defines.h"
@@ -21,12 +19,13 @@
 
 #include <csignal>
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     using sig_atomic = int32;
 
     REX_STD_FUNC_ALIAS(signal);
     REX_STD_FUNC_ALIAS(raise);
-}
+
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/enable_std_checking.h"

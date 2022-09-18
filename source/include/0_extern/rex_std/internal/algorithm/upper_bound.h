@@ -12,13 +12,17 @@
 
 #pragma once
 
-namespace rsl
-{
+#include "rex_std/internal/iterator/distance.h"
+#include "rex_std/internal/iterator/advance.h"
+#include "rex_std/internal/iterator/iterator_traits.h"
+
+REX_RSL_BEGIN_NAMESPACE
+
     template<class ForwardIterator, class T>
     ForwardIterator upper_bound(ForwardIterator first, ForwardIterator last, const T& value)
     {
         ForwardIterator it;
-        typename ForwardIterator::difference_type count, step;
+        typename iterator_traits<ForwardIterator>::difference_type count, step;
         count = rsl::distance(first, last);
 
         while (count > 0) 
@@ -43,7 +47,7 @@ namespace rsl
     ForwardIterator upper_bound(ForwardIterator first, ForwardIterator last, const T& value, Compare comp)
     {
         ForwardIterator it;
-        typename ForwardIterator::difference_type count, step;
+        typename iterator_traits<ForwardIterator>::difference_type count, step;
         count = rsl::distance(first, last);
 
         while (count > 0) 
@@ -63,4 +67,5 @@ namespace rsl
         }
         return first;
     }
-}
+
+REX_RSL_END_NAMESPACE

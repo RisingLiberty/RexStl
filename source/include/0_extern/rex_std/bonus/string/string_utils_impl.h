@@ -30,16 +30,16 @@
 
 #include "rex_std/internal/algorithm/reverse.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     namespace internal
     {
         constexpr card32 MaxIntBuffer = 21;
 
         template <typename CharType, typename T>
-        constexpr CharType* unsigned_intergral_to_buff(CharType* rnext, T value)
+        constexpr CharType* unsigned_integral_to_buff(CharType* rnext, T value)
         {
-            static_assert(rsl::is_unsigned_v<T>, "T must be unsgined");
+            static_assert(rsl::is_unsigned_v<T>, "T must be unsigned");
                 
             auto value_trunc = value;
 
@@ -65,11 +65,11 @@ namespace rsl
 
             if (value < 0)
             {
-                rnext = unsigned_intergral_to_buff(rnext, 0 - unsigned_value);
+                rnext = unsigned_integral_to_buff(rnext, 0 - unsigned_value);
             }
             else
             {
-                rnext = unsigned_intergral_to_buff(rnext, unsigned_value);
+                rnext = unsigned_integral_to_buff(rnext, unsigned_value);
             }
 
             size_t size = buff_end - rnext;
@@ -86,7 +86,7 @@ namespace rsl
 
             char_type buff[MaxIntBuffer];
             char_type* buff_end = rsl::end(buff);
-            char_type* rnext = unsigned_intergral_to_buff(buff_end, value);
+            char_type* rnext = unsigned_integral_to_buff(buff_end, value);
 
             size_t size = buff_end - rnext;
             return StringType(rnext, static_cast<count_t>(size));
@@ -291,4 +291,5 @@ namespace rsl
             return str;
         }
     }
-}
+
+REX_RSL_END_NAMESPACE

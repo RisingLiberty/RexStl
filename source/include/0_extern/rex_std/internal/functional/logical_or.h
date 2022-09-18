@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T = void>
     struct logical_or
     {
@@ -28,8 +28,4 @@ namespace rsl
         }
     };
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T = void>
-    using LogicalOr = logical_or<T>;
-#endif
-}
+REX_RSL_END_NAMESPACE

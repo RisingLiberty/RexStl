@@ -14,8 +14,8 @@
 
 #include "rex_std/bonus/types.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     int8 atomic_increment(int8& val);
     int16 atomic_increment(int16& val);
     int32 atomic_increment(int32& val);
@@ -26,4 +26,4 @@ namespace rsl
     uint32 atomic_increment(uint32& val);
     uint64 atomic_increment(uint64& val);
 
-}
+REX_RSL_END_NAMESPACE

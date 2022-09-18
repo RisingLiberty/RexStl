@@ -14,8 +14,8 @@
 
 #include "rex_std/internal/type_traits/is_constructible.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
 	template <typename T>
     struct is_default_constructible : bool_constant<__is_constructible(T)>
     {};
@@ -23,11 +23,5 @@ namespace rsl
     template <typename T>
     constexpr bool is_default_constructible_v = is_default_constructible<T>::value;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using IsDefaultConstructibleStruct = is_default_constructible<T>;
+REX_RSL_END_NAMESPACE
 
-    template <typename T>
-    constexpr bool IsDefaultConstructible = IsDefaultConstructibleStruct<T>::value;
-#endif
-}

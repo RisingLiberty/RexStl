@@ -12,8 +12,10 @@
 
 #pragma once
 
-namespace rsl
-{
+#include "rex_std/bonus/types.h"
+
+REX_RSL_BEGIN_NAMESPACE
+
     /// RSL Comment: Different from ISO C++ Standard at time of writing (17/Aug/2022)
     // in C++20, this structure changed making it more complex to implement.
     // this is not supported in Rex at the moment as it's not needed.
@@ -45,4 +47,5 @@ namespace rsl
         using pointer = const T*;
         using reference = const T&;
     };
-}
+
+REX_RSL_END_NAMESPACE

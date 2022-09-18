@@ -33,8 +33,8 @@
 
 #include "rex_std/ostream.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     namespace internal
     {
         template <typename T, typename Deleter>
@@ -369,8 +369,4 @@ namespace rsl
         }
     };
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T, typename Deleter>
-    using UniquePtr = unique_ptr<T, Deleter>;
-#endif
-}
+REX_RSL_END_NAMESPACE

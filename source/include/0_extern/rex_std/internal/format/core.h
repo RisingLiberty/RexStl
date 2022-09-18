@@ -224,11 +224,9 @@
 #endif
 
 #ifndef FMT_BEGIN_NAMESPACE
-#  define FMT_BEGIN_NAMESPACE \
-    namespace rsl {           
-
-#  define FMT_END_NAMESPACE \
-    }                       
+#  define FMT_BEGIN_NAMESPACE REX_RSL_BEGIN_NAMESPACE       
+#  define FMT_END_NAMESPACE REX_RSL_END_NAMESPACE
+                          
 #endif
 
 #ifndef FMT_MODULE_EXPORT

@@ -29,114 +29,115 @@
 #include "rex_std/internal/type_traits/is_integral.h"
 #include "rex_std/internal/type_traits/enable_if.h"
 
-namespace rsl
+REX_RSL_BEGIN_NAMESPACE
+
+using fpos_t = int64;
+
+template <typename State>
+class fpos
 {
-    using fpos_t = int64;
+public:
+  /* implicit */ fpos(streamoff off = 0)
+    : m_offset(off)
+    , m_fpos(0)
+    , m_state()
+  {}
 
-    template <typename State>
-    class fpos
-    {
-    public:
-        /* implicit */ fpos(streamoff off = 0) 
-            : m_offset(off)
-            , m_fpos(0)
-            , m_state()
-        {}
+  fpos(State state, fpos_t filePos)
+    : m_offset(filePos)
+    , m_fpos(0)
+    , m_state(state)
+  {}
 
-        fpos(State state, fpos_t filePos)
-            : m_offset(filePos)
-            , m_fpos(0)
-            , m_state(state)
-        {}
+  State state() const
+  {
+    return m_state;
+  }
 
-        State state() const 
-        {
-            return m_state;
-        }
+  void state(State state)
+  {
+    m_state = state;
+  }
 
-        void state(State state) 
-        {
-            m_state = state;
-        }
+  operator streamoff() const
+  {
+    return m_offset + m_fpos;
+  }
 
-        operator streamoff() const 
-        {
-            return m_offset + m_fpos;
-        }
+  streamoff operator-(const fpos& right) const
+  {
+    return static_cast<streamoff>(*this) - static_cast<streamoff>(right);
+  }
 
-        streamoff operator-(const fpos& right) const 
-        {
-            return static_cast<streamoff>(*this) - static_cast<streamoff>(right);
-        }
+  fpos& operator+=(streamoff off)
+  {
+    m_offset += off;
+    return *this;
+  }
 
-        fpos& operator+=(streamoff off) 
-        {
-            m_offset += off;
-            return *this;
-        }
+  fpos& operator-=(streamoff off)
+  {
+    m_offset -= off;
+    return *this;
+  }
 
-        fpos& operator-=(streamoff off) 
-        { 
-            m_offset -= off;
-            return *this;
-        }
+  fpos operator+(streamoff off) const
+  {
+    fpos tmp = *this;
+    tmp += off;
+    return tmp;
+  }
 
-        fpos operator+(streamoff off) const 
-        {
-            fpos tmp = *this;
-            tmp += off;
-            return tmp;
-        }
+  fpos operator-(streamoff off) const
+  {
+    fpos tmp = *this;
+    tmp -= off;
+    return tmp;
+  }
 
-        fpos operator-(streamoff off) const 
-        {
-            fpos tmp = *this;
-            tmp -= off;
-            return tmp;
-        }
+  bool operator==(const fpos& right) const
+  {
+    return static_cast<streamoff>(*this) == static_cast<streamoff>(right);
+  }
 
-        bool operator==(const fpos& right) const 
-        {
-            return static_cast<streamoff>(*this) == static_cast<streamoff>(right);
-        }
+  template <typename Int, enable_if_t<is_integral_v<Int>, int> = 0>
+  friend bool operator==(const fpos& left, const Int right)
+  {
+    return static_cast<streamoff>(left) == right;
+  }
 
-        template <typename Int, enable_if_t<is_integral_v<Int>, int> = 0>
-        friend bool operator==(const fpos& left, const Int right)
-        {
-            return static_cast<streamoff>(left) == right;
-        }
+  template <typename Int, enable_if_t<is_integral_v<Int>, int> = 0>
+  friend bool operator==(const Int left, const fpos& right)
+  {
+    return left == static_cast<streamoff>(right);
+  }
 
-        template <typename Int, enable_if_t<is_integral_v<Int>, int> = 0>
-        friend bool operator==(const Int left, const fpos& right) 
-        {
-            return left == static_cast<streamoff>(right);
-        }
+  bool operator!=(const fpos& right) const
+  {
+    return static_cast<streamoff>(*this) != static_cast<streamoff>(right);
+  }
 
-        bool operator!=(const fpos& right) const 
-        {
-            return static_cast<streamoff>(*this) != static_cast<streamoff>(right);
-        }
+  template <typename Int, enable_if_t<is_integral_v<Int>, int> = 0>
+  friend bool operator!=(const fpos& left, const Int right)
+  {
+    return static_cast<streamoff>(left) != right;
+  }
 
-        template <typename Int, enable_if_t<is_integral_v<Int>, int> = 0>
-        friend bool operator!=(const fpos& left, const Int right) 
-        {
-            return static_cast<streamoff>(left) != right;
-        }
+  template <typename Int, enable_if_t<is_integral_v<Int>, int> = 0>
+  friend bool operator!=(const Int left, const fpos& right)
+  {
+    return left != static_cast<streamoff>(right);
+  }
 
-        template <typename Int, enable_if_t<is_integral_v<Int>, int> = 0>
-        friend bool operator!=(const Int left, const fpos& right) 
-        {
-            return left != static_cast<streamoff>(right);
-        }
+private:
+  streamoff m_offset;
+  fpos_t m_fpos;
+  State m_state;
+};
 
-    private:
-        streamoff m_offset;
-        fpos_t m_fpos;
-        State m_state;
-    };
+using streampos = fpos<mbstate_t>;
+using wstreampos = fpos<mbstate_t>;
+using u16streampos = fpos<mbstate_t>;
+using u32streampos = fpos<mbstate_t>;
 
-    using streampos = fpos<mbstate_t>;
-    using wstreampos = fpos<mbstate_t>;
-    using u16streampos = fpos<mbstate_t>;
-    using u32streampos = fpos<mbstate_t>;
-}
+REX_RSL_END_NAMESPACE

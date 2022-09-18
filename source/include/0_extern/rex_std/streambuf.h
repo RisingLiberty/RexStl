@@ -12,22 +12,13 @@
 
 #pragma once
 
-#include "rex_std/internal/config.h"
-
 #include "rex_std/bonus/types.h"
 
-#include "rex_std/std_alias_defines.h"
-#include "rex_std/disable_std_checking.h"
+#include "rex_std/internal/streambuf/basic_streambuf.h"
 
-#include <streambuf>
+REX_RSL_BEGIN_NAMESPACE
 
-namespace rsl
-{
-    template <typename CharT, typename Traits = char_traits<CharT>>
-    REX_STD_TEMPLATED_CLASS_ALIAS(basic_streambuf, CharT, Traits);
+    using streambuf = basic_streambuf<char8>;
+    using wstreambuf = basic_streambuf<tchar>;
 
-    REX_STD_CLASS_ALIAS(streambuf);
-    REX_STD_CLASS_ALIAS(wstreambuf);
-}
-
-#include "rex_std/enable_std_checking.h"
+REX_RSL_END_NAMESPACE

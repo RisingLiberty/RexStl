@@ -12,19 +12,12 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T>
     struct is_class : public bool_constant<__is_class(T)> {};
 
     template <typename T>
     constexpr bool is_class_v = is_class<T>::value;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using IsClassStruct = is_class<T>;
-
-    template <typename T>
-    constexpr bool IsClass = IsClassStruct<T>::value;
-#endif
-}
+REX_RSL_END_NAMESPACE

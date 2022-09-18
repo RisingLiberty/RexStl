@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     struct input_iterator_tag {};
 
     struct output_iterator_tag {};
@@ -26,12 +26,4 @@ namespace rsl
 
     struct continuous_iterator_tag : public random_access_iterator_tag { };  // Extension to the C++ standard. Contiguous ranges are more than random access, they are physically contiguous.
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    using InputIteratorTag = input_iterator_tag;
-    using OutputIteratorTag = output_iterator_tag;
-    using ForwardIteratorTag = forward_iterator_tag;
-    using BidirectionalIteratorTag = bidirectional_iterator_tag;
-    using RandomAccessIteratorTag = random_access_iterator_tag;
-    using ContinuousIteratorTag = continuous_iterator_tag;
-#endif
-}
+REX_RSL_END_NAMESPACE

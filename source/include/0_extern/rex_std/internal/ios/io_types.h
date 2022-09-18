@@ -23,10 +23,11 @@
 
 #include "rex_std/bonus/types.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     using streamoff = card32;
     using streamsize = count_t;
     
     using wint_t = int32;
-}
+
+REX_RSL_END_NAMESPACE

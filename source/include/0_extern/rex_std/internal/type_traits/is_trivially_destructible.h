@@ -14,8 +14,8 @@
 
 #include "rex_std/internal/type_traits/integral_constant.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T>
     struct is_trivially_destructible : bool_constant<__is_trivially_destructible(T)>
     {};
@@ -23,11 +23,4 @@ namespace rsl
     template <typename T>
     constexpr bool is_trivially_destructible_v = is_trivially_destructible<T>::value;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using IsTriviallyDestructibleStruct = is_trivially_destructible<T>;
-
-    template <typename T>
-    constexpr bool IsTriviallyDestructible = is_trivially_destructible<T>::value;
-#endif
-}
+REX_RSL_END_NAMESPACE

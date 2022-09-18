@@ -17,8 +17,8 @@
 
 #include <complex>
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T>
     REX_STD_TEMPLATED_CLASS_ALIAS(complex, T);
 
@@ -58,6 +58,7 @@ namespace rsl
     REX_STD_FUNC_ALIAS(asinh);
     REX_STD_FUNC_ALIAS(acosh);
     REX_STD_FUNC_ALIAS(atanh);
-}
+
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/enable_std_checking.h"

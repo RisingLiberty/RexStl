@@ -14,12 +14,13 @@
 
 #include "rex_std/internal/type_traits/is_integral.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
   template <typename T>
   constexpr T factorial(T x)
   {
     static_assert(rsl::is_integral_v<T>, "T must be of an integer type");
     return x == 0 ? 1 : x * factorial(x - 1);
   }
-}
+
+REX_RSL_END_NAMESPACE

@@ -14,8 +14,8 @@
 
 #include "rex_std/internal/algorithm/iter_swap.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template<class InputIterator>
     constexpr InputIterator rotate(InputIterator first, InputIterator n_first, InputIterator last)
     {
@@ -40,4 +40,5 @@ namespace rsl
         (rotate)(write, next_read, last);
         return write;
     }
-}
+
+REX_RSL_END_NAMESPACE

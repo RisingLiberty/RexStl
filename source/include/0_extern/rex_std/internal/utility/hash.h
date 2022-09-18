@@ -19,8 +19,8 @@
 
 /// [22/Aug/2022] RSL Comment: there's a hash functor in functional
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     using HashID = uint64;
 
     // Uses MSVC hash implemenation
@@ -57,5 +57,6 @@ namespace rsl
         constexpr static HashID s_fnv_offset_basis = 14695981039346656037ULL;
         constexpr static HashID s_fnv_prime = 14695981039346656037ULL;
     };
-}
+
+REX_RSL_END_NAMESPACE
 

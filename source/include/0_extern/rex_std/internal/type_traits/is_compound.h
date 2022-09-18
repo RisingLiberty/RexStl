@@ -15,8 +15,8 @@
 #include "rex_std/internal/type_traits/integral_constant.h"
 #include "rex_std/internal/type_traits/is_fundamental.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T>
     struct is_compound : public bool_constant<!is_fundamental_v<T>>
     {};
@@ -24,11 +24,4 @@ namespace rsl
     template <typename T>
     constexpr bool is_compound_v = is_compound<T>;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using IsCompoundStruct = is_compound<T>;
-
-    template <typename T>
-    constexpr bool IsCompound = IsCompoundStruct<T>::value;
-#endif
-}
+REX_RSL_END_NAMESPACE

@@ -14,7 +14,9 @@
 
 #include "rex_std/bonus/types.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
 	void* memchr(const void* ptr, char8 ch, card32 length);
-}
+
+REX_RSL_END_NAMESPACE
+

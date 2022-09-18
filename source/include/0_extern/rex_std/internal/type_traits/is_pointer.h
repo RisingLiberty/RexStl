@@ -18,8 +18,8 @@
 #include "rex_std/bonus/type_traits/type_and.h"
 #include "rex_std/bonus/type_traits/type_not.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T> struct is_pointer : public false_type {};
 
     template <typename T> struct is_pointer<T*>                : public true_type {};
@@ -30,11 +30,4 @@ namespace rsl
     template <typename T>
     constexpr bool is_pointer_v = is_pointer<T>::value;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using IsPointerStruct = is_pointer<T>;
-
-    template <typename T>
-    constexpr bool IsPointer = is_pointer<T>::value;
-#endif
-}
+REX_RSL_END_NAMESPACE

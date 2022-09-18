@@ -12,8 +12,6 @@
 
 #pragma once
 
-#include "rex_std/internal/config.h"
-
 #include "rex_std/internal/functional/less.h"
 
 #include "rex_std/bonus/binary_tree/red_black_tree.h"
@@ -33,8 +31,8 @@
 
 #include "rex_std/initializer_list.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     //
     // map
     //
@@ -461,4 +459,5 @@ namespace rsl
 
     template <typename Key, typename Value, typename Allocator>
     multimap(rsl::initializer_list<key_value_pair<Key, Value>>, allocator) -> multimap<Key, Value, rsl::less<Key>, allocator>;
-}
+
+REX_RSL_END_NAMESPACE

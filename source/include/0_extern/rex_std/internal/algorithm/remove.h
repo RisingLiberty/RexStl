@@ -15,8 +15,8 @@
 #include "rex_std/internal/algorithm/find.h"
 #include "rex_std/internal/utility/move.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename InputIterator, typename T>
     InputIterator remove(InputIterator first, InputIterator last, const T& value)
     {
@@ -35,4 +35,6 @@ namespace rsl
 
         return first;
     }
-}
+
+    REX_RSL_END_NAMESPACE
+

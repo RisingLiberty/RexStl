@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     namespace internal
     {
         struct ArgumentSink
@@ -25,4 +25,5 @@ namespace rsl
         Unused swap(ArgumentSink, ArgumentSink);
 
     }
-}
+
+REX_RSL_END_NAMESPACE

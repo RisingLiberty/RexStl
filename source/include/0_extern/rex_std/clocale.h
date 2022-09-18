@@ -17,12 +17,13 @@
 
 #include <clocale>
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     REX_STD_CLASS_ALIAS(lconv);
 
     REX_STD_FUNC_ALIAS(setlocale);
     REX_STD_FUNC_ALIAS(localeconv);
-}
+
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/enable_std_checking.h"

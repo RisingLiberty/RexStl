@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename InputIterator, typename T>
     InputIterator find(InputIterator first, InputIterator last, const T& value)
     {
@@ -29,4 +29,5 @@ namespace rsl
 
         return it;
     }
-}
+
+REX_RSL_END_NAMESPACE

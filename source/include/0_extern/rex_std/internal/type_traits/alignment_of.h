@@ -14,8 +14,8 @@
 
 #include "rex_std/internal/type_traits/integral_constant.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T>
     struct alignment_of : integral_constant<size_t, alignof(T)>
     {};
@@ -23,11 +23,4 @@ namespace rsl
     template <typename T>
     constexpr size_t alignment_of_v = alignof(T);
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using AlignmentOfStruct = alignment_of<T>;
-
-    template <typename T>
-    constexpr size_t AlignmentOf = AlignmentOfStruct<T>::value;
-#endif
-}
+REX_RSL_END_NAMESPACE

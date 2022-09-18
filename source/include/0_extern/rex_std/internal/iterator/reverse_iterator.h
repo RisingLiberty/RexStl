@@ -14,8 +14,8 @@
 
 /// [21/Aug/2022] RSL Comment: deprecate this file
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename It>
     class reverse_iterator
     {
@@ -148,4 +148,6 @@ namespace rsl
     private:
         It m_base_iterator;
     };
-}
+
+REX_RSL_END_NAMESPACE
+

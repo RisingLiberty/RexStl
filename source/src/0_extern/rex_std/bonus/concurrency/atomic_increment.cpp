@@ -15,7 +15,8 @@
 #include <Windows.h>
 
 /// [06/Aug/2022] RSL Comment: We wrap the functions in internal calls to avoid C28113 on MSVC
-namespace rsl::internal
+REX_RSL_BEGIN_NAMESPACE
+namespace internal
 {
     int16 atomic_increment(int16* data)
     {
@@ -42,6 +43,7 @@ namespace rsl::internal
         return static_cast<uint64>(atomic_increment(reinterpret_cast<int64*>(data)));
     }
 }
+REX_RSL_END_NAMESPACE
 
 int8 rsl::atomic_increment(int8& val)
 {

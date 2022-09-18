@@ -14,6 +14,8 @@
 
 #ifdef REX_ENABLE_WITH_CPP20
 
+#include "rex_std/bonus/defines.h"
+
 #include "rex_std/ostream.h"
 
 #include "rex_std/internal/memory/allocator.h"
@@ -24,8 +26,8 @@
 
 #include <syncstream>
 
-namespace rsl
-{    
+REX_RSL_BEGIN_NAMESPACE
+    
     template <typename CharT, typename Traits = char_traits<CharT>, typename Allocator = typed_allocator<CharT>>
     REX_STD_TEMPLATED_CLASS_ALIAS(basic_syncbuf, CharT, Traits, Allocator);
 
@@ -38,7 +40,8 @@ namespace rsl
     REX_STD_CLASS_ALIAS(wosyncstream);
 
     //REX_STD_FUNC_ALIAS(swap); // Doesn't work because rsl has its own swap
-}
+
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/enable_std_checking.h"
 

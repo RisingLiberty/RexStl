@@ -15,8 +15,8 @@
 #include "rex_std/internal/type_traits/add_const.h"
 #include "rex_std/internal/type_traits/add_volatile.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T>
     struct add_cv
     {
@@ -26,11 +26,4 @@ namespace rsl
     template <typename T>
     using add_cv_t = add_cv<T>::type;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using AddCVStruct = add_cv<T>;
-
-    template <typename T>
-    using AddCV = typename AddCVStruct<T>::type;
-#endif
-}
+REX_RSL_END_NAMESPACE

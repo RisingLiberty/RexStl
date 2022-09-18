@@ -16,8 +16,8 @@
 #include "rex_std/internal/type_traits/is_const.h"
 #include "rex_std/internal/type_traits/is_reference.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T>
     struct is_function : public bool_constant<!is_const_v<const T> && !is_reference_v<T>> { };
 
@@ -30,12 +30,5 @@ namespace rsl
     template <typename T>
     constexpr bool is_function_v = is_function<T>::value;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using IsFunctionStruct = is_function<T>;
+REX_RSL_END_NAMESPACE
 
-    template <typename T>
-    constexpr bool IsFunction = IsFunctionStruct<T>::value;
-#endif
-
-}

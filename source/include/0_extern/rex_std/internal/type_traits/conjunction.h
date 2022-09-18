@@ -14,8 +14,8 @@
 
 #include "rex_std/internal/type_traits/integral_constant.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     namespace internal
     {
         // handle false trait or last trait
@@ -43,11 +43,4 @@ namespace rsl
     template <typename ... Traits>
     constexpr bool conjunction_v = conjunction<Traits...>::value;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename ... Traits>
-    using ConjunctionStruct = conjunction<Traits...>;
-
-    template <typename ... Traits>
-    constexpr bool Conjunction = ConjunctionStruct<Traits...>::value;
-#endif    
-}
+REX_RSL_END_NAMESPACE

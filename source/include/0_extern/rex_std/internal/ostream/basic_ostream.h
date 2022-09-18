@@ -35,8 +35,8 @@
 #include "rex_std/bonus/string/string_utils.h"
 #include "rex_std/bonus/string/stack_string.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename CharT, typename Traits = char_traits<CharT>>
     class basic_ostream : virtual public basic_ios<CharT, Traits>
     {
@@ -516,4 +516,5 @@ namespace rsl
         os << val;
         return rsl::move(os);
     }
-}
+
+REX_RSL_END_NAMESPACE

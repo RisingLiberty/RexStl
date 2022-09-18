@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     namespace internal
     {
         template <typename F>
@@ -56,5 +56,6 @@ namespace rsl
     {
         return { rsl::forward<F>(f) };
     }
-}
+
+REX_RSL_END_NAMESPACE
 

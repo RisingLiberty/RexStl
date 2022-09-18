@@ -14,8 +14,8 @@
 
 #include "rex_std/internal/type_traits/void.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     namespace bonus
     {
         // add reference (non-referenceable type)
@@ -35,4 +35,4 @@ namespace rsl
         };
     }
 
-}
+REX_RSL_END_NAMESPACE

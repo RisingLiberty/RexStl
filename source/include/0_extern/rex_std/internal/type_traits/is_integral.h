@@ -16,8 +16,8 @@
 #include "rex_std/internal/type_traits/integral_constant.h"
 #include "rex_std/internal/type_traits/remove_cv.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     namespace internal
     {
         template <typename T>
@@ -43,6 +43,7 @@ namespace rsl
         template <> struct IsIntegralHelper<char32_t> : public true_type {};
 
         template <> struct IsIntegralHelper<long> : public true_type {};
+        template <> struct IsIntegralHelper<ulong> : public true_type {};
     }
 
     template <typename T>
@@ -51,12 +52,5 @@ namespace rsl
     template <typename T>
     constexpr bool is_integral_v = is_integral<T>::value;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using IsIntegralStruct = is_integral<T>;
+REX_RSL_END_NAMESPACE
 
-    template <typename T>
-    constexpr bool IsIntegral = IsIntegralStruct<T>::value;
-#endif
-
-}

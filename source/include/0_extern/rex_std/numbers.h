@@ -12,14 +12,12 @@
 
 #pragma once
 
-#include "rex_std/internal/config.h"
-
 #include "rex_std/bonus/types.h"
 
 #include "rex_std/bonus/utility/always_false.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     namespace internal
     {
         template <typename T>
@@ -195,4 +193,5 @@ namespace rsl
     constexpr float32 InvSqrt3  = inv_sqrt3_v<float32>;
     constexpr float32 EGamma     = egamma_v<float32>;
     constexpr float32 Phi        = phi_v<float32>;
-}
+
+REX_RSL_END_NAMESPACE

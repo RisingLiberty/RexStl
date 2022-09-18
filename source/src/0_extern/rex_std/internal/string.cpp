@@ -5,20 +5,16 @@
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
 // 
-// File: cin.h
+// File: string.cpp
 // Copyright (c) Nick De Breuck 2022
 //
 // ============================================
 
-#pragma once
+#include "rex_std/string.h"
+#include "rex_std/ostream.h"
 
-#include "rex_std/istream.h"
-
-namespace rsl
-{
-    //class CinStream : public istream
-    //{
-    //public:
-    //    void receive_bytes(card32 num_bytes) override;
-    //};
-}
+//rsl::ostream& rsl::operator<<(ostream& os, const string& str)
+//{
+//  os.stream_buff().putn(str.data(), str.size());
+//  return os;
+//}

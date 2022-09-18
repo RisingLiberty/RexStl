@@ -5,20 +5,23 @@
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
 // 
-// File: fpos.h
+// File: mod_range_hashing.h
 // Copyright (c) Nick De Breuck 2022
 //
 // ============================================
 
 #pragma once
 
-#include "rex_std/internal/io/io_types.h"
+#include "rex_std/bonus/types.h"
 
-namespace rsl
-{
-    template <typename State>
-    class fpos
+REX_RSL_BEGIN_NAMESPACE
+
+  struct mod_range_hashing
+  {
+    uint32 operator()(count_t r, uint32 n) const
     {
-        
+      return r % n;
     }
-}
+  };
+
+REX_RSL_END_NAMESPACE

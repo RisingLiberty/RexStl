@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     // C++ doesn't define a count with predicate, as it can effectively be synthesized via count_if
     // with an appropriate predicate. However, it's often simpler to just have count with a predicate.
     template <typename InputIterator, typename T, typename Predicate>
@@ -28,4 +28,5 @@ namespace rsl
         }
         return result;
     }
-}
+
+REX_RSL_END_NAMESPACE

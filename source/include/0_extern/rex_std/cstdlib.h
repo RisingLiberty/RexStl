@@ -14,8 +14,6 @@
 
 #include <cstdlib>
 
-#include "rex_std/internal/config.h"
-
 #include "rex_std/bonus/types.h"
 #include "rex_std/bonus/cinttypes/div_result.h"
 
@@ -23,8 +21,8 @@
 
 #include "rex_std/internal/string/byte_strings.h" // string to int functions are defined here
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     // unsigned integer type returned by the sizeof operator
 #if defined(REX_PLATFORM_X86)
     using size_t = uint32;
@@ -155,15 +153,16 @@ namespace rsl
     {
         return rsl::div<int64>(x, y);
     }
-}
+
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/std_alias_defines.h"
 #include "rex_std/disable_std_checking.h"
 
 #include <cstdlib>
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     REX_STD_FUNC_ALIAS(abort);
     REX_STD_FUNC_ALIAS(exit);
     REX_STD_FUNC_ALIAS(quick_exit);
@@ -187,6 +186,7 @@ namespace rsl
     REX_STD_FUNC_ALIAS(srand);
     REX_STD_FUNC_ALIAS(qsort);
     REX_STD_FUNC_ALIAS(bsearch);
-}
+
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/enable_std_checking.h"

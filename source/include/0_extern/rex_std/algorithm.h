@@ -12,8 +12,6 @@
 
 #pragma once
 
-#include "rex_std/internal/config.h"
-
 // Standard algorithms
 #include "rex_std/internal/algorithm/adjacent_find.h"
 #include "rex_std/internal/algorithm/all_of.h"

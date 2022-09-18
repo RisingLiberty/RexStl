@@ -12,10 +12,11 @@
 
 #pragma once
 
+#include "rex_std/bonus/defines.h"
 #include "rex_std/bonus/attributes.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T, T Val>
     struct integral_constant
     {
@@ -41,14 +42,4 @@ namespace rsl
     using true_type = bool_constant<true>;
     using false_type = bool_constant<false>;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T, T Val>
-    using IntegralConstant = integral_constant<T, Val>;
-
-    template <bool Val>
-    using BoolConstant = integral_constant<bool, Val>;
-
-    using TrueType = true_type;
-    using FalseType = false_type;
-#endif
-}
+REX_RSL_END_NAMESPACE

@@ -18,8 +18,8 @@
 
 #include "rex_std/internal/algorithm/iter_swap.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename InputIterator>
     void reverse(InputIterator first, InputIterator last)
     {
@@ -43,4 +43,5 @@ namespace rsl
             }
         }
     }
-}
+
+REX_RSL_END_NAMESPACE

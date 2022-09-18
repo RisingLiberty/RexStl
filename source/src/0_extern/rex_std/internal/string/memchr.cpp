@@ -12,8 +12,8 @@
 
 #include "rex_std/internal/string/memchr.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
 	void* memchr(const void* ptr, char8 ch, card32 length)
 	{
 		const char8* str = reinterpret_cast<const char8*>(ptr);
@@ -28,4 +28,5 @@ namespace rsl
 
 		return nullptr;
 	}
-}
+
+REX_RSL_END_NAMESPACE

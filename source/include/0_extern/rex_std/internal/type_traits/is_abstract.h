@@ -14,8 +14,8 @@
 
 #include "rex_std/internal/type_traits/integral_constant.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T> 
 	struct is_abstract : public bool_constant<__is_abstract(T)>
     {};
@@ -23,11 +23,4 @@ namespace rsl
     template <typename T>
     constexpr bool is_abstract_v = is_abstract<T>::value;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using IsAbstractStruct = is_abstract<T>;
-
-    template <typename T>
-    constexpr bool IsAbstract = IsAbstractStruct<T>::value;
-#endif
-}
+REX_RSL_END_NAMESPACE

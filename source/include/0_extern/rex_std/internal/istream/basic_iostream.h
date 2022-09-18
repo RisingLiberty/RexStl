@@ -24,8 +24,8 @@
 #include "rex_std/internal/istream/basic_istream.h"
 #include "rex_std/internal/ostream/basic_ostream.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename CharT, typename Traits>
     class basic_iostream : public basic_ostream<CharT, Traits>, public basic_istream<CharT, Traits>
     {
@@ -81,4 +81,5 @@ namespace rsl
             my_ios::swap(right);
         }
     };
-}
+
+REX_RSL_END_NAMESPACE

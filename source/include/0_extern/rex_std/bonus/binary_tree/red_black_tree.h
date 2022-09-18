@@ -30,11 +30,11 @@
 #include "rex_std/bonus/utility/emplace_result.h"
 #include "rex_std/bonus/utility/output_param.h"
 
-#include "rex_std/cassert.h"
+#include "rex_std/internal/assert/assert_fwd.h"
 #include "rex_std/initializer_list.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     namespace internal
     {
         enum class RedBlackTreeSide
@@ -1789,4 +1789,5 @@ namespace rsl
     {
         lhs.swap(rhs);
     }
-}
+
+REX_RSL_END_NAMESPACE

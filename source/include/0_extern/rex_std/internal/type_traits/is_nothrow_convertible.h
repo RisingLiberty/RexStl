@@ -16,8 +16,8 @@
 #include "rex_std/internal/type_traits/is_convertible.h"
 #include "rex_std/internal/type_traits/is_void.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     namespace internal
     {
         template <typename T>
@@ -40,11 +40,4 @@ namespace rsl
     template <typename From, typename To>
     constexpr bool is_nothrow_convertible_v = is_nothrow_convertible<From, To>::value;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename From, typename To>
-    using IsNoThrowConvertibleStruct = is_nothrow_convertible<From, To>;
-
-    template <typename From, typename To>
-    constexpr bool IsNoThrowConvertible = is_nothrow_convertible<From, To>::value;
-#endif
-}
+REX_RSL_END_NAMESPACE

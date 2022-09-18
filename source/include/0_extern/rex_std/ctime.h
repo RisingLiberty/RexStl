@@ -12,12 +12,10 @@
 
 #pragma once
 
-#include "rex_std/internal/config.h"
-
 #include "rex_std/bonus/types.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     // null pointer constant
     #define NULL 0
 
@@ -107,15 +105,16 @@ namespace rsl
 
 // converts local calendar time to a time since epoch as a time_t object.
     time_t mktime(tm* time);
-}
+
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/std_alias_defines.h"
 #include "rex_std/enable_std_checking.h"
 
 #include <ctime>
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     REX_STD_FUNC_ALIAS(time);
     REX_STD_FUNC_ALIAS(clock);
     REX_STD_FUNC_ALIAS(timespec_get);
@@ -125,6 +124,7 @@ namespace rsl
     REX_STD_FUNC_ALIAS(gmtime);
     REX_STD_FUNC_ALIAS(localtime);
     REX_STD_FUNC_ALIAS(mktime);
-}
+
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/disable_std_checking.h"

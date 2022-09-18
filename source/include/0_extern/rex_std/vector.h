@@ -12,8 +12,6 @@
 
 #pragma once
 
-#include "rex_std/internal/config.h"
-
 #include "rex_std/bonus/types.h"
 
 #include "rex_std/initializer_list.h"
@@ -31,8 +29,8 @@
 #include "rex_std/bonus/utility/compressed_pair.h"
 
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     /// RSL Comment: Different from ISO C++ Standard at time of writing (27/Jun/2022)
     // RSL vector also has the numerator and denumerator which used to expand the vector in case of reallocation.
     // by default, the vector's capacity is doubled.
@@ -813,4 +811,5 @@ namespace rsl
     // This deduction guide is provided for vector to allow deduction from an iterator range.
     template <typename InputIt, typename Alloc = rsl::allocator> vector(InputIt, InputIt, Alloc = Alloc())
         ->vector<typename rsl::iterator_traits<InputIt>::value_type, Alloc>;
-}
+
+REX_RSL_END_NAMESPACE

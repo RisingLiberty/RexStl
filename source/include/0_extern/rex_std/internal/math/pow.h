@@ -14,8 +14,8 @@
 
 #include "rex_std/internal/type_traits/is_arithmetic.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
   template <typename T>
   constexpr T pow(const T base, const card32 exp)
   {
@@ -25,4 +25,5 @@ namespace rsl
       ? T(1)
       : base * pow(base, exp - 1);
   }
-}
+
+REX_RSL_END_NAMESPACE

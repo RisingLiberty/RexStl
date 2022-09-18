@@ -17,8 +17,8 @@
 
 #include <span>
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     REX_STD_OBJECT_ALIAS(dynamic_extent);   
     
     template <typename T, size_t Extent = rsl::dynamic_extent>
@@ -39,6 +39,7 @@ namespace rsl
     REX_STD_FUNC_ALIAS(ssize);
     REX_STD_FUNC_ALIAS(empty);
     REX_STD_FUNC_ALIAS(data);
-}
+
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/enable_std_checking.h"

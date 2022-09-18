@@ -14,8 +14,8 @@
 
 #include "rex_std/internal/type_traits/integral_constant.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template<typename T, size_t N = 0>
     struct extent : integral_constant<size_t, 0> 
     {};
@@ -39,11 +39,5 @@ namespace rsl
     template <typename T, size_t N = 0>
     constexpr size_t extent_v = extent<T, N>::value;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T, size_t N = 0>
-    using ExtentStruct = extent<T, N>;
+REX_RSL_END_NAMESPACE
 
-    template <typename T, size_t N = 0>
-    constexpr size_t Extent = ExtentStruct<T, N>::value;
-#endif
-}

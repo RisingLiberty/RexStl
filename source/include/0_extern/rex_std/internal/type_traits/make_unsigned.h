@@ -20,8 +20,8 @@
 #include "rex_std/internal/type_traits/add_volatile.h"
 #include "rex_std/internal/type_traits/add_cv.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     namespace internal
     {
         template <typename T, bool = is_enum_v<T> || is_integral_v<T>>
@@ -121,17 +121,10 @@ namespace rsl
     template <typename T>
     struct make_unsigned<const volatile T>
     {
-        using type = AddCV<typename make_unsigned<T>::type>;
+        using type = add_cv<typename make_unsigned<T>::type>;
     };
 
     template <typename T>
     using make_unsigned_t = make_unsigned<T>::type;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using MakeUnsignedStruct = make_unsigned<T>;
-
-    template <typename T>
-    using MakeUnsigned = typename make_unsigned<T>::type;
-#endif
-}
+REX_RSL_END_NAMESPACE

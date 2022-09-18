@@ -456,14 +456,14 @@ inline rsl::tm localtime(rsl::time_t time) {
     dispatcher(rsl::time_t t) : time_(t) {}
 
     bool run() {
-      using namespace rsl::detail;
+      using REX_RSL_BEGIN_NAMESPACE::detail;
       return handle(localtime_r(&time_, &tm_));
     }
 
     bool handle(rsl::tm* tm) { return tm != nullptr; }
 
     bool handle(detail::null<>) {
-      using namespace rsl::detail;
+      using REX_RSL_BEGIN_NAMESPACE::detail;
       return fallback(localtime_s(&tm_, &time_));
     }
 
@@ -471,7 +471,7 @@ inline rsl::tm localtime(rsl::time_t time) {
 
 #if !FMT_MSC_VERSION
     bool fallback(detail::null<>) {
-      using namespace rsl::detail;
+      using REX_RSL_BEGIN_NAMESPACE::detail;
       rsl::tm* tm = rsl::localtime(&time_);
       if (tm) tm_ = *tm;
       return tm != nullptr;
@@ -502,14 +502,14 @@ inline rsl::tm gmtime(rsl::time_t time) {
     dispatcher(rsl::time_t t) : time_(t) {}
 
     bool run() {
-      using namespace rsl::detail;
+      using REX_RSL_BEGIN_NAMESPACE::detail;
       return handle(gmtime_r(&time_, &tm_));
     }
 
     bool handle(rsl::tm* tm) { return tm != nullptr; }
 
     bool handle(detail::null<>) {
-      using namespace rsl::detail;
+      using REX_RSL_BEGIN_NAMESPACE::detail;
       return fallback(gmtime_s(&tm_, &time_));
     }
 

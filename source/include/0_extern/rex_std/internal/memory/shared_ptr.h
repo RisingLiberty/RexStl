@@ -18,28 +18,28 @@
 #include "rex_std/internal/memory/allocator.h"
 
 #include "rex_std/internal/type_traits/alignment_of.h"
-#include "rex_std/internal/utility/aligned_storage.h"
+#include "rex_std/internal/type_traits/aligned_storage.h"
+#include "rex_std/internal/type_traits/is_empty.h"
 
 #include "rex_std/bonus/utility/compressed_pair.h"
 
 #include "rex_std/bonus/concurrency/atomic_increment.h"
 #include "rex_std/bonus/concurrency/atomic_decrement.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     namespace internal
     {        
-        template <typename T>
         class RefCountBase
         {
         public:
             RefCountBase(count_t refCount)
-                , m_ref_count(refCount)
+                : m_ref_count(refCount)
             {}
 
-            virtual ~RefCount() = default;
+            virtual ~RefCountBase() = default;
 
-            void use_count()
+            count_t use_count()
             {
                 /// [06/Aug/2022] RSL Comment: If this causes any issues
                 // it's because the value is read at the same time it is written to.
@@ -57,7 +57,7 @@ namespace rsl
                 if (rsl::atomic_decrement(m_ref_count) == 0)
                 {
                     delete_ptr();
-                    deleter_this();
+                    delete_this();
                     return true;
                 }
 
@@ -65,8 +65,8 @@ namespace rsl
             }
 
         private:
-            virtual void deleter_ptr() = 0;
-            virtual void deleter_this() = 0;
+            virtual void delete_ptr() = 0;
+            virtual void delete_this() = 0;
             virtual void* get_deleter() const = 0;
 
         private:
@@ -76,6 +76,7 @@ namespace rsl
         template <typename T, typename Allocator, typename Deleter>
         class RefCount : RefCountBase
         {
+        public:
             using value_type = T;
             using pointer = T*;
             using allocator_type = allocator;
@@ -104,7 +105,18 @@ namespace rsl
             {
                 return (void*)m_deleter;
             }
+
+        private:
+          T* m_ptr;
+          Deleter m_deleter;
+          Allocator m_allocator;
         };
+
+        template <typename T>
+        class shared_ptr;
+
+        template <typename T>
+        void allocate_shared_helper(shared_ptr<T>& sharedPtr, RefCountBase* refCount, T* value);
 
         template <typename T, typename Allocator>
         class RefCountInst : RefCountBase
@@ -113,7 +125,7 @@ namespace rsl
             using value_type = T;
             using pointer = T*;
             using allocator_type = allocator;
-            using storage_type = rsl::aligned_storage<sizeof(T), rsl::alignment_of_v<T>>;
+            using storage_type = rsl::aligned_storage<T>;
 
             pointer value()
             {
@@ -142,7 +154,7 @@ namespace rsl
 
         private:
             template <typename U> friend class shared_ptr;
-            template <typename U> friend void internal::allocate_shared_helper(shared_ptr<U>&, RefCount, U*);
+            template <typename U> friend void internal::allocate_shared_helper(shared_ptr<U>&, RefCountBase*, U*);
 
         private:
             storage_type m_memory;
@@ -176,19 +188,19 @@ namespace rsl
             , m_ref_count(nullptr)
         {
             REX_ASSERT_X(ptr != nullptr, "nullptr can't be provided for this shared ptr constructor");
-            alloc(ptr, default_delete(), allocator<internal::RefCount>());
+            alloc(ptr, default_delete(), allocator());
         }
         /// RSL Comment: Different from ISO C++ Standard at time of writing (04/Aug/2022)
         // the pointer provided cannot be nullptr, in the standard, it can be
         // constructs a shared ptr with a ptr as the managed objects
         // uses the provided deleter as the deleter
-        template <typename U, template Deleter>
+        template <typename U, typename Deleter>
         shared_ptr(U* ptr, Deleter d)
             : m_ptr(ptr)
             , m_ref_count(nullptr)
         {
             REX_ASSERT_X(ptr != nullptr, "nullptr can't be provided for this shared ptr constructor");
-            alloc(ptr, d, allocator<internal::RefCount>());
+            alloc(ptr, d, allocator());
         }
         /// RSL Comment: Different from ISO C++ Standard at time of writing (04/Aug/2022)
         // in the standard, the use count after this construct call == 1
@@ -200,7 +212,7 @@ namespace rsl
             : m_ptr(nullptr)
             , m_ref_count(nullptr)
         {
-            alloc_without_ptr(d, allocator<internal::RefCount>());      
+            alloc_without_ptr(d, allocator());      
         }
         /// RSL Comment: Different from ISO C++ Standard at time of writing (04/Aug/2022)
         // in the standard, the use count after this construct call == 1
@@ -237,7 +249,7 @@ namespace rsl
         // all what this function does is store an UNMANAGED ptr
         // this is useful for when the pointer is a downcast of an existing pointer
         // it is not recommended to use this constructor if "ptr" is a pointer that needs to be deleted
-        template <typename Y>
+        template <typename U>
         shared_ptr(const shared_ptr<U>& sharedPtr, element_type* ptr)
             : m_ptr(ptr)
             , m_ref_count(sharedPtr.m_ref_count)
@@ -318,7 +330,7 @@ namespace rsl
             : m_ptr(uniquePtr.get())
             , m_ref_count(nullptr)
         {
-            alloc(uniquePtr.get(), uniquePtr.get_deleter(), allocator<internal::RefCount>());
+            alloc(uniquePtr.get(), uniquePtr.get_deleter(), allocator());
         }        
 
         // decrements the reference count if this has a managed object.
@@ -327,10 +339,7 @@ namespace rsl
         {
             if (m_ref_count)
             {
-                if (m_ref_count->release())
-                {
-                    m_alloc.deallocate(m_ref_count);
-                }
+              m_ref_count->release();
             }
         }
 
@@ -382,7 +391,7 @@ namespace rsl
 
         // transfers ownership of an unique ptr to this
         template <typename U, typename Deleter>
-        shared_ptr& operator=(unique_ptr<U, Deleter>&& ptr)
+        shared_ptr& operator=(unique_ptr<U, Deleter>&& other)
         {
             shared_ptr(rsl::move(other)).swap(*this);
             
@@ -420,9 +429,9 @@ namespace rsl
         // exchanges the owned pointer between two shared ptr objects
         void swap(shared_ptr& sharedPtr)
         {
-            element_type* const value = sharedPtr.m_value;
-            sharedPtr.m_value = m_value;
-            m_value = value;
+            element_type* const value = sharedPtr.m_ptr;
+            sharedPtr.m_ptr = m_ptr;
+            m_ptr = value;
         }
 
         /// RSL Comment: Different from ISO C++ Standard at time of writing (05/Aug/2022)
@@ -430,23 +439,23 @@ namespace rsl
         // returns a reference to the managed object
         const reference_type operator*() const
         {
-            return *m_value;
+            return *m_ptr;
         }
         // returns a reference to the managed object
         reference_type operator*() 
         {
-            return *m_value;
+            return *m_ptr;
         }
         /// RSL Comment: Different from ISO C++ Standard at time of writing (05/Aug/2022)
         // the standard doesn't propagate const, rex does
         // returns a pointer to the managed object
         const element_type* operator->() const
         {
-            return m_value;
+            return m_ptr;
         }
         element_type* operator->()
         {
-            return m_value;
+            return m_ptr;
         }
 
         /// RSL Comment: Different from ISO C++ Standard at time of writing (05/Aug/2022)
@@ -454,12 +463,12 @@ namespace rsl
         // returns a pointer to the managed object
         const element_type* get() const
         {
-            return m_value;
+            return m_ptr;
         }
         // returns a pointer to the managed object
         element_type* get()
         {
-            return m_value;
+            return m_ptr;
         }
         
         // returns the number of shared ptr objects referring to the same managed object
@@ -490,30 +499,42 @@ namespace rsl
         
         
     private:
-        template <typename U, typename Deleter, typename Allocator, typename enable_if_t<rsl::is_empty_v<allocator>, bool> = true>
-        void alloc(U* ptr, Deleter deleter, const allocator& alloc)
+        template <typename U, typename Deleter, typename Allocator, typename enable_if_t<rsl::is_empty_v<Allocator>, bool> = true>
+        void alloc(U* ptr, Deleter deleter, const Allocator& alloc)
         {
-            REX_ALLOCATOR_ALLOC(m_alloc, 1)
-            m_alloc.allocate(1_elem);
+          void* mem = alloc.allocate(1_elem);
+          
+          m_ref_count = new (mem) (internal::RefCount<T, Allocator, Deleter>) (ptr, rsl::move(deleter), rsl::move(alloc));
+          m_ptr = ptr;
         }
-        template <typename U, typename Deleter, typename Allocator, typename enable_if_t<!rsl::is_empty_v<allocator>, bool> = true>
-        void alloc(U* ptr, Deleter deleter, allocator& alloc)
+        template <typename U, typename Deleter, typename Allocator, typename enable_if_t<!rsl::is_empty_v<Allocator>, bool> = true>
+        void alloc(U* ptr, Deleter deleter, Allocator& alloc)
         {
-            m_alloc.allocate(1_elem);
+          void* mem = alloc.allocate(1_elem);
+
+          m_ref_count = new (mem) (internal::RefCount<T, Allocator, Deleter>) (ptr, rsl::move(deleter), rsl::move(alloc));
+          m_ptr = ptr;
         }
-        template <typename Deleter, typename Allocator, typename enable_if_t<rsl::is_empty_v<allocator>, bool> = true>
-        void alloc_without_ptr(Deleter deleter, const allocator& alloc)
+        template <typename Deleter, typename Allocator, typename enable_if_t<rsl::is_empty_v<Allocator>, bool> = true>
+        void alloc_without_ptr(Deleter deleter, const Allocator& alloc)
         {
-            m_alloc.allocate(1_elem);
+          void* mem = alloc.allocate(1_elem);
+
+          m_ref_count = new (mem) (internal::RefCount<T, Allocator, Deleter>) (nullptr, rsl::move(deleter), rsl::move(alloc));
         }
-        template <typename Deleter, typename Allocator, typename enable_if_t<!rsl::is_empty_v<allocator>, bool> = true>
-        void alloc_without_ptr(Deleter deleter, allocator& alloc)
+        template <typename Deleter, typename Allocator, typename enable_if_t<!rsl::is_empty_v<Allocator>, bool> = true>
+        void alloc_without_ptr(Deleter deleter, Allocator& alloc)
         {
-            m_alloc.allocate(1_elem);
+          void* mem = alloc.allocate(1_elem);
+
+          m_ref_count = new (mem) (internal::RefCount<T, Allocator, Deleter>) (nullptr, rsl::move(deleter), rsl::move(alloc));
         }
     private:
         element_type* m_ptr; // the only reason why we have to store this ptr is because of the ctor taking in a shared ptr and a ptr.
-        internal::RefCount* m_ref_count;
+        internal::RefCountBase* m_ref_count;
+
+        template <class Deleter, class T>
+        friend Deleter* get_deleter(const shared_ptr<T>& ptr);
     };
 
     template <typename T, typename ... Args>
@@ -544,17 +565,74 @@ namespace rsl
     }
 
     template <typename T>
-    struct hash<shared_ptr<T>>>
+    struct hash<shared_ptr<T>>
     {
-        hash_result operator()(const shared_ptr<T>& ptr) const
+      hash_result operator()(const shared_ptr<T>& ptr) const
+      {
+        hash<T*> new_hash;
+        return new_hash(ptr.get());
+      }
+    };
+
+    template <typename T, typename U>
+    shared_ptr<T> static_pointer_cast(const shared_ptr<U>& other)
+    {
+        const auto ptr = static_cast<typename shared_ptr<T>::element_type*>(other.get());
+        return shared_ptr<T>(other, ptr);
+    }
+    template <typename T, typename U>
+    shared_ptr<T> static_pointer_cast(shared_ptr<U>&& other)
+    {
+        const auto ptr = static_cast<typename shared_ptr<T>::element_type*>(other.get());
+        return shared_ptr<T>(rsl::move(other), ptr);
+    }
+
+    template <typename T, typename U>
+    shared_ptr<T> dynamic_pointer_cast(const shared_ptr<U>& other)
+    {
+        const auto ptr = dynamic_cast<typename shared_ptr<T>::element_type*>(other.get());
+        return shared_ptr<T>(other, ptr);                
+    }
+    template <typename T, typename U>
+    shared_ptr<T> dynamic_pointer_cast(shared_ptr<U>&& other)
+    {
+        const auto ptr = dynamic_cast<typename shared_ptr<T>::element_type*>(other.get());
+        return shared_ptr<T>(rsl::move(other), ptr);                        
+    }
+
+    template <typename T, typename U>
+    shared_ptr<T> const_pointer_cast(const shared_ptr<U>& other)
+    {
+        const auto ptr = const_cast<typename shared_ptr<T>::element_type*>(other.get());
+        return shared_ptr<T>(other, ptr);        
+    }
+    template <typename T, typename U>
+    shared_ptr<T> const_pointer_cast(shared_ptr<U>&& other)
+    {
+        const auto ptr = const_cast<typename shared_ptr<T>::element_type*>(other.get());
+        return shared_ptr<T>(rsl::move(other), ptr);        
+    }
+
+    template <typename T, typename U>
+    shared_ptr<T> reinterpret_pointer_cast(const shared_ptr<U>& other)
+    {
+        const auto ptr = reinterpret_cast<typename shared_ptr<T>::element_type*>(other.get());
+        return shared_ptr<T>(other, ptr);                
+    }
+    template <typename T, typename U>
+    shared_ptr<T> reinterpret_pointer_cast(shared_ptr<U>&& other)
+    {
+        const auto ptr = reinterpret_cast<typename shared_ptr<T>::element_type*>(other.get());
+        return shared_ptr<T>(rsl::move(other), ptr);                        
+    }
+
+    template <typename Deleter, typename T>
+    Deleter* get_deleter(const shared_ptr<T>& p)
+    {
+        if (p.m_ref_count)
         {
-            hash<T*> new_hash;
-            return new_hash(ptr.get());
+            return static_cast<Deleter*>(p.m_ref_count->get_deleter());
         }
     }
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using SharedPtr = shared_ptr<T>;
-#endif
-}
+REX_RSL_END_NAMESPACE

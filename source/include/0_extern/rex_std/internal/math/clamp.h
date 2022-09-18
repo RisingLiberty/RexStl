@@ -17,8 +17,8 @@
 
 #include "rex_std/internal/type_traits/type_identity.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
   template <typename T>
   constexpr T clamp(const T& x, const rsl::type_identity_t<T>& min, const rsl::type_identity_t<T>& max)
   {
@@ -35,4 +35,5 @@ namespace rsl
   {
     return min(x, max);
   }
-}
+
+REX_RSL_END_NAMESPACE

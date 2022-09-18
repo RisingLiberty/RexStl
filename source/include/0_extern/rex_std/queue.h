@@ -12,6 +12,8 @@
 
 #pragma once
 
+#include "rex_std/bonus/defines.h"
+
 #include "rex_std/compare.h"
 #include "rex_std/initializer_list.h"
 
@@ -22,8 +24,8 @@
 
 #include <queue>
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     class allocator;
     
     template <typename T, typename Allocator>
@@ -45,6 +47,6 @@ namespace rsl
     REX_STD_FUNC_ALIAS(operator>);
     REX_STD_FUNC_ALIAS(operator>=);
     
-}
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/enable_std_checking.h"

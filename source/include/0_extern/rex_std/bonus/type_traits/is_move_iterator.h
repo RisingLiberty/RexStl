@@ -15,8 +15,8 @@
 
 #include "rex_std/internal/iterator/move_iterator.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T>
     struct is_move_iterator : public false_type {};
 
@@ -25,4 +25,5 @@ namespace rsl
 
     template <typename T>
     constexpr bool is_move_iterator_v = is_move_iterator<T>::value;
-}
+
+REX_RSL_END_NAMESPACE

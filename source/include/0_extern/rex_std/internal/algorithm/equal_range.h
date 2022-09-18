@@ -18,8 +18,8 @@
 #include "rex_std/internal/algorithm/lower_bound.h"
 #include "rex_std/internal/algorithm/upper_bound.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
 	template <typename Iterator>
 	struct EqualrangeResult
 	{
@@ -98,4 +98,5 @@ namespace rsl
 		}
 		return ResultType(first, first);
 	}
-}
+
+REX_RSL_END_NAMESPACE

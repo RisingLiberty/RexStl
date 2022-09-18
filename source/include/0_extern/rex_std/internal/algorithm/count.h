@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
 	template <typename InputIterator, typename T>
 	typename InputIterator::difference_type count(InputIterator first, InputIterator last, const T& value)
 	{
@@ -26,4 +26,5 @@ namespace rsl
 		}
 		return result;
 	}
-}
+
+REX_RSL_END_NAMESPACE

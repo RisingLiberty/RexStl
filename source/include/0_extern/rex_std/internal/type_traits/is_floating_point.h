@@ -16,8 +16,8 @@
 #include "rex_std/internal/type_traits/integral_constant.h"
 #include "rex_std/internal/type_traits/remove_cv.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     namespace internal
     {
         template <typename T>
@@ -36,11 +36,4 @@ namespace rsl
     template <typename T>
     constexpr bool is_floating_point_v = is_floating_point<T>::value;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using IsFloatingPointStruct = is_floating_point<T>;
-
-    template <typename T>
-    constexpr bool IsFloatingPoint = IsFloatingPointStruct<T>::value;
-#endif
-}
+REX_RSL_END_NAMESPACE

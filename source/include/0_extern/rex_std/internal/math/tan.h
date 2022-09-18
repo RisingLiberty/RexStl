@@ -19,8 +19,8 @@
 #include "rex_std/limits.h"
 #include "rex_std/numbers.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     namespace internal
     {
         template<typename T>
@@ -111,4 +111,5 @@ namespace rsl
         return internal::tan_check(static_cast<return_t<T>>(x));
     }
 
-}
+
+REX_RSL_END_NAMESPACE

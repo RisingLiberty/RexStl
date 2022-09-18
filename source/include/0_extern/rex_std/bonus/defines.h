@@ -45,6 +45,7 @@ MERGE(str, __LINE__)
 
 #define TO_WIDE_STRING(str) L##str
 
+#define REX_ENABLE_TODO_CHECKING
 #ifdef REX_ENABLE_TODO_CHECKING
 #define REX_STATIC_TODO(msg) static_assert(false, "TODO: ", msg);
 #else
@@ -62,3 +63,8 @@ MERGE(str, __LINE__)
 #else
 #error "Unknown Compiler"
 #endif
+
+// We're defining everything inside a inline namespace so we can safely upgrade to newer versions
+// without break ABI.
+#define REX_RSL_BEGIN_NAMESPACE namespace rsl { inline namespace v1 {
+#define REX_RSL_END_NAMESPACE } }

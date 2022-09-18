@@ -17,8 +17,8 @@
 #include "rex_std/internal/type_traits/enable_if.h"
 #include "rex_std/internal/type_traits/is_integral.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     // distinct type that implements the concept of byte
     enum class byte : uint8 {};
     static_assert(sizeof(byte) == 1, "byte is not 1 byte big");
@@ -100,7 +100,4 @@ namespace rsl
         return static_cast<IntType>(arg);
     }
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    using Byte = byte;
-#endif
-}
+REX_RSL_END_NAMESPACE

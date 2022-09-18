@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T>
     class Out
     {
@@ -37,4 +37,5 @@ namespace rsl
     private:
         value_type& m_output;
     };
-}
+
+REX_RSL_END_NAMESPACE

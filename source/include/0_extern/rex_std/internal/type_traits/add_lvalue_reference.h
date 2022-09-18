@@ -14,8 +14,8 @@
 
 #include "rex_std/bonus/type_traits/add_reference.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T>
     struct add_lvalue_reference 
     {
@@ -25,11 +25,4 @@ namespace rsl
     template <typename T>
     using add_lvalue_reference_t = typename bonus::add_reference<T>::LValue;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using AddLValueReferenceStruct = add_lvalue_reference<T>;
-
-    template <typename T>
-    using AddLValueReference = typename AddLValueReferenceStruct<T>::type;
-#endif
-}
+REX_RSL_END_NAMESPACE

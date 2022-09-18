@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T>
     struct remove_all_extents
     {
@@ -35,11 +35,4 @@ namespace rsl
     template <typename T>
     using remove_all_extents_t = remove_all_extents<T>::type;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using RemoveAllExtentsStruct = remove_all_extents<T>;
-
-    template <typename T>
-    using RemoveAllExtents = typename remove_all_extents<T>::type;
-#endif
-}
+REX_RSL_END_NAMESPACE

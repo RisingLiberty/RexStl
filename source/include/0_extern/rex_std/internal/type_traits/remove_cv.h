@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T>
     struct remove_cv
     {
@@ -46,11 +46,4 @@ namespace rsl
     template <typename T>
     using remove_cv_t = typename remove_cv<T>::type;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using RemoveCVStruct = remove_cv<T>;
-
-    template <typename T>
-    using RemoveCV = typename remove_cv<T>::type;
-#endif
-}
+REX_RSL_END_NAMESPACE

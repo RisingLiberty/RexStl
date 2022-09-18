@@ -12,13 +12,11 @@
 
 #pragma once
 
-#include "rex_std/internal/config.h"
-
 #include "rex_std/bonus/types.h"
 
-namespace rsl
-{
-    #define NULL 0
+REX_RSL_BEGIN_NAMESPACE
+ 
+#define NULL 0
 
 #if defined(REX_PLATFORM_X86)
     using size_t = uint32;
@@ -81,19 +79,21 @@ namespace rsl
     // memset
     // memcpy
     // memmove
-}
+
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/std_alias_defines.h"
 #include "rex_std/disable_std_checking.h"
 
 #include <cstring>
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     REX_STD_FUNC_ALIAS(strxfrm);
     REX_STD_FUNC_ALIAS(strcoll);
     REX_STD_FUNC_ALIAS(strtok);
     REX_STD_FUNC_ALIAS(strerror);
-}
+
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/enable_std_checking.h"

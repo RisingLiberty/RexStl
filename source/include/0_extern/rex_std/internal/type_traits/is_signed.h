@@ -15,8 +15,8 @@
 #include "rex_std/internal/type_traits/integral_constant.h"
 #include "rex_std/internal/type_traits/is_arithmetic.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     namespace internal
     {
         template <typename T, bool = is_arithmetic_v<T>>
@@ -35,11 +35,4 @@ namespace rsl
     template <typename T>
     constexpr bool is_signed_v = is_signed<T>::value;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using IsSignedStruct = is_signed<T>;
-    
-    template <typename T>
-    constexpr bool is_signed = IsSignedStruct<T>::value;
-#endif
-}
+REX_RSL_END_NAMESPACE

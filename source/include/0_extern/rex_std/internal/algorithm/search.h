@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template<class ForwardIterator1, class ForwardIterator2>
     constexpr ForwardIterator1 search(ForwardIterator1 first, ForwardIterator1 last, ForwardIterator2 s_first, ForwardIterator2 s_last)
     {
@@ -54,4 +54,5 @@ namespace rsl
             ++first;
         }
     }
-}
+
+REX_RSL_END_NAMESPACE

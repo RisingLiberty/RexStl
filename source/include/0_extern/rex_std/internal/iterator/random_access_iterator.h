@@ -16,8 +16,8 @@
 
 /// [21/Aug/2022] RSL Comment: deprecate this file
     
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T>
     class random_access_iterator
     {
@@ -247,4 +247,5 @@ namespace rsl
     private:
         pointer m_value;
     };
-}
+
+REX_RSL_END_NAMESPACE

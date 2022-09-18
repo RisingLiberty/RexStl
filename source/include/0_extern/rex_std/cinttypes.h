@@ -12,20 +12,21 @@
 
 #pragma once
 
+#include "rex_std/bonus/defines.h"
+
 #include "rex_std/std_alias_defines.h"
 #include "rex_std/disable_std_checking.h"
 
 #include <cinttypes>
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     REX_STD_FUNC_ALIAS(wcstoimax);
     REX_STD_FUNC_ALIAS(wcstoumax);
-}
+
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/enable_std_checking.h"
-
-#include "rex_std/internal/config.h"
 
 #include "rex_std/bonus/cinttypes/div_result.h"
 
@@ -33,8 +34,8 @@ namespace rsl
 
 #include "rex_std/internal/string/byte_strings.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     #define PRId8        "hhd"
     #define PRId16       "hd"
     #define PRId32       "d"
@@ -257,4 +258,6 @@ namespace rsl
     {
         return rsl::div<intmax>(x, y);
     }
-}
+
+REX_RSL_END_NAMESPACE
+

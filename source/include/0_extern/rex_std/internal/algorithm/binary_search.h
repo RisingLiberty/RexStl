@@ -14,8 +14,8 @@
 
 #include "rex_std/internal/algorithm/lower_bound.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
 	template <typename ForwardIterator, typename T>
 	bool binary_search(ForwardIterator first, ForwardIterator last, const T& value)
 	{
@@ -31,4 +31,5 @@ namespace rsl
 		ForwardIterator i(lower_bound<ForwardIterator, T, Compare>(first, last, value, compare));
 		return ((i != last) && !compare(value, *i));
 	}
-}
+
+REX_RSL_END_NAMESPACE

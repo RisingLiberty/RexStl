@@ -12,8 +12,6 @@
 
 #pragma once
 
-#include "rex_std/internal/config.h"
-
 #include "rex_std/internal/functional/less.h"
 
 #include "rex_std/internal/memory/allocator.h"
@@ -24,8 +22,8 @@
 
 #include "rex_std/initializer_list.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename Key, typename Compare = rsl::less<Key>, typename Allocator = rsl::allocator>
     class set : public RedBlackTree<Key, Key, Compare, allocator, rsl::use_self<Key>, false, true>
     {
@@ -196,4 +194,5 @@ namespace rsl
 
     template <typename Key, typename Alloc>
     set(rsl::initializer_list<Key>, Alloc) -> set<Key, rsl::less<Key>, Alloc>;
-}
+
+REX_RSL_END_NAMESPACE

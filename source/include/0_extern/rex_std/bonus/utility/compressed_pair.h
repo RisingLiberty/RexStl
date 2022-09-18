@@ -45,8 +45,8 @@
 
 #include "rex_std/bonus/type_traits/call_traits.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     namespace internal
     {
         template <typename T1, typename T2, bool is_same_v, bool FirstEmpty, bool SecondEmpty>
@@ -363,4 +363,5 @@ namespace rsl
         second_reference second() { return base::second(); }
         second_const_reference second() const { return base::second(); }
     };
-}
+
+REX_RSL_END_NAMESPACE

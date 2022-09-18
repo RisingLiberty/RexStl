@@ -12,8 +12,9 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <int b1, int b2>
     struct type_not_equal { static const bool value = (b1 != b2); };
-}
+
+REX_RSL_END_NAMESPACE

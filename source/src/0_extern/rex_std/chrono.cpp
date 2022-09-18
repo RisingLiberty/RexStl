@@ -14,7 +14,8 @@
 
 #include <Windows.h>
 
-namespace rsl::chrono::internal
+REX_RSL_BEGIN_NAMESPACE
+namespace chrono::internal
 {
     uint64 get_ticks()
     {
@@ -37,3 +38,4 @@ namespace rsl::chrono::internal
         return uint64(frequency * query_counter());
     }
 }
+REX_RSL_END_NAMESPACE

@@ -15,8 +15,8 @@
 #include "rex_std/internal/type_traits/integral_constant.h"
 #include "rex_std/bonus/type_traits/is_swappable_utils.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     namespace internal
     {
         template <typename T>
@@ -41,11 +41,4 @@ namespace rsl
     template <typename T>
     constexpr bool is_nothrow_swappable_v = is_nothrow_swappable<T>::value;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using IsNothrowSwappableStruct = is_nothrow_swappable<T>;
-
-    template <typename T>
-    constexpr bool IsNothrowSwappable = is_nothrow_swappable<T>::value;
-#endif
-}
+REX_RSL_END_NAMESPACE

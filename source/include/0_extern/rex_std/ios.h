@@ -18,8 +18,6 @@
 
 #pragma once
 
-#include "rex_std/internal/config.h"
-
 #include "rex_std/bonus/types.h"
 
 #include "rex_std/internal/ios/ios_base.h"
@@ -29,8 +27,8 @@
 #include "rex_std/internal/ios/io_types.h"
 /// [06/Sep/2022] RSL Comment: missing is_error_code_enum specialization
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     using ios = basic_ios<char8>;
     using wios = basic_ios<tchar>;
 
@@ -71,4 +69,6 @@ namespace rsl
     ios_base& scientific(ios_base& stream);
     ios_base& hexfloat(ios_base& stream);
     ios_base& defaultfloat(ios_base& stream);
-}
+
+REX_RSL_END_NAMESPACE
+

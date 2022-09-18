@@ -20,8 +20,8 @@
 
 #include "rex_std/internal/iterator/iterator_tags.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
   template <typename CharT, typename Traits>
   class istreambuf_iterator
   {
@@ -192,4 +192,5 @@ namespace rsl
   {
     return !lhs.equal(rhs);
   }
-}
+
+REX_RSL_END_NAMESPACE

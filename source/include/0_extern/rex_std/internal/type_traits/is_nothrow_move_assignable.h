@@ -14,8 +14,8 @@
 
 #include "rex_std/internal/type_traits/integral_constant.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T>
     struct is_nothrow_move_assignable : bool_constant<__is_nothrow_assignable(add_lvalue_reference_t<T>, T)>
     {};
@@ -23,11 +23,4 @@ namespace rsl
     template <typename T>
     constexpr bool is_nothrow_move_assignable_v = is_nothrow_move_assignable<T>::value;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using IsNothrowMoveAssignableStruct = is_nothrow_move_assignable<T>;
-
-    template <typename T>
-    constexpr bool IsNothrowMoveAssignable = IsNothrowMoveAssignableStruct<T>::value;
-#endif
-}
+REX_RSL_END_NAMESPACE

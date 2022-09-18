@@ -12,8 +12,6 @@
 
 #pragma once
 
-#include "rex_std/internal/config.h"
-
 #include "rex_std/bonus/types.h"
 
 #include "rex_std/iterator.h"
@@ -23,8 +21,8 @@
 
 #include <locale>
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     REX_STD_CLASS_ALIAS(locale);
 
     class allocator;
@@ -124,6 +122,7 @@ namespace rsl
 
     REX_STD_FUNC_ALIAS(toupper);
     REX_STD_FUNC_ALIAS(tolower);
-}
+
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/enable_std_checking.h"

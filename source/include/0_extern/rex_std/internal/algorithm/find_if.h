@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename InputIterator, typename Predicate>
     InputIterator find_if(InputIterator first, InputIterator last, Predicate pred)
     {
@@ -30,4 +30,5 @@ namespace rsl
         return it;
 
     }
-}
+
+REX_RSL_END_NAMESPACE

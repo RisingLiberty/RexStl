@@ -15,8 +15,8 @@
 #include "rex_std/internal/type_traits/void.h"
 #include "rex_std/internal/type_traits/remove_reference.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     namespace internal
     {
         template <typename T, typename = void>
@@ -40,11 +40,4 @@ namespace rsl
     template <typename T>
     using add_pointer_t = add_pointer<T>::type;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using AddPointerStruct = add_pointer<T>;
-
-    template <typename T>
-    using AddPointer = typename AddPointerStruct<T>::type;
-#endif
-}
+REX_RSL_END_NAMESPACE

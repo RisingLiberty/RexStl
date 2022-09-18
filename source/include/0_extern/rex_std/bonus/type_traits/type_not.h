@@ -12,11 +12,12 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
 	template <bool b>
 	struct type_not { static const bool value = true; };
 
 	template <>
 	struct type_not<true> { static const bool value = false; };
-}
+
+REX_RSL_END_NAMESPACE

@@ -12,10 +12,6 @@
 
 #pragma once
 
-#include "rex_std/internal/config.h"
-
-#include "rex_std/enable_std_checking.h"
-
 #include "rex_std/bonus/attributes.h"
 #include "rex_std/bonus/types.h"
 #include "rex_std/type_traits.h"
@@ -24,8 +20,8 @@
 #include "rex_std/climits.h"
 #include "rex_std/cstdint.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     namespace internal
     {
         constexpr auto SignedInt8Min = SCHAR_MIN;
@@ -970,4 +966,5 @@ namespace rsl
         static constexpr int32 min_exponent = internal::LongDoubleMinExp;
         static constexpr int32 min_exponent10 = internal::LongDoubleMin10Exp;
     };
-}
+
+REX_RSL_END_NAMESPACE

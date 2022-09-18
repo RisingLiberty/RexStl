@@ -17,8 +17,8 @@
 #include "rex_std/internal/type_traits/is_enum.h"
 #include "rex_std/internal/type_traits/is_integral.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     namespace internal
     {
         template <typename T, bool = is_enum_v<T> || is_integral_v<T>>
@@ -125,11 +125,4 @@ namespace rsl
     template <typename T>
     using make_signed_t = make_signed<T>::type;   
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using MakeSignedStruct = make_signed<T>;
-
-    template <typename T>
-    using MakeSigned = typename make_signed<T>::type;
-#endif
-}
+REX_RSL_END_NAMESPACE

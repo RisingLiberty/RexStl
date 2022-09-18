@@ -16,8 +16,8 @@
 
 #include "rex_std/limits.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     namespace internal
     {
         template<typename T>
@@ -69,4 +69,5 @@ namespace rsl
     {
         return internal::sqrt_check(static_cast<return_t<T>>(x), return_t<T>(1));
     }
-}
+
+REX_RSL_END_NAMESPACE

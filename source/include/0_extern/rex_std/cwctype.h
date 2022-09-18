@@ -12,13 +12,15 @@
 
 #pragma once
 
+#include "rex_std/bonus/defines.h"
+
 #include "rex_std/std_alias_defines.h"
 #include "rex_std/disable_std_checking.h"
 
 #include <cwctype>
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     REX_STD_CLASS_ALIAS(wctrans_t);
     REX_STD_CLASS_ALIAS(wctype_t);
 
@@ -40,6 +42,7 @@ namespace rsl
     REX_STD_FUNC_ALIAS(towupper);
     REX_STD_FUNC_ALIAS(wctrans);
     REX_STD_FUNC_ALIAS(towctrans);
-}
+
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/enable_std_checking.h"

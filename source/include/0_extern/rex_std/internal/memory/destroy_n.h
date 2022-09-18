@@ -12,14 +12,17 @@
 
 #pragma once
 
-#include "rex_std/std_alias_defines.h"
-#include "rex_std/disable_std_checking.h"
+#include "rex_std/internal/memory/addressof.h"
 
-#include <algorithm>
+REX_RSL_BEGIN_NAMESPACE
 
-namespace rsl
-{
-    REX_STD_FUNC_ALIAS(destroy_n);
-}
+    template <typename ForwardIt, typename Size>
+    constexpr ForwardIt destroy_n(ForwardIt first, Size n)
+    {
+        for(; n > 0; ++first, --n)
+        {
+            destroy_at(addressof(*first));
+        }
+    }
 
-#include "rex_std/enable_std_checking.h"
+REX_RSL_END_NAMESPACE

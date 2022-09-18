@@ -12,14 +12,12 @@
 
 #pragma once
 
-#include "rex_std/internal/config.h"
-
 #include "rex_std/bonus/types.h"
 
 #include "rex_std/internal/math/abs.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     using float_t = float32;
     using double_t = float64;
 
@@ -251,15 +249,16 @@ namespace rsl
     lfloat64 atanl(lfloat64 arg);
     template <typename IntegralType>
     float64 atan(IntegralType arg);
-}
+
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/std_alias_defines.h"
 #include "rex_std/disable_std_checking.h"
 
 #include <cmath>
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     REX_STD_FUNC_ALIAS(remainder);
     REX_STD_FUNC_ALIAS(remquo);
     REX_STD_FUNC_ALIAS(fma);
@@ -321,6 +320,7 @@ namespace rsl
     REX_STD_FUNC_ALIAS(sph_bessel);
     REX_STD_FUNC_ALIAS(sph_legendre);
     REX_STD_FUNC_ALIAS(sph_neumann);
-}
+
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/enable_std_checking.h"

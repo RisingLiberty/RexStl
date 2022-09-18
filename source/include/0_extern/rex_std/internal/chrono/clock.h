@@ -17,11 +17,11 @@
 #include "rex_std/bonus/attributes.h"
 #include "rex_std/internal/chrono/time_point.h"
 #include "rex_std/internal/chrono/duration.h"
-#include "rex_std/internal/chrono/time_zone.h"
 
 #include "rex_std/internal/type_traits/integral_constant.h"
 
-namespace rsl::chrono
+REX_RSL_BEGIN_NAMESPACE
+namespace chrono
 {
     namespace internal
     {
@@ -373,50 +373,5 @@ namespace rsl::chrono
     {};
 
 #endif
-
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    using SystemClock = system_clock;
-
-    template <typename Duration>
-    using SysTime = time_point<system_clock, Duration>;
-    using SysSeconds = sys_time<seconds>;
-    using SysDays = sys_time<days>;
-
-#endif
-
-#ifdef REX_ENABLE_WITH_CPP20
-    using UtcClock = utc_clock;
-
-    template <typename Duration>
-    using UtcTime = time_point<utc_clock, Duration>;
-    using UtcSeconds = utc_time<seconds>;
-
-    using SteadyClock = steady_clock;
-    using HighResolutionClock = high_resolution_clock;
-    using TaiClock = tai_clock;
-
-    template <typename Duration>
-    using TaiTime = time_point<tai_clock, Duration>;
-    using TaiSeconds = time_point<tai_clock, seconds>;
-
-    using GpsClock = gps_clock;
-
-    template <typename Duration>
-    using GpsTime = time_point<gps_clock, Duration>;
-    using GpsSeconds = gps_time<seconds>;
-
-    using LeapSecondsInfo = leap_seconds_info;
-
-    template <typename Duration>
-    using LocalTime = time_point<local_t, Duration>;
-    using LocalSeconds = local_time<seconds>;
-    using LocalDays = local_time<days>;
-#endif
 }
-
-#include <chrono>
-
-namespace rsl::chrono
-{
-    using file_clock = std::chrono::file_clock;
-}
+REX_RSL_END_NAMESPACE

@@ -14,8 +14,8 @@
 
 #include "rex_std/bonus/types.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename C>
     auto end(C& c) -> decltype(c.end())
     {
@@ -36,4 +36,5 @@ namespace rsl
     {
         return c.cend();
     }
-}
+
+REX_RSL_END_NAMESPACE

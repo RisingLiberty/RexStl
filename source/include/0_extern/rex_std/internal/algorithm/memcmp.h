@@ -14,8 +14,8 @@
 
 #include "rex_std/bonus/types.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     constexpr int32 memcmp(const void* first1, const void* first2, count_t count)
     {
         const char* first_1byte = static_cast<const char*>(first1);
@@ -31,4 +31,5 @@ namespace rsl
 
         return 0;
     }
-}
+
+REX_RSL_END_NAMESPACE

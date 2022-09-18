@@ -16,8 +16,8 @@
 
 #include "rex_std/internal/iterator/iterator_tags.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template<class InputIterator, class OutputIterator>
     constexpr OutputIterator reverse_copy(InputIterator first, InputIterator last, OutputIterator d_first)
     {
@@ -28,4 +28,5 @@ namespace rsl
 
         return d_first;
     }
-}
+
+REX_RSL_END_NAMESPACE

@@ -12,10 +12,8 @@
 
 #pragma once
 
-#include "rex_std/internal/config.h"
+REX_RSL_BEGIN_NAMESPACE
 
-namespace rsl
-{
     #define CHAR_BIT      8
     #define SCHAR_MIN   (-128)
     #define SCHAR_MAX     127
@@ -69,4 +67,5 @@ namespace rsl
 #endif
 
     #define RSIZE_MAX (SIZE_MAX >> 1)
-}
+
+REX_RSL_END_NAMESPACE

@@ -17,8 +17,8 @@
 
 #include <cuchar>
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     REX_STD_CLASS_ALIAS(mbstate_t);
     REX_STD_CLASS_ALIAS(size_t);
 
@@ -31,6 +31,7 @@ namespace rsl
     REX_STD_FUNC_ALIAS(mbrtoc8);
     REX_STD_FUNC_ALIAS(c8rtomb);
 #endif // REX_ENABLE_WITH_CPP20
-}
+
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/enable_std_checking.h"

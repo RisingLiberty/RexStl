@@ -14,12 +14,14 @@
 
 #include "rex_std/bonus/types.h"
 
-#include "rex_std/internal/io/io_types.h"
+#include "rex_std/internal/cwchar/mbstate.h"
+#include "rex_std/internal/ios/io_types.h"
+#include "rex_std/internal/ios/fpos.h"
 
 #include "rex_std/cstring.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     // char_traits are implement and used by the basic_string class in Rex STL.
     // Unlike EASTL, we do use char_traits, this is so a basic_string can be created
     // using a case-insensitive char_traits to make case-insensitive usage easier.
@@ -214,7 +216,7 @@ namespace rsl
         using int_type = int32;
         using pos_type = rsl::streampos;
         using off_type = rsl::streamoff;
-        //using state_type = rsl::mbstate; /// RSL Comment: Different from ISO C++ Standard at time of writing (23/Aug/2022)
+        using state_type = rsl::mbstate_t;
 
         // Compares a and b for equality.
         constexpr static bool eq(char_type a, char_type b)
@@ -231,35 +233,34 @@ namespace rsl
     template <>
     class char_traits<tchar> : public internal::CharTraitsBase<tchar, rsl::wint_t>
     {
+    public:
         using char_type = tchar;
         using int_type = rsl::wint_t;
         using pos_type = rsl::wstreampos;
         using off_type = rsl::streamoff;
-        //using state_type = rsl::mbstate; /// RSL Comment: Different from ISO C++ Standard at time of writing (23/Aug/2022)
+        using state_type = rsl::mbstate_t;
     };
 
     template<>
     class char_traits<char16_t> : public internal::CharTraitsBase<char16_t, uint16>
     {
+    public:
         using char_type = char16_t;
         using int_type = uint16;
         using pos_type = rsl::u16streampos;
         using off_type = rsl::streamoff;
-        //using state_type = rsl::mbstate; /// RSL Comment: Different from ISO C++ Standard at time of writing (23/Aug/2022)
+        using state_type = rsl::mbstate_t;
     };
 
     template<>
     class char_traits<char32_t> : public internal::CharTraitsBase<char32_t, uint32>
     {
+    public:
         using char_type = char32_t;
         using int_type = uint32;
         using pos_type = rsl::u32streampos;
         using off_type = rsl::streamoff;
-        //using state_type = rsl::mbstate; /// RSL Comment: Different from ISO C++ Standard at time of writing (23/Aug/2022)
+        using state_type = rsl::mbstate_t;
     };
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename CharType>
-    using CharTraits = char_traits<CharType>;
-#endif 
-}
+REX_RSL_END_NAMESPACE

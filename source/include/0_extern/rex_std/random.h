@@ -12,8 +12,6 @@
 
 #pragma once
 
-#include "rex_std/internal/config.h"
-
 #include "rex_std/bonus/types.h"
 
 #include "rex_std/initializer_list.h"
@@ -23,8 +21,8 @@
 
 #include <random>
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename UIntType, UIntType a, UIntType c, UIntType m>
     REX_STD_TEMPLATED_CLASS_ALIAS(linear_congruential_engine, UIntType, a, c, m);
 
@@ -116,6 +114,8 @@ namespace rsl
     REX_STD_CLASS_ALIAS(seed_seq);
 
     REX_STD_FUNC_ALIAS(generate_canonical);
-}
+
+REX_RSL_END_NAMESPACE
+
 
 #include "rex_std/enable_std_checking.h"

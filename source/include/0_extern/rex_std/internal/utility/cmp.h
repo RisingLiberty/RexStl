@@ -13,8 +13,8 @@
 #include "rex_std/internal/type_traits/make_unsigned.h"
 #include "rex_std/internal/type_traits/is_signed.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T, typename U>
     constexpr bool cmp_equal(T t, U u)
     {
@@ -76,4 +76,5 @@ namespace rsl
     {
         return !cmp_less(t, u);
     }
-}
+
+REX_RSL_END_NAMESPACE

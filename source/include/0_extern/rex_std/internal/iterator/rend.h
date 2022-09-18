@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename C>
     auto rend(C& c) -> decltype(c.rend())
     {
@@ -29,4 +29,5 @@ namespace rsl
     {
         return c.crend();
     }
-}
+
+REX_RSL_END_NAMESPACE

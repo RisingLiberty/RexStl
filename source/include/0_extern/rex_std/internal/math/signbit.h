@@ -15,8 +15,8 @@
 #include "rex_std/internal/type_traits/is_integral.h"
 #include "rex_std/internal/type_traits/is_unsigned.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     constexpr bool signbit(int8 arg)
     {
         return arg & 0x80;
@@ -60,4 +60,4 @@ namespace rsl
         return signbit(arg_int);
     }
 
-}
+REX_RSL_END_NAMESPACE

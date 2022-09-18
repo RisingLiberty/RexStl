@@ -21,33 +21,10 @@
 
 #include <sstream>
 
-namespace rsl
-{
-    template <typename CharT, typename Traits = char_traits<CharT>, typename Allocator = typed_allocator<CharT>>
-    REX_STD_TEMPLATED_CLASS_ALIAS(basic_stringbuf, CharT, Traits, Allocator);
+REX_RSL_BEGIN_NAMESPACE
 
-    template <typename CharT, typename Traits = char_traits<CharT>, typename Allocator = typed_allocator<CharT>>
-    REX_STD_TEMPLATED_CLASS_ALIAS(basic_istringstream, CharT, Traits, Allocator);
 
-    template <typename CharT, typename Traits = char_traits<CharT>, typename Allocator = typed_allocator<CharT>>
-    REX_STD_TEMPLATED_CLASS_ALIAS(basic_ostringstream, CharT, Traits, Allocator);
 
-    template <typename CharT, typename Traits = char_traits<CharT>, typename Allocator = typed_allocator<CharT>>
-    REX_STD_TEMPLATED_CLASS_ALIAS(basic_stringstream, CharT, Traits, Allocator);
-
-    REX_STD_CLASS_ALIAS(stringbuf);
-    REX_STD_CLASS_ALIAS(wstringbuf);
-
-    REX_STD_CLASS_ALIAS(istringstream);
-    REX_STD_CLASS_ALIAS(wistringstream);
-
-    REX_STD_CLASS_ALIAS(ostringstream);
-    REX_STD_CLASS_ALIAS(wostringstream);
-    
-    REX_STD_CLASS_ALIAS(stringstream);
-    REX_STD_CLASS_ALIAS(wstringstream);
-
-    //REX_STD_FUNC_ALIAS(swap); // Doesn't work because rsl has its own swap
-}
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/enable_std_checking.h"

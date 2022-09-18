@@ -15,8 +15,8 @@
 #include "rex_std/internal/type_traits/integral_constant.h"
 #include "rex_std/internal/type_traits/remove_cv.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
 	namespace internal
 	{
         template <typename>
@@ -33,11 +33,4 @@ namespace rsl
     template <typename T>
     constexpr bool is_member_pointer_v = is_member_pointer<T>::value;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using IsMemberPointerStruct = is_member_pointer<T>;
-
-    template <typename T>
-    constexpr bool IsMemberPointer = IsMemberPointerStruct<T>::value;
-#endif
-}
+REX_RSL_END_NAMESPACE

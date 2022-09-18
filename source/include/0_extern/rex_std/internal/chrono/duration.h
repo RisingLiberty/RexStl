@@ -16,6 +16,7 @@
 #include "rex_std/ratio.h"
 
 #include "rex_std/internal/chrono/duration_values.h"
+#include "rex_std/internal/chrono/treat_as_floating_point.h"
 
 #include "rex_std/internal/type_traits/integral_constant.h"
 #include "rex_std/internal/type_traits/decay.h"
@@ -23,20 +24,17 @@
 #include "rex_std/internal/type_traits/enable_if.h"
 #include "rex_std/internal/type_traits/is_convertible.h"
 
-#include "rex_std/bonus//string/string_utils.h"
+#include "rex_std/bonus/string/string_utils.h"
 
 #include "rex_std/limits.h"
 
 #include "rex_std/ostream.h"
 
-#include "rex_std/cassert.h"
+#include "rex_std/internal/assert/assert_fwd.h"
 
-namespace rsl::chrono
+REX_RSL_BEGIN_NAMESPACE
+namespace chrono
 {
-    template <typename Rep>
-    struct treat_as_floating_point : public is_floating_point<Rep>
-    {};
-    
     template <typename Rep, typename Period = ratio<1>>
     class duration;
 
@@ -124,10 +122,12 @@ namespace rsl::chrono
     template <typename Rep, typename Period>
     class duration
     {
+    private:
+        using this_type = duration<Rep, Period>;
+
     public:
         using rep = Rep;
         using period = Period;
-        using this_type = duration<Rep, Period>;
 
         constexpr duration() = default;
         duration(const duration&) = default;
@@ -157,11 +157,11 @@ namespace rsl::chrono
         constexpr static duration (min)() { return duration((duration_values<Rep>::min)()); }
         constexpr static duration (max)() { return duration((duration_values<Rep>::max)()); }
 
-        constexpr duration operator+() const
+        constexpr common_type<duration> operator+() const
         {
             return *this;
         }
-        constexpr duration operator-() const
+        constexpr common_type<duration> operator-() const
         {
             return duration(0 - m_rep);
         }
@@ -406,11 +406,11 @@ namespace rsl::chrono
             *--rnext = ']';
             if (den != 1)
             {
-                rnext = rsl::internal::unsigned_intergral_to_buff(rnext, static_cast<uintmax>(den));
+                rnext = rsl::internal::unsigned_integral_to_buff(rnext, static_cast<uintmax>(den));
                 *--rnext = '/';
             }
 
-            rnext = rsl::internal::unsigned_intergral_to_buff(rnext, static_cast<uintmax>(num));
+            rnext = rsl::internal::unsigned_integral_to_buff(rnext, static_cast<uintmax>(num));
             *--rnext = '[';
             return rnext;
         }
@@ -455,18 +455,12 @@ namespace rsl::chrono
 
     /// [24/Jul/2022] RSL TODO: We have yet to implement rsl::chrono::Formatter
     // template <typename Rep, typename Period, typename CharType>
-    // struct Formatter<Chrono::duration<Rep, Period>, CharType>;
-
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename Rep, typename Period = ratio<1>>
-    using Duration = duration<Rep, Period>;
-
-    template <typename Rep>
-    using TreatAsFloatingPoint = treat_as_floating_point<Rep>;
-#endif    
+    // struct Formatter<Chrono::duration<Rep, Period>, CharType>;  
 }
+REX_RSL_END_NAMESPACE
 
-namespace rsl::chrono_literals
+REX_RSL_BEGIN_NAMESPACE
+namespace chrono_literals
 {
 #pragma warning(push)
 #pragma warning(disable : 4455) // literal suffix identifiers that do not start with an underscore are reserved
@@ -520,18 +514,4 @@ namespace rsl::chrono_literals
     }
 #pragma warning(pop)
 }
-
-#include "rex_std/std_alias_defines.h"
-#include "rex_std/disable_std_checking.h"
-
-#include <chrono>
-
-namespace rsl::chrono
-{
-#ifdef REX_ENABLE_WITH_CPP20
-    REX_STD_FUNC_ALIAS(from_stream);
-    REX_STD_FUNC_ALIAS(clock_cast);
-#endif // REX_ENABLE_WITH_CPP20
-}
-
-#include "rex_std/enable_std_checking.h"
+REX_RSL_END_NAMESPACE

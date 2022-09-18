@@ -12,10 +12,11 @@
 
 #pragma once
 
+#include "rex_std/bonus/defines.h"
 #include "rex_std/bonus/attributes.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     REX_NO_RETURN void unreachable()
     {
         #if defined(__GNUC__) // GCC, Clang, ICC
@@ -24,4 +25,5 @@ namespace rsl
             __assume(false);
         #endif
     }
-}
+
+REX_RSL_END_NAMESPACE

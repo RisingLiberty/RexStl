@@ -12,12 +12,10 @@
 
 #pragma once
 
-#include "rex_std/internal/config.h"
-
 #include "rex_std/internal/ostream/basic_ostream.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     using ostream = basic_ostream<char8>;
     using wostream = basic_ostream<tchar>;
 
@@ -45,6 +43,6 @@ namespace rsl
     //template <typename CharT, typename Traits>
     //basic_ostream<CharT, Traits>& flush_emit(basic_ostream<CharT, Traits>& os);
 
-}
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/enable_std_checking.h"

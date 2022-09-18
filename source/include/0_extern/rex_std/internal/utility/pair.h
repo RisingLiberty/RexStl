@@ -26,10 +26,10 @@
 #include "rex_std/internal/utility/move.h"
 #include "rex_std/internal/utility/forward.h"
 #include "rex_std/internal/utility/piecewise_construct.h"
-#include "rex_std/internal/utility/tuple.h"
+#include "rex_std/tuple.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     STATIC_WARNING("using rsl::pair - this is deprecated, please use a named struct");
 
 	template <typename T1, typename T2>
@@ -379,8 +379,5 @@ namespace rsl
 	struct pair_first_construct_t {};
 	inline constexpr pair_first_construct_t pair_first_construct = pair_first_construct_t();
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-	template <typename T1, typename T2>
-	using Pair = pair<T1, T2>;
-#endif
-}
+REX_RSL_END_NAMESPACE
+

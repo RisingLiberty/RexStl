@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template<typename InputIt1, typename InputIt2>
     bool includes(InputIt1 first1, InputIt1 last1,
         InputIt2 first2, InputIt2 last2)
@@ -41,4 +41,5 @@ namespace rsl
         }
         return true;
     }
-}
+
+REX_RSL_END_NAMESPACE

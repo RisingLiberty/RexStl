@@ -14,8 +14,8 @@
 
 #include "rex_std/internal/type_traits/integral_constant.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename, typename>
     constexpr bool is_same_v = false;
     template <typename T>
@@ -24,11 +24,4 @@ namespace rsl
     template <typename T1, typename T2>
     struct is_same : public bool_constant<is_same_v<T1, T2>> {};
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T1, typename T2>
-    using IsSameStruct = is_same<T1, T2>;
-
-    template <typename T1, typename T2>
-    constexpr bool IsSame = is_same<T1, T2>::value;
-#endif
-}
+REX_RSL_END_NAMESPACE

@@ -17,8 +17,8 @@
 
 #include <cstdio>
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     REX_STD_CLASS_ALIAS(FILE);
     REX_STD_CLASS_ALIAS(fpos_t);
     REX_STD_CLASS_ALIAS(size_t);
@@ -68,6 +68,7 @@ namespace rsl
     REX_STD_FUNC_ALIAS(rename);
     REX_STD_FUNC_ALIAS(tmpfile);
     REX_STD_FUNC_ALIAS(tmpnam);
-}
+
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/enable_std_checking.h"

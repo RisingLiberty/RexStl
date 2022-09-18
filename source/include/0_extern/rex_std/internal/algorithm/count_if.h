@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
 	// Note: The non-predicate version of count_if is count and not another variation of count_if.
 	// This is because both versions would have three parameters and there could be ambiguity.
 	template <typename InputIterator, typename Predicate>
@@ -28,4 +28,5 @@ namespace rsl
 		}
 		return result;
 	}
-}
+
+REX_RSL_END_NAMESPACE

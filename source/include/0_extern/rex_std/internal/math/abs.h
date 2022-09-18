@@ -12,11 +12,12 @@
 
 #pragma once
 
-namespace rsl::internal
-{
+REX_RSL_BEGIN_NAMESPACE::internal
+
   template <typename T>
   constexpr T abs(T value)
   {
     return (value > 0) ? value : -value;
   }
-}
+
+REX_RSL_END_NAMESPACE

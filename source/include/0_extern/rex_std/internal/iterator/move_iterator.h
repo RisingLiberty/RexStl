@@ -12,15 +12,74 @@
 
 #pragma once
 
-#include "rex_std/std_alias_defines.h"
-#include "rex_std/disable_std_checking.h"
+#include "rex_std/internal/iterator/iterator_traits.h"
 
-#include <iterator>
+REX_RSL_BEGIN_NAMESPACE
 
-namespace rsl
-{
-    template <typename Iterator>
-    REX_STD_TEMPLATED_CLASS_ALIAS(move_iterator, Iterator);
-}
+    template <typename Iter>
+    class move_iterator
+    {
+    public:
+        using iterator_type = Iter;
+        using iterator_category = typename iterator_traits<Iter>::iterator_category;
+        using value_type = typename iterator_traits<Iter>::value_type;
+        using difference_type = typename iterator_traits<Iter>::difference_type;
+        using pointer = Iter;
+        using reference = iterator_traits<Iter>::reference;
 
-#include "rex_std/enable_std_checking.h"
+        constexpr move_iterator();
+        constexpr explicit move_iterator(iterator_type it);
+        template <typename U>
+        constexpr move_iterator(const move_iterator<U>& other);
+        
+        template <typename U>
+        constexpr move_iterator& operator=(const move_iterator<U>& other);
+        
+        constexpr const iterator_type& base() const&;
+        constexpr iterator_type base() &&;
+
+        constexpr reference operator*() const;
+        constexpr pointer operator->() const;
+
+        constexpr auto operator[](difference_type n) const;
+
+        constexpr move_iterator& operator++();
+        constexpr move_iterator& operator--();
+
+        constexpr move_iterator operator++(int);
+        constexpr move_iterator operator--(int);
+
+        constexpr move_iterator operator+(difference_type n) const;
+        constexpr move_iterator operator-(difference_type n) const;
+        constexpr move_iterator& operator+=(difference_type n);
+        constexpr move_iterator& operator-=(difference_type n);
+
+    private:
+        iterator_type m_current;
+    };
+
+    template <typename Iterator1, typename Iterator2>
+    constexpr bool operator==(const move_iterator<Iterator1>& lhs, const move_iterator<Iterator2>& rhs);
+    template <typename Iterator1, typename Iterator2>
+    constexpr bool operator!=(const move_iterator<Iterator1>& lhs, const move_iterator<Iterator2>& rhs);
+
+    template <typename Iterator1, typename Iterator2>
+    constexpr bool operator<(const move_iterator<Iterator1>& lhs, const move_iterator<Iterator2>& rhs);
+    template <typename Iterator1, typename Iterator2>
+    constexpr bool operator<=(const move_iterator<Iterator1>& lhs, const move_iterator<Iterator2>& rhs);
+    template <typename Iterator1, typename Iterator2>
+    constexpr bool operator>(const move_iterator<Iterator1>& lhs, const move_iterator<Iterator2>& rhs);
+    template <typename Iterator1, typename Iterator2>
+    constexpr bool operator>=(const move_iterator<Iterator1>& lhs, const move_iterator<Iterator2>& rhs);
+
+    template <typename Iter>
+    constexpr move_iterator<Iter> operator+(typename move_iterator<Iter>::difference_type n, const move_iterator<Iter>& it);
+
+    template <typename Iterator1, typename Iterator2>
+    constexpr auto operator-(const move_iterator<Iterator1>& lhs, const move_iterator<Iterator2>& rhs) -> decltype(lhs.base() - rhs.base());
+
+    template <typename Iter>
+    constexpr move_iterator<Iter> make_move_iterator(Iter i);
+
+REX_RSL_END_NAMESPACE
+

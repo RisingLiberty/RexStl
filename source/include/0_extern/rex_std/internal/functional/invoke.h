@@ -19,8 +19,8 @@
 
 #include "rex_std/internal/functional/reference_wrapper.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     namespace internal
     {
         enum class InvokerStrategy
@@ -193,4 +193,5 @@ namespace rsl
             return (*static_cast<T1 &&>(args1)).*obj;
         }
     }
-}
+
+REX_RSL_END_NAMESPACE

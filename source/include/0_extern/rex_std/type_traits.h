@@ -12,8 +12,6 @@
 
 #pragma once
 
-#include "rex_std/internal/config.h"
-
 #include "rex_std/internal/type_traits/conditional.h"
 #include "rex_std/internal/type_traits/disjunction.h"
 #include "rex_std/internal/type_traits/enable_if.h"

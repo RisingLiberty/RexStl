@@ -13,9 +13,10 @@
 #pragma once
 
 #include "rex_std/bonus/types.h"
-#include "rex_std/internal/memory/byte.h"
 
-namespace rsl
-{
-    void* memset(byte* dest, byte val, card32 len);
-}
+REX_RSL_BEGIN_NAMESPACE
+
+    void* memset(void* dest, char val, count_t len); 
+
+REX_RSL_END_NAMESPACE
+

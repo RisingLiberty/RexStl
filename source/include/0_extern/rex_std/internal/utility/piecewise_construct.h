@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     struct piecewise_construct_t 
     { 
         explicit piecewise_construct_t() = default; 
@@ -21,10 +21,4 @@ namespace rsl
 
     constexpr piecewise_construct_t piecewise_construct = piecewise_construct_t();
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    using PiecewiseConstructStruct = piecewise_construct_t;
-
-    constexpr piecewise_construct_t PiecewiseConstruct;
-#endif
-
-}
+REX_RSL_END_NAMESPACE

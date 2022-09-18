@@ -23,8 +23,8 @@
 
 #include "rex_std/internal/memory/nullptr.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
   template <typename T>
   class unique_array
   {
@@ -130,4 +130,5 @@ namespace rsl
     using Elem = rsl::remove_extent_t<T>;
     return unique_array<Elem>(new Elem[size](), size);
   }
-}
+
+REX_RSL_END_NAMESPACE

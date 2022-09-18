@@ -19,8 +19,8 @@
 
 #include <compare>
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     REX_STD_CLASS_ALIAS(partial_ordering);
 
     template <typename T, typename Cat = rsl::partial_ordering>
@@ -48,7 +48,8 @@ namespace rsl
     REX_STD_FUNC_ALIAS(is_lteq);
     REX_STD_FUNC_ALIAS(is_gt);
     REX_STD_FUNC_ALIAS(is_gteq);
-}
+
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/enable_std_checking.h"
 

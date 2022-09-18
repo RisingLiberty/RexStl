@@ -18,8 +18,8 @@
 #include "rex_std/internal/type_traits/is_union.h"
 #include "rex_std/internal/type_traits/is_class.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T>
     struct is_object : public bool_constant<is_scalar_v<T> || is_array_v<T> || is_union_v<T> || is_class_v<T>>
     {};
@@ -27,11 +27,4 @@ namespace rsl
     template <typename T>
     constexpr bool is_object_v = is_object<T>::value;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using IsObjectStruct = is_object<T>;
-
-    template <typename T>
-    constexpr bool IsObject = is_object<T>::value;
-#endif
-}
+REX_RSL_END_NAMESPACE

@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T> struct remove_reference { using type = T; };
     template <typename T> struct remove_reference<T&> { using type = T; };
     template <typename T> struct remove_reference<T&&> { using type = T; };
@@ -21,11 +21,4 @@ namespace rsl
     template <typename T>
     using remove_reference_t = typename remove_reference<T>::type;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using RemoveReferenceStruct = remove_reference<T>;
-
-    template <typename T>
-    using RemoveReference = typename remove_reference<T>::type;
-#endif
-}
+REX_RSL_END_NAMESPACE

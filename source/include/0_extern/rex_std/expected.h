@@ -18,14 +18,15 @@
 #include "rex_std/disable_std_checking.h"
 #include <expected>
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     REX_STD_TEMPLATED_CLASS_ALIAS(expected, typename T, typename E);
     REX_STD_TEMPLATED_CLASS_ALIAS(unexpected, typename E);
 
     REX_STD_CLASS_ALIAS(unexpect_t);
     REX_STD_OBJECT_ALIAS(unexpect);
-}
+
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/enable_std_checking.h"
 

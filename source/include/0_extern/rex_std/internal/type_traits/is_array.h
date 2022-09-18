@@ -14,8 +14,8 @@
 
 #include "rex_std/internal/type_traits/integral_constant.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename>
     constexpr bool is_array_v = false; // determine whether type argument is an array
 
@@ -28,11 +28,4 @@ namespace rsl
     template <class T>
     struct is_array : public bool_constant<is_array_v<T>> {};
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using IsArrayStruct = is_array<T>;
-
-    template <typename T>
-    constexpr bool IsArray = is_array<T>::value;
-#endif
-}
+REX_RSL_END_NAMESPACE

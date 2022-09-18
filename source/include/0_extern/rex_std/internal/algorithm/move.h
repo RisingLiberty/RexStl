@@ -14,8 +14,8 @@
 
 #include "rex_std/internal/utility/move.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename InputIterator, typename OutputIterator>
     OutputIterator move(InputIterator first, InputIterator last, OutputIterator dst_first)
     {
@@ -28,4 +28,5 @@ namespace rsl
             ++dst;
         }
     }
-}
+
+REX_RSL_END_NAMESPACE

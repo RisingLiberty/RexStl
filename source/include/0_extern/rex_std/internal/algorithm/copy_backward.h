@@ -22,8 +22,8 @@
 #include "rex_std/internal/type_traits/is_trivially_copyable.h"
 #include "rex_std/internal/type_traits/is_pointer.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
 	namespace internal
 	{
 		// Implementation moving copying both trivial and non-trivial data via a lesser iterator than random-access.
@@ -114,4 +114,5 @@ namespace rsl
 
 		internal::MoveAndCopyBackwardHelper::move_or_copy_backward(first, last, dst_first);
 	}
-}
+
+REX_RSL_END_NAMESPACE

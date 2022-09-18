@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T>
     constexpr const T& (max)(const T& lhs, const T& rhs)
     {
@@ -24,4 +24,5 @@ namespace rsl
     {
         return comp(lhs, rhs) ? rhs : lhs;
     }
-}
+
+REX_RSL_END_NAMESPACE

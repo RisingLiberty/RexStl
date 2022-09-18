@@ -12,8 +12,6 @@
 
 #pragma once
 
-#include "rex_std/internal/config.h"
-
 #include "rex_std/bonus/types.h"
 #include "rex_std/bonus/type_traits/sign_of.h"
 
@@ -21,8 +19,8 @@
 
 #include "rex_std/cstdint.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <intmax Num, intmax Den>
     struct ratio;
     
@@ -243,4 +241,5 @@ namespace rsl
 	using exa   = ratio<1000000000000000000, 1      >;
 	// using zetta = ratio<1000000000000000000000, 1   >;   // not supported, too big for intmax
 	// using yotta = ratio<1000000000000000000000000, 1>;   // not supported, too big for intmax
-}
+
+REX_RSL_END_NAMESPACE

@@ -15,8 +15,8 @@
 #include "rex_std/internal/type_traits/is_array.h"
 #include "rex_std/internal/memory/addressof.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template<typename T>
     constexpr void destroy_at(T* p)
     {
@@ -32,4 +32,5 @@ namespace rsl
             p->~T();
         }
     }
-}
+
+REX_RSL_END_NAMESPACE

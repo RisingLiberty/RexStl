@@ -12,8 +12,8 @@
 
 #include "rex_std/internal/type_traits/integral_constant.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T>
     struct is_bounded_array : public false_type
     {};
@@ -25,11 +25,4 @@ namespace rsl
     template <typename T>
     constexpr bool is_bounded_array_v = is_bounded_array<T>::value;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using IsBoundedArrayStruct = is_bounded_array<T>;
-
-    template <typename T>
-    constexpr bool IsBoundedArray = IsBoundedArrayStruct<T>::value;
-#endif
-}
+REX_RSL_END_NAMESPACE

@@ -12,6 +12,8 @@
 
 #pragma once
 
+#include "rex_std/bonus/defines.h"
+
 #include "rex_std/std_alias_defines.h"
 #include "rex_std/disable_std_checking.h"
 
@@ -19,8 +21,8 @@
 
 #include "rex_std/compare.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename ... Types>
     REX_STD_TEMPLATED_CLASS_ALIAS(variant, Types...);
 
@@ -54,6 +56,6 @@ namespace rsl
     REX_STD_FUNC_ALIAS(operator>);
     REX_STD_FUNC_ALIAS(operator>=);
     
-}
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/enable_std_checking.h"

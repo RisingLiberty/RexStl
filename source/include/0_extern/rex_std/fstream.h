@@ -12,8 +12,6 @@
 
 #pragma once
 
-#include "rex_std/internal/config.h"
-
 #include "rex_std/internal/string/char_traits.h"
 
 #include "rex_std/std_alias_defines.h"
@@ -21,8 +19,8 @@
 
 #include <fstream>
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename CharT, typename Traits = char_traits<CharT>>
     REX_STD_TEMPLATED_CLASS_ALIAS(basic_filebuf, CharT, Traits);
 
@@ -45,6 +43,7 @@ namespace rsl
     REX_STD_CLASS_ALIAS(wfstream);
 
     ////REX_STD_FUNC_ALIAS(swap); // Doesn't work because rsl has its own swap // Doesn't work because rsl has its own swap
-}
+
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/enable_std_checking.h"

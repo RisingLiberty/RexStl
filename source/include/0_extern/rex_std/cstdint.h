@@ -12,10 +12,8 @@
 
 #pragma once
 
-#include "rex_std/internal/config.h"
+REX_RSL_BEGIN_NAMESPACE
 
-namespace rsl
-{
     using int8 = signed char;
     using int16 = short;
     using int32 = int;
@@ -132,4 +130,5 @@ namespace rsl
 
 #define INTMAX_C(x) INT64_C(x)
 #define UINTMAX_C(x) UINT64_C(x)
-}
+
+REX_RSL_END_NAMESPACE

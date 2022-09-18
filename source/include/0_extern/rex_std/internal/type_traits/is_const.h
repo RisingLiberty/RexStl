@@ -14,8 +14,8 @@
 
 #include "rex_std/internal/type_traits/integral_constant.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     // determine whether type argument is const qualified
 
     namespace internal
@@ -31,11 +31,5 @@ namespace rsl
     template <typename T>
     constexpr bool is_const_v = is_const<T>::value;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using IsConstStruct = is_const<T>;
+REX_RSL_END_NAMESPACE
 
-    template <typename T>
-    constexpr bool IsConst = IsConstStruct<T>::value;
-#endif
-}

@@ -12,13 +12,10 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename ... Args>
     using void_t = void;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename ... Args>
-    using Void = void;
-#endif
-}
+REX_RSL_END_NAMESPACE
+

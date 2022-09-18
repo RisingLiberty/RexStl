@@ -12,6 +12,8 @@
 
 #pragma once
 
+REX_RSL_BEGIN_NAMESPACE
+
 template <typename InputIterator, typename OutputIterator, typename Func, typename Predicate>
 void transform(InputIterator first, InputIterator last, OutputIterator dst_first, Func func, Predicate predicate)
 {
@@ -26,3 +28,5 @@ void transform(InputIterator first, InputIterator last, OutputIterator dst_first
         ++it;
     }
 }
+
+REX_RSL_END_NAMESPACE

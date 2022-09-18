@@ -14,11 +14,12 @@
 
 #include "rex_std/bonus/types.h"
 
-namespace rsl
-{
-    template <typename T, card32 N>
-    constexpr card32 size(const T(&/*arr*/)[N])
+REX_RSL_BEGIN_NAMESPACE
+
+    template <typename T, count_t N>
+    constexpr count_t size(const T(&/*arr*/)[N])
     {
         return N;
     }
-}
+
+REX_RSL_END_NAMESPACE

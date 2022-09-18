@@ -12,12 +12,13 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename Iterator>
     struct range
     {
         Iterator first;
         Iterator last;
     };
-}
+
+REX_RSL_END_NAMESPACE

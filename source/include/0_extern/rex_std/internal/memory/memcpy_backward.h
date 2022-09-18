@@ -16,8 +16,8 @@
 
 #include "rex_std/internal/memory/byte.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     constexpr void* memcpy_backward(void* dst, const void* src, card32 len)
     {
         byte* dst_byte = static_cast<byte*>(dst) + len;
@@ -31,4 +31,6 @@ namespace rsl
         }
         return dst;
     }
-}
+
+REX_RSL_END_NAMESPACE
+

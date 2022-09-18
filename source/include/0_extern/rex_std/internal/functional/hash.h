@@ -18,14 +18,14 @@
 
 #include "rex_std/internal/type_traits/is_enum.h"
 
-namespace rsl
-{
+#include "rex_std/bonus/functional/hash_result.h"
+
+REX_RSL_BEGIN_NAMESPACE
+
     /// RSL Comment: Different from ISO C++ Standard at time of writing (17/Jul/2022)
     // the standard uses size_t for the hash result.
     // we use uint32 for this, but define it outside of the type
     // which makes it easy to configure should we want to change it to be 64 bit.
-    using hash_result = uint32;
-
     namespace internal
     {
         constexpr hash_result hash_combine(uint64 seed, uint64 hash)
@@ -269,10 +269,4 @@ namespace rsl
         }
     };
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using Hash = hash<T>;
-    using HashResult = hash_result;
-#endif
-
-}
+REX_RSL_END_NAMESPACE

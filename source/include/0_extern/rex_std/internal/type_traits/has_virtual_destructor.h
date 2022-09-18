@@ -14,8 +14,8 @@
 
 #include "rex_std/internal/type_traits/integral_constant.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T>
     struct has_virtual_destructor : public Boolconstant<__has_virtual_destructor(T)>
     {};
@@ -23,11 +23,4 @@ namespace rsl
     template <typename T>
     constexpr bool has_virtual_destructor_v = has_virtual_destructor<T>::value;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using HasVirtualDestructorStruct = has_virtual_destructor<T>;
-
-    template <typename T>
-    constexpr bool HasVirtualDestructor = HasVirtualDestructorStruct<T>::value;
-#endif
-}
+REX_RSL_END_NAMESPACE

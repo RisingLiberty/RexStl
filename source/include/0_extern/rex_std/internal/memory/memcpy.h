@@ -16,16 +16,16 @@
 
 #include "rex_std/internal/memory/byte.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     // TODO: are there more performant ways of copying bytes over that is defined behavior?
     // Maybe cast the memory to int32 or int64, so we can copy over more bytes in 1 go
-    constexpr void* memcpy(void* dst, const void* src, card32 len)
+    constexpr void* memcpy(void* dst, const void* src, count_t len)
     {
         byte* dst_byte = static_cast<byte*>(dst);
         const byte* src_byte = static_cast<const byte*>(src);
 
-        for (card32 i = 0; i < len; ++i)
+        for (count_t i = 0; i < len; ++i)
         {
             *dst_byte = *src_byte;
             ++dst_byte;
@@ -33,4 +33,5 @@ namespace rsl
         }
         return dst;
     }
-}
+
+REX_RSL_END_NAMESPACE

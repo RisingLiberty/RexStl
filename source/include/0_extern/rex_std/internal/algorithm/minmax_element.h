@@ -14,8 +14,8 @@
 
 #include "rex_std/internal/functional/less.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename Iterator>
     struct min_max_element_result
     {
@@ -91,8 +91,4 @@ namespace rsl
         return { min, max };
     }
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename Iterator>
-    using MinMaxElementResult = min_max_element_result<Iterator>;
-#endif
-}
+REX_RSL_END_NAMESPACE

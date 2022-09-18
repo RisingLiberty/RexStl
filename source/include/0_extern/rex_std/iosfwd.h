@@ -14,8 +14,8 @@
 
 #include "rex_std/bonus/types.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     // defined in rex_std/string.h
     template <typename CharT>
     class char_traits;
@@ -105,5 +105,5 @@ namespace rsl
     template <typename CharT, typename Traits>
     class basic_spanstream;
 #endif //REX_ENABLE_WITH_CPP23
-}
 
+REX_RSL_END_NAMESPACE

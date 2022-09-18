@@ -18,8 +18,6 @@
 
 #pragma once
 
-#include "rex_std/internal/config.h"
-
 #include "rex_std/internal/functional/function.h"
 
 #include "rex_std/internal/functional/equal_to.h"
@@ -36,8 +34,8 @@
 
 #include <functional>
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     REX_STD_FUNC_ALIAS(mem_fn);
 
     template <typename ForwardIt, typename BinaryPredicate = rsl::equal_to<>>
@@ -57,6 +55,7 @@ namespace rsl
 
 #endif // REX_ENABLE_WITH_CPP23
 
-}
+
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/enable_std_checking.h"

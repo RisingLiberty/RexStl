@@ -16,8 +16,8 @@
 #include "rex_std/internal/type_traits/is_function.h"
 #include "rex_std/internal/type_traits/remove_cv.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     namespace internal
     {
         template <typename T>
@@ -35,11 +35,4 @@ namespace rsl
     template <typename T>
     constexpr bool is_member_function_pointer_v =is_member_function_pointer<T>::value;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using IsMemberFunctionPointerStruct = is_member_function_pointer<T>;
-
-    template <typename T>
-    using IsMemberFunctionPointer = IsMemberFunctionPointerStruct<T>::value;
-#endif
-}
+REX_RSL_END_NAMESPACE

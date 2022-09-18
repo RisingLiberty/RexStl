@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template<class ForwardIterator, class Size, class T>
     ForwardIterator search_n(ForwardIterator first, ForwardIterator last,
         Size count, const T& value)
@@ -97,4 +97,5 @@ namespace rsl
         }
         return last;
     }
-}
+
+REX_RSL_END_NAMESPACE

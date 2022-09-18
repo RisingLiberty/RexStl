@@ -22,8 +22,8 @@
 
 #include <deque>
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T, typename Allocator = typed_allocator<T>>
     REX_STD_TEMPLATED_CLASS_ALIAS(deque, T, Allocator);
 
@@ -49,6 +49,7 @@ namespace rsl
     REX_STD_FUNC_ALIAS(ssize);
     REX_STD_FUNC_ALIAS(empty);
     REX_STD_FUNC_ALIAS(data);
-}
+
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/enable_std_checking.h"

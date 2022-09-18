@@ -13,9 +13,10 @@
 #pragma once
 
 #include "rex_std/internal/type_traits/integral_constant.h"
+#include "rex_std/internal/type_traits/is_arithmetic.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     namespace internal
     {
         template <typename T, bool = is_arithmetic_v<T>>
@@ -34,11 +35,4 @@ namespace rsl
     template <typename T>
     constexpr bool is_unsigned_v = is_unsigned<T>::value;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using IsUnsignedStruct = is_unsigned<T>;
-
-    template <typename T>
-    constexpr bool IsUnsigned = is_unsigned<T>::value;
-#endif
-}
+REX_RSL_END_NAMESPACE

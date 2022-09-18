@@ -12,8 +12,6 @@
 
 #pragma once
 
-#include "rex_std/internal/config.h"
-
 #include "rex_std/bonus/types.h"
 #include "rex_std/bonus/defines.h"
 
@@ -38,8 +36,8 @@
 
 #include "rex_std/initializer_list.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     struct ListNodeBase
     {
         ListNodeBase* next;
@@ -1027,15 +1025,14 @@ namespace rsl
         size_type m_size;
 #endif
     };
-}
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/std_alias_defines.h"
 #include "rex_std/disable_std_checking.h"
 
 #include <list>
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
     template <typename T, typename Allocator>
     REX_STD_TEMPLATED_CLASS_ALIAS(list, T, Allocator);
 
@@ -1061,6 +1058,7 @@ namespace rsl
     REX_STD_FUNC_ALIAS(ssize);
     REX_STD_FUNC_ALIAS(empty);
     REX_STD_FUNC_ALIAS(data);
-}
+
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/enable_std_checking.h"

@@ -19,7 +19,7 @@
 
 #include <barrier>
 
-namespace rsl
+REX_RSL_BEGIN_NAMESPACE
 {
     template <typename CompletionFunction>
     REX_STD_TEMPLATED_CLASS_ALIAS(barrier, CompletionFunction);

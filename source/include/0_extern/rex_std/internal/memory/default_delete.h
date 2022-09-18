@@ -14,8 +14,8 @@
 
 #include "rex_std/internal/type_traits/is_convertible.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T>
     struct default_delete
     {
@@ -32,8 +32,4 @@ namespace rsl
         }
     };
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using DefaultDelete = default_delete<T>;
-#endif
-}
+REX_RSL_END_NAMESPACE

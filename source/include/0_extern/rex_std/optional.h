@@ -12,8 +12,6 @@
 
 #pragma once
 
-#include "rex_std/internal/config.h"
-
 #include "rex_std/internal/type_traits/is_trivially_destructible.h"
 #include "rex_std/internal/type_traits/aligned_storage.h"
 #include "rex_std/internal/type_traits/is_constructible.h"
@@ -30,13 +28,13 @@
 #include "rex_std/internal/utility/forward.h"
 #include "rex_std/internal/utility/swap.h"
 
-#include "rex_std/cassert.h"
+#include "rex_std/internal/assert/assert_fwd.h"
 #include "rex_std/initializer_list.h"
 
 #include "rex_std/bonus/functional/hash_result.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     // nullopt_t is a class type used indicate an empty optional
     struct nullopt_tag {};
 
@@ -875,8 +873,4 @@ namespace rsl
         }
     };
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using Optional = optional<T>;
-#endif
-}
+REX_RSL_END_NAMESPACE

@@ -13,11 +13,12 @@
 #pragma once
 
 #include "rex_std/internal/iterator/iterator_tags.h"
+#include "rex_std/internal/iterator/iterator_traits.h"
 
 #include "rex_std/internal/type_traits/is_base_of.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     namespace internal
     {
         template <typename Iterator, typename Distance>
@@ -53,11 +54,11 @@ namespace rsl
     void advance(Iterator& it, Distance distance)
     {
         // Random access
-        if constexpr (is_base_of_v<random_access_iterator_tag, typename Iterator::iterator_tag>)
+        if constexpr (is_base_of_v<random_access_iterator_tag, typename iterator_traits<Iterator>::iterator_category>)
         {
             internal::random_access_advance(it, distance);
         }
-        else if constexpr (is_base_of_v<bidirectional_iterator_tag, typename Iterator::iterator_tag>)
+        else if constexpr (is_base_of_v<bidirectional_iterator_tag, typename iterator_traits<Iterator>::iterator_category>)
         {
             internal::bidirectional_advance(it, distance);
         }
@@ -66,4 +67,5 @@ namespace rsl
             internal::forward_advance(it, distance);
         }
     }
-}
+
+REX_RSL_END_NAMESPACE

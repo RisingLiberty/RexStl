@@ -15,8 +15,7 @@
 #include "rex_std/bonus/defines.h"
 #include "rex_std/bonus/utility/strong_type.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
   // integers
 
   using int8 = signed char;
@@ -136,7 +135,8 @@ namespace rsl
   // useful strong types
   REX_CREATE_STRONG_TYPE(Capacity, card32);
   REX_CREATE_STRONG_TYPE(Size, card32);
-}
+
+REX_RSL_END_NAMESPACE
 
 using rsl::int8;
 using rsl::int16;

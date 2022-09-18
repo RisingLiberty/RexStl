@@ -15,8 +15,8 @@
 #include "rex_std/internal/iterator/iterator_tags.h"
 #include "rex_std/internal/algorithm/copy.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
 	namespace internal
 	{
 		template <typename InputIterator, typename Size, typename OutputIterator>
@@ -40,4 +40,5 @@ namespace rsl
 		using IC = typename InputIterator::iterator_category;
 		return internal::copy_n_impl(first, n, dst_first, IC());
 	}
-}
+
+REX_RSL_END_NAMESPACE

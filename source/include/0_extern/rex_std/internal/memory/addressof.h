@@ -14,8 +14,8 @@
 
 #include "rex_std/bonus/attributes.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T>
     REX_NO_DISCARD constexpr T* addressof(T& val)
     {
@@ -29,4 +29,6 @@ namespace rsl
 
     template <typename T>
     REX_NO_DISCARD const T* addressof(const T&&) = delete;
-}
+
+REX_RSL_END_NAMESPACE
+

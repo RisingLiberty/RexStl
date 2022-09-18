@@ -18,10 +18,11 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     enum class io_errc
     {
         stream = 1
     };
-}
+
+REX_RSL_END_NAMESPACE

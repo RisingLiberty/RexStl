@@ -12,15 +12,13 @@
 
 #pragma once
 
-#include "rex_std/internal/config.h"
-
 #include "rex_std/internal/type_traits/is_integral.h"
 #include "rex_std/internal/type_traits/enable_if.h"
 #include "rex_std/internal/cstddef/nullptr.h"
 #include "rex_std/internal/memory/byte.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     // null pointer constant
     #define NULL 0
     // byte offset from the beginning of a standard-layout type to specific member
@@ -45,6 +43,7 @@ namespace rsl
 #else
     #error "No platform defined"
 #endif
-}
+
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/internal/memory/byte.h"

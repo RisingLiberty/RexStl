@@ -16,8 +16,8 @@
 #include "rex_std/internal/type_traits/is_void.h"
 #include "rex_std/bonus/type_traits/is_swappable_utils.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     namespace internal
     {
         template <typename T, typename U, bool OneTypeIsVoid = (is_void_v<T> || is_void_v<U>)>
@@ -41,11 +41,4 @@ namespace rsl
     template <typename T, typename U>
     constexpr bool is_nothrow_swappable_with = is_nothrow_swappable_with<T>::value;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T, typename U>
-    using IsNothrowSwappableWithStruct = is_nothrow_swappable_with<T, U>;
-
-    template <typename T, typename U>
-    constexpr bool IsNothrowSwappableWith = IsNothrowSwappableWith<T, U>::value;
-#endif
-}
+REX_RSL_END_NAMESPACE

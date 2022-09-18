@@ -18,8 +18,8 @@
 
 #include <chrono>
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     using leap_second = std::chrono::leap_second;
     using leap_second_info = std::chrono::leap_second_info;
 
@@ -29,7 +29,8 @@ namespace rsl
     using std::chrono::operator<=;
     using std::chrono::operator>;
     using std::chrono::operator>=;
-}
+
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/enable_std_checking.h"
 

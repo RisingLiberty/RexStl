@@ -14,8 +14,8 @@
 
 #include "rex_std/bonus/types.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     int8 atomic_decrement(int8& val);
     int16 atomic_decrement(int16& val);
     int32 atomic_decrement(int32& val);
@@ -26,4 +26,4 @@ namespace rsl
     uint32 atomic_decrement(uint32& val);
     uint64 atomic_decrement(uint64& val);
 
-}
+REX_RSL_END_NAMESPACE

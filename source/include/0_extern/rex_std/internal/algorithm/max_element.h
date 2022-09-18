@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename InputIterator>
     InputIterator max_element(InputIterator first, InputIterator last)
     {
@@ -45,4 +45,5 @@ namespace rsl
 
         return largest;
     }
-}
+
+REX_RSL_END_NAMESPACE

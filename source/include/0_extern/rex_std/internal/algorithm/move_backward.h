@@ -14,8 +14,8 @@
 
 #include "rex_std/internal/utility/move.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename InputIterator, typename OutputIterator>
     OutputIterator move_backward(InputIterator first, InputIterator last, OutputIterator dst_last)
     {
@@ -27,4 +27,5 @@ namespace rsl
         // dst_last now points to the beginning of the destination sequence instead of the end.
         return dst_last; 
     }
-}
+
+REX_RSL_END_NAMESPACE

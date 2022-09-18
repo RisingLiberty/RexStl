@@ -18,7 +18,8 @@
 
 #include "rex_std/internal/chrono/duration.h"
 
-namespace rsl::chrono
+REX_RSL_BEGIN_NAMESPACE
+namespace chrono
 {
     template <typename Clock, typename Duration = typename Clock::duration>
     class time_point
@@ -165,18 +166,5 @@ namespace rsl::chrono
         return time_point<Clock, ToDuration>(rsl::chrono::round<ToDuration>(time.time_since_epoch()));
     }
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename Clock, typename Duration = typename Clock::duration>
-	using TimePoint = time_point<Clock, Duration>;
-#endif
 }
-
-#include <chrono>
-
-namespace rsl::chrono
-{
-	template <typename Dest, typename Source>
-	using clock_time_conversion = std::chrono::clock_time_conversion<Dest, Source>;
-}
-
-#include "rex_std/enable_std_checking.h"
+REX_RSL_END_NAMESPACE;

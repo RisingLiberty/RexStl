@@ -15,8 +15,8 @@
 #include "rex_std/internal/type_traits/is_pointer.h"
 #include "rex_std/internal/type_traits/is_arithmetic.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     namespace internal
     {
         template <typename T, bool IsSmall>
@@ -80,4 +80,5 @@ namespace rsl
         using const_reference = const array_type&;
         using param_type = const T* const;
     };
-}
+
+REX_RSL_END_NAMESPACE

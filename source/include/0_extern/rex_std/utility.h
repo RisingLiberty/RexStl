@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "rex_std/internal/config.h"
+#include "rex_std/bonus/defines.h"
 
 #include "compare.h"
 #include "initializer_list.h"
@@ -21,11 +21,12 @@
 #include "internal/utility/forward.h"
 #include "internal/utility/move.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename ... Ts>
     class tuple;
-}
+
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/enable_std_checking.h"
 #include <utility>

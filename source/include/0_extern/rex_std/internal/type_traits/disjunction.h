@@ -14,8 +14,8 @@
 
 #include "rex_std/internal/type_traits/integral_constant.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     namespace internal
     {
         template <bool FirstValue, typename First, typename ... Rest>
@@ -40,11 +40,5 @@ namespace rsl
     template <typename ... Traits>
     constexpr bool disjunction_t = disjunction<Traits>::value;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename ... Traits>
-    using DisjunctionStruct = disjunction<Traits...>;
+REX_RSL_END_NAMESPACE
 
-    template <typename ... Traits>
-    using Disjunction = typename DisjunctionStruct<Traits...>::type;
-#endif
-}

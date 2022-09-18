@@ -22,10 +22,11 @@
 
 #include <flat_set>
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     // No pages about this exist yet on cppreference
-}
+
+REX_RSL_END_NAMESPACE
 
 #include <rex_std/enable_std_checking.h>
 

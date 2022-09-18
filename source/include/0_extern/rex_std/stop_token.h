@@ -19,8 +19,8 @@
 
 #include <stop_token>
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     REX_STD_CLASS_ALIAS(stop_token);
     REX_STD_CLASS_ALIAS(stop_source);
 
@@ -30,7 +30,8 @@ namespace rsl
     REX_STD_CLASS_ALIAS(nostopstate_t);
 
     REX_STD_OBJECT_ALIAS(nostopstate);
-}
+
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/enable_std_checking.h"
 

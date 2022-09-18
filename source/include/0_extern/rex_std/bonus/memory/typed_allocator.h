@@ -18,8 +18,8 @@
 
 #include "rex_std/limits.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T>
     class typed_allocator
     {
@@ -27,7 +27,7 @@ namespace rsl
       static_assert(!rsl::is_const_v<T>, "The C++ standard forbids containers of const elements because typed_allocator<const T> is ill-formed");
 
       using value_type = T;
-      using size_type = size_t;
+      using size_type = count_t;
       using difference_type = ptrdiff_t;
 
       /// RSL Comment: Different from ISO C++ Standard at time of writing (24/Jul/2022)
@@ -101,4 +101,5 @@ namespace rsl
     {
       return false; 
     }
-}
+
+REX_RSL_END_NAMESPACE

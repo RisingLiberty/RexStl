@@ -11,15 +11,18 @@
 // ============================================
 
 #include "rex_std/internal/memory/memset.h"
+#include "rex_std/internal/memory/byte.h"
 
-namespace rsl
-{
-    void* memset(byte* dest, byte val, card32 len)
+REX_RSL_BEGIN_NAMESPACE
+
+    void* memset(void* dest, char val, count_t len)
     {
-        while (len-- > 0)
-        {
-            *dest++ = val;
-        }
-        return dest;
+      rsl::byte* dest_b = static_cast<byte*>(dest);
+      while (len-- > 0)
+      {
+        *dest_b++ = static_cast<byte>(val);
+      }
+      return dest;
     }
-}
+
+REX_RSL_END_NAMESPACE

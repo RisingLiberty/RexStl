@@ -18,7 +18,7 @@
 
 #include <chrono>
 
-namespace rsl::chrono
+REX_RSL_BEGIN_NAMESPACE::chrono
 {
     using hh_mm_ss = std::chrono::hh_mm_ss;
 

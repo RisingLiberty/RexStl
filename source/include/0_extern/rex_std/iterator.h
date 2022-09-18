@@ -12,8 +12,6 @@
 
 #pragma once
 
-#include "rex_std/internal/config.h"
-
 #include "rex_std/bonus/types.h"
 
 #include "rex_std/internal/iterator/iterator_tags.h"
@@ -22,8 +20,8 @@
 #include "rex_std/internal/iterator/random_access_iterator.h"
 #include "rex_std/internal/iterator/reverse_iterator.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     /// RSL Comment: Not in ISO C++ Standard at time of writing (17/Aug/2022)
     template <typename It>
     constexpr auto iterator_to_pointer(It it)
@@ -45,15 +43,14 @@ namespace rsl
         return (it + 1).base();
     }
 
-}
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/std_alias_defines.h"
 #include "rex_std/disable_std_checking.h"
 
 #include <iterator>
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
     // No C++20 symbols added here
 
     template <typename Container>
@@ -105,6 +102,7 @@ namespace rsl
     REX_STD_FUNC_ALIAS(size);
     REX_STD_FUNC_ALIAS(ssize);
     REX_STD_FUNC_ALIAS(data);
-}
+
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/enable_std_checking.h"

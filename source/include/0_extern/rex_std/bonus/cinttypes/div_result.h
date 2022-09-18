@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T>
     struct DivResult
     {
@@ -29,4 +29,5 @@ namespace rsl
         res.rem = x % y;
         return res;
     }
-}
+
+REX_RSL_END_NAMESPACE

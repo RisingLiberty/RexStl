@@ -14,8 +14,8 @@
 
 #include "rex_std/bonus/type_traits/is_scalar.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename InputIterator, typename T>
     void fill(InputIterator first, InputIterator end, const T& value)
     {
@@ -24,4 +24,5 @@ namespace rsl
             *dst = value;
         }
     }
-}
+
+REX_RSL_END_NAMESPACE

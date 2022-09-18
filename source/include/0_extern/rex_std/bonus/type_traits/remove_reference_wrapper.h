@@ -12,8 +12,8 @@
 
 #include "rex_std/internal/functional/reference_wrapper.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T>
     struct remove_reference_wrapper
     {
@@ -29,4 +29,5 @@ namespace rsl
     {
         using type = T&;
     };
-}
+
+REX_RSL_END_NAMESPACE

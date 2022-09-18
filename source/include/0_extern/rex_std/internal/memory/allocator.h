@@ -22,8 +22,8 @@
 #include "rex_std/bonus/memory/typed_allocator.h"
 #endif
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     // the only reason we have this define/config is to easily replace std calls with rsl calls
     // when using std, use the type based allocator
 #ifdef REX_ALLOCATOR_IS_TYPE_BASED
@@ -120,12 +120,4 @@ namespace rsl
     }
 #endif
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-#ifdef REX_ALLOCATOR_IS_TYPE_BASED
-    template <typename T>
-    using allocator = allocator<T>;
-#else
-    using allocator = allocator;
-#endif
-#endif
-}
+REX_RSL_END_NAMESPACE

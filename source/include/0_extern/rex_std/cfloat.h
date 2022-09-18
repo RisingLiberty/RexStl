@@ -12,15 +12,13 @@
 
 #pragma once
 
-#include "rex_std/internal/config.h"
-
 /// [22/Jul/2022] RSL Comment: Rex Standard Library doesn't support floating pointer flags yet.
 // It's possible some floating point precision error might occur when using rsl.
 // Due to time constrains we have different priorities right now.
 // Should you have any issues with floating points when using rsl, please contact @nick.debreuck
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     // Define the floating point precision used.
     //
     // For x86, results are in double precision (unless /arch:sse2 is used, in which
@@ -94,4 +92,5 @@ namespace rsl
 
     #define DECIMAL_DIG      DBL_DECIMAL_DIG
    
-}
+
+REX_RSL_END_NAMESPACE

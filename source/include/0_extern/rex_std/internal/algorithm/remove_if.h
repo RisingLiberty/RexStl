@@ -14,8 +14,8 @@
 
 #include "rex_std/internal/algorithm/find_if.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename InputIterator, typename Predicate>
     InputIterator remove_if(InputIterator first, InputIterator last, Predicate predicate)
     {
@@ -32,4 +32,5 @@ namespace rsl
         }
         return first;
     }
-}
+
+REX_RSL_END_NAMESPACE

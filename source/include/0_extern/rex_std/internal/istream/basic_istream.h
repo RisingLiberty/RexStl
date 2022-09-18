@@ -41,8 +41,8 @@
 
 #include "rex_std/bonus/string/string_utils.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
   template <typename CharT, typename Traits>
   class basic_istream : virtual public basic_ios<CharT, Traits>
   {
@@ -973,4 +973,5 @@ namespace rsl
     is >> rsl::forward<T>(val);
     return rsl::move(is);
   }
-}
+
+REX_RSL_END_NAMESPACE

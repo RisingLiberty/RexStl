@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename InputIterator, typename Size, typename Generator>
     void generate_n(InputIterator first, InputIterator last, Size n, Generator g)
     {
@@ -23,4 +23,5 @@ namespace rsl
             *it = g();
         }
     }
-}
+
+REX_RSL_END_NAMESPACE

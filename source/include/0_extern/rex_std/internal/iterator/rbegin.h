@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename C>
     auto rbegin(C& c) -> decltype(c.rbegin())
     {
@@ -29,4 +29,5 @@ namespace rsl
     {
         return c.crbegin();
     }
-}
+
+REX_RSL_END_NAMESPACE

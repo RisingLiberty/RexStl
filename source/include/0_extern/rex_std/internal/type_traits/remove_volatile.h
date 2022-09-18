@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T>
     struct remove_volatile
     {
@@ -29,11 +29,4 @@ namespace rsl
     template <typename T>
     using remove_volatile_t = typename remove_volatile<T>::type;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using RemoveVolatileStruct = remove_volatile_t<T>;
-
-    template <typename T>
-    using RemoveVolatile = typename remove_volatile<T>::type;
-#endif
-}
+REX_RSL_END_NAMESPACE

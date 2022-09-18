@@ -18,7 +18,7 @@
 
 #include <chrono>
 
-namespace rsl::chrono
+REX_RSL_BEGIN_NAMESPACE::chrono
 {
     using tzdb = std::chrono::tzdb;
     using tzdb_list = std::chrono::tzdb_list;

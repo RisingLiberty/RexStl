@@ -12,7 +12,9 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     using nullptr_t = decltype(nullptr);
-}
+
+REX_RSL_END_NAMESPACE
+

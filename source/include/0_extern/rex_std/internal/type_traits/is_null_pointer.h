@@ -16,8 +16,8 @@
 #include "rex_std/internal/type_traits/remove_cv.h"
 #include "rex_std/internal/cstddef/nullptr.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T>
     struct is_null_pointer : public bool_constant<rsl::is_same_v<remove_cv_t<T>, nullptr_t>>
     {};
@@ -25,11 +25,4 @@ namespace rsl
     template <typename T>
     constexpr bool is_null_pointer_v = is_null_pointer<T>::value;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using IsNullPointerStruct = is_null_pointer<T>;
-
-    template <typename T>
-    constexpr bool IsNullPointer = is_null_pointer<T>::value;
-#endif
-}
+REX_RSL_END_NAMESPACE

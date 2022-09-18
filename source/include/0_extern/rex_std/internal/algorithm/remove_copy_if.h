@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template<class InputIterator, class OutputIterator, class Predicate>
     OutputIterator remove_copy_if(InputIterator first, InputIterator last, OutputIterator d_first, Predicate p)
     {
@@ -26,4 +26,5 @@ namespace rsl
         }
         return d_first;
     }
-}
+
+REX_RSL_END_NAMESPACE

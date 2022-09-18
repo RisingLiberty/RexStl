@@ -33,8 +33,8 @@
 
 #include "rex_std/internal/type_traits/underlying_type.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     namespace io
     {
         /// [09/Sep/2022] RSL Comment: to avoid having the following enum classes
@@ -148,4 +148,5 @@ namespace rsl
         // before first use and before destructor
         ios_base() = default;
     };
-}
+
+REX_RSL_END_NAMESPACE

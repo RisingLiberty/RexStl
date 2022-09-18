@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T>
     struct min_max_result
     {
@@ -32,8 +32,4 @@ namespace rsl
         return compare(lhs, rhs) ? min_max_result<T>{ lhs, rhs } : min_max_result<T>{ rhs, lhs };
     }
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using MinMaxResult = min_max_result<T>;
-#endif
-}
+REX_RSL_END_NAMESPACE

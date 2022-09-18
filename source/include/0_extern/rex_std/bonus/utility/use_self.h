@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T>
 	struct use_self
 	{
@@ -24,4 +24,5 @@ namespace rsl
             return x; 
         }
 	};
-}
+
+REX_RSL_END_NAMESPACE

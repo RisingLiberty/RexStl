@@ -10,17 +10,34 @@
 //
 // ============================================
 
+//-----------------------------------------------------------------------------
+// https://en.cppreference.com/w/cpp/memory/uses_allocator
+//
+// Checks if T has type alias of name allocator_type.
+//-----------------------------------------------------------------------------
+
 #pragma once
 
-#include "rex_std/std_alias_defines.h"
+#include "rex_std/internal/type_traits/is_convertible.h"
 
-#include <memory>
+REX_RSL_BEGIN_NAMESPACE
 
-namespace rsl
-{
-    template <typename T, typename Alloc>
-    REX_STD_TEMPLATED_CLASS_ALIAS(uses_allocator, T, Alloc);
+    namespace internal
+    {
+        template <typename T, typename Alloc, typename = void>
+        struct has_allocator_type : false_type {}; // tests for suitable T::allocator_type
 
-    template <typename T, typename Alloc>
-    REX_STD_TEMPLATED_OBJECT_ALIAS(uses_allocator_v, T, Alloc);
-}
+        template <typename T, typename Alloc>
+        struct has_allocator_type<T, Alloc, void_t<typename T::allocator_type>>
+            : is_convertible<Alloc, typename T::allocator_type>::type {}; // tests for suitable T::allocator_type
+
+    }
+
+    template <class T, class Alloc>
+    struct uses_allocator : internal::has_allocator_type<T, Alloc>::type
+    {};
+
+    template <class T, class Alloc>
+    inline constexpr bool uses_allocator_v = uses_allocator<T, Alloc>::value;
+
+REX_RSL_END_NAMESPACE

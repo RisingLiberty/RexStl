@@ -12,8 +12,6 @@
 
 #pragma once
 
-#include "rex_std/internal/config.h"
-
 #include "rex_std/bonus/types.h"
 
 #include "rex_std/bonus/utility/compressed_pair.h"
@@ -26,8 +24,8 @@
 
 #include "rex_std/internal/utility/forward.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     namespace internal
     {
         struct ForwardListNodeBase
@@ -587,52 +585,4 @@ namespace rsl
 #endif
     };
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T, typename Alloc = rsl::allocator>
-    using ForwardList = forward_list<T, Alloc>;
-
-    template <typename T>
-    class ForwardListIterator
-    {};
-
-    template <typename T>
-    class ConstForwardListIterator
-    {};
-#endif
-}
-
-#include "rex_std/std_alias_defines.h"
-#include "rex_std/disable_std_checking.h"
-
-#include <forward_list>
-
-namespace rsl
-{
-    //template <typename T, typename Allocator>
-    //REX_STD_TEMPLATED_CLASS_ALIAS(forward_list, T, Allocator);
-
-    //REX_STD_FUNC_ALIAS(operator==);
-    //REX_STD_FUNC_ALIAS(operator!=);
-    //REX_STD_FUNC_ALIAS(operator<);
-    //REX_STD_FUNC_ALIAS(operator<=);
-    //REX_STD_FUNC_ALIAS(operator>);
-    //REX_STD_FUNC_ALIAS(operator>=);
-    //
-    //REX_STD_FUNC_ALIAS(erase);
-    //REX_STD_FUNC_ALIAS(erase_if);
-
-    //REX_STD_FUNC_ALIAS(begin);
-    //REX_STD_FUNC_ALIAS(cbegin);
-    //REX_STD_FUNC_ALIAS(end);
-    //REX_STD_FUNC_ALIAS(cend);
-    //REX_STD_FUNC_ALIAS(rbegin);
-    //REX_STD_FUNC_ALIAS(crbegin);
-    //REX_STD_FUNC_ALIAS(rend);
-    //REX_STD_FUNC_ALIAS(crend);
-    //REX_STD_FUNC_ALIAS(size);
-    //REX_STD_FUNC_ALIAS(ssize);
-    //REX_STD_FUNC_ALIAS(empty);
-    //REX_STD_FUNC_ALIAS(data);
-}
-
-#include "rex_std/enable_std_checking.h"
+REX_RSL_END_NAMESPACE

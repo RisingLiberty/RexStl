@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <bool Test, typename T = void>
     struct enable_if {};
 
@@ -26,11 +26,4 @@ namespace rsl
     template <bool Test, typename T = void>
     using enable_if_t = typename enable_if<Test, T>::type;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <bool Test, typename T = void>
-    using EnableIfStruct = enable_if<Test, T>;
-
-    template <bool Test, typename T = void>
-    using EnableIf = typename EnableIfStruct<Test>::type;
-#endif
-}
+REX_RSL_END_NAMESPACE

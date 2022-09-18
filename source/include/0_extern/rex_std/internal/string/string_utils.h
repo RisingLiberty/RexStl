@@ -14,7 +14,8 @@
 
 #include "rex_std/bonus/string/character_lookup.h"
 
-namespace rsl::internal::string_utils
+REX_RSL_BEGIN_NAMESPACE
+namespace internal::string_utils
 {
     // compares 2 strings lexicographically
     template <typename Traits, typename Pointer, typename SizeType>
@@ -149,3 +150,4 @@ namespace rsl::internal::string_utils
     }
 
 }
+REX_RSL_END_NAMESPACE

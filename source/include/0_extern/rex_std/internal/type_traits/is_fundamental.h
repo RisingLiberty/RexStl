@@ -18,8 +18,8 @@
 #include "rex_std/internal/type_traits/is_null_pointer.h"
 #include "rex_std/internal/type_traits/is_void.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T>
     struct is_fundamental : public bool_constant<is_arithmetic_v<T> || is_null_pointer_v<T> || is_void_v<T>>
     {};
@@ -27,12 +27,4 @@ namespace rsl
     template <typename T>
     constexpr bool is_fundamental_v = is_fundamental<T>;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using IsFundamentalStruct = is_fundamental<T>;
-
-    template <typename T>
-    constexpr bool IsFundamental = IsFundamentalStruct<T>::value;
-#endif
-
-}
+REX_RSL_END_NAMESPACE

@@ -19,8 +19,8 @@
 
 #include "rex_std/limits.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename CharType>
     class character_lookup
     {
@@ -55,4 +55,5 @@ namespace rsl
     private:
         bool m_table[(numeric_limits<rsl::make_unsigned_t<CharType>>::max)() + 1];
        };
-}
+
+REX_RSL_END_NAMESPACE

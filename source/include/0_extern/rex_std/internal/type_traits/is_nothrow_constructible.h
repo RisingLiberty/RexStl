@@ -14,8 +14,8 @@
 
 #include "rex_std/internal/type_traits/integral_constant.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T, typename ... Args>
     struct is_nothrow_constructible : bool_constant<__is_nothrow_constructible(T, Args...)>
     {};
@@ -23,11 +23,4 @@ namespace rsl
     template <typename T, typename ... Args>
     constexpr bool is_nothrow_constructible_v = is_nothrow_constructible<T, Args>::value;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T, typename ... Args>
-    using IsNoThrowConstructibleStruct = is_nothrow_constructible<T, Args...>;
-
-    template <typename T, typename ... Args>
-    constexpr bool IsNoThrowConstructible = is_nothrow_constructible<T, Args...>::value;
-#endif
-}
+REX_RSL_END_NAMESPACE

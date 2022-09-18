@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename Iterator>
     struct emplace_result
     {
@@ -22,4 +22,5 @@ namespace rsl
     };
     template <typename Iterator>
     using insert_result = emplace_result<Iterator>;
-}
+
+REX_RSL_END_NAMESPACE

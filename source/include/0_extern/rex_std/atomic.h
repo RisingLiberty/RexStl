@@ -17,8 +17,8 @@
 
 #include <atomic>
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T>
     REX_STD_TEMPLATED_CLASS_ALIAS(atomic, T);
 
@@ -117,6 +117,7 @@ namespace rsl
     REX_STD_FUNC_ALIAS(kill_dependency);
     REX_STD_FUNC_ALIAS(atomic_thread_fence);
     REX_STD_FUNC_ALIAS(atomic_signal_fence);
-}
+
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/enable_std_checking.h"

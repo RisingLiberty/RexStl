@@ -32,10 +32,10 @@
 
 #include "rex_std/internal/ios/ios_base.h"
 
-#include "rex_std/cassert.h"
+#include "rex_std/internal/assert/assert_fwd.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename CharT, typename Traits>
     class basic_ios : public ios_base
     {
@@ -283,4 +283,5 @@ namespace rsl
         io::iostate m_iostate;
         CharT m_fill_ch;
     };
-}
+
+REX_RSL_END_NAMESPACE

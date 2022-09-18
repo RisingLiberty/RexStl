@@ -17,8 +17,8 @@
 
 #include "rex_std/internal/memory/pointer_traits.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     namespace internal
     {
         template <typename T, typename = void>
@@ -175,8 +175,4 @@ namespace rsl
         // - select_on_container_copy_construction
     };
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename Alloc>
-    using AllocatorTraits = allocator_traits<Alloc>;
-#endif
-}
+REX_RSL_END_NAMESPACE

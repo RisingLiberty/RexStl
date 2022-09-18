@@ -13,11 +13,12 @@
 #pragma once
 
 #include "rex_std/internal/iterator/iterator_tags.h"
+#include "rex_std/internal/iterator/iterator_traits.h"
 
 #include "rex_std/internal/type_traits/is_base_of.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     namespace internal
     {
         template <typename Iterator>
@@ -29,7 +30,7 @@ namespace rsl
         template <typename Iterator>
         auto non_random_access_distance(Iterator lhs, Iterator rhs)
         {
-            typename Iterator::difference_type result = 0;
+            typename iterator_traits<Iterator>::difference_type result = 0;
             while (lhs != rhs)
             {
                 ++lhs;
@@ -40,15 +41,16 @@ namespace rsl
     }
 
     template <typename Iterator>
-    void distance(Iterator lhs, Iterator rhs)
+    auto distance(Iterator lhs, Iterator rhs)
     {
-        if constexpr (is_base_of_v<random_access_iterator_tag, typename Iterator::iterator_tag>)
+        if constexpr (is_base_of_v<random_access_iterator_tag, typename iterator_traits<Iterator>::iterator_category>)
         {
-            internal::random_access_distance(lhs, rhs);
+            return internal::random_access_distance(lhs, rhs);
         }
         else
         {
-            internal::non_random_access_distance(lhs, rhs);
+            return internal::non_random_access_distance(lhs, rhs);
         }
     }
-}
+
+REX_RSL_END_NAMESPACE

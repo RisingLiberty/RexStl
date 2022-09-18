@@ -23,8 +23,8 @@
 
 #include "rex_std/internal/functional/invoke.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     namespace internal
     {
         template <typename T>
@@ -629,8 +629,4 @@ namespace rsl
     template <typename Fx>
     function(Fx)->function<typename internal::DeduceSignature<Fx>::type>;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename F>
-    using Function = function<F>;
-#endif
-}
+REX_RSL_END_NAMESPACE

@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
 	template <typename InputIterator1, typename InputIterator2>
 	constexpr bool equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2)
 	{
@@ -39,4 +39,5 @@ namespace rsl
 		}
 		return true;
 	}
-}
+
+REX_RSL_END_NAMESPACE

@@ -23,8 +23,8 @@
 
 #include "rex_std/internal/utility/declval.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     namespace internal
     {
         template <typename void_t, typename Callable>
@@ -83,4 +83,5 @@ namespace rsl
         template <typename Callable, typename ... Args>
         using SelectInvokeTraits = conditional_t<sizeof...(Args) == 0, InvokeTraitsZero<void, Callable>, InvokeTraitsNonZero<void, Callable, Args...>>;
     }
-}
+
+REX_RSL_END_NAMESPACE

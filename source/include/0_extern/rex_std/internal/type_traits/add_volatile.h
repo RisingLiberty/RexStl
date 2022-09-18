@@ -14,8 +14,8 @@
 
 #include "rex_std/internal/type_traits/integral_constant.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T>
     struct add_volatile
     {
@@ -25,11 +25,4 @@ namespace rsl
     template <typename T>
     using add_volatile_t = add_volatile<T>::type;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using AddVolatileStruct = add_volatile<T>;
-
-    template <typename T>
-    using AddVolatile = typename AddVolatileStruct<T>::type;
-#endif
-}
+REX_RSL_END_NAMESPACE

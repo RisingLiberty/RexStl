@@ -12,6 +12,8 @@
 
 #pragma once
 
+#include "rex_std/bonus/defines.h"
+
 #include "rex_std/compare.h"
 #include "rex_std/initializer_list.h"
 
@@ -22,8 +24,8 @@
 
 #include <unordered_set>
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T>
     struct hash;
 
@@ -55,6 +57,7 @@ namespace rsl
     REX_STD_FUNC_ALIAS(ssize);
     REX_STD_FUNC_ALIAS(empty);
     REX_STD_FUNC_ALIAS(data);
-}
+
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/enable_std_checking.h"

@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename InputIterator>
     InputIterator min_element(InputIterator first, InputIterator last)
     {
@@ -44,4 +44,5 @@ namespace rsl
 
         return smallest;
     }
-}
+
+REX_RSL_END_NAMESPACE

@@ -18,8 +18,8 @@
 
 #include "rex_std/internal/memory/addressof.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     namespace internal
     {
         template <typename T>
@@ -109,8 +109,4 @@ namespace rsl
         }
     };
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using PointerTraits = pointer_traits<T>;
-#endif
-}
+REX_RSL_END_NAMESPACE

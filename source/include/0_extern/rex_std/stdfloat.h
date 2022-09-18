@@ -19,14 +19,15 @@
 
 #include <stdfloat>
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     REX_STD_CLASS_ALIAS(float16_t);
     REX_STD_CLASS_ALIAS(float32_t);
     REX_STD_CLASS_ALIAS(float64_t);
     REX_STD_CLASS_ALIAS(float128_t);
     REX_STD_CLASS_ALIAS(bfloat16_t);
-}
+
+REX_RSL_END_NAMESPACE
 
 #include "rex_std/enable_std_checking.h"
 

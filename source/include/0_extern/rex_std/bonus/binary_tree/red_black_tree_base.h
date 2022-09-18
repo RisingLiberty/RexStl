@@ -16,8 +16,8 @@
 
 #include "rex_std/internal/utility/pair.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename Compare, bool /*bIsEmpty*/ = is_empty_v<Compare>>
     class RedBlackCompareEmptyBaseOpt
     {
@@ -147,4 +147,5 @@ namespace rsl
         using RedBlackCompareEmptyBaseOpt<Compare>::compare;
         using RedBlackCompareEmptyBaseOpt<Compare>::get_compare;
     };
-}
+
+REX_RSL_END_NAMESPACE

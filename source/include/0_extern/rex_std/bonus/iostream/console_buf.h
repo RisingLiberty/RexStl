@@ -22,8 +22,8 @@
 
 #include "rex_std/internal/memory/memcpy.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
   namespace internal
   {
     class get_area
@@ -339,4 +339,5 @@ namespace rsl
   private:
     internal::console_buf_impl m_impl;
   };
-}
+
+REX_RSL_END_NAMESPACE

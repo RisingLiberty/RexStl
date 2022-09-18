@@ -15,8 +15,8 @@
 #include "rex_std/bonus/attributes.h"
 #include "rex_std/bonus/types.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     struct identity 
     {
     public:
@@ -29,7 +29,4 @@ namespace rsl
         }
     };
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    using Identity = identity;
-#endif
-}
+REX_RSL_END_NAMESPACE

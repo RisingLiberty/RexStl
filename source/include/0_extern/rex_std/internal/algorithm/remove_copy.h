@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template<typename InputIterator, typename OutputIterator, typename T>
     OutputIterator remove_copy(InputIterator first, InputIterator last, OutputIterator d_first, const T& value)
     {
@@ -26,4 +26,5 @@ namespace rsl
         }
         return d_first;
     }
-}
+
+REX_RSL_END_NAMESPACE

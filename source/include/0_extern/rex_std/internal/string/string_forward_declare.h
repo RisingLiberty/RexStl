@@ -10,8 +10,8 @@
 //
 // ============================================
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename CharType>
     class char_traits;
   
@@ -25,4 +25,5 @@ namespace rsl
     class basic_string;
 
     using string = basic_string<char8, char_traits<char8>, allocator>;
-}
+
+REX_RSL_END_NAMESPACE

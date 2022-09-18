@@ -12,8 +12,6 @@
 
 #pragma once
 
-#include "rex_std/internal/config.h"
-
 #include "rex_std/bonus/types.h"
 #include "rex_std/bonus/defines.h"
 
@@ -33,10 +31,12 @@
 #include "rex_std/internal/iterator/iterator_traits.h"
 #include "rex_std/internal/iterator/reverse_iterator.h"
 
-#include "rex_std/cassert.h"
+#include "rex_std/internal/type_traits/is_base_of.h"
 
-namespace rsl
-{
+#include "rex_std/internal/assert/assert_fwd.h"
+
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename CharType, typename Traits = char_traits<CharType>>
     class basic_string_view
     {
@@ -181,7 +181,7 @@ namespace rsl
         // returns the max possible number of elements the view can hold
         constexpr size_type max_size() const
         {
-            return rsl::numeric_limits<difference_type>::max();
+            return (rsl::numeric_limits<difference_type>::max)();
         }
         // checks if the view is empty
         constexpr bool empty() const
@@ -452,7 +452,7 @@ namespace rsl
         // compares 2 strings lexicographically 
         int32 compare(pointer lhs, pointer rhs, size_type lhs_length, size_type rhs_length) const
         {
-            int32 res = traits_type::compare(lhs, rhs, rsl::min(lhs_length, rhs_length));
+            int32 res = traits_type::compare(lhs, rhs, (rsl::min)(lhs_length, rhs_length));
 
             if (res != 0)
             {
@@ -581,4 +581,5 @@ namespace rsl
 
     template <typename It>
     basic_string_view(It, It) -> basic_string_view<typename rsl::iterator_traits<It>::value_type, rsl::char_traits<typename rsl::iterator_traits<It>::value_type>>;
-}
+
+REX_RSL_END_NAMESPACE

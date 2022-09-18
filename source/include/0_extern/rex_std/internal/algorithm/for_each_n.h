@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename InputIterator, typename Size, typename Func>
     InputIterator for_each_n(InputIterator first, Size n, Func func)
     {
@@ -24,4 +24,5 @@ namespace rsl
         }
         return it;
     }
-}
+
+REX_RSL_END_NAMESPACE

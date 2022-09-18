@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T>
     struct type_identity
     {
@@ -23,11 +23,4 @@ namespace rsl
     template <typename T>
     using type_identity_t = typename type_identity<T>::type;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using TypeIdentityStruct = type_identity<T>;
-
-    template <typename T>
-    using TypeIdentity = typename type_identity<T>::type;
-#endif
-}
+REX_RSL_END_NAMESPACE

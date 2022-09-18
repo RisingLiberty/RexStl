@@ -14,8 +14,8 @@
 
 #include "rex_std/bonus/type_traits/is_invocable_utils.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename Callable, typename ... Args>
     struct is_invocable : internal::SelectInvokeTraits<Callable, Args...>::is_invocable_v
     {};
@@ -23,11 +23,4 @@ namespace rsl
     template <typename Callable, typename ... Args>
     constexpr bool is_invocable_v = is_invocable<Callable, Args...>::value;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename Callable, typename ... Args>
-    using IsInvocableStruct = is_invocable_v<Callable, Args...>;
-
-    template <typename Callable, typename ... Args>
-    constexpr bool IsInvocable = IsInvocableStruct<Callable, Args...>::value;
-#endif
-}
+REX_RSL_END_NAMESPACE

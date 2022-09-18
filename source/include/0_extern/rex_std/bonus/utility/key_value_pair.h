@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename Key, typename Value>
     struct key_value_pair
     {
@@ -23,4 +23,5 @@ namespace rsl
         Key key;
         Value value;
     };
-}
+
+REX_RSL_END_NAMESPACE

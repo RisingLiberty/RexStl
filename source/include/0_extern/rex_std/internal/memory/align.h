@@ -12,7 +12,12 @@
 
 #pragma once
 
-void* align(count_t alignment, size_t size, void*& ptr, size_t* space)
+#include "rex_std/bonus/types.h"
+#include "rex_std/internal/memory/byte.h"
+
+REX_RSL_BEGIN_NAMESPACE
+
+void* align(count_t alignment, size_t size, void*& ptr, size_t space)
 {
     if (space >= size)
     {
@@ -30,3 +35,5 @@ void* align(count_t alignment, size_t size, void*& ptr, size_t* space)
 
     return nullptr;
 }
+
+REX_RSL_END_NAMESPACE

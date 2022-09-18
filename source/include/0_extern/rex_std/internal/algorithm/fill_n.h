@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     namespace internal
     {
         template <bool IsScalarValue>
@@ -55,4 +55,5 @@ namespace rsl
     {
         return FillNImpl<is_scalar_v<T>>::do_fill(first, n, value);
     }
-}
+
+REX_RSL_END_NAMESPACE

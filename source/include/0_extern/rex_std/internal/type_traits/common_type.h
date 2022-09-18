@@ -15,8 +15,8 @@
 #include "rex_std/internal/type_traits/decay.h"
 #include "rex_std/internal/type_traits/void.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename ... T>
     struct common_type;
 
@@ -57,11 +57,4 @@ namespace rsl
     struct common_type<T1, T2, Rest...> : internal::CommonType3<void, T1, T2, Rest...>
     {};
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using CommonTypeStruct = common_type<T>;
-
-    template <typename T>
-    using CommonType = typename CommonTypeStruct<T>::type;
-#endif
-}
+REX_RSL_END_NAMESPACE

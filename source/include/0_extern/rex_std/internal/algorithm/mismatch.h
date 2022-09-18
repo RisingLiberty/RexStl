@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename Iterator1, typename Iterator2>
     struct mismatch_result
     {
@@ -69,8 +69,4 @@ namespace rsl
         return mismatch_result<InputIterator1, InputIterator2>{ lhs_it, rhs_it};
     }
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename InputIt1, typename InputIt2>
-    using MismatchResult = mismatch_result<InputIt1, InputIt2>;
-#endif  
-}
+REX_RSL_END_NAMESPACE

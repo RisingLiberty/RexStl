@@ -16,8 +16,8 @@
 
 #include "rex_std/internal/type_traits/is_integral.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T, T... Ints>
     class integer_sequence
     {
@@ -59,11 +59,4 @@ namespace rsl
     template <card32 Size>
     using make_index_sequence = typename internal::make_index_sequence<Size, integer_sequence<card32>>::type;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T, T... Ints>
-    using IntegerSequence = integer_sequence<T, Ints...>;
-
-    template <card32 ... Ints>
-    using IndexSequence = index_sequence<Ints...>;
-#endif
-}
+REX_RSL_END_NAMESPACE

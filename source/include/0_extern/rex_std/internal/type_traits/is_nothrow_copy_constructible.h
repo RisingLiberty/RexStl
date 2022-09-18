@@ -14,8 +14,8 @@
 
 #include "rex_std/internal/type_traits/integral_constant.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T>
     struct is_nothrow_copy_constructible : bool_constant<is_nothrow_constructible(T, add_lvalue_reference_t<const T>)>
     {};
@@ -23,11 +23,4 @@ namespace rsl
     template <typename T>
     constexpr bool is_nothrow_copy_constructible_v = is_nothrow_copy_constructible<T>::value;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using IsNothrowCopyConstructibleStruct = is_nothrow_copy_constructible<T>;
-
-    template <typename T>
-    constexpr bool IsNothrowCopyConstructible = IsNothrowCopyConstructibleStruct<T>::value;
-#endif
-}
+REX_RSL_END_NAMESPACE

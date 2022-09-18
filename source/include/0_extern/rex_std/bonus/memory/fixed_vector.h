@@ -22,8 +22,8 @@
 
 #include "rex_std/internal/memory/nullptr.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
   template <typename T>
   class fixed_vector
   {
@@ -129,4 +129,5 @@ namespace rsl
     using Elem = rsl::remove_extent_t<T>;
     return fixed_vector<Elem>(new Elem[size](), size);
   }
-}
+
+REX_RSL_END_NAMESPACE

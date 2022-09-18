@@ -12,8 +12,6 @@
 
 #pragma once
 
-#include "rex_std/internal/config.h"
-
 #include "rex_std/internal/iterator/reverse_iterator.h"
 
 #ifndef _INITIALIZER_LIST_ // MSVC STD Include guard
@@ -66,8 +64,8 @@ namespace std // needs to be in std namespace
     };
 }
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T>
     using initializer_list = std::initializer_list<T>;
 
@@ -116,17 +114,14 @@ namespace rsl
     {
         return ilist.begin();
     }
-}
+
+REX_RSL_END_NAMESPACE
 #endif
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     // needs to be defined again here, in case std::intializer_list is already included in another header
     template <typename T>
     using initializer_list = std::initializer_list<T>;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using InitializerList = initializer_list<T>;
-#endif
-}
+REX_RSL_END_NAMESPACE

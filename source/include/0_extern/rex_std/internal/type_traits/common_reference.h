@@ -20,8 +20,8 @@
 #include "rex_std/internal/type_traits/is_lvalue_reference.h"
 #include "rex_std/internal/type_traits/is_convertible.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename ...>
     struct common_reference
     {};
@@ -171,11 +171,4 @@ namespace rsl
     struct common_reference<T1, T2, T3, Rest...> : internal::FoldCommonReference<void, T1, T2, T3, Rest...>
     {};
     
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using CommonReferenceStruct = common_reference<T>;
-
-    template <typename T>
-    using CommonReference = typename CommonReferenceStruct<T>::type;
-#endif
-}
+REX_RSL_END_NAMESPACE

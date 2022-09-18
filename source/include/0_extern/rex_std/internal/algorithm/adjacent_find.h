@@ -12,8 +12,8 @@
 
 #pragma once
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
 	template <typename ForwardIterator>
 	ForwardIterator adjacent_find(ForwardIterator first, ForwardIterator last)
 	{
@@ -47,4 +47,5 @@ namespace rsl
 		}
 		return last;
 	}
-}
+
+REX_RSL_END_NAMESPACE

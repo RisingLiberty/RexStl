@@ -16,8 +16,9 @@
 
 #include "rex_std/internal/type_traits/is_same.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T>
     constexpr bool is_character_v = rsl::is_same_v<T, char8> || rsl::is_same_v<T, tchar>;
-}
+
+REX_RSL_END_NAMESPACE

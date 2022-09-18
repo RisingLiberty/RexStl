@@ -15,8 +15,8 @@
 #include "rex_std/internal/utility/move.h"
 #include "rex_std/internal/utility/forward.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     template <typename T, typename Other = T>
     constexpr T exchange(T& val, Other&& new_val)
     {
@@ -24,4 +24,5 @@ namespace rsl
         val = rsl::forward<Other>(new_val);
         return old_val;
     }
-}
+
+REX_RSL_END_NAMESPACE

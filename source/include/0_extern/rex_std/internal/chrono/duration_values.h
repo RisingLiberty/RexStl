@@ -14,7 +14,9 @@
 
 #include "rex_std/limits.h"
 
-namespace rsl::chrono
+REX_RSL_BEGIN_NAMESPACE
+
+namespace chrono
 {
     template <typename Rep>
     struct duration_values
@@ -34,8 +36,6 @@ namespace rsl::chrono
         }
     };
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename Rep>
-    using DurationValues = duration_values<Rep>;
-#endif
 }
+
+REX_RSL_END_NAMESPACE

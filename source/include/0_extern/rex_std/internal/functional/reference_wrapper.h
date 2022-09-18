@@ -17,8 +17,8 @@
 #include "rex_std/internal/type_traits/invoke_result.h"
 #include "rex_std/internal/type_traits/decay.h"
 
-namespace rsl
-{
+REX_RSL_BEGIN_NAMESPACE
+
     // a class template that wraps a reference in a copyable, assignable object.
     template <typename T>
     class reference_wrapper
@@ -108,14 +108,4 @@ namespace rsl
     template <typename T>
     void cref(const T&&) = delete;
 
-#ifdef REX_USE_REX_CODING_GUIDELINES_FOR_RSL
-    template <typename T>
-    using ReferenceWrapper = reference_wrapper<T>;
-
-    template <typename T>
-    using UnwrapReference = unwrap_reference<T>;
-
-    template <typename T>
-    using UnwrapRefDecay = unwrap_ref_decay<T>;
-#endif
-}
+REX_RSL_END_NAMESPACE
