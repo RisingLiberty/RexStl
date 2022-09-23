@@ -91,6 +91,8 @@ string to_string(lfloat64 value)
 
 namespace string_literals
 {
+#pragma warning(push)
+#pragma warning(disable : 4455) // literal suffix identifiers that do not start with an underscore are reserved
   // returns a string of the desired type
   string operator""s(const char8 * s, size_t len)
   {
@@ -115,6 +117,7 @@ namespace string_literals
     count_t len_as_count = static_cast<count_t>(len);
     return wstring(s, len_as_count);
   }
+#pragma warning(pop)
 }
 
 REX_RSL_END_NAMESPACE

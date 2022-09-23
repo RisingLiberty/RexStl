@@ -10,6 +10,8 @@
 //
 // ============================================
 
+#pragma once
+
 #include "rex_std/internal/algorithm/memcmp.h"
 
 #include "rex_std/internal/memory/memcpy.h"
