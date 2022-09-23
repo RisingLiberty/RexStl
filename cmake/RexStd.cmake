@@ -54,8 +54,9 @@ ENDIF()
 
 
 # Compiler options
+if (MSVC)
 target_compile_options(RexStd PRIVATE /W4 /WX /MP)
+endif()
 
-
-# Set precompiled header
-# add_precompiled_header(RexStd "rex_std/rex_stl_pch.h" "rex_std/rex_stl_pch.cpp")
+# add the clang tools post build check
+add_custom_command(TARGET RexStd POST_BUILD COMMAND "${CMAKE_SOURCE_DIR}/scripts/run_clang_tools.py")
