@@ -34,3 +34,5 @@
 build/*
 scripts/__pycache__/*
 *.bak
+.rex/
+.vscode/
