@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: algorithm.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -19,6 +19,7 @@
 #include "rex_std/internal/algorithm/binary_search.h"
 #include "rex_std/internal/algorithm/bsearch.h"
 #include "rex_std/internal/algorithm/clamp.h"
+#include "rex_std/internal/algorithm/construct_at.h"
 #include "rex_std/internal/algorithm/copy.h"
 #include "rex_std/internal/algorithm/copy_backward.h"
 #include "rex_std/internal/algorithm/copy_if.h"
@@ -101,7 +102,6 @@
 #include "rex_std/internal/algorithm/stable_sort.h"
 #include "rex_std/internal/algorithm/swap_ranges.h"
 #include "rex_std/internal/algorithm/transform.h"
-#include "rex_std/internal/algorithm/construct_at.h"
 #include "rex_std/internal/algorithm/unique.h"
 #include "rex_std/internal/algorithm/unique_copy.h"
 #include "rex_std/internal/algorithm/upper_bound.h"

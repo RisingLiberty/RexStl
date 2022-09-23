@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: memchr.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -16,7 +16,6 @@
 
 REX_RSL_BEGIN_NAMESPACE
 
-	void* memchr(const void* ptr, char8 ch, card32 length);
+void* memchr(const void* ptr, char8 ch, card32 length);
 
 REX_RSL_END_NAMESPACE
-

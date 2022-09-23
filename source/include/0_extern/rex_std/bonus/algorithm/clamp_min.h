@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: clamp_min.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -16,10 +16,10 @@
 
 REX_RSL_BEGIN_NAMESPACE
 
-    template <typename T>
-    constexpr T clamp_min(const T& x, const T& min)
-    {
-        return rsl::max(x, min);
-    }
+template <typename T>
+constexpr T clamp_min(const T& x, const T& min)
+{
+  return rsl::max(x, min);
+}
 
 REX_RSL_END_NAMESPACE

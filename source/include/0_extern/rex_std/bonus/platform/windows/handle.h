@@ -1,10 +1,10 @@
-// ============================================ 
+// ============================================
 //
 // REX - STANDARD LIBRARY IMPLEMENTATION
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: handle.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -22,22 +22,22 @@
 REX_RSL_BEGIN_NAMESPACE
 namespace win
 {
-    using handle_t = void*;
+  using handle_t = void*;
 
-    class handle
-    {
-    public:
-      handle();
-      handle(handle_t handle);
-      ~handle();
+  class handle
+  {
+  public:
+    handle();
+    handle(handle_t handle);
+    ~handle();
 
-      bool is_valid() const;
-      operator bool() const;
+    bool is_valid() const;
+    operator bool() const;
 
-      static handle_t invalid_value();
+    static handle_t invalid_value();
 
-    private:
-      handle_t m_handle;
-    };
-}
+  private:
+    handle_t m_handle;
+  };
+} // namespace win
 REX_RSL_END_NAMESPACE

@@ -1,10 +1,10 @@
-// ============================================ 
+// ============================================
 //
 // REX - STANDARD LIBRARY IMPLEMENTATION
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: allocator_arg_t.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -21,8 +21,11 @@
 
 REX_RSL_BEGIN_NAMESPACE
 
-  struct allocator_arg_t { explicit allocator_arg_t() = default };
-  
-  inline constexpr allocator_arg_t allocator_arg = allocator_arg_t();
+struct allocator_arg_t
+{
+  explicit allocator_arg_t() = default
+};
+
+inline constexpr allocator_arg_t allocator_arg = allocator_arg_t();
 
 REX_RSL_END_NAMESPACE

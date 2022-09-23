@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: clocale.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -12,17 +12,17 @@
 
 #pragma once
 
-#include "rex_std/std_alias_defines.h"
 #include "rex_std/disable_std_checking.h"
+#include "rex_std/std_alias_defines.h"
 
 #include <clocale>
 
 REX_RSL_BEGIN_NAMESPACE
 
-    REX_STD_CLASS_ALIAS(lconv);
+REX_STD_CLASS_ALIAS(lconv);
 
-    REX_STD_FUNC_ALIAS(setlocale);
-    REX_STD_FUNC_ALIAS(localeconv);
+REX_STD_FUNC_ALIAS(setlocale);
+REX_STD_FUNC_ALIAS(localeconv);
 
 REX_RSL_END_NAMESPACE
 

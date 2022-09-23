@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: istream.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -16,8 +16,7 @@
 
 REX_RSL_BEGIN_NAMESPACE
 
-    using istream = basic_istream<char8>;
-    using wistream = basic_istream<tchar>;
+using istream  = basic_istream<char8>;
+using wistream = basic_istream<tchar>;
 
 REX_RSL_END_NAMESPACE
-

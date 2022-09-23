@@ -1,10 +1,10 @@
-// ============================================ 
+// ============================================
 //
 // REX - STANDARD LIBRARY IMPLEMENTATION
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: basic_string.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -12,39 +12,30 @@
 
 #pragma once
 
+#include "rex_std/bonus/string/character_lookup.h"
+#include "rex_std/bonus/string/stack_string.h"
+#include "rex_std/bonus/utility/compressed_pair.h"
+#include "rex_std/bonus/utility/element_literal.h"
+#include "rex_std/cstddef.h"
+#include "rex_std/initializer_list.h"
 #include "rex_std/internal/algorithm/memcmp.h"
-
+#include "rex_std/internal/algorithm/remove.h"
+#include "rex_std/internal/algorithm/remove_if.h"
+#include "rex_std/internal/assert/assert_fwd.h"
+#include "rex_std/internal/functional/hash.h"
+#include "rex_std/internal/iterator/iterator_tags.h"
+#include "rex_std/internal/iterator/iterator_traits.h"
+#include "rex_std/internal/memory/allocator.h"
+#include "rex_std/internal/memory/allocator_traits.h"
+#include "rex_std/internal/memory/byte.h"
 #include "rex_std/internal/memory/memcpy.h"
 #include "rex_std/internal/memory/memmove.h"
 #include "rex_std/internal/memory/memset.h"
-#include "rex_std/internal/memory/byte.h"
-#include "rex_std/internal/memory/allocator.h"
-#include "rex_std/internal/memory/allocator_traits.h"
-
-#include "rex_std/internal/string/char_traits.h"
 #include "rex_std/internal/string/byte_strings.h"
+#include "rex_std/internal/string/char_traits.h"
 #include "rex_std/internal/string/string_forward_declare.h"
-
-#include "rex_std/internal/functional/hash.h"
-
-#include "rex_std/internal/iterator/iterator_tags.h"
-#include "rex_std/internal/iterator/iterator_traits.h"
-
-#include "rex_std/internal/algorithm/remove.h"
-#include "rex_std/internal/algorithm/remove_if.h"
-
-#include "rex_std/bonus/string/stack_string.h"
-#include "rex_std/bonus/string/character_lookup.h"
-
-#include "rex_std/bonus/utility/compressed_pair.h"
-#include "rex_std/bonus/utility/element_literal.h"
-
-#include "rex_std/initializer_list.h"
-#include "rex_std/internal/assert/assert_fwd.h"
-#include "rex_std/cstddef.h"
-
-#include "rex_std/ostream.h"
 #include "rex_std/istream.h"
+#include "rex_std/ostream.h"
 
 // Strings are in theory just fancy vectors.
 // They act like a vector of chars, but have extra functionality,
@@ -63,67 +54,69 @@ template <typename CharType, typename Traits = char_traits<CharType>, typename A
 class basic_string
 {
 public:
-  using traits_type = Traits;
-  using value_type = CharType;
-  using allocator_type = allocator;
-  using size_type = count_t; /// RSL Comment: Different from ISO C++ Standard at time of writing (28/Jun/2022)
-  using difference_type = int32; /// RSL Comment: Different from ISO C++ Standard at time of writing (28/Jun/2022)
-  using reference = value_type&;
+  using traits_type     = Traits;
+  using value_type      = CharType;
+  using allocator_type  = allocator;
+  using size_type       = count_t; /// RSL Comment: Different from ISO C++ Standard at time of writing (28/Jun/2022)
+  using difference_type = int32;   /// RSL Comment: Different from ISO C++ Standard at time of writing (28/Jun/2022)
+  using reference       = value_type&;
   using const_reference = const value_type&;
-  using pointer = typename rsl::allocator_traits<allocator>::template pointer_or<value_type*>;
-  using const_pointer = typename rsl::allocator_traits<allocator>::template const_pointer_or<const value_type*>;
+  using pointer         = typename rsl::allocator_traits<allocator>::template pointer_or<value_type*>;
+  using const_pointer   = typename rsl::allocator_traits<allocator>::template const_pointer_or<const value_type*>;
 
-  using iterator = random_access_iterator<value_type>;
-  using const_iterator = const_random_access_iterator<value_type>;
-  using reverse_iterator = rsl::reverse_iterator<iterator>;
+  using iterator               = random_access_iterator<value_type>;
+  using const_iterator         = const_random_access_iterator<value_type>;
+  using reverse_iterator       = rsl::reverse_iterator<iterator>;
   using const_reverse_iterator = rsl::reverse_iterator<const_iterator>;
 
   static constexpr size_type s_sso_buff_size = 16;
-  static constexpr size_type s_npos = static_cast<size_type>(-1);
+  static constexpr size_type s_npos          = static_cast<size_type>(-1);
 
-  // Default constructor. Constructs empty string 
+  // Default constructor. Constructs empty string
   basic_string()
-    : m_sso_buffer()
-    , m_begin(m_sso_buffer.data())
-    , m_end(m_sso_buffer.data())
-    , m_cp_last_and_allocator(m_sso_buffer.data() + m_sso_buffer.max_size())
-  {}
+      : m_sso_buffer()
+      , m_begin(m_sso_buffer.data())
+      , m_end(m_sso_buffer.data())
+      , m_cp_last_and_allocator(m_sso_buffer.data() + m_sso_buffer.max_size())
+  {
+  }
   // Default constructor. Constructs an empty string
   explicit basic_string(const allocator& alloc)
-    : m_sso_buffer()
-    , m_begin(m_sso_buffer.data())
-    , m_end(m_sso_buffer.data())
-    , m_cp_last_and_allocator(m_sso_buffer.data() + m_sso_buffer.max_size(), alloc)
-  {}
+      : m_sso_buffer()
+      , m_begin(m_sso_buffer.data())
+      , m_end(m_sso_buffer.data())
+      , m_cp_last_and_allocator(m_sso_buffer.data() + m_sso_buffer.max_size(), alloc)
+  {
+  }
   // Constructs the string with count copies of character ch
   basic_string(size_type count, value_type ch, const allocator& alloc = allocator())
-    : basic_string(alloc)
+      : basic_string(alloc)
   {
     assign(count, ch);
   }
   // Constructs the string with a substring of other. starting at pos and going to the end of other
   basic_string(const basic_string& other, size_type pos, const allocator& alloc = allocator())
-    : basic_string(alloc)
+      : basic_string(alloc)
   {
     assign(other.begin() + pos, other.size());
   }
   // Constructs the string with a substring of other. starting at pos and going to count
   basic_string(const basic_string& other, size_type pos, size_type count, const allocator& alloc = allocator())
-    : basic_string(alloc)
+      : basic_string(alloc)
   {
     size_type num_to_copy = count_or_obj_length(count);
     assign(other.cbegin() + pos, rsl::min(count, other.size()));
   }
   // Construct a string from s ranging from s to s + count.
   basic_string(const_pointer s, size_type count, const allocator& alloc = allocator())
-    : basic_string(alloc)
+      : basic_string(alloc)
   {
     assign(s, count);
   }
   /// RSL Comment: Different from ISO C++ Standard at time of writing (28/Jun/2022)
   // marked explicit in RSL
   explicit basic_string(const_pointer s, const allocator& alloc = allocator())
-    : basic_string(alloc)
+      : basic_string(alloc)
   {
     size_type length = traits_type::length(s);
     assign(s, length);
@@ -131,8 +124,8 @@ public:
   /// RSL Comment: Not in ISO C++ Standard at time of writing time of writing (29/Jun/2022)
   // we add this overload so you're able to construct the string from a literal.
   template <count_t Size>
-  explicit basic_string(const_pointer(&arr)[Size], const allocator alloc = allocator())
-    : basic_string(alloc)
+  explicit basic_string(const_pointer (&arr)[Size], const allocator alloc = allocator())
+      : basic_string(alloc)
   {
     assign(arr, Size);
   }
@@ -146,28 +139,28 @@ public:
   // marked explicit in RSL
   // copy constructor. copies the contents of other.
   explicit basic_string(const basic_string& other)
-    : basic_string(other.get_allocator())
+      : basic_string(other.get_allocator())
   {
     assign(other.data(), other.length());
   }
   // construct the string with the contents of other, using the allocator provided
   basic_string(const basic_string& other, const allocator& alloc)
-    : basic_string(alloc)
+      : basic_string(alloc)
   {
     assign(other.data(), other.length());
   }
   // move constructor, swaps contents of other with the current string
   basic_string(basic_string&& other)
-    : basic_string(rsl::move(other.get_allocator()))
+      : basic_string(rsl::move(other.get_allocator()))
   {
     swap(other);
   }
   // swaps the contents of other with the current string if allocs are equal
   // copies the contents over otherwise using the allocator provided
   basic_string(basic_string&& other, const allocator& alloc)
-    : basic_string(alloc)
+      : basic_string(alloc)
   {
-    if (other.get_allocator() != alloc)
+    if(other.get_allocator() != alloc)
     {
       insert(other.cbegin(), other.cend());
     }
@@ -178,7 +171,7 @@ public:
   }
   // Construct the string from the given initializer_list
   basic_string(rsl::initializer_list<value_type> ilist, const allocator& alloc = allocator())
-    : basic_string(alloc)
+      : basic_string(alloc)
   {
     // using insert_n instead of insert because we know the length
     // and can therefore allocate the length straight away and then fill
@@ -193,7 +186,7 @@ public:
   // Therefore this takes a basic_string_view
   // Constructs the string using the contents of the string view
   explicit basic_string(const basic_string_view<CharType>& sv, const allocator& alloc = allocator())
-    : basic_string(alloc)
+      : basic_string(alloc)
   {
     // using insert_n instead of insert because we know the length
     // and can therefore allocate the length straight away and then fill
@@ -208,8 +201,8 @@ public:
   // Therefore this takes a basic_string_view
   // Constructs the string using the contents of the string view
   // starting at pos and going till pos + n
-  explicit basic_string(const basic_string_view<value_type, traits_type>  sv, size_type pos, size_type n, const allocator& alloc = allocator())
-    : basic_string(alloc)
+  explicit basic_string(const basic_string_view<value_type, traits_type> sv, size_type pos, size_type n, const allocator& alloc = allocator())
+      : basic_string(alloc)
   {
     assign(sv.begin() + pos, n);
   }
@@ -249,7 +242,7 @@ public:
   // The standard doesn't provide a assignment operator for a string literal without having to calculate its length
   // Assigns the string literal to the string.
   template <count_t Size>
-  basic_string& operator=(const_pointer(&str)[Size])
+  basic_string& operator=(const_pointer (&str)[Size])
   {
     assign(str, Size);
     return *this;
@@ -283,7 +276,7 @@ public:
   {
     size_type new_size = count + 1;
 
-    if (new_size > capacity())
+    if(new_size > capacity())
     {
       deallocate();
       pointer new_buffer = static_cast<pointer>(get_allocator().allocate(new_size));
@@ -332,7 +325,7 @@ public:
   // Replaces the contents with the content of str till str + count.
   basic_string& assign(const_pointer str, size_type count)
   {
-    if (is_using_sso_string() && count < s_sso_buff_size)
+    if(is_using_sso_string() && count < s_sso_buff_size)
     {
       sso_assign(str, count);
     }
@@ -347,7 +340,7 @@ public:
   // the standard doesn't provide an overload for a string literal
   // replaces the contents of the string array
   template <count_t Size>
-  basic_string& assign(const_pointer(&str)[Size])
+  basic_string& assign(const_pointer (&str)[Size])
   {
     return assign(str, Size);
   }
@@ -362,7 +355,7 @@ public:
   {
     // you don't know the size and iterator could be forward iterator
     // so this is very slow as it has to check for a possible resize after every insertion.
-    while (first != last)
+    while(first != last)
     {
       insert(*first);
     }
@@ -378,7 +371,7 @@ public:
     // we'll overwrite them anyway so there's no point in doing that
     size_type new_size = static_cast<size_type>(ilist.size()) + 1; // +1 for the null termination char
 
-    if (new_size > capacity())
+    if(new_size > capacity())
     {
       deallocate();
       pointer new_buffer = static_cast<pointer>(get_allocator().allocate(new_size));
@@ -386,7 +379,7 @@ public:
     }
 
     pointer dst = m_begin;
-    for (value_type c : ilist)
+    for(value_type c: ilist)
     {
       traits_type::assign(*dst, c);
       ++dst;
@@ -402,7 +395,7 @@ public:
   // This is not possible in RSL though as the ctor for const char* for string is explicit.
   // Therefore this takes a basic_string_view
   // replaces the contents with the content of the string view.
-  basic_string& assign(basic_string_view<value_type, traits_type>  sv)
+  basic_string& assign(basic_string_view<value_type, traits_type> sv)
   {
     assign(sv.data(), sv.length());
   }
@@ -412,7 +405,7 @@ public:
   // This is not possible in RSL though as the ctor for const char* for string is explicit.
   // Therefore this takes a basic_string_view
   // start at pos and going till pos + count.
-  basic_string& assign(basic_string_view<value_type, traits_type>  sv, size_type pos, size_type count = s_npos)
+  basic_string& assign(basic_string_view<value_type, traits_type> sv, size_type pos, size_type count = s_npos)
   {
     size_type num_to_copy = count_or_obj_length(sv, count);
     assign(sv.data() + pos, num_to_copy);
@@ -583,7 +576,7 @@ public:
   // request memory reallocation so the string can hold "new_capacity" amount of characters
   void reserve(size_type new_capacity)
   {
-    if (new_capacity > capacity())
+    if(new_capacity > capacity())
     {
       reallocate(new_capacity, data(), size());
     }
@@ -596,7 +589,7 @@ public:
   // request the removal of unused capacity.
   void shrink_to_fit()
   {
-    if (is_using_sso_string())
+    if(is_using_sso_string())
     {
       return;
     }
@@ -623,7 +616,7 @@ public:
   // the standard doesn't provide an overload for a string literal
   // Inserts character string pointed to by s at the position index
   template <count_t Size>
-  basic_string& insert(size_type index, const value_type(&s)[Size])
+  basic_string& insert(size_type index, const value_type (&s)[Size])
   {
     return insert(index, s, Size - 1);
   }
@@ -672,29 +665,30 @@ public:
   template <typename InputIt>
   iterator insert(const_iterator pos, InputIt first, InputIt last)
   {
-    size_type pos_idx = rsl::distance(cbegin(), pos);
+    size_type pos_idx                = rsl::distance(cbegin(), pos);
     size_type num_elements_to_insert = rsl::distance(first, last);
 
     prepare_for_new_insert(num_elements_to_insert);
 
     size_type current_idx = pos_idx;
-    while (first != last)
+    while(first != last)
     {
       traits_type::assign(operator[](current_idx), *first);
-      ++current_idx; ++first;
+      ++current_idx;
+      ++first;
     }
     return iterator(m_begin[current_idx]);
   }
   // inserts elements from the initializer list before the element (if any) pointed by pos
   iterator insert(const_iterator pos, rsl::initializer_list<value_type> ilist)
   {
-    size_type pos_idx = rsl::distance(cbegin(), pos);
+    size_type pos_idx                = rsl::distance(cbegin(), pos);
     size_type num_elements_to_insert = ilist.size();
 
     prepare_for_new_insert(pos, num_elements_to_insert);
 
     size_type current_idx = pos_idx;
-    for (value_type ch : ilist)
+    for(value_type ch: ilist)
     {
       traits_type::assign(operator[](current_idx), ch);
       ++current_idx;
@@ -752,8 +746,8 @@ public:
   iterator erase(const_iterator first, const_iterator last)
   {
     size_type first_idx = rsl::distance(cbegin(), first);
-    size_type last_idx = rsl::distance(cbegin(), last);
-    size_type count = last_idx - first_idx;
+    size_type last_idx  = rsl::distance(cbegin(), last);
+    size_type count     = last_idx - first_idx;
 
     traits_type::move(m_begin[first_idx], m_begin[last_idx], count);
 
@@ -814,7 +808,7 @@ public:
   // the standard doesn't provide an overload for a string literal
   // Appends character string pointed to by s.
   template <count_t Size>
-  basic_string& append(const value_type(&s)[Size])
+  basic_string& append(const value_type (&s)[Size])
   {
     return append(s, Size - 1);
   }
@@ -830,7 +824,7 @@ public:
 
     increase_capacity_if_needed(count);
 
-    while (first != last)
+    while(first != last)
     {
       traits_type::assign(*m_end, *first);
       ++m_end;
@@ -846,7 +840,7 @@ public:
   {
     increase_capacity_if_needed(ilist.size());
 
-    for (value_type ch : ilist)
+    for(value_type ch: ilist)
     {
       traits_type::assign(*m_end, ch);
       ++m_end;
@@ -862,7 +856,7 @@ public:
   // This is not possible in RSL though as the ctor for const char* for string is explicit.
   // Therefore this takes a basic_string_view
   // appends all characters from sv
-  basic_string& append(const basic_string_view<value_type, traits_type>  sv)
+  basic_string& append(const basic_string_view<value_type, traits_type> sv)
   {
     return append(sv.data(), sv.length());
   }
@@ -892,7 +886,7 @@ public:
   // the standard doesn't provide an overload for a string literal
   // Appends character string pointed to by s.
   template <count_t Size>
-  basic_string& operator+=(const value_type(&s)[Size])
+  basic_string& operator+=(const value_type (&s)[Size])
   {
     return append(s, Size - 1);
   }
@@ -935,25 +929,25 @@ public:
   // the standard doesn't provide an overload for a string literal
   // Compares the string to a string literal.
   template <count_t Size>
-  REX_NO_DISCARD int32 compare(const_pointer(&s)[Size]) const
+  REX_NO_DISCARD int32 compare(const_pointer (&s)[Size]) const
   {
     return Traits::compare(data(), s);
   }
   /// RSL Comment: Different from ISO C++ Standard at time of writing (01/Jul/2022)
   // Because we have the above function, we don't specify the following.
-  //int32 compare(const_pointer s) const;
+  // int32 compare(const_pointer s) const;
 
   /// RSL Comment: Not in ISO C++ Standard at time of writing (01/Jul/2022)
-  // the standard doesn't provide an overload for a string literal        
+  // the standard doesn't provide an overload for a string literal
   // compares a [pos1, pos1_count1) substring of this string to a string literal
   template <count_t Size>
-  REX_NO_DISCARD int32 compare(size_type pos1, size_type count1, const_pointer(&s)[Size]) const
+  REX_NO_DISCARD int32 compare(size_type pos1, size_type count1, const_pointer (&s)[Size]) const
   {
     return internal::string_utils::compare(data() + pos1, s, count1, Size - 1);
   }
   /// RSL Comment: Different from ISO C++ Standard at time of writing (01/Jul/2022)
   // Because we have the above function, we don't specify the following.
-  //int32 compare(size_type pos1, size_type count1, const_pointer s) const;
+  // int32 compare(size_type pos1, size_type count1, const_pointer s) const;
 
   // compares a [pos1, pos1+count1) substring of this string to another string pointed
   // to by s with a length of count2.
@@ -977,7 +971,7 @@ public:
   // This is not possible in RSL though as the ctor for const char* for string is explicit.
   // Therefore this takes a basic_string_view
   // compares [pos1, pos1+count1) substring of this string to sv
-  REX_NO_DISCARD int32 compare(size_type pos1, size_type count1, const basic_string_view<value_type, traits_type>  sv) const
+  REX_NO_DISCARD int32 compare(size_type pos1, size_type count1, const basic_string_view<value_type, traits_type> sv) const
   {
     return internal::string_utils::compare(data() + pos1, sv.length(), count1, sv.length());
   }
@@ -987,7 +981,7 @@ public:
   // This is not possible in RSL though as the ctor for const char* for string is explicit.
   // Therefore this takes a basic_string_view
   // compares [pos1, pos1+count1) substring of this string to a substring [pos2, pos2+count2) of sv
-  REX_NO_DISCARD int32 compare(size_type pos1, size_type count1, const basic_string_view<value_type, traits_type>  sv, size_type pos2, size_type count2 = s_npos) const
+  REX_NO_DISCARD int32 compare(size_type pos1, size_type count1, const basic_string_view<value_type, traits_type> sv, size_type pos2, size_type count2 = s_npos) const
   {
     return internal::string_utils::compare(data() + pos1, sv.data() + pos2, count1, count_or_obj_length(sv, count2));
   }
@@ -1003,10 +997,10 @@ public:
     return traits_type::eq(front(), c);
   }
   /// RSL Comment: Different from ISO C++ Standard at time of writing (01/Jul/2022)
-  // the standard doesn't provide an overload for a string literal        
+  // the standard doesn't provide an overload for a string literal
   // checks if the string begins with the given prefix
   template <count_t Size>
-  REX_NO_DISCARD bool starts_with(const_pointer(&s)[Size]) const
+  REX_NO_DISCARD bool starts_with(const_pointer (&s)[Size]) const
   {
     return traits_type::compare(data(), s, Size - 1) == 0;
   }
@@ -1026,7 +1020,7 @@ public:
   }
   // checks if the string ends with the given suffix
   template <count_t Size>
-  REX_NO_DISCARD bool ends_with(const_pointer(&s)[Size]) const
+  REX_NO_DISCARD bool ends_with(const_pointer (&s)[Size]) const
   {
     return traits_type::compare(data() + (size() - Size - 1), s, Size - 1) == 0;
   }
@@ -1045,10 +1039,10 @@ public:
     return find(c) != s_npos;
   }
   /// RSL Comment: Different from ISO C++ Standard at time of writing (01/Jul/2022)
-  // the standard doesn't provide an overload for a string literal        
+  // the standard doesn't provide an overload for a string literal
   // checks if the string contains the given substring
   template <count_t Size>
-  REX_NO_DISCARD bool constains(const_pointer(&s)[Size]) const
+  REX_NO_DISCARD bool constains(const_pointer (&s)[Size]) const
   {
     return find(s) != s_npos;
   }
@@ -1068,7 +1062,7 @@ public:
   basic_string& replace(const_iterator first, const_iterator last, const basic_string& str)
   {
     size_type first_idx = rsl::distance(cbegin(), first);
-    size_type last_idx = rsl::distance(cbegin(), last);
+    size_type last_idx  = rsl::distance(cbegin(), last);
 
     REX_ASSERT_X(first_idx < size(), "'first' iterator out of range");
     REX_ASSERT_X(last_idx <= size(), "'last' iterator out of range");
@@ -1091,22 +1085,23 @@ public:
   basic_string& replace(const_iterator first, const_iterator last, InputIt first2, InputIt last2)
   {
     size_type first_idx = rsl::distance(cbegin(), first);
-    size_type last_idx = rsl::distance(cbegin(), last);
+    size_type last_idx  = rsl::distance(cbegin(), last);
 
     REX_ASSERT_X(first_idx < size(), "'first' iterator out of range");
     REX_ASSERT_X(last_idx <= size(), "'last' iterator out of range");
 
-    while (first_idx != last_idx || first2 != last2)
+    while(first_idx != last_idx || first2 != last2)
     {
       traits_type::assign(operator[](first_idx), *first2);
-      ++first_idx; ++first2;
+      ++first_idx;
+      ++first2;
     }
 
-    if (first_idx != last_idx)
+    if(first_idx != last_idx)
     {
       erase(first_idx, last_idx - first_idx);
     }
-    else if (first2 != last2)
+    else if(first2 != last2)
     {
       insert(iterator(first_idx), first2, last2);
     }
@@ -1117,7 +1112,7 @@ public:
   // The standard doesn't provide an overload for a string literal
   // replaces the part of the string, indicated by [pos, pos + count) with a new string literal.
   template <count_t Size>
-  basic_string& replace(size_type pos, size_type count, const value_type(&s)[Size])
+  basic_string& replace(size_type pos, size_type count, const value_type (&s)[Size])
   {
     REX_ASSERT_X(pos >= 0 && pos < length(), "pos out of range");
 
@@ -1134,10 +1129,10 @@ public:
   // The standard doesn't provide an overload for a string literal
   // replaces the part of the string, indicated by [first, last) with a new string literal.
   template <count_t Size>
-  basic_string& replace(const_iterator first, const_iterator last, const value_type(&s)[Size])
+  basic_string& replace(const_iterator first, const_iterator last, const value_type (&s)[Size])
   {
     size_type first_idx = rsl::distance(cbegin(), first);
-    size_type last_idx = rsl::distance(cbegin(), last);
+    size_type last_idx  = rsl::distance(cbegin(), last);
 
     REX_ASSERT_X(first_idx < size(), "'first' iterator out of range");
     REX_ASSERT_X(last_idx <= size(), "'last' iterator out of range");
@@ -1155,7 +1150,7 @@ public:
     REX_ASSERT_X(pos >= 0 && pos < length(), "pos out of range");
 
     count = rsl::min(count, size() - pos);
-    if (count2 > count)
+    if(count2 > count)
     {
       prepare_for_new_insert(pos + count, count2 - count);
     }
@@ -1168,7 +1163,7 @@ public:
   basic_string& replace(const_iterator first, const_iterator last, size_type count2, value_type ch)
   {
     size_type first_idx = rsl::distance(cbegin(), first);
-    size_type last_idx = rsl::distance(cbegin(), last);
+    size_type last_idx  = rsl::distance(cbegin(), last);
 
     REX_ASSERT_X(first_idx < size(), "'first' iterator out of range");
     REX_ASSERT_X(last_idx <= size(), "'last' iterator out of range");
@@ -1200,7 +1195,7 @@ public:
   basic_string& replace(const_iterator first, const_iterator last, const basic_string_view<value_type, traits_type>& sv)
   {
     size_type first_idx = rsl::distance(cbegin(), first);
-    size_type last_idx = rsl::distance(cbegin(), last);
+    size_type last_idx  = rsl::distance(cbegin(), last);
 
     REX_ASSERT_X(first_idx < size(), "'first' iterator out of range");
     REX_ASSERT_X(last_idx <= size(), "'last' iterator out of range");
@@ -1215,7 +1210,7 @@ public:
   // replaces the part of the string, indicated by [pos, pos + count) with the characters of a string view [pos2, pos2 + count2)
   basic_string& replace(size_type pos, size_type count, const basic_string_view<value_type, traits_type>& sv, size_type pos2, size_type count2 = s_npos)
   {
-    count = rsl::min(count, size() - pos);
+    count  = rsl::min(count, size() - pos);
     count2 = count_or_obj_length(sv, count2);
     return replace(pos, count, sv.data() + pos2, count2);
   }
@@ -1245,7 +1240,7 @@ public:
   // Resizes the string to contain count characters, fills the buffer with ch
   void resize(size_type count, value_type ch)
   {
-    if (count > size())
+    if(count > size())
     {
       increase_capacity_if_needed(count - size());
       traits_type::assign(m_begin + size(), count, ch);
@@ -1262,13 +1257,13 @@ public:
   /// RSL Comment: Different from ISO C++ Standard at time of writing (03/Jul/2022)
   // C++23 specifies a new function resize_and_overwrite, but I haven't implemented it yet.
   // check https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2021/p1072r10.html for more info.
-  //template <typename Operation>
-  //void resize_and_overwrite(size_type count, Operation op);
+  // template <typename Operation>
+  // void resize_and_overwrite(size_type count, Operation op);
 
   // swaps the contents of the string with those of other
   void swap(basic_string& other)
   {
-    if (other.is_using_big_string())
+    if(other.is_using_big_string())
     {
       rsl::swap(m_begin, other.m_begin);
       rsl::swap(m_end, other.m_end);
@@ -1293,7 +1288,7 @@ public:
   // The standard doesn't provide an overload for a string literal
   // finds the first substring equal to s
   template <count_t Size>
-  REX_NO_DISCARD size_type find(const value_type(&s)[Size], size_type pos) const
+  REX_NO_DISCARD size_type find(const value_type (&s)[Size], size_type pos) const
   {
     return internal::string_utils::find<traits_type>(m_begin, length(), pos, s, Size - 1, s_npos);
   }
@@ -1302,7 +1297,7 @@ public:
   // size_type find(const_pointer s, size_type pos, size_type count) const;
   // size_type find(const_pointer s, size_type pos = 0) const;
 
-  //finds the first character ch (treated as a single-character substring)
+  // finds the first character ch (treated as a single-character substring)
   REX_NO_DISCARD size_type find(value_type ch, size_type pos = 0) const
   {
     return internal::string_utils::find<traits_type>(m_begin, length(), pos, rsl::addressof(ch), 1_elem, s_npos);
@@ -1328,7 +1323,7 @@ public:
   // The standard doesn't provide an overload for a string literal
   // finds the last substring equal to s
   template <count_t Size>
-  REX_NO_DISCARD size_type rfind(const value_type(&s)[Size], size_type pos, size_type count) const
+  REX_NO_DISCARD size_type rfind(const value_type (&s)[Size], size_type pos, size_type count) const
   {
     return internal::string_utils::rfind<traits_type>(m_begin, length(), pos, s, Size - 1, s_npos);
   }
@@ -1362,7 +1357,7 @@ public:
   // The standard doesn't provide an overload for a string literal
   // finds the first character equal to one of the characters in the string literal
   template <count_t Size>
-  REX_NO_DISCARD size_type find_first_of(const value_type(&s)[Size], size_type pos) const
+  REX_NO_DISCARD size_type find_first_of(const value_type (&s)[Size], size_type pos) const
   {
     return internal::string_utils::find_first_of<traits_type>(m_begin, length(), pos, s, Size - 1, s_npos);
   }
@@ -1396,7 +1391,7 @@ public:
   // The standard doesn't provide an overload for a string literal
   // finds the first character equal to none of the characters in the string literal
   template <count_t Size>
-  REX_NO_DISCARD size_type find_first_not_of(const value_type(&s)[Size], size_type pos = 0) const
+  REX_NO_DISCARD size_type find_first_not_of(const value_type (&s)[Size], size_type pos = 0) const
   {
     return internal::string_utils::find_first_not_of<traits_type>(m_begin, length(), pos, s, Size - 1, s_npos);
   }
@@ -1430,7 +1425,7 @@ public:
   // The standard doesn't provide an overload for a string literal
   // finds the last character equal to one of the characters in the string literal
   template <count_t Size>
-  REX_NO_DISCARD size_type find_last_of(const value_type(&s)[Size], size_type pos) const
+  REX_NO_DISCARD size_type find_last_of(const value_type (&s)[Size], size_type pos) const
   {
     return internal::string_utils::find_last_of<traits_type>(m_begin, length(), pos, s, Size - 1, s_npos);
   }
@@ -1464,7 +1459,7 @@ public:
   // The standard doesn't provide an overload for a string literal
   // finds the last character equal to one of the characters in the string literal
   template <count_t Size>
-  REX_NO_DISCARD size_type find_last_not_of(const value_type(&s)[Size], size_type pos) const
+  REX_NO_DISCARD size_type find_last_not_of(const value_type (&s)[Size], size_type pos) const
   {
     return internal::string_utils::find_last_not_of<traits_type>(m_begin, length(), pos, s, Size - 1, s_npos);
   }
@@ -1568,8 +1563,8 @@ private:
   void reset(pointer buffer, size_type length, size_type buffer_size)
   {
     m_begin = buffer;
-    m_end = m_begin + length;
-    last() = m_begin + buffer_size;
+    m_end   = m_begin + length;
+    last()  = m_begin + buffer_size;
   }
   // assigns a string into the sso buffer,
   // setting m_begin, m_end and m_last
@@ -1590,7 +1585,7 @@ private:
     REX_ASSERT_X(is_using_big_string(), "Not using big string when using heap assign");
     REX_ASSERT_X(str[length] == value_type(), "str doesn't end in a null termination char");
 
-    if (length > capacity())
+    if(length > capacity())
     {
       // we shouldn't call reserve here as that'll copy the current data over to the new buffer
       // this is pointless as we want to overwrite the data anyway.
@@ -1601,13 +1596,13 @@ private:
   // copies when using small string, swaps when using big string
   void move_assign(rsl::basic_string<CharType>&& str)
   {
-    if (str.is_using_big_string())
+    if(str.is_using_big_string())
     {
       // if the other string is using heap memory,
       // we can just copy over the pointers and reset the source string.
       m_begin = str.m_begin;
-      m_end = str.m_end;
-      last() = str.last();
+      m_end   = str.m_end;
+      last()  = str.last();
 
       str.reset();
     }
@@ -1628,14 +1623,14 @@ private:
     deallocate();
 
     m_begin = new_buffer;
-    m_end = m_begin + length;
+    m_end   = m_begin + length;
     traits_type::assign(*--m_end, value_type());
     last() = m_begin + new_capacity;
   }
   // deallocates all heap data, if used.
   void deallocate()
   {
-    if (is_using_big_string())
+    if(is_using_big_string())
     {
       get_allocator().deallocate(data(), calc_bytes_needed(capacity()));
     }
@@ -1643,13 +1638,13 @@ private:
   // moves every element starting at str[idx] 'count' space(s) to the right
   void prepare_for_new_insert(size_type idx, size_type count = 1)
   {
-    if (size() + count > capacity())
+    if(size() + count > capacity())
     {
       // if we have to reallocate, we want to copy over elements in the range [0, idx)
       // and then copy the remaining elements in [idx, end())
       // then release the old buffer.
       const size_type size_for_new_buffer = new_buffer_size(count);
-      pointer new_buffer = static_cast<pointer>(get_allocator().allocate(size_for_new_buffer));
+      pointer new_buffer                  = static_cast<pointer>(get_allocator().allocate(size_for_new_buffer));
 
       // we now have 2 buffers, 1 buffer holding our data, and 1 that is prepared to receive a copy of this data
       // +---+---+---+---+---+---+---+---+---+---+---+---+
@@ -1678,8 +1673,8 @@ private:
       deallocate();
 
       m_begin = new_buffer;
-      m_end = m_begin + size_for_new_buffer;
-      last() = m_begin + size_for_new_buffer;
+      m_end   = m_begin + size_for_new_buffer;
+      last()  = m_begin + size_for_new_buffer;
     }
     else
     {
@@ -1697,7 +1692,7 @@ private:
   // reallocates if new size is bigger than the sso and bigger than the current capacity
   bool increase_capacity_if_needed(size_type num_elements_to_add)
   {
-    if (size() + num_elements_to_add > capacity())
+    if(size() + num_elements_to_add > capacity())
     {
       reallocate(new_buffer_size(num_elements_to_add), data(), size());
       return true;
@@ -1748,11 +1743,11 @@ private:
   // replace substring with given substring, doesn't perform any checking
   basic_string& replace(size_type pos, size_type count1, pointer str, size_type count2)
   {
-    if (count2 == count1)
+    if(count2 == count1)
     {
       traits_type::copy(rsl::addressof(m_begin[pos]), str, count2);
     }
-    else if (count2 > count1)
+    else if(count2 > count1)
     {
       prepare_for_new_insert(pos + count1, count2 - count1);
       traits_type::copy(rsl::addressof(m_begin[pos]), str, count2);
@@ -1764,13 +1759,13 @@ private:
     }
 
     return *this;
-
   }
   // returns the allocator used by the string
   allocator_type& get_allocator()
   {
     return m_cp_last_and_allocator.second();
   }
+
 private:
   pointer& last()
   {
@@ -1801,7 +1796,7 @@ rsl::basic_string<Char, Traits, Alloc> operator+(const rsl::basic_string<Char, T
 // the standard doesn't provide an overload for a string literal.
 // returns a string containing characters from lhs followed by the characters from rhs
 template <typename Char, typename Traits, typename Alloc, count_t Size>
-rsl::basic_string<Char, Traits, Alloc> operator+(const rsl::basic_string<Char, Traits, Alloc>& lhs, const Char(&rhs)[Size])
+rsl::basic_string<Char, Traits, Alloc> operator+(const rsl::basic_string<Char, Traits, Alloc>& lhs, const Char (&rhs)[Size])
 {
   rsl::basic_string<Char, Traits, Alloc> str;
   str += lhs;
@@ -1810,8 +1805,8 @@ rsl::basic_string<Char, Traits, Alloc> operator+(const rsl::basic_string<Char, T
 }
 /// RSL Comment: Different from ISO C++ Standard at time of writing (07/Jul/2022)
 // because we define the function above, we don't define the following
-//template <typename Char, typename Traits, typename Alloc, count_t Size>
-//rsl::basic_string<Char, Traits, Alloc> operator+(const rsl::basic_string<Char, Traits, Alloc>& lhs, const Char (&s)[Size]);
+// template <typename Char, typename Traits, typename Alloc, count_t Size>
+// rsl::basic_string<Char, Traits, Alloc> operator+(const rsl::basic_string<Char, Traits, Alloc>& lhs, const Char (&s)[Size]);
 
 // returns a string containing characters from lhs followed by the characters from rhs
 template <typename Char, typename Traits, typename Alloc>
@@ -1827,7 +1822,7 @@ rsl::basic_string<Char, Traits, Alloc> operator+(const rsl::basic_string<Char, T
 // the standard doesn't provide an overload for a string literal.
 // returns a string containing characters from lhs followed by the characters from rhs
 template <typename Char, typename Traits, typename Alloc, count_t Size>
-rsl::basic_string<Char, Traits, Alloc> operator+(const Char(&lhs)[Size], const rsl::basic_string<Char, Traits, Alloc>& rhs)
+rsl::basic_string<Char, Traits, Alloc> operator+(const Char (&lhs)[Size], const rsl::basic_string<Char, Traits, Alloc>& rhs)
 {
   rsl::basic_string<Char, Traits, Alloc> str;
   str += lhs;
@@ -1872,7 +1867,7 @@ rsl::basic_string<Char, Traits, Alloc> operator+(rsl::basic_string<Char, Traits,
 // for string literals as we don't have to calculate its length
 // returns a string containing characters from lhs followed by the characters from rhs
 template <typename Char, typename Traits, typename Alloc, count_t Size>
-rsl::basic_string<Char, Traits, Alloc> operator+(rsl::basic_string<Char, Traits, Alloc>&& lhs, const Char(&rhs)[Size])
+rsl::basic_string<Char, Traits, Alloc> operator+(rsl::basic_string<Char, Traits, Alloc>&& lhs, const Char (&rhs)[Size])
 {
   rsl::basic_string<Char, Traits, Alloc> str(rsl::move(lhs));
   str += rhs;
@@ -1899,7 +1894,7 @@ rsl::basic_string<Char, Traits, Alloc> operator+(const rsl::basic_string<Char, T
 
 // returns a string containing characters from lhs followed by the characters from rhs
 template <typename Char, typename Traits, typename Alloc, count_t Size>
-rsl::basic_string<Char, Traits, Alloc> operator+(const Char(&lhs)[Size], rsl::basic_string<Char, Traits, Alloc>&& rhs)
+rsl::basic_string<Char, Traits, Alloc> operator+(const Char (&lhs)[Size], rsl::basic_string<Char, Traits, Alloc>&& rhs)
 {
   rsl::basic_string<Char, Traits, Alloc> str(rsl::move(rhs));
   str.insert(str.cbegin(), lhs);
@@ -1919,7 +1914,7 @@ rsl::basic_string<Char, Traits, Alloc> operator+(Char lhs, rsl::basic_string<Cha
 template <typename Char, typename Traits, typename Alloc>
 bool operator==(const rsl::basic_string<Char, Traits, Alloc>& lhs, const rsl::basic_string<Char, Traits, Alloc>& rhs)
 {
-  if (lhs.length() != rhs.length())
+  if(lhs.length() != rhs.length())
   {
     return false;
   }
@@ -1958,9 +1953,9 @@ bool operator>=(const rsl::basic_string<Char, Traits, Alloc>& lhs, const rsl::ba
 }
 // compares if 2 strings are equal
 template <typename Char, typename Traits, typename Alloc, count_t Size>
-bool operator==(const rsl::basic_string<Char, Traits, Alloc>& lhs, const Char(&rhs)[Size])
+bool operator==(const rsl::basic_string<Char, Traits, Alloc>& lhs, const Char (&rhs)[Size])
 {
-  if (lhs.length() != Size - 1)
+  if(lhs.length() != Size - 1)
   {
     return false;
   }
@@ -1969,67 +1964,67 @@ bool operator==(const rsl::basic_string<Char, Traits, Alloc>& lhs, const Char(&r
 }
 // compares if 2 strings are equal
 template <typename Char, typename Traits, typename Alloc, count_t Size>
-bool operator==(const Char(&lhs)[Size], const rsl::basic_string<Char, Traits, Alloc>& rhs)
+bool operator==(const Char (&lhs)[Size], const rsl::basic_string<Char, Traits, Alloc>& rhs)
 {
   return rhs == lhs;
 }
 // compares if 2 strings are not equal
 template <typename Char, typename Traits, typename Alloc, count_t Size>
-bool operator!=(const rsl::basic_string<Char, Traits, Alloc>& lhs, const Char(&rhs)[Size])
+bool operator!=(const rsl::basic_string<Char, Traits, Alloc>& lhs, const Char (&rhs)[Size])
 {
   return !(lhs == rhs);
 }
 // compares if 2 strings are not equal
 template <typename Char, typename Traits, typename Alloc, count_t Size>
-bool operator!=(const Char(&lhs)[Size], const rsl::basic_string<Char, Traits, Alloc>& rhs)
+bool operator!=(const Char (&lhs)[Size], const rsl::basic_string<Char, Traits, Alloc>& rhs)
 {
   return !(rhs == lhs);
 }
 // lexicographically compares 2 strings
 template <typename Char, typename Traits, typename Alloc, count_t Size>
-bool operator<(const rsl::basic_string<Char, Traits, Alloc>& lhs, const Char(&rhs)[Size])
+bool operator<(const rsl::basic_string<Char, Traits, Alloc>& lhs, const Char (&rhs)[Size])
 {
   return lhs.compare(rhs) < 0;
 }
 // lexicographically compares 2 strings
 template <typename Char, typename Traits, typename Alloc, count_t Size>
-bool operator<(const Char(&lhs)[Size], const rsl::basic_string<Char, Traits, Alloc>& rhs)
+bool operator<(const Char (&lhs)[Size], const rsl::basic_string<Char, Traits, Alloc>& rhs)
 {
   return rhs.compare(lhs) > 0;
 }
 // lexicographically compares 2 strings
 template <typename Char, typename Traits, typename Alloc, count_t Size>
-bool operator<=(const rsl::basic_string<Char, Traits, Alloc>& lhs, const Char(&rhs)[Size])
+bool operator<=(const rsl::basic_string<Char, Traits, Alloc>& lhs, const Char (&rhs)[Size])
 {
   return lhs.compare(rhs) <= 0;
 }
 // lexicographically compares 2 strings
 template <typename Char, typename Traits, typename Alloc, count_t Size>
-bool operator<=(const Char(&lhs)[Size], const rsl::basic_string<Char, Traits, Alloc>& rhs)
+bool operator<=(const Char (&lhs)[Size], const rsl::basic_string<Char, Traits, Alloc>& rhs)
 {
   return rhs.compare(lhs) >= 0;
 }
 // lexicographically compares 2 strings
 template <typename Char, typename Traits, typename Alloc, count_t Size>
-bool operator>(const rsl::basic_string<Char, Traits, Alloc>& lhs, const Char(&rhs)[Size])
+bool operator>(const rsl::basic_string<Char, Traits, Alloc>& lhs, const Char (&rhs)[Size])
 {
   return lhs.compare(rhs) > 0;
 }
 // lexicographically compares 2 strings
 template <typename Char, typename Traits, typename Alloc, count_t Size>
-bool operator>(const Char(&lhs)[Size], const rsl::basic_string<Char, Traits, Alloc>& rhs)
+bool operator>(const Char (&lhs)[Size], const rsl::basic_string<Char, Traits, Alloc>& rhs)
 {
   return rhs.compare(lhs) < 0;
 }
 // lexicographically compares 2 strings
 template <typename Char, typename Traits, typename Alloc, count_t Size>
-bool operator>=(const rsl::basic_string<Char, Traits, Alloc>& lhs, const Char(&rhs)[Size])
+bool operator>=(const rsl::basic_string<Char, Traits, Alloc>& lhs, const Char (&rhs)[Size])
 {
   return lhs.compare(rhs) >= 0;
 }
 // lexicographically compares 2 strings
 template <typename Char, typename Traits, typename Alloc, count_t Size>
-bool operator>=(const Char(&lhs)[Size], const rsl::basic_string<Char, Traits, Alloc>& rhs)
+bool operator>=(const Char (&lhs)[Size], const rsl::basic_string<Char, Traits, Alloc>& rhs)
 {
   return rhs.compare(lhs) <= 0;
 }
@@ -2046,7 +2041,7 @@ template <typename Char, typename Traits, typename Alloc, typename U>
 typename basic_string<Char, Traits, Alloc>::size_type erase(basic_string<Char, Traits, Alloc>& c, const U& value)
 {
   auto it = rsl::remove(c.begin(), c.end(), value);
-  auto r = rsl::distance(it, c.end());
+  auto r  = rsl::distance(it, c.end());
   c.erase(it, c.end());
   return r;
 }
@@ -2055,18 +2050,18 @@ template <typename Char, typename Traits, typename Alloc, typename Predicate>
 typename basic_string<Char, Traits, Alloc>::size_type erase_if(basic_string<Char, Traits, Alloc>& c, Predicate pred)
 {
   auto it = rsl::remove_if(c.begin(), c.end(), pred);
-  auto r = rsl::distance(it, c.end());
+  auto r  = rsl::distance(it, c.end());
   c.erase(it, c.end());
   return r;
 }
 
-using string = basic_string<char8>;
-using wstring = basic_string<tchar>;
+using string    = basic_string<char8>;
+using wstring   = basic_string<tchar>;
 using u16string = basic_string<char16_t>;
 using u32string = basic_string<char32_t>;
 
-//template <typename Char, typename Traits>
-//class basic_istream;
+// template <typename Char, typename Traits>
+// class basic_istream;
 
 // extracts characters from input and appends them to str until the delim is found or the stream's eof.
 template <typename Char, typename Traits, typename Allocator>
@@ -2171,15 +2166,15 @@ namespace string_literals
 #pragma warning(push)
 #pragma warning(disable : 4455) // literal suffix identifiers that do not start with an underscore are reserved
   // returns a string of the desired type
-  string operator""s(const char8 * s, size_t len);
+  string operator""s(const char8* s, size_t len);
   // returns a string of the desired type
   u16string operator""s(const char16_t* s, size_t len);
   // returns a string of the desired type
   u32string operator""s(const char32_t* s, size_t len);
   // returns a string of the desired type
-  wstring operator""s(const tchar * s, size_t len);
+  wstring operator""s(const tchar* s, size_t len);
 #pragma warning(pop)
-}
+} // namespace string_literals
 
 template <typename T>
 struct hash;
@@ -2194,35 +2189,18 @@ struct hash<basic_string<CharType, Traits, Allocator>>
 };
 
 template <typename InputIt, typename Alloc = rsl::allocator>
-basic_string(InputIt, InputIt, Alloc = Alloc())
-->basic_string <
-  typename rsl::iterator_traits<InputIt>::value_type,
-  rsl::char_traits<typename rsl::iterator_traits<InputIt>::value_type>,
-  Alloc>;
+basic_string(InputIt, InputIt, Alloc = Alloc()) -> basic_string<typename rsl::iterator_traits<InputIt>::value_type, rsl::char_traits<typename rsl::iterator_traits<InputIt>::value_type>, Alloc>;
 
-template <
-  typename Char,
-  typename Traits,
-  typename Alloc = rsl::allocator>
-  explicit basic_string(rsl::basic_string_view<Char, Traits>, const Alloc & = Alloc())
-  ->basic_string<Char, Traits, Alloc>;
+template <typename Char, typename Traits, typename Alloc = rsl::allocator>
+explicit basic_string(rsl::basic_string_view<Char, Traits>, const Alloc& = Alloc()) -> basic_string<Char, Traits, Alloc>;
 
-template <
-  typename Char,
-  typename Traits,
-  typename Alloc = rsl::allocator>
-  explicit basic_string(
-    rsl::basic_string_view<Char, Traits>,
-    typename rsl::basic_string_view<Char, Traits>::size_type,
-    typename rsl::basic_string_view<Char, Traits>::size_type,
-    const Alloc & = Alloc())
-  ->basic_string<Char, Traits, Alloc>;
+template <typename Char, typename Traits, typename Alloc = rsl::allocator>
+explicit basic_string(rsl::basic_string_view<Char, Traits>, typename rsl::basic_string_view<Char, Traits>::size_type, typename rsl::basic_string_view<Char, Traits>::size_type, const Alloc& = Alloc()) -> basic_string<Char, Traits, Alloc>;
 
 template <typename Char, typename Traits>
 class basic_ostream;
 
 REX_RSL_END_NAMESPACE
-
 
 // stores each characters from the resulting sequence to the output stream
 template <typename Char, typename Traits, typename Allocator>

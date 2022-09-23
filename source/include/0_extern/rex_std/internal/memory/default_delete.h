@@ -1,10 +1,10 @@
-// ============================================ 
+// ============================================
 //
 // REX - STANDARD LIBRARY IMPLEMENTATION
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: default_delete.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -16,20 +16,21 @@
 
 REX_RSL_BEGIN_NAMESPACE
 
-    template <typename T>
-    struct default_delete
-    {
-    public:
-        constexpr default_delete() = default;
-        template <typename T2, enable_if_t<is_convertible_v<T2*, T*>, bool> = true>
-        constexpr default_delete(const default_delete<T2>&)
-        {}
+template <typename T>
+struct default_delete
+{
+public:
+  constexpr default_delete() = default;
+  template <typename T2, enable_if_t<is_convertible_v<T2*, T*>, bool> = true>
+  constexpr default_delete(const default_delete<T2>&)
+  {
+  }
 
-        constexpr void operator()(T* ptr) const
-        {
-            static_assert(sizeof(T) > 0, "can't delete an incomplete type");
-            delete ptr;
-        }
-    };
+  constexpr void operator()(T* ptr) const
+  {
+    static_assert(sizeof(T) > 0, "can't delete an incomplete type");
+    delete ptr;
+  }
+};
 
 REX_RSL_END_NAMESPACE

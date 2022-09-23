@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: memset.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -16,7 +16,6 @@
 
 REX_RSL_BEGIN_NAMESPACE
 
-    void* memset(void* dest, char val, count_t len); 
+void* memset(void* dest, char val, count_t len);
 
 REX_RSL_END_NAMESPACE
-

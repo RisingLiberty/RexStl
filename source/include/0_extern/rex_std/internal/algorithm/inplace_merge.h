@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: inplace_merge.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -16,6 +16,6 @@
 
 REX_RSL_BEGIN_NAMESPACE
 
-    STATIC_WARNING("Implement inplace merge");
+STATIC_WARNING("Implement inplace merge");
 
 REX_RSL_END_NAMESPACE

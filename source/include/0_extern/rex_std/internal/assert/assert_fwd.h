@@ -1,10 +1,10 @@
-// ============================================ 
+// ============================================
 //
 // REX - STANDARD LIBRARY IMPLEMENTATION
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: assert_fwd.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -21,8 +21,8 @@
 
 REX_RSL_BEGIN_NAMESPACE
 
-  template <typename ... Args>
-  bool assert(bool cond, Args&& ... args);
+template <typename... Args>
+bool assert(bool cond, Args&&... args);
 
 REX_RSL_END_NAMESPACE
 
@@ -33,7 +33,7 @@ REX_RSL_END_NAMESPACE
   #define assert(cond, ...) rsl::assert(cond, __VA_ARGS__)
 
   #define REX_ASSERT_X(cond, ...) assert(cond, __VA_ARGS__)
-  #define REX_ASSERT(...) assert(false, __VA_ARGS__)
+  #define REX_ASSERT(...)         assert(false, __VA_ARGS__)
 #else
   #define assert(cond, ...)
 

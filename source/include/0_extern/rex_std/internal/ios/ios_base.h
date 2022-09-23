@@ -1,10 +1,10 @@
-// ============================================ 
+// ============================================
 //
 // REX - STANDARD LIBRARY IMPLEMENTATION
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: ios_base.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -30,123 +30,121 @@
 #pragma once
 
 #include "rex_std/internal/ios/io_types.h"
-
 #include "rex_std/internal/type_traits/underlying_type.h"
 
 REX_RSL_BEGIN_NAMESPACE
 
-    namespace io
-    {
-        /// [09/Sep/2022] RSL Comment: to avoid having the following enum classes
-        // be part of the ios_base class, we define them in an io namespace instead.
-        enum class openmode
-        {
-            app, // seek to the end of stream before each write
-            binary, // open in binary mode
-            in, // open for reading
-            out, // open for writing
-            trunc, // discard the contents of the stream when opening
-            ate // seek to the end of stream immediately after open
-        };
-        
-        enum class iostate
-        {
-            goodbit = 0,        // no error
-            badbit = (1 << 0), // irrecoverable stream error
-            failbit = (1 << 1), // input/output operation failed
-            eofbit = (1 << 2), // associated input sequence has reached end-of-file
-            noinitbit = (1 << 3)  // the stream is not yet initialized /// RSL Comment: Not in ISO C++ Standard at time of writing (09/Sep/2022)
-        };
-        
-        namespace internal
-        {
-            using openmode_int = rsl::underlying_type_t<openmode>;
-            using iostate_int = rsl::underlying_type_t<iostate>;
-        }
+namespace io
+{
+  /// [09/Sep/2022] RSL Comment: to avoid having the following enum classes
+  // be part of the ios_base class, we define them in an io namespace instead.
+  enum class openmode
+  {
+    app,    // seek to the end of stream before each write
+    binary, // open in binary mode
+    in,     // open for reading
+    out,    // open for writing
+    trunc,  // discard the contents of the stream when opening
+    ate     // seek to the end of stream immediately after open
+  };
 
-        constexpr openmode operator&(openmode lhs, openmode rhs)
-        {
-            internal::openmode_int lhs_int = static_cast<internal::openmode_int>(lhs);
-            internal::openmode_int rhs_int = static_cast<internal::openmode_int>(rhs);
+  enum class iostate
+  {
+    goodbit   = 0,        // no error
+    badbit    = (1 << 0), // irrecoverable stream error
+    failbit   = (1 << 1), // input/output operation failed
+    eofbit    = (1 << 2), // associated input sequence has reached end-of-file
+    noinitbit = (1 << 3)  // the stream is not yet initialized /// RSL Comment: Not in ISO C++ Standard at time of writing (09/Sep/2022)
+  };
 
-            return static_cast<openmode>(lhs_int & rhs_int);
-        }
-        constexpr openmode operator&=(openmode& lhs, openmode rhs)
-        {
-            lhs = lhs & rhs;
-            return lhs;
-        }
-        constexpr openmode operator|(openmode lhs, openmode rhs)
-        {
-            internal::openmode_int lhs_int = static_cast<internal::openmode_int>(lhs);
-            internal::openmode_int rhs_int = static_cast<internal::openmode_int>(rhs);
+  namespace internal
+  {
+    using openmode_int = rsl::underlying_type_t<openmode>;
+    using iostate_int  = rsl::underlying_type_t<iostate>;
+  } // namespace internal
 
-            return static_cast<openmode>(lhs_int | rhs_int);
-        }
-        constexpr openmode operator|=(openmode& lhs, openmode rhs)
-        {
-            lhs = lhs | rhs;
-            return lhs;
-        }
+  constexpr openmode operator&(openmode lhs, openmode rhs)
+  {
+    internal::openmode_int lhs_int = static_cast<internal::openmode_int>(lhs);
+    internal::openmode_int rhs_int = static_cast<internal::openmode_int>(rhs);
 
-        
-        constexpr iostate operator&(iostate lhs, iostate rhs)
-        {
-            internal::iostate_int lhs_int = static_cast<internal::iostate_int>(lhs);
-            internal::iostate_int rhs_int = static_cast<internal::iostate_int>(rhs);
+    return static_cast<openmode>(lhs_int & rhs_int);
+  }
+  constexpr openmode operator&=(openmode& lhs, openmode rhs)
+  {
+    lhs = lhs & rhs;
+    return lhs;
+  }
+  constexpr openmode operator|(openmode lhs, openmode rhs)
+  {
+    internal::openmode_int lhs_int = static_cast<internal::openmode_int>(lhs);
+    internal::openmode_int rhs_int = static_cast<internal::openmode_int>(rhs);
 
-            return static_cast<iostate>(lhs_int & rhs_int);
-        }
-        constexpr iostate operator&=(iostate& lhs, iostate rhs)
-        {
-            lhs = lhs & rhs;
-            return lhs;
-        }
-        constexpr iostate operator|(iostate lhs, iostate rhs)
-        {
-            internal::iostate_int lhs_int = static_cast<internal::iostate_int>(lhs);
-            internal::iostate_int rhs_int = static_cast<internal::iostate_int>(rhs);
+    return static_cast<openmode>(lhs_int | rhs_int);
+  }
+  constexpr openmode operator|=(openmode& lhs, openmode rhs)
+  {
+    lhs = lhs | rhs;
+    return lhs;
+  }
 
-            return static_cast<iostate>(lhs_int | rhs_int);
-        }
-        constexpr iostate operator|=(iostate& lhs, iostate rhs)
-        {
-            lhs = lhs | rhs;
-            return lhs;
-        }
+  constexpr iostate operator&(iostate lhs, iostate rhs)
+  {
+    internal::iostate_int lhs_int = static_cast<internal::iostate_int>(lhs);
+    internal::iostate_int rhs_int = static_cast<internal::iostate_int>(rhs);
 
-        enum class seekdir
-        {
-            beg, // the beginning of a stream
-            end, // the ending of a stream
-            cur, // the current position of stream position indicator
-        };
-    }
+    return static_cast<iostate>(lhs_int & rhs_int);
+  }
+  constexpr iostate operator&=(iostate& lhs, iostate rhs)
+  {
+    lhs = lhs & rhs;
+    return lhs;
+  }
+  constexpr iostate operator|(iostate lhs, iostate rhs)
+  {
+    internal::iostate_int lhs_int = static_cast<internal::iostate_int>(lhs);
+    internal::iostate_int rhs_int = static_cast<internal::iostate_int>(rhs);
 
-    class ios_base
-    {
-    public:
-        // you can't copy something that inherits from ios_base
-        ios_base(const ios_base&) = delete;
+    return static_cast<iostate>(lhs_int | rhs_int);
+  }
+  constexpr iostate operator|=(iostate& lhs, iostate rhs)
+  {
+    lhs = lhs | rhs;
+    return lhs;
+  }
 
-        // destroys the ios_base object
-        virtual ~ios_base() = default;
+  enum class seekdir
+  {
+    beg, // the beginning of a stream
+    end, // the ending of a stream
+    cur, // the current position of stream position indicator
+  };
+} // namespace io
 
-        // you can't assign to an ios_base object
-        ios_base& operator=(const ios_base&) = delete;
+class ios_base
+{
+public:
+  // you can't copy something that inherits from ios_base
+  ios_base(const ios_base&) = delete;
 
-        /// [09/Sep/2022] RSL Comment: Rex Standard Library ios_base provides no implemented member functions.
-        // This is because Rex Standard Library doesn't provide locales, nor does it allow the user
-        // to config global objects like rsl::cout with formatting rules.
+  // destroys the ios_base object
+  virtual ~ios_base() = default;
 
-        /// [09/Sep/2022] RSL Comment: Because Rex Standard Library wants to break the dependency on C.
-        // it makes little sense of having sync_with_stdio as a member function.
+  // you can't assign to an ios_base object
+  ios_base& operator=(const ios_base&) = delete;
 
-    protected:
-        // only derived classes can construct an ios_base class.
-        // the derived class must call basic_ios::init() to complete initialization
-        // before first use and before destructor
-        ios_base() = default;
-    };
+  /// [09/Sep/2022] RSL Comment: Rex Standard Library ios_base provides no implemented member functions.
+  // This is because Rex Standard Library doesn't provide locales, nor does it allow the user
+  // to config global objects like rsl::cout with formatting rules.
+
+  /// [09/Sep/2022] RSL Comment: Because Rex Standard Library wants to break the dependency on C.
+  // it makes little sense of having sync_with_stdio as a member function.
+
+protected:
+  // only derived classes can construct an ios_base class.
+  // the derived class must call basic_ios::init() to complete initialization
+  // before first use and before destructor
+  ios_base() = default;
+};
 
 REX_RSL_END_NAMESPACE

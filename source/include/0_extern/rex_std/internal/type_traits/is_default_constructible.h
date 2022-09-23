@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: is_default_constructible.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -16,12 +16,12 @@
 
 REX_RSL_BEGIN_NAMESPACE
 
-	template <typename T>
-    struct is_default_constructible : bool_constant<__is_constructible(T)>
-    {};
+template <typename T>
+struct is_default_constructible : bool_constant<__is_constructible(T)>
+{
+};
 
-    template <typename T>
-    constexpr bool is_default_constructible_v = is_default_constructible<T>::value;
+template <typename T>
+constexpr bool is_default_constructible_v = is_default_constructible<T>::value;
 
 REX_RSL_END_NAMESPACE
-

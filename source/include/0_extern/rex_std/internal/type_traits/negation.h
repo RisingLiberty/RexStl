@@ -1,10 +1,10 @@
-// ============================================ 
+// ============================================
 //
 // REX - STANDARD LIBRARY IMPLEMENTATION
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: negation.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -16,11 +16,12 @@
 
 REX_RSL_BEGIN_NAMESPACE
 
-    template <typename T>
-    struct negation : bool_constant<!bool(T::value)>
-    {};
+template <typename T>
+struct negation : bool_constant<!bool(T::value)>
+{
+};
 
-    template <typename T>
-    constexpr bool negation_v = negation<T>::value;
+template <typename T>
+constexpr bool negation_v = negation<T>::value;
 
 REX_RSL_END_NAMESPACE

@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: size.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -16,10 +16,10 @@
 
 REX_RSL_BEGIN_NAMESPACE
 
-    template <typename T, count_t N>
-    constexpr count_t size(const T(&/*arr*/)[N])
-    {
-        return N;
-    }
+template <typename T, count_t N>
+constexpr count_t size(const T (&/*arr*/)[N])
+{
+  return N;
+}
 
 REX_RSL_END_NAMESPACE

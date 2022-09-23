@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: is_function.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -18,17 +18,22 @@
 
 REX_RSL_BEGIN_NAMESPACE
 
-    template <typename T>
-    struct is_function : public bool_constant<!is_const_v<const T> && !is_reference_v<T>> { };
+template <typename T>
+struct is_function : public bool_constant<!is_const_v<const T> && !is_reference_v<T>>
+{
+};
 
-    template <typename T>
-    struct is_function<T&> : public false_type { };
+template <typename T>
+struct is_function<T&> : public false_type
+{
+};
 
-    template <typename T>
-    struct is_function<T&&> : public false_type { };
+template <typename T>
+struct is_function<T&&> : public false_type
+{
+};
 
-    template <typename T>
-    constexpr bool is_function_v = is_function<T>::value;
+template <typename T>
+constexpr bool is_function_v = is_function<T>::value;
 
 REX_RSL_END_NAMESPACE
-

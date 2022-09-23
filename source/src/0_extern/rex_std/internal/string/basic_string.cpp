@@ -1,10 +1,10 @@
-// ============================================ 
+// ============================================
 //
 // REX - STANDARD LIBRARY IMPLEMENTATION
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: basic_string.cpp
 // Copyright (c) Nick De Breuck 2022
 //
@@ -51,7 +51,6 @@ rsl::optional<lfloat64> stold(const string& str, char8* str_end)
   return rsl::strtold(str.data(), &str_end);
 }
 
-
 string to_string(int32 value)
 {
   return internal::to_string<string>(value);
@@ -94,7 +93,7 @@ namespace string_literals
 #pragma warning(push)
 #pragma warning(disable : 4455) // literal suffix identifiers that do not start with an underscore are reserved
   // returns a string of the desired type
-  string operator""s(const char8 * s, size_t len)
+  string operator""s(const char8* s, size_t len)
   {
     count_t len_as_count = static_cast<count_t>(len);
     return string(s, len_as_count);
@@ -112,12 +111,12 @@ namespace string_literals
     return u32string(s, len_as_count);
   }
   // returns a string of the desired type
-  wstring operator""s(const tchar * s, size_t len)
+  wstring operator""s(const tchar* s, size_t len)
   {
     count_t len_as_count = static_cast<count_t>(len);
     return wstring(s, len_as_count);
   }
 #pragma warning(pop)
-}
+} // namespace string_literals
 
 REX_RSL_END_NAMESPACE

@@ -1,10 +1,10 @@
-// ============================================ 
+// ============================================
 //
 // REX - STANDARD LIBRARY IMPLEMENTATION
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: fpos.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -21,13 +21,10 @@
 #pragma once
 
 #include "rex_std/bonus/types.h"
-
-#include "rex_std/internal/ios/io_types.h"
-
 #include "rex_std/internal/cwchar/mbstate.h"
-
-#include "rex_std/internal/type_traits/is_integral.h"
+#include "rex_std/internal/ios/io_types.h"
 #include "rex_std/internal/type_traits/enable_if.h"
+#include "rex_std/internal/type_traits/is_integral.h"
 
 REX_RSL_BEGIN_NAMESPACE
 
@@ -38,16 +35,18 @@ class fpos
 {
 public:
   /* implicit */ fpos(streamoff off = 0)
-    : m_offset(off)
-    , m_fpos(0)
-    , m_state()
-  {}
+      : m_offset(off)
+      , m_fpos(0)
+      , m_state()
+  {
+  }
 
   fpos(State state, fpos_t filePos)
-    : m_offset(filePos)
-    , m_fpos(0)
-    , m_state(state)
-  {}
+      : m_offset(filePos)
+      , m_fpos(0)
+      , m_state(state)
+  {
+  }
 
   State state() const
   {
@@ -135,8 +134,8 @@ private:
   State m_state;
 };
 
-using streampos = fpos<mbstate_t>;
-using wstreampos = fpos<mbstate_t>;
+using streampos    = fpos<mbstate_t>;
+using wstreampos   = fpos<mbstate_t>;
 using u16streampos = fpos<mbstate_t>;
 using u32streampos = fpos<mbstate_t>;
 

@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: none_of.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -16,10 +16,10 @@
 
 REX_RSL_BEGIN_NAMESPACE
 
-    template <typename InputIterator, typename Predicate>
-    bool none_of(const InputIterator first, const InputIterator last, Predicate predicate)
-    {
-        return find_if(first, last, predicate) == last;
-    }
+template <typename InputIterator, typename Predicate>
+bool none_of(const InputIterator first, const InputIterator last, Predicate predicate)
+{
+  return find_if(first, last, predicate) == last;
+}
 
 REX_RSL_END_NAMESPACE

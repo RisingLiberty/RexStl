@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: source_location.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -21,50 +21,49 @@
 #include "rex_std/bonus/types.h"
 
 #ifdef REX_ENABLE_WITH_CPP20
-#define REX_CONSTEVAL_WITH_CPP20 consteval
+  #define REX_CONSTEVAL_WITH_CPP20 consteval
 #else
-#define REX_CONSTEVAL_WITH_CPP20 constexpr
+  #define REX_CONSTEVAL_WITH_CPP20 constexpr
 #endif
 
 REX_RSL_BEGIN_NAMESPACE
 
-    class source_location
-    {
-    public:
-        REX_CONSTEVAL_WITH_CPP20 source_location() = default;
+class source_location
+{
+public:
+  REX_CONSTEVAL_WITH_CPP20 source_location() = default;
 
-        static constexpr source_location current(const card32 line = __builtin_LINE(), card32 column = __builtin_COLUMN(), const char8* file = __builtin_FILE(),
-        const char8* function = __builtin_FUNCTION())
-        {
-            source_location res{};
-            res.m_line = line;
-            res.m_column = column;
-            res.m_file_name = file;
-            res.m_function_name = function;
-        }
+  static constexpr source_location current(const card32 line = __builtin_LINE(), card32 column = __builtin_COLUMN(), const char8* file = __builtin_FILE(), const char8* function = __builtin_FUNCTION())
+  {
+    source_location res {};
+    res.m_line          = line;
+    res.m_column        = column;
+    res.m_file_name     = file;
+    res.m_function_name = function;
+  }
 
-        card32 line() const
-        {
-            return m_line;
-        }
-        card32 column() const
-        {
-            return m_column;
-        }
-        const char8* file_name() const
-        {
-            return m_file_name;
-        }
-        const char8* function_name() const
-        {
-            return m_function_name;
-        }
+  card32 line() const
+  {
+    return m_line;
+  }
+  card32 column() const
+  {
+    return m_column;
+  }
+  const char8* file_name() const
+  {
+    return m_file_name;
+  }
+  const char8* function_name() const
+  {
+    return m_function_name;
+  }
 
-    private:
-        card32 m_line;
-        card32 m_column;
-        const char8* m_file_name;
-        const char8* m_function_name;
-    };
+private:
+  card32 m_line;
+  card32 m_column;
+  const char8* m_file_name;
+  const char8* m_function_name;
+};
 
 REX_RSL_END_NAMESPACE

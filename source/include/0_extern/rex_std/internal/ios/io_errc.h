@@ -1,10 +1,10 @@
-// ============================================ 
+// ============================================
 //
 // REX - STANDARD LIBRARY IMPLEMENTATION
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: io_errc.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -20,9 +20,9 @@
 
 REX_RSL_BEGIN_NAMESPACE
 
-    enum class io_errc
-    {
-        stream = 1
-    };
+enum class io_errc
+{
+  stream = 1
+};
 
 REX_RSL_END_NAMESPACE

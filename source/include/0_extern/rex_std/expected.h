@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: expected.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -14,20 +14,21 @@
 
 #ifdef REX_ENABLE_WITH_CPP23
 
-#include "rex_std/std_alias_defines.h"
-#include "rex_std/disable_std_checking.h"
-#include <expected>
+  #include "rex_std/disable_std_checking.h"
+  #include "rex_std/std_alias_defines.h"
+
+  #include <expected>
 
 REX_RSL_BEGIN_NAMESPACE
 
-    REX_STD_TEMPLATED_CLASS_ALIAS(expected, typename T, typename E);
-    REX_STD_TEMPLATED_CLASS_ALIAS(unexpected, typename E);
+REX_STD_TEMPLATED_CLASS_ALIAS(expected, typename T, typename E);
+REX_STD_TEMPLATED_CLASS_ALIAS(unexpected, typename E);
 
-    REX_STD_CLASS_ALIAS(unexpect_t);
-    REX_STD_OBJECT_ALIAS(unexpect);
+REX_STD_CLASS_ALIAS(unexpect_t);
+REX_STD_OBJECT_ALIAS(unexpect);
 
 REX_RSL_END_NAMESPACE
 
-#include "rex_std/enable_std_checking.h"
+  #include "rex_std/enable_std_checking.h"
 
 #endif

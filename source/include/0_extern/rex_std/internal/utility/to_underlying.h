@@ -1,10 +1,10 @@
-// ============================================ 
+// ============================================
 //
 // REX - STANDARD LIBRARY IMPLEMENTATION
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: to_underlying.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -17,10 +17,10 @@
 
 REX_RSL_BEGIN_NAMESPACE
 
-    template <typename Enum>
-    constexpr underlying_type_t<Enum> to_underlying(Enum e)
-    {
-        return static_cast<underlying_type_t<Enum>>(e);
-    }
+template <typename Enum>
+constexpr underlying_type_t<Enum> to_underlying(Enum e)
+{
+  return static_cast<underlying_type_t<Enum>>(e);
+}
 
 REX_RSL_END_NAMESPACE

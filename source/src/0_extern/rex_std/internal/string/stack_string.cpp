@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: stack_string.cpp
 // Copyright (c) Nick De Breuck 2022
 //
@@ -38,7 +38,7 @@ rsl::tiny_stack_string rsl::to_stack_string(const float64 value, card32 precisio
 }
 rsl::tiny_stack_string rsl::to_stack_string(const void* ptr)
 {
-    return internal::to_string<tiny_stack_string>(ptr);
+  return internal::to_string<tiny_stack_string>(ptr);
 }
 
 rsl::tiny_stack_string operator"" _tiny(const char* str, size_t length)

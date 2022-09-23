@@ -1,10 +1,10 @@
-// ============================================ 
+// ============================================
 //
 // REX - STANDARD LIBRARY IMPLEMENTATION
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: mod_range_hashing.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -16,12 +16,12 @@
 
 REX_RSL_BEGIN_NAMESPACE
 
-  struct mod_range_hashing
+struct mod_range_hashing
+{
+  uint32 operator()(count_t r, uint32 n) const
   {
-    uint32 operator()(count_t r, uint32 n) const
-    {
-      return r % n;
-    }
-  };
+    return r % n;
+  }
+};
 
 REX_RSL_END_NAMESPACE

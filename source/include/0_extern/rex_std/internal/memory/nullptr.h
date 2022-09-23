@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: nullptr.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -14,7 +14,6 @@
 
 REX_RSL_BEGIN_NAMESPACE
 
-    using nullptr_t = decltype(nullptr);
+using nullptr_t = decltype(nullptr);
 
 REX_RSL_END_NAMESPACE
-

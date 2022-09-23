@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: condecvt.h
 // Copyright (c) Nick De Breuck 2022
 //

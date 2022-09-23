@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: transform_if.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -17,16 +17,16 @@ REX_RSL_BEGIN_NAMESPACE
 template <typename InputIterator, typename OutputIterator, typename Func, typename Predicate>
 void transform(InputIterator first, InputIterator last, OutputIterator dst_first, Func func, Predicate predicate)
 {
-    auto it = first;
-    while (it != last)
+  auto it = first;
+  while(it != last)
+  {
+    if(*it)
     {
-        if (*it)
-        {
-            *dst_first = func(*it);
-            ++dst_first;
-        }
-        ++it;
+      *dst_first = func(*it);
+      ++dst_first;
     }
+    ++it;
+  }
 }
 
 REX_RSL_END_NAMESPACE

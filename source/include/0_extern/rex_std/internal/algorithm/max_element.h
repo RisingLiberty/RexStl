@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: max_element.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -14,36 +14,36 @@
 
 REX_RSL_BEGIN_NAMESPACE
 
-    template <typename InputIterator>
-    InputIterator max_element(InputIterator first, InputIterator last)
+template <typename InputIterator>
+InputIterator max_element(InputIterator first, InputIterator last)
+{
+  auto largest = first++;
+  auto it      = first;
+  while(it != last)
+  {
+    if(*it > *largest)
     {
-        auto largest = first++;
-        auto it = first;
-        while (it != last)
-        {
-            if (*it > *largest)
-            {
-                largest = it;
-            }
-        }
-
-        return largest;
+      largest = it;
     }
+  }
 
-    template <typename InputIterator, typename Compare>
-    InputIterator max_element(InputIterator first, InputIterator last, Compare comp)
+  return largest;
+}
+
+template <typename InputIterator, typename Compare>
+InputIterator max_element(InputIterator first, InputIterator last, Compare comp)
+{
+  auto largest = first++;
+  auto it      = first;
+  while(it != last)
+  {
+    if(comp(*it, largest) == false)
     {
-        auto largest = first++;
-        auto it = first;
-        while (it != last)
-        {
-            if (comp(*it, largest) == false)
-            {
-                largest = it;
-            }
-        }
-
-        return largest;
+      largest = it;
     }
+  }
+
+  return largest;
+}
 
 REX_RSL_END_NAMESPACE

@@ -1,10 +1,10 @@
-// ============================================ 
+// ============================================
 //
 // REX - STANDARD LIBRARY IMPLEMENTATION
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: mbstate.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -27,11 +27,11 @@
 
 REX_RSL_BEGIN_NAMESPACE
 
-    struct mbstate_t
-    {
-        ulong wchar; // the byte to convert
-        uint16 byte;
-        uint16 state; // the current state of the conversion
-    };
+struct mbstate_t
+{
+  ulong wchar; // the byte to convert
+  uint16 byte;
+  uint16 state; // the current state of the conversion
+};
 
 REX_RSL_END_NAMESPACE

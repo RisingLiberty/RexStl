@@ -1,10 +1,10 @@
-// ============================================ 
+// ============================================
 //
 // REX - STANDARD LIBRARY IMPLEMENTATION
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: is_layout_compatible.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -16,11 +16,12 @@
 
 REX_RSL_BEGIN_NAMESPACE
 
-    template <typename T, typename U>
-    struct is_layout_compatible : public bool_constant<__is_layout_compatible(T, U)>
-    {};
+template <typename T, typename U>
+struct is_layout_compatible : public bool_constant<__is_layout_compatible(T, U)>
+{
+};
 
-    template <typename T, typename U>
-    constexpr bool is_layout_compatible_v = is_layout_compatible<T, U>::value;
+template <typename T, typename U>
+constexpr bool is_layout_compatible_v = is_layout_compatible<T, U>::value;
 
 REX_RSL_END_NAMESPACE

@@ -1,10 +1,10 @@
-// ============================================ 
+// ============================================
 //
 // REX - STANDARD LIBRARY IMPLEMENTATION
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: atomic_decrement.cpp
 // Copyright (c) Nick De Breuck 2022
 //
@@ -18,65 +18,65 @@
 REX_RSL_BEGIN_NAMESPACE
 namespace internal
 {
-    int16 atomic_decrement(int16* data)
-    {
-        return _InterlockedDecrement16(data);
-    }
-    int32 atomic_decrement(long* data)
-    {
-        return _InterlockedDecrement(data);
-    }
-    int64 atomic_decrement(int64* data)
-    {
-        return _InterlockedDecrement64(data);
-    }
-    uint16 atomic_decrement(uint16* data)
-    {
-        return static_cast<uint16>(atomic_decrement(reinterpret_cast<int16*>(data)));
-    }
-    uint32 atomic_decrement(ulong* data)
-    {
-        return _InterlockedDecrement(data);
-    }
-    uint64 atomic_decrement(uint64* data)
-    {
-        return static_cast<uint64>(atomic_decrement(reinterpret_cast<int64*>(data)));
-    }
-}
+  int16 atomic_decrement(int16* data)
+  {
+    return _InterlockedDecrement16(data);
+  }
+  int32 atomic_decrement(long* data)
+  {
+    return _InterlockedDecrement(data);
+  }
+  int64 atomic_decrement(int64* data)
+  {
+    return _InterlockedDecrement64(data);
+  }
+  uint16 atomic_decrement(uint16* data)
+  {
+    return static_cast<uint16>(atomic_decrement(reinterpret_cast<int16*>(data)));
+  }
+  uint32 atomic_decrement(ulong* data)
+  {
+    return _InterlockedDecrement(data);
+  }
+  uint64 atomic_decrement(uint64* data)
+  {
+    return static_cast<uint64>(atomic_decrement(reinterpret_cast<int64*>(data)));
+  }
+} // namespace internal
 REX_RSL_END_NAMESPACE
 
 int8 rsl::atomic_decrement(int8& val)
 {
-    long i32_val = val;
-    return static_cast<int8>(internal::atomic_decrement(&i32_val));
+  long i32_val = val;
+  return static_cast<int8>(internal::atomic_decrement(&i32_val));
 }
 int16 rsl::atomic_decrement(int16& val)
 {
-    return internal::atomic_decrement(&val);
+  return internal::atomic_decrement(&val);
 }
 int32 rsl::atomic_decrement(int32& val)
 {
-    return internal::atomic_decrement(reinterpret_cast<long*>(&val));
+  return internal::atomic_decrement(reinterpret_cast<long*>(&val));
 }
 int64 rsl::atomic_decrement(int64& val)
 {
-    return internal::atomic_decrement(&val);
+  return internal::atomic_decrement(&val);
 }
 
 uint8 rsl::atomic_decrement(uint8& val)
 {
-    ulong u32_val = val;
-    return static_cast<uint8>(internal::atomic_decrement(&u32_val));
+  ulong u32_val = val;
+  return static_cast<uint8>(internal::atomic_decrement(&u32_val));
 }
 uint16 rsl::atomic_decrement(uint16& val)
 {
-    return internal::atomic_decrement(&val);
+  return internal::atomic_decrement(&val);
 }
 uint32 rsl::atomic_decrement(uint32& val)
 {
-    return internal::atomic_decrement(reinterpret_cast<ulong*>(&val));
+  return internal::atomic_decrement(reinterpret_cast<ulong*>(&val));
 }
 uint64 rsl::atomic_decrement(uint64& val)
 {
-    return internal::atomic_decrement(&val);
+  return internal::atomic_decrement(&val);
 }

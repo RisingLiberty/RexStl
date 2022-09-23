@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: barrier.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -14,17 +14,17 @@
 
 #ifdef REX_ENABLE_WITH_CPP20
 
-#include "rex_std/std_alias_defines.h"
-#include "rex_std/disable_std_checking.h"
+  #include "rex_std/disable_std_checking.h"
+  #include "rex_std/std_alias_defines.h"
 
-#include <barrier>
+  #include <barrier>
 
 REX_RSL_BEGIN_NAMESPACE
 {
-    template <typename CompletionFunction>
-    REX_STD_TEMPLATED_CLASS_ALIAS(barrier, CompletionFunction);
+  template <typename CompletionFunction>
+  REX_STD_TEMPLATED_CLASS_ALIAS(barrier, CompletionFunction);
 }
 
-#include "rex_std/enable_std_checking.h"
+  #include "rex_std/enable_std_checking.h"
 
 #endif // REX_ENABLE_WITH_CPP20

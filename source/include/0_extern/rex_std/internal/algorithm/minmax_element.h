@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: minmax_element.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -16,79 +16,79 @@
 
 REX_RSL_BEGIN_NAMESPACE
 
-    template <typename Iterator>
-    struct min_max_element_result
-    {
-        Iterator min;
-        Iterator max;
-    };
+template <typename Iterator>
+struct min_max_element_result
+{
+  Iterator min;
+  Iterator max;
+};
 
-    template <typename InputIterator>
-    min_max_element_result<InputIterator> minmax_element(InputIterator first, InputIterator last)
+template <typename InputIterator>
+min_max_element_result<InputIterator> minmax_element(InputIterator first, InputIterator last)
+{
+  using value_type = InputIterator::value_type;
+  return minmax_element(first, last, rsl::less<value_type>());
+}
+
+template <typename InputIterator, typename Compare>
+min_max_element_result<InputIterator> minmax_element(InputIterator first, InputIterator last, Compare compare)
+{
+  auto min = first, max = first;
+
+  if(first == last || ++first == last)
+    return {min, max};
+
+  if(compare(*first, *min))
+  {
+    min = first;
+  }
+  else
+  {
+    max = first;
+  }
+
+  while(++first != last)
+  {
+    auto it = first;
+    if(++first == last)
     {
-        using value_type = InputIterator::value_type;
-        return minmax_element(first, last, rsl::less<value_type>());
+      if(compare(*it, *min))
+      {
+        min = it;
+      }
+      else if(!(compare(*it, *max)))
+      {
+        max = it;
+      }
+      break;
     }
-
-    template <typename InputIterator, typename Compare>
-    min_max_element_result<InputIterator> minmax_element(InputIterator first, InputIterator last, Compare compare)
+    else
     {
-        auto min = first, max = first;
-
-        if (first == last || ++first == last)
-            return { min, max };
-
-        if (compare(*first, *min)) 
+      if(compare(*first, *it))
+      {
+        if(compare(*first, *min))
         {
-            min = first;
+          min = first;
         }
-        else 
+        if(!(compare(*it, *max)))
         {
-            max = first;
+          max = it;
         }
-
-        while (++first != last) 
+      }
+      else
+      {
+        if(compare(*it, *min))
         {
-            auto it = first;
-            if (++first == last) 
-            {
-                if (compare(*it, *min))
-                {
-                    min = it;
-                }
-                else if (!(compare(*it, *max)))
-                {
-                    max = it;
-                }
-                break;
-            }
-            else 
-            {
-                if (compare(*first, *it)) 
-                {
-                    if (compare(*first, *min)) 
-                    {
-                        min = first;
-                    }
-                    if (!(compare(*it, *max)))
-                    {
-                        max = it;
-                    }
-                }
-                else 
-                {
-                    if (compare(*it, *min))
-                    {
-                        min = it;
-                    }
-                    if (!(compare(*first, *max)))
-                    {
-                        max = first;
-                    }
-                }
-            }
+          min = it;
         }
-        return { min, max };
+        if(!(compare(*first, *max)))
+        {
+          max = first;
+        }
+      }
     }
+  }
+  return {min, max};
+}
 
 REX_RSL_END_NAMESPACE

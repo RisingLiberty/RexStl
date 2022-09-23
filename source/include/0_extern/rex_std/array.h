@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: array.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -14,20 +14,16 @@
 
 #include "rex_std/internal/algorithm/fill_n.h"
 #include "rex_std/internal/algorithm/lexicographical_compare.h"
-
+#include "rex_std/internal/assert/assert_fwd.h"
+#include "rex_std/internal/iterator/random_access_iterator.h"
+#include "rex_std/internal/iterator/reverse_iterator.h"
 #include "rex_std/internal/type_traits/conjunction.h"
 #include "rex_std/internal/type_traits/is_array.h"
 #include "rex_std/internal/type_traits/is_constructible.h"
 #include "rex_std/internal/type_traits/is_same.h"
 #include "rex_std/internal/type_traits/remove_cv.h"
-
 #include "rex_std/internal/utility/integer_sequence.h"
 #include "rex_std/internal/utility/swap.h"
-
-#include "rex_std/internal/iterator/random_access_iterator.h"
-#include "rex_std/internal/iterator/reverse_iterator.h"
-
-#include "rex_std/internal/assert/assert_fwd.h"
 
 REX_RSL_BEGIN_NAMESPACE
 
@@ -35,18 +31,18 @@ template <typename T, count_t Size>
 class array
 {
 public:
-  using value_type = T;
-  using size_type = count_t; /// RSL Comment: Different from ISO C++ Standard at time of writing (26/Jun/2022)
-  using difference_type = int32; /// RSL Comment: Different from ISO C++ Standard at time of writing (26/Jun/2022)
-  using pointer = value_type*;
-  using const_pointer = const value_type*;
-  using reference = value_type&;
+  using value_type      = T;
+  using size_type       = count_t; /// RSL Comment: Different from ISO C++ Standard at time of writing (26/Jun/2022)
+  using difference_type = int32;   /// RSL Comment: Different from ISO C++ Standard at time of writing (26/Jun/2022)
+  using pointer         = value_type*;
+  using const_pointer   = const value_type*;
+  using reference       = value_type&;
   using const_reference = const value_type&;
 
-  using iterator = random_access_iterator<T>;
+  using iterator       = random_access_iterator<T>;
   using const_iterator = const_random_access_iterator<T>;
 
-  using reverse_iterator = rsl::reverse_iterator<iterator>;
+  using reverse_iterator       = rsl::reverse_iterator<iterator>;
   using const_reverse_iterator = rsl::reverse_iterator<const_iterator>;
 
   // Returns a reference to the element at specified location pos, with bounds checking.
@@ -135,19 +131,19 @@ public:
     return const_iterator(m_data + size());
   }
   // Returns a reverse iterator to the first element of the reversed array.
-  // It corresponds to the last element of the non-reversed array. 
+  // It corresponds to the last element of the non-reversed array.
   constexpr reverse_iterator rbegin()
   {
     return reverse_iterator(end());
   }
   // Returns a reverse iterator to the first element of the reversed array.
-  // It corresponds to the last element of the non-reversed array. 
+  // It corresponds to the last element of the non-reversed array.
   constexpr const_reverse_iterator rbegin() const
   {
     return const_reverse_iterator(end());
   }
   // Returns a reverse iterator to the first element of the reversed array.
-  // It corresponds to the last element of the non-reversed array. 
+  // It corresponds to the last element of the non-reversed array.
   constexpr const_reverse_iterator crbegin() const
   {
     return rbegin();
@@ -194,7 +190,7 @@ public:
   // Exchanges the contents of the container with those of other.
   constexpr void swap(array& other)
   {
-    for (card32 i = 0; i < size(); ++i)
+    for(card32 i = 0; i < size(); ++i)
     {
       rsl::swap(m_data[i], other[i]);
     }
@@ -211,9 +207,9 @@ public:
 template <typename T, count_t Size>
 constexpr bool operator==(const rsl::array<T, Size>& lhs, const rsl::array<T, Size>& rhs)
 {
-  for (auto lhs_it = lhs.cbegin(), lhs_end = lhs.cend(), rhs_it = rhs.cbegin(); lhs_it != lhs_end; ++lhs_it)
+  for(auto lhs_it = lhs.cbegin(), lhs_end = lhs.cend(), rhs_it = rhs.cbegin(); lhs_it != lhs_end; ++lhs_it)
   {
-    if (*lhs_it != rhs_it)
+    if(*lhs_it != rhs_it)
     {
       return false;
     }
@@ -289,42 +285,47 @@ constexpr void swap(rsl::array<T, Size>& lhs, rsl::array<T, Size>& rhs)
 namespace internal
 {
   // TODO: Check for the compile time overhead
-  template <typename T, count_t Size, card32 ... I>
-  constexpr rsl::array<rsl::remove_cv_t<T>, Size> to_array(T(&a)[Size])
+  template <typename T, count_t Size, card32... I>
+  constexpr rsl::array<rsl::remove_cv_t<T>, Size> to_array(T (&a)[Size])
   {
-    return rsl::array<remove_cv_t<T>, Size>{ {a[I]...}};
+    return rsl::array<remove_cv_t<T>, Size> {{a[I]...}};
   }
-  template <typename T, count_t Size, card32 ... I>
-  constexpr rsl::array<rsl::remove_cv_t<T>, Size> to_array(T(&& a)[Size])
+  template <typename T, count_t Size, card32... I>
+  constexpr rsl::array<rsl::remove_cv_t<T>, Size> to_array(T (&&a)[Size])
   {
-    return rsl::array<remove_cv_t<T>, Size>{ {rsl::move(a[I])...}};
+    return rsl::array<remove_cv_t<T>, Size> {{rsl::move(a[I])...}};
   }
-}
+} // namespace internal
 
 // Create a rsl::array from the one dimensinoal built-in array.
 // elements are copy-initialized from the corresponding element of a
 template <typename T, count_t Size>
-constexpr rsl::array<rsl::remove_cv_t<T>, Size> to_array(T(&a)[Size])
+constexpr rsl::array<rsl::remove_cv_t<T>, Size> to_array(T (&a)[Size])
 {
   static_assert(rsl::is_constructible_v<T, T&>, "element of type T must be copy constructible");
   static_assert(!rsl::is_array_v<T>, "passing multidimensional arrays to to_array is ill-formed");
-  return internal::to_array(a, make_index_sequence<Size>{});
+  return internal::to_array(a, make_index_sequence<Size> {});
 }
 // Create a rsl::array from the one dimensinoal built-in array.
 // elements are move-initialized from the corresponding element of a
 template <typename T, count_t Size>
-constexpr rsl::array<rsl::remove_cv_t<T>, Size> to_array(T(&& a)[Size])
+constexpr rsl::array<rsl::remove_cv_t<T>, Size> to_array(T (&&a)[Size])
 {
   static_assert(rsl::is_constructible_v<T, T&>, "element of type T must be copy constructible");
   static_assert(!rsl::is_array_v<T>, "passing multidimensional arrays to to_array is ill-formed");
-  return internal::to_array(rsl::move(a), make_index_sequence<Size>{});
+  return internal::to_array(rsl::move(a), make_index_sequence<Size> {});
 }
 
 // Provides access to the number of elements in an rsl::array as a compile-time constant expression.
-template <typename T> class tuple_size {};
+template <typename T>
+class tuple_size
+{
+};
 
 template <typename T, count_t Size>
-struct tuple_size<rsl::array<T, Size>> : rsl::integral_constant<card32, Size> {};
+struct tuple_size<rsl::array<T, Size>> : rsl::integral_constant<card32, Size>
+{
+};
 
 template <card32 I, typename T>
 struct tuple_element;
@@ -337,7 +338,7 @@ struct tuple_element<I, rsl::array<T, Size>>
 };
 
 // Construction of rsl::array from a variadic parameter pack.
-template <typename T, typename ... U>
-array(T, U...)->array<T, 1 + sizeof...(U)>;
+template <typename T, typename... U>
+array(T, U...) -> array<T, 1 + sizeof...(U)>;
 
 REX_RSL_END_NAMESPACE

@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: void.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -14,8 +14,7 @@
 
 REX_RSL_BEGIN_NAMESPACE
 
-    template <typename ... Args>
-    using void_t = void;
+template <typename... Args>
+using void_t = void;
 
 REX_RSL_END_NAMESPACE
-

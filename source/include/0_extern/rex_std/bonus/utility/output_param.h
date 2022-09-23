@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: output_param.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -14,28 +14,29 @@
 
 REX_RSL_BEGIN_NAMESPACE
 
-    template <typename T>
-    class Out
-    {
-    public:
-        using value_type = T;
+template <typename T>
+class Out
+{
+public:
+  using value_type = T;
 
-        explicit Out(value_type& output)
-            : m_output(output)
-        {}
+  explicit Out(value_type& output)
+      : m_output(output)
+  {
+  }
 
-        value_type& get()
-        {
-            return m_output;
-        }
+  value_type& get()
+  {
+    return m_output;
+  }
 
-        Out& operator=(const value_type& rhs)
-        {
-            m_output = rhs;
-        }
+  Out& operator=(const value_type& rhs)
+  {
+    m_output = rhs;
+  }
 
-    private:
-        value_type& m_output;
-    };
+private:
+  value_type& m_output;
+};
 
 REX_RSL_END_NAMESPACE

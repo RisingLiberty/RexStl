@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: stack_string.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -12,18 +12,14 @@
 
 #pragma once
 
-#include "rex_std/bonus/types.h"
-
-#include "rex_std/internal/algorithm/copy_n.h"
-#include "rex_std/internal/algorithm/clamp.h"
-
-#include "rex_std/bonus/algorithm/clamp_max.h"
-
-#include "rex_std/internal/memory/memcpy.h"
-
 #include "rex_std/array.h"
-#include "rex_std/string_view.h"
+#include "rex_std/bonus/algorithm/clamp_max.h"
+#include "rex_std/bonus/types.h"
 #include "rex_std/initializer_list.h"
+#include "rex_std/internal/algorithm/clamp.h"
+#include "rex_std/internal/algorithm/copy_n.h"
+#include "rex_std/internal/memory/memcpy.h"
+#include "rex_std/string_view.h"
 
 REX_RSL_BEGIN_NAMESPACE
 
@@ -34,25 +30,26 @@ public:
   static_assert(StrMaxSize > 0, "Can't have a stack string with a size of 0");
   static_assert(rsl::is_integral_v<CharType>, "CharType must be of integral type!");
 
-  using value_type = CharType;
-  using iterator = typename rsl::array<CharType, StrMaxSize>::iterator;
+  using value_type     = CharType;
+  using iterator       = typename rsl::array<CharType, StrMaxSize>::iterator;
   using const_iterator = typename rsl::array<CharType, StrMaxSize>::const_iterator;
 
   stack_string()
-    : m_data()
-    , m_null_terminator_offset(0)
-  {}
+      : m_data()
+      , m_null_terminator_offset(0)
+  {
+  }
 
   template <card32 N>
   stack_string(const value_type str[N])
-    : stack_string()
+      : stack_string()
   {
     static_assert(N < StrMaxSize, "Trying to copy more into a string than is allowed");
     m_null_terminator_offset = rsl::memcpy(m_data.data(), str, sizeof(CharType) * N);
   }
 
   stack_string(rsl::initializer_list<value_type> str)
-    : stack_string()
+      : stack_string()
   {
     card32 copy_size = rsl::clamp_max(static_cast<card32>(str.size()), StrMaxSize);
     rsl::memcpy(m_data.data(), str.begin(), copy_size);
@@ -60,16 +57,16 @@ public:
   }
 
   explicit stack_string(const value_type* str)
-    : stack_string()
+      : stack_string()
   {
     card32 string_length = rsl::string_length(str);
-    card32 copy_size = rsl::clamp_max(string_length, StrMaxSize);
+    card32 copy_size     = rsl::clamp_max(string_length, StrMaxSize);
     rsl::memcpy(m_data.data(), str, copy_size);
     m_null_terminator_offset = copy_size;
   }
 
   stack_string(const value_type* str, card32 size)
-    : stack_string()
+      : stack_string()
   {
     card32 copy_size = rsl::clamp_max(size, StrMaxSize);
     rsl::memcpy(m_data.data(), str, copy_size);
@@ -77,7 +74,7 @@ public:
   }
 
   stack_string(basic_string_view<CharType> view)
-    : stack_string()
+      : stack_string()
   {
     card32 copy_size = rsl::clamp_max(view.length(), StrMaxSize);
     rsl::memcpy(m_data.data(), view.data(), copy_size);
@@ -86,8 +83,8 @@ public:
 
   template <card32 N>
   stack_string(const stack_string<CharType, N>& str)
-    : m_data()
-    , m_null_terminator_offset(str.length())
+      : m_data()
+      , m_null_terminator_offset(str.length())
   {
     card32 copy_size = rsl::clamp_max(rsl::string_length(str), StrMaxSize);
     rsl::copy_n(str.data(), copy_size, m_data.data());
@@ -113,7 +110,7 @@ public:
 
   void assign(const value_type* first, const value_type* last)
   {
-    card32 length = static_cast<card32>(last - first);
+    card32 length    = static_cast<card32>(last - first);
     card32 copy_size = clamp_max(length, StrMaxSize);
     rsl::memcpy(data(), first, copy_size);
     m_null_terminator_offset = copy_size;
@@ -256,7 +253,7 @@ public:
     card32 new_size = rsl::clamp_max(size, StrMaxSize - 1);
     card32 old_size = length();
 
-    for (card32 i = old_size; i < new_size; ++i)
+    for(card32 i = old_size; i < new_size; ++i)
     {
       m_data[i] = CharType();
     }
@@ -291,7 +288,7 @@ public:
 
   stack_string substr(card32 pos = 0, card32 count = npos()) const
   {
-    basic_string_view<CharType> view = to_view();
+    basic_string_view<CharType> view   = to_view();
     basic_string_view<CharType> substr = view.substr(pos, count);
     return stack_string(substr);
   }
@@ -299,7 +296,7 @@ public:
   template <card32 RhsSize>
   int32 compare(const stack_string<CharType, RhsSize>& rhs) const
   {
-    basic_string_view<CharType> view = to_view();
+    basic_string_view<CharType> view     = to_view();
     basic_string_view<CharType> rhs_view = rhs.to_view();
 
     return view.compare(rhs_view);
@@ -307,7 +304,7 @@ public:
   template <card32 RhsSize>
   int32 compare(card32 pos1, card32 count1, const stack_string<CharType, RhsSize>& rhs, card32 pos2, card32 count2) const
   {
-    basic_string_view<CharType> view = to_view();
+    basic_string_view<CharType> view     = to_view();
     basic_string_view<CharType> rhs_view = rhs.to_view();
 
     return view.compare(pos1, count1, rhs_view, pos2, count2);
@@ -330,7 +327,7 @@ public:
 
   constexpr void erase(card32 offset)
   {
-    for (card32 i = offset; i < max_size() - 1; ++i)
+    for(card32 i = offset; i < max_size() - 1; ++i)
     {
       m_data[i] = m_data[i + 1];
     }
@@ -339,7 +336,7 @@ public:
   }
   void erase(card32 offset, card32 count)
   {
-    for (card32 i = offset; i < max_size() - count; ++i)
+    for(card32 i = offset; i < max_size() - count; ++i)
     {
       m_data[i] = m_data[i + count];
     }
@@ -528,7 +525,6 @@ public:
     rsl::to_upper(data(), data(), length());
   }
 
-
   bool is_letters() const
   {
     return rsl::is_letters(data(), length());
@@ -589,7 +585,7 @@ public:
 
   stack_string& operator+=(const basic_string_view<CharType> str)
   {
-    card32 string_length = str.length();
+    card32 string_length   = str.length();
     card32 remaining_bytes = rsl::clamp_max(string_length, StrMaxSize);
 
     append(str.data(), remaining_bytes);
@@ -643,10 +639,10 @@ stack_string<CharType, Size> operator+(const CharType* str, const stack_string<C
   return res;
 }
 
-using tiny_stack_string = stack_string<char8, 32>;
-using small_stack_string = stack_string<char8, 64>;
+using tiny_stack_string   = stack_string<char8, 32>;
+using small_stack_string  = stack_string<char8, 64>;
 using medium_stack_string = stack_string<char8, 128>;
-using big_stack_string = stack_string<char8, 256>;
+using big_stack_string    = stack_string<char8, 256>;
 
 tiny_stack_string to_stack_string(const uint32 value);
 tiny_stack_string to_stack_string(const int32 value);
@@ -656,15 +652,14 @@ tiny_stack_string to_stack_string(const float32 value, card32 precision = 4);
 tiny_stack_string to_stack_string(const float64 value, card32 precision = 4);
 tiny_stack_string to_stack_string(const void* ptr);
 
-//template <typename CharType, size_t MaxSize>
-//ostream& operator<<(ostream& os, const stack_string<CharType, MaxSize>& str)
+// template <typename CharType, size_t MaxSize>
+// ostream& operator<<(ostream& os, const stack_string<CharType, MaxSize>& str)
 //{
-//    os.stream_buff().putn(str.data(), str.length());
-//    return os;
-//}
+//     os.stream_buff().putn(str.data(), str.length());
+//     return os;
+// }
 
 REX_RSL_END_NAMESPACE
-
 
 rsl::tiny_stack_string operator"" _tiny(const char* str, size_t length);
 rsl::small_stack_string operator"" _small(const char* str, size_t length);

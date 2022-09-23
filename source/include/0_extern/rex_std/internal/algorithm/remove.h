@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: remove.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -17,24 +17,23 @@
 
 REX_RSL_BEGIN_NAMESPACE
 
-    template <typename InputIterator, typename T>
-    InputIterator remove(InputIterator first, InputIterator last, const T& value)
+template <typename InputIterator, typename T>
+InputIterator remove(InputIterator first, InputIterator last, const T& value)
+{
+  first = rsl::find(first, last, value);
+
+  if(first != last)
+  {
+    for(InputIterator it = first; ++it != last;)
     {
-        first = rsl::find(first, last, value);
-
-        if (first != last)
-        {
-            for (InputIterator it = first; ++it != last; )
-            {
-                if (*it != value)
-                {
-                    *first++ = rsl::move(*it);
-                }
-            }
-        }
-
-        return first;
+      if(*it != value)
+      {
+        *first++ = rsl::move(*it);
+      }
     }
+  }
 
-    REX_RSL_END_NAMESPACE
+  return first;
+}
 
+REX_RSL_END_NAMESPACE

@@ -11,154 +11,168 @@
 #include <fstream>
 #include <ostream>
 #if defined(_WIN32) && defined(__GLIBCXX__)
-#  include <ext/stdio_filebuf.h>
-#  include <ext/stdio_sync_filebuf.h>
+  #include <ext/stdio_filebuf.h>
+  #include <ext/stdio_sync_filebuf.h>
 #elif defined(_WIN32) && defined(_LIBCPP_VERSION)
-#  include <__std_stream>
+  #include <__std_stream>
 #endif
 
 #include "rex_std/format.h"
 
 FMT_BEGIN_NAMESPACE
 
-template <typename OutputIt, typename Char> class basic_printf_context;
+template <typename OutputIt, typename Char>
+class basic_printf_context;
 
-namespace detail {
+namespace detail
+{
 
-// Checks if T has a user-defined operator<<.
-template <typename T, typename Char, typename Enable = void>
-class is_streamable {
- private:
-  template <typename U>
-  static auto test(int)
-      -> bool_constant<sizeof(rsl::declval<rsl::basic_ostream<Char>&>()
-                              << rsl::declval<U>()) != 0>;
+  // Checks if T has a user-defined operator<<.
+  template <typename T, typename Char, typename Enable = void>
+  class is_streamable
+  {
+  private:
+    template <typename U>
+    static auto test(int) -> bool_constant<sizeof(rsl::declval<rsl::basic_ostream<Char>&>() << rsl::declval<U>()) != 0>;
 
-  template <typename> static auto test(...) -> rsl::false_type;
+    template <typename>
+    static auto test(...) -> rsl::false_type;
 
-  using result = decltype(test<T>(0));
+    using result = decltype(test<T>(0));
 
- public:
-  is_streamable() = default;
+  public:
+    is_streamable() = default;
 
-  static const bool value = result::value;
-};
+    static const bool value = result::value;
+  };
 
-// Formatting of built-in types and arrays is intentionally disabled because
-// it's handled by standard (non-ostream) formatters.
-template <typename T, typename Char>
-struct is_streamable<
-    T, Char,
-    enable_if_t<
-        rsl::is_arithmetic<T>::value || rsl::is_array<T>::value ||
-        rsl::is_pointer<T>::value || rsl::is_same<T, char8_type>::value ||
-        rsl::is_convertible<T, fmt::basic_string_view<Char>>::value ||
-        rsl::is_same<T, std_string_view<Char>>::value ||
-        (rsl::is_convertible<T, int>::value && !rsl::is_enum<T>::value)>>
-    : rsl::false_type {};
+  // Formatting of built-in types and arrays is intentionally disabled because
+  // it's handled by standard (non-ostream) formatters.
+  template <typename T, typename Char>
+  struct is_streamable<T, Char,
+                       enable_if_t<rsl::is_arithmetic<T>::value || rsl::is_array<T>::value || rsl::is_pointer<T>::value || rsl::is_same<T, char8_type>::value || rsl::is_convertible<T, fmt::basic_string_view<Char>>::value ||
+                                   rsl::is_same<T, std_string_view<Char>>::value || (rsl::is_convertible<T, int>::value && !rsl::is_enum<T>::value)>> : rsl::false_type
+  {
+  };
 
-// Generate a unique explicit instantion in every translation unit using a tag
-// type in an anonymous namespace.
-namespace {
-struct file_access_tag {};
-}  // namespace
-template <class Tag, class BufType, FILE* BufType::*FileMemberPtr>
-class file_access {
-  friend auto get_file(BufType& obj) -> FILE* { return obj.*FileMemberPtr; }
-};
+  // Generate a unique explicit instantion in every translation unit using a tag
+  // type in an anonymous namespace.
+  namespace
+  {
+    struct file_access_tag
+    {
+    };
+  } // namespace
+  template <class Tag, class BufType, FILE* BufType::*FileMemberPtr>
+  class file_access
+  {
+    friend auto get_file(BufType& obj) -> FILE*
+    {
+      return obj.*FileMemberPtr;
+    }
+  };
 
 #if FMT_MSC_VERSION
-template class file_access<file_access_tag, rsl::filebuf,
-                           &rsl::filebuf::_Myfile>;
-auto get_file(rsl::filebuf&) -> FILE*;
+  template class file_access<file_access_tag, rsl::filebuf, &rsl::filebuf::_Myfile>;
+  auto get_file(rsl::filebuf&) -> FILE*;
 #elif defined(_WIN32) && defined(_LIBCPP_VERSION)
-template class file_access<file_access_tag, rsl::__stdoutbuf<char>,
-                           &rsl::__stdoutbuf<char>::__file_>;
-auto get_file(rsl::__stdoutbuf<char>&) -> FILE*;
+  template class file_access<file_access_tag, rsl::__stdoutbuf<char>, &rsl::__stdoutbuf<char>::__file_>;
+  auto get_file(rsl::__stdoutbuf<char>&) -> FILE*;
 #endif
 
-inline bool write_ostream_unicode(rsl::ostream& os, rsl::string_view data) {
+  inline bool write_ostream_unicode(rsl::ostream& os, rsl::string_view data)
+  {
 #if FMT_MSC_VERSION
-  if (auto* buf = dynamic_cast<rsl::filebuf*>(os.rdbuf()))
-    if (FILE* f = get_file(*buf)) return write_console(f, data);
+    if(auto* buf = dynamic_cast<rsl::filebuf*>(os.rdbuf()))
+      if(FILE* f = get_file(*buf))
+        return write_console(f, data);
 #elif defined(_WIN32) && defined(__GLIBCXX__)
-  auto* rdbuf = os.rdbuf();
-  FILE* c_file;
-  if (auto* fbuf = dynamic_cast<__gnu_cxx::stdio_sync_filebuf<char>*>(rdbuf))
-    c_file = fbuf->file();
-  else if (auto* fbuf = dynamic_cast<__gnu_cxx::stdio_filebuf<char>*>(rdbuf))
-    c_file = fbuf->file();
-  else
-    return false;
-  if (c_file) return write_console(c_file, data);
+    auto* rdbuf = os.rdbuf();
+    FILE* c_file;
+    if(auto* fbuf = dynamic_cast<__gnu_cxx::stdio_sync_filebuf<char>*>(rdbuf))
+      c_file = fbuf->file();
+    else if(auto* fbuf = dynamic_cast<__gnu_cxx::stdio_filebuf<char>*>(rdbuf))
+      c_file = fbuf->file();
+    else
+      return false;
+    if(c_file)
+      return write_console(c_file, data);
 #elif defined(_WIN32) && defined(_LIBCPP_VERSION)
-  if (auto* buf = dynamic_cast<rsl::__stdoutbuf<char>*>(os.rdbuf()))
-    if (FILE* f = get_file(*buf)) return write_console(f, data);
+    if(auto* buf = dynamic_cast<rsl::__stdoutbuf<char>*>(os.rdbuf()))
+      if(FILE* f = get_file(*buf))
+        return write_console(f, data);
 #else
-  ignore_unused(os, data);
+    ignore_unused(os, data);
 #endif
-  return false;
-}
-inline bool write_ostream_unicode(rsl::wostream&,
-                                  rsl::basic_string_view<wchar_t>) {
-  return false;
-}
+    return false;
+  }
+  inline bool write_ostream_unicode(rsl::wostream&, rsl::basic_string_view<wchar_t>)
+  {
+    return false;
+  }
 
-// Write the content of buf to os.
-// It is a separate function rather than a part of vprint to simplify testing.
-template <typename Char>
-void write_buffer(rsl::basic_ostream<Char>& os, buffer<Char>& buf) {
-  const Char* buf_data = buf.data();
-  using unsigned_streamsize = rsl::make_unsigned<rsl::streamsize>::type;
-  unsigned_streamsize size = buf.size();
-  unsigned_streamsize max_size = to_unsigned(max_value<rsl::streamsize>());
-  do {
-    unsigned_streamsize n = size <= max_size ? size : max_size;
-    os.write(buf_data, static_cast<rsl::streamsize>(n));
-    buf_data += n;
-    size -= n;
-  } while (size != 0);
-}
+  // Write the content of buf to os.
+  // It is a separate function rather than a part of vprint to simplify testing.
+  template <typename Char>
+  void write_buffer(rsl::basic_ostream<Char>& os, buffer<Char>& buf)
+  {
+    const Char* buf_data         = buf.data();
+    using unsigned_streamsize    = rsl::make_unsigned<rsl::streamsize>::type;
+    unsigned_streamsize size     = buf.size();
+    unsigned_streamsize max_size = to_unsigned(max_value<rsl::streamsize>());
+    do
+    {
+      unsigned_streamsize n = size <= max_size ? size : max_size;
+      os.write(buf_data, static_cast<rsl::streamsize>(n));
+      buf_data += n;
+      size -= n;
+    } while(size != 0);
+  }
 
-template <typename Char, typename T>
-void format_value(buffer<Char>& buf, const T& value,
-                  locale_ref loc = locale_ref()) {
-  auto&& format_buf = formatbuf<rsl::basic_streambuf<Char>>(buf);
-  auto&& output = rsl::basic_ostream<Char>(&format_buf);
+  template <typename Char, typename T>
+  void format_value(buffer<Char>& buf, const T& value, locale_ref loc = locale_ref())
+  {
+    auto&& format_buf = formatbuf<rsl::basic_streambuf<Char>>(buf);
+    auto&& output     = rsl::basic_ostream<Char>(&format_buf);
 #if !defined(FMT_STATIC_THOUSANDS_SEPARATOR)
-  if (loc) output.imbue(loc.get<rsl::locale>());
+    if(loc)
+      output.imbue(loc.get<rsl::locale>());
 #endif
-  output << value;
-  output.exceptions(rsl::ios_base::failbit | rsl::ios_base::badbit);
-}
+    output << value;
+    output.exceptions(rsl::ios_base::failbit | rsl::ios_base::badbit);
+  }
 
-template <typename T> struct streamed_view { const T& value; };
+  template <typename T>
+  struct streamed_view
+  {
+    const T& value;
+  };
 
-}  // namespace detail
+} // namespace detail
 
 // Formats an object of type T that has an overloaded ostream operator<<.
 template <typename Char>
-struct basic_ostream_formatter : formatter<basic_string_view<Char>, Char> {
+struct basic_ostream_formatter : formatter<basic_string_view<Char>, Char>
+{
   void set_debug_format() = delete;
 
   template <typename T, typename OutputIt>
-  auto format(const T& value, basic_format_context<OutputIt, Char>& ctx) const
-      -> OutputIt {
+  auto format(const T& value, basic_format_context<OutputIt, Char>& ctx) const -> OutputIt
+  {
     auto buffer = basic_memory_buffer<Char>();
     format_value(buffer, value, ctx.locale());
-    return formatter<basic_string_view<Char>, Char>::format(
-        {buffer.data(), buffer.size()}, ctx);
+    return formatter<basic_string_view<Char>, Char>::format({buffer.data(), buffer.size()}, ctx);
   }
 };
 
 using ostream_formatter = basic_ostream_formatter<char>;
 
 template <typename T, typename Char>
-struct formatter<detail::streamed_view<T>, Char>
-    : basic_ostream_formatter<Char> {
+struct formatter<detail::streamed_view<T>, Char> : basic_ostream_formatter<Char>
+{
   template <typename OutputIt>
-  auto format(detail::streamed_view<T> view,
-              basic_format_context<OutputIt, Char>& ctx) const -> OutputIt {
+  auto format(detail::streamed_view<T> view, basic_format_context<OutputIt, Char>& ctx) const -> OutputIt
+  {
     return basic_ostream_formatter<Char>::format(view.value, ctx);
   }
 };
@@ -174,35 +188,37 @@ struct formatter<detail::streamed_view<T>, Char>
   \endrst
  */
 template <typename T>
-auto streamed(const T& value) -> detail::streamed_view<T> {
+auto streamed(const T& value) -> detail::streamed_view<T>
+{
   return {value};
 }
 
-namespace detail {
+namespace detail
+{
 
-// Formats an object of type T that has an overloaded ostream operator<<.
-template <typename T, typename Char>
-struct fallback_formatter<T, Char, enable_if_t<is_streamable<T, Char>::value>>
-    : basic_ostream_formatter<Char> {
-  using basic_ostream_formatter<Char>::format;
-};
+  // Formats an object of type T that has an overloaded ostream operator<<.
+  template <typename T, typename Char>
+  struct fallback_formatter<T, Char, enable_if_t<is_streamable<T, Char>::value>> : basic_ostream_formatter<Char>
+  {
+    using basic_ostream_formatter<Char>::format;
+  };
 
-inline void vprint_directly(rsl::ostream& os, string_view format_str,
-                            format_args args) {
-  auto buffer = memory_buffer();
-  detail::vformat_to(buffer, format_str, args);
-  detail::write_buffer(os, buffer);
-}
+  inline void vprint_directly(rsl::ostream& os, string_view format_str, format_args args)
+  {
+    auto buffer = memory_buffer();
+    detail::vformat_to(buffer, format_str, args);
+    detail::write_buffer(os, buffer);
+  }
 
-}  // namespace detail
+} // namespace detail
 
 FMT_MODULE_EXPORT template <typename Char>
-void vprint(rsl::basic_ostream<Char>& os,
-            basic_string_view<type_identity_t<Char>> format_str,
-            basic_format_args<buffer_context<type_identity_t<Char>>> args) {
+void vprint(rsl::basic_ostream<Char>& os, basic_string_view<type_identity_t<Char>> format_str, basic_format_args<buffer_context<type_identity_t<Char>>> args)
+{
   auto buffer = basic_memory_buffer<Char>();
   detail::vformat_to(buffer, format_str, args);
-  if (detail::write_ostream_unicode(os, {buffer.data(), buffer.size()})) return;
+  if(detail::write_ostream_unicode(os, {buffer.data(), buffer.size()}))
+    return;
   detail::write_buffer(os, buffer);
 }
 
@@ -216,9 +232,10 @@ void vprint(rsl::basic_ostream<Char>& os,
   \endrst
  */
 FMT_MODULE_EXPORT template <typename... T>
-void print(rsl::ostream& os, format_string<T...> fmt, T&&... args) {
+void print(rsl::ostream& os, format_string<T...> fmt, T&&... args)
+{
   const auto& vargs = rsl::make_format_args(args...);
-  if (detail::is_utf8())
+  if(detail::is_utf8())
     vprint(os, fmt, vargs);
   else
     detail::vprint_directly(os, fmt, vargs);
@@ -226,12 +243,11 @@ void print(rsl::ostream& os, format_string<T...> fmt, T&&... args) {
 
 FMT_MODULE_EXPORT
 template <typename... Args>
-void print(rsl::wostream& os,
-           basic_format_string<wchar_t, type_identity_t<Args>...> fmt,
-           Args&&... args) {
+void print(rsl::wostream& os, basic_format_string<wchar_t, type_identity_t<Args>...> fmt, Args&&... args)
+{
   vprint(os, fmt, rsl::make_format_args<buffer_context<wchar_t>>(args...));
 }
 
 FMT_END_NAMESPACE
 
-#endif  // FMT_OSTREAM_H_
+#endif // FMT_OSTREAM_H_

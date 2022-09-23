@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: factorial.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -16,11 +16,11 @@
 
 REX_RSL_BEGIN_NAMESPACE
 
-  template <typename T>
-  constexpr T factorial(T x)
-  {
-    static_assert(rsl::is_integral_v<T>, "T must be of an integer type");
-    return x == 0 ? 1 : x * factorial(x - 1);
-  }
+template <typename T>
+constexpr T factorial(T x)
+{
+  static_assert(rsl::is_integral_v<T>, "T must be of an integer type");
+  return x == 0 ? 1 : x * factorial(x - 1);
+}
 
 REX_RSL_END_NAMESPACE
