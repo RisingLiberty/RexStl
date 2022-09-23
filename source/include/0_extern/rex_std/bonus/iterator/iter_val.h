@@ -12,6 +12,8 @@
 
 #pragma once
 
+#include "rex_std/internal/iterator/iterator_traits.h"
+
 REX_RSL_BEGIN_NAMESPACE
 
 template <typename InputIt>

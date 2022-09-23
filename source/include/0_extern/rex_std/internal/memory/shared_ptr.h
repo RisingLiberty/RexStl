@@ -14,7 +14,9 @@
 
 #include "rex_std/bonus/concurrency/atomic_decrement.h"
 #include "rex_std/bonus/concurrency/atomic_increment.h"
+#include "rex_std/bonus/functional/hash_result.h"
 #include "rex_std/bonus/utility/compressed_pair.h"
+#include "rex_std/internal/assert/assert_fwd.h"
 #include "rex_std/internal/memory/allocator.h"
 #include "rex_std/internal/memory/default_delete.h"
 #include "rex_std/internal/type_traits/aligned_storage.h"
@@ -161,6 +163,9 @@ namespace internal
     allocator_type m_allocator;
   };
 } // namespace internal
+
+template <typename T, typename Deleter>
+class unique_ptr;
 
 template <typename T>
 class shared_ptr
@@ -565,6 +570,9 @@ shared_ptr<T> allocate_shared(allocator& allocator, Args&&... args)
   ref_count_type* ref_count = new(mem) ref_count_type(rsl::forward<Args>(args)...);
   allocate_shared_helper(ret, ref_count, ref_count->value());
 }
+
+template <typename T>
+struct hash;
 
 template <typename T>
 struct hash<shared_ptr<T>>

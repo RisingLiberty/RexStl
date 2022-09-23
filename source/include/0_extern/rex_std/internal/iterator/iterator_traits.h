@@ -13,6 +13,7 @@
 #pragma once
 
 #include "rex_std/bonus/types.h"
+#include "rex_std/internal/iterator/iterator_tags.h"
 
 REX_RSL_BEGIN_NAMESPACE
 
