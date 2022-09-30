@@ -1,0 +1,7 @@
+{
+	"rtl-diff-std": {
+		"prefix": "rtl_diff_std",
+		"body": [ " /// RTL Comment: Different from ISO C++ Standard at time of writing ($CURRENT_DATE/$CURRENT_MONTH_NAME_SHORT/$CURRENT_YEAR)" ],
+		"description": "Code differentiates from ISO C++ Standard"
+	}
+}

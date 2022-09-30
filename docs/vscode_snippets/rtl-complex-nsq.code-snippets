@@ -1,0 +1,7 @@
+{
+	"rtl-diff-std": {
+		"prefix": "rtl_complex_nsq",
+		"body": [ "// Complexity: O(n^2)" ],
+		"description": "Quadratic complexity"
+	}
+}
