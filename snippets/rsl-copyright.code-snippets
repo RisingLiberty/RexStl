@@ -1,0 +1,21 @@
+{
+	"rex-std-copyright": {
+		"prefix": "rex_standard_copyright",
+		"body": [
+"// ============================================ ",
+"//",
+"// REX - STANDARD LIBRARY IMPLEMENTATION",
+"//",
+"// Author: Nick De Breuck",
+"// Twitter: @nick_debreuck",
+"// ",
+"// File: $TM_FILENAME",
+"// Copyright (c) Nick De Breuck 2022",
+"//",
+"// ============================================",
+"",
+""
+		],
+		"description": "Rex Standard Library Copyright statement"
+	}
+}
