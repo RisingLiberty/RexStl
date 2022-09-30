@@ -34,6 +34,6 @@ struct is_function<T&&> : public false_type
 };
 
 template <typename T>
-constexpr bool is_function_v = is_function<T>::value;
+inline constexpr bool is_function_v = is_function<T>::value;
 
 REX_RSL_END_NAMESPACE

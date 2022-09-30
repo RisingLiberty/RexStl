@@ -26,6 +26,6 @@ struct is_lvalue_reference<T&> : public true_type
 };
 
 template <typename T>
-constexpr bool is_lvalue_reference_v = is_lvalue_reference<T>::value;
+inline constexpr bool is_lvalue_reference_v = is_lvalue_reference<T>::value;
 
 REX_RSL_END_NAMESPACE

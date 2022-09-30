@@ -22,6 +22,6 @@ struct is_nothrow_constructible : bool_constant<__is_nothrow_constructible(T, Ar
 };
 
 template <typename T, typename... Args>
-constexpr bool is_nothrow_constructible_v = is_nothrow_constructible<T, Args>::value;
+inline constexpr bool is_nothrow_constructible_v = is_nothrow_constructible<T, Args>::value;
 
 REX_RSL_END_NAMESPACE

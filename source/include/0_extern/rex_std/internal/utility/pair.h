@@ -364,6 +364,6 @@ struct use_second
 struct pair_first_construct_t
 {
 };
-inline constexpr pair_first_construct_t pair_first_construct = pair_first_construct_t();
+constexpr pair_first_construct_t pair_first_construct = pair_first_construct_t();
 
 REX_RSL_END_NAMESPACE

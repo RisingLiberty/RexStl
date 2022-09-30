@@ -44,6 +44,6 @@ struct is_scalar<T* const volatile> : public true_type
 };
 
 template <typename T>
-constexpr bool is_scalar_v = is_scalar<T>::value;
+inline constexpr bool is_scalar_v = is_scalar<T>::value;
 
 REX_RSL_END_NAMESPACE

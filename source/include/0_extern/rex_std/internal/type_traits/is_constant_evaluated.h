@@ -14,7 +14,7 @@
 
 REX_RSL_BEGIN_NAMESPACE
 
-constexpr bool is_constant_evaluated()
+inline constexpr bool is_constant_evaluated()
 {
   return __builtin_is_constant_evaluated();
 }

@@ -22,6 +22,6 @@ struct is_convertible : public bool_constant<__is_convertible_to(From, To)>
 };
 
 template <typename From, typename To>
-constexpr bool is_convertible_v = is_convertible<From, To>::value;
+inline constexpr bool is_convertible_v = is_convertible<From, To>::value;
 
 REX_RSL_END_NAMESPACE

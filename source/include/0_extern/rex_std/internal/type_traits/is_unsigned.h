@@ -36,6 +36,6 @@ struct is_unsigned : public internal::is_unsigned_helper<T>
 };
 
 template <typename T>
-constexpr bool is_unsigned_v = is_unsigned<T>::value;
+inline constexpr bool is_unsigned_v = is_unsigned<T>::value;
 
 REX_RSL_END_NAMESPACE

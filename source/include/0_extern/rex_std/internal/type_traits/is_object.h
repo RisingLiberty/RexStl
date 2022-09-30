@@ -26,6 +26,6 @@ struct is_object : public bool_constant<is_scalar_v<T> || is_array_v<T> || is_un
 };
 
 template <typename T>
-constexpr bool is_object_v = is_object<T>::value;
+inline constexpr bool is_object_v = is_object<T>::value;
 
 REX_RSL_END_NAMESPACE

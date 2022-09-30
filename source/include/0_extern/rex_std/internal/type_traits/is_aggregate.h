@@ -22,6 +22,6 @@ struct is_aggregate : public bool_constant<__is_aggregate(T)>
 };
 
 template <typename T>
-constexpr bool is_aggregate_v = is_aggregate<T>::value;
+inline constexpr bool is_aggregate_v = is_aggregate<T>::value;
 
 REX_RSL_END_NAMESPACE

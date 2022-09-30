@@ -40,6 +40,6 @@ template <typename T, typename U>
 };
 
 template <typename T, typename U>
-constexpr bool is_swappable_with_v = is_swappable_with<T, U>::value;
+inline constexpr bool is_swappable_with_v = is_swappable_with<T, U>::value;
 
 REX_RSL_END_NAMESPACE

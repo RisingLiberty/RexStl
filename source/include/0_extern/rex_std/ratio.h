@@ -51,10 +51,10 @@ namespace internal
   };
 
   template <typename T>
-  constexpr bool is_ratio = false;
+  inline constexpr bool is_ratio = false;
 
   template <intmax R1, intmax R2>
-  constexpr bool is_ratio<ratio<R1, R2>> = true;
+  inline constexpr bool is_ratio<ratio<R1, R2>> = true;
 
   template <intmax X, intmax Y>
   struct lcm

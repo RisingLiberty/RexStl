@@ -22,6 +22,6 @@ struct is_destructible : bool_constant<__is_destructible(T)>
 };
 
 template <typename T>
-constexpr bool is_destructible_v = is_destructible<T>::value;
+inline constexpr bool is_destructible_v = is_destructible<T>::value;
 
 REX_RSL_END_NAMESPACE

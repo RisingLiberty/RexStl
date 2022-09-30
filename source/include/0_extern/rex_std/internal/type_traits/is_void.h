@@ -24,6 +24,6 @@ struct is_void : public bool_constant<is_same_v<remove_cv_t<T>, void>>
 };
 
 template <typename T>
-constexpr bool is_void_v = is_void<T>::value;
+inline constexpr bool is_void_v = is_void<T>::value;
 
 REX_RSL_END_NAMESPACE

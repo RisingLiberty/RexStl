@@ -22,6 +22,6 @@ struct alignment_of : integral_constant<size_t, alignof(T)>
 };
 
 template <typename T>
-constexpr size_t alignment_of_v = alignof(T);
+inline constexpr size_t alignment_of_v = alignof(T);
 
 REX_RSL_END_NAMESPACE

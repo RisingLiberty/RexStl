@@ -42,6 +42,6 @@ struct is_pointer<T* const volatile> : public true_type
 };
 
 template <typename T>
-constexpr bool is_pointer_v = is_pointer<T>::value;
+inline constexpr bool is_pointer_v = is_pointer<T>::value;
 
 REX_RSL_END_NAMESPACE

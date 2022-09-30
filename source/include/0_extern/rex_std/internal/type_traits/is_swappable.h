@@ -24,6 +24,6 @@ struct is_swappable : public bool_constant<!is_same_v<decltype(swap(declval<T&>(
 };
 
 template <typename T>
-constexpr bool is_swappable_v = is_swappable<T>::value;
+inline constexpr bool is_swappable_v = is_swappable<T>::value;
 
 REX_RSL_END_NAMESPACE

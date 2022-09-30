@@ -22,6 +22,6 @@ struct is_pointer_inter_convertible_base_of : public bool_constant<__is_pointer_
 };
 
 template <typename Base, typename Derived>
-constexpr bool is_pointer_inter_convertible_base_of_v = is_pointer_inter_convertible_base_of<Base, Derived>::value;
+inline constexpr bool is_pointer_inter_convertible_base_of_v = is_pointer_inter_convertible_base_of<Base, Derived>::value;
 
 REX_RSL_END_NAMESPACE

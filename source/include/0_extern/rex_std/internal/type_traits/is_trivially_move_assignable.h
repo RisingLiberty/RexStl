@@ -22,6 +22,6 @@ struct is_trivially_move_assignable : bool_constant<__is_trivially_assignable(ad
 };
 
 template <typename T>
-constexpr bool is_trivially_move_assignable_v = is_trivially_move_assignable<T>::value;
+inline constexpr bool is_trivially_move_assignable_v = is_trivially_move_assignable<T>::value;
 
 REX_RSL_END_NAMESPACE

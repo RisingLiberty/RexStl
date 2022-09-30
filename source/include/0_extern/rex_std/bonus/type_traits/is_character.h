@@ -18,6 +18,6 @@
 REX_RSL_BEGIN_NAMESPACE
 
 template <typename T>
-constexpr bool is_character_v = rsl::is_same_v<T, char8> || rsl::is_same_v<T, tchar>;
+inline constexpr bool is_character_v = rsl::is_same_v<T, char8> || rsl::is_same_v<T, tchar>;
 
 REX_RSL_END_NAMESPACE

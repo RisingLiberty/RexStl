@@ -24,6 +24,6 @@ struct is_arithmetic : public bool_constant<is_integral_v<T> || is_floating_poin
 };
 
 template <typename T>
-constexpr bool is_arithmetic_v = is_arithmetic<T>::value;
+inline constexpr bool is_arithmetic_v = is_arithmetic<T>::value;
 
 REX_RSL_END_NAMESPACE

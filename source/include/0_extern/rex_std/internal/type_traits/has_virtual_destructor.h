@@ -22,6 +22,6 @@ struct has_virtual_destructor : public Boolconstant<__has_virtual_destructor(T)>
 };
 
 template <typename T>
-constexpr bool has_virtual_destructor_v = has_virtual_destructor<T>::value;
+inline constexpr bool has_virtual_destructor_v = has_virtual_destructor<T>::value;
 
 REX_RSL_END_NAMESPACE

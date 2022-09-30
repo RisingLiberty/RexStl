@@ -22,6 +22,6 @@ struct is_assignable : bool_constant<__is_assignable(T, U)>
 };
 
 template <typename T, typename U>
-constexpr bool is_assignable_v = is_assignable<T, U>::value;
+inline constexpr bool is_assignable_v = is_assignable<T, U>::value;
 
 REX_RSL_END_NAMESPACE

@@ -36,6 +36,6 @@ struct is_member_pointer : public internal::is_member_pointer_helper<remove_cv_t
 };
 
 template <typename T>
-constexpr bool is_member_pointer_v = is_member_pointer<T>::value;
+inline constexpr bool is_member_pointer_v = is_member_pointer<T>::value;
 
 REX_RSL_END_NAMESPACE

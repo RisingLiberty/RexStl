@@ -22,6 +22,6 @@ struct is_nothrow_default_constructible : bool_constant<is_nothrow_constructible
 };
 
 template <typename T>
-constexpr bool is_nothrow_default_constructible_v = is_nothrow_default_constructible<T>::value;
+inline constexpr bool is_nothrow_default_constructible_v = is_nothrow_default_constructible<T>::value;
 
 REX_RSL_END_NAMESPACE

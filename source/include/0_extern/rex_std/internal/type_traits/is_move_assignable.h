@@ -22,6 +22,6 @@ struct is_move_assignable : bool_constant<__is_assignable(add_lvalue_reference_t
 };
 
 template <typename T>
-constexpr bool is_move_assignable_v = is_move_assignable<T>::value;
+inline constexpr bool is_move_assignable_v = is_move_assignable<T>::value;
 
 REX_RSL_END_NAMESPACE

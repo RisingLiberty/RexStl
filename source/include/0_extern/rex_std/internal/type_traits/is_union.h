@@ -20,6 +20,6 @@ struct is_union : public bool_constant<__is_union(T)>
 };
 
 template <typename T>
-constexpr bool is_union_v = is_union<T>::value;
+inline constexpr bool is_union_v = is_union<T>::value;
 
 REX_RSL_END_NAMESPACE

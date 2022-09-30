@@ -22,6 +22,6 @@ struct is_layout_compatible : public bool_constant<__is_layout_compatible(T, U)>
 };
 
 template <typename T, typename U>
-constexpr bool is_layout_compatible_v = is_layout_compatible<T, U>::value;
+inline constexpr bool is_layout_compatible_v = is_layout_compatible<T, U>::value;
 
 REX_RSL_END_NAMESPACE

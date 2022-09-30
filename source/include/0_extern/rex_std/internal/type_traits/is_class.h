@@ -20,6 +20,6 @@ struct is_class : public bool_constant<__is_class(T)>
 };
 
 template <typename T>
-constexpr bool is_class_v = is_class<T>::value;
+inline constexpr bool is_class_v = is_class<T>::value;
 
 REX_RSL_END_NAMESPACE

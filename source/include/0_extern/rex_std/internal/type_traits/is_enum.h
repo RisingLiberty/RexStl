@@ -22,6 +22,6 @@ struct is_enum : public bool_constant<__is_enum(T)>
 };
 
 template <typename T>
-constexpr bool is_enum_v = is_enum<T>::value;
+inline constexpr bool is_enum_v = is_enum<T>::value;
 
 REX_RSL_END_NAMESPACE

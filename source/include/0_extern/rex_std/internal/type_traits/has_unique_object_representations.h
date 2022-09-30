@@ -24,6 +24,6 @@ struct has_unique_object_representations : public bool_constant<__has_unique_obj
 };
 
 template <typename T>
-constexpr bool has_unique_object_representations_v = has_unique_object_representations<T>::value;
+inline constexpr bool has_unique_object_representations_v = has_unique_object_representations<T>::value;
 
 REX_RSL_END_NAMESPACE

@@ -22,6 +22,6 @@ struct negation : bool_constant<!bool(T::value)>
 };
 
 template <typename T>
-constexpr bool negation_v = negation<T>::value;
+inline constexpr bool negation_v = negation<T>::value;
 
 REX_RSL_END_NAMESPACE

@@ -44,6 +44,6 @@ struct conjunction<First, Rest...> : internal::conjunction_helper_struct<First::
 };
 
 template <typename... Traits>
-constexpr bool conjunction_v = conjunction<Traits...>::value;
+inline constexpr bool conjunction_v = conjunction<Traits...>::value;
 
 REX_RSL_END_NAMESPACE

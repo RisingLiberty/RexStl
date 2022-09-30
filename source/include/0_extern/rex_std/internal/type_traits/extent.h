@@ -42,6 +42,6 @@ struct extent<T[I], N> : extent_v<T, N - 1>
 };
 
 template <typename T, size_t N = 0>
-constexpr size_t extent_v = extent<T, N>::value;
+inline constexpr size_t extent_v = extent<T, N>::value;
 
 REX_RSL_END_NAMESPACE

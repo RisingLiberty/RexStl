@@ -23,7 +23,7 @@ REX_RSL_BEGIN_NAMESPACE
 
 struct allocator_arg_t
 {
-  explicit allocator_arg_t() = default
+  explicit allocator_arg_t() = default;
 };
 
 inline constexpr allocator_arg_t allocator_arg = allocator_arg_t();

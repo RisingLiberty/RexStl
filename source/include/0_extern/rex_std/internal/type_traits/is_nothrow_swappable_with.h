@@ -39,6 +39,6 @@ struct is_nothrow_swappable_with : public bool_constant<internal::IsNoThrowSwapp
 };
 
 template <typename T, typename U>
-constexpr bool is_nothrow_swappable_with = is_nothrow_swappable_with<T>::value;
+inline constexpr bool is_nothrow_swappable_with = is_nothrow_swappable_with<T>::value;
 
 REX_RSL_END_NAMESPACE

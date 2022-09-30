@@ -37,6 +37,6 @@ struct is_member_function_pointer : public bool_constant<internal::IsMemberFunct
 };
 
 template <typename T>
-constexpr bool is_member_function_pointer_v = is_member_function_pointer<T>::value;
+inline constexpr bool is_member_function_pointer_v = is_member_function_pointer<T>::value;
 
 REX_RSL_END_NAMESPACE

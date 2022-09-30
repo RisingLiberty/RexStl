@@ -104,9 +104,9 @@ OutputIterator copy_backward(InputIterator first, InputIterator last, OutputIter
   using value_type_input  = typename InputIterator::value_type;
   using value_type_output = typename OutputIterator::value_type;
 
-  REX_UNUSED(constexpr bool IsMove)        = rsl::is_move_iterator_v<InputIterator>;
-  REX_UNUSED(constexpr bool CanBeMemmoved) = rsl::is_trivially_copyable_v<value_type_output>::value && rsl::is_same_v<value_type_input, value_type_output> &&
-                                             (rsl::is_pointer_v<InputIterator> || rsl::is_same_v<IIC, rsl::continuous_iterator_tag>)&&(rsl::is_pointer_v<OutputIterator> || rsl::is_same_v<OIC, rsl::continuous_iterator_tag>);
+  REX_UNUSED(static constexpr bool IsMove)        = rsl::is_move_iterator_v<InputIterator>;
+  REX_UNUSED(static constexpr bool CanBeMemmoved) = rsl::is_trivially_copyable_v<value_type_output>::value && rsl::is_same_v<value_type_input, value_type_output> &&
+                                                    (rsl::is_pointer_v<InputIterator> || rsl::is_same_v<IIC, rsl::continuous_iterator_tag>)&&(rsl::is_pointer_v<OutputIterator> || rsl::is_same_v<OIC, rsl::continuous_iterator_tag>);
 
   internal::MoveAndCopyBackwardHelper::move_or_copy_backward(first, last, dst_first);
 }

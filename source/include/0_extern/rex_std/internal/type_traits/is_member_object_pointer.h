@@ -23,14 +23,14 @@ namespace internal
   template <typename>
   struct is_member_object_pointer
   {
-    static constexpr bool value = false;
+    static inline constexpr bool value = false;
   };
 
   template <typename T1, typename T2>
   struct is_member_object_pointer<T1 T2::*>
   {
-    static constexpr bool value = !is_function_v<T1>;
-    using class_type            = T2;
+    static inline constexpr bool value = !is_function_v<T1>;
+    using class_type                   = T2;
   };
 } // namespace internal
 

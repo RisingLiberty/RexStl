@@ -22,6 +22,6 @@ struct is_abstract : public bool_constant<__is_abstract(T)>
 };
 
 template <typename T>
-constexpr bool is_abstract_v = is_abstract<T>::value;
+inline constexpr bool is_abstract_v = is_abstract<T>::value;
 
 REX_RSL_END_NAMESPACE

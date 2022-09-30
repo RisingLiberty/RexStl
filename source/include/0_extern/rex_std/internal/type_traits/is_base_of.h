@@ -22,6 +22,6 @@ struct is_base_of : public bool_constant<__is_base_of(Base, Derived)>
 };
 
 template <typename Base, typename Derived>
-constexpr bool is_base_of_v = is_base_of<Base, Derived>::value;
+inline constexpr bool is_base_of_v = is_base_of<Base, Derived>::value;
 
 REX_RSL_END_NAMESPACE

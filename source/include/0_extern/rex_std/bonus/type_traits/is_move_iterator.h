@@ -27,6 +27,6 @@ struct is_move_iterator<move_iterator<Iterator>> : public true_type
 };
 
 template <typename T>
-constexpr bool is_move_iterator_v = is_move_iterator<T>::value;
+inline constexpr bool is_move_iterator_v = is_move_iterator<T>::value;
 
 REX_RSL_END_NAMESPACE

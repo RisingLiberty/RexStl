@@ -102,6 +102,6 @@ struct is_integral : public internal::is_integral_helper<remove_cv_t<T>>
 };
 
 template <typename T>
-constexpr bool is_integral_v = is_integral<T>::value;
+inline constexpr bool is_integral_v = is_integral<T>::value;
 
 REX_RSL_END_NAMESPACE

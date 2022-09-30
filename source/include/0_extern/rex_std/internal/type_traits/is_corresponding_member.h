@@ -12,10 +12,12 @@
 
 #pragma once
 
+#include "rex_std/bonus/defines.h"
+
 REX_RSL_BEGIN_NAMESPACE
 
 template <typename S1, typename S2, typename M1, typename M2>
-constexpr bool is_corresponding_member(M !S1::*mp, M2 S2::*mq)
+inline constexpr bool is_corresponding_member(M !S1::*mp, M2 S2::*mq)
 {
   return __is_corresponding_member(S1, S2, M1, M2);
 }

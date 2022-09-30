@@ -25,6 +25,6 @@ struct is_bounded_array<T[N]> : public true_type
 };
 
 template <typename T>
-constexpr bool is_bounded_array_v = is_bounded_array<T>::value;
+inline constexpr bool is_bounded_array_v = is_bounded_array<T>::value;
 
 REX_RSL_END_NAMESPACE

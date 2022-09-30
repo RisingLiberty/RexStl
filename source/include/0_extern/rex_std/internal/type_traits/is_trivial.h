@@ -24,6 +24,6 @@ struct is_trivial : public bool_constant<is_trivially_copyable_v<T> || is_trivia
 };
 
 template <typename T>
-constexpr bool is_trivial_v = is_trivial<T>::value;
+inline constexpr bool is_trivial_v = is_trivial<T>::value;
 
 REX_RSL_END_NAMESPACE

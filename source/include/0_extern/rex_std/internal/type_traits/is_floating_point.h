@@ -47,6 +47,6 @@ struct is_floating_point : public internal::is_floating_point_helper<typename rs
 };
 
 template <typename T>
-constexpr bool is_floating_point_v = is_floating_point<T>::value;
+inline constexpr bool is_floating_point_v = is_floating_point<T>::value;
 
 REX_RSL_END_NAMESPACE

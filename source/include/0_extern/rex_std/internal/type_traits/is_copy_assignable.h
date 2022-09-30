@@ -22,6 +22,6 @@ struct is_copy_assignable : bool_constant<__is_assignable(add_lvalue_reference_t
 };
 
 template <typename T>
-constexpr bool is_copy_assignable = is_copy_assignable<T>::value;
+inline constexpr bool is_copy_assignable = is_copy_assignable<T>::value;
 
 REX_RSL_END_NAMESPACE

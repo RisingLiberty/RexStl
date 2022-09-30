@@ -22,6 +22,6 @@ struct is_polymorphic : public bool_constant<__is_polymorphic(T)>
 };
 
 template <typename T>
-constexpr bool is_polymorphic_v = is_polymorphic<T>::value;
+inline constexpr bool is_polymorphic_v = is_polymorphic<T>::value;
 
 REX_RSL_END_NAMESPACE

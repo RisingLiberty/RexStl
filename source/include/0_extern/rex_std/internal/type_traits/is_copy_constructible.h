@@ -23,6 +23,6 @@ struct is_copy_constructible : bool_constant<__is_constructible(T, add_lvalue_re
 };
 
 template <typename T>
-constexpr bool is_copy_constructible_v = is_copy_constructible<T>::value;
+inline constexpr bool is_copy_constructible_v = is_copy_constructible<T>::value;
 
 REX_RSL_END_NAMESPACE

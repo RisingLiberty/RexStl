@@ -25,6 +25,6 @@ struct is_fundamental : public bool_constant<is_arithmetic_v<T> || is_null_point
 };
 
 template <typename T>
-constexpr bool is_fundamental_v = is_fundamental<T>;
+inline constexpr bool is_fundamental_v = is_fundamental<T>;
 
 REX_RSL_END_NAMESPACE

@@ -15,7 +15,7 @@
 REX_RSL_BEGIN_NAMESPACE
 
 template <typename S, typename M>
-constexpr bool is_pointer_interconvertible_with_class(M S::*mp)
+inline constexpr bool is_pointer_interconvertible_with_class(M S::*mp)
 {
   return __is_pointer_interconvertible_with_class(S, M);
 }

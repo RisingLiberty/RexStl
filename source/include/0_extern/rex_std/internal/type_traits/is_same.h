@@ -17,9 +17,9 @@
 REX_RSL_BEGIN_NAMESPACE
 
 template <typename, typename>
-constexpr bool is_same_v = false;
+inline constexpr bool is_same_v = false;
 template <typename T>
-constexpr bool is_same_v<T, T> = true;
+inline constexpr bool is_same_v<T, T> = true;
 
 template <typename T1, typename T2>
 struct is_same : public bool_constant<is_same_v<T1, T2>>

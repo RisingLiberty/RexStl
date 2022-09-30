@@ -17,10 +17,10 @@
 REX_RSL_BEGIN_NAMESPACE
 
 template <typename>
-constexpr bool is_volatile_v = false;
+inline constexpr bool is_volatile_v = false;
 
 template <typename T>
-constexpr bool is_volatile_v<volatile T> = true;
+inline constexpr bool is_volatile_v<volatile T> = true;
 
 template <typename T>
 struct is_volatile : public bool_constant<is_volatile_v<T>>

@@ -22,6 +22,6 @@ struct is_nothrow_move_assignable : bool_constant<__is_nothrow_assignable(add_lv
 };
 
 template <typename T>
-constexpr bool is_nothrow_move_assignable_v = is_nothrow_move_assignable<T>::value;
+inline constexpr bool is_nothrow_move_assignable_v = is_nothrow_move_assignable<T>::value;
 
 REX_RSL_END_NAMESPACE

@@ -44,6 +44,6 @@ struct is_const<T&> : public false_type
 };
 
 template <typename T>
-constexpr bool is_const_v = is_const<T>::value;
+inline constexpr bool is_const_v = is_const<T>::value;
 
 REX_RSL_END_NAMESPACE

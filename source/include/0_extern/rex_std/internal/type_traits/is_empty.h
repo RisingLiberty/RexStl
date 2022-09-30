@@ -22,6 +22,6 @@ struct is_empty : public bool_constant<__is_empty(T)>
 };
 
 template <typename T>
-constexpr bool is_empty_v = is_empty<T>::value;
+inline constexpr bool is_empty_v = is_empty<T>::value;
 
 REX_RSL_END_NAMESPACE

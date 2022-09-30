@@ -22,6 +22,6 @@ template <typename T>
 };
 
 template <typename T>
-constexpr bool is_trivially_copy_constructible_v = is_trivially_copy_constructible<T>::value;
+inline constexpr bool is_trivially_copy_constructible_v = is_trivially_copy_constructible<T>::value;
 
 REX_RSL_END_NAMESPACE

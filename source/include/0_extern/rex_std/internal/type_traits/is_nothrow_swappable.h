@@ -42,6 +42,6 @@ struct is_nothrow_swappable : internal::IsNoThrowSwappableHelper<T, is_swappable
 };
 
 template <typename T>
-constexpr bool is_nothrow_swappable_v = is_nothrow_swappable<T>::value;
+inline constexpr bool is_nothrow_swappable_v = is_nothrow_swappable<T>::value;
 
 REX_RSL_END_NAMESPACE

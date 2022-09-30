@@ -22,6 +22,6 @@ struct is_default_constructible : bool_constant<__is_constructible(T)>
 };
 
 template <typename T>
-constexpr bool is_default_constructible_v = is_default_constructible<T>::value;
+inline constexpr bool is_default_constructible_v = is_default_constructible<T>::value;
 
 REX_RSL_END_NAMESPACE

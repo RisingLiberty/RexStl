@@ -22,6 +22,6 @@ struct is_nothrow_invocable : internal::SelectInvokeTraits<Callable, Args...>::i
 };
 
 template <typename Callable, typename... Args>
-constexpr bool is_nothrow_invocable_v = is_nothrow_invocable<Callable, Args...>::value;
+inline constexpr bool is_nothrow_invocable_v = is_nothrow_invocable<Callable, Args...>::value;
 
 REX_RSL_END_NAMESPACE

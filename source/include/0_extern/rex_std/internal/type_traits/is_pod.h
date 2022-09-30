@@ -20,6 +20,6 @@ struct is_pod : public bool_constant<__is_pod(T)>
 };
 
 template <typename T>
-constexpr bool is_pod_v = is_pod<T>::value;
+inline constexpr bool is_pod_v = is_pod<T>::value;
 
 REX_RSL_END_NAMESPACE

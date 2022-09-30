@@ -25,6 +25,6 @@ struct IsUnboundedArrayStruct<T[]> : public true_type
 };
 
 template <typename T>
-constexpr bool IsUnboundedArray = IsUnboundedArrayStruct<T>::value;
+inline constexpr bool IsUnboundedArray = IsUnboundedArrayStruct<T>::value;
 
 REX_RSL_END_NAMESPACE

@@ -23,6 +23,6 @@ struct is_null_pointer : public is_same<typename remove_cv_t<T>::type, decltype(
 };
 
 template <typename T>
-constexpr bool is_null_pointer_v = is_null_pointer_v<T>::value;
+inline constexpr bool is_null_pointer_v = is_null_pointer_v<T>::value;
 
 REX_RSL_END_NAMESPACE

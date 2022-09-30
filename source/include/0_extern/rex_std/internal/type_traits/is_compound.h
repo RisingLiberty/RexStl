@@ -23,6 +23,6 @@ struct is_compound : public bool_constant<!is_fundamental_v<T>>
 };
 
 template <typename T>
-constexpr bool is_compound_v = is_compound<T>;
+inline constexpr bool is_compound_v = is_compound<T>;
 
 REX_RSL_END_NAMESPACE

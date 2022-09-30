@@ -22,7 +22,7 @@ struct is_scoped_enum : public bool_constant<__is_scoped_enum(T)>
 };
 
 template <typename T>
-constexpr bool is_scoped_enum_v = is_scoped_enum<T>::value;
+inline constexpr bool is_scoped_enum_v = is_scoped_enum<T>::value;
 
 REX_RSL_END_NAMESPACE
 

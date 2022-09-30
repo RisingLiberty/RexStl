@@ -32,6 +32,6 @@ struct rank<T[N]> : public integral_constant<size_t, rank<T>::Value + 1>
 };
 
 template <typename T>
-constexpr size_t rank_v = rank<T>::value;
+inline constexpr size_t rank_v = rank<T>::value;
 
 REX_RSL_END_NAMESPACE

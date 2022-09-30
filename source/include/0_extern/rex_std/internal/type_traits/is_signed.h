@@ -36,6 +36,6 @@ struct is_signed : public internal::is_signed_helper<T>
 };
 
 template <typename T>
-constexpr bool is_signed_v = is_signed<T>::value;
+inline constexpr bool is_signed_v = is_signed<T>::value;
 
 REX_RSL_END_NAMESPACE

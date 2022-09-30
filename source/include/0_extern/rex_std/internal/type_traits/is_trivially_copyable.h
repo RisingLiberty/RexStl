@@ -17,7 +17,7 @@ REX_RSL_BEGIN_NAMESPACE
 template <typename T>
 struct is_trivially_copyable
 {
-  static constexpr bool value = __is_trivially_copyable(T);
+  static inline constexpr bool value = __is_trivially_copyable(T);
 };
 
 template <typename T>
