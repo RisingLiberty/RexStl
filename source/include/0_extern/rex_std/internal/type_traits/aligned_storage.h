@@ -25,22 +25,50 @@ template <typename T>
 class aligned_storage
 {
 public:
+  constexpr aligned_storage()
+      : m_buff()
+  {
+  }
+  constexpr aligned_storage(const aligned_storage& other) // NOLINT(cppcoreguidelines-pro-type-member-init)
+  {
+    memcpy(m_buff, other.m_buff, sizeof(T));
+  }
+  constexpr aligned_storage(aligned_storage&& other) // NOLINT(cppcoreguidelines-pro-type-member-init)
+  {
+    memcpy(m_buff, other.m_buff, sizeof(T));
+  }
+
+  constexpr ~aligned_storage() = default;
+
+  constexpr aligned_storage& operator=(const aligned_storage& other) // NOLINT(bugprone-unhandled-self-assignment)
+  {
+    REX_ASSERT_X(this != addressof(other), "Can't copy to yourself");
+    memcpy(m_buff, other.m_buff, sizeof(T));
+    return *this;
+  }
+  constexpr aligned_storage& operator=(aligned_storage&& other)
+  {
+    REX_ASSERT_X(this != addressof(other), "Can't move to yourself");
+    memcpy(m_buff, other.m_buff, sizeof(T));
+    return *this;
+  }
+
   template <typename... Args>
-  void set(Args&&... args)
+  constexpr void set(Args&&... args)
   {
     new(static_cast<void*>(m_buff)) T(rsl::forward<Args>(args)...);
   }
-  void set(const T* newVal)
+  constexpr void set(const T* newVal)
   {
     rsl::memcpy(m_buff, newVal, sizeof(T));
   }
-  T* get()
+  constexpr T* get()
   {
-    return reinterpret_cast<T*>(m_buff);
+    return reinterpret_cast<T*>(m_buff); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
   }
 
 private:
-  alignas(T) rsl::byte m_buff[sizeof(T)];
+  alignas(T) rsl::byte m_buff[sizeof(T)]; // NOLINT(modernize-avoid-c-arrays)
 };
 
 REX_RSL_END_NAMESPACE

@@ -12,12 +12,14 @@
 
 #pragma once
 
+#include "rex_std/bonus/defines.h"
+
 REX_RSL_BEGIN_NAMESPACE
 
 namespace internal
 {
   template <bool IsScalarValue>
-  struct FillNImpl
+  struct fill_n_impl
   {
     template <typename OutputIterator, typename Size, typename T>
     static OutputIterator do_fill(OutputIterator first, Size n, const T& value)
@@ -31,7 +33,7 @@ namespace internal
   };
 
   template <>
-  struct FillNImpl<true>
+  struct fill_n_impl<true>
   {
     template <typename OutputIterator, typename Size, typename T>
     static OutputIterator do_fill(OutputIterator first, Size n, const T& value)

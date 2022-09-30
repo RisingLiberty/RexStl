@@ -47,7 +47,6 @@
   private:                                                                                                                                                                                                                                               \
     underlying_type m_value;                                                                                                                                                                                                                             \
   };
-
 REX_RSL_BEGIN_NAMESPACE
 
 namespace internal

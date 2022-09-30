@@ -19,18 +19,18 @@ REX_RSL_BEGIN_NAMESPACE
 namespace internal
 {
   template <typename T, bool = is_enum_v<T>>
-  struct UnderlyingTypeHelper
+  struct underlying_type_helper
   {
     using type = __underlying_type(T);
   };
 
   template <typename T>
-  struct UnderlyingTypeHelper<T, false>
+  struct underlying_type_helper<T, false>
   {
   };
 } // namespace internal
 template <typename T>
-struct underlying_type : internal::UnderlyingTypeHelper<T>
+struct underlying_type : internal::underlying_type_helper<T>
 {
 };
 

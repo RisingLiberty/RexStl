@@ -28,11 +28,16 @@ namespace win
   {
   public:
     handle();
-    handle(handle_t handle);
+    explicit handle(handle_t handle);
+    handle(const handle&) = delete;
+    handle(handle&& other);
     ~handle();
 
+    handle& operator=(const handle&) = delete;
+    handle& operator=(handle&& other);
+
     bool is_valid() const;
-    operator bool() const;
+    explicit operator bool() const;
 
     static handle_t invalid_value();
 

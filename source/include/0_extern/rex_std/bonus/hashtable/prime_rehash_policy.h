@@ -17,7 +17,7 @@ REX_RSL_BEGIN_NAMESPACE
 struct prime_rehash_policy
 {
 public:
-  prime_rehash_policy(float32 maxLoadFactor = 1.0f);
+  explicit prime_rehash_policy(float32 maxLoadFactor = 1.0f);
 
   float32 get_max_load_factor() const;
 
@@ -28,8 +28,8 @@ public:
 
   struct hash_required_result
   {
-    bool is_hash_required;
     count_t new_bucket_count;
+    bool is_hash_required;
   };
   hash_required_result is_rehash_required(uint32 bucketCount, uint32 elementCount, uint32 elementAdd) const;
 

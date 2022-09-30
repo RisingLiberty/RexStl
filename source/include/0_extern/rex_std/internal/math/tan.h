@@ -53,7 +53,7 @@ namespace internal
   constexpr T tan_cf_main(const T x)
   {
     return ((x > T(1.55) && x < T(1.60)) ? tan_series_exp(x) : // deals with a singularity at tan(pi/2)
-                //
+                                                               //
                 x > T(1.4) ? x / tan_cf_recur(x * x, 1, 45)
             : x > T(1)     ? x / tan_cf_recur(x * x, 1, 35)
                            :

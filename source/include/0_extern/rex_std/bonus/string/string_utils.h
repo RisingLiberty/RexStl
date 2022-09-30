@@ -156,22 +156,22 @@ REX_NO_DISCARD constexpr bool is_xdigit(char8 ch)
 // checks if a character is a control character
 REX_NO_DISCARD constexpr bool is_cntrl(char8 ch)
 {
-  return ch >= 0 && ch <= 31 || ch == 127;
+  return ch >= 0 && ch <= 31 || ch == 127; // NOLINT(readability-magic-numbers)
 }
 // checks if a character is a graphical character
 REX_NO_DISCARD constexpr bool is_graph(char8 ch)
 {
-  return is_print(ch) && ch != 32;
+  return is_print(ch) && ch != ' ';
 }
 // checks if a character is a space character
 REX_NO_DISCARD constexpr bool is_space(char8 ch)
 {
-  return ch == 32 || (ch >= 9 && ch <= 13);
+  return ch == ' ' || (ch >= '\t' && ch <= '\r');
 }
 // checks if a character is a blank character
 REX_NO_DISCARD constexpr bool is_blank(char8 ch)
 {
-  return ch == 9 || ch == 32;
+  return ch == '\t' || ch == ' ';
 }
 // checks if a character is a printing character
 REX_NO_DISCARD constexpr bool is_print(char8 ch)
@@ -220,7 +220,7 @@ REX_NO_DISCARD constexpr bool is_sign(Iterator sign)
 
 REX_NO_DISCARD constexpr bool is_multibyte(char8 c)
 {
-  return (c & 0x80) != 0;
+  return (c & 0x80) != 0; // NOLINT(readability-magic-numbers, hicpp-signed-bitwise)
 }
 
 template <typename Iterator>
@@ -255,11 +255,11 @@ REX_NO_DISCARD constexpr card32 string_length(const Iterator* str)
 }
 
 template <typename Iterator>
-REX_NO_DISCARD constexpr bool string_compare(const Iterator* str, card32 length, bool (*string_compare_func)(Iterator))
+REX_NO_DISCARD constexpr bool string_compare(const Iterator* str, card32 length, bool (*stringCompareFunc)(Iterator))
 {
   for(card32 i = 0; i < length; ++i)
   {
-    if(!string_compare_func(str[i]))
+    if(!stringCompareFunc(str[i]))
       return false;
   }
 
@@ -267,12 +267,12 @@ REX_NO_DISCARD constexpr bool string_compare(const Iterator* str, card32 length,
 }
 
 template <typename Iterator>
-REX_NO_DISCARD constexpr bool string_equals(const Iterator* lhs, card32 lhs_length, const Iterator* rhs, card32 rhs_length)
+REX_NO_DISCARD constexpr bool string_equals(const Iterator* lhs, card32 lhsLength, const Iterator* rhs, card32 rhsLength)
 {
-  if(lhs_length != rhs_length)
+  if(lhsLength != rhsLength)
     return false;
 
-  for(card32 i = 0; i < lhs_length; ++i)
+  for(card32 i = 0; i < lhsLength; ++i)
   {
     if(lhs[i] != rhs[i])
       return false;
@@ -282,9 +282,9 @@ REX_NO_DISCARD constexpr bool string_equals(const Iterator* lhs, card32 lhs_leng
 }
 
 template <typename Iterator>
-REX_NO_DISCARD constexpr bool string_equals(const Iterator* lhs, const Iterator* rhs, card32 rhs_length)
+REX_NO_DISCARD constexpr bool string_equals(const Iterator* lhs, const Iterator* rhs, card32 rhsLength)
 {
-  for(card32 i = 0; i < rhs_length; ++i)
+  for(card32 i = 0; i < rhsLength; ++i)
   {
     if(lhs[i] != rhs[i])
       return false;
@@ -294,12 +294,12 @@ REX_NO_DISCARD constexpr bool string_equals(const Iterator* lhs, const Iterator*
 }
 
 template <typename Iterator>
-REX_NO_DISCARD constexpr bool string_equals_case_insensitive(const char* lhs, card32 lhs_length, const Iterator* rhs, card32 rhs_length)
+REX_NO_DISCARD constexpr bool string_equals_case_insensitive(const char* lhs, card32 lhsLength, const Iterator* rhs, card32 rhsLength)
 {
-  if(lhs_length != rhs_length)
+  if(lhsLength != rhsLength)
     return false;
 
-  for(card32 i = 0; i < lhs_length; ++i)
+  for(card32 i = 0; i < lhsLength; ++i)
   {
     Iterator lhs_c = to_lower(lhs[i]);
     Iterator rhs_c = to_lower(rhs[i]);
@@ -319,16 +319,16 @@ REX_NO_DISCARD constexpr int32 string_lex_compare(const char* lhs, const char* r
 }
 
 template <typename Iterator>
-REX_NO_DISCARD constexpr bool ends_with(const Iterator* str, card32 str_length, const Iterator* suffix, card32 suffix_length)
+REX_NO_DISCARD constexpr bool ends_with(const Iterator* str, card32 strLength, const Iterator* suffix, card32 suffixLength)
 {
-  if(str_length < suffix_length)
+  if(strLength < suffixLength)
   {
     return false;
   }
 
-  const char* start = str + (str_length - suffix_length);
+  const char* start = str + (strLength - suffixLength);
 
-  return string_equals(start, suffix_length, suffix, suffix_length);
+  return string_equals(start, suffixLength, suffix, suffixLength);
 }
 template <typename Iterator>
 REX_NO_DISCARD constexpr bool ends_with(const Iterator* str, const Iterator* suffix)
@@ -340,14 +340,14 @@ REX_NO_DISCARD constexpr bool ends_with(const Iterator* str, const Iterator* suf
 }
 
 template <typename Iterator>
-REX_NO_DISCARD constexpr bool starts_with(const Iterator* str, card32 str_length, const Iterator* prefix, card32 prefix_length)
+REX_NO_DISCARD constexpr bool starts_with(const Iterator* str, card32 strLength, const Iterator* prefix, card32 prefixLength)
 {
-  if(str_length < prefix_length)
+  if(strLength < prefixLength)
   {
     return false;
   }
 
-  return string_equals(str, prefix_length, prefix, prefix_length);
+  return string_equals(str, prefixLength, prefix, prefixLength);
 }
 template <typename Iterator>
 REX_NO_DISCARD constexpr bool starts_with(const Iterator* str, const Iterator* prefix)
@@ -447,7 +447,7 @@ constexpr void to_lower(const Iterator* str, Iterator* buf, card32 length)
 }
 
 template <typename Iterator, card32 Size>
-constexpr void to_lower(const Iterator* str, Iterator (&buf)[Size])
+constexpr void to_lower(const Iterator* str, Iterator (&buf)[Size]) // NOLINT(modernize-avoid-c-arrays)
 {
   to_lower(str, buf, Size - 1);
 }
@@ -461,7 +461,7 @@ constexpr void to_upper(const Iterator* str, Iterator* buf, card32 length)
 }
 
 template <typename Iterator, card32 Size>
-constexpr void to_upper(const Iterator* str, Iterator (&buf)[Size])
+constexpr void to_upper(const Iterator* str, Iterator (&buf)[Size]) // NOLINT(modernize-avoid-c-arrays)
 {
   to_upper(str, buf, Size - 1);
 }
@@ -500,16 +500,16 @@ REX_NO_DISCARD constexpr optional<float32> stof(const Iterator* str, card32 leng
 
     if(assigning_before_radix)
     {
-      before_radix_value = ctoi(str[i]) + before_radix_value * 10.0f;
+      before_radix_value = ctoi(str[i]) + before_radix_value * 10.0f; // NOLINT(readability-magic-numbers)
     }
     else
     {
-      after_radix_value = ctoi(str[i]) + after_radix_value * 10.0f;
+      after_radix_value = ctoi(str[i]) + after_radix_value * 10.0f; // NOLINT(readability-magic-numbers)
       ++digits_after_radix;
     }
   }
 
-  return sign * before_radix_value + (after_radix_value / (max(1.0f, pow(10.0f, digits_after_radix))));
+  return sign * before_radix_value + (after_radix_value / (max(1.0f, pow(10.0f, digits_after_radix)))); // NOLINT(readability-magic-numbers, bugprone-narrowing-conversions, cppcoreguidelines-narrowing-conversions)
 }
 template <typename Iterator>
 REX_NO_DISCARD constexpr optional<int32> stoi(const Iterator* str, card32 length)
@@ -533,7 +533,7 @@ REX_NO_DISCARD constexpr optional<int32> stoi(const Iterator* str, card32 length
     if(!is_digit(str[i]))
       return nullopt;
 
-    value = ctoi(str[i]) + value * 10;
+    value = ctoi(str[i]) + value * 10; // NOLINT(readability-magic-numbers)
   }
 
   return sign * value;
@@ -548,7 +548,7 @@ REX_NO_DISCARD constexpr optional<uint32> stoui(const Iterator* str, card32 leng
     if(!is_digit(str[i]))
       return nullopt;
 
-    value = ctoi(str[i]) + value * 10;
+    value = ctoi(str[i]) + value * 10; // NOLINT(readability-magic-numbers)
   }
 
   return value;
@@ -556,8 +556,8 @@ REX_NO_DISCARD constexpr optional<uint32> stoui(const Iterator* str, card32 leng
 template <typename Iterator>
 REX_NO_DISCARD constexpr optional<bool> stob(const Iterator* str, card32 length)
 {
-  constexpr Iterator true_str[]  = "true";
-  constexpr Iterator false_str[] = "false";
+  constexpr Iterator true_str[]  = "true";  // NOLINT(modernize-avoid-c-arrays)
+  constexpr Iterator false_str[] = "false"; // NOLINT(modernize-avoid-c-arrays)
 
   if(string_equals(str, length, true_str, size(true_str)))
   {
@@ -572,29 +572,29 @@ REX_NO_DISCARD constexpr optional<bool> stob(const Iterator* str, card32 length)
 }
 
 template <typename SizeType, typename Iterator>
-constexpr SizeType find(Iterator src_begin, Iterator src_end, Iterator to_find_begin, SizeType to_find_length, SizeType default_value);
+constexpr SizeType find(Iterator srcBegin, Iterator srcEnd, Iterator toFindBegin, SizeType toFindLength, SizeType defaultValue);
 template <typename SizeType, typename Iterator>
-constexpr SizeType find(Iterator src_begin, Iterator src_end, Iterator to_find_begin, SizeType default_value);
+constexpr SizeType find(Iterator srcBegin, Iterator srcEnd, Iterator toFindBegin, SizeType defaultValue);
 template <typename SizeType, typename Iterator>
-constexpr SizeType rfind(Iterator src_begin, Iterator src_end, Iterator to_find_begin, SizeType to_find_length, SizeType default_value);
+constexpr SizeType rfind(Iterator srcBegin, Iterator srcEnd, Iterator toFindBegin, SizeType toFindLength, SizeType defaultValue);
 template <typename SizeType, typename Iterator>
-constexpr SizeType rfind(Iterator src_begin, Iterator src_end, Iterator to_find_begin, SizeType default_value);
+constexpr SizeType rfind(Iterator srcBegin, Iterator srcEnd, Iterator toFindBegin, SizeType defaultValue);
 template <typename SizeType, typename Iterator>
-constexpr SizeType find_first_of(Iterator src_begin, SizeType num_chars_to_check, Iterator to_find_begin, SizeType to_find_length, SizeType default_value);
+constexpr SizeType find_first_of(Iterator srcBegin, SizeType numCharsToCheck, Iterator toFindBegin, SizeType toFindLength, SizeType defaultValue);
 template <typename SizeType, typename Iterator>
-constexpr SizeType find_first_of(Iterator src_begin, SizeType num_chars_to_check, Iterator to_find_begin, SizeType default_value);
+constexpr SizeType find_first_of(Iterator srcBegin, SizeType numCharsToCheck, Iterator toFindBegin, SizeType defaultValue);
 template <typename SizeType, typename Iterator>
-constexpr SizeType find_first_not_of(Iterator src_begin, SizeType num_chars_to_check, Iterator to_find_begin, SizeType to_find_length, SizeType default_value);
+constexpr SizeType find_first_not_of(Iterator srcBegin, SizeType numCharsToCheck, Iterator toFindBegin, SizeType toFindLength, SizeType defaultValue);
 template <typename SizeType, typename Iterator>
-constexpr SizeType find_first_not_of(Iterator src_begin, SizeType num_chars_to_check, Iterator to_find_begin, SizeType default_value);
+constexpr SizeType find_first_not_of(Iterator srcBegin, SizeType numCharsToCheck, Iterator toFindBegin, SizeType defaultValue);
 template <typename SizeType, typename Iterator>
-constexpr SizeType find_last_of(Iterator src_begin, SizeType num_chars_to_check, Iterator to_find_begin, SizeType to_find_length, SizeType default_value);
+constexpr SizeType find_last_of(Iterator srcBegin, SizeType numCharsToCheck, Iterator toFindBegin, SizeType toFindLength, SizeType defaultValue);
 template <typename SizeType, typename Iterator>
-constexpr SizeType find_last_of(Iterator src_begin, SizeType num_chars_to_check, Iterator to_find_begin, SizeType default_value);
+constexpr SizeType find_last_of(Iterator srcBegin, SizeType numCharsToCheck, Iterator toFindBegin, SizeType defaultValue);
 template <typename SizeType, typename Iterator>
-constexpr SizeType find_last_not_of(Iterator src_begin, SizeType num_chars_to_check, Iterator to_find_begin, SizeType to_find_length, SizeType default_value);
+constexpr SizeType find_last_not_of(Iterator srcBegin, SizeType numCharsToCheck, Iterator toFindBegin, SizeType toFindLength, SizeType defaultValue);
 template <typename SizeType, typename Iterator>
-constexpr SizeType find_last_not_of(Iterator src_begin, SizeType num_chars_to_check, Iterator to_find_begin, SizeType default_value);
+constexpr SizeType find_last_not_of(Iterator srcBegin, SizeType numCharsToCheck, Iterator toFindBegin, SizeType defaultValue);
 
 namespace internal
 {
@@ -606,21 +606,21 @@ namespace internal
   constexpr StringType unsigned_to_string(T value);
 
   template <typename StringType>
-  constexpr StringType to_string(const int32 value);
+  constexpr StringType to_string(int32 value);
   template <typename StringType>
-  constexpr StringType to_string(const uint32 value);
+  constexpr StringType to_string(uint32 value);
   template <typename StringType>
-  constexpr StringType to_string(const int64 value);
+  constexpr StringType to_string(int64 value);
   template <typename StringType>
-  constexpr StringType to_string(const uint64 value);
+  constexpr StringType to_string(uint64 value);
   template <typename StringType>
-  constexpr StringType to_string(const float32 value, card32 precision = 4);
+  constexpr StringType to_string(float32 value, card32 precision = 4);
   template <typename StringType>
-  constexpr StringType to_string(const float64 value, card32 precision = 4);
+  constexpr StringType to_string(float64 value, card32 precision = 4);
   template <typename StringType>
-  constexpr StringType to_string(const lfloat64 value, card32 precision = 4);
+  constexpr StringType to_string(lfloat64 value, card32 precision = 4);
   template <typename StringType>
-  constexpr StringType to_string(const void* ptr);
+  constexpr StringType to_string(void* ptr);
 
   // iterator can be of type:
   // - char8*
@@ -628,7 +628,7 @@ namespace internal
   // - istreambuf_iterator
   // - random_access_iterator
   template <typename T, typename Iterator, typename IteratorPointer>
-  constexpr optional<T> str_to_signed(Iterator str, IteratorPointer str_end, int32 base)
+  constexpr optional<T> str_to_signed(Iterator str, IteratorPointer strEnd, int32 base)
   {
     static_assert(rsl::is_signed_v<T>, "T must be a signed type");
 
@@ -639,14 +639,14 @@ namespace internal
     }
 
     // determine base
-    if((base == 0 || base == 16) && *str == '0' && (*(str + 1) == 'x' || *(str + 1) == 'X'))
+    if((base == 0 || base == 16) && *str == '0' && (*(str + 1) == 'x' || *(str + 1) == 'X')) // NOLINT(readability-magic-numbers)
     {
       str += 2;
-      return 16;
+      return 16; // NOLINT(readability-magic-numbers)
     }
     if(base == 0)
     {
-      base = *str == '0' ? 8 : 10;
+      base = *str == '0' ? 8 : 10; // NOLINT(readability-magic-numbers)
     }
 
     // determine sign
@@ -669,15 +669,22 @@ namespace internal
       auto c = *str;
 
       if(is_digit(c))
+      {
         c -= '0';
-      else if((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) /* is_alpha(c))*/
-        c -= (c >= 'A' && c <= 'Z') ? 'A' - 10 : 'a' - 10;
+      }
+      else if(is_alpha(c))
+      { /* is_alpha(c))*/
+        c -= is_upper(c) ? 'A' - 10 : 'a' - 10;
+      }
       else
+      {
         break;
+      }
 
       if(c >= base)
+      {
         break;
-
+      }
       else
       {
         value *= base;
@@ -688,7 +695,7 @@ namespace internal
     }
 
     // return result
-    if(str_end)
+    if(strEnd)
     {
       /**str_end = const_cast<Iterator>(str);*/
     }
@@ -700,7 +707,7 @@ namespace internal
   template <typename T, typename Iterator>
   constexpr optional<T> str_to_signed(const Iterator str, int32 base)
   {
-    return str_to_signed<T>(str, (Iterator*)nullptr, base);
+    return str_to_signed<T>(str, static_cast<Iterator*>(nullptr), base);
   }
 
   // iterator can be of type:
@@ -738,15 +745,22 @@ namespace internal
       auto c = *str;
 
       if(is_digit(c))
+      {
         c -= '0';
+      }
       else if(is_alpha(c))
+      {
         c -= is_upper(c) ? 'A' - 10 : 'a' - 10;
+      }
       else
+      {
         break;
+      }
 
       if(c >= base)
+      {
         break;
-
+      }
       else
       {
         value *= base;
@@ -769,7 +783,7 @@ namespace internal
   template <typename T, typename Iterator>
   constexpr optional<T> str_to_unsigned(Iterator str, int32 base)
   {
-    return str_to_unsigned<T>(str, (Iterator*)nullptr, base);
+    return str_to_unsigned<T>(str, static_cast<Iterator*>(nullptr), base);
   }
   // iterator can be of type:
   // - char8*
@@ -799,7 +813,7 @@ namespace internal
     T after_radix_value           = 0.0f;
     card32 num_digits_after_radix = 0;
     bool assigning_before_radix   = true;
-    optional<T> result            = nullopt;
+    optional<T> const result      = nullopt;
 
     while(*c != '\0')
     {
@@ -829,20 +843,20 @@ namespace internal
     //{
     //   *str_end = const_cast<Iterator>(str);
     // }
-    return optional<T>(sign * before_radix_value + (after_radix_value / (max(1.0f, pow(10.0f, num_digits_after_radix)))));
+    return optional<T>(sign * before_radix_value + (after_radix_value / ((rsl::max)(1.0f, pow(10.0f, num_digits_after_radix)))));
   }
 
   template <typename T, typename Iterator>
   constexpr optional<T> str_to_floating_point(Iterator str)
   {
-    return str_to_floating_point<T>(str, (Iterator*)nullptr);
+    return str_to_floating_point<T>(str, static_cast<Iterator*>(nullptr));
   }
 
   template <typename Iterator, typename IteratorPointer>
-  constexpr optional<bool> str_to_bool(Iterator str, IteratorPointer str_end)
+  constexpr optional<bool> str_to_bool(Iterator str, IteratorPointer strEnd)
   {
-    constexpr Iterator true_str[]  = "true";
-    constexpr Iterator false_str[] = "false";
+    constexpr Iterator true_str[]  = "true";  // NOLINT(modernize-avoid-c-arrays)
+    constexpr Iterator false_str[] = "false"; // NOLINT(modernize-avoid-c-arrays)
 
     if(string_equals(str, true_str, size(true_str)))
     {
@@ -861,13 +875,13 @@ namespace internal
       return false;
     }
 
-    return str_to_unsigned(str, str_end, 10);
+    return str_to_unsigned(str, strEnd, 10);
   }
 
   template <typename T, typename Iterator>
   constexpr optional<T> str_to_bool(const Iterator str)
   {
-    return str_to_bool<T>(str, (Iterator*)nullptr);
+    return str_to_bool<T>(str, static_cast<Iterator*>(nullptr));
   }
 
   // iterator can be of type:
@@ -876,16 +890,17 @@ namespace internal
   // - istreambuf_iterator
   // - random_access_iterator
   template <typename Iterator, typename IteratorPointer>
-  constexpr optional<void*> str_to_pointer(Iterator str, IteratorPointer str_end)
+  constexpr optional<void*> str_to_pointer(Iterator str, IteratorPointer strEnd)
   {
-    optional<uint64> opt_value(str_to_unsigned(str, str_end));
-    return optional<void*>(opt_value.value_or(nullptr));
+    optional<uint64> opt_value(str_to_unsigned(str, strEnd));
+    void* val = opt_value.has_value() ? reinterpret_cast<void*>(*opt_value) : nullptr; // NOLINT(performance-no-int-to-ptr, cppcoreguidelines-pro-type-reinterpret-cast)
+    return optional<void*>(val);
   }
 
   template <typename Iterator>
   constexpr optional<void*> str_to_pointer(const Iterator str)
   {
-    return str_to_pointer(str, (Iterator*)nullptr);
+    return str_to_pointer(str, static_cast<Iterator*>(nullptr));
   }
 
   namespace string_utils
@@ -928,7 +943,7 @@ namespace internal
     template <typename Traits, typename Pointer, typename SizeType>
     SizeType rfind(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer toFindStr, SizeType toFindLength, SizeType defaultValue)
     {
-      pos = min(pos, lhsLength - 1);
+      pos = (rsl::min)(pos, lhsLength - 1);
 
       // the string must be found between [begin, pos]
 
@@ -1059,61 +1074,61 @@ REX_NO_DISCARD constexpr optional<int64> atoll(const char8* str)
 
 /// RSL Comment: Not in ISO C++ Standard at time of writing (10/Jul/2022)
 // converts a byte string to an integer value
-REX_NO_DISCARD constexpr optional<int32> strtoi(const char8* str, char8** str_end, int32 base)
+REX_NO_DISCARD constexpr optional<int32> strtoi(const char8* str, char8** strEnd, int32 base)
 {
-  return internal::str_to_signed<int32>(str, str_end, base);
+  return internal::str_to_signed<int32>(str, strEnd, base);
 }
 /// RSL Comment: Different from ISO C++ Standard at time of writing (17/Jul/2022)
 // this returns an optional instead of a basic type
 // converts a byte string to an integer value
-REX_NO_DISCARD constexpr optional<long> strtol(const char8* str, char8** str_end, int32 base)
+REX_NO_DISCARD constexpr optional<long> strtol(const char8* str, char8** strEnd, int32 base)
 {
-  return internal::str_to_signed<long>(str, str_end, base);
+  return internal::str_to_signed<long>(str, strEnd, base);
 }
 // converts a byte string to an integer value
 // this returns an optional instead of a basic type
-REX_NO_DISCARD constexpr optional<int64> strtoll(const char8* str, char8** str_end, int32 base)
+REX_NO_DISCARD constexpr optional<int64> strtoll(const char8* str, char8** strEnd, int32 base)
 {
-  return internal::str_to_signed<int64>(str, str_end, base);
+  return internal::str_to_signed<int64>(str, strEnd, base);
 }
 
 /// RSL Comment: Not in ISO C++ Standard at time of writing (10/Jul/2022)
 // converts a byte string to an unsigned integer value
-REX_NO_DISCARD constexpr optional<uint32> strtoui(const char8* str, char8** str_end, int32 base)
+REX_NO_DISCARD constexpr optional<uint32> strtoui(const char8* str, char8** strEnd, int32 base)
 {
-  return internal::str_to_unsigned<uint32>(str, str_end, base);
+  return internal::str_to_unsigned<uint32>(str, strEnd, base);
 }
 // converts a byte string to an unsigned integer value
-REX_NO_DISCARD constexpr optional<ulong> strtoul(const char8* str, char8** str_end, int32 base)
+REX_NO_DISCARD constexpr optional<ulong> strtoul(const char8* str, char8** strEnd, int32 base)
 {
-  return internal::str_to_unsigned<ulong>(str, str_end, base);
+  return internal::str_to_unsigned<ulong>(str, strEnd, base);
 }
 // converts a byte string to an unsigned integer value
-REX_NO_DISCARD constexpr optional<uint64> strtoull(const char8* str, char8** str_end, int32 base)
+REX_NO_DISCARD constexpr optional<uint64> strtoull(const char8* str, char8** strEnd, int32 base)
 {
-  return internal::str_to_unsigned<uint64>(str, str_end, base);
+  return internal::str_to_unsigned<uint64>(str, strEnd, base);
 }
 
 /// RSL Comment: Different from ISO C++ Standard at time of writing (27/Aug/2022)
 // this returns an optional instead of a basic type
 // converts a byte string to an floating point value
-REX_NO_DISCARD constexpr optional<float32> strtof(const char8* str, char8** str_end)
+REX_NO_DISCARD constexpr optional<float32> strtof(const char8* str, char8** strEnd)
 {
-  return internal::str_to_floating_point<float32>(str, str_end);
+  return internal::str_to_floating_point<float32>(str, strEnd);
 }
 /// RSL Comment: Different from ISO C++ Standard at time of writing (27/Aug/2022)
 // this returns an optional instead of a basic type
 // converts a byte string to an floating point value
-REX_NO_DISCARD constexpr optional<float64> strtod(const char8* str, char8** str_end)
+REX_NO_DISCARD constexpr optional<float64> strtod(const char8* str, char8** strEnd)
 {
-  return internal::str_to_floating_point<float64>(str, str_end);
+  return internal::str_to_floating_point<float64>(str, strEnd);
 }
 /// RSL Comment: Different from ISO C++ Standard at time of writing (27/Aug/2022)
 // this returns an optional instead of a basic type
 // converts a byte string to an floating point value
-REX_NO_DISCARD constexpr optional<lfloat64> strtold(const char8* str, char8** str_end)
+REX_NO_DISCARD constexpr optional<lfloat64> strtold(const char8* str, char8** strEnd)
 {
-  return internal::str_to_floating_point<lfloat64>(str, str_end);
+  return internal::str_to_floating_point<lfloat64>(str, strEnd);
 }
 
 // (cinttypes.h)
@@ -1121,61 +1136,25 @@ REX_NO_DISCARD constexpr optional<lfloat64> strtold(const char8* str, char8** st
 /// RSL Comment: Different from ISO C++ Standard at time of writing (27/Aug/2022)
 // this returns an optional instead of a basic type
 // converts a byte string to intmax
-REX_NO_DISCARD constexpr optional<intmax> strtoimax(const char8* str, char8** str_end, int32 base)
+REX_NO_DISCARD constexpr optional<intmax> strtoimax(const char8* str, char8** strEnd, int32 base)
 {
-  return internal::str_to_signed<intmax>(str, str_end, base);
+  return internal::str_to_signed<intmax>(str, strEnd, base);
 }
 /// RSL Comment: Different from ISO C++ Standard at time of writing (27/Aug/2022)
 // this returns an optional instead of a basic type
 // converts a byte string to uintmax
-REX_NO_DISCARD constexpr optional<uintmax> strtoumax(const char8* str, char8** str_end, int32 base)
+REX_NO_DISCARD constexpr optional<uintmax> strtoumax(const char8* str, char8** strEnd, int32 base)
 {
-  return internal::str_to_unsigned<uintmax>(str, str_end, base);
+  return internal::str_to_unsigned<uintmax>(str, strEnd, base);
 }
 
 //
 // string Manipulation (cstring.h)
 //
 
-// copies one string to another
-char8* strcpy(char8* dest, const char8* src);
-// copies a certain amount of characters from one string to another
-char8* strncpy(char8* dest, const char8* src, count_t count);
-// concatenates two strings
-char8* strcat(char8* dest, const char8* src);
-// concatenates a certain amount of characters of two strings
-char8* strncat(char8* dest, const char8* src, count_t count);
-// transform a string so that strcmp would produce the same result as strcoll
-// count_t strxfrm(char8* dest, const char8* src, count_t count);
-
 //
 // string Examination (cstring.h)
 //
-
-// returns the lengths of a given string
-REX_NO_DISCARD count_t strlen(const char8* str);
-// compares two strings
-REX_NO_DISCARD int32 strcmp(const char8* lhs, const char8* rhs);
-// compares a certain number of characters from two strings
-REX_NO_DISCARD int32 strncmp(const char8* lhs, const char8* rhs, count_t count);
-// compares two strings in accordance to the current locale
-// REX_NO_DISCARD int32 strcoll(const char8* lhs, const char8* rhs);
-// finds the first occurrence of a character
-REX_NO_DISCARD const char8* strchr(const char8* str, char8 ch);
-// finds the last occurrence of a character
-REX_NO_DISCARD const char8* strrchr(const char8* str, char8 ch);
-// returns the length of the maximum initial segment that consists
-// of only the characters found in another byte string
-REX_NO_DISCARD count_t strspn(const char8* dest, const char8* src);
-// returns the length of the maximum initial segment that consists
-// of only the characters not found in another byte string
-REX_NO_DISCARD count_t strcspn(const char8* dest, const char8* src);
-// finds the first location of any character from a set of separators
-REX_NO_DISCARD const char8* strpbrk(const char8* dest, const char8* breakset);
-// finds the first occurrence of a substring of characters
-REX_NO_DISCARD const char8* strstr(const char8* str, const char8* substring);
-// finds the next token in a byte string
-// REX_NO_DISCARD char8* strtok(char8* str, const char8* delim);
 
 //
 // Miscellaneous (cstring.h)

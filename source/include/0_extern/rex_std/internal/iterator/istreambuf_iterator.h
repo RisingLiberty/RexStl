@@ -76,25 +76,29 @@ public:
   {
   }
 #endif
-  istreambuf_iterator(istream_type& is)
+  explicit istreambuf_iterator(istream_type& is)
       : m_stream_buf(is.rdbuf())
       , m_got_ch(m_stream_buf == nullptr)
       , m_value()
   {
   }
-  istreambuf_iterator(streambuf_type* s)
+  explicit istreambuf_iterator(streambuf_type* s)
       : m_stream_buf(s)
       , m_got_ch(m_stream_buf == nullptr)
       , m_value()
   {
   }
-  istreambuf_iterator(const istreambuf_proxy& p)
+  explicit istreambuf_iterator(const istreambuf_proxy& p)
       : m_stream_buf(p.streambuf())
       , m_got_ch(m_stream_buf == nullptr)
       , m_value()
   {
   }
   istreambuf_iterator(const istreambuf_iterator&) = default;
+
+  ~istreambuf_iterator() = default;
+
+  istreambuf_iterator& operator=(const istreambuf_iterator&) = default;
 
   char_type operator*() const
   {

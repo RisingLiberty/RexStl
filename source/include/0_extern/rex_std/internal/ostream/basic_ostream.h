@@ -56,8 +56,8 @@ public:
     using traits_type = Traits;
 
     // prepares the stream for formatted output
-    explicit sentry(basic_ostream<CharT, Traits>& outStream)
-        : m_ostream(outStream)
+    explicit sentry(basic_ostream<CharT, Traits>& outStream) // NOLINT(misc-no-recursion)
+        : m_ostream(&outStream)
         , m_is_ok(false)
     {
       if(outStream.good() == false)
@@ -65,30 +65,36 @@ public:
         return;
       }
 
-      basic_ostream<CharT, Traits>* tied_str = m_ostream.tie();
+      basic_ostream<CharT, Traits>* tied_str = m_ostream->tie();
       if(tied_str)
       {
+        REX_ASSERT_X(tied_str->tie() != addressof(m_ostream), "circular tied ostreams, this is not allowed!");
         tied_str->flush();
       }
 
       m_is_ok = outStream.good();
     }
+
+    sentry(const sentry&) = delete;
+    sentry(sentry&&)      = delete;
+
     // finalizes the stream object after formatted output
     ~sentry()
     {
       /// [09/Sep/2022] RSL Comment: Because ios_base doesn't have any flags, this always flushes.
-      if(m_ostream.good())
+      if(m_ostream->good())
       {
         // flush the stream
-        if(m_ostream.rdbuf()->pubsync() == -1)
+        if(m_ostream->rdbuf()->pubsync() == -1)
         {
-          m_ostream.setstate(io::iostate::badbit);
+          m_ostream->setstate(io::iostate::badbit);
         }
       }
     }
 
     // the copy assignment is deleted
     sentry& operator=(const sentry&) = delete;
+    sentry& operator=(sentry&&)      = delete;
 
     // checks whether the preparation of the output stream was successful.
     explicit operator bool() const
@@ -97,7 +103,7 @@ public:
     }
 
   private:
-    basic_ostream<CharT, Traits>& m_ostream;
+    basic_ostream<CharT, Traits>* m_ostream;
     bool m_is_ok;
   };
 
@@ -110,6 +116,12 @@ public:
 
   // destroys the basic_ostream object.
   ~basic_ostream() override = default;
+
+  // you can't copy an output stream
+  basic_ostream(const basic_ostream& other) = delete;
+
+  // you can't copy assign an output stream
+  basic_ostream& operator=(const basic_ostream&) = delete;
 
   // writes an integer value to the stream
   basic_ostream& operator<<(int16 value)
@@ -397,16 +409,16 @@ public:
   }
 
   // synchronizes with the underlying storage device
-  basic_ostream& flush()
+  basic_ostream& flush() // NOLINT(misc-no-recursion)
   {
-    sentry sentry(*this);
+    sentry const sentry(*this);
 
     if(sentry)
     {
       basic_streambuf<CharT, Traits>* streambuf = base::rdbuf();
       if(streambuf)
       {
-        int32 result = streambuf->pubsync();
+        int32 const result = streambuf->pubsync();
 
         if(result == -1)
         {
@@ -424,8 +436,6 @@ public:
   }
 
 protected:
-  // you can't copy an output stream
-  basic_ostream(const basic_ostream& other) = delete;
   // Uses basic_ios<CharT, Traits>::move(other) to move all basic_ios members,
   // except for the rdbuf(), from other to this
   basic_ostream(basic_ostream&& other)
@@ -434,8 +444,6 @@ protected:
     base::move(rsl::move(other));
   }
 
-  // you can't copy assign an output stream
-  basic_ostream& operator=(const basic_ostream&) = delete;
   // exchanges all data members of the base class, except for rdbuf(), with other.
   basic_ostream& operator=(basic_ostream&& other)
   {
@@ -490,7 +498,7 @@ basic_ostream<CharT, Traits>& operator<<(basic_ostream<CharT, Traits>& os, uint8
 // outputting a CharT pointer is not supported, for performance reasons.
 // writes a string literal to the stream
 template <typename CharT, typename Traits, count_t N>
-basic_ostream<CharT, Traits>& operator<<(basic_ostream<CharT, Traits>& os, const CharT (&s)[N])
+basic_ostream<CharT, Traits>& operator<<(basic_ostream<CharT, Traits>& os, const CharT (&s)[N]) // NOLINT(modernize-avoid-c-arrays)
 {
   os.write(s, N);
   return os;
@@ -499,18 +507,18 @@ basic_ostream<CharT, Traits>& operator<<(basic_ostream<CharT, Traits>& os, const
 namespace internal
 {
   template <typename Ostream, typename T, typename = void>
-  struct CanStreamOut : false_type
+  struct can_stream_out : false_type
   {
   };
 
   template <typename Ostream, typename T>
-  struct CanStreamOut<Ostream, T, void_t<decltype(rsl::declval<Ostream&>() << rsl::declval<const T&>())>> : true_type
+  struct can_stream_out<Ostream, T, void_t<decltype(rsl::declval<Ostream&>() << rsl::declval<const T&>())>> : true_type
   {
   };
 } // namespace internal
 
 // calls the appropriate insertion operator, given an rvalue reference to an output stream object
-template <typename Ostream, typename T, enable_if_t<conjunction_v<is_convertible<Ostream*, ios_base*>, internal::CanStreamOut<Ostream, T>>, bool> = true>
+template <typename Ostream, typename T, enable_if_t<conjunction_v<is_convertible<Ostream*, ios_base*>, internal::can_stream_out<Ostream, T>>, bool> = true>
 Ostream&& operator<<(Ostream&& os, const T& val)
 {
   os << val;

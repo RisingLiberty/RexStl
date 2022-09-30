@@ -25,7 +25,7 @@ struct integral_constant
 
   static constexpr value_type value = Val;
 
-  constexpr operator value_type() const
+  explicit constexpr operator value_type() const
   {
     return value;
   }

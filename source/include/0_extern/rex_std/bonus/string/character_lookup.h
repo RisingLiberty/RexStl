@@ -12,6 +12,7 @@
 
 #pragma once
 
+#include "rex_std/array.h"
 #include "rex_std/internal/iterator/random_access_iterator.h"
 #include "rex_std/internal/iterator/reverse_iterator.h"
 #include "rex_std/internal/type_traits/make_unsigned.h"
@@ -51,7 +52,7 @@ public:
   }
 
 private:
-  bool m_table[(numeric_limits<rsl::make_unsigned_t<CharType>>::max)() + 1];
+  rsl::array<bool, (numeric_limits<rsl::make_unsigned_t<CharType>>::max)() + 1> m_table; // NOLINT
 };
 
 REX_RSL_END_NAMESPACE

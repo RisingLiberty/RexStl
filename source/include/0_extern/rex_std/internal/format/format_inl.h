@@ -5,8 +5,11 @@
 //
 // For the license information refer to format.h.
 
-#ifndef FMT_FORMAT_INL_H_
-#define FMT_FORMAT_INL_H_
+#pragma once
+
+// NOLINTBEGIN(hicpp-signed-bitwise, fuchsia-trailing-return)
+
+#include "rex_std/bonus/defines.h"
 
 #include <algorithm>
 #include <cctype>
@@ -32,33 +35,33 @@ FMT_BEGIN_NAMESPACE
 namespace detail
 {
 
-  FMT_FUNC void assert_fail(const char* file, int line, const char* message)
+  FMT_FUNC void assert_fail(const char* file, int line, const char* message) // NOLINT(misc-definitions-in-headers)
   {
     // Use unchecked std::fprintf to avoid triggering another assertion when
     // writing to stderr fails
-    std::fprintf(stderr, "%s:%d: assertion failed: %s", file, line, message);
+    REX_MAYBE_UNUSED int const result = std::fprintf(stderr, "%s:%d: assertion failed: %s", file, line, message);
     // Chosen instead of rsl::abort to satisfy Clang in CUDA mode during device
     // code pass.
     std::terminate();
   }
 
-  FMT_FUNC void throw_format_error(const char* message)
+  FMT_FUNC void throw_format_error(const char* message) // NOLINT(misc-definitions-in-headers)
   {
     FMT_THROW(format_error(message));
   }
 
-  FMT_FUNC void format_error_code(detail::buffer<char>& out, int error_code, string_view message) noexcept
+  FMT_FUNC void format_error_code(detail::buffer<char>& out, int errorCode, string_view message) noexcept // NOLINT(misc-definitions-in-headers)
   {
     // Report error code making sure that the output fits into
     // inline_buffer_size to avoid dynamic memory allocation and potential
     // bad_alloc.
     out.try_resize(0);
-    static const char SEP[]       = ": ";
-    static const char ERROR_STR[] = "error ";
+    static const char s_sep[]       = ": ";     // NOLINT(modernize-avoid-c-arrays)
+    static const char s_error_str[] = "error "; // NOLINT(modernize-avoid-c-arrays)
     // Subtract 2 to account for terminating null characters in SEP and ERROR_STR.
-    size_t error_code_size = sizeof(SEP) + sizeof(ERROR_STR) - 2;
-    auto abs_value         = static_cast<uint32_or_64_or_128_t<int>>(error_code);
-    if(detail::is_negative(error_code))
+    size_t error_code_size = sizeof(s_sep) + sizeof(s_error_str) - 2;
+    auto abs_value         = static_cast<uint32_or_64_or_128_t<int>>(errorCode);
+    if(detail::is_negative(errorCode))
     {
       abs_value = 0 - abs_value;
       ++error_code_size;
@@ -66,24 +69,24 @@ namespace detail
     error_code_size += detail::to_unsigned(detail::count_digits(abs_value));
     auto it = buffer_appender<char>(out);
     if(message.size() <= inline_buffer_size - error_code_size)
-      format_to(it, FMT_STRING("{}{}"), message, SEP);
-    format_to(it, FMT_STRING("{}{}"), ERROR_STR, error_code);
+      format_to(it, FMT_STRING("{}{}"), message, s_sep);
+    format_to(it, FMT_STRING("{}{}"), s_error_str, errorCode);
     FMT_ASSERT(out.size() <= inline_buffer_size, "");
   }
 
-  FMT_FUNC void report_error(format_func func, int error_code, const char* message) noexcept
+  FMT_FUNC void report_error(format_func func, int errorCode, const char* message) noexcept // NOLINT(misc-definitions-in-headers)
   {
     memory_buffer full_message;
-    func(full_message, error_code, message);
+    func(full_message, errorCode, message);
     // Don't use fwrite_fully because the latter may throw.
     if(std::fwrite(full_message.data(), full_message.size(), 1, stderr) > 0)
-      std::fputc('\n', stderr);
+      REX_MAYBE_UNUSED int const res = std::fputc('\n', stderr);
   }
 
   // A wrapper around fwrite that throws on error.
   inline void fwrite_fully(const void* ptr, size_t size, size_t count, FILE* stream)
   {
-    size_t written = std::fwrite(ptr, size, count, stream);
+    size_t const written = std::fwrite(ptr, size, count, stream);
     if(written < count)
       FMT_THROW(system_error(errno, FMT_STRING("cannot write to file")));
   }
@@ -91,16 +94,16 @@ namespace detail
 #ifndef FMT_STATIC_THOUSANDS_SEPARATOR
   template <typename Locale>
   locale_ref::locale_ref(const Locale& loc)
-      : locale_(&loc)
+      : m_locale(&loc)
   {
-    static_assert(rsl::is_same<Locale, std::locale>::value, "");
+    static_assert(rsl::is_same<Locale, std::locale>::value, "locales are not the same");
   }
 
   template <typename Locale>
   Locale locale_ref::get() const
   {
-    static_assert(rsl::is_same<Locale, std::locale>::value, "");
-    return locale_ ? *static_cast<const std::locale*>(locale_) : std::locale();
+    static_assert(rsl::is_same<Locale, std::locale>::value, "locales are not the same");
+    return m_locale ? *static_cast<const std::locale*>(m_locale) : std::locale();
   }
 
   template <typename Char>
@@ -109,7 +112,7 @@ namespace detail
     auto& facet        = std::use_facet<std::numpunct<Char>>(loc.get<std::locale>());
     auto grouping      = facet.grouping();
     auto thousands_sep = grouping.empty() ? Char() : facet.thousands_sep();
-    return {rsl::string(grouping.data(), static_cast<count_t>(grouping.length())), thousands_sep};
+    return thousands_sep_result(rsl::string(grouping.data(), static_cast<count_t>(grouping.length())), thousands_sep);
   }
   template <typename Char>
   FMT_FUNC Char decimal_point_impl(locale_ref loc)
@@ -134,10 +137,10 @@ namespace detail
 FMT_API FMT_FUNC format_error::~format_error() noexcept = default;
 #endif
 
-FMT_FUNC std::system_error vsystem_error(int error_code, string_view format_str, format_args args)
+FMT_FUNC std::system_error vsystem_error(int errorCode, string_view formatStr, format_args args) // NOLINT(misc-definitions-in-headers)
 {
-  auto ec  = std::error_code(error_code, std::generic_category());
-  auto str = vformat(format_str, args);
+  auto ec  = std::error_code(errorCode, std::generic_category());
+  auto str = vformat(formatStr, args);
   return std::system_error(ec, std::string(str.data(), str.length()));
 }
 
@@ -170,7 +173,7 @@ namespace detail
     return {static_cast<uint64_t>(p >> 64), static_cast<uint64_t>(p)};
 #elif defined(_MSC_VER) && defined(_M_X64)
     auto result = uint128_fallback();
-    result.lo_  = _umul128(x, y, &result.hi_);
+    result.m_lo = _umul128(x, y, &result.m_hi);
     return result;
 #else
     const uint64_t mask = static_cast<uint64_t>(max_value<uint32_t>());
@@ -227,8 +230,8 @@ namespace detail
     // 128-bit unsigned integer.
     inline uint128_fallback umul192_lower128(uint64_t x, uint128_fallback y) noexcept
     {
-      uint64_t high             = x * y.high();
-      uint128_fallback high_low = umul128(x, y.low());
+      uint64_t const high             = x * y.high();
+      uint128_fallback const high_low = umul128(x, y.low());
       return {high + high_low.high(), high_low.low()};
     }
 
@@ -260,7 +263,7 @@ namespace detail
       return (e * 631305 - 261663) >> 21;
     }
 
-    static constexpr struct
+    static constexpr struct // NOLINT(modernize-avoid-c-arrays)
     {
       uint32_t divisor;
       int shift_amount;
@@ -288,7 +291,7 @@ namespace detail
       constexpr uint32_t magic_number = (1u << info.shift_amount) / info.divisor + 1;
       n *= magic_number;
       const uint32_t comparison_mask = (1u << info.shift_amount) - 1;
-      bool result                    = (n & comparison_mask) < magic_number;
+      bool const result              = (n & comparison_mask) < magic_number;
       n >>= info.shift_amount;
       return result;
     }
@@ -330,15 +333,16 @@ namespace detail
       static uint64_t get_cached_power(int k) noexcept
       {
         FMT_ASSERT(k >= float_info<float>::min_k && k <= float_info<float>::max_k, "k is out of range");
-        static constexpr const uint64_t pow10_significands[] = {0x81ceb32c4b43fcf5, 0xa2425ff75e14fc32, 0xcad2f7f5359a3b3f, 0xfd87b5f28300ca0e, 0x9e74d1b791e07e49, 0xc612062576589ddb, 0xf79687aed3eec552, 0x9abe14cd44753b53, 0xc16d9a0095928a28,
-                                                                0xf1c90080baf72cb2, 0x971da05074da7bef, 0xbce5086492111aeb, 0xec1e4a7db69561a6, 0x9392ee8e921d5d08, 0xb877aa3236a4b44a, 0xe69594bec44de15c, 0x901d7cf73ab0acda, 0xb424dc35095cd810,
-                                                                0xe12e13424bb40e14, 0x8cbccc096f5088cc, 0xafebff0bcb24aaff, 0xdbe6fecebdedd5bf, 0x89705f4136b4a598, 0xabcc77118461cefd, 0xd6bf94d5e57a42bd, 0x8637bd05af6c69b6, 0xa7c5ac471b478424,
-                                                                0xd1b71758e219652c, 0x83126e978d4fdf3c, 0xa3d70a3d70a3d70b, 0xcccccccccccccccd, 0x8000000000000000, 0xa000000000000000, 0xc800000000000000, 0xfa00000000000000, 0x9c40000000000000,
-                                                                0xc350000000000000, 0xf424000000000000, 0x9896800000000000, 0xbebc200000000000, 0xee6b280000000000, 0x9502f90000000000, 0xba43b74000000000, 0xe8d4a51000000000, 0x9184e72a00000000,
-                                                                0xb5e620f480000000, 0xe35fa931a0000000, 0x8e1bc9bf04000000, 0xb1a2bc2ec5000000, 0xde0b6b3a76400000, 0x8ac7230489e80000, 0xad78ebc5ac620000, 0xd8d726b7177a8000, 0x878678326eac9000,
-                                                                0xa968163f0a57b400, 0xd3c21bcecceda100, 0x84595161401484a0, 0xa56fa5b99019a5c8, 0xcecb8f27f4200f3a, 0x813f3978f8940985, 0xa18f07d736b90be6, 0xc9f2c9cd04674edf, 0xfc6f7c4045812297,
-                                                                0x9dc5ada82b70b59e, 0xc5371912364ce306, 0xf684df56c3e01bc7, 0x9a130b963a6c115d, 0xc097ce7bc90715b4, 0xf0bdc21abb48db21, 0x96769950b50d88f5, 0xbc143fa4e250eb32, 0xeb194f8e1ae525fe,
-                                                                0x92efd1b8d0cf37bf, 0xb7abc627050305ae, 0xe596b7b0c643c71a, 0x8f7e32ce7bea5c70, 0xb35dbf821ae4f38c, 0xe0352f62a19e306f};
+        // NOLINTNEXTLINE(modernize-avoid-c-arrays)
+        static constexpr const uint64_t pow10_significands[] = {
+            0x81ceb32c4b43fcf5, 0xa2425ff75e14fc32, 0xcad2f7f5359a3b3f, 0xfd87b5f28300ca0e, 0x9e74d1b791e07e49, 0xc612062576589ddb, 0xf79687aed3eec552, 0x9abe14cd44753b53, 0xc16d9a0095928a28, // NOLINT(modernize-avoid-c-arrays)
+            0xf1c90080baf72cb2, 0x971da05074da7bef, 0xbce5086492111aeb, 0xec1e4a7db69561a6, 0x9392ee8e921d5d08, 0xb877aa3236a4b44a, 0xe69594bec44de15c, 0x901d7cf73ab0acda, 0xb424dc35095cd810, 0xe12e13424bb40e14,
+            0x8cbccc096f5088cc, 0xafebff0bcb24aaff, 0xdbe6fecebdedd5bf, 0x89705f4136b4a598, 0xabcc77118461cefd, 0xd6bf94d5e57a42bd, 0x8637bd05af6c69b6, 0xa7c5ac471b478424, 0xd1b71758e219652c, 0x83126e978d4fdf3c,
+            0xa3d70a3d70a3d70b, 0xcccccccccccccccd, 0x8000000000000000, 0xa000000000000000, 0xc800000000000000, 0xfa00000000000000, 0x9c40000000000000, 0xc350000000000000, 0xf424000000000000, 0x9896800000000000,
+            0xbebc200000000000, 0xee6b280000000000, 0x9502f90000000000, 0xba43b74000000000, 0xe8d4a51000000000, 0x9184e72a00000000, 0xb5e620f480000000, 0xe35fa931a0000000, 0x8e1bc9bf04000000, 0xb1a2bc2ec5000000,
+            0xde0b6b3a76400000, 0x8ac7230489e80000, 0xad78ebc5ac620000, 0xd8d726b7177a8000, 0x878678326eac9000, 0xa968163f0a57b400, 0xd3c21bcecceda100, 0x84595161401484a0, 0xa56fa5b99019a5c8, 0xcecb8f27f4200f3a,
+            0x813f3978f8940985, 0xa18f07d736b90be6, 0xc9f2c9cd04674edf, 0xfc6f7c4045812297, 0x9dc5ada82b70b59e, 0xc5371912364ce306, 0xf684df56c3e01bc7, 0x9a130b963a6c115d, 0xc097ce7bc90715b4, 0xf0bdc21abb48db21,
+            0x96769950b50d88f5, 0xbc143fa4e250eb32, 0xeb194f8e1ae525fe, 0x92efd1b8d0cf37bf, 0xb7abc627050305ae, 0xe596b7b0c643c71a, 0x8f7e32ce7bea5c70, 0xb35dbf821ae4f38c, 0xe0352f62a19e306f};
         return pow10_significands[k - float_info<float>::min_k];
       }
 
@@ -364,12 +368,12 @@ namespace detail
         return static_cast<uint32_t>(cache >> (64 - 1 - beta));
       }
 
-      static compute_mul_parity_result compute_mul_parity(carrier_uint two_f, const cache_entry_type& cache, int beta) noexcept
+      static compute_mul_parity_result compute_mul_parity(carrier_uint twoF, const cache_entry_type& cache, int beta) noexcept
       {
         FMT_ASSERT(beta >= 1, "");
         FMT_ASSERT(beta < 64, "");
 
-        auto r = umul96_lower64(two_f, cache);
+        auto r = umul96_lower64(twoF, cache);
         return {((r >> (64 - beta)) & 1) != 0, static_cast<uint32_t>(r >> (32 - beta)) == 0};
       }
 
@@ -399,7 +403,7 @@ namespace detail
       {
         FMT_ASSERT(k >= float_info<double>::min_k && k <= float_info<double>::max_k, "k is out of range");
 
-        static constexpr const uint128_fallback pow10_significands[] = {
+        static constexpr const uint128_fallback pow10_significands[] = { // NOLINT(modernize-avoid-c-arrays)
 #if FMT_USE_FULL_CACHE_DRAGONBOX
           {0xff77b1fcbebcdc4f, 0x25e8e89c13bb0f7b},
           {0x9faacf3df73609b1, 0x77b191618c54e9ad},
@@ -1051,16 +1055,17 @@ namespace detail
 #if FMT_USE_FULL_CACHE_DRAGONBOX
         return pow10_significands[k - float_info<double>::min_k];
 #else
-        static constexpr const uint64_t powers_of_5_64[] = {0x0000000000000001, 0x0000000000000005, 0x0000000000000019, 0x000000000000007d, 0x0000000000000271, 0x0000000000000c35, 0x0000000000003d09, 0x000000000001312d, 0x000000000005f5e1,
+        static constexpr const uint64_t powers_of_5_64[] = {// NOLINT(modernize-avoid-c-arrays)
+                                                            0x0000000000000001, 0x0000000000000005, 0x0000000000000019, 0x000000000000007d, 0x0000000000000271, 0x0000000000000c35, 0x0000000000003d09, 0x000000000001312d, 0x000000000005f5e1,
                                                             0x00000000001dcd65, 0x00000000009502f9, 0x0000000002e90edd, 0x000000000e8d4a51, 0x0000000048c27395, 0x000000016bcc41e9, 0x000000071afd498d, 0x0000002386f26fc1, 0x000000b1a2bc2ec5,
                                                             0x000003782dace9d9, 0x00001158e460913d, 0x000056bc75e2d631, 0x0001b1ae4d6e2ef5, 0x000878678326eac9, 0x002a5a058fc295ed, 0x00d3c21bcecceda1, 0x0422ca8b0a00a425, 0x14adf4b7320334b9};
 
-        static const int compression_ratio = 27;
+        static const int s_compression_ratio = 27;
 
         // Compute base index.
-        int cache_index = (k - float_info<double>::min_k) / compression_ratio;
-        int kb          = cache_index * compression_ratio + float_info<double>::min_k;
-        int offset      = k - kb;
+        int const cache_index = (k - float_info<double>::min_k) / s_compression_ratio;
+        int const kb          = cache_index * s_compression_ratio + float_info<double>::min_k;
+        int const offset      = k - kb;
 
         // Get base cache.
         uint128_fallback base_cache = pow10_significands[cache_index];
@@ -1068,18 +1073,18 @@ namespace detail
           return base_cache;
 
         // Compute the required amount of bit-shift.
-        int alpha = floor_log2_pow10(kb + offset) - floor_log2_pow10(kb) - offset;
+        int const alpha = floor_log2_pow10(kb + offset) - floor_log2_pow10(kb) - offset;
         FMT_ASSERT(alpha > 0 && alpha < 64, "shifting error detected");
 
         // Try to recover the real cache.
-        uint64_t pow5                    = powers_of_5_64[offset];
-        uint128_fallback recovered_cache = umul128(base_cache.high(), pow5);
-        uint128_fallback middle_low      = umul128(base_cache.low(), pow5);
+        uint64_t const pow5               = powers_of_5_64[offset];
+        uint128_fallback recovered_cache  = umul128(base_cache.high(), pow5);
+        uint128_fallback const middle_low = umul128(base_cache.low(), pow5);
 
         recovered_cache += middle_low.high();
 
-        uint64_t high_to_middle = recovered_cache.high() << (64 - alpha);
-        uint64_t middle_to_low  = recovered_cache.low() << (64 - alpha);
+        uint64_t const high_to_middle = recovered_cache.high() << (64 - alpha);
+        uint64_t const middle_to_low  = recovered_cache.low() << (64 - alpha);
 
         recovered_cache = uint128_fallback {(recovered_cache.low() >> alpha) | high_to_middle, ((middle_low.low() >> alpha) | middle_to_low)};
         FMT_ASSERT(recovered_cache.low() + 1 != 0, "");
@@ -1109,12 +1114,12 @@ namespace detail
         return static_cast<uint32_t>(cache.high() >> (64 - 1 - beta));
       }
 
-      static compute_mul_parity_result compute_mul_parity(carrier_uint two_f, const cache_entry_type& cache, int beta) noexcept
+      static compute_mul_parity_result compute_mul_parity(carrier_uint twoF, const cache_entry_type& cache, int beta) noexcept
       {
         FMT_ASSERT(beta >= 1, "");
         FMT_ASSERT(beta < 64, "");
 
-        auto r = umul192_lower128(two_f, cache);
+        auto r = umul192_lower128(twoF, cache);
         return {((r.high() >> (64 - beta)) & 1) != 0, ((r.high() << beta) | (r.low() >> (64 - beta))) == 0};
       }
 
@@ -1234,7 +1239,7 @@ namespace detail
     template <class T>
     FMT_INLINE decimal_fp<T> shorter_interval_case(int exponent) noexcept
     {
-      decimal_fp<T> ret_value;
+      decimal_fp<T> ret_value {};
       // Compute k and beta
       const int minus_k = floor_log10_pow2_minus_log10_4_over_3(exponent);
       const int beta    = exponent + floor_log2_pow10(-minus_k);
@@ -1275,6 +1280,41 @@ namespace detail
         ++ret_value.significand;
       }
       return ret_value;
+    }
+
+    template <typename T>
+    decimal_fp<T> to_decimal_small_divisor(decimal_fp<T> value, uint32_t r, int beta, uint32_t deltai, typename float_info<T>::carrier_uint twoFc, const int minusK, typename cache_accessor<T>::cache_entry_type cache)
+    {
+      value.significand *= 10;
+      value.exponent = minusK + float_info<T>::kappa;
+
+      uint32_t dist              = r - (deltai / 2) + (float_info<T>::small_divisor / 2);
+      const bool approx_y_parity = ((dist ^ (float_info<T>::small_divisor / 2)) & 1) != 0;
+
+      // Is dist divisible by 10^kappa?
+      const bool divisible_by_small_divisor = check_divisibility_and_divide_by_pow10<float_info<T>::kappa>(dist);
+
+      // Add dist / 10^kappa to the significand.
+      value.significand += dist;
+
+      if(!divisible_by_small_divisor)
+        return value;
+
+      // Check z^(f) >= epsilon^(f).
+      // We have either yi == zi - epsiloni or yi == (zi - epsiloni) - 1,
+      // where yi == zi - epsiloni if and only if z^(f) >= epsilon^(f).
+      // Since there are only 2 possibilities, we only need to care about the
+      // parity. Also, zi and r should have the same parity since the divisor
+      // is an even number.
+      const auto y_mul = cache_accessor<T>::compute_mul_parity(twoFc, cache, beta);
+
+      // If z^(f) >= epsilon^(f), we might have a tie when z^(f) == epsilon^(f),
+      // or equivalently, when y is an integer.
+      if(y_mul.parity != approx_y_parity || y_mul.is_integer & (value.significand % 2 != 0))
+      {
+        --value.significand;
+      }
+      return value;
     }
 
     template <typename T>
@@ -1340,7 +1380,7 @@ namespace detail
 
       // Using an upper bound on zi, we might be able to optimize the division
       // better than the compiler; we are computing zi / big_divisor here.
-      decimal_fp<T> ret_value;
+      decimal_fp<T> ret_value {};
       ret_value.significand = divide_by_10_to_kappa_plus_1(z_mul.result);
       uint32_t r            = static_cast<uint32_t>(z_mul.result - float_info<T>::big_divisor * ret_value.significand);
 
@@ -1351,12 +1391,12 @@ namespace detail
         {
           --ret_value.significand;
           r = float_info<T>::big_divisor;
-          goto small_divisor_case_label;
+          return to_decimal_small_divisor(ret_value, r, beta, deltai, two_fc, minus_k, cache);
         }
       }
       else if(r > deltai)
       {
-        goto small_divisor_case_label;
+        return to_decimal_small_divisor(ret_value, r, beta, deltai, two_fc, minus_k, cache);
       }
       else
       {
@@ -1364,56 +1404,22 @@ namespace detail
         const typename cache_accessor<T>::compute_mul_parity_result x_mul = cache_accessor<T>::compute_mul_parity(two_fc - 1, cache, beta);
 
         if(!(x_mul.parity | (x_mul.is_integer & include_left_endpoint)))
-          goto small_divisor_case_label;
+          return to_decimal_small_divisor(ret_value, r, beta, deltai, two_fc, minus_k, cache);
       }
       ret_value.exponent = minus_k + float_info<T>::kappa + 1;
 
       // We may need to remove trailing zeros.
       ret_value.exponent += remove_trailing_zeros(ret_value.significand);
       return ret_value;
-
-      // Step 3: Find the significand with the smaller divisor.
-
-    small_divisor_case_label:
-      ret_value.significand *= 10;
-      ret_value.exponent = minus_k + float_info<T>::kappa;
-
-      uint32_t dist              = r - (deltai / 2) + (float_info<T>::small_divisor / 2);
-      const bool approx_y_parity = ((dist ^ (float_info<T>::small_divisor / 2)) & 1) != 0;
-
-      // Is dist divisible by 10^kappa?
-      const bool divisible_by_small_divisor = check_divisibility_and_divide_by_pow10<float_info<T>::kappa>(dist);
-
-      // Add dist / 10^kappa to the significand.
-      ret_value.significand += dist;
-
-      if(!divisible_by_small_divisor)
-        return ret_value;
-
-      // Check z^(f) >= epsilon^(f).
-      // We have either yi == zi - epsiloni or yi == (zi - epsiloni) - 1,
-      // where yi == zi - epsiloni if and only if z^(f) >= epsilon^(f).
-      // Since there are only 2 possibilities, we only need to care about the
-      // parity. Also, zi and r should have the same parity since the divisor
-      // is an even number.
-      const auto y_mul = cache_accessor<T>::compute_mul_parity(two_fc, cache, beta);
-
-      // If z^(f) >= epsilon^(f), we might have a tie when z^(f) == epsilon^(f),
-      // or equivalently, when y is an integer.
-      if(y_mul.parity != approx_y_parity)
-        --ret_value.significand;
-      else if(y_mul.is_integer & (ret_value.significand % 2 != 0))
-        --ret_value.significand;
-      return ret_value;
     }
   } // namespace dragonbox
 
 #ifdef _MSC_VER
-  FMT_FUNC auto fmt_snprintf(char* buf, count_t size, const char* fmt, ...) -> int
+  FMT_FUNC auto fmt_snprintf(char* buf, count_t size, const char* fmt, ...) -> int // NOLINT(misc-definitions-in-headers)
   {
-    auto args = va_list();
+    auto* args = va_list();
     va_start(args, fmt);
-    int result = vsnprintf_s(buf, size, _TRUNCATE, fmt, args);
+    int const result = vsnprintf_s(buf, size, _TRUNCATE, fmt, args);
     va_end(args);
     return result;
   }
@@ -1423,7 +1429,7 @@ namespace detail
 template <>
 struct formatter<detail::bigint>
 {
-  FMT_CONSTEXPR auto parse(format_parse_context& ctx) -> format_parse_context::iterator
+  FMT_CONSTEXPR auto parse(format_parse_context& ctx) -> format_parse_context::iterator // NOLINT(readability-convert-member-functions-to-static)
   {
     return ctx.begin();
   }
@@ -1433,9 +1439,9 @@ struct formatter<detail::bigint>
   {
     auto out   = ctx.out();
     bool first = true;
-    for(auto i = n.bigits_.size(); i > 0; --i)
+    for(auto i = n.m_bigits.size(); i > 0; --i)
     {
-      auto value = n.bigits_[i - 1u];
+      auto value = n.m_bigits[i - 1u];
       if(first)
       {
         out   = format_to(out, FMT_STRING("{:x}"), value);
@@ -1444,13 +1450,13 @@ struct formatter<detail::bigint>
       }
       out = format_to(out, FMT_STRING("{:08x}"), value);
     }
-    if(n.exp_ > 0)
-      out = format_to(out, FMT_STRING("p{}"), n.exp_ * detail::bigint::bigit_bits);
+    if(n.m_exp > 0)
+      out = format_to(out, FMT_STRING("p{}"), n.m_exp * detail::bigint::bigit_bits);
     return out;
   }
 };
 
-FMT_FUNC detail::utf8_to_utf16::utf8_to_utf16(string_view s)
+FMT_FUNC detail::utf8_to_utf16::utf8_to_utf16(string_view s) // NOLINT(misc-definitions-in-headers)
 {
   for_each_codepoint(s,
                      [this](uint32_t cp, string_view)
@@ -1459,37 +1465,37 @@ FMT_FUNC detail::utf8_to_utf16::utf8_to_utf16(string_view s)
                          FMT_THROW(std::runtime_error("invalid utf8"));
                        if(cp <= 0xFFFF)
                        {
-                         buffer_.push_back(static_cast<wchar_t>(cp));
+                         m_buffer.push_back(static_cast<wchar_t>(cp));
                        }
                        else
                        {
                          cp -= 0x10000;
-                         buffer_.push_back(static_cast<wchar_t>(0xD800 + (cp >> 10)));
-                         buffer_.push_back(static_cast<wchar_t>(0xDC00 + (cp & 0x3FF)));
+                         m_buffer.push_back(static_cast<wchar_t>(0xD800 + (cp >> 10)));
+                         m_buffer.push_back(static_cast<wchar_t>(0xDC00 + (cp & 0x3FF)));
                        }
                        return true;
                      });
-  buffer_.push_back(0);
+  m_buffer.push_back(0);
 }
 
-FMT_FUNC void format_system_error(detail::buffer<char>& out, int error_code, const char* message) noexcept
+FMT_FUNC void format_system_error(detail::buffer<char>& out, int errorCode, const char* message) noexcept // NOLINT(misc-definitions-in-headers)
 {
   FMT_TRY
   {
-    auto ec = std::error_code(error_code, std::generic_category());
+    auto ec = std::error_code(errorCode, std::generic_category());
     write(rsl::back_inserter(out), std::system_error(ec, message).what());
     return;
   }
   FMT_CATCH(...) {}
-  format_error_code(out, error_code, message);
+  format_error_code(out, errorCode, string_view(message));
 }
 
-FMT_FUNC void report_system_error(int error_code, const char* message) noexcept
+FMT_FUNC void report_system_error(int errorCode, const char* message) noexcept // NOLINT(misc-definitions-in-headers)
 {
-  report_error(format_system_error, error_code, message);
+  report_error(format_system_error, errorCode, message);
 }
 
-FMT_FUNC rsl::string vformat(string_view fmt, format_args args)
+FMT_FUNC rsl::string vformat(string_view fmt, format_args args) // NOLINT(misc-definitions-in-headers)
 {
   // Don't optimize the "{}" case to keep the binary size small and because it
   // can be better optimized in fmt::format anyway.
@@ -1502,17 +1508,18 @@ namespace detail
 {
 #ifdef _WIN32
   using dword = conditional_t<sizeof(long) == 4, unsigned long, unsigned>;
-  extern "C" __declspec(dllimport) int __stdcall WriteConsoleW( //
+  extern "C" __declspec(dllimport) int __stdcall write_console_w( //
       void*, const void*, dword, dword*, void*);
 
-  FMT_FUNC bool write_console(std::FILE* f, string_view text)
+  FMT_FUNC bool write_console(std::FILE* f, string_view text) // NOLINT(misc-definitions-in-headers)
   {
     auto fd = _fileno(f);
-    if(_isatty(fd))
+    if(_isatty(fd)) // NOLINT(readability-implicit-bool-conversion)
     {
-      detail::utf8_to_utf16 u16(string_view(text.data(), text.size()));
+      detail::utf8_to_utf16 const u16(string_view(text.data(), text.size()));
       auto written = detail::dword();
-      if(detail::WriteConsoleW(reinterpret_cast<void*>(_get_osfhandle(fd)), u16.c_str(), static_cast<uint32_t>(u16.size()), &written, nullptr))
+      // NOLINTNEXTLINE(performance-no-int-to-ptr, cppcoreguidelines-pro-type-reinterpret-cast, readability-implicit-bool-conversion)
+      if(detail::write_console_w(reinterpret_cast<void*>(_get_osfhandle(fd)), u16.c_str(), static_cast<uint32_t>(u16.size()), &written, nullptr) != 0)
       {
         return true;
       }
@@ -1525,7 +1532,7 @@ namespace detail
   }
 #endif
 
-  FMT_FUNC void print(std::FILE* f, string_view text)
+  FMT_FUNC void print(std::FILE* f, string_view text) // NOLINT(misc-definitions-in-headers)
   {
 #ifdef _WIN32
     if(write_console(f, text))
@@ -1535,26 +1542,26 @@ namespace detail
   }
 } // namespace detail
 
-FMT_FUNC void vprint(std::FILE* f, string_view format_str, format_args args)
+FMT_FUNC void vprint(std::FILE* f, string_view formatStr, format_args args) // NOLINT(misc-definitions-in-headers)
 {
   memory_buffer buffer;
-  detail::vformat_to(buffer, format_str, args);
+  detail::vformat_to(buffer, formatStr, args);
   detail::print(f, {buffer.data(), buffer.size()});
 }
 
 #ifdef _WIN32
 // Print assuming legacy (non-Unicode) encoding.
-FMT_FUNC void detail::vprint_mojibake(std::FILE* f, string_view format_str, format_args args)
+FMT_FUNC void detail::vprint_mojibake(std::FILE* f, string_view formatStr, format_args args) // NOLINT(misc-definitions-in-headers)
 {
   memory_buffer buffer;
-  detail::vformat_to(buffer, format_str, basic_format_args<buffer_context<char>>(args));
+  detail::vformat_to(buffer, formatStr, basic_format_args<buffer_context<char>>(args));
   fwrite_fully(buffer.data(), 1, buffer.size(), f);
 }
 #endif
 
-FMT_FUNC void vprint(string_view format_str, format_args args)
+FMT_FUNC void vprint(string_view formatStr, format_args args) // NOLINT(misc-definitions-in-headers)
 {
-  vprint(stdout, format_str, args);
+  vprint(stdout, formatStr, args);
 }
 
 namespace detail
@@ -1566,11 +1573,11 @@ namespace detail
     unsigned char lower_count;
   };
 
-  inline auto is_printable(uint16_t x, const singleton* singletons, size_t singletons_size, const unsigned char* singleton_lowers, const unsigned char* normal, size_t normal_size) -> bool
+  inline auto is_printable(uint16_t x, const singleton* singletons, size_t singletonsSize, const unsigned char* singletonLowers, const unsigned char* normal, size_t normalSize) -> bool
   {
     auto upper       = x >> 8;
     auto lower_start = 0;
-    for(size_t i = 0; i < singletons_size; ++i)
+    for(size_t i = 0; i < singletonsSize; ++i)
     {
       auto s         = singletons[i];
       auto lower_end = lower_start + s.lower_count;
@@ -1580,7 +1587,7 @@ namespace detail
       {
         for(auto j = lower_start; j < lower_end; ++j)
         {
-          if(singleton_lowers[j] == (x & 0xff))
+          if(singletonLowers[j] == (x & 0xff))
             return false;
         }
       }
@@ -1589,7 +1596,7 @@ namespace detail
 
     auto xsigned = static_cast<int>(x);
     auto current = true;
-    for(size_t i = 0; i < normal_size; ++i)
+    for(size_t i = 0; i < normalSize; ++i)
     {
       auto v   = static_cast<int>(normal[i]);
       auto len = (v & 0x80) != 0 ? (v & 0x7f) << 8 | normal[++i] : v;
@@ -1602,12 +1609,14 @@ namespace detail
   }
 
   // This code is generated by support/printable.py.
-  FMT_FUNC auto is_printable(uint32_t cp) -> bool
+  FMT_FUNC auto is_printable(uint32_t cp) -> bool // NOLINT(misc-definitions-in-headers)
   {
+    // NOLINTNEXTLINE(modernize-avoid-c-arrays)
     static constexpr singleton singletons0[] = {
         {0x00, 1}, {0x03, 5}, {0x05, 6},  {0x06, 3}, {0x07, 6}, {0x08, 8}, {0x09, 17}, {0x0a, 28}, {0x0b, 25}, {0x0c, 20}, {0x0d, 16}, {0x0e, 13}, {0x0f, 4}, {0x10, 3}, {0x12, 18}, {0x13, 9}, {0x16, 1}, {0x17, 5}, {0x18, 2}, {0x19, 3}, {0x1a, 7},
         {0x1c, 2}, {0x1d, 1}, {0x1f, 22}, {0x20, 3}, {0x2b, 3}, {0x2c, 2}, {0x2d, 11}, {0x2e, 1},  {0x30, 3},  {0x31, 2},  {0x32, 1},  {0xa7, 2},  {0xa9, 2}, {0xaa, 4}, {0xab, 8},  {0xfa, 2}, {0xfb, 5}, {0xfd, 4}, {0xfe, 3}, {0xff, 9},
     };
+    // NOLINTNEXTLINE(modernize-avoid-c-arrays)
     static constexpr unsigned char singletons0_lower[] = {
         0xad, 0x78, 0x79, 0x8b, 0x8d, 0xa2, 0x30, 0x57, 0x58, 0x8b, 0x8c, 0x90, 0x1c, 0x1d, 0xdd, 0x0e, 0x0f, 0x4b, 0x4c, 0xfb, 0xfc, 0x2e, 0x2f, 0x3f, 0x5c, 0x5d, 0x5f, 0xb5, 0xe2, 0x84, 0x8d, 0x8e, 0x91, 0x92, 0xa9, 0xb1, 0xba,
         0xbb, 0xc5, 0xc6, 0xc9, 0xca, 0xde, 0xe4, 0xe5, 0xff, 0x00, 0x04, 0x11, 0x12, 0x29, 0x31, 0x34, 0x37, 0x3a, 0x3b, 0x3d, 0x49, 0x4a, 0x5d, 0x84, 0x8e, 0x92, 0xa9, 0xb1, 0xb4, 0xba, 0xbb, 0xc6, 0xca, 0xce, 0xcf, 0xe4, 0xe5,
@@ -1618,10 +1627,12 @@ namespace detail
         0xf0, 0xf1, 0xf5, 0x72, 0x73, 0x8f, 0x74, 0x75, 0x96, 0x2f, 0x5f, 0x26, 0x2e, 0x2f, 0xa7, 0xaf, 0xb7, 0xbf, 0xc7, 0xcf, 0xd7, 0xdf, 0x9a, 0x40, 0x97, 0x98, 0x30, 0x8f, 0x1f, 0xc0, 0xc1, 0xce, 0xff, 0x4e, 0x4f, 0x5a, 0x5b,
         0x07, 0x08, 0x0f, 0x10, 0x27, 0x2f, 0xee, 0xef, 0x6e, 0x6f, 0x37, 0x3d, 0x3f, 0x42, 0x45, 0x90, 0x91, 0xfe, 0xff, 0x53, 0x67, 0x75, 0xc8, 0xc9, 0xd0, 0xd1, 0xd8, 0xd9, 0xe7, 0xfe, 0xff,
     };
+    // NOLINTNEXTLINE(modernize-avoid-c-arrays)
     static constexpr singleton singletons1[] = {
         {0x00, 6}, {0x01, 1}, {0x03, 1}, {0x04, 2}, {0x08, 8}, {0x09, 2},  {0x0a, 5}, {0x0b, 2}, {0x0e, 4}, {0x10, 1}, {0x11, 2}, {0x12, 5}, {0x13, 17}, {0x14, 1},  {0x15, 2}, {0x17, 2}, {0x19, 13}, {0x1c, 5}, {0x1d, 8},
         {0x24, 1}, {0x6a, 3}, {0x6b, 2}, {0xbc, 2}, {0xd1, 2}, {0xd4, 12}, {0xd5, 9}, {0xd6, 2}, {0xd7, 2}, {0xda, 1}, {0xe0, 5}, {0xe1, 2}, {0xe8, 2},  {0xee, 32}, {0xf0, 4}, {0xf8, 2}, {0xf9, 2},  {0xfa, 2}, {0xfb, 1},
     };
+    // NOLINTNEXTLINE(modernize-avoid-c-arrays)
     static constexpr unsigned char singletons1_lower[] = {
         0x0c, 0x27, 0x3b, 0x3e, 0x4e, 0x4f, 0x8f, 0x9e, 0x9e, 0x9f, 0x06, 0x07, 0x09, 0x36, 0x3d, 0x3e, 0x56, 0xf3, 0xd0, 0xd1, 0x04, 0x14, 0x18, 0x36, 0x37, 0x56, 0x57, 0x7f, 0xaa, 0xae, 0xaf, 0xbd, 0x35, 0xe0, 0x12,
         0x87, 0x89, 0x8e, 0x9e, 0x04, 0x0d, 0x0e, 0x11, 0x12, 0x29, 0x31, 0x34, 0x3a, 0x45, 0x46, 0x49, 0x4a, 0x4e, 0x4f, 0x64, 0x65, 0x5c, 0xb6, 0xb7, 0x1b, 0x1c, 0x07, 0x08, 0x0a, 0x0b, 0x14, 0x17, 0x36, 0x39, 0x3a,
@@ -1629,6 +1640,7 @@ namespace detail
         0xad, 0xba, 0xbc, 0xc4, 0x06, 0x0b, 0x0c, 0x15, 0x1d, 0x3a, 0x3f, 0x45, 0x51, 0xa6, 0xa7, 0xcc, 0xcd, 0xa0, 0x07, 0x19, 0x1a, 0x22, 0x25, 0x3e, 0x3f, 0xc5, 0xc6, 0x04, 0x20, 0x23, 0x25, 0x26, 0x28, 0x33, 0x38,
         0x3a, 0x48, 0x4a, 0x4c, 0x50, 0x53, 0x55, 0x56, 0x58, 0x5a, 0x5c, 0x5e, 0x60, 0x63, 0x65, 0x66, 0x6b, 0x73, 0x78, 0x7d, 0x7f, 0x8a, 0xa4, 0xaa, 0xaf, 0xb0, 0xc0, 0xd0, 0xae, 0xaf, 0x79, 0xcc, 0x6e, 0x6f, 0x93,
     };
+    // NOLINTNEXTLINE(modernize-avoid-c-arrays)
     static constexpr unsigned char normal0[] = {
         0x00, 0x20, 0x5f, 0x22, 0x82, 0xdf, 0x04, 0x82, 0x44, 0x08, 0x1b, 0x04, 0x06, 0x11, 0x81, 0xac, 0x0e, 0x80, 0xab, 0x35, 0x28, 0x0b, 0x80, 0xe0, 0x03, 0x19, 0x08, 0x01, 0x04, 0x2f, 0x04, 0x34, 0x04, 0x07, 0x03, 0x01, 0x07, 0x06, 0x07,
         0x11, 0x0a, 0x50, 0x0f, 0x12, 0x07, 0x55, 0x07, 0x03, 0x04, 0x1c, 0x0a, 0x09, 0x03, 0x08, 0x03, 0x07, 0x03, 0x02, 0x03, 0x03, 0x03, 0x0c, 0x04, 0x05, 0x03, 0x0b, 0x06, 0x01, 0x0e, 0x15, 0x05, 0x3a, 0x03, 0x11, 0x07, 0x06, 0x05, 0x10,
@@ -1639,6 +1651,7 @@ namespace detail
         0x5c, 0x14, 0x80, 0xb8, 0x08, 0x80, 0xcb, 0x2a, 0x38, 0x03, 0x0a, 0x06, 0x38, 0x08, 0x46, 0x08, 0x0c, 0x06, 0x74, 0x0b, 0x1e, 0x03, 0x5a, 0x04, 0x59, 0x09, 0x80, 0x83, 0x18, 0x1c, 0x0a, 0x16, 0x09, 0x4c, 0x04, 0x80, 0x8a, 0x06, 0xab,
         0xa4, 0x0c, 0x17, 0x04, 0x31, 0xa1, 0x04, 0x81, 0xda, 0x26, 0x07, 0x0c, 0x05, 0x05, 0x80, 0xa5, 0x11, 0x81, 0x6d, 0x10, 0x78, 0x28, 0x2a, 0x06, 0x4c, 0x04, 0x80, 0x8d, 0x04, 0x80, 0xbe, 0x03, 0x1b, 0x03, 0x0f, 0x0d,
     };
+    // NOLINTNEXTLINE(modernize-avoid-c-arrays)
     static constexpr unsigned char normal1[] = {
         0x5e, 0x22, 0x7b, 0x05, 0x03, 0x04, 0x2d, 0x03, 0x66, 0x03, 0x01, 0x2f, 0x2e, 0x80, 0x82, 0x1d, 0x03, 0x31, 0x0f, 0x1c, 0x04, 0x24, 0x09, 0x1e, 0x05, 0x2b, 0x05, 0x44, 0x04, 0x0e, 0x2a, 0x80, 0xaa, 0x06, 0x24, 0x04, 0x24, 0x04, 0x28,
         0x08, 0x34, 0x0b, 0x01, 0x80, 0x90, 0x81, 0x37, 0x09, 0x16, 0x0a, 0x08, 0x80, 0x98, 0x39, 0x03, 0x63, 0x08, 0x09, 0x30, 0x16, 0x05, 0x21, 0x03, 0x1b, 0x05, 0x01, 0x40, 0x38, 0x04, 0x4b, 0x05, 0x2f, 0x04, 0x0a, 0x07, 0x09, 0x07, 0x40,
@@ -1684,4 +1697,4 @@ namespace detail
 
 FMT_END_NAMESPACE
 
-#endif // FMT_FORMAT_INL_H_
+// NOLINTEND(hicpp-signed-bitwise, fuchsia-trailing-return)

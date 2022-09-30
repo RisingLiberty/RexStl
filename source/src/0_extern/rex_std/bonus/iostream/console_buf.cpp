@@ -34,15 +34,15 @@ namespace internal
 
   streamsize console_buf_impl::xsgetn(char8* s, size_t elemSize, streamsize count)
   {
-    DWORD num_read;
-    ReadFile(m_handle, s, static_cast<DWORD>(count * elemSize), &num_read, NULL);
-    return num_read;
+    DWORD num_read = 0;
+    ReadFile(m_handle, s, static_cast<DWORD>(count * elemSize), &num_read, nullptr);
+    return static_cast<streamsize>(num_read);
   }
   streamsize console_buf_impl::xsputn(const char8* s, size_t elemSize, streamsize count)
   {
-    DWORD num_written;
-    WriteFile(m_handle, s, static_cast<DWORD>(count * elemSize), &num_written, NULL);
-    return num_written;
+    DWORD num_written = 0;
+    WriteFile(m_handle, s, static_cast<DWORD>(count * elemSize), &num_written, nullptr);
+    return static_cast<streamsize>(num_written);
   }
 
   REX_RSL_END_NAMESPACE

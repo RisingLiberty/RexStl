@@ -27,7 +27,7 @@ public:
 
   using value_type      = T;
   using size_type       = count_t;
-  using difference_type = ptrdiff_t;
+  using difference_type = ptrdiff;
 
   /// RSL Comment: Different from ISO C++ Standard at time of writing (24/Jul/2022)
   // RSL doesn't support moving or copying if allocators differ,
@@ -41,9 +41,14 @@ public:
   typed_allocator(const typed_allocator&) = default;
   // constructs the default allocator
   template <typename U>
-  constexpr typed_allocator(const typed_allocator<U>&)
+  constexpr typed_allocator(const typed_allocator<U>& /*unused*/) // NOLINT(google-explicit-constructor)
   {
   }
+
+  ~typed_allocator() = default;
+
+  typed_allocator& operator=(const typed_allocator&) = default;
+
   // allocates n * sizeof(T) bytes of uninitialized storage
   REX_NO_DISCARD T* allocate(const size_type count)
   {
@@ -89,14 +94,14 @@ public:
 // compares 2 default allocators.
 // default allocators are stateless, so they're always equal
 template <typename T1, typename T2>
-constexpr bool operator==(const typed_allocator<T1>&, const typed_allocator<T2>&)
+constexpr bool operator==(const typed_allocator<T1>& /*unused*/, const typed_allocator<T2>& /*unused*/)
 {
   return true;
 }
 // compares 2 default allocators.
 // default allocators are stateless, so they're always equal
 template <typename T1, typename T2>
-constexpr bool operator!=(const typed_allocator<T1>&, const typed_allocator<T2>&)
+constexpr bool operator!=(const typed_allocator<T1>& /*unused*/, const typed_allocator<T2>& /*unused*/)
 {
   return false;
 }

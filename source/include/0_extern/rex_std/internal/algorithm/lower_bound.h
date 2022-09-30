@@ -12,12 +12,14 @@
 
 #pragma once
 
+#include "rex_std/bonus/defines.h"
+
 REX_RSL_BEGIN_NAMESPACE
 
 template <typename InputIterator, typename T>
 InputIterator lower_bound(InputIterator first, InputIterator last, const T& value)
 {
-  auto it = first;
+  auto it = first; // NOLINT
   while(it != last)
   {
     if(!(*it < value))

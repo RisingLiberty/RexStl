@@ -44,91 +44,95 @@ using uint_fast64 = unsigned long long;
 using intmax  = long long;
 using uintmax = unsigned long long;
 
-#define INT8_MIN   (-127i8 - 1)
-#define INT16_MIN  (-32767i16 - 1)
-#define INT32_MIN  (-2147483647i32 - 1)
-#define INT64_MIN  (-9223372036854775807i64 - 1)
-#define INT8_MAX   127i8
-#define INT16_MAX  32767i16
-#define INT32_MAX  2147483647i32
-#define INT64_MAX  9223372036854775807i64
-#define UINT8_MAX  0xffui8
-#define UINT16_MAX 0xffffui16
-#define UINT32_MAX 0xffffffffui32
-#define UINT64_MAX 0xffffffffffffffffui64
+// NOLINTBEGIN(clang-diagnostic-macro-redefined)
 
-#define INT_LEAST8_MIN   INT8_MIN
-#define INT_LEAST16_MIN  INT16_MIN
-#define INT_LEAST32_MIN  INT32_MIN
-#define INT_LEAST64_MIN  INT64_MIN
-#define INT_LEAST8_MAX   INT8_MAX
-#define INT_LEAST16_MAX  INT16_MAX
-#define INT_LEAST32_MAX  INT32_MAX
-#define INT_LEAST64_MAX  INT64_MAX
-#define UINT_LEAST8_MAX  UINT8_MAX
-#define UINT_LEAST16_MAX UINT16_MAX
-#define UINT_LEAST32_MAX UINT32_MAX
-#define UINT_LEAST64_MAX UINT64_MAX
+#define REX_INT8_MIN   (-127i8 - 1)
+#define REX_INT16_MIN  (-32767i16 - 1)
+#define REX_INT32_MIN  (-2147483647i32 - 1)
+#define REX_INT64_MIN  (-9223372036854775807i64 - 1)
+#define REX_INT8_MAX   127i8
+#define REX_INT16_MAX  32767i16
+#define REX_INT32_MAX  2147483647i32
+#define REX_INT64_MAX  9223372036854775807i64
+#define REX_UINT8_MAX  0xffui8
+#define REX_UINT16_MAX 0xffffui16
+#define REX_UINT32_MAX 0xffffffffui32
+#define REX_UINT64_MAX 0xffffffffffffffffui64
 
-#define INT_FAST8_MIN   INT8_MIN
-#define INT_FAST16_MIN  INT32_MIN
-#define INT_FAST32_MIN  INT32_MIN
-#define INT_FAST64_MIN  INT64_MIN
-#define INT_FAST8_MAX   INT8_MAX
-#define INT_FAST16_MAX  INT32_MAX
-#define INT_FAST32_MAX  INT32_MAX
-#define INT_FAST64_MAX  INT64_MAX
-#define UINT_FAST8_MAX  UINT8_MAX
-#define UINT_FAST16_MAX UINT32_MAX
-#define UINT_FAST32_MAX UINT32_MAX
-#define UINT_FAST64_MAX UINT64_MAX
+#define REX_INT_LEAST8_MIN   REX_INT8_MIN
+#define REX_INT_LEAST16_MIN  REX_INT16_MIN
+#define REX_INT_LEAST32_MIN  REX_INT32_MIN
+#define REX_INT_LEAST64_MIN  REX_INT64_MIN
+#define REX_INT_LEAST8_MAX   REX_INT8_MAX
+#define REX_INT_LEAST16_MAX  REX_INT16_MAX
+#define REX_INT_LEAST32_MAX  REX_INT32_MAX
+#define REX_INT_LEAST64_MAX  REX_INT64_MAX
+#define REX_UINT_LEAST8_MAX  REX_UINT8_MAX
+#define REX_UINT_LEAST16_MAX REX_UINT16_MAX
+#define REX_UINT_LEAST32_MAX REX_UINT32_MAX
+#define REX_UINT_LEAST64_MAX REX_UINT64_MAX
+
+#define REX_INT_FAST8_MIN   REX_INT8_MIN
+#define REX_INT_FAST16_MIN  REX_INT32_MIN
+#define REX_INT_FAST32_MIN  REX_INT32_MIN
+#define REX_INT_FAST64_MIN  REX_INT64_MIN
+#define REX_INT_FAST8_MAX   REX_INT8_MAX
+#define REX_INT_FAST16_MAX  REX_INT32_MAX
+#define REX_INT_FAST32_MAX  REX_INT32_MAX
+#define REX_INT_FAST64_MAX  REX_INT64_MAX
+#define REX_UINT_FAST8_MAX  REX_UINT8_MAX
+#define REX_UINT_FAST16_MAX REX_UINT32_MAX
+#define REX_UINT_FAST32_MAX REX_UINT32_MAX
+#define REX_UINT_FAST64_MAX REX_UINT64_MAX
 
 #ifdef REX_PLATFORM_X86
-  #define INTPTR_MIN  INT32_MIN
-  #define INTPTR_MAX  INT32_MAX
-  #define UINTPTR_MAX UINT32_MAX
+  #define REX_INTPTR_MIN  REX_INT32_MIN
+  #define REX_INTPTR_MAX  REX_INT32_MAX
+  #define REX_UINTPTR_MAX REX_UINT32_MAX
 #else
-  #define INTPTR_MIN  INT64_MIN
-  #define INTPTR_MAX  INT64_MAX
-  #define UINTPTR_MAX UINT64_MAX
+  #define REX_INTPTR_MIN  REX_INT64_MIN
+  #define REX_INTPTR_MAX  REX_INT64_MAX
+  #define REX_UINTPTR_MAX REX_UINT64_MAX
 #endif
 
-#define INTMAX_MIN  INT64_MIN
-#define INTMAX_MAX  INT64_MAX
-#define UINTMAX_MAX UINT64_MAX
+#define REX_INTMAX_MIN  REX_INT64_MIN
+#define REX_INTMAX_MAX  REX_INT64_MAX
+#define REX_UINTMAX_MAX REX_UINT64_MAX
 
-#define PTRDIFF_MIN INTPTR_MIN
-#define PTRDIFF_MAX INTPTR_MAX
+#define REX_PTRDIFF_MIN REX_INTPTR_MIN
+#define REX_PTRDIFF_MAX REX_INTPTR_MAX
 
-#ifndef SIZE_MAX
+#ifndef REX_SIZE_MAX
   // SIZE_MAX definition must match exactly with climits.h for modules support.
   #ifdef REX_PLATFORM_X86
-    #define SIZE_MAX 0xffffffffui32
+    #define REX_SIZE_MAX 0xffffffffui32
   #else
-    #define SIZE_MAX 0xffffffffffffffffui64
+    #define REX_SIZE_MAX 0xffffffffffffffffui64
   #endif
 #endif
 
-#define SIG_ATOMIC_MIN INT32_MIN
-#define SIG_ATOMIC_MAX INT32_MAX
+#define REX_SIG_ATOMIC_MIN REX_INT32_MIN
+#define REX_SIG_ATOMIC_MAX REX_INT32_MAX
 
-#define WCHAR_MIN 0x0000
-#define WCHAR_MAX 0xffff
+#define REX_WCHAR_MIN 0x0000
+#define REX_WCHAR_MAX 0xffff
 
-#define WINT_MIN 0x0000
-#define WINT_MAX 0xffff
+#define REX_WINT_MIN 0x0000
+#define REX_WINT_MAX 0xffff
 
-#define INT8_C(x)  (x)
-#define INT16_C(x) (x)
-#define INT32_C(x) (x)
-#define INT64_C(x) (x##LL)
+#define REX_INT8_C(x)  (x)
+#define REX_INT16_C(x) (x)
+#define REX_INT32_C(x) (x)
+#define REX_INT64_C(x) (x##LL)
 
-#define UINT8_C(x)  (x)
-#define UINT16_C(x) (x)
-#define UINT32_C(x) (x##U)
-#define UINT64_C(x) (x##ULL)
+#define REX_UINT8_C(x)  (x)
+#define REX_UINT16_C(x) (x)
+#define REX_UINT32_C(x) (x##U)
+#define REX_UINT64_C(x) (x##ULL)
 
-#define INTMAX_C(x)  INT64_C(x)
-#define UINTMAX_C(x) UINT64_C(x)
+#define REX_INTMAX_C(x)  REX_INT64_C(x)
+#define REX_UINTMAX_C(x) REX_UINT64_C(x)
+
+// NOLINTEND(clang-diagnostic-macro-redefined)
 
 REX_RSL_END_NAMESPACE

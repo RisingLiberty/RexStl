@@ -36,15 +36,15 @@ namespace internal
   template <typename CharType>
   constexpr hash_result hash(const CharType* key)
   {
-    uint64 p          = 31;
-    const uint64 m    = (uint64)1e9 + 9;
+    uint64 const p    = 31;
+    const uint64 m    = static_cast<uint64>(1e9 + 9);
     int64 hash_value  = 0;
     int64 p_pow       = 1;
     const CharType* c = key;
     while(*c)
     {
-      hash_value = (hash_value + (*c - (uint64)'a' + 1) * p_pow) % m;
-      p_pow      = (p_pow * p) % m;
+      hash_value = (hash_value + (*c - static_cast<uint64>('a') + 1) * p_pow) % m;
+      p_pow      = (p_pow * p) % m; // NOLINT(cppcoreguidelines-narrowing-conversions)
       c++;
     }
 
@@ -53,15 +53,15 @@ namespace internal
   template <typename CharType>
   constexpr hash_result hash(const CharType* key, count_t count)
   {
-    uint64 p          = 31;
-    const uint64 m    = (uint64)1e9 + 9;
+    uint64 const p    = 31;
+    const uint64 m    = static_cast<uint64>(1e9 + 9); // NOLINT(google-readability-casting)
     int64 hash_value  = 0;
     int64 p_pow       = 1;
     const CharType* c = key;
     while(count > 0)
     {
-      hash_value = (hash_value + (*c - (uint64)'a' + 1) * p_pow) % m;
-      p_pow      = (p_pow * p) % m;
+      hash_value = (hash_value + (*c - static_cast<uint64>('a') + 1) * p_pow) % m;
+      p_pow      = (p_pow * p) % m; // NOLINT(cppcoreguidelines-narrowing-conversions)
       c++;
       --count;
     }
@@ -77,7 +77,7 @@ struct hash;
 namespace internal
 {
   template <typename T, bool IsEnum>
-  struct ConditionalHash
+  struct conditional_hash
   {
     hash_result operator()(T val) const
     {
@@ -86,19 +86,20 @@ namespace internal
   };
 
   template <typename T>
-  struct ConditionalHash<T, false>
+  struct conditional_hash<T, false>
   {
-    ConditionalHash()                       = delete;
-    ConditionalHash(const ConditionalHash&) = delete;
-    ConditionalHash(ConditionalHash&&)      = delete;
+    conditional_hash()                        = delete;
+    conditional_hash(const conditional_hash&) = delete;
+    conditional_hash(conditional_hash&&)      = delete;
+    ~conditional_hash()                       = delete;
 
-    ConditionalHash& operator=(const ConditionalHash&) = delete;
-    ConditionalHash& operator=(ConditionalHash&&)      = delete;
+    conditional_hash& operator=(const conditional_hash&) = delete;
+    conditional_hash& operator=(conditional_hash&&)      = delete;
   };
 } // namespace internal
 
 template <typename T>
-struct hash : public internal::ConditionalHash<T, rsl::is_enum_v<T>>
+struct hash : public internal::conditional_hash<T, rsl::is_enum_v<T>>
 {
 };
 
@@ -263,7 +264,7 @@ struct hash<nullptr_t>
   hash_result operator()(nullptr_t) const
   {
     void* p {};
-    return static_cast<hash_result>((uintptr)(p));
+    return static_cast<hash_result>(reinterpret_cast<uintptr>(p)); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
   }
 };
 

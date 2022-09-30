@@ -18,6 +18,6 @@ namespace internal
 {
   template <typename T>
   constexpr bool always_false = false;
-}
+} // namespace internal
 
 REX_RSL_END_NAMESPACE

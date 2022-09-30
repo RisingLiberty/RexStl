@@ -30,14 +30,14 @@ constexpr auto iterator_to_pointer(It it)
 
 /// RSL Comment: Not in ISO C++ Standard at time of writing (17/Aug/2022)
 template <typename It>
-constexpr const auto const_iterator_to_pointer(It it)
+constexpr auto const_iterator_to_pointer(It it)
 {
   return &(*it);
 }
 
 /// RSL Comment: Not in ISO C++ Standard at time of writing (17/Aug/2022)
-template <typename reverse_iterator>
-constexpr auto to_forward_iterator(reverse_iterator it)
+template <typename ReverseIterator>
+constexpr auto to_forward_iterator(ReverseIterator it)
 {
   return (it + 1).base();
 }
@@ -90,9 +90,7 @@ REX_STD_FUNC_ALIAS(advance);
 REX_STD_FUNC_ALIAS(distance);
 REX_STD_FUNC_ALIAS(next);
 REX_STD_FUNC_ALIAS(prev);
-REX_STD_FUNC_ALIAS(begin);
 REX_STD_FUNC_ALIAS(cbegin);
-REX_STD_FUNC_ALIAS(end);
 REX_STD_FUNC_ALIAS(cend);
 REX_STD_FUNC_ALIAS(rbegin);
 REX_STD_FUNC_ALIAS(crbegin);

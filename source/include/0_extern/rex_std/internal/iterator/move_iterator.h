@@ -25,12 +25,12 @@ public:
   using value_type        = typename iterator_traits<Iter>::value_type;
   using difference_type   = typename iterator_traits<Iter>::difference_type;
   using pointer           = Iter;
-  using reference         = iterator_traits<Iter>::reference;
+  using reference         = typename iterator_traits<Iter>::reference;
 
   constexpr move_iterator();
   constexpr explicit move_iterator(iterator_type it);
   template <typename U>
-  constexpr move_iterator(const move_iterator<U>& other);
+  constexpr explicit move_iterator(const move_iterator<U>& other);
 
   template <typename U>
   constexpr move_iterator& operator=(const move_iterator<U>& other);

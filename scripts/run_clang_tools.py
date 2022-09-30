@@ -14,11 +14,12 @@ import os
 import diagnostics
 
 def run():
-  root_path = os.path.dirname(__file__)
+  script_path = os.path.dirname(__file__)
+  root_path = os.path.normpath(f"{script_path}/..")
   logger.info("Running clang-tidy")
-  os.system(f"py {root_path}/run_clang_tidy.py -p={root_path}/../.rex/build/ninja/ -header-filter=.* -format -quiet")
+  os.system(f"py {script_path}/run_clang_tidy.py -p={root_path}/.rex/build/ninja/ -header-filter=.* -quiet")
   logger.info("Running clang-format")
-  os.system(f"py {root_path}/run_clang_format.py -r {root_path}/../source")
+  os.system(f"py {script_path}/run_clang_format.py -r -i {root_path}/source")
 
 if __name__ == "__main__":
   # arguments setups

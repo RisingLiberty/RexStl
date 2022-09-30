@@ -20,18 +20,18 @@ REX_RSL_BEGIN_NAMESPACE
 namespace internal
 {
   template <typename T, bool = is_arithmetic_v<T>>
-  struct IsSignedHelper : bool_constant<T(-1) < T(0)>
+  struct is_signed_helper : bool_constant<static_cast<T>(-1) < static_cast<T>(0)>
   {
   };
 
   template <typename T>
-  struct IsSignedHelper<T, false> : false_type
+  struct is_signed_helper<T, false> : false_type
   {
   };
 } // namespace internal
 
 template <typename T>
-struct is_signed : public internal::IsSignedHelper<T>
+struct is_signed : public internal::is_signed_helper<T>
 {
 };
 

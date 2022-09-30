@@ -34,7 +34,7 @@ template <typename State>
 class fpos
 {
 public:
-  /* implicit */ fpos(streamoff off = 0)
+  /* implicit */ fpos(streamoff off = 0) // NOLINT(google-explicit-constructor)
       : m_offset(off)
       , m_fpos(0)
       , m_state()
@@ -58,7 +58,7 @@ public:
     m_state = state;
   }
 
-  operator streamoff() const
+  operator streamoff() const // NOLINT(google-explicit-constructor)
   {
     return m_offset + m_fpos;
   }

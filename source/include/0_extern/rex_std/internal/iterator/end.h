@@ -27,7 +27,7 @@ auto end(const C& c) -> decltype(c.end())
   return c.end();
 }
 template <typename T, card32 N>
-T* end(T (&array)[N])
+T* end(T (&array)[N]) // NOLINT(modernize-avoid-c-arrays)
 {
   return &array[N];
 }

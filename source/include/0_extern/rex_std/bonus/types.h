@@ -23,20 +23,20 @@ using int16 = signed short;
 using int32 = signed int;
 using int64 = signed long long;
 
-static_assert(sizeof(int8) == 1, "int8 must be 1 byte big");
-static_assert(sizeof(int16) == 2, "int16 must be 2 bytes big");
-static_assert(sizeof(int32) == 4, "int32 must be 4 bytes big");
-static_assert(sizeof(int64) == 8, "int64 must be 8 bytes big");
+static_assert(sizeof(int8) == 1, "int8 must be 1 byte big");    // NOLINT
+static_assert(sizeof(int16) == 2, "int16 must be 2 bytes big"); // NOLINT
+static_assert(sizeof(int32) == 4, "int32 must be 4 bytes big"); // NOLINT
+static_assert(sizeof(int64) == 8, "int64 must be 8 bytes big"); // NOLINT
 
 using uint8  = unsigned char;
 using uint16 = unsigned short;
 using uint32 = unsigned int;
 using uint64 = unsigned long long;
 
-static_assert(sizeof(uint8) == 1, "uint8 must be 1 byte big");
-static_assert(sizeof(uint16) == 2, "uint16 must be 2 bytes big");
-static_assert(sizeof(uint32) == 4, "uint32 must be 4 bytes big");
-static_assert(sizeof(uint64) == 8, "uint64 must be 8 bytes big");
+static_assert(sizeof(uint8) == 1, "uint8 must be 1 byte big");    // NOLINT
+static_assert(sizeof(uint16) == 2, "uint16 must be 2 bytes big"); // NOLINT
+static_assert(sizeof(uint32) == 4, "uint32 must be 4 bytes big"); // NOLINT
+static_assert(sizeof(uint64) == 8, "uint64 must be 8 bytes big"); // NOLINT
 
 using ulong = unsigned long;
 
@@ -62,9 +62,9 @@ using char16 = char16_t;
 using char32 = char32_t;
 using tchar  = wchar_t;
 
-static_assert(sizeof(char8) == 1, "char8 must be 1 byte big");
-static_assert(sizeof(char16) == 2, "char16 must be 2 byte big");
-static_assert(sizeof(char32) == 4, "char32 must be 4 byte big");
+static_assert(sizeof(char8) == 1, "char8 must be 1 byte big");   // NOLINT
+static_assert(sizeof(char16) == 2, "char16 must be 2 byte big"); // NOLINT
+static_assert(sizeof(char32) == 4, "char32 must be 4 byte big"); // NOLINT
 
 // with MSVC, wchar_t is 2 bytes big, while with clang and gcc, it's 4 bytes big
 #ifdef _MSC_VER
@@ -77,11 +77,11 @@ static_assert(sizeof(tchar) == 4, "tchar must be 4 bytes big");
 using float32 = float;
 using float64 = double;
 
-static_assert(sizeof(float32) == 4, "float32 must be 4 bytes big");
-static_assert(sizeof(float64) == 8, "float64 must be 8 bytes big");
+static_assert(sizeof(float32) == 4, "float32 must be 4 bytes big"); // NOLINT
+static_assert(sizeof(float64) == 8, "float64 must be 8 bytes big"); // NOLINT
 
 using lfloat64 = long double;
-static_assert(sizeof(lfloat64) == 8, "long float must be 8 bytes big");
+static_assert(sizeof(lfloat64) == 8, "long float must be 8 bytes big"); // NOLINT
 
 // bool
 static_assert(sizeof(bool) == 1, "bool must be 1 byte big");
@@ -105,8 +105,8 @@ namespace internal
   static_assert(sizeof(test_scoped_enum) == sizeof(int32), "scoped enum must be 4 bytes big");
 } // namespace internal
 
-static_assert(false == 0, "C++ false keyword does not equal 0");
-static_assert(true == 1, "C++ true keyword does not equal 1");
+static_assert(false == 0, "C++ false keyword does not equal 0"); // NOLINT
+static_assert(true == 1, "C++ true keyword does not equal 1");   // NOLINT
 
 // types that need to be defined for standard purposes
 #if defined(REX_PLATFORM_X86)
@@ -142,34 +142,34 @@ REX_CREATE_STRONG_TYPE(Size, card32);
 
 REX_RSL_END_NAMESPACE
 
-using rsl::int16;
-using rsl::int32;
-using rsl::int64;
-using rsl::int8;
+using rsl::int16; // NOLINT
+using rsl::int32; // NOLINT
+using rsl::int64; // NOLINT
+using rsl::int8;  // NOLINT
 
-using rsl::uint16;
-using rsl::uint32;
-using rsl::uint64;
-using rsl::uint8;
+using rsl::uint16; // NOLINT
+using rsl::uint32; // NOLINT
+using rsl::uint64; // NOLINT
+using rsl::uint8;  // NOLINT
 
-using rsl::card16;
-using rsl::card32;
-using rsl::card64;
-using rsl::card8;
+using rsl::card16; // NOLINT
+using rsl::card32; // NOLINT
+using rsl::card64; // NOLINT
+using rsl::card8;  // NOLINT
 
-using rsl::char8;
-using rsl::tchar;
+using rsl::char8; // NOLINT
+using rsl::tchar; // NOLINT
 
-using rsl::float32;
-using rsl::float64;
+using rsl::float32; // NOLINT
+using rsl::float64; // NOLINT
 
-using rsl::intmax;
-using rsl::intptr;
-using rsl::ptrdiff;
-using rsl::size_t;
-using rsl::uintptr;
+using rsl::intmax;  // NOLINT
+using rsl::intptr;  // NOLINT
+using rsl::ptrdiff; // NOLINT
+using rsl::size_t;  // NOLINT
+using rsl::uintptr; // NOLINT
 
-using rsl::count_t;
+using rsl::count_t; // NOLINT
 
 REX_CREATE_LITERAL_FOR_STRONG_TYPE(rsl::Capacity, _cap);
 REX_CREATE_LITERAL_FOR_STRONG_TYPE(rsl::Size, _size);

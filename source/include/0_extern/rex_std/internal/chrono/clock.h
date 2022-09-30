@@ -24,11 +24,11 @@ namespace chrono
   namespace internal
   {
     /// [24/Jul/2022] RSL TODO: Wrap this in an ifdef per platform
-    constexpr count_t NanoSecsPerTick = 100;
+    constexpr count_t nano_secs_per_tick = 100;
 
     /// [24/Jul/2022] RSL TODO: Wrap this in an ifdef for posix vs non posix
-    using SystemClockPeriod = RatioMultiply<ratio<NanoSecsPerTick, 1>, nano>;
-    using SteadyClockPeriod = RatioMultiply<ratio<NanoSecsPerTick, 1>, nano>;
+    using SystemClockPeriod = RatioMultiply<ratio<nano_secs_per_tick, 1>, nano>;
+    using SteadyClockPeriod = RatioMultiply<ratio<nano_secs_per_tick, 1>, nano>;
 
     uint64 get_ticks();
   } // namespace internal
@@ -41,7 +41,7 @@ namespace chrono
     using duration   = duration<rep, period>;
     using time_point = time_point<system_clock>;
 
-    constexpr static bool IsSteady = false;
+    constexpr static bool is_steady = false;
 
     static time_point now()
     {
@@ -62,7 +62,7 @@ namespace chrono
     using duration   = duration<rep, period>;
     using time_point = time_point<steady_clock>;
 
-    constexpr static bool IsSteady = true;
+    constexpr static bool is_steady = true;
 
     static time_point now()
     {

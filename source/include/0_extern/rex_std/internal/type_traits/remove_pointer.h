@@ -41,6 +41,6 @@ struct remove_pointer<T* const volatile>
 };
 
 template <typename T>
-using remove_pointer_t = remove_pointer<T>::type;
+using remove_pointer_t = typename remove_pointer<T>::type;
 
 REX_RSL_END_NAMESPACE

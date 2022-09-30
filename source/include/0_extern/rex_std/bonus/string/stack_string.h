@@ -41,17 +41,17 @@ public:
   }
 
   template <card32 N>
-  stack_string(const value_type str[N])
+  explicit stack_string(const value_type str[N]) // NOLINT
       : stack_string()
   {
     static_assert(N < StrMaxSize, "Trying to copy more into a string than is allowed");
     m_null_terminator_offset = rsl::memcpy(m_data.data(), str, sizeof(CharType) * N);
   }
 
-  stack_string(rsl::initializer_list<value_type> str)
+  stack_string(rsl::initializer_list<value_type> str) // NOLINT
       : stack_string()
   {
-    card32 copy_size = rsl::clamp_max(static_cast<card32>(str.size()), StrMaxSize);
+    const card32 copy_size = rsl::clamp_max(static_cast<card32>(str.size()), StrMaxSize);
     rsl::memcpy(m_data.data(), str.begin(), copy_size);
     m_null_terminator_offset = copy_size;
   }
@@ -59,8 +59,8 @@ public:
   explicit stack_string(const value_type* str)
       : stack_string()
   {
-    card32 string_length = rsl::string_length(str);
-    card32 copy_size     = rsl::clamp_max(string_length, StrMaxSize);
+    const card32 string_length = rsl::string_length(str);
+    const card32 copy_size     = rsl::clamp_max(string_length, StrMaxSize);
     rsl::memcpy(m_data.data(), str, copy_size);
     m_null_terminator_offset = copy_size;
   }
@@ -68,25 +68,25 @@ public:
   stack_string(const value_type* str, card32 size)
       : stack_string()
   {
-    card32 copy_size = rsl::clamp_max(size, StrMaxSize);
+    const card32 copy_size = rsl::clamp_max(size, StrMaxSize);
     rsl::memcpy(m_data.data(), str, copy_size);
     m_null_terminator_offset = copy_size;
   }
 
-  stack_string(basic_string_view<CharType> view)
+  stack_string(basic_string_view<CharType> view) // NOLINT(google-explicit-constructor)
       : stack_string()
   {
-    card32 copy_size = rsl::clamp_max(view.length(), StrMaxSize);
+    const card32 copy_size = rsl::clamp_max(view.length(), StrMaxSize);
     rsl::memcpy(m_data.data(), view.data(), copy_size);
     m_null_terminator_offset = copy_size;
   }
 
   template <card32 N>
-  stack_string(const stack_string<CharType, N>& str)
+  stack_string(const stack_string<CharType, N>& str) // NOLINT(google-explicit-constructor)
       : m_data()
       , m_null_terminator_offset(str.length())
   {
-    card32 copy_size = rsl::clamp_max(rsl::string_length(str), StrMaxSize);
+    const card32 copy_size = rsl::clamp_max(rsl::string_length(str), StrMaxSize);
     rsl::copy_n(str.data(), copy_size, m_data.data());
   }
 
@@ -94,14 +94,14 @@ public:
 
   stack_string& operator=(basic_string_view<CharType> view)
   {
-    card32 new_length = rsl::clamp_max(view.length(), StrMaxSize);
+    const card32 new_length = rsl::clamp_max(view.length(), StrMaxSize);
     rsl::memcpy(m_data.data(), view.data(), new_length);
     m_null_terminator_offset = new_length;
     return *this;
   }
   stack_string& operator=(const value_type* str)
   {
-    card32 new_length = rsl::clamp_max(rsl::string_length(str), StrMaxSize);
+    const card32 new_length = rsl::clamp_max(rsl::string_length(str), StrMaxSize);
     rsl::memcpy(m_data.data(), str, new_length);
     m_null_terminator_offset = new_length;
     return *this;
@@ -110,15 +110,15 @@ public:
 
   void assign(const value_type* first, const value_type* last)
   {
-    card32 length    = static_cast<card32>(last - first);
-    card32 copy_size = clamp_max(length, StrMaxSize);
+    const card32 length    = static_cast<card32>(last - first);
+    const card32 copy_size = clamp_max(length, StrMaxSize);
     rsl::memcpy(data(), first, copy_size);
     m_null_terminator_offset = copy_size;
   }
-  void assign(const value_type* new_data, card32 length)
+  void assign(const value_type* newData, card32 length)
   {
-    card32 copy_size = clamp_max(length, StrMaxSize);
-    rsl::memcpy(data(), new_data, copy_size);
+    const card32 copy_size = clamp_max(length, StrMaxSize);
+    rsl::memcpy(data(), newData, copy_size);
     m_null_terminator_offset = copy_size;
   }
 
@@ -229,7 +229,7 @@ public:
   {
     return basic_string_view<CharType>(data(), length());
   }
-  operator basic_string_view<CharType>() const
+  operator basic_string_view<CharType>() const // NOLINT(google-explicit-constructor)
   {
     return to_view();
   }
@@ -250,8 +250,8 @@ public:
   }
   void resize(card32 size)
   {
-    card32 new_size = rsl::clamp_max(size, StrMaxSize - 1);
-    card32 old_size = length();
+    const card32 new_size = rsl::clamp_max(size, StrMaxSize - 1);
+    const card32 old_size = length();
 
     for(card32 i = old_size; i < new_size; ++i)
     {
@@ -585,8 +585,8 @@ public:
 
   stack_string& operator+=(const basic_string_view<CharType> str)
   {
-    card32 string_length   = str.length();
-    card32 remaining_bytes = rsl::clamp_max(string_length, StrMaxSize);
+    const card32 string_length   = str.length();
+    const card32 remaining_bytes = rsl::clamp_max(string_length, StrMaxSize);
 
     append(str.data(), remaining_bytes);
     return *this;
@@ -626,7 +626,7 @@ public:
 
 private:
   rsl::array<CharType, StrMaxSize> m_data;
-  card32 m_null_terminator_offset;
+  card32 m_null_terminator_offset; // NOLINT(misc-non-private-member-variables-in-classes): ignoring false positive
 
   constexpr static card32 s_npos = -1;
 };
@@ -639,17 +639,17 @@ stack_string<CharType, Size> operator+(const CharType* str, const stack_string<C
   return res;
 }
 
-using tiny_stack_string   = stack_string<char8, 32>;
-using small_stack_string  = stack_string<char8, 64>;
-using medium_stack_string = stack_string<char8, 128>;
-using big_stack_string    = stack_string<char8, 256>;
+using tiny_stack_string   = stack_string<char8, 32>;  // NOLINT(readability-magic-numbers)
+using small_stack_string  = stack_string<char8, 64>;  // NOLINT(readability-magic-numbers)
+using medium_stack_string = stack_string<char8, 128>; // NOLINT(readability-magic-numbers)
+using big_stack_string    = stack_string<char8, 256>; // NOLINT(readability-magic-numbers)
 
-tiny_stack_string to_stack_string(const uint32 value);
-tiny_stack_string to_stack_string(const int32 value);
-tiny_stack_string to_stack_string(const uint64 value);
-tiny_stack_string to_stack_string(const int64 value);
-tiny_stack_string to_stack_string(const float32 value, card32 precision = 4);
-tiny_stack_string to_stack_string(const float64 value, card32 precision = 4);
+tiny_stack_string to_stack_string(uint32 value);
+tiny_stack_string to_stack_string(int32 value);
+tiny_stack_string to_stack_string(uint64 value);
+tiny_stack_string to_stack_string(int64 value);
+tiny_stack_string to_stack_string(float32 value, card32 precision = 4);
+tiny_stack_string to_stack_string(float64 value, card32 precision = 4);
 tiny_stack_string to_stack_string(const void* ptr);
 
 // template <typename CharType, size_t MaxSize>

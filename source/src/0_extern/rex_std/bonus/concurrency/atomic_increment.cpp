@@ -32,7 +32,7 @@ namespace internal
   }
   uint16 atomic_increment(uint16* data)
   {
-    return static_cast<uint16>(atomic_increment(reinterpret_cast<int16*>(data)));
+    return static_cast<uint16>(atomic_increment(reinterpret_cast<int16*>(data))); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
   }
   uint32 atomic_increment(ulong* data)
   {
@@ -40,14 +40,14 @@ namespace internal
   }
   uint64 atomic_increment(uint64* data)
   {
-    return static_cast<uint64>(atomic_increment(reinterpret_cast<int64*>(data)));
+    return static_cast<uint64>(atomic_increment(reinterpret_cast<int64*>(data))); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
   }
 } // namespace internal
 REX_RSL_END_NAMESPACE
 
 int8 rsl::atomic_increment(int8& val)
 {
-  long i32_val = val;
+  long i32_val = val; // NOLINT(bugprone-signed-char-misuse)
   return static_cast<int8>(internal::atomic_increment(&i32_val));
 }
 int16 rsl::atomic_increment(int16& val)
@@ -56,7 +56,7 @@ int16 rsl::atomic_increment(int16& val)
 }
 int32 rsl::atomic_increment(int32& val)
 {
-  return internal::atomic_increment(reinterpret_cast<long*>(&val));
+  return internal::atomic_increment(reinterpret_cast<long*>(&val)); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
 }
 int64 rsl::atomic_increment(int64& val)
 {
@@ -74,7 +74,7 @@ uint16 rsl::atomic_increment(uint16& val)
 }
 uint32 rsl::atomic_increment(uint32& val)
 {
-  return internal::atomic_increment(reinterpret_cast<ulong*>(&val));
+  return internal::atomic_increment(reinterpret_cast<ulong*>(&val)); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
 }
 uint64 rsl::atomic_increment(uint64& val)
 {

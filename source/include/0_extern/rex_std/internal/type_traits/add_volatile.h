@@ -23,6 +23,6 @@ struct add_volatile
 };
 
 template <typename T>
-using add_volatile_t = add_volatile<T>::type;
+using add_volatile_t = typename add_volatile<T>::type;
 
 REX_RSL_END_NAMESPACE

@@ -38,7 +38,7 @@ namespace io
 {
   /// [09/Sep/2022] RSL Comment: to avoid having the following enum classes
   // be part of the ios_base class, we define them in an io namespace instead.
-  enum class openmode
+  enum class openmode : uint32
   {
     app,    // seek to the end of stream before each write
     binary, // open in binary mode
@@ -48,7 +48,7 @@ namespace io
     ate     // seek to the end of stream immediately after open
   };
 
-  enum class iostate
+  enum class iostate : uint32
   {
     goodbit   = 0,        // no error
     badbit    = (1 << 0), // irrecoverable stream error
@@ -65,8 +65,8 @@ namespace io
 
   constexpr openmode operator&(openmode lhs, openmode rhs)
   {
-    internal::openmode_int lhs_int = static_cast<internal::openmode_int>(lhs);
-    internal::openmode_int rhs_int = static_cast<internal::openmode_int>(rhs);
+    const internal::openmode_int lhs_int = static_cast<internal::openmode_int>(lhs);
+    const internal::openmode_int rhs_int = static_cast<internal::openmode_int>(rhs);
 
     return static_cast<openmode>(lhs_int & rhs_int);
   }
@@ -77,8 +77,8 @@ namespace io
   }
   constexpr openmode operator|(openmode lhs, openmode rhs)
   {
-    internal::openmode_int lhs_int = static_cast<internal::openmode_int>(lhs);
-    internal::openmode_int rhs_int = static_cast<internal::openmode_int>(rhs);
+    const internal::openmode_int lhs_int = static_cast<internal::openmode_int>(lhs);
+    const internal::openmode_int rhs_int = static_cast<internal::openmode_int>(rhs);
 
     return static_cast<openmode>(lhs_int | rhs_int);
   }
@@ -90,8 +90,8 @@ namespace io
 
   constexpr iostate operator&(iostate lhs, iostate rhs)
   {
-    internal::iostate_int lhs_int = static_cast<internal::iostate_int>(lhs);
-    internal::iostate_int rhs_int = static_cast<internal::iostate_int>(rhs);
+    internal::iostate_int const lhs_int = static_cast<internal::iostate_int>(lhs);
+    internal::iostate_int const rhs_int = static_cast<internal::iostate_int>(rhs);
 
     return static_cast<iostate>(lhs_int & rhs_int);
   }
@@ -102,8 +102,8 @@ namespace io
   }
   constexpr iostate operator|(iostate lhs, iostate rhs)
   {
-    internal::iostate_int lhs_int = static_cast<internal::iostate_int>(lhs);
-    internal::iostate_int rhs_int = static_cast<internal::iostate_int>(rhs);
+    internal::iostate_int const lhs_int = static_cast<internal::iostate_int>(lhs);
+    internal::iostate_int const rhs_int = static_cast<internal::iostate_int>(rhs);
 
     return static_cast<iostate>(lhs_int | rhs_int);
   }

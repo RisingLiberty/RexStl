@@ -35,7 +35,7 @@ REX_RSL_END_NAMESPACE
   #define REX_ASSERT_X(cond, ...) assert(cond, __VA_ARGS__)
   #define REX_ASSERT(...)         assert(false, __VA_ARGS__)
 #else
-  #define assert(cond, ...)
+  #define assert(cond, ...) // NOLINT(readability-identifier-naming)
 
   #define REX_ASSERT_X(cond, ...)
   #define REX_ASSERT(...)

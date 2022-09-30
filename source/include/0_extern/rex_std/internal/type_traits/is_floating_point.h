@@ -21,28 +21,28 @@ REX_RSL_BEGIN_NAMESPACE
 namespace internal
 {
   template <typename T>
-  struct IsFloatingPointHelper : public false_type
+  struct is_floating_point_helper : public false_type
   {
   };
 
   template <>
-  struct IsFloatingPointHelper<float32> : public true_type
+  struct is_floating_point_helper<float32> : public true_type
   {
   };
   template <>
-  struct IsFloatingPointHelper<float64> : public true_type
+  struct is_floating_point_helper<float64> : public true_type
   {
   };
 
   // other types that aren't really used by rex engine, but we still need regardless
   template <>
-  struct IsFloatingPointHelper<lfloat64> : public true_type
+  struct is_floating_point_helper<lfloat64> : public true_type
   {
   };
 } // namespace internal
 
 template <typename T>
-struct is_floating_point : public internal::IsFloatingPointHelper<typename rsl::remove_cv_t<T>>
+struct is_floating_point : public internal::is_floating_point_helper<typename rsl::remove_cv_t<T>>
 {
 };
 

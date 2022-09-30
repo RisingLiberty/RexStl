@@ -21,13 +21,13 @@ struct remove_extent
 };
 
 template <typename T, size_t I>
-struct remove_extent<T[I]>
+struct remove_extent<T[I]> // NOLINT(modernize-avoid-c-arrays)
 {
   using type = T;
 };
 
 template <typename T>
-struct remove_extent<T[]>
+struct remove_extent<T[]> // NOLINT(modernize-avoid-c-arrays)
 {
   using type = T;
 };

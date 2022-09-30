@@ -18,10 +18,10 @@
 REX_RSL_BEGIN_NAMESPACE
 
 template <typename T, typename Other = T>
-constexpr T exchange(T& val, Other&& new_val)
+constexpr T exchange(T& val, Other&& newVal)
 {
   T old_val = rsl::move(val);
-  val       = rsl::forward<Other>(new_val);
+  val       = rsl::forward<Other>(newVal);
   return old_val;
 }
 

@@ -12,6 +12,7 @@
 
 #pragma once
 
+#include "rex_std/bonus/string/c_string.h"
 #include "rex_std/bonus/string/character_lookup.h"
 #include "rex_std/bonus/string/stack_string.h"
 #include "rex_std/bonus/utility/compressed_pair.h"
@@ -114,17 +115,18 @@ public:
     assign(s, count);
   }
   /// RSL Comment: Different from ISO C++ Standard at time of writing (28/Jun/2022)
+  // this overload uses c_string so that we can differentiate between a string and string literal
   // marked explicit in RSL
-  explicit basic_string(const_pointer s, const allocator& alloc = allocator())
+  explicit basic_string(c_string<value_type> s, const allocator& alloc = allocator())
       : basic_string(alloc)
   {
-    size_type length = traits_type::length(s);
-    assign(s, length);
+    size_type length = traits_type::length(s.ptr());
+    assign(s.ptr(), length);
   }
   /// RSL Comment: Not in ISO C++ Standard at time of writing time of writing (29/Jun/2022)
   // we add this overload so you're able to construct the string from a literal.
   template <count_t Size>
-  explicit basic_string(const_pointer (&arr)[Size], const allocator alloc = allocator())
+  explicit basic_string(value_type (&arr)[Size], const allocator alloc = allocator()) // NOLINT(modernize-avoid-c-arrays)
       : basic_string(alloc)
   {
     assign(arr, Size);
@@ -138,7 +140,7 @@ public:
   /// RSL Comment: Different from ISO C++ Standard at time of writing (28/Jun/2022)
   // marked explicit in RSL
   // copy constructor. copies the contents of other.
-  explicit basic_string(const basic_string& other)
+  basic_string(const basic_string& other)
       : basic_string(other.get_allocator())
   {
     assign(other.data(), other.length());
@@ -242,7 +244,7 @@ public:
   // The standard doesn't provide a assignment operator for a string literal without having to calculate its length
   // Assigns the string literal to the string.
   template <count_t Size>
-  basic_string& operator=(const_pointer (&str)[Size])
+  basic_string& operator=(const_pointer (&str)[Size]) // NOLINT(modernize-avoid-c-arrays)
   {
     assign(str, Size);
     return *this;
@@ -340,7 +342,7 @@ public:
   // the standard doesn't provide an overload for a string literal
   // replaces the contents of the string array
   template <count_t Size>
-  basic_string& assign(const_pointer (&str)[Size])
+  basic_string& assign(const_pointer (&str)[Size]) // NOLINT(modernize-avoid-c-arrays)
   {
     return assign(str, Size);
   }
@@ -482,7 +484,7 @@ public:
     return m_begin;
   }
   // returns a basic_string_view<value_type, traits_type> pointing to the current string
-  operator basic_string_view<value_type, traits_type>() const
+  operator basic_string_view<value_type, traits_type>() const // NOLINT(google-explicit-constructor)
   {
     return basic_string_view<value_type, traits_type>(data(), size());
   }
@@ -574,11 +576,11 @@ public:
     return rsl::numeric_limits<difference_type>::max();
   }
   // request memory reallocation so the string can hold "new_capacity" amount of characters
-  void reserve(size_type new_capacity)
+  void reserve(size_type newCapacity)
   {
-    if(new_capacity > capacity())
+    if(newCapacity > capacity())
     {
-      reallocate(new_capacity, data(), size());
+      reallocate(newCapacity, data(), size());
     }
   }
   // returns the number of characters the string can currently hold
@@ -616,7 +618,7 @@ public:
   // the standard doesn't provide an overload for a string literal
   // Inserts character string pointed to by s at the position index
   template <count_t Size>
-  basic_string& insert(size_type index, const value_type (&s)[Size])
+  basic_string& insert(size_type index, const value_type (&s)[Size]) // NOLINT(modernize-avoid-c-arrays)
   {
     return insert(index, s, Size - 1);
   }
@@ -640,7 +642,7 @@ public:
     return insert(index, str.data(), str.size());
   }
   // inserts a string obtained by str.substr(index_str, count) at the position index
-  basic_string& insert(size_type index, const basic_string& str, size_type index_str, size_type count = s_npos)
+  basic_string& insert(size_type index, const basic_string& str, size_type indexStr, size_type count = s_npos)
   {
     size_type num_to_copy = count_or_obj_length(str, count);
     return insert(index, str.data(), num_to_copy);
@@ -712,10 +714,10 @@ public:
   // This is not possible in RSL though as the ctor for const char* for string is explicit.
   // Therefore this takes a basic_string_view
   // inserts the elements from sv starting at index_str before the element (if any) pointed by pos.
-  basic_string& insert(size_type pos, const basic_string_view<value_type, traits_type>& sv, size_type index_str, size_type count = s_npos)
+  basic_string& insert(size_type pos, const basic_string_view<value_type, traits_type>& sv, size_type indexStr, size_type count = s_npos)
   {
     size_type num_chars_to_insert = count_or_obj_length(sv, count);
-    return insert(pos, sv.data() + index_str, num_chars_to_insert);
+    return insert(pos, sv.data() + indexStr, num_chars_to_insert);
   }
 
   // removes min(count, size() - index) characters starting at index
@@ -808,7 +810,7 @@ public:
   // the standard doesn't provide an overload for a string literal
   // Appends character string pointed to by s.
   template <count_t Size>
-  basic_string& append(const value_type (&s)[Size])
+  basic_string& append(const value_type (&s)[Size]) // NOLINT(modernize-avoid-c-arrays)
   {
     return append(s, Size - 1);
   }
@@ -886,7 +888,7 @@ public:
   // the standard doesn't provide an overload for a string literal
   // Appends character string pointed to by s.
   template <count_t Size>
-  basic_string& operator+=(const value_type (&s)[Size])
+  basic_string& operator+=(const value_type (&s)[Size]) // NOLINT(modernize-avoid-c-arrays)
   {
     return append(s, Size - 1);
   }
@@ -929,7 +931,7 @@ public:
   // the standard doesn't provide an overload for a string literal
   // Compares the string to a string literal.
   template <count_t Size>
-  REX_NO_DISCARD int32 compare(const_pointer (&s)[Size]) const
+  REX_NO_DISCARD int32 compare(const_pointer (&s)[Size]) const // NOLINT(modernize-avoid-c-arrays)
   {
     return Traits::compare(data(), s);
   }
@@ -941,7 +943,7 @@ public:
   // the standard doesn't provide an overload for a string literal
   // compares a [pos1, pos1_count1) substring of this string to a string literal
   template <count_t Size>
-  REX_NO_DISCARD int32 compare(size_type pos1, size_type count1, const_pointer (&s)[Size]) const
+  REX_NO_DISCARD int32 compare(size_type pos1, size_type count1, const_pointer (&s)[Size]) const // NOLINT(modernize-avoid-c-arrays)
   {
     return internal::string_utils::compare(data() + pos1, s, count1, Size - 1);
   }
@@ -1000,7 +1002,7 @@ public:
   // the standard doesn't provide an overload for a string literal
   // checks if the string begins with the given prefix
   template <count_t Size>
-  REX_NO_DISCARD bool starts_with(const_pointer (&s)[Size]) const
+  REX_NO_DISCARD bool starts_with(const_pointer (&s)[Size]) const // NOLINT(modernize-avoid-c-arrays)
   {
     return traits_type::compare(data(), s, Size - 1) == 0;
   }
@@ -1020,7 +1022,7 @@ public:
   }
   // checks if the string ends with the given suffix
   template <count_t Size>
-  REX_NO_DISCARD bool ends_with(const_pointer (&s)[Size]) const
+  REX_NO_DISCARD bool ends_with(const_pointer (&s)[Size]) const // NOLINT(modernize-avoid-c-arrays)
   {
     return traits_type::compare(data() + (size() - Size - 1), s, Size - 1) == 0;
   }
@@ -1042,7 +1044,7 @@ public:
   // the standard doesn't provide an overload for a string literal
   // checks if the string contains the given substring
   template <count_t Size>
-  REX_NO_DISCARD bool constains(const_pointer (&s)[Size]) const
+  REX_NO_DISCARD bool constains(const_pointer (&s)[Size]) const // NOLINT(modernize-avoid-c-arrays)
   {
     return find(s) != s_npos;
   }
@@ -1112,7 +1114,7 @@ public:
   // The standard doesn't provide an overload for a string literal
   // replaces the part of the string, indicated by [pos, pos + count) with a new string literal.
   template <count_t Size>
-  basic_string& replace(size_type pos, size_type count, const value_type (&s)[Size])
+  basic_string& replace(size_type pos, size_type count, const value_type (&s)[Size]) // NOLINT(modernize-avoid-c-arrays)
   {
     REX_ASSERT_X(pos >= 0 && pos < length(), "pos out of range");
 
@@ -1129,7 +1131,7 @@ public:
   // The standard doesn't provide an overload for a string literal
   // replaces the part of the string, indicated by [first, last) with a new string literal.
   template <count_t Size>
-  basic_string& replace(const_iterator first, const_iterator last, const value_type (&s)[Size])
+  basic_string& replace(const_iterator first, const_iterator last, const value_type (&s)[Size]) // NOLINT(modernize-avoid-c-arrays)
   {
     size_type first_idx = rsl::distance(cbegin(), first);
     size_type last_idx  = rsl::distance(cbegin(), last);
@@ -1288,7 +1290,7 @@ public:
   // The standard doesn't provide an overload for a string literal
   // finds the first substring equal to s
   template <count_t Size>
-  REX_NO_DISCARD size_type find(const value_type (&s)[Size], size_type pos) const
+  REX_NO_DISCARD size_type find(const value_type (&s)[Size], size_type pos) const // NOLINT(modernize-avoid-c-arrays)
   {
     return internal::string_utils::find<traits_type>(m_begin, length(), pos, s, Size - 1, s_npos);
   }
@@ -1323,7 +1325,7 @@ public:
   // The standard doesn't provide an overload for a string literal
   // finds the last substring equal to s
   template <count_t Size>
-  REX_NO_DISCARD size_type rfind(const value_type (&s)[Size], size_type pos, size_type count) const
+  REX_NO_DISCARD size_type rfind(const value_type (&s)[Size], size_type pos, size_type count) const // NOLINT(modernize-avoid-c-arrays)
   {
     return internal::string_utils::rfind<traits_type>(m_begin, length(), pos, s, Size - 1, s_npos);
   }
@@ -1357,7 +1359,7 @@ public:
   // The standard doesn't provide an overload for a string literal
   // finds the first character equal to one of the characters in the string literal
   template <count_t Size>
-  REX_NO_DISCARD size_type find_first_of(const value_type (&s)[Size], size_type pos) const
+  REX_NO_DISCARD size_type find_first_of(const value_type (&s)[Size], size_type pos) const // NOLINT(modernize-avoid-c-arrays)
   {
     return internal::string_utils::find_first_of<traits_type>(m_begin, length(), pos, s, Size - 1, s_npos);
   }
@@ -1391,7 +1393,7 @@ public:
   // The standard doesn't provide an overload for a string literal
   // finds the first character equal to none of the characters in the string literal
   template <count_t Size>
-  REX_NO_DISCARD size_type find_first_not_of(const value_type (&s)[Size], size_type pos = 0) const
+  REX_NO_DISCARD size_type find_first_not_of(const value_type (&s)[Size], size_type pos = 0) const // NOLINT(modernize-avoid-c-arrays)
   {
     return internal::string_utils::find_first_not_of<traits_type>(m_begin, length(), pos, s, Size - 1, s_npos);
   }
@@ -1425,7 +1427,7 @@ public:
   // The standard doesn't provide an overload for a string literal
   // finds the last character equal to one of the characters in the string literal
   template <count_t Size>
-  REX_NO_DISCARD size_type find_last_of(const value_type (&s)[Size], size_type pos) const
+  REX_NO_DISCARD size_type find_last_of(const value_type (&s)[Size], size_type pos) const // NOLINT(modernize-avoid-c-arrays)
   {
     return internal::string_utils::find_last_of<traits_type>(m_begin, length(), pos, s, Size - 1, s_npos);
   }
@@ -1459,7 +1461,7 @@ public:
   // The standard doesn't provide an overload for a string literal
   // finds the last character equal to one of the characters in the string literal
   template <count_t Size>
-  REX_NO_DISCARD size_type find_last_not_of(const value_type (&s)[Size], size_type pos) const
+  REX_NO_DISCARD size_type find_last_not_of(const value_type (&s)[Size], size_type pos) const // NOLINT(modernize-avoid-c-arrays)
   {
     return internal::string_utils::find_last_not_of<traits_type>(m_begin, length(), pos, s, Size - 1, s_npos);
   }
@@ -1495,59 +1497,59 @@ public:
 
   /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
   // converts the string to an int32. same as rsl::stoi
-  REX_NO_DISCARD int32 to_int(value_type* str_end, int32 base = 10) const
+  REX_NO_DISCARD int32 to_int(value_type* strEnd, int32 base = 10) const
   {
-    return rsl::strtoi(data(), &str_end, base);
+    return rsl::strtoi(data(), &strEnd, base);
   }
   /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
   // converts the string to a long. same as rsl::stol
-  REX_NO_DISCARD long to_long(value_type* str_end, int32 base = 10) const
+  REX_NO_DISCARD long to_long(value_type* strEnd, int32 base = 10) const
   {
-    return rsl::strtol(data(), &str_end, base);
+    return rsl::strtol(data(), &strEnd, base);
   }
   /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
   // converts the string to a long long. same as rsl::stoll
-  REX_NO_DISCARD int64 to_long64(value_type* str_end, int32 base = 10) const
+  REX_NO_DISCARD int64 to_long64(value_type* strEnd, int32 base = 10) const
   {
-    return rsl::strtoll(data(), &str_end, base);
+    return rsl::strtoll(data(), &strEnd, base);
   }
 
   /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
   // converts the string to an unsigned int32. same as rsl::stoui
-  REX_NO_DISCARD uint32 to_uint(value_type* str_end, int32 base = 10) const
+  REX_NO_DISCARD uint32 to_uint(value_type* strEnd, int32 base = 10) const
   {
-    return rsl::strtoui(data(), &str_end, base);
+    return rsl::strtoui(data(), &strEnd, base);
   }
   /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
   // converts the string to an unsigned long. same as rsl::stoul
-  REX_NO_DISCARD ulong to_ulong(value_type* str_end, int32 base = 10) const
+  REX_NO_DISCARD ulong to_ulong(value_type* strEnd, int32 base = 10) const
   {
-    return rsl::strtoul(data(), &str_end, base);
+    return rsl::strtoul(data(), &strEnd, base);
   }
   /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
   // converts the string to an unsigned long long. same as rsl::stoull
-  REX_NO_DISCARD uint64 to_ulong64(value_type* str_end, int32 base = 10) const
+  REX_NO_DISCARD uint64 to_ulong64(value_type* strEnd, int32 base = 10) const
   {
-    return rsl::strtoull(data(), &str_end, base);
+    return rsl::strtoull(data(), &strEnd, base);
   }
 
   /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
   // converts the string to a float. same as rsl::stof
-  REX_NO_DISCARD float32 to_float(value_type* str_end, int32 base = 10) const
+  REX_NO_DISCARD float32 to_float(value_type* strEnd, int32 base = 10) const
   {
-    return rsl::strtof(data(), &str_end, base);
+    return rsl::strtof(data(), &strEnd, base);
   }
   /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
   // converts the string to a double. same as rsl::stod
-  REX_NO_DISCARD float64 to_double(value_type* str_end, int32 base = 10) const
+  REX_NO_DISCARD float64 to_double(value_type* strEnd, int32 base = 10) const
   {
-    return rsl::strtod(data(), &str_end, base);
+    return rsl::strtod(data(), &strEnd, base);
   }
   /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
   // converts the string to a long double. same as rsl::stold
-  REX_NO_DISCARD lfloat64 to_lfloat(value_type* str_end, int32 base = 10) const
+  REX_NO_DISCARD lfloat64 to_lfloat(value_type* strEnd, int32 base = 10) const
   {
-    return rsl::strtold(data(), &str_end, base);
+    return rsl::strtold(data(), &strEnd, base);
   }
 
 private:
@@ -1560,11 +1562,11 @@ private:
     reset(m_sso_buffer.data(), 0, m_sso_buffer.max_size());
   }
   // sets the data pointers of the string
-  void reset(pointer buffer, size_type length, size_type buffer_size)
+  void reset(pointer buffer, size_type length, size_type bufferSize)
   {
     m_begin = buffer;
     m_end   = m_begin + length;
-    last()  = m_begin + buffer_size;
+    last()  = m_begin + bufferSize;
   }
   // assigns a string into the sso buffer,
   // setting m_begin, m_end and m_last
@@ -1615,24 +1617,24 @@ private:
   // allocates a new buffer and copies over the data
   // begin_src should point to a null terminated char
   // setting m_begin, m_end and m_last
-  void reallocate(size_type new_capacity, const_pointer begin_src, size_type length)
+  void reallocate(size_type newCapacity, const_pointer beginSrc, size_type length)
   {
-    pointer new_buffer = static_cast<pointer>(get_allocator().allocate(new_capacity));
+    pointer new_buffer = static_cast<pointer>(get_allocator().allocate(newCapacity));
 
-    traits_type::copy(new_buffer, begin_src, length);
+    traits_type::copy(new_buffer, beginSrc, length);
     deallocate();
 
     m_begin = new_buffer;
     m_end   = m_begin + length;
     traits_type::assign(*--m_end, value_type());
-    last() = m_begin + new_capacity;
+    last() = m_begin + newCapacity;
   }
   // deallocates all heap data, if used.
   void deallocate()
   {
     if(is_using_big_string())
     {
-      get_allocator().deallocate(data(), calc_bytes_needed(capacity()));
+      get_allocator().deallocate(data());
     }
   }
   // moves every element starting at str[idx] 'count' space(s) to the right
@@ -1690,11 +1692,11 @@ private:
     prepare_for_new_insert(pos_idx, count);
   }
   // reallocates if new size is bigger than the sso and bigger than the current capacity
-  bool increase_capacity_if_needed(size_type num_elements_to_add)
+  bool increase_capacity_if_needed(size_type numElementsToAdd)
   {
-    if(size() + num_elements_to_add > capacity())
+    if(size() + numElementsToAdd > capacity())
     {
-      reallocate(new_buffer_size(num_elements_to_add), data(), size());
+      reallocate(new_buffer_size(numElementsToAdd), data(), size());
       return true;
     }
 
@@ -1736,9 +1738,9 @@ private:
     return (count == s_npos || count > s.length()) ? s.length() : count;
   }
   // returns the size of a new buffer on reallocation
-  size_type new_buffer_size(size_type num_elements_to_add) const
+  size_type new_buffer_size(size_type numElementsToAdd) const
   {
-    return size() * 2 + num_elements_to_add + 1;
+    return size() * 2 + numElementsToAdd + 1;
   }
   // replace substring with given substring, doesn't perform any checking
   basic_string& replace(size_type pos, size_type count1, pointer str, size_type count2)
@@ -1796,7 +1798,7 @@ rsl::basic_string<Char, Traits, Alloc> operator+(const rsl::basic_string<Char, T
 // the standard doesn't provide an overload for a string literal.
 // returns a string containing characters from lhs followed by the characters from rhs
 template <typename Char, typename Traits, typename Alloc, count_t Size>
-rsl::basic_string<Char, Traits, Alloc> operator+(const rsl::basic_string<Char, Traits, Alloc>& lhs, const Char (&rhs)[Size])
+rsl::basic_string<Char, Traits, Alloc> operator+(const rsl::basic_string<Char, Traits, Alloc>& lhs, const Char (&rhs)[Size]) // NOLINT(modernize-avoid-c-arrays)
 {
   rsl::basic_string<Char, Traits, Alloc> str;
   str += lhs;
@@ -1822,7 +1824,7 @@ rsl::basic_string<Char, Traits, Alloc> operator+(const rsl::basic_string<Char, T
 // the standard doesn't provide an overload for a string literal.
 // returns a string containing characters from lhs followed by the characters from rhs
 template <typename Char, typename Traits, typename Alloc, count_t Size>
-rsl::basic_string<Char, Traits, Alloc> operator+(const Char (&lhs)[Size], const rsl::basic_string<Char, Traits, Alloc>& rhs)
+rsl::basic_string<Char, Traits, Alloc> operator+(const Char (&lhs)[Size], const rsl::basic_string<Char, Traits, Alloc>& rhs) // NOLINT(modernize-avoid-c-arrays)
 {
   rsl::basic_string<Char, Traits, Alloc> str;
   str += lhs;
@@ -1867,7 +1869,7 @@ rsl::basic_string<Char, Traits, Alloc> operator+(rsl::basic_string<Char, Traits,
 // for string literals as we don't have to calculate its length
 // returns a string containing characters from lhs followed by the characters from rhs
 template <typename Char, typename Traits, typename Alloc, count_t Size>
-rsl::basic_string<Char, Traits, Alloc> operator+(rsl::basic_string<Char, Traits, Alloc>&& lhs, const Char (&rhs)[Size])
+rsl::basic_string<Char, Traits, Alloc> operator+(rsl::basic_string<Char, Traits, Alloc>&& lhs, const Char (&rhs)[Size]) // NOLINT(modernize-avoid-c-arrays)
 {
   rsl::basic_string<Char, Traits, Alloc> str(rsl::move(lhs));
   str += rhs;
@@ -1894,7 +1896,7 @@ rsl::basic_string<Char, Traits, Alloc> operator+(const rsl::basic_string<Char, T
 
 // returns a string containing characters from lhs followed by the characters from rhs
 template <typename Char, typename Traits, typename Alloc, count_t Size>
-rsl::basic_string<Char, Traits, Alloc> operator+(const Char (&lhs)[Size], rsl::basic_string<Char, Traits, Alloc>&& rhs)
+rsl::basic_string<Char, Traits, Alloc> operator+(const Char (&lhs)[Size], rsl::basic_string<Char, Traits, Alloc>&& rhs) // NOLINT(modernize-avoid-c-arrays)
 {
   rsl::basic_string<Char, Traits, Alloc> str(rsl::move(rhs));
   str.insert(str.cbegin(), lhs);
@@ -1953,7 +1955,7 @@ bool operator>=(const rsl::basic_string<Char, Traits, Alloc>& lhs, const rsl::ba
 }
 // compares if 2 strings are equal
 template <typename Char, typename Traits, typename Alloc, count_t Size>
-bool operator==(const rsl::basic_string<Char, Traits, Alloc>& lhs, const Char (&rhs)[Size])
+bool operator==(const rsl::basic_string<Char, Traits, Alloc>& lhs, const Char (&rhs)[Size]) // NOLINT(modernize-avoid-c-arrays)
 {
   if(lhs.length() != Size - 1)
   {
@@ -1964,67 +1966,67 @@ bool operator==(const rsl::basic_string<Char, Traits, Alloc>& lhs, const Char (&
 }
 // compares if 2 strings are equal
 template <typename Char, typename Traits, typename Alloc, count_t Size>
-bool operator==(const Char (&lhs)[Size], const rsl::basic_string<Char, Traits, Alloc>& rhs)
+bool operator==(const Char (&lhs)[Size], const rsl::basic_string<Char, Traits, Alloc>& rhs) // NOLINT(modernize-avoid-c-arrays)
 {
   return rhs == lhs;
 }
 // compares if 2 strings are not equal
 template <typename Char, typename Traits, typename Alloc, count_t Size>
-bool operator!=(const rsl::basic_string<Char, Traits, Alloc>& lhs, const Char (&rhs)[Size])
+bool operator!=(const rsl::basic_string<Char, Traits, Alloc>& lhs, const Char (&rhs)[Size]) // NOLINT(modernize-avoid-c-arrays)
 {
   return !(lhs == rhs);
 }
 // compares if 2 strings are not equal
 template <typename Char, typename Traits, typename Alloc, count_t Size>
-bool operator!=(const Char (&lhs)[Size], const rsl::basic_string<Char, Traits, Alloc>& rhs)
+bool operator!=(const Char (&lhs)[Size], const rsl::basic_string<Char, Traits, Alloc>& rhs) // NOLINT(modernize-avoid-c-arrays)
 {
   return !(rhs == lhs);
 }
 // lexicographically compares 2 strings
 template <typename Char, typename Traits, typename Alloc, count_t Size>
-bool operator<(const rsl::basic_string<Char, Traits, Alloc>& lhs, const Char (&rhs)[Size])
+bool operator<(const rsl::basic_string<Char, Traits, Alloc>& lhs, const Char (&rhs)[Size]) // NOLINT(modernize-avoid-c-arrays)
 {
   return lhs.compare(rhs) < 0;
 }
 // lexicographically compares 2 strings
 template <typename Char, typename Traits, typename Alloc, count_t Size>
-bool operator<(const Char (&lhs)[Size], const rsl::basic_string<Char, Traits, Alloc>& rhs)
+bool operator<(const Char (&lhs)[Size], const rsl::basic_string<Char, Traits, Alloc>& rhs) // NOLINT(modernize-avoid-c-arrays)
 {
   return rhs.compare(lhs) > 0;
 }
 // lexicographically compares 2 strings
 template <typename Char, typename Traits, typename Alloc, count_t Size>
-bool operator<=(const rsl::basic_string<Char, Traits, Alloc>& lhs, const Char (&rhs)[Size])
+bool operator<=(const rsl::basic_string<Char, Traits, Alloc>& lhs, const Char (&rhs)[Size]) // NOLINT(modernize-avoid-c-arrays)
 {
   return lhs.compare(rhs) <= 0;
 }
 // lexicographically compares 2 strings
 template <typename Char, typename Traits, typename Alloc, count_t Size>
-bool operator<=(const Char (&lhs)[Size], const rsl::basic_string<Char, Traits, Alloc>& rhs)
+bool operator<=(const Char (&lhs)[Size], const rsl::basic_string<Char, Traits, Alloc>& rhs) // NOLINT(modernize-avoid-c-arrays)
 {
   return rhs.compare(lhs) >= 0;
 }
 // lexicographically compares 2 strings
 template <typename Char, typename Traits, typename Alloc, count_t Size>
-bool operator>(const rsl::basic_string<Char, Traits, Alloc>& lhs, const Char (&rhs)[Size])
+bool operator>(const rsl::basic_string<Char, Traits, Alloc>& lhs, const Char (&rhs)[Size]) // NOLINT(modernize-avoid-c-arrays)
 {
   return lhs.compare(rhs) > 0;
 }
 // lexicographically compares 2 strings
 template <typename Char, typename Traits, typename Alloc, count_t Size>
-bool operator>(const Char (&lhs)[Size], const rsl::basic_string<Char, Traits, Alloc>& rhs)
+bool operator>(const Char (&lhs)[Size], const rsl::basic_string<Char, Traits, Alloc>& rhs) // NOLINT(modernize-avoid-c-arrays)
 {
   return rhs.compare(lhs) < 0;
 }
 // lexicographically compares 2 strings
 template <typename Char, typename Traits, typename Alloc, count_t Size>
-bool operator>=(const rsl::basic_string<Char, Traits, Alloc>& lhs, const Char (&rhs)[Size])
+bool operator>=(const rsl::basic_string<Char, Traits, Alloc>& lhs, const Char (&rhs)[Size]) // NOLINT(modernize-avoid-c-arrays)
 {
   return lhs.compare(rhs) >= 0;
 }
 // lexicographically compares 2 strings
 template <typename Char, typename Traits, typename Alloc, count_t Size>
-bool operator>=(const Char (&lhs)[Size], const rsl::basic_string<Char, Traits, Alloc>& rhs)
+bool operator>=(const Char (&lhs)[Size], const rsl::basic_string<Char, Traits, Alloc>& rhs) // NOLINT(modernize-avoid-c-arrays)
 {
   return rhs.compare(lhs) <= 0;
 }
@@ -2082,21 +2084,21 @@ basic_istream<Char, Traits>& getline(basic_istream<Char, Traits>& input, basic_s
 /// RSL Comment: Different from ISO C++ Standard at time of writing (27/Aug/2022)
 // returns an optional instead of a basic type
 // interprets a signed integer value in the string
-rsl::optional<int32> stoi(const string& str, char8* str_end = nullptr, int32 base = 10);
+rsl::optional<int32> stoi(const string& str, char8* strEnd = nullptr, int32 base = 10);
 /// RSL Comment: Different from ISO C++ Standard at time of writing (27/Aug/2022)
 // returns an optional instead of a basic type
 rsl::optional<int32> stoi(const wstring& /*str*/, tchar* /*str_end*/ = nullptr, int32 /*base*/ = 10);
 /// RSL Comment: Different from ISO C++ Standard at time of writing (27/Aug/2022)
 // returns an optional instead of a basic type
 // interprets a signed integer value in the string
-rsl::optional<long> stol(const string& str, char8* str_end = nullptr, int32 base = 10);
+rsl::optional<long> stol(const string& str, char8* strEnd = nullptr, int32 base = 10);
 /// RSL Comment: Different from ISO C++ Standard at time of writing (27/Aug/2022)
 // returns an optional instead of a basic type
 rsl::optional<long> stol(const wstring& /*str*/, tchar* /*str_end */ = nullptr, int32 /*base */ = 10);
 /// RSL Comment: Different from ISO C++ Standard at time of writing (27/Aug/2022)
 // returns an optional instead of a basic type
 // interprets a signed integer value in the string
-rsl::optional<int64> stoll(const string& str, char8* str_end = nullptr, int32 base = 10);
+rsl::optional<int64> stoll(const string& str, char8* strEnd = nullptr, int32 base = 10);
 /// RSL Comment: Different from ISO C++ Standard at time of writing (27/Aug/2022)
 // returns an optional instead of a basic type
 rsl::optional<int64> stoll(const wstring& /*str*/, tchar* /*str_end */ = nullptr, int32 /*base*/ = 10);
@@ -2104,23 +2106,23 @@ rsl::optional<int64> stoll(const wstring& /*str*/, tchar* /*str_end */ = nullptr
 /// RSL Comment: Not in ISO C++ Standard at time of writing (04/Jul/2022)
 // For some reason, the standard doesn't provide a conversion to unsigned int32.
 // interprets an unsigned integer value in the string
-rsl::optional<uint32> stoui(const string& str, char8* str_end = nullptr, int32 base = 10);
+rsl::optional<uint32> stoui(const string& str, char8* strEnd = nullptr, int32 base = 10);
 rsl::optional<uint32> stoui(const wstring& /*str*/, tchar* /*str_end */ = nullptr, int32 /*base */ = 10);
 // interprets an unsigned integer value in the string
-rsl::optional<ulong> stoul(const string& str, char8* str_end = nullptr, int32 base = 10);
+rsl::optional<ulong> stoul(const string& str, char8* strEnd = nullptr, int32 base = 10);
 rsl::optional<ulong> stoul(const wstring& /*str*/, tchar* /*str_end*/ = nullptr, int32 /*base*/ = 10);
 // interprets an unsigned integer value in the string
-rsl::optional<uint64> stoull(const string& str, char8* str_end = nullptr, int32 base = 10);
+rsl::optional<uint64> stoull(const string& str, char8* strEnd = nullptr, int32 base = 10);
 rsl::optional<uint64> stoull(const wstring& /*str*/, tchar* /*str_end */ = nullptr, int32 /*base */ = 10);
 
 // interprets a floating point value in a string
-rsl::optional<float32> stof(const string& str, char8* str_end = nullptr);
+rsl::optional<float32> stof(const string& str, char8* strEnd = nullptr);
 rsl::optional<float32> stof(const wstring& /*str*/, tchar* /*str_end */ = nullptr);
 // interprets a floating point value in a string
-rsl::optional<float64> stod(const string& str, char8* str_end = nullptr);
+rsl::optional<float64> stod(const string& str, char8* strEnd = nullptr);
 rsl::optional<float64> stod(const wstring& /*str*/, tchar* /*str_end */ = nullptr);
 // interprets a floating point value in a string
-rsl::optional<lfloat64> stold(const string& str, char8* str_end = nullptr);
+rsl::optional<lfloat64> stold(const string& str, char8* strEnd = nullptr);
 rsl::optional<lfloat64> stold(const wstring& /*str*/, tchar* /*str_end */ = nullptr);
 
 // converts a signed integer to a string
@@ -2166,13 +2168,13 @@ namespace string_literals
 #pragma warning(push)
 #pragma warning(disable : 4455) // literal suffix identifiers that do not start with an underscore are reserved
   // returns a string of the desired type
-  string operator""s(const char8* s, size_t len);
+  string operator""s(const char8* s, size_t len); // NOLINT(clang-diagnostic-user-defined-literals)
   // returns a string of the desired type
-  u16string operator""s(const char16_t* s, size_t len);
+  u16string operator""s(const char16_t* s, size_t len); // NOLINT(clang-diagnostic-user-defined-literals)
   // returns a string of the desired type
-  u32string operator""s(const char32_t* s, size_t len);
+  u32string operator""s(const char32_t* s, size_t len); // NOLINT(clang-diagnostic-user-defined-literals)
   // returns a string of the desired type
-  wstring operator""s(const tchar* s, size_t len);
+  wstring operator""s(const tchar* s, size_t len); // NOLINT(clang-diagnostic-user-defined-literals)
 #pragma warning(pop)
 } // namespace string_literals
 

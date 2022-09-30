@@ -23,132 +23,132 @@ REX_RSL_BEGIN_NAMESPACE
 
 namespace internal
 {
-  constexpr auto SignedInt8Min = SCHAR_MIN;
-  constexpr auto SignedInt8Max = SCHAR_MAX;
+  constexpr auto signed_int8_min = SCHAR_MIN;
+  constexpr auto signed_int8_max = SCHAR_MAX;
 
-  constexpr auto SignedInt16Min = SHRT_MIN;
-  constexpr auto SignedInt16Max = SHRT_MAX;
+  constexpr auto signed_int16_min = SHRT_MIN;
+  constexpr auto signed_int16_max = SHRT_MAX;
 
-  constexpr auto SignedInt32Min = INT_MIN;
-  constexpr auto SignedInt32Max = INT_MAX;
+  constexpr auto signed_int32_min = INT_MIN;
+  constexpr auto signed_int32_max = INT_MAX;
 
-  constexpr auto SignedInt64Min = LLONG_MIN;
-  constexpr auto SignedInt64Max = LLONG_MAX;
+  constexpr auto signed_int64_min = LLONG_MIN;
+  constexpr auto signed_int64_max = LLONG_MAX;
 
-  constexpr auto UnsignedInt8Max  = UCHAR_MAX;
-  constexpr auto UnsignedInt16Max = USHRT_MAX;
-  constexpr auto UnsignedInt32Max = UINT_MAX;
-  constexpr auto UnsignedInt64Max = ULLONG_MAX;
+  constexpr auto unsigned_int8_max  = UCHAR_MAX;
+  constexpr auto unsigned_int16_max = USHRT_MAX;
+  constexpr auto unsigned_int32_max = UINT_MAX;
+  constexpr auto unsigned_int64_max = ULLONG_MAX;
 
-  constexpr auto ExponentRadix = 2;
+  constexpr auto exponent_radix = 2;
 
-  constexpr auto WCharMin = 0x0000;
-  constexpr auto WCharMax = 0xffff;
-  constexpr auto WIntMax  = 0xffff;
+  constexpr auto w_char_min = 0x0000;
+  constexpr auto w_char_max = 0xffff;
+  constexpr auto w_int_max  = 0xffff;
 
-  constexpr auto SignedLongMin       = -2147483648L;
-  constexpr auto SignedLongMax       = 2147483647L;
-  constexpr auto UnsignedLongMax     = 0xffffffffUL;
-  constexpr auto SignedLongLongMin   = (-9223372036854775808i64);
-  constexpr auto SignedLongLongMax   = 9223372036854775807i64;
-  constexpr auto UnsignedLongLongMax = 0xffffffffffffffffui64;
+  constexpr auto signed_long_min        = -2147483648L;
+  constexpr auto signed_long_max        = 2147483647L;
+  constexpr auto unsigned_long_max      = 0xffffffffUL;
+  constexpr auto signed_long_long_min   = (-9223372036854775807i64);
+  constexpr auto signed_long_long_max   = 9223372036854775807i64;
+  constexpr auto unsigned_long_long_max = 0xffffffffffffffffui64;
 
-  constexpr auto DoubleDecimalDigits  = DBL_DECIMAL_DIG; // # of decimal digits of rounding precision
-  constexpr auto DoubleDigits         = DBL_DIG;         // # of decimal digits of precision
-  constexpr auto DoubleEpsilon        = DBL_EPSILON;     // smallest such that 1.0+DoubleEpsilon != 1.0
-  constexpr auto DoubleHasSubnorm     = DBL_HAS_SUBNORM; // type does support subnormal numbers
-  constexpr auto DoubleMantissaDigits = DBL_MANT_DIG;    // # of bits in mantissa
-  constexpr auto DoubleMax            = DBL_MAX;         // max value
-  constexpr auto DoubleMax10Exp       = DBL_MAX_10_EXP;  // max decimal exponent
-  constexpr auto DoubleMaxExp         = DBL_MAX_EXP;     // max binary exponent
-  constexpr auto DoubleMin            = DBL_MIN;         // min positive value
-  constexpr auto DoubleMin10Exp       = DBL_MIN_10_EXP;  // min decimal exponent
-  constexpr auto DoubleMinExp         = DBL_MIN_EXP;     // min binary exponent
-  constexpr auto DoubleRadix          = _DBL_RADIX;      // exponent radix
-  constexpr auto DoubleTrueMin        = DBL_TRUE_MIN;    // min positive value
+  constexpr auto double_decimal_digits  = REX_DBL_DECIMAL_DIG; // # of decimal digits of rounding precision
+  constexpr auto double_digits          = REX_DBL_DIG;         // # of decimal digits of precision
+  constexpr auto double_epsilon         = REX_DBL_EPSILON;     // smallest such that 1.0+DoubleEpsilon != 1.0
+  constexpr auto double_has_subnorm     = REX_DBL_HAS_SUBNORM; // type does support subnormal numbers
+  constexpr auto double_mantissa_digits = REX_DBL_MANT_DIG;    // # of bits in mantissa
+  constexpr auto double_max             = REX_DBL_MAX;         // max value
+  constexpr auto double_max10_exp       = REX_DBL_MAX_10_EXP;  // max decimal exponent
+  constexpr auto double_max_exp         = REX_DBL_MAX_EXP;     // max binary exponent
+  constexpr auto double_min             = REX_DBL_MIN;         // min positive value
+  constexpr auto double_min10_exp       = REX_DBL_MIN_10_EXP;  // min decimal exponent
+  constexpr auto double_min_exp         = REX_DBL_MIN_EXP;     // min binary exponent
+  constexpr auto double_radix           = REX_DBL_RADIX;       // exponent radix
+  constexpr auto double_true_min        = REX_DBL_TRUE_MIN;    // min positive value
 
-  constexpr auto FloatDecimalDigits  = FLT_DECIMAL_DIG; // # of decimal digits of rounding precision
-  constexpr auto FloatDigits         = FLT_DIG;         // # of decimal digits of precision
-  constexpr auto FloatEpsilon        = FLT_EPSILON;     // smallest such that 1.0+FloatEpsilon != 1.0
-  constexpr auto FloatHasSubnorm     = FLT_HAS_SUBNORM; // type does support subnormal numbers
-  constexpr auto FloatGuard          = FLT_GUARD;
-  constexpr auto FloatMantissaDigits = FLT_MANT_DIG;   // # of bits in mantissa
-  constexpr auto FloatMax            = FLT_MAX;        // max value
-  constexpr auto FloatMax10Exp       = FLT_MAX_10_EXP; // max decimal exponent
-  constexpr auto FloatMaxExp         = FLT_MAX_EXP;    // max binary exponent
-  constexpr auto FloatMin            = FLT_MIN;        // min normalized positive value
-  constexpr auto FloatMin10Exp       = FLT_MIN_10_EXP; // min decimal exponent
-  constexpr auto FloatMinExpr        = FLT_MIN_EXP;    // min binary exponent
-  constexpr auto FloatNormalize      = FLT_NORMALIZE;
-  constexpr auto FloatRadix          = FLT_RADIX;    // exponent radix
-  constexpr auto FloatTrueMin        = FLT_TRUE_MIN; // min positive value
+  constexpr auto float_decimal_digits  = REX_FLT_DECIMAL_DIG; // # of decimal digits of rounding precision
+  constexpr auto float_digits          = REX_FLT_DIG;         // # of decimal digits of precision
+  constexpr auto float_epsilon         = REX_FLT_EPSILON;     // smallest such that 1.0+FloatEpsilon != 1.0
+  constexpr auto float_has_subnorm     = REX_FLT_HAS_SUBNORM; // type does support subnormal numbers
+  constexpr auto float_guard           = REX_FLT_GUARD;
+  constexpr auto float_mantissa_digits = REX_FLT_MANT_DIG;   // # of bits in mantissa
+  constexpr auto float_max             = REX_FLT_MAX;        // max value
+  constexpr auto float_max10_exp       = REX_FLT_MAX_10_EXP; // max decimal exponent
+  constexpr auto float_max_exp         = REX_FLT_MAX_EXP;    // max binary exponent
+  constexpr auto float_min             = REX_FLT_MIN;        // min normalized positive value
+  constexpr auto float_min10_exp       = REX_FLT_MIN_10_EXP; // min decimal exponent
+  constexpr auto float_min_expr        = REX_FLT_MIN_EXP;    // min binary exponent
+  constexpr auto float_normalize       = REX_FLT_NORMALIZE;
+  constexpr auto float_radix           = REX_FLT_RADIX;    // exponent radix
+  constexpr auto float_true_min        = REX_FLT_TRUE_MIN; // min positive value
 
-  constexpr auto LongDoubleDigits         = DoubleDigits;         // # of decimal digits of precision
-  constexpr auto LongDoubleEpsilon        = DoubleEpsilon;        // smallest such that 1.0+LDBL_EPSILON != 1.0
-  constexpr auto LongDoubleHasSubnorm     = DoubleHasSubnorm;     // type does support subnormal numbers
-  constexpr auto LongDoubleMantissaDigits = DoubleMantissaDigits; // # of bits in mantissa
-  constexpr auto LongDoubleMax            = DoubleMax;            // max value
-  constexpr auto LongDoubleMax10Exp       = DoubleMax10Exp;       // max decimal exponent
-  constexpr auto LongDoubleMaxExp         = DoubleMaxExp;         // max binary exponent
-  constexpr auto LongDoubleMin            = DoubleMin;            // min normalized positive value
-  constexpr auto LongDoubleMin10Exp       = DoubleMin10Exp;       // min decimal exponent
-  constexpr auto LongDoubleMinExp         = DoubleMinExp;         // min binary exponent
-  constexpr auto LongDoubleRadix          = DoubleRadix;          // exponent radix
-  constexpr auto LongDoubleTrueMin        = DoubleTrueMin;        // min positive value
+  constexpr auto long_double_digits          = double_digits;          // # of decimal digits of precision
+  constexpr auto long_double_epsilon         = double_epsilon;         // smallest such that 1.0+LDBL_EPSILON != 1.0
+  constexpr auto long_double_has_subnorm     = double_has_subnorm;     // type does support subnormal numbers
+  constexpr auto long_double_mantissa_digits = double_mantissa_digits; // # of bits in mantissa
+  constexpr auto long_double_max             = double_max;             // max value
+  constexpr auto long_double_max10_exp       = double_max10_exp;       // max decimal exponent
+  constexpr auto long_double_max_exp         = double_max_exp;         // max binary exponent
+  constexpr auto long_double_min             = double_min;             // min normalized positive value
+  constexpr auto long_double_min10_exp       = double_min10_exp;       // min decimal exponent
+  constexpr auto long_double_min_exp         = double_min_exp;         // min binary exponent
+  constexpr auto long_double_radix           = double_radix;           // exponent radix
+  constexpr auto long_double_true_min        = double_true_min;        // min positive value
 
-  constexpr auto NrOfBitsInAByte = CHAR_BIT;
+  constexpr auto nr_of_bits_in_a_byte = CHAR_BIT;
 
   // ENUM FloatDenormStyle
   // constants for different IEEE float denormalization
   // styles
-  enum class FloatDenormStyle
+  enum class float_denorm_style
   {
-    DenormIndeterminate = -1,
-    DenormAbsent        = 0,
-    DenormPresent       = 1
+    denorm_indeterminate = -1,
+    denorm_absent        = 0,
+    denorm_present       = 1
   };
 
   // ENUM FloatRoundStyle
   // constants for different IEEE rounding styles
-  enum class FloatRoundStyle
+  enum class float_round_style
   {
-    RoundIndeterminate     = -1,
-    RoundTowardZero        = 0,
-    RoundToNearest         = 1,
-    RoundTowardInfinity    = 2,
-    RoundTowardNegInfinity = 3
+    round_indeterminate       = -1,
+    round_toward_zero         = 0,
+    round_to_nearest          = 1,
+    round_toward_infinity     = 2,
+    round_toward_neg_infinity = 3
   };
 
   // STRUCT NumBase
-  struct NumBase
+  struct num_base
   { // base for all types, with common defaults
-    static constexpr FloatDenormStyle has_denorm = FloatDenormStyle::DenormAbsent;
-    static constexpr bool has_denorm_loss        = false;
-    static constexpr bool has_infinity           = false;
-    static constexpr bool has_quiet_nan          = false;
-    static constexpr bool has_signaling_nan      = false;
-    static constexpr bool is_bounded             = false;
-    static constexpr bool is_exact               = false;
-    static constexpr bool is_iec559              = false;
-    static constexpr bool is_integer             = false;
-    static constexpr bool is_modulo              = false;
-    static constexpr bool is_signed              = false;
-    static constexpr bool is_specialized         = false;
-    static constexpr bool tinyness_before        = false;
-    static constexpr bool trap                   = false;
-    static constexpr FloatRoundStyle round_style = FloatRoundStyle::RoundTowardZero;
-    static constexpr int32 digits                = 0;
-    static constexpr int32 digits10              = 0;
-    static constexpr int32 max_digits10          = 0;
-    static constexpr int32 max_exponent          = 0;
-    static constexpr int32 max_exponent10        = 0;
-    static constexpr int32 min_exponent          = 0;
-    static constexpr int32 min_exponent10        = 0;
-    static constexpr int32 radix                 = 0;
+    static constexpr float_denorm_style has_denorm = float_denorm_style::denorm_absent;
+    static constexpr bool has_denorm_loss          = false;
+    static constexpr bool has_infinity             = false;
+    static constexpr bool has_quiet_nan            = false;
+    static constexpr bool has_signaling_nan        = false;
+    static constexpr bool is_bounded               = false;
+    static constexpr bool is_exact                 = false;
+    static constexpr bool is_iec559                = false;
+    static constexpr bool is_integer               = false;
+    static constexpr bool is_modulo                = false;
+    static constexpr bool is_signed                = false;
+    static constexpr bool is_specialized           = false;
+    static constexpr bool tinyness_before          = false;
+    static constexpr bool trap                     = false;
+    static constexpr float_round_style round_style = float_round_style::round_toward_zero;
+    static constexpr int32 digits                  = 0;
+    static constexpr int32 digits10                = 0;
+    static constexpr int32 max_digits10            = 0;
+    static constexpr int32 max_exponent            = 0;
+    static constexpr int32 max_exponent10          = 0;
+    static constexpr int32 min_exponent            = 0;
+    static constexpr int32 min_exponent10          = 0;
+    static constexpr int32 radix                   = 0;
   };
 
   // STRUCT NumIntBase
-  struct NumIntBase : NumBase
+  struct num_int_base : num_base
   { // base for integer types
     static constexpr bool is_bounded     = true;
     static constexpr bool is_exact       = true;
@@ -158,56 +158,56 @@ namespace internal
   };
 
   // STRUCT NumFloatBase
-  struct NumFloatBase : NumBase
+  struct num_float_base : num_base
   { // base for floating-point types
-    static constexpr FloatDenormStyle has_denorm = FloatDenormStyle::DenormPresent;
-    static constexpr bool has_infinity           = true;
-    static constexpr bool has_quiet_nan          = true;
-    static constexpr bool has_signaling_nan      = true;
-    static constexpr bool is_bounded             = true;
-    static constexpr bool is_iec559              = true;
-    static constexpr bool is_signed              = true;
-    static constexpr bool is_specialized         = true;
-    static constexpr FloatRoundStyle round_style = FloatRoundStyle ::RoundToNearest;
-    static constexpr int32 radix                 = ExponentRadix;
+    static constexpr float_denorm_style has_denorm = float_denorm_style::denorm_present;
+    static constexpr bool has_infinity             = true;
+    static constexpr bool has_quiet_nan            = true;
+    static constexpr bool has_signaling_nan        = true;
+    static constexpr bool is_bounded               = true;
+    static constexpr bool is_iec559                = true;
+    static constexpr bool is_signed                = true;
+    static constexpr bool is_specialized           = true;
+    static constexpr float_round_style round_style = float_round_style ::round_to_nearest;
+    static constexpr int32 radix                   = exponent_radix;
   };
-
-  // the min possible value of T
-  template <typename T>
-  constexpr auto MinSigned = (T)1 << NrOfDigits<T>;
-  template <typename T>
-  constexpr auto MinUnSigned = (T)0;
-  template <typename T>
-  constexpr auto Min = rsl::is_signed<T> ? MinSigned<T> : MinUnSigned<T>;
-
-  // the max possible value of T
-  template <typename T>
-  constexpr auto MaxSigned = (T)(((((T)1 << (NrOfDigits<T> - 1)) - 1) << 1) + 1);
-  template <typename T>
-  constexpr auto MaxUnigned = ((T) ~(T)0);
-  template <typename T>
-  constexpr auto Max = rsl::is_signed<T> ? MaxSigned<T> : MaxUnigned<T>;
 
   // the number of bits in the represenation of T
   template <typename T>
-  constexpr auto NrOfDigitsSigned = (sizeof(T) * internal::NrOfBitsInAByte) - 1;
+  constexpr auto nr_of_digits_signed = (sizeof(T) * internal::nr_of_bits_in_a_byte) - 1;
   template <typename T>
-  constexpr auto NrOfDigitsUnsigned = (sizeof(T) * internal::NrOfBitsInAByte);
+  constexpr auto nr_of_digits_unsigned = (sizeof(T) * internal::nr_of_bits_in_a_byte);
   template <typename T>
-  constexpr auto NrOfDigits = rsl::is_signed<T> ? NrOfDigitsSigned<T> : NrOfDigitsUnsigned<T>;
+  constexpr auto nr_of_digits = rsl::is_signed_v<T> ? nr_of_digits_signed<T> : nr_of_digits_unsigned<T>;
+
+  // the min possible value of T
+  template <typename T>
+  constexpr auto min_signed = static_cast<T>(1) << nr_of_digits<T>;
+  template <typename T>
+  constexpr auto min_unsigned = static_cast<T>(0);
+  template <typename T>
+  constexpr auto min = rsl::is_signed_v<T> ? min_signed<T> : min_unsigned<T>;
+
+  // the max possible value of T
+  template <typename T>
+  constexpr auto max_signed = static_cast<T>((((static_cast<T>(1) << (nr_of_digits<T> - 1)) - 1) << 1) + 1);
+  template <typename T>
+  constexpr auto max_unsigned = (static_cast<T>(~static_cast<T>(0)));
+  template <typename T>
+  constexpr auto max = rsl::is_signed_v<T> ? max_signed<T> : max_unsigned<T>;
 
   // the number of decimal digits that can be represented by T
   template <typename T>
-  constexpr auto NrOfDigits10Signed = (NrOfDigitsSigned<T> * 643L) / 2136; // ( 643 / 2136 ) ~= log10(2)
+  constexpr auto nr_of_digits10_signed = (nr_of_digits_signed<T> * 643L) / 2136; // ( 643 / 2136 ) ~= log10(2)
   template <typename T>
-  constexpr auto NrOfDigits10Unsigned = (NrOfDigitsUnsigned<T> * 643L) / 2136; // ( 643 / 2136 ) ~= log10(2)
+  constexpr auto nr_of_digits10_unsigned = (nr_of_digits_unsigned<T> * 643L) / 2136; // ( 643 / 2136 ) ~= log10(2)
   template <typename T>
-  constexpr auto NrOfDigits10 = rsl::is_signed<T> ? NrOfDigits10Signed<T> : NrOfDigits10Unsigned<T>;
+  constexpr auto nr_of_digits10 = rsl::is_signed_v<T> ? nr_of_digits10_signed<T> : nr_of_digits10_unsigned<T>;
 } // namespace internal
 
 // CLASS TEMPLATE numeric_limits
 template <class T>
-class numeric_limits : public internal::NumBase
+class numeric_limits : public internal::num_base
 { // numeric limits for arbitrary type
   // T (say little or nothing)
 public:
@@ -246,12 +246,12 @@ public:
     return T();
   }
 
-  REX_NO_DISCARD static constexpr T quiet_NaN() noexcept
+  REX_NO_DISCARD static constexpr T quiet_na_n() noexcept
   {
     return T();
   }
 
-  REX_NO_DISCARD static constexpr T signaling_NaN() noexcept
+  REX_NO_DISCARD static constexpr T signaling_na_n() noexcept
   {
     return T();
   }
@@ -274,7 +274,7 @@ class numeric_limits<const volatile T> : public numeric_limits<T>
 
 // CLASS numeric_limits<bool>
 template <>
-class numeric_limits<bool> : public internal::NumIntBase
+class numeric_limits<bool> : public internal::num_int_base
 {
 public:
   REX_NO_DISCARD static constexpr bool(min)() noexcept
@@ -294,32 +294,32 @@ public:
 
   REX_NO_DISCARD static constexpr bool epsilon() noexcept
   {
-    return 0;
+    return false;
   }
 
   REX_NO_DISCARD static constexpr bool round_error() noexcept
   {
-    return 0;
+    return false;
   }
 
   REX_NO_DISCARD static constexpr bool denorm_min() noexcept
   {
-    return 0;
+    return false;
   }
 
   REX_NO_DISCARD static constexpr bool infinity() noexcept
   {
-    return 0;
+    return false;
   }
 
-  REX_NO_DISCARD static constexpr bool quiet_NaN() noexcept
+  REX_NO_DISCARD static constexpr bool quiet_na_n() noexcept
   {
-    return 0;
+    return false;
   }
 
-  REX_NO_DISCARD static constexpr bool signaling_NaN() noexcept
+  REX_NO_DISCARD static constexpr bool signaling_na_n() noexcept
   {
-    return 0;
+    return false;
   }
 
   static constexpr int32 digits = 1;
@@ -327,17 +327,17 @@ public:
 
 // CLASS numeric_limits<char>
 template <>
-class numeric_limits<char> : public internal::NumIntBase
+class numeric_limits<char> : public internal::num_int_base
 {
 public:
   REX_NO_DISCARD static constexpr char(min)() noexcept
   {
-    return internal::SignedInt8Min;
+    return internal::signed_int8_min;
   }
 
   REX_NO_DISCARD static constexpr char(max)() noexcept
   {
-    return internal::SignedInt8Max;
+    return internal::signed_int8_max;
   }
 
   REX_NO_DISCARD static constexpr char lowest() noexcept
@@ -365,35 +365,35 @@ public:
     return 0;
   }
 
-  REX_NO_DISCARD static constexpr char quiet_NaN() noexcept
+  REX_NO_DISCARD static constexpr char quiet_na_n() noexcept
   {
     return 0;
   }
 
-  REX_NO_DISCARD static constexpr char signaling_NaN() noexcept
+  REX_NO_DISCARD static constexpr char signaling_na_n() noexcept
   {
     return 0;
   }
 
-  static constexpr bool is_signed = internal::SignedInt8Min != 0;
-  static constexpr bool is_modulo = internal::SignedInt8Min == 0;
-  static constexpr int32 digits   = 8 - (internal::SignedInt8Min != 0);
+  static constexpr bool is_signed = internal::signed_int8_min != 0;
+  static constexpr bool is_modulo = internal::signed_int8_min == 0;
+  static constexpr int32 digits   = 8 - static_cast<int32>((internal::signed_int8_min != 0));
   static constexpr int32 digits10 = 2;
 };
 
 // CLASS numeric_limits<signed char>
 template <>
-class numeric_limits<signed char> : public internal::NumIntBase
+class numeric_limits<signed char> : public internal::num_int_base
 {
 public:
   REX_NO_DISCARD static constexpr signed char(min)() noexcept
   {
-    return internal::SignedInt8Min;
+    return internal::signed_int8_min;
   }
 
   REX_NO_DISCARD static constexpr signed char(max)() noexcept
   {
-    return internal::SignedInt8Max;
+    return internal::signed_int8_max;
   }
 
   REX_NO_DISCARD static constexpr signed char lowest() noexcept
@@ -421,12 +421,12 @@ public:
     return 0;
   }
 
-  REX_NO_DISCARD static constexpr signed char quiet_NaN() noexcept
+  REX_NO_DISCARD static constexpr signed char quiet_na_n() noexcept
   {
     return 0;
   }
 
-  REX_NO_DISCARD static constexpr signed char signaling_NaN() noexcept
+  REX_NO_DISCARD static constexpr signed char signaling_na_n() noexcept
   {
     return 0;
   }
@@ -438,7 +438,7 @@ public:
 
 // CLASS numeric_limits<unsigned char>
 template <>
-class numeric_limits<unsigned char> : public internal::NumIntBase
+class numeric_limits<unsigned char> : public internal::num_int_base
 {
 public:
   REX_NO_DISCARD static constexpr unsigned char(min)() noexcept
@@ -448,7 +448,7 @@ public:
 
   REX_NO_DISCARD static constexpr unsigned char(max)() noexcept
   {
-    return internal::UnsignedInt8Max;
+    return internal::unsigned_int8_max;
   }
 
   REX_NO_DISCARD static constexpr unsigned char lowest() noexcept
@@ -476,12 +476,12 @@ public:
     return 0;
   }
 
-  REX_NO_DISCARD static constexpr unsigned char quiet_NaN() noexcept
+  REX_NO_DISCARD static constexpr unsigned char quiet_na_n() noexcept
   {
     return 0;
   }
 
-  REX_NO_DISCARD static constexpr unsigned char signaling_NaN() noexcept
+  REX_NO_DISCARD static constexpr unsigned char signaling_na_n() noexcept
   {
     return 0;
   }
@@ -494,7 +494,7 @@ public:
 #ifdef __cpp_char8_t
 // CLASS numeric_limits<char8_t>
 template <>
-class numeric_limits<char8_t> : public internal::NumIntBase
+class numeric_limits<char8_t> : public internal::num_int_base
 {
 public:
   REX_NO_DISCARD static constexpr char8_t(min)() noexcept
@@ -504,7 +504,7 @@ public:
 
   REX_NO_DISCARD static constexpr char8_t(max)() noexcept
   {
-    return internal::UnsignedInt8Max;
+    return internal::unsigned_int8_max;
   }
 
   REX_NO_DISCARD static constexpr char8_t lowest() noexcept
@@ -532,12 +532,12 @@ public:
     return 0;
   }
 
-  REX_NO_DISCARD static constexpr char8_t quiet_NaN() noexcept
+  REX_NO_DISCARD static constexpr char8_t quiet_na_n() noexcept
   {
     return 0;
   }
 
-  REX_NO_DISCARD static constexpr char8_t signaling_NaN() noexcept
+  REX_NO_DISCARD static constexpr char8_t signaling_na_n() noexcept
   {
     return 0;
   }
@@ -550,7 +550,7 @@ public:
 
 // CLASS numeric_limits<char16_t>
 template <>
-class numeric_limits<char16_t> : public internal::NumIntBase
+class numeric_limits<char16_t> : public internal::num_int_base
 {
 public:
   REX_NO_DISCARD static constexpr char16_t(min)() noexcept
@@ -560,7 +560,7 @@ public:
 
   REX_NO_DISCARD static constexpr char16_t(max)() noexcept
   {
-    return internal::UnsignedInt16Max;
+    return internal::unsigned_int16_max;
   }
 
   REX_NO_DISCARD static constexpr char16_t lowest() noexcept
@@ -588,12 +588,12 @@ public:
     return 0;
   }
 
-  REX_NO_DISCARD static constexpr char16_t quiet_NaN() noexcept
+  REX_NO_DISCARD static constexpr char16_t quiet_na_n() noexcept
   {
     return 0;
   }
 
-  REX_NO_DISCARD static constexpr char16_t signaling_NaN() noexcept
+  REX_NO_DISCARD static constexpr char16_t signaling_na_n() noexcept
   {
     return 0;
   }
@@ -605,7 +605,7 @@ public:
 
 // CLASS numeric_limits<char32_t>
 template <>
-class numeric_limits<char32_t> : public internal::NumIntBase
+class numeric_limits<char32_t> : public internal::num_int_base
 {
 public:
   REX_NO_DISCARD static constexpr char32_t(min)() noexcept
@@ -615,7 +615,7 @@ public:
 
   REX_NO_DISCARD static constexpr char32_t(max)() noexcept
   {
-    return internal::UnsignedInt32Max;
+    return internal::unsigned_int32_max;
   }
 
   REX_NO_DISCARD static constexpr char32_t lowest() noexcept
@@ -643,12 +643,12 @@ public:
     return 0;
   }
 
-  REX_NO_DISCARD static constexpr char32_t quiet_NaN() noexcept
+  REX_NO_DISCARD static constexpr char32_t quiet_na_n() noexcept
   {
     return 0;
   }
 
-  REX_NO_DISCARD static constexpr char32_t signaling_NaN() noexcept
+  REX_NO_DISCARD static constexpr char32_t signaling_na_n() noexcept
   {
     return 0;
   }
@@ -660,17 +660,17 @@ public:
 
 // CLASS numeric_limits<wchar_t>
 template <>
-class numeric_limits<wchar_t> : public internal::NumIntBase
+class numeric_limits<wchar_t> : public internal::num_int_base
 {
 public:
   REX_NO_DISCARD static constexpr wchar_t(min)() noexcept
   {
-    return internal::WCharMin;
+    return internal::w_char_min;
   }
 
   REX_NO_DISCARD static constexpr wchar_t(max)() noexcept
   {
-    return internal::WCharMax;
+    return internal::w_char_max;
   }
 
   REX_NO_DISCARD static constexpr wchar_t lowest() noexcept
@@ -698,12 +698,12 @@ public:
     return 0;
   }
 
-  REX_NO_DISCARD static constexpr wchar_t quiet_NaN() noexcept
+  REX_NO_DISCARD static constexpr wchar_t quiet_na_n() noexcept
   {
     return 0;
   }
 
-  REX_NO_DISCARD static constexpr wchar_t signaling_NaN() noexcept
+  REX_NO_DISCARD static constexpr wchar_t signaling_na_n() noexcept
   {
     return 0;
   }
@@ -715,17 +715,17 @@ public:
 
 // CLASS numeric_limits<short>
 template <>
-class numeric_limits<short> : public internal::NumIntBase
+class numeric_limits<short> : public internal::num_int_base
 {
 public:
   REX_NO_DISCARD static constexpr short(min)() noexcept
   {
-    return internal::SignedInt16Min;
+    return internal::signed_int16_min;
   }
 
   REX_NO_DISCARD static constexpr short(max)() noexcept
   {
-    return internal::SignedInt16Max;
+    return internal::signed_int16_max;
   }
 
   REX_NO_DISCARD static constexpr short lowest() noexcept
@@ -753,12 +753,12 @@ public:
     return 0;
   }
 
-  REX_NO_DISCARD static constexpr short quiet_NaN() noexcept
+  REX_NO_DISCARD static constexpr short quiet_na_n() noexcept
   {
     return 0;
   }
 
-  REX_NO_DISCARD static constexpr short signaling_NaN() noexcept
+  REX_NO_DISCARD static constexpr short signaling_na_n() noexcept
   {
     return 0;
   }
@@ -770,17 +770,17 @@ public:
 
 // CLASS numeric_limits<int32>
 template <>
-class numeric_limits<int32> : public internal::NumIntBase
+class numeric_limits<int32> : public internal::num_int_base
 {
 public:
   REX_NO_DISCARD static constexpr int32(min)() noexcept
   {
-    return internal::SignedInt32Min;
+    return internal::signed_int32_min;
   }
 
   REX_NO_DISCARD static constexpr int32(max)() noexcept
   {
-    return internal::SignedInt32Max;
+    return internal::signed_int32_max;
   }
 
   REX_NO_DISCARD static constexpr int32 lowest() noexcept
@@ -808,12 +808,12 @@ public:
     return 0;
   }
 
-  REX_NO_DISCARD static constexpr int32 quiet_NaN() noexcept
+  REX_NO_DISCARD static constexpr int32 quiet_na_n() noexcept
   {
     return 0;
   }
 
-  REX_NO_DISCARD static constexpr int32 signaling_NaN() noexcept
+  REX_NO_DISCARD static constexpr int32 signaling_na_n() noexcept
   {
     return 0;
   }
@@ -825,17 +825,17 @@ public:
 
 // CLASS numeric_limits<long>
 template <>
-class numeric_limits<long> : public internal::NumIntBase
+class numeric_limits<long> : public internal::num_int_base
 {
 public:
   REX_NO_DISCARD static constexpr long(min)() noexcept
   {
-    return internal::SignedLongMin;
+    return internal::signed_long_min;
   }
 
   REX_NO_DISCARD static constexpr long(max)() noexcept
   {
-    return internal::SignedLongMax;
+    return internal::signed_long_max;
   }
 
   REX_NO_DISCARD static constexpr long lowest() noexcept
@@ -863,12 +863,12 @@ public:
     return 0;
   }
 
-  REX_NO_DISCARD static constexpr long quiet_NaN() noexcept
+  REX_NO_DISCARD static constexpr long quiet_na_n() noexcept
   {
     return 0;
   }
 
-  REX_NO_DISCARD static constexpr long signaling_NaN() noexcept
+  REX_NO_DISCARD static constexpr long signaling_na_n() noexcept
   {
     return 0;
   }
@@ -881,17 +881,17 @@ public:
 
 // CLASS numeric_limits<long long>
 template <>
-class numeric_limits<long long> : public internal::NumIntBase
+class numeric_limits<long long> : public internal::num_int_base
 {
 public:
   REX_NO_DISCARD static constexpr long long(min)() noexcept
   {
-    return internal::SignedLongLongMin;
+    return internal::signed_long_long_min;
   }
 
   REX_NO_DISCARD static constexpr long long(max)() noexcept
   {
-    return internal::SignedLongLongMax;
+    return internal::signed_long_long_max;
   }
 
   REX_NO_DISCARD static constexpr long long lowest() noexcept
@@ -919,12 +919,12 @@ public:
     return 0;
   }
 
-  REX_NO_DISCARD static constexpr long long quiet_NaN() noexcept
+  REX_NO_DISCARD static constexpr long long quiet_na_n() noexcept
   {
     return 0;
   }
 
-  REX_NO_DISCARD static constexpr long long signaling_NaN() noexcept
+  REX_NO_DISCARD static constexpr long long signaling_na_n() noexcept
   {
     return 0;
   }
@@ -937,7 +937,7 @@ public:
 #ifdef _NATIVE_WCHAR_T_DEFINED
 // CLASS numeric_limits<unsigned short>
 template <>
-class numeric_limits<unsigned short> : public internal::NumIntBase
+class numeric_limits<unsigned short> : public internal::num_int_base
 {
 public:
   REX_NO_DISCARD static constexpr unsigned short(min)() noexcept
@@ -947,7 +947,7 @@ public:
 
   REX_NO_DISCARD static constexpr unsigned short(max)() noexcept
   {
-    return internal::UnsignedInt16Max;
+    return internal::unsigned_int16_max;
   }
 
   REX_NO_DISCARD static constexpr unsigned short lowest() noexcept
@@ -975,12 +975,12 @@ public:
     return 0;
   }
 
-  REX_NO_DISCARD static constexpr unsigned short quiet_NaN() noexcept
+  REX_NO_DISCARD static constexpr unsigned short quiet_na_n() noexcept
   {
     return 0;
   }
 
-  REX_NO_DISCARD static constexpr unsigned short signaling_NaN() noexcept
+  REX_NO_DISCARD static constexpr unsigned short signaling_na_n() noexcept
   {
     return 0;
   }
@@ -993,7 +993,7 @@ public:
 
 // CLASS numeric_limits<uint32>
 template <>
-class numeric_limits<uint32> : public internal::NumIntBase
+class numeric_limits<uint32> : public internal::num_int_base
 {
 public:
   REX_NO_DISCARD static constexpr uint32(min)() noexcept
@@ -1003,7 +1003,7 @@ public:
 
   REX_NO_DISCARD static constexpr uint32(max)() noexcept
   {
-    return internal::UnsignedInt32Max;
+    return internal::unsigned_int32_max;
   }
 
   REX_NO_DISCARD static constexpr uint32 lowest() noexcept
@@ -1031,12 +1031,12 @@ public:
     return 0;
   }
 
-  REX_NO_DISCARD static constexpr uint32 quiet_NaN() noexcept
+  REX_NO_DISCARD static constexpr uint32 quiet_na_n() noexcept
   {
     return 0;
   }
 
-  REX_NO_DISCARD static constexpr uint32 signaling_NaN() noexcept
+  REX_NO_DISCARD static constexpr uint32 signaling_na_n() noexcept
   {
     return 0;
   }
@@ -1048,7 +1048,7 @@ public:
 
 // CLASS numeric_limits<unsigned long>
 template <>
-class numeric_limits<unsigned long> : public internal::NumIntBase
+class numeric_limits<unsigned long> : public internal::num_int_base
 {
 public:
   REX_NO_DISCARD static constexpr unsigned long(min)() noexcept
@@ -1058,7 +1058,7 @@ public:
 
   REX_NO_DISCARD static constexpr unsigned long(max)() noexcept
   {
-    return internal::UnsignedLongMax;
+    return internal::unsigned_long_max;
   }
 
   REX_NO_DISCARD static constexpr unsigned long lowest() noexcept
@@ -1086,12 +1086,12 @@ public:
     return 0;
   }
 
-  REX_NO_DISCARD static constexpr unsigned long quiet_NaN() noexcept
+  REX_NO_DISCARD static constexpr unsigned long quiet_na_n() noexcept
   {
     return 0;
   }
 
-  REX_NO_DISCARD static constexpr unsigned long signaling_NaN() noexcept
+  REX_NO_DISCARD static constexpr unsigned long signaling_na_n() noexcept
   {
     return 0;
   }
@@ -1104,7 +1104,7 @@ public:
 
 // CLASS numeric_limits<unsigned long long>
 template <>
-class numeric_limits<unsigned long long> : public internal::NumIntBase
+class numeric_limits<unsigned long long> : public internal::num_int_base
 {
 public:
   REX_NO_DISCARD static constexpr unsigned long long(min)() noexcept
@@ -1114,7 +1114,7 @@ public:
 
   REX_NO_DISCARD static constexpr unsigned long long(max)() noexcept
   {
-    return internal::UnsignedLongLongMax;
+    return internal::unsigned_long_long_max;
   }
 
   REX_NO_DISCARD static constexpr unsigned long long lowest() noexcept
@@ -1142,12 +1142,12 @@ public:
     return 0;
   }
 
-  REX_NO_DISCARD static constexpr unsigned long long quiet_NaN() noexcept
+  REX_NO_DISCARD static constexpr unsigned long long quiet_na_n() noexcept
   {
     return 0;
   }
 
-  REX_NO_DISCARD static constexpr unsigned long long signaling_NaN() noexcept
+  REX_NO_DISCARD static constexpr unsigned long long signaling_na_n() noexcept
   {
     return 0;
   }
@@ -1159,17 +1159,17 @@ public:
 
 // CLASS numeric_limits<float>
 template <>
-class numeric_limits<float> : public internal::NumFloatBase
+class numeric_limits<float> : public internal::num_float_base
 {
 public:
   REX_NO_DISCARD static constexpr float(min)() noexcept
   {
-    return internal::FloatMin;
+    return internal::float_min;
   }
 
   REX_NO_DISCARD static constexpr float(max)() noexcept
   {
-    return internal::FloatMax;
+    return internal::float_max;
   }
 
   REX_NO_DISCARD static constexpr float lowest() noexcept
@@ -1179,7 +1179,7 @@ public:
 
   REX_NO_DISCARD static constexpr float epsilon() noexcept
   {
-    return internal::FloatEpsilon;
+    return internal::float_epsilon;
   }
 
   REX_NO_DISCARD static constexpr float round_error() noexcept
@@ -1189,7 +1189,7 @@ public:
 
   REX_NO_DISCARD static constexpr float denorm_min() noexcept
   {
-    return internal::FloatTrueMin;
+    return internal::float_true_min;
   }
 
   REX_NO_DISCARD static constexpr float infinity() noexcept
@@ -1197,38 +1197,38 @@ public:
     return __builtin_huge_valf();
   }
 
-  REX_NO_DISCARD static constexpr float quiet_NaN() noexcept
+  REX_NO_DISCARD static constexpr float quiet_na_n() noexcept
   {
     return __builtin_nanf("0");
   }
 
-  REX_NO_DISCARD static constexpr float signaling_NaN() noexcept
+  REX_NO_DISCARD static constexpr float signaling_na_n() noexcept
   {
     return __builtin_nansf("1");
   }
 
-  static constexpr int32 digits         = internal::FloatMantissaDigits;
-  static constexpr int32 digits10       = internal::FloatDigits;
+  static constexpr int32 digits         = internal::float_mantissa_digits;
+  static constexpr int32 digits10       = internal::float_digits;
   static constexpr int32 max_digits10   = 9;
-  static constexpr int32 max_exponent   = internal::FloatMaxExp;
-  static constexpr int32 max_exponent10 = internal::FloatMax10Exp;
-  static constexpr int32 min_exponent   = internal::FloatMinExpr;
-  static constexpr int32 min_exponent10 = internal::FloatMin10Exp;
+  static constexpr int32 max_exponent   = internal::float_max_exp;
+  static constexpr int32 max_exponent10 = internal::float_max10_exp;
+  static constexpr int32 min_exponent   = internal::float_min_expr;
+  static constexpr int32 min_exponent10 = internal::float_min10_exp;
 };
 
 // CLASS numeric_limits<double>
 template <>
-class numeric_limits<double> : public internal::NumFloatBase
+class numeric_limits<double> : public internal::num_float_base
 {
 public:
   REX_NO_DISCARD static constexpr double(min)() noexcept
   {
-    return internal::DoubleMin;
+    return internal::double_min;
   }
 
   REX_NO_DISCARD static constexpr double(max)() noexcept
   {
-    return internal::DoubleMax;
+    return internal::double_max;
   }
 
   REX_NO_DISCARD static constexpr double lowest() noexcept
@@ -1238,7 +1238,7 @@ public:
 
   REX_NO_DISCARD static constexpr double epsilon() noexcept
   {
-    return internal::DoubleEpsilon;
+    return internal::double_epsilon;
   }
 
   REX_NO_DISCARD static constexpr double round_error() noexcept
@@ -1248,7 +1248,7 @@ public:
 
   REX_NO_DISCARD static constexpr double denorm_min() noexcept
   {
-    return internal::DoubleTrueMin;
+    return internal::double_true_min;
   }
 
   REX_NO_DISCARD static constexpr double infinity() noexcept
@@ -1256,38 +1256,38 @@ public:
     return __builtin_huge_val();
   }
 
-  REX_NO_DISCARD static constexpr double quiet_NaN() noexcept
+  REX_NO_DISCARD static constexpr double quiet_na_n() noexcept
   {
     return __builtin_nan("0");
   }
 
-  REX_NO_DISCARD static constexpr double signaling_NaN() noexcept
+  REX_NO_DISCARD static constexpr double signaling_na_n() noexcept
   {
     return __builtin_nans("1");
   }
 
-  static constexpr int32 digits         = internal::DoubleMantissaDigits;
-  static constexpr int32 digits10       = internal::DoubleDigits;
+  static constexpr int32 digits         = internal::double_mantissa_digits;
+  static constexpr int32 digits10       = internal::double_digits;
   static constexpr int32 max_digits10   = 17;
-  static constexpr int32 max_exponent   = internal::DoubleMaxExp;
-  static constexpr int32 max_exponent10 = internal::DoubleMax10Exp;
-  static constexpr int32 min_exponent   = internal::DoubleMinExp;
-  static constexpr int32 min_exponent10 = internal::DoubleMin10Exp;
+  static constexpr int32 max_exponent   = internal::double_max_exp;
+  static constexpr int32 max_exponent10 = internal::double_max10_exp;
+  static constexpr int32 min_exponent   = internal::double_min_exp;
+  static constexpr int32 min_exponent10 = internal::double_min10_exp;
 };
 
 // CLASS numeric_limits<long double>
 template <>
-class numeric_limits<long double> : public internal::NumFloatBase
+class numeric_limits<long double> : public internal::num_float_base
 {
 public:
   REX_NO_DISCARD static constexpr long double(min)() noexcept
   {
-    return internal::LongDoubleMin;
+    return internal::long_double_min;
   }
 
   REX_NO_DISCARD static constexpr long double(max)() noexcept
   {
-    return internal::LongDoubleMax;
+    return internal::long_double_max;
   }
 
   REX_NO_DISCARD static constexpr long double lowest() noexcept
@@ -1297,7 +1297,7 @@ public:
 
   REX_NO_DISCARD static constexpr long double epsilon() noexcept
   {
-    return internal::LongDoubleEpsilon;
+    return internal::long_double_epsilon;
   }
 
   REX_NO_DISCARD static constexpr long double round_error() noexcept
@@ -1307,31 +1307,31 @@ public:
 
   REX_NO_DISCARD static constexpr long double denorm_min() noexcept
   {
-    return internal::LongDoubleTrueMin;
+    return internal::long_double_true_min;
   }
 
   REX_NO_DISCARD static constexpr long double infinity() noexcept
   {
-    return __builtin_huge_val();
+    return __builtin_huge_val(); // NOLINT(cppcoreguidelines-narrowing-conversions)
   }
 
-  REX_NO_DISCARD static constexpr long double quiet_NaN() noexcept
+  REX_NO_DISCARD static constexpr long double quiet_na_n() noexcept
   {
     return __builtin_nan("0");
   }
 
-  REX_NO_DISCARD static constexpr long double signaling_NaN() noexcept
+  REX_NO_DISCARD static constexpr long double signaling_na_n() noexcept
   {
     return __builtin_nans("1");
   }
 
-  static constexpr int32 digits         = internal::LongDoubleMantissaDigits;
-  static constexpr int32 digits10       = internal::LongDoubleDigits;
+  static constexpr int32 digits         = internal::long_double_mantissa_digits;
+  static constexpr int32 digits10       = internal::long_double_digits;
   static constexpr int32 max_digits10   = 17;
-  static constexpr int32 max_exponent   = internal::LongDoubleMaxExp;
-  static constexpr int32 max_exponent10 = internal::LongDoubleMax10Exp;
-  static constexpr int32 min_exponent   = internal::LongDoubleMinExp;
-  static constexpr int32 min_exponent10 = internal::LongDoubleMin10Exp;
+  static constexpr int32 max_exponent   = internal::long_double_max_exp;
+  static constexpr int32 max_exponent10 = internal::long_double_max10_exp;
+  static constexpr int32 min_exponent   = internal::long_double_min_exp;
+  static constexpr int32 min_exponent10 = internal::long_double_min10_exp;
 };
 
 REX_RSL_END_NAMESPACE

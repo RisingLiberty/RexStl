@@ -31,23 +31,23 @@ namespace internal
   };
 
   template <typename T, typename = void>
-  struct GetElementType
+  struct get_element_type
   {
-    using type = GetFirstParameter<T>::type;
+    using type = typename GetFirstParameter<T>::type;
   };
   template <typename T>
-  struct GetElementType<T, void_t<typename T::element_type>>
+  struct get_element_type<T, void_t<typename T::element_type>>
   {
     using type = typename T::element_type;
   };
 
   template <typename T, typename = void>
-  struct GetPtrDifferenceType
+  struct get_ptr_difference_type
   {
     using type = ptrdiff;
   };
   template <typename T>
-  struct GetPtrDifferenceType<T, void_t<typename T::difference_type>>
+  struct get_ptr_difference_type<T, void_t<typename T::difference_type>>
   {
     using type = typename T::difference_type;
   };
@@ -62,12 +62,12 @@ namespace internal
   };
 
   template <typename T, typename Other, typename = void>
-  struct GetRebindAlias
+  struct get_rebind_alias
   {
     using type = typename ReplaceFirstParameter<Other, T>::type;
   };
   template <typename T, typename Other>
-  struct GetRebindAlias<T, Other, void_t<typename T::template rebind<Other>>>
+  struct get_rebind_alias<T, Other, void_t<typename T::template rebind<Other>>>
   {
     using type = typename T::template rebind<Other>;
   };
@@ -77,11 +77,11 @@ template <typename T>
 struct pointer_traits
 {
   using pointer         = T;
-  using element_type    = typename internal::GetElementType<T>::type;
-  using difference_type = typename internal::GetPtrDifferenceType<T>::type;
+  using element_type    = typename internal::get_element_type<T>::type;
+  using difference_type = typename internal::get_ptr_difference_type<T>::type;
 
   template <typename Other>
-  using rebind = typename internal::GetRebindAlias<T, Other>::type;
+  using rebind = typename internal::get_rebind_alias<T, Other>::type;
 
   using ref_type = conditional_t<is_void_v<element_type>, char, element_type>&;
 

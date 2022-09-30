@@ -14,41 +14,41 @@
 
 REX_RSL_BEGIN_NAMESPACE
 
-rsl::optional<int32> stoi(const string& str, char8* str_end, int32 base)
+rsl::optional<int32> stoi(const string& str, char8* strEnd, int32 base)
 {
-  return rsl::strtol(str.data(), &str_end, base);
+  return rsl::strtol(str.data(), &strEnd, base);
 }
-rsl::optional<long> stol(const string& str, char8* str_end, int32 base)
+rsl::optional<long> stol(const string& str, char8* strEnd, int32 base)
 {
-  return rsl::strtol(str.data(), &str_end, base);
+  return rsl::strtol(str.data(), &strEnd, base);
 }
-rsl::optional<int64> stoll(const string& str, char8* str_end, int32 base)
+rsl::optional<int64> stoll(const string& str, char8* strEnd, int32 base)
 {
-  return rsl::strtoll(str.data(), &str_end, base);
+  return rsl::strtoll(str.data(), &strEnd, base);
 }
-rsl::optional<uint32> stoui(const string& str, char8* str_end, int32 base)
+rsl::optional<uint32> stoui(const string& str, char8* strEnd, int32 base)
 {
-  return rsl::strtoul(str.data(), &str_end, base);
+  return rsl::strtoul(str.data(), &strEnd, base);
 }
-rsl::optional<ulong> stoul(const string& str, char8* str_end, int32 base)
+rsl::optional<ulong> stoul(const string& str, char8* strEnd, int32 base)
 {
-  return rsl::strtoul(str.data(), &str_end, base);
+  return rsl::strtoul(str.data(), &strEnd, base);
 }
-rsl::optional<uint64> stoull(const string& str, char8* str_end, int32 base)
+rsl::optional<uint64> stoull(const string& str, char8* strEnd, int32 base)
 {
-  return rsl::strtoull(str.data(), &str_end, base);
+  return rsl::strtoull(str.data(), &strEnd, base);
 }
-rsl::optional<float32> stof(const string& str, char8* str_end)
+rsl::optional<float32> stof(const string& str, char8* strEnd)
 {
-  return rsl::strtof(str.data(), &str_end);
+  return rsl::strtof(str.data(), &strEnd);
 }
-rsl::optional<float64> stod(const string& str, char8* str_end)
+rsl::optional<float64> stod(const string& str, char8* strEnd)
 {
-  return rsl::strtod(str.data(), &str_end);
+  return rsl::strtod(str.data(), &strEnd);
 }
-rsl::optional<lfloat64> stold(const string& str, char8* str_end)
+rsl::optional<lfloat64> stold(const string& str, char8* strEnd)
 {
-  return rsl::strtold(str.data(), &str_end);
+  return rsl::strtold(str.data(), &strEnd);
 }
 
 string to_string(int32 value)
@@ -93,27 +93,27 @@ namespace string_literals
 #pragma warning(push)
 #pragma warning(disable : 4455) // literal suffix identifiers that do not start with an underscore are reserved
   // returns a string of the desired type
-  string operator""s(const char8* s, size_t len)
+  string operator""s(const char8* s, size_t len) // NOLINT(clang-diagnostic-user-defined-literals)
   {
-    count_t len_as_count = static_cast<count_t>(len);
+    const count_t len_as_count = static_cast<count_t>(len);
     return string(s, len_as_count);
   }
   // returns a string of the desired type
-  u16string operator""s(const char16_t* s, size_t len)
+  u16string operator""s(const char16_t* s, size_t len) // NOLINT(clang-diagnostic-user-defined-literals)
   {
-    count_t len_as_count = static_cast<count_t>(len);
+    const count_t len_as_count = static_cast<count_t>(len);
     return u16string(s, len_as_count);
   }
   // returns a string of the desired type
-  u32string operator""s(const char32_t* s, size_t len)
+  u32string operator""s(const char32_t* s, size_t len) // NOLINT(clang-diagnostic-user-defined-literals)
   {
-    count_t len_as_count = static_cast<count_t>(len);
+    const count_t len_as_count = static_cast<count_t>(len);
     return u32string(s, len_as_count);
   }
   // returns a string of the desired type
-  wstring operator""s(const tchar* s, size_t len)
+  wstring operator""s(const tchar* s, size_t len) // NOLINT(clang-diagnostic-user-defined-literals)
   {
-    count_t len_as_count = static_cast<count_t>(len);
+    const count_t len_as_count = static_cast<count_t>(len);
     return wstring(s, len_as_count);
   }
 #pragma warning(pop)

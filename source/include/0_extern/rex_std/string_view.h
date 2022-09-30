@@ -13,8 +13,10 @@
 #pragma once
 
 #include "rex_std/bonus/defines.h"
+#include "rex_std/bonus/string/c_string.h"
 #include "rex_std/bonus/string/string_utils.h"
 #include "rex_std/bonus/types.h"
+#include "rex_std/bonus/utility/element_literal.h"
 #include "rex_std/internal/algorithm/min.h"
 #include "rex_std/internal/assert/assert_fwd.h"
 #include "rex_std/internal/functional/hash.h"
@@ -54,7 +56,9 @@ public:
   {
   }
   // Copy constructor. defaulted, shallow copies members over from other
-  constexpr basic_string_view(const basic_string_view& other) = default;
+  constexpr basic_string_view(const basic_string_view&) = default;
+  // Move constructor. defaulted, shallow copies members over from other
+  constexpr basic_string_view(basic_string_view&&) = default;
   // Constructs a view of the first count characters starting at s
   constexpr basic_string_view(const_pointer s, size_type count)
       : m_data(s)
@@ -62,9 +66,9 @@ public:
   {
   }
   // Constructs a view starting at s, reaching to the first null termination char.
-  constexpr basic_string_view(const_pointer s)
-      : m_data(s)
-      , m_length(traits_type::length(s))
+  constexpr explicit basic_string_view(c_string<value_type> s)
+      : m_data(s.ptr())
+      , m_length(traits_type::length(s.ptr()))
   {
   }
   /// RSL Comment: Different from ISO C++ Standard at time of writing (07/Jul/2022)
@@ -80,7 +84,7 @@ public:
   // The standard doesn't provide an overload for a string literal
   // Constructs a view using a string literal
   template <size_t Size>
-  constexpr basic_string_view(const value_type (&s)[Size])
+  constexpr basic_string_view(const value_type (&s)[Size]) // NOLINT(google-explicit-constructor, modernize-avoid-c-arrays)
       : m_data(s)
       , m_length(Size - 1)
   {
@@ -88,8 +92,13 @@ public:
   // can't construct a string view from a nullptr
   constexpr basic_string_view(rsl::nullptr_t) = delete;
 
+  // default destructor
+  constexpr ~basic_string_view() = default;
+
   // assigns a new view
-  constexpr basic_string_view& operator=(const basic_string_view& view) = default;
+  constexpr basic_string_view& operator=(const basic_string_view&) = default;
+  // move a view, this is just a copy
+  constexpr basic_string_view& operator=(basic_string_view&&) = default;
 
   // returns an iterator to the beginning of the view
   constexpr const_iterator begin() const
@@ -235,7 +244,7 @@ public:
   // The standard doesn't provide an overload for a string literal
   // compares 2 character sequences
   template <count_t Size>
-  REX_NO_DISCARD constexpr int32 compare(const value_type (&s)[Size]) const
+  REX_NO_DISCARD constexpr int32 compare(const value_type (&s)[Size]) const // NOLINT(modernize-avoid-c-arrays)
   {
     return compare(basic_string_view(s, Size - 1));
   }
@@ -243,7 +252,7 @@ public:
   // The standard doesn't provide an overload for a string literal
   // compares 2 character sequences
   template <count_t Size>
-  REX_NO_DISCARD constexpr int32 compare(size_type pos1, size_type count1, const value_type (&s)[Size]) const
+  REX_NO_DISCARD constexpr int32 compare(size_type pos1, size_type count1, const value_type (&s)[Size]) const // NOLINT(modernize-avoid-c-arrays)
   {
     return substr(pos1, count1).compare(basic_string_view(s, Size - 1));
   }
@@ -264,7 +273,7 @@ public:
     return traits_type::eq(front(), c);
   }
   // checks if the string view starts with the given prefix
-  REX_NO_DISCARD constexpr bool starts_with(const_pointer s) const
+  REX_NO_DISCARD constexpr bool starts_with(c_string<value_type> s) const
   {
     return starts_with(basic_string_view(s));
   }
@@ -298,7 +307,7 @@ public:
   // the standard doesn't provide an overload for a string literal
   // checks if the string view contains the given substring
   template <count_t Size>
-  REX_NO_DISCARD constexpr bool constains(const_pointer (&s)[Size]) const
+  REX_NO_DISCARD constexpr bool constains(const_pointer (&s)[Size]) const // NOLINT(modernize-avoid-c-arrays)
   {
     return find(s) != s_npos;
   }
@@ -447,21 +456,21 @@ public:
 
 private:
   // compares 2 strings lexicographically
-  int32 compare(pointer lhs, pointer rhs, size_type lhs_length, size_type rhs_length) const
+  int32 compare(pointer lhs, pointer rhs, size_type lhsLength, size_type rhsLength) const
   {
-    int32 res = traits_type::compare(lhs, rhs, (rsl::min)(lhs_length, rhs_length));
+    int32 res = traits_type::compare(lhs, rhs, (rsl::min)(lhsLength, rhsLength));
 
     if(res != 0)
     {
       return res;
     }
 
-    if(lhs_length < rhs_length)
+    if(lhsLength < rhsLength)
     {
       return -1;
     }
 
-    if(lhs_length > rhs_length)
+    if(lhsLength > rhsLength)
     {
       return 1;
     }
@@ -541,27 +550,27 @@ namespace string_view_literals
 #pragma warning(push)
 #pragma warning(disable : 4455) // literal suffix identifiers that do not start with an underscore are reserved
   // returns a string view of the desired type
-  constexpr string_view operator""s(const char8* s, size_t len)
+  constexpr string_view operator""s(const char8* s, size_t len) // NOLINT(clang-diagnostic-user-defined-literals)
   {
-    count_t len_as_count = static_cast<count_t>(len);
+    const count_t len_as_count = static_cast<count_t>(len);
     return string_view(s, len_as_count);
   }
   // returns a string view of the desired type
-  constexpr u16StringView operator""s(const char16_t* s, size_t len)
+  constexpr u16StringView operator""s(const char16_t* s, size_t len) // NOLINT(clang-diagnostic-user-defined-literals)
   {
-    count_t len_as_count = static_cast<count_t>(len);
+    const count_t len_as_count = static_cast<count_t>(len);
     return u16StringView(s, len_as_count);
   }
   // returns a string view of the desired type
-  constexpr u32StringView operator""s(const char32_t* s, size_t len)
+  constexpr u32StringView operator""s(const char32_t* s, size_t len) // NOLINT(clang-diagnostic-user-defined-literals)
   {
-    count_t len_as_count = static_cast<count_t>(len);
+    const count_t len_as_count = static_cast<count_t>(len);
     return u32StringView(s, len_as_count);
   }
   // returns a string view of the desired type
-  constexpr WStringView operator""s(const tchar* s, size_t len)
+  constexpr WStringView operator""s(const tchar* s, size_t len) // NOLINT(clang-diagnostic-user-defined-literals)
   {
-    count_t len_as_count = static_cast<count_t>(len);
+    const count_t len_as_count = static_cast<count_t>(len);
     return WStringView(s, len_as_count);
   }
 #pragma warning(pop)

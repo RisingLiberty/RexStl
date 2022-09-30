@@ -19,7 +19,7 @@
 REX_RSL_BEGIN_NAMESPACE
 
 template <typename T>
-class ForwardIterator
+class forward_iterator
 {
 public:
   using value_type        = T;
@@ -30,7 +30,7 @@ public:
   using iterator_category = rsl::forward_iterator_tag;
   using difference_type   = int32;
 
-  constexpr ForwardIterator(pointer value = nullptr)
+  constexpr explicit forward_iterator(pointer value = nullptr)
       : m_value(value)
   {
   }
@@ -53,40 +53,40 @@ public:
     return m_value;
   }
 
-  constexpr bool operator==(const ForwardIterator other) const
+  constexpr bool operator==(const forward_iterator other) const
   {
     return m_value == other.m_value;
   }
-  constexpr bool operator!=(const ForwardIterator other) const
+  constexpr bool operator!=(const forward_iterator other) const
   {
     return m_value != other.m_value;
   }
 
-  constexpr bool operator<(const ForwardIterator other) const
+  constexpr bool operator<(const forward_iterator other) const
   {
     return m_value < other.m_value;
   }
-  constexpr bool operator<=(const ForwardIterator other) const
+  constexpr bool operator<=(const forward_iterator other) const
   {
     return m_value <= other.m_value;
   }
-  constexpr bool operator>(const ForwardIterator other) const
+  constexpr bool operator>(const forward_iterator other) const
   {
     return m_value > other.m_value;
   }
-  constexpr bool operator>=(const ForwardIterator other) const
+  constexpr bool operator>=(const forward_iterator other) const
   {
     return m_value >= other.m_value;
   }
 
-  constexpr ForwardIterator operator++()
+  constexpr forward_iterator operator++()
   {
     ++m_value;
     return *this;
   }
-  constexpr ForwardIterator operator++(int)
+  constexpr forward_iterator operator++(int)
   {
-    ForwardIterator tmp = *this;
+    forward_iterator tmp = *this;
     operator++();
     return tmp;
   }
@@ -96,7 +96,7 @@ private:
 };
 
 template <typename T>
-class ConstForwardIterator
+class const_forward_iterator
 {
 public:
   using value_type        = T;
@@ -107,7 +107,7 @@ public:
   using iterator_category = rsl::forward_iterator_tag;
   using difference_type   = int32;
 
-  constexpr ConstForwardIterator(pointer value = nullptr)
+  constexpr explicit const_forward_iterator(pointer value = nullptr)
       : m_value(value)
   {
   }
@@ -121,40 +121,40 @@ public:
     return m_value;
   }
 
-  constexpr bool operator==(const ConstForwardIterator other) const
+  constexpr bool operator==(const const_forward_iterator other) const
   {
     return m_value == other.m_value;
   }
-  constexpr bool operator!=(const ConstForwardIterator other) const
+  constexpr bool operator!=(const const_forward_iterator other) const
   {
     return m_value != other.m_value;
   }
 
-  constexpr bool operator<(const ConstForwardIterator other) const
+  constexpr bool operator<(const const_forward_iterator other) const
   {
     return m_value < other.m_value;
   }
-  constexpr bool operator<=(const ConstForwardIterator other) const
+  constexpr bool operator<=(const const_forward_iterator other) const
   {
     return m_value <= other.m_value;
   }
-  constexpr bool operator>(const ConstForwardIterator other) const
+  constexpr bool operator>(const const_forward_iterator other) const
   {
     return m_value > other.m_value;
   }
-  constexpr bool operator>=(const ConstForwardIterator other) const
+  constexpr bool operator>=(const const_forward_iterator other) const
   {
     return m_value >= other.m_value;
   }
 
-  constexpr ConstForwardIterator operator++()
+  constexpr const_forward_iterator operator++()
   {
     ++m_value;
     return *this;
   }
-  constexpr ConstForwardIterator operator++(int)
+  constexpr const_forward_iterator operator++(int)
   {
-    ConstForwardIterator tmp = *this;
+    const_forward_iterator tmp = *this;
     operator++();
     return tmp;
   }

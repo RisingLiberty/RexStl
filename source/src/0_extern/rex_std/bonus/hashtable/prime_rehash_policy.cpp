@@ -28,6 +28,8 @@ REX_RSL_BEGIN_NAMESPACE
 ///
 /// To consider: Allow the user to specify their own prime number array.
 ///
+
+// NOLINTBEGIN
 const uint32 g_prime_number_array[] = {
     2u,          3u,          5u,          7u,          11u,         13u,         17u,         19u,         23u,         29u,         31u,         37u,         41u,         43u,         47u,         53u,         59u,         61u,         67u,
     71u,         73u,         79u,         83u,         89u,         97u,         103u,        109u,        113u,        127u,        137u,        139u,        149u,        157u,        167u,        179u,        193u,        199u,        211u,
@@ -45,12 +47,14 @@ const uint32 g_prime_number_array[] = {
     2364114217u, 2557710269u, 2767159799u, 2993761039u, 3238918481u, 3504151727u, 3791104843u, 4101556399u, 4294967291u,
     4294967291u // Sentinel so we don't have to test result of lower_bound
 };
+// NOLINTEND
 
-card32 g_prime_count = rsl::size(g_prime_number_array) - 1;
+constexpr card32 g_prime_count            = rsl::size(g_prime_number_array) - 1;
+constexpr float32 g_default_growth_factor = 2.0f;
 
 prime_rehash_policy::prime_rehash_policy(float32 maxLoadFactor)
     : m_max_load_factor(maxLoadFactor)
-    , m_growth_factor(2.0f)
+    , m_growth_factor(g_default_growth_factor)
     , m_next_resize(0)
 {
 }
@@ -70,7 +74,7 @@ uint32 prime_rehash_policy::get_prev_bucket_count(uint32 bucketCountHint) const
 {
   const uint32 prime = *(rsl::upper_bound(g_prime_number_array, g_prime_number_array + g_prime_count, bucketCountHint) - 1);
 
-  m_next_resize = static_cast<uint32>(ceil(prime * m_max_load_factor));
+  m_next_resize = static_cast<uint32>(ceil(prime * m_max_load_factor)); // NOLINT
   return prime;
 }
 
@@ -78,16 +82,16 @@ uint32 prime_rehash_policy::get_next_bucket_count(uint32 bucketCountHint) const
 {
   const uint32 prime = *rsl::lower_bound(g_prime_number_array, g_prime_number_array + g_prime_count, bucketCountHint);
 
-  m_next_resize = static_cast<uint32>(ceil(prime * m_max_load_factor));
+  m_next_resize = static_cast<uint32>(ceil(prime * m_max_load_factor)); // NOLINT
   return prime;
 }
 
 uint32 prime_rehash_policy::get_bucket_count(uint32 elementCount) const
 {
-  const uint32 min_bucket_count = static_cast<uint32>(elementCount / m_max_load_factor);
+  const uint32 min_bucket_count = static_cast<uint32>(elementCount / m_max_load_factor); // NOLINT
   const uint32 prime            = *rsl::lower_bound(g_prime_number_array, g_prime_number_array + g_prime_count, elementCount);
 
-  m_next_resize = static_cast<uint32>(ceil(prime * m_max_load_factor));
+  m_next_resize = static_cast<uint32>(ceil(prime * m_max_load_factor)); // NOLINT
   return prime;
 }
 
@@ -100,24 +104,24 @@ prime_rehash_policy::hash_required_result prime_rehash_policy::is_rehash_require
       bucketCount = 0;
     }
 
-    float32 min_bucket_count = (elementCount + elementAdd) / m_max_load_factor;
+    float32 min_bucket_count = (elementCount + elementAdd) / m_max_load_factor; // NOLINT
 
     if(min_bucket_count > static_cast<float32>(bucketCount))
     {
-      min_bucket_count    = (rsl::max)(min_bucket_count, m_growth_factor * bucketCount);
+      min_bucket_count    = (rsl::max)(min_bucket_count, m_growth_factor * bucketCount); // NOLINT
       const count_t prime = static_cast<count_t>(*rsl::lower_bound(g_prime_number_array, g_prime_number_array + g_prime_count, static_cast<uint32>(min_bucket_count)));
-      m_next_resize       = static_cast<uint32>(ceil(prime * m_max_load_factor));
+      m_next_resize       = static_cast<uint32>(ceil(prime * m_max_load_factor)); // NOLINT
 
-      return hash_required_result {true, prime};
+      return hash_required_result {prime, true};
     }
     else
     {
-      m_next_resize = static_cast<uint32>(ceil(bucketCount * m_max_load_factor));
-      return hash_required_result {false, 0};
+      m_next_resize = static_cast<uint32>(ceil(bucketCount * m_max_load_factor)); // NOLINT
+      return hash_required_result {0, false};
     }
   }
 
-  return hash_required_result {false, 0};
+  return hash_required_result {0, false};
 }
 
 REX_RSL_END_NAMESPACE

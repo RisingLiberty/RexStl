@@ -15,5 +15,5 @@
 template <typename T>
 constexpr bool is_nan(const T x)
 {
-  return x != x;
+  return x != x; // NOLINT(misc-redundant-expression)
 }

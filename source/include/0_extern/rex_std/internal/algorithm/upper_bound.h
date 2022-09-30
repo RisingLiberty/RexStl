@@ -22,8 +22,10 @@ template <class ForwardIterator, class T>
 ForwardIterator upper_bound(ForwardIterator first, ForwardIterator last, const T& value)
 {
   ForwardIterator it;
-  typename iterator_traits<ForwardIterator>::difference_type count, step;
-  count = rsl::distance(first, last);
+  using diff_type = typename iterator_traits<ForwardIterator>::difference_type;
+  diff_type count = 0;
+  diff_type step  = 0;
+  count           = rsl::distance(first, last);
 
   while(count > 0)
   {

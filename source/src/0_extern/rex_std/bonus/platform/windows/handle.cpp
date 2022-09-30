@@ -27,10 +27,22 @@ namespace win
       : m_handle(handle)
   {
   }
+  handle::handle(handle&& other)
+      : m_handle(other.m_handle)
+  {
+    other.m_handle = INVALID_HANDLE_VALUE;
+  }
 
   handle::~handle()
   {
     CloseHandle(m_handle);
+  }
+
+  handle& handle::operator=(handle&& other)
+  {
+    m_handle       = other.m_handle;
+    other.m_handle = nullptr;
+    return *this;
   }
 
   bool handle::is_valid() const

@@ -38,7 +38,7 @@ struct nullopt_tag
 
 struct nullopt_t
 {
-  constexpr nullopt_t(nullopt_tag = {}) {}
+  constexpr nullopt_t(nullopt_tag /*unused*/ = {}) {} // NOLINT(google-explicit-constructor)
 };
 
 constexpr nullopt_t nullopt {nullopt_tag {}};
@@ -46,50 +46,56 @@ constexpr nullopt_t nullopt {nullopt_tag {}};
 namespace internal
 {
   template <typename T, bool IsTriviallyDestructible = is_trivially_destructible_v<T>>
-  struct OptionalStorage
+  struct optional_storage
   {
   public:
     using value_type = rsl::remove_const_t<T>;
 
-    constexpr OptionalStorage()
+    constexpr optional_storage()
         : m_has_value(false)
         , m_val()
     {
     }
 
-    constexpr OptionalStorage(const value_type& v)
+    constexpr explicit optional_storage(const value_type& v)
         : m_has_value(true)
     {
       new(rsl::addressof(m_val)) value_type(v);
     }
 
-    constexpr OptionalStorage(value_type&& v)
+    constexpr explicit optional_storage(value_type&& v)
         : m_has_value(true)
     {
       new(rsl::addressof(m_val)) value_type(rsl::move(v));
     }
 
     template <typename... Args>
-    constexpr explicit OptionalStorage(in_place_t, Args&&... args)
+    constexpr explicit optional_storage(in_place_t /*unused*/, Args&&... args)
         : m_has_value(true)
     {
       new(rsl::addressof(m_val)) value_type(rsl::forward<Args>(args)...);
     }
 
     template <typename U, typename... Args, typename = enable_if_t<is_constructible_v<T, rsl::initializer_list<U>&, Args&&...>>>
-    constexpr explicit OptionalStorage(in_place_t, rsl::initializer_list<U> ilist, Args&&... args)
+    constexpr explicit optional_storage(in_place_t /*unused*/, rsl::initializer_list<U> ilist, Args&&... args)
         : m_has_value(true)
     {
       new(rsl::addressof(m_val)) value_type(ilist, rsl::forward<Args>(args)...);
     }
 
-    constexpr ~OptionalStorage()
+    constexpr optional_storage(const optional_storage&) = default;
+    constexpr optional_storage(optional_storage&&)      = default;
+
+    constexpr ~optional_storage()
     {
       if(m_has_value)
       {
         destroy_value();
       }
     }
+
+    constexpr optional_storage& operator=(const optional_storage&) = default;
+    constexpr optional_storage& operator=(optional_storage&&)      = default;
 
     template <typename... Args>
     constexpr void construct_value(Args&&... args)
@@ -105,9 +111,9 @@ namespace internal
     {
       return m_has_value;
     }
-    constexpr void has_value(bool new_has_value)
+    constexpr void has_value(bool newHasValue)
     {
-      m_has_value = new_has_value;
+      m_has_value = newHasValue;
     }
     constexpr void set_val(const value_type& val)
     {
@@ -124,41 +130,44 @@ namespace internal
   };
 
   template <typename T>
-  class OptionalStorage<T, true>
+  class optional_storage<T, true>
   {
   public:
     using value_type = rsl::remove_const_t<T>;
 
-    constexpr OptionalStorage() = default;
+    constexpr optional_storage()
+        : m_has_value(false)
+    {
+    }
 
-    constexpr OptionalStorage(const value_type& v)
+    constexpr explicit optional_storage(const value_type& v)
         : m_has_value(true)
     {
       m_val.set(v);
     }
 
-    constexpr OptionalStorage(value_type&& v)
+    constexpr explicit optional_storage(value_type&& v)
         : m_has_value(true)
     {
       m_val.set(rsl::move(v));
     }
 
     template <typename... Args>
-    constexpr explicit OptionalStorage(in_place_t, Args&&... args)
+    constexpr explicit optional_storage(in_place_t /*unused*/, Args&&... args)
         : m_has_value(true)
     {
       m_val.set(rsl::forward<Args>(args)...);
     }
 
     template <typename U, typename... Args, typename = enable_if_t<is_constructible_v<T, rsl::initializer_list<U>&, Args&&...>>>
-    constexpr explicit OptionalStorage(in_place_t, rsl::initializer_list<U> ilist, Args&&... args)
+    constexpr explicit optional_storage(in_place_t /*unused*/, rsl::initializer_list<U> ilist, Args&&... args)
         : m_has_value(true)
     {
       m_val.set(ilist, rsl::forward<Args>(args)...);
     }
 
     // default to make optional trivially destructible
-    constexpr ~OptionalStorage() = default;
+    constexpr ~optional_storage() = default;
 
     template <typename... Args>
     constexpr void construct_value(Args&&... args)
@@ -171,9 +180,9 @@ namespace internal
     {
       return m_has_value;
     }
-    constexpr void has_value(bool new_has_value)
+    constexpr void has_value(bool newHasValue)
     {
-      m_has_value = new_has_value;
+      m_has_value = newHasValue;
     }
     constexpr void set_val(const value_type& val)
     {
@@ -202,7 +211,7 @@ template <typename T>
 class optional
 {
 private:
-  using storage_type = internal::OptionalStorage<T>;
+  using storage_type = internal::optional_storage<T>;
 
 public:
   using value_type = T;
@@ -214,7 +223,7 @@ public:
   // constructs an object that does not contain a value
   constexpr optional() = default;
   // constructs an object that does not contain a value
-  constexpr optional(nullopt_t)
+  constexpr optional(nullopt_t /*unused*/) // NOLINT(google-explicit-constructor)
       : m_storage()
   {
   }
@@ -242,7 +251,7 @@ public:
   }
   // converting copy constructor, if other contains a value, it's copied in to this
   template <typename U>
-  constexpr optional(const optional<U>& other)
+  constexpr optional(const optional<U>& other) // NOLINT(google-explicit-constructor)
   {
     m_storage.has_value(other.has_value());
 
@@ -254,7 +263,7 @@ public:
   }
   // converting move constructor, if other contains a value, it's moved in to this
   template <typename U>
-  constexpr optional(optional<U>&& other)
+  constexpr optional(optional<U>&& other) // NOLINT(google-explicit-constructor)
   {
     m_storage.has_value(other.has_value());
 
@@ -266,20 +275,21 @@ public:
   }
   // construct an optional object that contains a value initialized with the arguments "arg"
   template <typename... Args>
-  constexpr explicit optional(in_place_t, Args&&... args)
+  constexpr explicit optional(in_place_t /*unused*/, Args&&... args)
       : m_storage(in_place, rsl::forward<Args>(args)...)
   {
   }
 
   // construct an optional object that contains a value initialized with the arguments ilist and "arg"
   template <typename U, typename... Args, typename = enable_if_t<is_constructible_v<T, rsl::initializer_list<U>&, Args&&...>>>
-  constexpr optional(in_place_t, rsl::initializer_list<U> ilist, Args&&... args)
-      : m_storage(in_place, rsl::forward<U>(value))
+  constexpr optional(in_place_t /*unused*/, rsl::initializer_list<U> ilist, Args&&... args)
+      : m_storage(in_place, ilist, rsl::forward<Args>(args)...)
   {
   }
   // construct an object initialized from the argument provided
-  template <typename U = T>
-  constexpr optional(U&& value)
+  REX_STATIC_TODO("clang tidy complains here because it checks for std::enable_if");
+  template <typename U = T, enable_if_t<is_constructible_v<T, U&&>, bool> = true>
+  constexpr optional(U&& value) // NOLINT(google-explicit-constructor, bugprone-forwarding-reference-overload): works with std::enable_if_t, not with rsl::enable_if_t
       : m_storage(rsl::forward<U>(value))
   {
   }
@@ -288,7 +298,7 @@ public:
   constexpr ~optional() = default;
 
   // if this contains a value, it's destroyed, afterwards this object contains no value
-  constexpr optional& operator=(nullopt_t)
+  constexpr optional& operator=(nullopt_t /*unused*/)
   {
     reset();
     return *this;
@@ -296,7 +306,7 @@ public:
   // if other contains a value, it's copied in to this. if this contains a value, it's copy assignment operator is called
   constexpr optional& operator=(const optional& other)
   {
-    auto* other_value = reinterpret_cast<const T*>(rsl::addressof(other.val()));
+    auto* other_value = reinterpret_cast<const T*>(rsl::addressof(other.val())); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
     if(m_storage.has_value() == other.has_value())
     {
       if(m_storage.has_value())
@@ -322,7 +332,7 @@ public:
   // if other contains a value, it's moved in to this. if this contains a value, it's move assignment operator is called
   constexpr optional& operator=(optional&& other)
   {
-    auto* other_value = reinterpret_cast<const T*>(rsl::addressof(other.value()));
+    auto* other_value = reinterpret_cast<const T*>(rsl::addressof(other.value())); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
     if(m_storage.has_value() == other.has_value())
     {
       if(m_storage.has_value())
@@ -364,7 +374,7 @@ public:
   template <typename U>
   constexpr optional& operator=(const optional<U>& other)
   {
-    auto* other_value = reinterpret_cast<const T*>(rsl::addressof(other.val()));
+    auto* other_value = reinterpret_cast<const T*>(rsl::addressof(other.val())); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
     if(m_storage.has_value() == other.has_value())
     {
       if(m_storage.has_value())
@@ -389,9 +399,9 @@ public:
   }
   // if other contains a value, it's moved in to this. if this contains a value, it's move assignment operator is called
   template <typename U>
-  constexpr optional& operator=(const optional<U>&& other)
+  constexpr optional& operator=(optional<U>&& other)
   {
-    auto* other_value = reinterpret_cast<const T*>(rsl::addressof(other.val()));
+    auto* other_value = reinterpret_cast<const T*>(rsl::addressof(other.val())); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
     if(m_storage.has_value() == other.has_value())
     {
       if(m_storage.has_value())
@@ -487,15 +497,15 @@ public:
 
   // returns the contained value if this has one, returns default value otherwise
   template <typename U>
-  constexpr value_type value_or(U&& default_value) const
+  constexpr value_type value_or(U&& defaultValue) const&
   {
-    return m_storage.has_value() ? m_storage.val() : static_cast<value_type>(rsl::forward<U>(default_value));
+    return m_storage.has_value() ? m_storage.val() : static_cast<value_type>(rsl::forward<U>(defaultValue));
   }
   // returns the contained value if this has one, returns default value otherwise
   template <typename U>
-  constexpr value_type value_or(U&& default_value)
+  constexpr value_type value_or(U&& defaultValue) &&
   {
-    return m_storage.has_value() ? m_storage.val() : static_cast<value_type>(rsl::forward<U>(default_value));
+    return m_storage.has_value() ? rsl::move(m_storage.val()) : static_cast<value_type>(defaultValue);
   }
 
   /// RSL Comment: Different from ISO C++ Standard at time of writing (18/Jul/2022)
@@ -538,7 +548,7 @@ public:
   }
   // constructs the contained value in place.
   // if this already contains a value before the call, the contained value is destroyed by calling its destructor
-  template <typename U, typename... Args, typename enable_if_t<is_constructible_v<T, rsl::initializer_list<U>&, Args...>, bool> = true>
+  template <typename U, typename... Args, enable_if_t<is_constructible_v<T, rsl::initializer_list<U>&, Args...>, bool> = true>
   constexpr T& emplace(rsl::initializer_list<U> ilist, Args&&... args)
   {
     return emplace(ilist, rsl::forward<Args>(args)...);
@@ -644,73 +654,73 @@ constexpr bool operator>=(const optional<T>& lhs, const optional<U>& rhs)
 
 // compares optional object with nullopt
 template <typename T>
-constexpr bool operator==(const optional<T>& opt, nullopt_t)
+constexpr bool operator==(const optional<T>& opt, nullopt_t /*unused*/)
 {
   return !opt;
 }
 // compares optional object with nullopt
 template <typename T>
-constexpr bool operator==(nullopt_t, const optional<T>& opt)
+constexpr bool operator==(nullopt_t /*unused*/, const optional<T>& opt)
 {
   return !opt;
 }
 // compares optional object with nullopt
 template <typename T>
-constexpr bool operator!=(const optional<T>& opt, nullopt_t)
+constexpr bool operator!=(const optional<T>& opt, nullopt_t /*unused*/)
 {
   return bool(opt);
 }
 // compares optional object with nullopt
 template <typename T>
-constexpr bool operator!=(nullopt_t, const optional<T>& opt)
+constexpr bool operator!=(nullopt_t /*unused*/, const optional<T>& opt)
 {
   return bool(opt);
 }
 // compares optional object with nullopt
 template <typename T>
-constexpr bool operator<(const optional<T>& opt, nullopt_t)
+constexpr bool operator<(const optional<T>& /*unused*/, nullopt_t /*unused*/)
 {
   return false;
 }
 // compares optional object with nullopt
 template <typename T>
-constexpr bool operator<(nullopt_t, const optional<T>& opt)
+constexpr bool operator<(nullopt_t /*unused*/, const optional<T>& opt)
 {
   return bool(opt);
 }
 // compares optional object with nullopt
 template <typename T>
-constexpr bool operator<=(const optional<T>& opt, nullopt_t)
+constexpr bool operator<=(const optional<T>& opt, nullopt_t /*unused*/)
 {
   return !opt;
 }
 // compares optional object with nullopt
 template <typename T>
-constexpr bool operator<=(nullopt_t, const optional<T>& opt)
+constexpr bool operator<=(nullopt_t /*unused*/, const optional<T>& /*unused*/)
 {
   return true;
 }
 // compares optional object with nullopt
 template <typename T>
-constexpr bool operator>(const optional<T>& opt, nullopt_t)
+constexpr bool operator>(const optional<T>& opt, nullopt_t /*unused*/)
 {
   return bool(opt);
 }
 // compares optional object with nullopt
 template <typename T>
-constexpr bool operator>(nullopt_t, const optional<T>& opt)
+constexpr bool operator>(nullopt_t /*unused*/, const optional<T>& /*unused*/)
 {
   return false;
 }
 // compares optional object with nullopt
 template <typename T>
-constexpr bool operator>=(const optional<T>& lhs, nullopt_t)
+constexpr bool operator>=(const optional<T>& /*unused*/, nullopt_t /*unused*/)
 {
   return true;
 }
 // compares optional object with nullopt
 template <typename T>
-constexpr bool operator>=(nullopt_t, const optional<T>& opt)
+constexpr bool operator>=(nullopt_t /*unused*/, const optional<T>& opt)
 {
   return !opt;
 }

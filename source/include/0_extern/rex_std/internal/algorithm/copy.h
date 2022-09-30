@@ -28,27 +28,27 @@ REX_RSL_BEGIN_NAMESPACE
 namespace internal
 {
   template <typename InputIteratorCategory, bool IsMove, bool CanMemMove>
-  struct MoveAndCopyHelper
+  struct move_and_copy_helper
   {
     template <typename InputIterator, typename OutputIterator>
-    constexpr static OutputIterator move_or_copy(InputIterator first, InputIterator last, OutputIterator dst_first)
+    constexpr static OutputIterator move_or_copy(InputIterator first, InputIterator last, OutputIterator dstFirst)
     {
-      for(; first != last; ++dst_first, ++first)
+      for(; first != last; ++dstFirst, ++first)
       {
-        *dst_first = *first;
+        *dstFirst = *first;
       }
 
-      return dst_first;
+      return dstFirst;
     }
   };
 
   template <>
-  struct MoveAndCopyHelper<rsl::random_access_iterator_tag, false, false>
+  struct move_and_copy_helper<rsl::random_access_iterator_tag, false, false>
   {
     template <typename InputIterator, typename OutputIterator>
     constexpr static OutputIterator move_or_copy(InputIterator first, InputIterator last, OutputIterator result)
     {
-      using difference_type = iterator_traits<InputIterator>::difference_type;
+      using difference_type = typename iterator_traits<InputIterator>::difference_type;
 
       for(difference_type n = (last - first); n > 0; --n, ++first, ++result)
       {
@@ -60,7 +60,7 @@ namespace internal
   };
 
   template <typename InputIteratorCategory>
-  struct MoveAndCopyHelper<InputIteratorCategory, true, false>
+  struct move_and_copy_helper<InputIteratorCategory, true, false>
   {
     template <typename InputIterator, typename OutputIterator>
     constexpr static OutputIterator move_or_copy(InputIterator first, InputIterator last, OutputIterator result)
@@ -74,12 +74,12 @@ namespace internal
   };
 
   template <>
-  struct MoveAndCopyHelper<rsl::random_access_iterator_tag, true, false>
+  struct move_and_copy_helper<rsl::random_access_iterator_tag, true, false>
   {
     template <typename InputIterator, typename OutputIterator>
     constexpr static OutputIterator move_or_copy(InputIterator first, InputIterator last, OutputIterator result)
     {
-      using difference_type = InputIterator::difference_type;
+      using difference_type = typename InputIterator::difference_type;
 
       for(difference_type n = (last - first); n > 0; --n, ++first, ++result)
       {
@@ -91,7 +91,7 @@ namespace internal
   };
 
   template <bool IsMove>
-  struct MoveAndCopyHelper<rsl::random_access_iterator_tag, IsMove, true>
+  struct move_and_copy_helper<rsl::random_access_iterator_tag, IsMove, true>
   {
     template <typename T>
     constexpr static T* move_or_copy(const T* first, const T* last, T* result)
@@ -100,25 +100,25 @@ namespace internal
         return result;
 
       // We could use memcpy here if there's no range overlap, but memcpy is rarely much faster than memmove.
-      size_t len = (size_t)((uintptr)last - (uintptr)first);
-      return static_cast<T*>(rsl::memmove(result, first, len) + (last - first));
+      card32 len = static_cast<card32>(reinterpret_cast<uintptr>(last) - reinterpret_cast<uintptr>(first)); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+      return static_cast<T*>(memmove(result, first, len)) + len;
     }
   };
 } // namespace internal
 
 template <typename InputIt, typename OutputIt>
-constexpr OutputIt copy(InputIt first, InputIt last, OutputIt dst_first)
+constexpr OutputIt copy(InputIt first, InputIt last, OutputIt dstFirst)
 {
   using IIC               = typename iterator_traits<InputIt>::iterator_category;
   using OIC               = typename iterator_traits<OutputIt>::iterator_category;
   using value_type_input  = typename iterator_traits<InputIt>::value_type;
   using value_type_output = typename iterator_traits<OutputIt>::value_type;
 
-  constexpr bool IsMove        = rsl::is_move_iterator_v<InputIt>;
-  constexpr bool CanBeMemmoved = rsl::is_trivially_copyable_v<value_type_output> && rsl::is_same_v<value_type_input, value_type_output> &&
-                                 (rsl::is_pointer_v<InputIt> || rsl::is_same_v<IIC, rsl::continuous_iterator_tag>)&&(rsl::is_pointer_v<OutputIt> || rsl::is_same_v<OIC, rsl::continuous_iterator_tag>);
+  constexpr bool is_move         = rsl::is_move_iterator_v<InputIt>;
+  constexpr bool can_be_memmoved = rsl::is_trivially_copyable_v<value_type_output> && rsl::is_same_v<value_type_input, value_type_output> &&
+                                   (rsl::is_pointer_v<InputIt> || rsl::is_same_v<IIC, rsl::continuous_iterator_tag>)&&(rsl::is_pointer_v<OutputIt> || rsl::is_same_v<OIC, rsl::continuous_iterator_tag>);
 
-  return internal::MoveAndCopyHelper<IIC, IsMove, CanBeMemmoved>::move_or_copy(first, last, dst_first);
+  return internal::move_and_copy_helper<IIC, is_move, can_be_memmoved>::move_or_copy(first, last, dstFirst);
 }
 
 REX_RSL_END_NAMESPACE

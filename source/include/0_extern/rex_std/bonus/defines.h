@@ -49,7 +49,6 @@ MERGE(str, __LINE__)
 
 #define TO_WIDE_STRING(str) L##str
 
-#define REX_ENABLE_TODO_CHECKING
 #ifdef REX_ENABLE_TODO_CHECKING
   #define REX_STATIC_TODO(msg) static_assert(false, "TODO: ", msg);
 #else
@@ -78,3 +77,5 @@ MERGE(str, __LINE__)
 #define REX_RSL_END_NAMESPACE                                                                                                                                                                                                                            \
   }                                                                                                                                                                                                                                                      \
   }
+
+#define REX_RSL_NAMESPACE ::rsl::v1

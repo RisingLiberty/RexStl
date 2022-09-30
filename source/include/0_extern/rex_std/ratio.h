@@ -25,95 +25,95 @@ struct ratio;
 namespace internal
 {
   template <intmax Val>
-  struct Abs : integral_constant<intmax, (Val < 0 ? -Val : Val)>
+  struct abs : integral_constant<intmax, (Val < 0 ? -Val : Val)>
   {
   };
 
   template <intmax X, intmax Y>
-  struct GcdX : GcdX<Y, X % Y>::type
+  struct gcd_x : gcd_x<Y, X % Y>::type
   {
   };
 
   template <intmax Val>
-  struct GcdX<Val, 0> : integral_constant<intmax, Val>
+  struct gcd_x<Val, 0> : integral_constant<intmax, Val>
   {
   };
 
   template <intmax X, intmax Y>
-  struct Gcd : GcdX<Abs<X>::value, Abs<Y>::value>::type
+  struct gcd : gcd_x<abs<X>::value, abs<Y>::value>::type
   {
   };
 
   // specialization to avoid division by 0
   template <>
-  struct Gcd<0, 0> : integral_constant<intmax, 1>
+  struct gcd<0, 0> : integral_constant<intmax, 1>
   {
   };
 
   template <typename T>
-  constexpr bool IsRatio = false;
+  constexpr bool is_ratio = false;
 
   template <intmax R1, intmax R2>
-  constexpr bool IsRatio<ratio<R1, R2>> = true;
+  constexpr bool is_ratio<ratio<R1, R2>> = true;
 
   template <intmax X, intmax Y>
-  struct Lcm
+  struct lcm
   {
-    static const intmax value = (X * (Y / Gcd<X, Y>::value));
+    static const intmax s_value = (X * (Y / gcd<X, Y>::value));
   };
 
   template <typename Period1, typename Period2>
-  struct RatioGcd
+  struct ratio_gcd
   {
-    static_assert(IsRatio<Period1>::value, "Period1 is not a ratio type");
-    static_assert(IsRatio<Period2>::value, "Period2 is not a ratio type");
+    static_assert(is_ratio<Period1>, "Period1 is not a ratio type");
+    static_assert(is_ratio<Period2>, "Period2 is not a ratio type");
 
-    using type = ratio<Gcd<Period1::num, Period2::num>::value, Lcm<Period1::den, Period2::den>::value>;
+    using type = ratio<gcd<Period1::num, Period2::num>::value, lcm<Period1::den, Period2::den>::value>;
   };
 
   template <intmax X, intmax Y>
-  struct AdditionOverFlow
+  struct addition_over_flow
   {
-    static const bool DifferentSigns  = (X <= 0 && 0 <= Y) || (Y < 0 && 0 < X);
-    static const bool InrangeOfIntMax = Abs<Y>::value <= INTMAX_MAX - Abs<X>::value;
-    static const bool value           = DifferentSigns || InrangeOfIntMax;
+    static const bool s_different_signs    = (X <= 0 && 0 <= Y) || (Y < 0 && 0 < X);
+    static const bool s_inrange_of_int_max = abs<Y>::value <= INTMAX_MAX - abs<X>::value;
+    static const bool s_value              = s_different_signs || s_inrange_of_int_max;
   };
 
   template <intmax X, intmax Y>
-  struct MultiplyOverFlow
+  struct multiply_over_flow
   {
-    static const bool value = (Abs<X>::value <= (INTMAX_MAX / Abs<Y>::value));
+    static const bool s_value = (abs<X>::value <= (INTMAX_MAX / abs<Y>::value));
   };
 
   template <intmax X, intmax Y>
   struct ct_add
   {
-    static_assert(AdditionOverFlow<x, Y>::value, "compile-time addition overflow");
-    static const intmax value = X + Y;
+    static_assert(addition_over_flow<X, Y>::value, "compile-time addition overflow");
+    static const intmax s_value = X + Y;
   };
 
   template <intmax X, intmax Y>
   struct ct_sub
   {
-    static_assert(AdditionOverFlow<X, -Y>::value, "compile-time addition overflow");
-    static const intmax value = X - Y;
+    static_assert(addition_over_flow<X, -Y>::value, "compile-time addition overflow");
+    static const intmax s_value = X - Y;
   };
 
   template <intmax X, intmax Y>
   struct ct_multi
   {
-    static_assert(MultiplyOverFlow<X, Y>::value, "compile-time multiply overflow");
-    static const intmax value = X * Y;
+    static_assert(multiply_over_flow<X, Y>::s_value, "compile-time multiply overflow");
+    static const intmax s_value = X * Y;
   };
 
   template <class R1>
   struct ct_simplify
   {
-    static const intmax divisor = internal::Gcd<R1::num, R1::den>::value;
-    static const intmax num     = R1::num / divisor;
-    static const intmax den     = R1::den / divisor;
+    static const intmax s_divisor = internal::gcd<R1::num, R1::den>::value;
+    static const intmax s_num     = R1::num / s_divisor;
+    static const intmax s_den     = R1::den / s_divisor;
 
-    using ratio_type = ratio<num, den>;
+    using ratio_type = ratio<s_num, s_den>;
     using this_type  = ct_simplify<R1>;
   };
 } // namespace internal
@@ -125,83 +125,83 @@ struct ratio
   static_assert(Num > -INTMAX_MAX, "numerator too negative");
   static_assert(Den > -INTMAX_MAX, "denominator too negative");
 
-  static constexpr intmax num = sign_of_v<Num> * sign_of_v<Den> * internal::Abs<Num>::value / internal::Gcd<Num, Den>::value;
-  static constexpr intmax den = internal::Abs<Den>::value / internal::Gcd<Num, Den>::value;
+  static constexpr intmax num = sign_of_v<Num> * sign_of_v<Den> * internal::abs<Num>::value / internal::gcd<Num, Den>::value;
+  static constexpr intmax den = internal::abs<Den>::value / internal::gcd<Num, Den>::value;
 
   using type = ratio<num, den>;
 };
 
 template <typename R1, typename R2>
-struct RatioAddStruct
+struct ratio_add_struct
 {
   using type = typename internal::ct_simplify<typename ratio<internal::ct_add<internal::ct_multi<R1::num, R2::den>::value, internal::ct_multi<R2::num, R1::den>::value>::value, internal::ct_multi<R1::den, R2::den>::value>::type>::ratio_type;
 };
 
 template <typename R1, typename R2>
-struct RatioSubtractStruct
+struct ratio_subtract_struct
 {
   using type = typename internal::ct_simplify<
       typename ratio<internal::ct_sub<internal::ct_sub<internal::ct_multi<R1::num, R2::den>::value, internal::ct_multi<R2::num, R1::den>::value>::value, internal::ct_multi<R1::den, R2::den>::value>::value>::type>::ratio_type;
 };
 
 template <typename R1, typename R2>
-struct RatioMultiplyStruct
+struct ratio_multiply_struct
 {
-  using type = typename internal::ct_simplify<typename ratio<internal::ct_multi<R1::num, R2::num>::value, internal::ct_multi<R1::den, R2::den>::value>::type>::ratio_type;
+  using type = typename internal::ct_simplify<typename ratio<internal::ct_multi<R1::num, R2::num>::s_value, internal::ct_multi<R1::den, R2::den>::s_value>::type>::ratio_type;
 };
 
 template <typename R1, typename R2>
-struct RatioDivideStruct
+struct ratio_divide_struct
 {
-  using type = typename internal::ct_simplify<typename ratio<internal::ct_multi<R1::num, R2::den>::value, internal::ct_multi<R1::den, R2::num>::value>::type>::ratio_type;
+  using type = typename internal::ct_simplify<typename ratio<internal::ct_multi<R1::num, R2::den>::s_value, internal::ct_multi<R1::den, R2::num>::s_value>::type>::ratio_type;
 };
 
 template <typename R1, typename R2>
-struct RatioEqualStruct
+struct ratio_equal_struct
 {
   using sr1 = internal::ct_simplify<R1>;
   using sr2 = internal::ct_simplify<R2>;
 
-  static const bool value = (sr1::num == sr2::num) && (sr1::den == sr2::den);
+  static const bool s_value = (sr1::num == sr2::num) && (sr1::den == sr2::den);
 };
 
 template <typename R1, typename R2>
-struct RatioLessStruct
+struct ratio_less_struct
 {
-  static const bool value = (R1::num * R2::den) < (R2::num * R1::den);
+  static const bool s_value = (R1::num * R2::den) < (R2::num * R1::den);
 };
 
 template <typename R1, typename R2>
-using RatioAdd = typename RatioAddStruct<R1, R2>::type;
+using RatioAdd = typename ratio_add_struct<R1, R2>::type;
 template <typename R1, typename R2>
-using RatioSubtract = typename RatioSubtractStruct<R1, R2>::type;
+using RatioSubtract = typename ratio_subtract_struct<R1, R2>::type;
 template <typename R1, typename R2>
-using RatioMultiply = typename RatioMultiplyStruct<R1, R2>::type;
+using RatioMultiply = typename ratio_multiply_struct<R1, R2>::type;
 template <typename R1, typename R2>
-using RatioDivide = typename RatioDivideStruct<R1, R2>::type;
+using RatioDivide = typename ratio_divide_struct<R1, R2>::type;
 
 template <typename R1, typename R2>
-struct RatioEqual : public bool_constant<RatioEqualStruct<R1, R2>::value>
+struct ratio_equal : public bool_constant<ratio_equal_struct<R1, R2>::value>
 {
 };
 template <typename R1, typename R2>
-struct RatioNotEqual : public bool_constant<!RatioEqual<R1, R2>::value>
+struct ratio_not_equal : public bool_constant<!ratio_equal<R1, R2>::value>
 {
 };
 template <typename R1, typename R2>
-struct RatioLess : public bool_constant<RatioLessStruct<R1, R2>::value>
+struct ratio_less : public bool_constant<ratio_less_struct<R1, R2>::value>
 {
 };
 template <typename R1, typename R2>
-struct RatioLessEqual : public bool_constant<!RatioLess<R2, R1>::value>
+struct ratio_less_equal : public bool_constant<!ratio_less<R2, R1>::value>
 {
 };
 template <typename R1, typename R2>
-struct RatioGreater : public bool_constant<RatioLess<R2, R1>::value>
+struct ratio_greater : public bool_constant<ratio_less<R2, R1>::value>
 {
 };
 template <typename R1, typename R2>
-struct RatioGreaterEqual : public bool_constant<!RatioLess<R1, R2>::value>
+struct ratio_greater_equal : public bool_constant<!ratio_less<R1, R2>::value>
 {
 };
 

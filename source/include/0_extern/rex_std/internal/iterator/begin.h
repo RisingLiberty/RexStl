@@ -27,7 +27,7 @@ auto begin(const C& c) -> decltype(c.begin())
   return c.begin();
 }
 template <typename T, card32 N>
-T* begin(T (&array)[N])
+T* begin(T (&array)[N]) // NOLINT(modernize-avoid-c-arrays)
 {
   return &array[0];
 }

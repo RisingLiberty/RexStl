@@ -43,7 +43,7 @@ public:
   static_assert(rsl::is_same_v<typename Traits::char_type, CharT>, "char type of Traits has to be the same type as the stream's underlying type");
 
   // initializes the internal state by calling init(sb).
-  explicit basic_ios(basic_streambuf<CharT, Traits>* sb)
+  explicit basic_ios(basic_streambuf<CharT, Traits>* sb) // NOLINT(cppcoreguidelines-pro-type-member-init)
       : basic_ios()
   {
     init(sb);
@@ -51,11 +51,16 @@ public:
 
   // you're not allowed to copy a I/O stream.
   basic_ios(const basic_ios&) = delete;
+  // you're not allowed to move a I/O stream.
+  basic_ios(basic_ios&&) = delete;
 
   // destroys the object
   ~basic_ios() override = default;
 
+  // you can't assign to a basic_ios
   basic_ios& operator=(const basic_ios&) = delete;
+  // you can't assign to a basic_ios
+  basic_ios& operator=(basic_ios&&) = delete;
 
   //
   // state functions
@@ -122,7 +127,7 @@ public:
 
     if(rdbuf() == nullptr)
     {
-      setstate(io::iostate::badbit);
+      m_iostate |= io::iostate::badbit;
     }
   }
 
@@ -159,7 +164,7 @@ public:
   /// RSL Comment: Different from ISO C++ Standard at time of writing (09/Sep/2022)
   // Rex Standard Library doesn't use exceptions, so this function doesn't do anything.
   // sets the exception mask to except.
-  void exceptions(io::iostate)
+  void exceptions(io::iostate /*unused*/)
   {
     REX_ASSERT("You can't set the exception mask of a stream");
   }
@@ -235,7 +240,7 @@ protected:
     m_stream_buf  = sb;
     m_iostate     = io::iostate::goodbit;
     m_tied_stream = nullptr;
-    m_fill_ch     = CharT(' ');
+    m_fill_ch     = CharT(' '); // NOLINT(google-readability-casting)
   }
 
   // replaces the current state with that of other, except for the associated stream buffer

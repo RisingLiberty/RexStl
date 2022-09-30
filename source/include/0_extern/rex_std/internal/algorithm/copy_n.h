@@ -20,25 +20,25 @@ REX_RSL_BEGIN_NAMESPACE
 namespace internal
 {
   template <typename InputIterator, typename Size, typename OutputIterator>
-  OutputIterator copy_n_impl(InputIterator first, Size n, OutputIterator result, rsl::input_iterator_tag)
+  OutputIterator copy_n_impl(InputIterator first, Size n, OutputIterator result, rsl::input_iterator_tag /*unused*/)
   {
     for(; n > 0; --n)
       *result++ = *first++;
     return result;
   }
 
-  template <typename random_access_iterator, typename Size, typename OutputIterator>
-  OutputIterator copy_n_impl(random_access_iterator first, Size n, OutputIterator result, rsl::random_access_iterator_tag)
+  template <typename RandomAccessIterator, typename Size, typename OutputIterator>
+  OutputIterator copy_n_impl(RandomAccessIterator first, Size n, OutputIterator result, rsl::random_access_iterator_tag /*unused*/)
   {
     return rsl::copy(first, first + n, result); // Take advantage of the optimizations present in the copy algorithm.
   }
 } // namespace internal
 
 template <typename InputIterator, typename Size, typename OutputIterator>
-OutputIterator copy_n(InputIterator first, Size n, OutputIterator dst_first)
+OutputIterator copy_n(InputIterator first, Size n, OutputIterator dstFirst)
 {
   using IC = typename InputIterator::iterator_category;
-  return internal::copy_n_impl(first, n, dst_first, IC());
+  return internal::copy_n_impl(first, n, dstFirst, IC());
 }
 
 REX_RSL_END_NAMESPACE

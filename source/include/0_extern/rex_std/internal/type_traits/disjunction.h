@@ -42,6 +42,6 @@ struct disjunction<First, Rest...> : internal::disjunction<First::value, First, 
 };
 
 template <typename... Traits>
-constexpr bool disjunction_t = disjunction<Traits>::value;
+constexpr bool disjunction_t = disjunction<Traits...>::value;
 
 REX_RSL_END_NAMESPACE

@@ -12,6 +12,7 @@
 
 #pragma once
 
+#include "rex_std/bonus/string/string_utils.h"
 #include "rex_std/bonus/types.h"
 #include "rex_std/cstring.h"
 #include "rex_std/internal/cwchar/mbstate.h"
@@ -31,7 +32,7 @@ class char_traits
 namespace internal
 {
   template <typename CharT, typename IntType>
-  class CharTraitsBase
+  class char_traits_base
   {
   public:
     using char_type = CharT;
@@ -208,7 +209,7 @@ namespace internal
 // the values instead of C++ basic types.
 
 template <>
-class char_traits<char8> : public internal::CharTraitsBase<char8, int32>
+class char_traits<char8> : public internal::char_traits_base<char8, int32>
 {
 public:
   using char_type  = char8;
@@ -230,7 +231,7 @@ public:
 };
 
 template <>
-class char_traits<tchar> : public internal::CharTraitsBase<tchar, rsl::wint_t>
+class char_traits<tchar> : public internal::char_traits_base<tchar, rsl::wint_t>
 {
 public:
   using char_type  = tchar;
@@ -241,7 +242,7 @@ public:
 };
 
 template <>
-class char_traits<char16_t> : public internal::CharTraitsBase<char16_t, uint16>
+class char_traits<char16_t> : public internal::char_traits_base<char16_t, uint16>
 {
 public:
   using char_type  = char16_t;
@@ -252,7 +253,7 @@ public:
 };
 
 template <>
-class char_traits<char32_t> : public internal::CharTraitsBase<char32_t, uint32>
+class char_traits<char32_t> : public internal::char_traits_base<char32_t, uint32>
 {
 public:
   using char_type  = char32_t;

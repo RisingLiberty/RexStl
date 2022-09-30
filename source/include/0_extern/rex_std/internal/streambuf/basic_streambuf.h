@@ -31,6 +31,7 @@
 #include "rex_std/internal/algorithm/min.h"
 #include "rex_std/internal/assert/assert_fwd.h"
 #include "rex_std/internal/ios/ios_base.h"
+#include "rex_std/internal/memory/addressof.h"
 #include "rex_std/internal/string/char_traits.h"
 #include "rex_std/internal/type_traits/is_same.h"
 #include "rex_std/internal/utility/swap.h"
@@ -216,8 +217,10 @@ protected:
   {
   }
 
-  basic_streambuf& operator=(const basic_streambuf& other)
+  basic_streambuf& operator=(const basic_streambuf& other) // NOLINT(bugprone-unhandled-self-assignment)
   {
+    REX_ASSERT_X(this != addressof(other), "Can't assign an streambuffer to itself");
+
     m_read_buf_begin = other.m_read_buf_begin;
     m_read_buf_curr  = other.m_read_buf_curr;
     m_read_buf_end   = other.m_read_buf_end;
@@ -247,21 +250,21 @@ protected:
 
   // the base class version of this function has no effect, Derived classes may override this function
   // to allow removal or replacement of the controlled character sequence
-  virtual basic_streambuf<CharT, Traits>* setbuf(char_type*, streamsize)
+  virtual basic_streambuf<CharT, Traits>* setbuf(char_type* /*unused*/, streamsize /*unused*/)
   {
     return this;
   }
 
   // the base class version of this function has no effect. Derived classes may override this function
   // to allow relative positioning of the position indicator
-  virtual pos_type seekoff(off_type, io::seekdir, io::openmode = io::openmode::in | io::openmode::out)
+  virtual pos_type seekoff(off_type /*unused*/, io::seekdir /*unused*/, io::openmode /*unused*/)
   {
     return pos_type(-1);
   }
 
   // the base class version of this function has no effect. Derived classes may override this function
   // to allow absolute positioning of the position indicator
-  virtual pos_type seekpos(pos_type, io::openmode = io::openmode::in | io::openmode::out)
+  virtual pos_type seekpos(pos_type /*unused*/, io::openmode /*unused*/)
   {
     return pos_type(-1);
   }
@@ -293,7 +296,7 @@ protected:
   // reads characters from the associated input sequence to the get area and advances the next pointer
   virtual int_type uflow()
   {
-    int_type ch = underflow();
+    int_type const ch = underflow();
     if(Traits::eq_int_type(ch, Traits::eof()))
     {
       return Traits::eof();
@@ -316,8 +319,8 @@ protected:
   // works as if by repeated calls to sbumpc.
   virtual streamsize xsgetn(char_type* s, streamsize count)
   {
-    streamsize num_chars_read        = 0;
-    streamsize to_read_from_get_area = (rsl::min)(count, available_in_get_area());
+    streamsize num_chars_read              = 0;
+    streamsize const to_read_from_get_area = (rsl::min)(count, available_in_get_area());
     if(to_read_from_get_area > 0)
     {
       Traits::copy(s, gptr(), to_read_from_get_area);
@@ -374,8 +377,8 @@ protected:
   // write count characters to the output sequence from the character array whose element is pointed to by s.
   virtual streamsize xsputn(const char_type* s, streamsize count)
   {
-    streamsize num_chars_written    = 0;
-    streamsize to_write_to_put_area = (rsl::min)(count, available_in_put_area());
+    streamsize num_chars_written          = 0;
+    streamsize const to_write_to_put_area = (rsl::min)(count, available_in_put_area());
     if(to_write_to_put_area > 0)
     {
       // this cannot fail, so no point in setting the iostate
@@ -395,9 +398,13 @@ protected:
   }
 
   // writes characters to the associated output sequence from the put area
-  virtual int_type overflow(int_type ch = Traits::eof())
+  virtual int_type overflow(int_type ch)
   {
     return ch;
+  }
+  int_type overflow()
+  {
+    return overflow(Traits::eof());
   }
 
   /// RSL Comment: Not in ISO C++ Standard at time of writing (10/Sep/2022)
@@ -442,9 +449,13 @@ protected:
   void setp(char_type** beg, char_type** end) {}
 
   // puts a character back into the input sequence, possibly modifying the input sequence
-  virtual int_type pbackfail(int_type c = Traits::eof())
+  virtual int_type pbackfail(int_type c)
   {
     return c;
+  }
+  int_type pbackfail()
+  {
+    return pbackfail(Traits::eof());
   }
 
   // increases current read pointer

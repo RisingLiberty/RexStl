@@ -35,38 +35,38 @@ namespace chrono
   namespace internal
   {
     template <typename>
-    struct IsDuration : false_type
+    struct is_duration : false_type
     {
     };
     template <typename Rep, typename Period>
-    struct IsDuration<duration<Rep, Period>> : true_type
+    struct is_duration<duration<Rep, Period>> : true_type
     {
     };
     template <typename Rep, typename Period>
-    struct IsDuration<const duration<Rep, Period>> : true_type
+    struct is_duration<const duration<Rep, Period>> : true_type
     {
     };
     template <typename Rep, typename Period>
-    struct IsDuration<volatile duration<Rep, Period>> : true_type
+    struct is_duration<volatile duration<Rep, Period>> : true_type
     {
     };
     template <typename Rep, typename Period>
-    struct IsDuration<const volatile duration<Rep, Period>> : true_type
+    struct is_duration<const volatile duration<Rep, Period>> : true_type
     {
     };
 
     template <typename Period1, typename Period2>
-    struct RatioGCD
+    struct ratio_gcd
     {
-      static_assert(rsl::internal::IsRatio<Period1>::value, "Period1 is not a rsl::ratio type");
-      static_assert(rsl::internal::IsRatio<Period2>::value, "Period2 is not a rsl::ratio type");
+      static_assert(rsl::internal::is_ratio<Period1>, "Period1 is not a rsl::ratio type");
+      static_assert(rsl::internal::is_ratio<Period2>, "Period2 is not a rsl::ratio type");
 
-      using type = ratio<rsl::internal::Gcd<Period1::num, Period2::num>::value, rsl::internal::Lcm<Period1::den, Period2::den>::value>;
+      using type = ratio<rsl::internal::gcd<Period1::num, Period2::num>::value, rsl::internal::lcm<Period1::den, Period2::den>::value>;
     };
 
     // duration cast
     template <typename FromDuration, typename ToDuration, typename CommonPeriod = typename RatioDivide<typename FromDuration::period, typename ToDuration::period>::type,
-              typename CommonRep = typename rsl::decay_t<typename common_type_t<typename ToDuration::rep, typename FromDuration::rep, intmax>>, bool = CommonPeriod::num == 1, bool = CommonPeriod::den == 1>
+              typename CommonRep = typename rsl::decay_t<common_type_t<typename ToDuration::rep, typename FromDuration::rep, intmax>>, bool = CommonPeriod::num == 1, bool = CommonPeriod::den == 1>
     struct DurationCastImpl;
 
     template <typename FromDuration, typename ToDuration, typename CommonPeriod, typename CommonRep>
@@ -107,7 +107,7 @@ namespace chrono
   } // namespace internal
 
   template <typename ToDuration, typename Rep, typename Period>
-  typename enable_if_t<internal::IsDuration<ToDuration>::value, ToDuration>::type duration_cast(const duration<Rep, Period>& d)
+  typename enable_if_t<internal::is_duration<ToDuration>::value, ToDuration>::type duration_cast(const duration<Rep, Period>& d)
   {
     using FromDuration = typename duration<Rep, Period>::this_type;
     return internal::DurationCastImpl<FromDuration, ToDuration>::do_cast(d);
@@ -125,15 +125,16 @@ namespace chrono
 
     constexpr duration()      = default;
     duration(const duration&) = default;
+    constexpr ~duration()     = default;
 
     template <typename Rep2>
-    constexpr explicit duration(const Rep2& rep2, typename enable_if_t<is_convertible_v<Rep2, Rep> && (treat_as_floating_point<Rep>::value || !treat_as_floating_point<Rep2>::value)>** = 0)
+    constexpr explicit duration(const Rep2& rep2, enable_if_t<is_convertible_v<Rep2, Rep> && (treat_as_floating_point<Rep>::value || !treat_as_floating_point<Rep2>::value)>** /*unused*/ = nullptr)
         : m_rep(static_cast<Rep>(rep2))
     {
     }
 
     template <typename Rep2, typename Period2>
-    constexpr duration(const duration<Rep2, Period2>& d2, typename enable_if_t<treat_as_floating_point<Rep>::value || (RatioDivide<Period2, Period>::den == 1 && !treat_as_floating_point<Rep2>::value), void>** = 0)
+    constexpr explicit duration(const duration<Rep2, Period2>& d2, enable_if_t<treat_as_floating_point<Rep>::value || (RatioDivide<Period2, Period>::den == 1 && !treat_as_floating_point<Rep2>::value), void>** /*unused*/ = 0)
         : m_rep(duration_cast<duration>(d2).count())
     {
     }
@@ -221,53 +222,53 @@ namespace chrono
   };
 
   template <typename Rep1, typename Period1, typename Rep2, typename Period2>
-  typename common_type_t<duration<Rep1, Period1>, duration<Rep2, Period2>> operator+(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs)
+  common_type_t<duration<Rep1, Period1>, duration<Rep2, Period2>> operator+(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs)
   {
     using common_duration = common_type_t<duration<Rep1, Period1>, duration<Rep2, Period2>>;
     return common_duration(common_duration(lhs).count() + common_duration(rhs).count());
   }
 
   template <typename Rep1, typename Period1, typename Rep2, typename Period2>
-  typename common_type_t<duration<Rep1, Period1>, duration<Rep2, Period2>> operator-(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs)
+  common_type_t<duration<Rep1, Period1>, duration<Rep2, Period2>> operator-(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs)
   {
     using common_duration = common_type_t<duration<Rep1, Period1>, duration<Rep2, Period2>>;
     return common_duration(common_duration(lhs).count() - common_duration(rhs).count());
   }
 
   template <typename Rep1, typename Period1, typename Rep2>
-  duration<typename common_type_t<Rep1, Rep2>, Period1> operator*(const duration<Rep1, Period1>& lhs, const Rep2& rhs)
+  duration<common_type_t<Rep1, Rep2>, Period1> operator*(const duration<Rep1, Period1>& lhs, const Rep2& rhs)
   {
     using common_duration = duration<common_type_t<Rep1, Rep2>, Period1>;
     return common_duration(common_duration(lhs).count() * rhs);
   }
   template <typename Rep1, typename Period1, typename Rep2>
-  duration<typename common_type_t<Rep1, Rep2>, Period1> operator*(const Rep2& lhs, const duration<Rep1, Period1>& rhs)
+  duration<common_type_t<Rep1, Rep2>, Period1> operator*(const Rep2& lhs, const duration<Rep1, Period1>& rhs)
   {
     using common_duration = duration<common_type_t<Rep1, Rep2>, Period1>;
     return common_duration(lhs * common_duration(rhs).count());
   }
 
   template <typename Rep1, typename Period1, typename Rep2>
-  duration<typename common_type_t<Rep1, Rep2>, Period1> operator/(const duration<Rep1, Period1>& lhs, const Rep2& rhs)
+  duration<common_type_t<Rep1, Rep2>, Period1> operator/(const duration<Rep1, Period1>& lhs, const Rep2& rhs)
   {
     using common_duration = duration<common_type_t<Rep1, Rep2>, Period1>;
     return common_duration(common_duration(lhs).count() / rhs);
   }
   template <typename Rep1, typename Period1, typename Rep2>
-  duration<typename common_type_t<Rep1, Rep2>, Period1> operator/(const Rep2& lhs, const duration<Rep1, Period1>& rhs)
+  duration<common_type_t<Rep1, Rep2>, Period1> operator/(const Rep2& lhs, const duration<Rep1, Period1>& rhs)
   {
     using common_duration = duration<common_type_t<Rep1, Rep2>, Period1>;
     return common_duration(lhs / common_duration(rhs).count());
   }
 
   template <typename Rep1, typename Period1, typename Rep2>
-  duration<typename common_type_t<Rep1, Rep2>, Period1> operator%(const duration<Rep1, Period1>& lhs, const Rep2& rhs)
+  duration<common_type_t<Rep1, Rep2>, Period1> operator%(const duration<Rep1, Period1>& lhs, const Rep2& rhs)
   {
     using common_duration = duration<common_type_t<Rep1, Rep2>, Period1>;
     return common_duration(common_duration(lhs).count() % rhs);
   }
   template <typename Rep1, typename Period1, typename Rep2>
-  duration<typename common_type_t<Rep1, Rep2>, Period1> operator%(const Rep2& lhs, const duration<Rep1, Period1>& rhs)
+  duration<common_type_t<Rep1, Rep2>, Period1> operator%(const Rep2& lhs, const duration<Rep1, Period1>& rhs)
   {
     using common_duration = duration<common_type_t<Rep1, Rep2>, Period1>;
     return common_duration(lhs % common_duration(rhs).count());
@@ -322,7 +323,7 @@ namespace chrono
   using months       = duration<int64, ratio<2629746>>;
   using years        = duration<int64, ratio<31556952>>;
 
-  template <typename ToDuration, typename Rep, typename Period, enable_if_t<internal::IsDuration<ToDuration>::value, bool> = true>
+  template <typename ToDuration, typename Rep, typename Period, enable_if_t<internal::is_duration<ToDuration>::value, bool> = true>
   REX_NO_DISCARD constexpr ToDuration floor(const duration<Rep, Period>& dur)
   {
     // convert duration to another duration; round towards negative infinity
@@ -336,7 +337,7 @@ namespace chrono
     return casted;
   }
 
-  template <typename ToDuration, typename Rep, typename Period, enable_if_t<internal::IsDuration<ToDuration>::value, bool> = true>
+  template <typename ToDuration, typename Rep, typename Period, enable_if_t<internal::is_duration<ToDuration>::value, bool> = true>
   REX_NO_DISCARD constexpr ToDuration ceil(const duration<Rep, Period>& dur)
   {
     // convert duration to another duration; round towards positive infinity
@@ -360,7 +361,7 @@ namespace chrono
     }
   } // namespace internal
 
-  template <typename ToDuration, typename Rep, typename Period, enable_if_t<internal::IsDuration<ToDuration>::value && !treat_as_floating_point<typename ToDuration::rep>::value, bool> = true>
+  template <typename ToDuration, typename Rep, typename Period, enable_if_t<internal::is_duration<ToDuration>::value && !treat_as_floating_point<typename ToDuration::rep>::value, bool> = true>
   REX_NO_DISCARD constexpr ToDuration round(const duration<Rep, Period>& dur)
   {
     // convert duration to another duration, round to nearest, ties to even
@@ -399,7 +400,7 @@ namespace chrono
   }
 
     template <typename CharType, typename Period>
-    constexpr const CharType* get_literal_unit_suffix()
+    constexpr const CharType* get_literal_unit_suffix() // NOLINT(readability-function-cognitive-complexity)
     {
       IF_PERIOD_RETURN_SUFFIX_ELSE(atto, "as")
       IF_PERIOD_RETURN_SUFFIX_ELSE(femto, "fs")
@@ -470,12 +471,6 @@ namespace chrono
     return os << ss.str();
   }
 
-  template <typename Rep1, typename Period1, typename Rep2, typename Period2>
-  struct common_type<chrono::duration<Rep1, Period1>, chrono::duration<Rep2, Period2>>
-  {
-    using type = chrono::duration<decay_t<common_type_t<Rep1, Rep2>>, typename internal::RatioGcd<Period1, Period2>::type>;
-  };
-
   /// [24/Jul/2022] RSL TODO: We have yet to implement rsl::chrono::from_stream
   // template <typename CharType, typename Traits, typename Rep, typename Period, typename Alloc = rsl::allocator<CharType>>
   // basic_istream<CharType, Traits>& from_stream(basic_istream<CharType, Traits>& is, const CharType* fmt,
@@ -485,58 +480,65 @@ namespace chrono
   // template <typename Rep, typename Period, typename CharType>
   // struct Formatter<Chrono::duration<Rep, Period>, CharType>;
 } // namespace chrono
+
+template <typename Rep1, typename Period1, typename Rep2, typename Period2>
+struct common_type<chrono::duration<Rep1, Period1>, chrono::duration<Rep2, Period2>>
+{
+  using type = chrono::duration<decay_t<common_type_t<Rep1, Rep2>>, typename internal::ratio_gcd<Period1, Period2>::type>;
+};
+
 REX_RSL_END_NAMESPACE
 
 REX_RSL_BEGIN_NAMESPACE
 namespace chrono_literals
 {
 #pragma warning(push)
-#pragma warning(disable : 4455) // literal suffix identifiers that do not start with an underscore are reserved
-  constexpr rsl::chrono::hours operator"" h(uint64 val)
+#pragma warning(disable : 4455)                         // literal suffix identifiers that do not start with an underscore are reserved
+  constexpr rsl::chrono::hours operator"" h(uint64 val) // NOLINT(clang-diagnostic-user-defined-literals)
   {
     return rsl::chrono::hours(val);
   }
-  constexpr rsl::chrono::duration<float64, ratio<3600>> operator"" h(lfloat64 val)
+  constexpr rsl::chrono::duration<float64, ratio<3600>> operator"" h(lfloat64 val) // NOLINT(clang-diagnostic-user-defined-literals)
   {
     return rsl::chrono::duration<float64, ratio<3600>>(val);
   }
-  constexpr rsl::chrono::minutes(operator"" min)(uint64 val)
+  constexpr rsl::chrono::minutes(operator"" min)(uint64 val) // NOLINT(clang-diagnostic-user-defined-literals)
   {
     return rsl::chrono::minutes(val);
   }
-  constexpr rsl::chrono::duration<float64, ratio<60>>(operator"" min)(lfloat64 val)
+  constexpr rsl::chrono::duration<float64, ratio<60>>(operator"" min)(lfloat64 val) // NOLINT(clang-diagnostic-user-defined-literals)
   {
     return rsl::chrono::duration<float64, ratio<60>>(val);
   }
-  constexpr rsl::chrono::seconds operator"" s(uint64 val)
+  constexpr rsl::chrono::seconds operator"" s(uint64 val) // NOLINT(clang-diagnostic-user-defined-literals)
   {
     return rsl::chrono::seconds(val);
   }
-  constexpr rsl::chrono::duration<float64> operator"" s(lfloat64 val)
+  constexpr rsl::chrono::duration<float64> operator"" s(lfloat64 val) // NOLINT(clang-diagnostic-user-defined-literals)
   {
     return rsl::chrono::duration<float64>(val);
   }
-  constexpr rsl::chrono::milliseconds operator"" ms(uint64 val)
+  constexpr rsl::chrono::milliseconds operator"" ms(uint64 val) // NOLINT(clang-diagnostic-user-defined-literals)
   {
     return rsl::chrono::milliseconds(val);
   }
-  constexpr rsl::chrono::duration<float64, milli> operator"" ms(lfloat64 val)
+  constexpr rsl::chrono::duration<float64, milli> operator"" ms(lfloat64 val) // NOLINT(clang-diagnostic-user-defined-literals)
   {
     return rsl::chrono::duration<float64, milli>(val);
   }
-  constexpr rsl::chrono::microseconds operator"" us(uint64 val)
+  constexpr rsl::chrono::microseconds operator"" us(uint64 val) // NOLINT(clang-diagnostic-user-defined-literals)
   {
     return rsl::chrono::microseconds(val);
   }
-  constexpr rsl::chrono::duration<float64, micro> operator"" us(lfloat64 val)
+  constexpr rsl::chrono::duration<float64, micro> operator"" us(lfloat64 val) // NOLINT(clang-diagnostic-user-defined-literals)
   {
     return rsl::chrono::duration<float64, micro>(val);
   }
-  constexpr rsl::chrono::nanoseconds operator"" ns(uint64 val)
+  constexpr rsl::chrono::nanoseconds operator"" ns(uint64 val) // NOLINT(clang-diagnostic-user-defined-literals)
   {
     return rsl::chrono::nanoseconds(val);
   }
-  constexpr rsl::chrono::duration<float64, nano> operator"" ns(lfloat64 val)
+  constexpr rsl::chrono::duration<float64, nano> operator"" ns(lfloat64 val) // NOLINT(clang-diagnostic-user-defined-literals)
   {
     return rsl::chrono::duration<float64, nano>(val);
   }

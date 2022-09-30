@@ -47,7 +47,7 @@ REX_RSL_BEGIN_NAMESPACE
 
 namespace internal
 {
-  template <typename T1, typename T2, bool is_same_v, bool FirstEmpty, bool SecondEmpty>
+  template <typename T1, typename T2, bool IsSameV, bool FirstEmpty, bool SecondEmpty>
   struct CompressedPairSwitch;
 
   template <typename T1, typename T2>
@@ -80,12 +80,12 @@ namespace internal
   {
   };
 
-  template <typename T1, typename T2, card32 version>
-  struct CompressedPairImpl;
+  template <typename T1, typename T2, card32 Version>
+  struct compressed_pair_impl;
 
   // Derived from neither
   template <typename T1, typename T2>
-  class CompressedPairImpl<T1, T2, 0>
+  class compressed_pair_impl<T1, T2, 0>
   {
   public:
     using first_type             = T1;
@@ -97,18 +97,18 @@ namespace internal
     using first_const_reference  = typename call_traits<first_type>::const_reference;
     using second_const_reference = typename call_traits<second_type>::const_reference;
 
-    CompressedPairImpl() = default;
-    CompressedPairImpl(first_param_type first, second_param_type second)
+    compressed_pair_impl() = default;
+    compressed_pair_impl(first_param_type first, second_param_type second)
         : m_first(first)
         , m_second(second)
     {
     }
-    CompressedPairImpl(first_param_type first)
+    explicit compressed_pair_impl(first_param_type first)
         : m_first(first)
         , m_second()
     {
     }
-    CompressedPairImpl(second_param_type second)
+    explicit compressed_pair_impl(second_param_type second)
         : m_first()
         , m_second(second)
     {
@@ -139,7 +139,7 @@ namespace internal
 
   // Derive from T1
   template <typename T1, typename T2>
-  class CompressedPairImpl<T1, T2, 1> : private T1
+  class compressed_pair_impl<T1, T2, 1> : private T1
   {
   public:
     using first_type             = T1;
@@ -151,18 +151,18 @@ namespace internal
     using first_const_reference  = typename call_traits<first_type>::const_reference;
     using second_const_reference = typename call_traits<second_type>::const_reference;
 
-    CompressedPairImpl() = default;
-    CompressedPairImpl(first_param_type first, second_param_type second)
+    compressed_pair_impl() = default;
+    compressed_pair_impl(first_param_type first, second_param_type second)
         : first_type(first)
         , m_second(second)
     {
     }
-    CompressedPairImpl(first_param_type first)
+    explicit compressed_pair_impl(first_param_type first)
         : first_type(first)
         , m_second()
     {
     }
-    CompressedPairImpl(second_param_type second)
+    explicit compressed_pair_impl(second_param_type second)
         : first_type()
         , m_second(second)
     {
@@ -192,7 +192,7 @@ namespace internal
 
   // Derive from T2
   template <typename T1, typename T2>
-  class CompressedPairImpl<T1, T2, 2> : private T2
+  class compressed_pair_impl<T1, T2, 2> : private T2
   {
   public:
     using first_type             = T1;
@@ -204,18 +204,18 @@ namespace internal
     using first_const_reference  = typename call_traits<first_type>::const_reference;
     using second_const_reference = typename call_traits<second_type>::const_reference;
 
-    CompressedPairImpl() = default;
-    CompressedPairImpl(first_param_type first, second_param_type second)
+    compressed_pair_impl() = default;
+    compressed_pair_impl(first_param_type first, second_param_type second)
         : second_type(second)
         , m_first(first)
     {
     }
-    CompressedPairImpl(first_param_type first)
+    explicit compressed_pair_impl(first_param_type first)
         : second_type()
         , m_first(first)
     {
     }
-    CompressedPairImpl(second_param_type second)
+    explicit compressed_pair_impl(second_param_type second)
         : second_type(second)
         , m_first()
     {
@@ -245,7 +245,7 @@ namespace internal
 
   // Derive from T1 & T2
   template <typename T1, typename T2>
-  class CompressedPairImpl<T1, T2, 3> : private T1, private T2
+  class compressed_pair_impl<T1, T2, 3> : private T1, private T2
   {
   public:
     using first_type             = T1;
@@ -257,18 +257,18 @@ namespace internal
     using first_const_reference  = typename call_traits<first_type>::const_reference;
     using second_const_reference = typename call_traits<second_type>::const_reference;
 
-    CompressedPairImpl() = default;
-    CompressedPairImpl(first_param_type first, second_param_type second)
+    compressed_pair_impl() = default;
+    compressed_pair_impl(first_param_type first, second_param_type second)
         : first_type(first)
         , second_type(second)
     {
     }
-    CompressedPairImpl(first_param_type first)
+    explicit compressed_pair_impl(first_param_type first)
         : first_type(first)
         , second_type()
     {
     }
-    CompressedPairImpl(second_param_type second)
+    explicit compressed_pair_impl(second_param_type second)
         : first_type()
         , second_type(second)
     {
@@ -295,7 +295,7 @@ namespace internal
 
   // T1 == T2 and are not empty
   template <typename T1, typename T2>
-  class CompressedPairImpl<T1, T2, 4>
+  class compressed_pair_impl<T1, T2, 4>
   {
   public:
     using first_type             = T1;
@@ -307,18 +307,18 @@ namespace internal
     using first_const_reference  = typename call_traits<first_type>::const_reference;
     using second_const_reference = typename call_traits<second_type>::const_reference;
 
-    CompressedPairImpl() = default;
-    CompressedPairImpl(first_param_type first, second_param_type second)
+    compressed_pair_impl() = default;
+    compressed_pair_impl(first_param_type first, second_param_type second)
         : m_first(first)
         , m_second(second)
     {
     }
-    CompressedPairImpl(first_param_type first)
+    explicit compressed_pair_impl(first_param_type first)
         : m_first(first)
         , m_second()
     {
     }
-    CompressedPairImpl(second_param_type second)
+    explicit compressed_pair_impl(second_param_type second)
         : m_first()
         , m_second(second)
     {
@@ -351,7 +351,7 @@ namespace internal
   // Note does not actually store an instance of T2 at all;
   // but reuses T1 base class for both first() and second().
   template <typename T1, typename T2>
-  class CompressedPairImpl<T1, T2, 5> : private T1
+  class compressed_pair_impl<T1, T2, 5> : private T1
   {
   public:
     using first_type             = T1;
@@ -363,16 +363,16 @@ namespace internal
     using first_const_reference  = typename call_traits<first_type>::const_reference;
     using second_const_reference = typename call_traits<second_type>::const_reference;
 
-    CompressedPairImpl() = default;
-    CompressedPairImpl(first_param_type first, second_param_type second)
+    compressed_pair_impl() = default;
+    compressed_pair_impl(first_param_type first, second_param_type second)
         : first_type(first)
     {
     }
-    CompressedPairImpl(first_param_type first)
+    explicit compressed_pair_impl(first_param_type first)
         : first_type(first)
     {
     }
-    CompressedPairImpl(second_param_type second)
+    explicit compressed_pair_impl(second_param_type second)
         : first_type()
     {
     }
@@ -399,10 +399,10 @@ namespace internal
 } // namespace internal
 
 template <typename T1, typename T2>
-struct compressed_pair : private internal::CompressedPairImpl<T1, T2, internal::CompressedPairSwitch<T1, T2, is_same_v<typename remove_cv_t<T1>, typename remove_cv_t<T2>>, is_empty_v<T1>, is_empty_v<T2>>::value>
+struct compressed_pair : private internal::compressed_pair_impl<T1, T2, internal::CompressedPairSwitch<T1, T2, is_same_v<remove_cv_t<T1>, remove_cv_t<T2>>, is_empty_v<T1>, is_empty_v<T2>>::value>
 {
 private:
-  using base = internal::CompressedPairImpl<T1, T2, internal::CompressedPairSwitch<T1, T2, is_same_v<typename remove_cv_t<T1>, typename remove_cv_t<T2>>, is_empty_v<T1>, is_empty_v<T2>>::value>;
+  using base = internal::compressed_pair_impl<T1, T2, internal::CompressedPairSwitch<T1, T2, is_same_v<remove_cv_t<T1>, remove_cv_t<T2>>, is_empty_v<T1>, is_empty_v<T2>>::value>;
 
 public:
   using first_type             = T1;
@@ -448,10 +448,10 @@ public:
 };
 
 template <typename T>
-struct compressed_pair<T, T> : private internal::CompressedPairImpl<T, T, internal::CompressedPairSwitch<T, T, is_same_v<typename remove_cv_t<T>, typename remove_cv_t<T>>, is_empty_v<T>, is_empty_v<T>>::value>
+struct compressed_pair<T, T> : private internal::compressed_pair_impl<T, T, internal::CompressedPairSwitch<T, T, is_same_v<remove_cv_t<T>, remove_cv_t<T>>, is_empty_v<T>, is_empty_v<T>>::value>
 {
 private:
-  using base = internal::CompressedPairImpl<T, T, internal::CompressedPairSwitch<T, T, is_same_v<typename remove_cv_t<T>, typename remove_cv_t<T>>, is_empty_v<T>, is_empty_v<T>>::value>;
+  using base = internal::compressed_pair_impl<T, T, internal::CompressedPairSwitch<T, T, is_same_v<remove_cv_t<T>, remove_cv_t<T>>, is_empty_v<T>, is_empty_v<T>>::value>;
 
 public:
   using first_type             = T;

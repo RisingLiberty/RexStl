@@ -28,17 +28,17 @@ REX_RSL_BEGIN_NAMESPACE
 
 namespace internal
 {
-  class RefCountBase
+  class ref_count_base
   {
   public:
-    RefCountBase(count_t refCount)
+    explicit ref_count_base(count_t refCount)
         : m_ref_count(refCount)
     {
     }
 
-    virtual ~RefCountBase() = default;
+    virtual ~ref_count_base() = default;
 
-    count_t use_count()
+    count_t use_count() const
     {
       /// [06/Aug/2022] RSL Comment: If this causes any issues
       // it's because the value is read at the same time it is written to.
@@ -73,7 +73,7 @@ namespace internal
   };
 
   template <typename T, typename Allocator, typename Deleter>
-  class RefCount : RefCountBase
+  class ref_count : ref_count_base
   {
   public:
     using value_type     = T;
@@ -81,8 +81,8 @@ namespace internal
     using allocator_type = allocator;
     using deleter_type   = Deleter;
 
-    RefCount(T* ptr, allocator allocator, Deleter deleter)
-        : RefCountBase(0)
+    ref_count(T* ptr, allocator allocator, Deleter deleter)
+        : ref_count_base(0)
         , m_ptr(ptr)
         , m_deleter(rsl::move(deleter))
         , m_allocator(rsl::move(allocator))
@@ -101,7 +101,7 @@ namespace internal
       m_allocator.deallocate(this, sizeof(*this));
     }
 
-    void* get_deleter() const
+    void* get_deleter() const final
     {
       return (void*)m_deleter;
     }
@@ -116,10 +116,10 @@ namespace internal
   class shared_ptr;
 
   template <typename T>
-  void allocate_shared_helper(shared_ptr<T>& sharedPtr, RefCountBase* refCount, T* value);
+  void allocate_shared_helper(shared_ptr<T>& sharedPtr, ref_count_base* refCount, T* value);
 
   template <typename T, typename Allocator>
-  class RefCountInst : RefCountBase
+  class ref_count_inst : ref_count_base
   {
   public:
     using value_type     = T;
@@ -133,12 +133,12 @@ namespace internal
     }
 
     template <typename... Args>
-    RefCountInst(allocator_type allocator, Args&&... args)
+    explicit ref_count_inst(allocator_type allocator, Args&&... args)
     {
       new(&m_memory) value_type(rsl::forward<Args>(args)...);
     }
 
-    void deleter_ptr() override
+    void delete_ptr() override
     {
       value()->~value_type();
     }
@@ -147,7 +147,7 @@ namespace internal
       this->~RefCountInst();
       m_allocator.deallocate(this, sizeof(*this));
     }
-    void* get_deleter() const
+    void* get_deleter() const final
     {
       return nullptr;
     }
@@ -156,7 +156,7 @@ namespace internal
     template <typename U>
     friend class shared_ptr;
     template <typename U>
-    friend void internal::allocate_shared_helper(shared_ptr<U>&, RefCountBase*, U*);
+    friend void internal::allocate_shared_helper(shared_ptr<U>&, ref_count_base*, U*);
 
   private:
     storage_type m_memory;
@@ -182,7 +182,7 @@ public:
   {
   }
   // constructs new shared ptr with no managed object
-  shared_ptr(nullptr_t)
+  shared_ptr(nullptr_t) // NOLINT(google-explicit-constructor)
       : m_ptr(nullptr)
       , m_ref_count(nullptr)
   {
@@ -202,7 +202,7 @@ public:
   // constructs a shared ptr with a ptr as the managed objects
   // uses the provided deleter as the deleter
   template <typename U, typename Deleter>
-  shared_ptr(U* ptr, Deleter d)
+  explicit shared_ptr(U* ptr, Deleter d)
       : m_ptr(ptr)
       , m_ref_count(nullptr)
   {
@@ -215,7 +215,7 @@ public:
   // construct a shared ptr with no managed object
   // uses the provided deleter as the deleter
   template <typename Deleter>
-  shared_ptr(nullptr_t, Deleter d)
+  explicit shared_ptr(nullptr_t, Deleter d)
       : m_ptr(nullptr)
       , m_ref_count(nullptr)
   {
@@ -229,7 +229,7 @@ public:
   // uses the provided deleter as the deleter
   // uses a copy of alloc for heap allocation
   template <typename U, typename Deleter, typename Alloc>
-  shared_ptr(U* ptr, Deleter d, Alloc& alloc)
+  explicit shared_ptr(U* ptr, Deleter d, Alloc& alloc)
       : m_ptr(ptr)
       , m_ref_count(nullptr)
   {
@@ -244,7 +244,7 @@ public:
   // uses the provided deleter as the deleter
   // uses a copy of alloc for heap allocation
   template <typename Deleter, typename Alloc>
-  shared_ptr(nullptr_t, Deleter d, Alloc& alloc)
+  explicit shared_ptr(nullptr_t, Deleter d, Alloc& alloc)
       : m_ptr(nullptr)
       , m_ref_count(nullptr)
   {
@@ -257,7 +257,7 @@ public:
   // this is useful for when the pointer is a downcast of an existing pointer
   // it is not recommended to use this constructor if "ptr" is a pointer that needs to be deleted
   template <typename U>
-  shared_ptr(const shared_ptr<U>& sharedPtr, element_type* ptr)
+  explicit shared_ptr(const shared_ptr<U>& sharedPtr, element_type* ptr)
       : m_ptr(ptr)
       , m_ref_count(sharedPtr.m_ref_count)
   {
@@ -274,7 +274,7 @@ public:
   // this is useful for when the pointer is a downcast of an existing pointer
   // it is not recommended to use this constructor if "ptr" is a pointer that needs to be deleted
   template <typename U>
-  shared_ptr(shared_ptr<U>&& sharedPtr, element_type* ptr)
+  explicit shared_ptr(shared_ptr<U>&& sharedPtr, element_type* ptr)
       : m_ptr(ptr)
       , m_ref_count(sharedPtr.m_ref_count)
   {
@@ -293,7 +293,7 @@ public:
   }
   // constructs a shared pointer which shares ownership with the sharedPtr provided
   template <typename U>
-  shared_ptr(const shared_ptr<U>& sharedPtr)
+  explicit shared_ptr(const shared_ptr<U>& sharedPtr)
       : m_ptr(sharedPtr.m_ptr)
       , m_ref_count(sharedPtr.m_ref_count)
   {
@@ -314,7 +314,7 @@ public:
   // moves ownership from the sharedPtr provided
   // after the call the sharedPtr provided is empty
   template <typename U>
-  shared_ptr(shared_ptr<U>&& sharedPtr)
+  explicit shared_ptr(shared_ptr<U>&& sharedPtr)
       : m_ptr(sharedPtr.m_ptr)
       , m_ref_count(sharedPtr.m_ref_count)
   {
@@ -333,7 +333,7 @@ public:
   // post condition: ref count == 1
   // uniquePtr.get() == nullptr
   template <typename U, typename Deleter>
-  shared_ptr(unique_ptr<U, Deleter>&& uniquePtr)
+  explicit shared_ptr(unique_ptr<U, Deleter>&& uniquePtr)
       : m_ptr(uniquePtr.get())
       , m_ref_count(nullptr)
   {
@@ -351,7 +351,7 @@ public:
   }
 
   // replaces the managed object with the one managed by r
-  shared_ptr& operator=(const shared_ptr& other)
+  shared_ptr& operator=(const shared_ptr& other) // NOLINT(bugprone-unhandled-self-assignment)
   {
     REX_ASSERT_X(&other != this, "copying shared ptr to itself");
 
@@ -444,7 +444,7 @@ public:
   /// RSL Comment: Different from ISO C++ Standard at time of writing (05/Aug/2022)
   // the standard doesn't propagate const, rex does
   // returns a reference to the managed object
-  const reference_type operator*() const
+  reference_type operator*() const
   {
     return *m_ptr;
   }
@@ -505,43 +505,43 @@ public:
   // }
 
 private:
-  template <typename U, typename Deleter, typename Allocator, typename enable_if_t<rsl::is_empty_v<Allocator>, bool> = true>
+  template <typename U, typename Deleter, typename Allocator, enable_if_t<rsl::is_empty_v<Allocator>, bool> = true>
   void alloc(U* ptr, Deleter deleter, const Allocator& alloc)
   {
     void* mem = alloc.allocate(1_elem);
 
-    m_ref_count = new(mem)(internal::RefCount<T, Allocator, Deleter>)(ptr, rsl::move(deleter), rsl::move(alloc));
+    m_ref_count = new(mem)(internal::ref_count<T, Allocator, Deleter>)(ptr, rsl::move(deleter), rsl::move(alloc));
     m_ptr       = ptr;
   }
-  template <typename U, typename Deleter, typename Allocator, typename enable_if_t<!rsl::is_empty_v<Allocator>, bool> = true>
+  template <typename U, typename Deleter, typename Allocator, enable_if_t<!rsl::is_empty_v<Allocator>, bool> = true>
   void alloc(U* ptr, Deleter deleter, Allocator& alloc)
   {
     void* mem = alloc.allocate(1_elem);
 
-    m_ref_count = new(mem)(internal::RefCount<T, Allocator, Deleter>)(ptr, rsl::move(deleter), rsl::move(alloc));
+    m_ref_count = new(mem)(internal::ref_count<T, Allocator, Deleter>)(ptr, rsl::move(deleter), rsl::move(alloc));
     m_ptr       = ptr;
   }
-  template <typename Deleter, typename Allocator, typename enable_if_t<rsl::is_empty_v<Allocator>, bool> = true>
+  template <typename Deleter, typename Allocator, enable_if_t<rsl::is_empty_v<Allocator>, bool> = true>
   void alloc_without_ptr(Deleter deleter, const Allocator& alloc)
   {
     void* mem = alloc.allocate(1_elem);
 
-    m_ref_count = new(mem)(internal::RefCount<T, Allocator, Deleter>)(nullptr, rsl::move(deleter), rsl::move(alloc));
+    m_ref_count = new(mem)(internal::ref_count<T, Allocator, Deleter>)(nullptr, rsl::move(deleter), rsl::move(alloc));
   }
-  template <typename Deleter, typename Allocator, typename enable_if_t<!rsl::is_empty_v<Allocator>, bool> = true>
+  template <typename Deleter, typename Allocator, enable_if_t<!rsl::is_empty_v<Allocator>, bool> = true>
   void alloc_without_ptr(Deleter deleter, Allocator& alloc)
   {
     void* mem = alloc.allocate(1_elem);
 
-    m_ref_count = new(mem)(internal::RefCount<T, Allocator, Deleter>)(nullptr, rsl::move(deleter), rsl::move(alloc));
+    m_ref_count = new(mem)(internal::ref_count<T, Allocator, Deleter>)(nullptr, rsl::move(deleter), rsl::move(alloc));
   }
 
 private:
   element_type* m_ptr; // the only reason why we have to store this ptr is because of the ctor taking in a shared ptr and a ptr.
-  internal::RefCountBase* m_ref_count;
+  internal::ref_count_base* m_ref_count;
 
-  template <class Deleter, class T>
-  friend Deleter* get_deleter(const shared_ptr<T>& ptr);
+  template <class Deleter, class U>
+  friend Deleter* get_deleter(const shared_ptr<U>& ptr);
 };
 
 template <typename T, typename... Args>
@@ -554,7 +554,7 @@ shared_ptr<T> make_shared(Args&&... args)
 namespace internal
 {
   template <typename T>
-  void allocate_shared_helper(shared_ptr<T>& sharedPtr, RefCountBase* refCount, T* value)
+  void allocate_shared_helper(shared_ptr<T>& sharedPtr, ref_count_base* refCount, T* value)
   {
     sharedPtr.m_ref_count = refCount;
     sharedPtr.m_ptr       = value;
@@ -564,7 +564,7 @@ namespace internal
 template <typename T, typename Allocator, typename... Args>
 shared_ptr<T> allocate_shared(allocator& allocator, Args&&... args)
 {
-  using ref_count_type = internal::RefCountInst<T>;
+  using ref_count_type = internal::ref_count_inst<T>;
   shared_ptr<T> ret;
   void* const mem           = allocator.allocate(sizeof(ref_count_type));
   ref_count_type* ref_count = new(mem) ref_count_type(rsl::forward<Args>(args)...);

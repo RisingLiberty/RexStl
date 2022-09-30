@@ -26,7 +26,7 @@ constexpr void swap(T& lhs, T& rhs)
 }
 
 template <typename T, size_t N>
-constexpr void swap(T (&a)[N], T (&b)[N])
+constexpr void swap(T (&a)[N], T (&b)[N]) // NOLINT(modernize-avoid-c-arrays)
 {
   swap_ranges(a, a + N, b);
 }

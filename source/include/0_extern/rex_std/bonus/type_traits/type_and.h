@@ -14,19 +14,19 @@
 
 REX_RSL_BEGIN_NAMESPACE
 
-template <bool b1, bool b2, bool b3 = true, bool b4 = true, bool b5 = true>
+template <bool B1, bool B2, bool B3 = true, bool B4 = true, bool B5 = true>
 struct type_and;
 
-template <bool b1, bool b2, bool b3, bool b4, bool b5>
+template <bool B1, bool B2, bool B3, bool B4, bool B5>
 struct type_and
 {
-  static const bool value = false;
+  static constexpr bool value = false;
 };
 
 template <>
 struct type_and<true, true, true, true, true>
 {
-  static const bool value = true;
+  static constexpr bool value = true;
 };
 
 REX_RSL_END_NAMESPACE

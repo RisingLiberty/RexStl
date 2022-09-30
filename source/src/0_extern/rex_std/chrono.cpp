@@ -24,7 +24,7 @@ namespace chrono::internal
     {
       LARGE_INTEGER frequency;
       QueryPerformanceFrequency(&frequency);
-      return double(1000000000.0L / frequency.QuadPart); // nanoseconds per tick
+      return double(1000000000.0L / frequency.QuadPart); // NOLINT nanoseconds per tick
     };
 
     auto query_counter = []()
@@ -34,8 +34,8 @@ namespace chrono::internal
       return counter.QuadPart;
     };
 
-    static auto frequency = query_frequency();
-    return uint64(frequency * query_counter());
+    static auto s_frequency = query_frequency();
+    return static_cast<uint64>(s_frequency * query_counter()); // NOLINT(bugprone-narrowing-conversions,cppcoreguidelines-narrowing-conversions)
   }
 } // namespace chrono::internal
 REX_RSL_END_NAMESPACE

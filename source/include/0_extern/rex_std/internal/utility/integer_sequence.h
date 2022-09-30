@@ -33,11 +33,11 @@ public:
 namespace internal
 {
   // breaking coding guidelines here.
-  template <typename card32 Size, typename IndexSeq>
+  template <card32 Size, typename IndexSeq>
   struct make_index_sequence;
 
   // breaking coding guidelines here.
-  template <typename card32 Size, card32... Ints>
+  template <card32 Size, card32... Ints>
   struct make_index_sequence<Size, integer_sequence<card32, Ints...>>
   {
     using type = typename make_index_sequence<Size - 1, integer_sequence<card32, Size - 1, Ints...>>::type;

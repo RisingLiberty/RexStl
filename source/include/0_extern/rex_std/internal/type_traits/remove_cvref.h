@@ -21,7 +21,7 @@ namespace internal
 {
   template <typename T>
   using RemoveCVRefHelper = remove_cv_t<remove_reference_t<T>>;
-}
+} // namespace internal
 
 template <typename T>
 using remove_cvref_t = internal::RemoveCVRefHelper<T>;

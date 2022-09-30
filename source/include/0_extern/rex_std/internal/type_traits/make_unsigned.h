@@ -24,69 +24,70 @@ REX_RSL_BEGIN_NAMESPACE
 namespace internal
 {
   template <typename T, bool = is_enum_v<T> || is_integral_v<T>>
-  struct MakeUnsignedHelper0
+  struct make_unsigned_helper0
   {
-    struct CharHelper
+    struct char_helper
     {
       using type = uint8;
     };
 
-    struct ShortHelper
+    struct short_helper
     {
       using type = uint16;
     };
 
-    struct IntHelper
+    struct int_helper
     {
       using type = uint32;
     };
 
-    struct LongHelper
+    struct long_helper
     {
       using type = ulong;
     };
 
-    struct LongLongHelper
+    struct long_long_helper
     {
       using type = uint64;
     };
 
-    struct NoTypeHelper
+    struct no_type_helper
     {
     };
 
-    using type = conditional_t<sizeof(T) <= sizeof(uint8), CharHelper,
-                               conditional_t<sizeof(T) <= sizeof(uint16), ShortHelper,
-                                             conditional_t<sizeof(T) <= sizeof(uint32), IntHelper, conditional_t<sizeof(T) <= sizeof(uint64), LongLongHelper, conditional_t<sizeof(T) <= sizeof(ulong), LongHelper, NoTypeHelper>>>>>::type;
+    using type =
+        typename conditional_t<sizeof(T) <= sizeof(uint8), char_helper,
+                               conditional_t<sizeof(T) <= sizeof(uint16), short_helper,
+                                             conditional_t<sizeof(T) <= sizeof(uint32), int_helper, conditional_t<sizeof(T) <= sizeof(uint64), long_long_helper, conditional_t<sizeof(T) <= sizeof(ulong), long_helper, no_type_helper>>>>>::type;
   };
 
   template <typename T>
-  struct MakeUnsignedHelper0<T, false>
+  struct make_unsigned_helper0<T, false>
   {
-    struct NoTypeHelper
+    struct no_type_helper
     {
     };
 
-    using type = NoTypeHelper;
+    using type = no_type_helper;
   };
 
   template <typename T>
-  struct MakeUnsignedHelper1
+  struct make_unsigned_helper1
   {
     using type = typename T::type;
   };
 
   template <typename T>
-  struct MakeUnsignedHelper
+  struct make_unsigned_helper
   {
-    using type = typename MakeUnsignedHelper1<typename MakeUnsignedHelper0<T>::type>::type;
+    using type = typename make_unsigned_helper1<typename make_unsigned_helper0<T>::type>::type;
   };
 } // namespace internal
 
 template <typename T>
 struct make_unsigned
 {
-  using type = internal::MakeUnsignedHelper<T>::type;
+  using type = typename internal::make_unsigned_helper<T>::type;
 };
 
 template <>
@@ -172,6 +173,6 @@ struct make_unsigned<const volatile T>
 };
 
 template <typename T>
-using make_unsigned_t = make_unsigned<T>::type;
+using make_unsigned_t = typename make_unsigned<T>::type;
 
 REX_RSL_END_NAMESPACE

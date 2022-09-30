@@ -200,7 +200,7 @@ public:
   // Note that the member data is intentionally public.
   // This allows for aggregate initialization of the object
   // eg. array<int, 5> arr = { 1, 2, 3, 4, 5 };
-  T m_data[Size];
+  T m_data[Size]; // NOLINT
 };
 
 // Checks if the contents of lhs and rhs are equal
@@ -286,12 +286,12 @@ namespace internal
 {
   // TODO: Check for the compile time overhead
   template <typename T, count_t Size, card32... I>
-  constexpr rsl::array<rsl::remove_cv_t<T>, Size> to_array(T (&a)[Size])
+  constexpr rsl::array<rsl::remove_cv_t<T>, Size> to_array(T (&a)[Size]) // NOLINT
   {
     return rsl::array<remove_cv_t<T>, Size> {{a[I]...}};
   }
   template <typename T, count_t Size, card32... I>
-  constexpr rsl::array<rsl::remove_cv_t<T>, Size> to_array(T (&&a)[Size])
+  constexpr rsl::array<rsl::remove_cv_t<T>, Size> to_array(T (&&a)[Size]) // NOLINT
   {
     return rsl::array<remove_cv_t<T>, Size> {{rsl::move(a[I])...}};
   }
@@ -300,7 +300,7 @@ namespace internal
 // Create a rsl::array from the one dimensinoal built-in array.
 // elements are copy-initialized from the corresponding element of a
 template <typename T, count_t Size>
-constexpr rsl::array<rsl::remove_cv_t<T>, Size> to_array(T (&a)[Size])
+constexpr rsl::array<rsl::remove_cv_t<T>, Size> to_array(T (&a)[Size]) // NOLINT
 {
   static_assert(rsl::is_constructible_v<T, T&>, "element of type T must be copy constructible");
   static_assert(!rsl::is_array_v<T>, "passing multidimensional arrays to to_array is ill-formed");
@@ -309,7 +309,7 @@ constexpr rsl::array<rsl::remove_cv_t<T>, Size> to_array(T (&a)[Size])
 // Create a rsl::array from the one dimensinoal built-in array.
 // elements are move-initialized from the corresponding element of a
 template <typename T, count_t Size>
-constexpr rsl::array<rsl::remove_cv_t<T>, Size> to_array(T (&&a)[Size])
+constexpr rsl::array<rsl::remove_cv_t<T>, Size> to_array(T (&&a)[Size]) // NOLINT
 {
   static_assert(rsl::is_constructible_v<T, T&>, "element of type T must be copy constructible");
   static_assert(!rsl::is_array_v<T>, "passing multidimensional arrays to to_array is ill-formed");

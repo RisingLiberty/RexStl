@@ -64,10 +64,10 @@ public:
     // this flag is omitted in Rex Standard Library
     // prepares the stream for formatted input
     explicit sentry(basic_istream<CharT, Traits>& inStream)
-        : m_istream(inStream)
+        : m_istream(&inStream)
         , m_is_ok(false)
     {
-      if(inStream.good() == false)
+      if(inStream->good() == false)
       {
         m_istream.setstate(io::iostate::failbit);
         return;
@@ -81,20 +81,26 @@ public:
 
       m_is_ok = m_istream.good();
     }
+
+    sentry(const sentry&) = delete;
+    sentry(sentry&&)      = delete;
     // finalizes the stream object after formatted input
     ~sentry() = default;
 
     // the copy assignment is deleted
     sentry& operator=(const sentry&) = delete;
 
+    // the move assignment is deleted
+    sentry& operator=(sentry&&) = delete;
+
     // checks whether the preparation of the input stream was successful.
-    operator bool() const
+    explicit operator bool() const
     {
       return m_is_ok;
     }
 
   private:
-    basic_istream<CharT, Traits>& m_istream;
+    basic_istream<CharT, Traits>* m_istream;
     bool m_is_ok;
   };
 
@@ -106,8 +112,14 @@ public:
   {
   }
 
+  // you can't copy an input stream
+  basic_istream(const basic_istream& other) = delete;
+
   // destroys the basic_istream object
   ~basic_istream() override = default;
+
+  // you can't assign to an input stream
+  basic_istream& operator=(const basic_istream& other) = delete;
 
   // reads an integer from the stream
   basic_istream& operator>>(int16& value)
@@ -844,16 +856,10 @@ public:
   }
 
 protected:
-  // you can't copy an input stream
-  basic_istream(const basic_istream& other) = delete;
-
   // the move constructor copies the value of gcount() from other,
   // sets the gcount() value of other to zero and uses basic_ios<CharT, Traits>::move(other)
   // to move all basic_ios members, except for the rdbuf(), from other into this.
   basic_istream(basic_istream&& other);
-
-  // you can't assign to an input stream
-  basic_istream& operator=(const basic_istream& other) = delete;
 
   // exchanges the gcount() values and all data members of the base class,
   // except for the rdbuf(), with other.
@@ -916,7 +922,7 @@ basic_istream<CharT, Traits>& operator>>(basic_istream<CharT, Traits>& str, Char
 }
 
 template <typename CharT, typename Traits, count_t N>
-basic_istream<CharT, Traits>& operator>>(basic_istream<CharT, Traits>& str, CharT (&s)[N])
+basic_istream<CharT, Traits>& operator>>(basic_istream<CharT, Traits>& str, CharT (&s)[N]) // NOLINT(modernize-avoid-c-arrays)
 {
   using my_istream  = basic_istream<CharT, Traits>;
   io::iostate state = io::iostate::goodbit;
@@ -958,17 +964,17 @@ basic_istream<CharT, Traits>& operator>>(basic_istream<CharT, Traits>& str, Char
 namespace internal
 {
   template <typename IStream, typename T, typename = void>
-  struct CanStreamIn : false_type
+  struct can_stream_in : false_type
   {
   };
 
   template <typename IStream, typename T>
-  struct CanStreamIn<IStream, T, void_t<decltype(rsl::declval<IStream&>() >> rsl::declval<T>())>> : true_type
+  struct can_stream_in<IStream, T, void_t<decltype(rsl::declval<IStream&>() >> rsl::declval<T>())>> : true_type
   {
   };
 } // namespace internal
 
-template <typename IStream, typename T, enable_if_t<conjunction_v<is_convertible<IStream*, ios_base*>, internal::CanStreamIn<IStream, T>>, bool> = true>
+template <typename IStream, typename T, enable_if_t<conjunction_v<is_convertible<IStream*, ios_base*>, internal::can_stream_in<IStream, T>>, bool> = true>
 IStream&& operator>>(IStream&& is, T&& val)
 {
   is >> rsl::forward<T>(val);

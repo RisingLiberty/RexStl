@@ -47,34 +47,35 @@ public:
   allocator() = default;
   // constructs the default allocator
   allocator(const allocator&) = default;
+  // constructs the default allocator
+  allocator(allocator&&) = default;
+
+  ~allocator() = default;
+
+  allocator& operator=(const allocator&) = default;
+  allocator& operator=(allocator&&)      = default;
+
   /// RSL Comment: Different from ISO C++ Standard at time of writing (23/Aug/2022)
   // because rex's allocator is not templated.
   // the following function is not defined
   // template <typename U>
   // constexpr allocator(const allocator<U> &);
   // allocates count bytes of uninitialized storage
-  REX_NO_DISCARD void* allocate(const size_type count)
+  REX_NO_DISCARD void* allocate(const size_type count) // NOLINT(readability-convert-member-functions-to-static)
   {
     return (operator new(count));
   }
   // deallocates the storage reference by the pointer p.
   // the pointer must be obtained by an earlier call to allocate
   // performed by this allocator or an allocator that's equal to this.
-  void deallocate(void* const ptr)
+  void deallocate(void* const ptr) // NOLINT(readability-convert-member-functions-to-static)
   {
     operator delete(ptr);
-  }
-  // deallocates the storage reference by the pointer p.
-  // the pointer must be obtained by an earlier call to allocate
-  // performed by this allocator or an allocator that's equal to this.
-  void deallocate(void* const ptr, count_t count)
-  {
-    operator delete(ptr, count);
   }
 
   // returns the maximum theoretically possible value of n for,
   // for which all calls to allocate(n) could succeed.
-  size_type max_size() const
+  size_type max_size() const // NOLINT(readability-convert-member-functions-to-static)
   {
     return rsl::numeric_limits<size_type>::max();
   }
@@ -106,13 +107,13 @@ public:
 // these functions differ from the standard's
 // compares 2 default allocators.
 // default allocators are stateless, so they're always equal
-constexpr bool operator==(const allocator&, const allocator&)
+constexpr bool operator==(const allocator& /*unused*/, const allocator& /*unused*/)
 {
   return true;
 }
 // compares 2 default allocators.
 // default allocators are stateless, so they're always equal
-constexpr bool operator!=(const allocator&, const allocator&)
+constexpr bool operator!=(const allocator& /*unused*/, const allocator& /*unused*/)
 {
   return false;
 }

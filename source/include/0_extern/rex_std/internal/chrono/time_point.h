@@ -38,7 +38,7 @@ namespace chrono
     {
     }
     template <typename Duration2>
-    constexpr time_point(const time_point<Clock, Duration2>& t, typename enable_if_t<is_convertible_v<Duration2, duration>>** = 0)
+    constexpr explicit time_point(const time_point<Clock, Duration2>& t, enable_if_t<is_convertible_v<Duration2, duration>>** /*unused*/ = 0)
         : m_duration(t.time_since_epoch())
     {
     }
@@ -70,12 +70,6 @@ namespace chrono
 
   private:
     duration m_duration;
-  };
-
-  template <typename Clock, typename Duration1, typename Duration2>
-  struct common_type<time_point<Clock, Duration1>, time_point<Clock, Duration2>>
-  {
-    using type = rsl::chrono::time_point<Clock, common_type_t<Duration1, Duration2>>;
   };
 
   template <typename Clock, typename Duration1, typename Rep2, typename Period2>
@@ -142,26 +136,26 @@ namespace chrono
   }
 
   template <typename ToDuration, typename Clock, typename Duration>
-  constexpr time_point<Clock, ToDuration> time_point_cast(const time_point<Clock, Duration>& t, typename enable_if<internal::IsDuration<ToDuration>::value>::type** = 0)
+  constexpr time_point<Clock, ToDuration> time_point_cast(const time_point<Clock, Duration>& t, typename enable_if<internal::is_duration<ToDuration>::value>::type** /*unused*/ = 0)
   {
     return time_point<Clock, ToDuration>(duration_cast<ToDuration>(t.time_since_epoch()));
   }
 
-  template <typename ToDuration, typename Clock, typename Duration, enable_if_t<internal::IsDuration<ToDuration>::value, bool> = true>
+  template <typename ToDuration, typename Clock, typename Duration, enable_if_t<internal::is_duration<ToDuration>::value, bool> = true>
   REX_NO_DISCARD constexpr time_point<Clock, ToDuration> floor(const time_point<Clock, Duration>& time)
   {
     // change the duration type of a time_point; round towards negative infinity
     return time_point<Clock, ToDuration>(rsl::chrono::floor<ToDuration>(time.time_since_epoch()));
   }
 
-  template <typename ToDuration, typename Clock, typename Duration, enable_if_t<internal::IsDuration<ToDuration>::value, bool> = true>
+  template <typename ToDuration, typename Clock, typename Duration, enable_if_t<internal::is_duration<ToDuration>::value, bool> = true>
   REX_NO_DISCARD constexpr time_point<Clock, ToDuration> ceil(const time_point<Clock, Duration>& time)
   {
     // change the duration type of a time_point; round towards positive infinity
     return time_point<Clock, ToDuration>(rsl::chrono::ceil<ToDuration>(time.time_since_epoch()));
   }
 
-  template <typename ToDuration, typename Clock, typename Duration, enable_if_t<internal::IsDuration<ToDuration>::value && !treat_as_floating_point<typename ToDuration::rep>::value, bool> = true>
+  template <typename ToDuration, typename Clock, typename Duration, enable_if_t<internal::is_duration<ToDuration>::value && !treat_as_floating_point<typename ToDuration::rep>::value, bool> = true>
   REX_NO_DISCARD constexpr time_point<Clock, ToDuration> round(const time_point<Clock, Duration>& time)
   {
     // change the duration type of a time_point; round to nearest, ties to even
@@ -169,4 +163,11 @@ namespace chrono
   }
 
 } // namespace chrono
+
+template <typename Clock, typename Duration1, typename Duration2>
+struct common_type<chrono::time_point<Clock, Duration1>, chrono::time_point<Clock, Duration2>>
+{
+  using type = rsl::chrono::time_point<Clock, common_type_t<Duration1, Duration2>>;
+};
+
 REX_RSL_END_NAMESPACE;

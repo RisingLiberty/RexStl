@@ -17,7 +17,7 @@
 REX_RSL_BEGIN_NAMESPACE
 
 template <typename T, count_t N>
-constexpr count_t size(const T (&/*arr*/)[N])
+constexpr count_t size(const T (&/*arr*/)[N]) // NOLINT
 {
   return N;
 }

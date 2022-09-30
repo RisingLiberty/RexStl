@@ -38,6 +38,6 @@ struct add_pointer
 };
 
 template <typename T>
-using add_pointer_t = add_pointer<T>::type;
+using add_pointer_t = typename add_pointer<T>::type;
 
 REX_RSL_END_NAMESPACE

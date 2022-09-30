@@ -21,83 +21,83 @@ REX_RSL_BEGIN_NAMESPACE
 namespace internal
 {
   template <typename T>
-  struct IsIntegralHelper : public false_type
+  struct is_integral_helper : public false_type
   {
   };
 
   template <>
-  struct IsIntegralHelper<int8> : public true_type
+  struct is_integral_helper<int8> : public true_type
   {
   };
   template <>
-  struct IsIntegralHelper<int16> : public true_type
+  struct is_integral_helper<int16> : public true_type
   {
   };
   template <>
-  struct IsIntegralHelper<int32> : public true_type
+  struct is_integral_helper<int32> : public true_type
   {
   };
   template <>
-  struct IsIntegralHelper<int64> : public true_type
-  {
-  };
-
-  template <>
-  struct IsIntegralHelper<uint8> : public true_type
-  {
-  };
-  template <>
-  struct IsIntegralHelper<uint16> : public true_type
-  {
-  };
-  template <>
-  struct IsIntegralHelper<uint32> : public true_type
-  {
-  };
-  template <>
-  struct IsIntegralHelper<uint64> : public true_type
+  struct is_integral_helper<int64> : public true_type
   {
   };
 
   template <>
-  struct IsIntegralHelper<bool> : public true_type
+  struct is_integral_helper<uint8> : public true_type
   {
   };
   template <>
-  struct IsIntegralHelper<char8> : public true_type
+  struct is_integral_helper<uint16> : public true_type
+  {
+  };
+  template <>
+  struct is_integral_helper<uint32> : public true_type
+  {
+  };
+  template <>
+  struct is_integral_helper<uint64> : public true_type
+  {
+  };
+
+  template <>
+  struct is_integral_helper<bool> : public true_type
+  {
+  };
+  template <>
+  struct is_integral_helper<char8> : public true_type
   {
   };
 
   // other types that aren't really used by rex engine, but we still need regardless
   template <>
-  struct IsIntegralHelper<tchar> : public true_type
+  struct is_integral_helper<tchar> : public true_type
   {
   };
   template <>
-  struct IsIntegralHelper<char8_t> : public true_type
+  struct is_integral_helper<char8_t> : public true_type
   {
   };
   template <>
-  struct IsIntegralHelper<char16_t> : public true_type
+  struct is_integral_helper<char16_t> : public true_type
   {
   };
   template <>
-  struct IsIntegralHelper<char32_t> : public true_type
+  struct is_integral_helper<char32_t> : public true_type
   {
   };
 
   template <>
-  struct IsIntegralHelper<long> : public true_type
+  struct is_integral_helper<long> : public true_type
   {
   };
   template <>
-  struct IsIntegralHelper<ulong> : public true_type
+  struct is_integral_helper<ulong> : public true_type
   {
   };
 } // namespace internal
 
 template <typename T>
-struct is_integral : public internal::IsIntegralHelper<typename remove_cv_t<T>>
+struct is_integral : public internal::is_integral_helper<remove_cv_t<T>>
 {
 };
 

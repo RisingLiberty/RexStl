@@ -18,7 +18,7 @@
 REX_RSL_BEGIN_NAMESPACE
 
 template <typename T>
-typename add_rvalue_reference_t<T> declval()
+add_rvalue_reference_t<T> declval()
 {
   static_assert(internal::always_false<T>, "declval cannot be called in an evaluated expression");
 }

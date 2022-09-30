@@ -37,10 +37,10 @@ namespace internal
 
     void allocate()
     {
-      m_begin   = new char8[s_StreamSize];
+      m_begin   = new char8[s_stream_size];
       m_current = m_begin;
       m_end     = m_current;
-      m_last    = m_begin + s_StreamSize;
+      m_last    = m_begin + s_stream_size;
     }
 
     void deallocate()
@@ -103,25 +103,30 @@ namespace internal
     char8* m_end;     // end of chars loaded into the buffer
     char8* m_last;    // 1 past the end of the buffer
 
-    static constexpr streamsize s_StreamSize = 256;
+    static constexpr streamsize s_stream_size = 256;
   };
 
   class console_buf_impl
   {
   public:
-    console_buf_impl(win::handle_t handle);
+    explicit console_buf_impl(win::handle_t handle);
+    console_buf_impl(const console_buf_impl&) = delete;
+    console_buf_impl(console_buf_impl&&)      = delete;
     ~console_buf_impl();
+
+    console_buf_impl& operator=(const console_buf_impl&) = delete;
+    console_buf_impl& operator=(console_buf_impl&&)      = delete;
 
     streamsize xsgetn(char8* s, size_t elemSize, streamsize count);
     streamsize xsputn(const char8* s, size_t elemSize, streamsize count);
 
     template <typename CharT, typename Traits>
-    Traits::int_type overflow(CharT ch)
+    typename Traits::int_type overflow(CharT ch)
     {
       return (xsputn(&ch, sizeof(CharT), 1) / sizeof(CharT)) == 0 ? Traits::eof() : ch;
     }
     template <typename CharT, typename Traits>
-    Traits::int_type overflown(const CharT* s, count_t count)
+    typename Traits::int_type overflown(const CharT* s, count_t count)
     {
       return (xsputn(s, sizeof(CharT), count) / sizeof(CharT)) != count ? Traits::eof() : CharT();
     }
@@ -145,10 +150,10 @@ namespace internal
         m_get_area.reset();
       }
 
-      underflow_result<CharT> res;
-      streamsize count_read = xsgetn(m_get_area.current(), sizeof(CharT), 1) / sizeof(CharT);
+      streamsize const count_read = xsgetn(m_get_area.current(), sizeof(CharT), 1) / sizeof(CharT);
       m_get_area.inc_end();
 
+      underflow_result<CharT> res {};
       res.get_area = &m_get_area;
       res.ch       = count_read == 0 ? Traits::to_char_type(Traits::eof()) : *res.get_area->current();
 
@@ -167,11 +172,12 @@ namespace internal
         m_get_area.reset();
       }
 
-      underflow_result<CharT> res;
-      streamsize count_read = xsgetn(m_get_area.current(), sizeof(CharT), 1) / sizeof(CharT);
+      streamsize const count_read = xsgetn(m_get_area.current(), sizeof(CharT), 1) / sizeof(CharT);
 
       m_get_area.inc_current();
       m_get_area.inc_end();
+
+      underflow_result<CharT> res {};
 
       res.get_area = &m_get_area;
       res.ch       = count_read == 0 ? Traits::to_char_type(Traits::eof()) : *res.get_area->current();
@@ -192,7 +198,7 @@ namespace internal
       // directly into the destination.
       // This means if an invalid read happened, there's no way to put it back
 
-      streamsize num_available = m_get_area.num_available();
+      streamsize const num_available = m_get_area.num_available();
       if(count > num_available)
       {
         // first load the characters in the get area
@@ -200,9 +206,9 @@ namespace internal
         m_get_area.reset();
       }
 
-      uflown_result<CharT> res;
-      streamsize count_read = xsgetn(s, sizeof(CharT), count) / sizeof(CharT);
+      streamsize const count_read = xsgetn(s, sizeof(CharT), count) / sizeof(CharT);
 
+      uflown_result<CharT> res {};
       res.get_area = &m_get_area;
       res.num_read = count_read;
 
@@ -233,7 +239,7 @@ public:
   using pos_type    = typename base::pos_type;
   using off_type    = typename base::off_type;
 
-  console_buf(win::handle_t handle)
+  explicit console_buf(win::handle_t handle)
       : m_impl(handle)
   {
   }
@@ -241,8 +247,8 @@ public:
 protected:
   streamsize xsgetn(char_type* s, streamsize count) final
   {
-    streamsize num_chars_read        = 0;
-    streamsize to_read_from_get_area = (rsl::min)(count, num_available_in_get_area());
+    streamsize num_chars_read              = 0;
+    streamsize const to_read_from_get_area = (rsl::min)(count, num_available_in_get_area());
     // first get all the elements from the get area.
     // these are copied there before from the character sequence.
     // We can't get them back from the get area that's managed by the operating system.
@@ -258,7 +264,7 @@ protected:
     // if we still need to get characters, get them directly from the operating system.
     if(count > 0)
     {
-      streamsize num_bytes_read = m_impl.xsgetn(s, sizeof(CharT), count);
+      streamsize const num_bytes_read = m_impl.xsgetn(s, sizeof(CharT), count);
       num_chars_read += num_bytes_read / sizeof(CharT);
     }
 

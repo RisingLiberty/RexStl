@@ -16,11 +16,11 @@
 
 REX_RSL_BEGIN_NAMESPACE
 
-template <typename It>
+template <typename Iter>
 class reverse_iterator
 {
 public:
-  using iterator_type = It;
+  using iterator_type = Iter;
 
   using value_type        = typename iterator_type::value_type;
   using pointer           = typename iterator_type::pointer;
@@ -30,8 +30,8 @@ public:
   using iterator_category = typename iterator_type::iterator_category;
   using difference_type   = typename iterator_type::difference_type;
 
-  constexpr reverse_iterator(It base_iterator)
-      : m_base_iterator(base_iterator)
+  constexpr explicit reverse_iterator(Iter baseIterator)
+      : m_base_iterator(baseIterator)
   {
   }
 
@@ -147,7 +147,7 @@ public:
   }
 
 private:
-  It m_base_iterator;
+  Iter m_base_iterator;
 };
 
 REX_RSL_END_NAMESPACE

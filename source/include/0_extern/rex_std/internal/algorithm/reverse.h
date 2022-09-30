@@ -21,7 +21,7 @@ REX_RSL_BEGIN_NAMESPACE
 template <typename InputIterator>
 void reverse(InputIterator first, InputIterator last)
 {
-  using iter_cat = InputIterator::iterator_category;
+  using iter_cat = typename InputIterator::iterator_category;
 
   if constexpr(is_base_of_v<random_access_iterator_tag, iter_cat>)
   {

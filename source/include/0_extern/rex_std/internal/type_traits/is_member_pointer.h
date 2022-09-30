@@ -20,18 +20,18 @@ REX_RSL_BEGIN_NAMESPACE
 namespace internal
 {
   template <typename>
-  struct IsMemberPointerHelper : public false_type
+  struct is_member_pointer_helper : public false_type
   {
   };
 
   template <typename T, typename U>
-  struct IsMemberPointerHelper<T U::*> : public true_type
+  struct is_member_pointer_helper<T U::*> : public true_type
   {
   };
 } // namespace internal
 
 template <typename T>
-struct is_member_pointer : public internal::IsMemberPointerHelper<remove_cv_t<T>>::type
+struct is_member_pointer : public internal::is_member_pointer_helper<remove_cv_t<T>>::type
 {
 };
 

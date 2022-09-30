@@ -12,6 +12,7 @@
 
 #pragma once
 
+#include "rex_std/bonus/types.h"
 #include "rex_std/internal/iterator/iterator_tags.h"
 
 /// [21/Aug/2022] RSL Comment: deprecate this file
@@ -30,7 +31,7 @@ public:
   using iterator_category = rsl::random_access_iterator_tag;
   using difference_type   = int32;
 
-  constexpr random_access_iterator(pointer value = nullptr)
+  constexpr explicit random_access_iterator(pointer value = nullptr)
       : m_value(value)
   {
   }
@@ -150,7 +151,7 @@ public:
   using iterator_category = rsl::random_access_iterator_tag;
   using difference_type   = int32;
 
-  constexpr const_random_access_iterator(pointer value = nullptr)
+  constexpr explicit const_random_access_iterator(pointer value = nullptr)
       : m_value(value)
   {
   }

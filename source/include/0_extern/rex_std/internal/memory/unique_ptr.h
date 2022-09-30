@@ -33,7 +33,7 @@ REX_RSL_BEGIN_NAMESPACE
 namespace internal
 {
   template <typename T, typename Deleter>
-  class UniquePointerType
+  class unique_pointer_type
   {
     template <typename U>
     static typename U::pointer test(typename U::pointer*);
@@ -53,10 +53,10 @@ template <typename T, typename Deleter = default_delete<T>>
 class unique_ptr
 {
 public:
-  using pointer         = internal::UniquePointerType<T, remove_reference_t<Deleter>>::type;
-  using const_pointer   = internal::UniquePointerType<const T, remove_reference_t<Deleter>>::type; /// RSL Comment: Not in ISO C++ Standard at time of writing (24/Aug/2022)
-  using reference       = T&;                                                                      /// RSL Comment: Not in ISO C++ Standard at time of writing (24/Aug/2022)
-  using const_reference = const T&;                                                                /// RSL Comment: Not in ISO C++ Standard at time of writing (24/Aug/2022)
+  using pointer         = typename internal::unique_pointer_type<T, remove_reference_t<Deleter>>::type;
+  using const_pointer   = typename internal::unique_pointer_type<const T, remove_reference_t<Deleter>>::type; /// RSL Comment: Not in ISO C++ Standard at time of writing (24/Aug/2022)
+  using reference       = T&;                                                                                 /// RSL Comment: Not in ISO C++ Standard at time of writing (24/Aug/2022)
+  using const_reference = const T&;                                                                           /// RSL Comment: Not in ISO C++ Standard at time of writing (24/Aug/2022)
   using element_type    = T;
   using deleter_type    = Deleter;
 
@@ -68,7 +68,7 @@ public:
   }
   // constructs a unique_ptr that owns nothing
   template <typename Deleter2 = Deleter, internal::UniquePtrEnableDefault<Deleter2> = 0>
-  constexpr unique_ptr(rsl::nullptr_t)
+  constexpr unique_ptr(rsl::nullptr_t) // NOLINT(google-explicit-constructor): this needs to be explicit
       : m_cp_ptr_and_deleter(nullptr)
   {
   }
@@ -92,9 +92,10 @@ public:
   }
   template <typename Deleter2, enable_if_t<conjunction_v<is_reference<Deleter2>, is_constructible<Deleter2, remove_reference_t<Deleter2>>>, bool> = true>
   unique_ptr(pointer, remove_reference_t<Deleter>&&) = delete;
+  // dleters the copy constructor
+  unique_ptr(const unique_ptr&) = delete;
   // construct a unique_ptr that takes ownership of the  ptr in the other unique_ptr.
   // perfectly forwards the deleter of the other unique_ptr.
-  template <typename Deleter2 = Deleter, enable_if_t<is_move_constructible_v<Deleter2>, bool> = true>
   unique_ptr(unique_ptr&& right)
       : m_cp_ptr_and_deleter(right.release(), rsl::forward<Deleter>(right.get_deleter()))
   {
@@ -102,7 +103,7 @@ public:
   // construct a unique_ptr that owns ptr and copy constructs the deleter
   template <typename T2, typename Deleter2,
             enable_if_t<conjunction_v<negation<is_array<T2>>, is_convertible<typename unique_ptr<T2, Deleter2>::pointer, pointer>, conditional_t<is_reference_v<Deleter>, is_same<Deleter, Deleter>, is_convertible<Deleter2, Deleter>>>, bool> = true>
-  unique_ptr(unique_ptr<T2, Deleter2>&& right)
+  explicit unique_ptr(unique_ptr<T2, Deleter2>&& right)
       : m_cp_ptr_and_deleter(right.release(), rsl::forward<Deleter2>(right.get_deleter()))
   {
   }
@@ -169,7 +170,7 @@ public:
   // however, pointers where the object they're pointing to is const rather than the pointer itself
   // are much more common, so that's why rex standard propagates const.
   // returns a pointer to the managed object
-  REX_NO_DISCARD const pointer get() const
+  REX_NO_DISCARD const_pointer get() const
   {
     return m_cp_ptr_and_deleter.first();
   }

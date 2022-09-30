@@ -29,10 +29,10 @@ private:
   using U = remove_reference_t<T>;
 
 public:
-  using type = conditional_t<is_array_v<U>, typename remove_extent_t<U>*, typename conditional_t<is_function_v<U>, add_pointer_t<U>, remove_cv_t<U>>>;
+  using type = conditional_t<is_array_v<U>, remove_extent_t<U>*, conditional_t<is_function_v<U>, add_pointer_t<U>, remove_cv_t<U>>>;
 };
 
 template <typename T>
-using decay_t = decay<T>::type;
+using decay_t = typename decay<T>::type;
 
 REX_RSL_END_NAMESPACE

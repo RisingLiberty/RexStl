@@ -23,7 +23,7 @@ REX_RSL_BEGIN_NAMESPACE
 template <typename T>
 constexpr typename rsl::remove_reference_t<T>&& move(T&& x) noexcept
 {
-  static_assert(rsl::is_const_v<T> == false, "calling move with a const T");
+  static_assert(!rsl::is_const_v<T>, "calling move with a const T");
   return static_cast<typename rsl::remove_reference_t<T>&&>(x);
 }
 REX_RSL_END_NAMESPACE

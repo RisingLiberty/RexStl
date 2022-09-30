@@ -36,28 +36,33 @@ struct common_type<T1> : common_type_t<T1, T1>
 namespace internal
 {
   template <typename T1, typename T2, typename Decayed1 = decay_t<T1>, typename Decayed2 = decay_t<T2>>
-  struct CommonType2 : common_type<Decayed1, Decayed2>
+  struct common_type2 : common_type<Decayed1, Decayed2>
+  {
+  };
+
+  template <typename T1, typename T2, typename = void>
+  struct decayed_cond_oper
   {
   };
 
   template <typename T1, typename T2>
-  struct CommonType2<T1, T2> : CommonType2<T1, T2>
+  struct common_type2<T1, T2, T1, T2> : decayed_cond_oper<T1, T2>
   {
   };
 
-  template <typename void_t, typename T1, typename T2, typename... Rest>
-  struct CommonType3
+  template <typename VoidT, typename T1, typename T2, typename... Rest>
+  struct common_type3
   {
   };
 
   template <typename T1, typename T2, typename... Rest>
-  struct CommonType3<void_t<common_type_t<T1, T2>>, T1, T2, Rest...> : common_type<common_type_t<T1, T2>, Rest...>
+  struct common_type3<void_t<common_type_t<T1, T2>>, T1, T2, Rest...> : common_type<common_type_t<T1, T2>, Rest...>
   {
   };
 } // namespace internal
 
 template <typename T1, typename T2, typename... Rest>
-struct common_type<T1, T2, Rest...> : internal::CommonType3<void, T1, T2, Rest...>
+struct common_type<T1, T2, Rest...> : internal::common_type3<void, T1, T2, Rest...>
 {
 };
 

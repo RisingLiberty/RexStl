@@ -41,21 +41,21 @@ REX_RSL_BEGIN_NAMESPACE
 #define LLONG_MIN  (-9223372036854775807i64 - 1)
 #define ULLONG_MAX 0xffffffffffffffffui64
 
-#define _I8_MIN  (-127i8 - 1)
-#define _I8_MAX  127i8
-#define _UI8_MAX 0xffui8
+#define I8_MIN  (-127i8 - 1)
+#define I8_MAX  127i8
+#define UI8_MAX 0xffui8
 
-#define _I16_MIN  (-32767i16 - 1)
-#define _I16_MAX  32767i16
-#define _UI16_MAX 0xffffui16
+#define I16_MIN  (-32767i16 - 1)
+#define I16_MAX  32767i16
+#define UI16_MAX 0xffffui16
 
-#define _I32_MIN  (-2147483647i32 - 1)
-#define _I32_MAX  2147483647i32
-#define _UI32_MAX 0xffffffffui32
+#define I32_MIN  (-2147483647i32 - 1)
+#define I32_MAX  2147483647i32
+#define UI32_MAX 0xffffffffui32
 
-#define _I64_MIN  (-9223372036854775807i64 - 1)
-#define _I64_MAX  9223372036854775807i64
-#define _UI64_MAX 0xffffffffffffffffui64
+#define I64_MIN  (-9223372036854775807i64 - 1)
+#define I64_MAX  9223372036854775807i64
+#define UI64_MAX 0xffffffffffffffffui64
 
 #ifndef SIZE_MAX
   // SIZE_MAX definition must match exactly with cstdint.h for modules support.
