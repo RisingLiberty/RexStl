@@ -173,3 +173,4 @@ docs/book/fonts/open-sans-v17-all-charsets-800.woff2
 docs/book/
 cmake/RexStdExtra.cmake
 cmake/RexStdExe.cmake
+generate_vs.bat
