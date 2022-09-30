@@ -171,3 +171,5 @@ source/include/0_extern/rex_std_extra/utilities/wrapped_index.h
 source/include/0_extern/rex_std_extra/utilities/yes_no_enum.h
 docs/book/fonts/open-sans-v17-all-charsets-800.woff2
 docs/book/
+cmake/RexStdExtra.cmake
+cmake/RexStdExe.cmake
