@@ -296,7 +296,7 @@ protected:
   // reads characters from the associated input sequence to the get area and advances the next pointer
   virtual int_type uflow()
   {
-    int_type const ch = underflow();
+    const int_type ch = underflow();
     if(Traits::eq_int_type(ch, Traits::eof()))
     {
       return Traits::eof();
@@ -320,7 +320,7 @@ protected:
   virtual streamsize xsgetn(char_type* s, streamsize count)
   {
     streamsize num_chars_read              = 0;
-    streamsize const to_read_from_get_area = (rsl::min)(count, available_in_get_area());
+    const streamsize to_read_from_get_area = (rsl::min)(count, available_in_get_area());
     if(to_read_from_get_area > 0)
     {
       Traits::copy(s, gptr(), to_read_from_get_area);
@@ -378,7 +378,7 @@ protected:
   virtual streamsize xsputn(const char_type* s, streamsize count)
   {
     streamsize num_chars_written          = 0;
-    streamsize const to_write_to_put_area = (rsl::min)(count, available_in_put_area());
+    const streamsize to_write_to_put_area = (rsl::min)(count, available_in_put_area());
     if(to_write_to_put_area > 0)
     {
       // this cannot fail, so no point in setting the iostate

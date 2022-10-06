@@ -271,7 +271,7 @@ namespace detail
   }
 
   template <class T>
-  FMT_CONSTEXPR make_index_sequence<rsl::tuple_size<T>::value> get_indexes(T const&)
+  FMT_CONSTEXPR make_index_sequence<rsl::tuple_size<T>::value> get_indexes(const T&)
   {
     return {};
   }

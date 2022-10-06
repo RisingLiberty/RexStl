@@ -411,14 +411,14 @@ public:
   // synchronizes with the underlying storage device
   basic_ostream& flush() // NOLINT(misc-no-recursion)
   {
-    sentry const sentry(*this);
+    const sentry sentry(*this);
 
     if(sentry)
     {
       basic_streambuf<CharT, Traits>* streambuf = base::rdbuf();
       if(streambuf)
       {
-        int32 const result = streambuf->pubsync();
+        const int32 result = streambuf->pubsync();
 
         if(result == -1)
         {

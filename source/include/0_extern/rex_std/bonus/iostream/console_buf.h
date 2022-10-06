@@ -150,7 +150,7 @@ namespace internal
         m_get_area.reset();
       }
 
-      streamsize const count_read = xsgetn(m_get_area.current(), sizeof(CharT), 1) / sizeof(CharT);
+      const streamsize count_read = xsgetn(m_get_area.current(), sizeof(CharT), 1) / sizeof(CharT);
       m_get_area.inc_end();
 
       underflow_result<CharT> res {};
@@ -172,7 +172,7 @@ namespace internal
         m_get_area.reset();
       }
 
-      streamsize const count_read = xsgetn(m_get_area.current(), sizeof(CharT), 1) / sizeof(CharT);
+      const streamsize count_read = xsgetn(m_get_area.current(), sizeof(CharT), 1) / sizeof(CharT);
 
       m_get_area.inc_current();
       m_get_area.inc_end();
@@ -198,7 +198,7 @@ namespace internal
       // directly into the destination.
       // This means if an invalid read happened, there's no way to put it back
 
-      streamsize const num_available = m_get_area.num_available();
+      const streamsize num_available = m_get_area.num_available();
       if(count > num_available)
       {
         // first load the characters in the get area
@@ -206,7 +206,7 @@ namespace internal
         m_get_area.reset();
       }
 
-      streamsize const count_read = xsgetn(s, sizeof(CharT), count) / sizeof(CharT);
+      const streamsize count_read = xsgetn(s, sizeof(CharT), count) / sizeof(CharT);
 
       uflown_result<CharT> res {};
       res.get_area = &m_get_area;
@@ -248,7 +248,7 @@ protected:
   streamsize xsgetn(char_type* s, streamsize count) final
   {
     streamsize num_chars_read              = 0;
-    streamsize const to_read_from_get_area = (rsl::min)(count, num_available_in_get_area());
+    const streamsize to_read_from_get_area = (rsl::min)(count, num_available_in_get_area());
     // first get all the elements from the get area.
     // these are copied there before from the character sequence.
     // We can't get them back from the get area that's managed by the operating system.
@@ -264,7 +264,7 @@ protected:
     // if we still need to get characters, get them directly from the operating system.
     if(count > 0)
     {
-      streamsize const num_bytes_read = m_impl.xsgetn(s, sizeof(CharT), count);
+      const streamsize num_bytes_read = m_impl.xsgetn(s, sizeof(CharT), count);
       num_chars_read += num_bytes_read / sizeof(CharT);
     }
 

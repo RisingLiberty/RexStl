@@ -429,9 +429,9 @@ namespace detail
     friend auto operator*(const uint128_fallback& lhs, uint32_t rhs) -> uint128_fallback
     {
       FMT_ASSERT(lhs.m_hi == 0, "");
-      uint64_t const hi     = (lhs.m_lo >> 32) * rhs;
-      uint64_t const lo     = (lhs.m_lo & ~uint32_t()) * rhs;
-      uint64_t const new_lo = (hi << 32) + lo;
+      const uint64_t hi     = (lhs.m_lo >> 32) * rhs;
+      const uint64_t lo     = (lhs.m_lo & ~uint32_t()) * rhs;
+      const uint64_t new_lo = (hi << 32) + lo;
       return {(hi >> 32) + (new_lo < lo ? 1 : 0), new_lo};
     }
     friend auto operator-(const uint128_fallback& lhs, uint64_t rhs) -> uint128_fallback
@@ -460,8 +460,8 @@ namespace detail
     }
     FMT_CONSTEXPR void operator+=(uint128_fallback n)
     {
-      uint64_t const new_lo = m_lo + n.m_lo;
-      uint64_t const new_hi = m_hi + n.m_hi + (new_lo < m_lo ? 1 : 0);
+      const uint64_t new_lo = m_lo + n.m_lo;
+      const uint64_t new_hi = m_hi + n.m_hi + (new_lo < m_lo ? 1 : 0);
       FMT_ASSERT(new_hi >= m_hi, "");
       m_lo = new_lo;
       m_hi = new_hi;
@@ -715,7 +715,7 @@ namespace detail
     constexpr const int shiftc[]       = {0, 18, 12, 6, 0};              // NOLINT(modernize-avoid-c-arrays)
     constexpr const int shifte[]       = {0, 6, 4, 2, 0};                // NOLINT(modernize-avoid-c-arrays)
 
-    int const len    = code_point_length(s);
+    const int len    = code_point_length(s);
     const char* next = s + len;
 
     // Assume a four-byte character and load four bytes. Unused bits are
@@ -1472,7 +1472,7 @@ FMT_CONSTEXPR auto format_uint(Char* buffer, UInt value, int numDigits, bool upp
   do
   {
     const char* digits   = upper ? "0123456789ABCDEF" : "0123456789abcdef";
-    unsigned const digit = static_cast<unsigned>(value & ((1 << BaseBits) - 1));
+    const unsigned digit = static_cast<unsigned>(value & ((1 << BaseBits) - 1));
     *--buffer            = static_cast<Char>(BaseBits < 4 ? static_cast<char>('0' + digit) : digits[digit]);
   } while((value >>= BaseBits) != 0);
   return end;
@@ -1733,12 +1733,12 @@ FMT_CONSTEXPR inline uint64_t multiply(uint64_t lhs, uint64_t rhs)
   return (static_cast<uint64_t>(product) & (1ULL << 63)) != 0 ? f + 1 : f;
   #else
   // Multiply 32-bit parts of significands.
-  uint64_t const mask = (1ULL << 32) - 1;
+  const uint64_t mask = (1ULL << 32) - 1;
   const uint64_t a = lhs >> 32, b = lhs & mask;                  // NOLINT(readability-isolate-declaration)
   const uint64_t c = rhs >> 32, d = rhs & mask;                  // NOLINT(readability-isolate-declaration)
   const uint64_t ac = a * c, bc = b * c, ad = a * d, bd = b * d; // NOLINT(readability-isolate-declaration)
   // Compute mid 64-bit of result and round.
-  uint64_t const mid = (bd >> 32) + (ad & mask) + (bc & mask) + (1U << 31);
+  const uint64_t mid = (bd >> 32) + (ad & mask) + (bc & mask) + (1U << 31);
   return ac + (ad >> 32) + (bc >> 32) + (mid >> 32);
   #endif
 }
@@ -1859,7 +1859,7 @@ auto snprintf_float(T value, int precision, float_specs specs, buffer<char>& buf
     // Suppress the warning about a nonliteral format string.
     // Cannot use auto because of a bug in MinGW (#1532).
     int (*snprintf_ptr)(char*, count_t, const char*, ...) = FMT_SNPRINTF;
-    int const result                                      = precision >= 0 ? snprintf_ptr(begin, capacity, format, precision, value) : snprintf_ptr(begin, capacity, format, value);
+    const int result                                      = precision >= 0 ? snprintf_ptr(begin, capacity, format, precision, value) : snprintf_ptr(begin, capacity, format, value);
     if(result < 0)
     {
       // The buffer will grow exponentially.
@@ -1939,7 +1939,7 @@ FMT_CONSTEXPR auto write_bytes(OutputIt out, string_view bytes, const basic_form
 template <typename Char, typename OutputIt, typename UIntPtr>
 auto write_ptr(OutputIt out, UIntPtr value, const basic_format_specs<Char>* specs) -> OutputIt
 {
-  int const num_digits = count_digits<4>(value);
+  const int num_digits = count_digits<4>(value);
   auto size            = to_unsigned(num_digits) + count_t(2); // NOLINT(google-readability-casting)
   auto write           = [=](reserve_iterator<OutputIt> it)
   {
@@ -1974,7 +1974,7 @@ auto find_escape(const Char* begin, const Char* end) -> find_escape_result<Char>
 {
   for(; begin != end; ++begin)
   {
-    uint32_t const cp = static_cast<make_unsigned_char<Char>>(*begin);
+    const uint32_t cp = static_cast<make_unsigned_char<Char>>(*begin);
     if(const_check(sizeof(Char) == 1) && cp >= 0x80)
       continue;
     if(needs_escape(cp))
@@ -2124,7 +2124,7 @@ auto write_escaped_char(OutputIt out, Char v) -> OutputIt
 template <typename Char, typename OutputIt>
 FMT_CONSTEXPR auto write_char(OutputIt out, Char value, const basic_format_specs<Char>& specs) -> OutputIt
 {
-  bool const is_debug = specs.type == presentation_type::debug;
+  const bool is_debug = specs.type == presentation_type::debug;
   return write_padded(out, specs, 1,
                       [=](reserve_iterator<OutputIt> it)
                       {
@@ -2276,7 +2276,7 @@ public:
     auto separators = basic_memory_buffer<int>();
     separators.push_back(0);
     auto state = initial_state();
-    while(int const i = next(state))
+    while(const int i = next(state))
     {
       if(i >= num_digits)
         break;
@@ -2302,7 +2302,7 @@ auto write_int_localized(OutputIt out, UInt value, unsigned prefix, const basic_
   int num_digits = count_digits(value);
   char digits[40]; // NOLINT(modernize-avoid-c-arrays)
   format_decimal(digits, value, num_digits);
-  unsigned const size = to_unsigned((prefix != 0 ? 1 : 0) + num_digits + grouping.count_separators(num_digits));
+  const unsigned size = to_unsigned((prefix != 0 ? 1 : 0) + num_digits + grouping.count_separators(num_digits));
   return write_padded<align::right>(out, specs, size, size,
                                     [&](reserve_iterator<OutputIt> it)
                                     {
@@ -2375,24 +2375,24 @@ FMT_CONSTEXPR FMT_INLINE auto write_int(OutputIt out, write_int_arg<T> arg, cons
     case presentation_type::hex_lower:
     case presentation_type::hex_upper:
     {
-      bool const upper = specs.type == presentation_type::hex_upper;
+      const bool upper = specs.type == presentation_type::hex_upper;
       if(specs.alt)
         prefix_append(prefix, unsigned(upper ? 'X' : 'x') << 8 | '0'); // NOLINT(google-readability-casting)
-      int const num_digits = count_digits<4>(abs_value);
+      const int num_digits = count_digits<4>(abs_value);
       return write_int(out, num_digits, prefix, specs, [=](reserve_iterator<OutputIt> it) { return format_uint<4, Char>(it, abs_value, num_digits, upper); });
     }
     case presentation_type::bin_lower:
     case presentation_type::bin_upper:
     {
-      bool const upper = specs.type == presentation_type::bin_upper;
+      const bool upper = specs.type == presentation_type::bin_upper;
       if(specs.alt)
         prefix_append(prefix, unsigned(upper ? 'B' : 'b') << 8 | '0'); // NOLINT(google-readability-casting)
-      int const num_digits = count_digits<1>(abs_value);
+      const int num_digits = count_digits<1>(abs_value);
       return write_int(out, num_digits, prefix, specs, [=](reserve_iterator<OutputIt> it) { return format_uint<1, Char>(it, abs_value, num_digits); });
     }
     case presentation_type::oct:
     {
-      int const num_digits = count_digits<3>(abs_value);
+      const int num_digits = count_digits<3>(abs_value);
       // Octal prefix '0' is counted as a digit, so only add it if precision
       // is not greater than the number of digits.
       if(specs.alt && specs.precision <= num_digits && abs_value != 0)
@@ -2485,7 +2485,7 @@ FMT_CONSTEXPR auto write(OutputIt out, basic_string_view<Char> s, const basic_fo
   auto size = s.size();
   if(specs.precision >= 0 && specs.precision < size)
     size = code_point_index(s, to_unsigned(specs.precision));
-  bool const is_debug = specs.type == presentation_type::debug;
+  const bool is_debug = specs.type == presentation_type::debug;
   count_t width       = 0;
   if(specs.width != 0)
   {
@@ -2522,11 +2522,11 @@ template <typename Char, typename OutputIt, typename T, FMT_ENABLE_IF(is_integra
 FMT_CONSTEXPR auto write(OutputIt out, T value) -> OutputIt
 {
   auto abs_value      = static_cast<uint32_or_64_or_128_t<T>>(value);
-  bool const negative = is_negative(value);
+  const bool negative = is_negative(value);
   // Don't do -abs_value since it trips unsigned-integer-overflow sanitizer.
   if(negative)
     abs_value = ~abs_value + 1;
-  int const num_digits = count_digits(abs_value);
+  const int num_digits = count_digits(abs_value);
   auto size            = (negative ? 1 : 0) + static_cast<count_t>(num_digits);
   auto it              = reserve(out, size);
   if(auto ptr = to_pointer<Char>(it, size))
@@ -2611,7 +2611,7 @@ inline auto write_significand(Char* out, UInt significand, int significandSize, 
     return format_decimal(out, significand, significandSize).end;
   out += significandSize + 1;
   Char* end               = out;
-  int const floating_size = significandSize - integralSize;
+  const int floating_size = significandSize - integralSize;
   for(int i = floating_size / 2; i > 0; --i)
   {
     out -= 2;
@@ -2672,7 +2672,7 @@ FMT_CONSTEXPR20 auto do_write_float(OutputIt out, const DecimalFP& f, const basi
 
   Char decimal_point = fspecs.locale ? detail::decimal_point<Char>(loc) : static_cast<Char>('.');
 
-  int const output_exp = f.exponent + significand_size - 1;
+  const int output_exp = f.exponent + significand_size - 1;
   auto use_exp_format  = [=]()
   {
     if(fspecs.format == float_format::exp)
@@ -2704,7 +2704,7 @@ FMT_CONSTEXPR20 auto do_write_float(OutputIt out, const DecimalFP& f, const basi
       exp_digits = abs_output_exp >= 1000 ? 4 : 3;
 
     size += to_unsigned((decimal_point ? 1 : 0) + 2 + exp_digits);
-    char const exp_char = fspecs.upper ? 'E' : 'e';
+    const char exp_char = fspecs.upper ? 'E' : 'e';
     auto write          = [=](iterator it)
     {
       if(sign)
@@ -2770,7 +2770,7 @@ FMT_CONSTEXPR20 auto do_write_float(OutputIt out, const DecimalFP& f, const basi
   {
     num_zeros = fspecs.precision;
   }
-  bool const pointy = num_zeros != 0 || significand_size != 0 || fspecs.showpoint;
+  const bool pointy = num_zeros != 0 || significand_size != 0 || fspecs.showpoint;
   size += 1 + (pointy ? 1 : 0) + to_unsigned(num_zeros); // NOLINT(cppcoreguidelines-narrowing-conversions)
   return write_padded<align::right>(out, specs, size,
                                     [&](iterator it)
@@ -2995,7 +2995,7 @@ FMT_INLINE FMT_CONSTEXPR20 auto grisu_gen_digits(fp value, uint64_t error, int& 
       if(handler.precision < 0)
         return digits::done;
       // Divide by 10 to prevent overflow.
-      uint64_t const divisor = data::power_of_10_64[exp - 1] << -one.e;
+      const uint64_t divisor = data::power_of_10_64[exp - 1] << -one.e;
       auto dir               = get_round_direction(divisor, value.f / 10, error * 10);
       if(dir == round_direction::unknown)
         return digits::error;
@@ -3042,7 +3042,7 @@ FMT_INLINE FMT_CONSTEXPR20 auto grisu_gen_digits(fp value, uint64_t error, int& 
   {
     fractional *= 10;
     error *= 10;
-    char const digit = static_cast<char>('0' + (fractional >> -one.e));
+    const char digit = static_cast<char>('0' + (fractional >> -one.e));
     fractional &= one.f - 1;
     --exp;
     auto result = handler.on_digit(digit, one.f, fractional, error, false);
@@ -3113,7 +3113,7 @@ private:
     bigit carry                   = 0;
     for(count_t i = 0, n = m_bigits.size(); i < n; ++i)
     {
-      double_bigit const result = m_bigits[i] * wide_value + carry;
+      const double_bigit result = m_bigits[i] * wide_value + carry;
       m_bigits[i]               = static_cast<bigit>(result);
       carry                     = static_cast<bigit>(result >> bigit_bits);
     }
@@ -3202,7 +3202,7 @@ public:
     bigit carry = 0;
     for(count_t i = 0, n = m_bigits.size(); i < n; ++i)
     {
-      bigit const c = m_bigits[i] >> (bigit_bits - shift);
+      const bigit c = m_bigits[i] >> (bigit_bits - shift);
       m_bigits[i]   = (m_bigits[i] << shift) + carry;
       carry         = c;
     }
@@ -3245,19 +3245,19 @@ public:
   {
     auto minimum             = [](int a, int b) { return a < b ? a : b; };
     auto maximum             = [](int a, int b) { return a > b ? a : b; };
-    int const max_lhs_bigits = maximum(lhs1.num_bigits(), lhs2.num_bigits());
-    int const num_rhs_bigits = rhs.num_bigits();
+    const int max_lhs_bigits = maximum(lhs1.num_bigits(), lhs2.num_bigits());
+    const int num_rhs_bigits = rhs.num_bigits();
     if(max_lhs_bigits + 1 < num_rhs_bigits)
       return -1;
     if(max_lhs_bigits > num_rhs_bigits)
       return 1;
     auto get_bigit      = [](const bigint& n, int i) -> bigit { return i >= n.m_exp && i < n.num_bigits() ? n[i - n.m_exp] : 0; };
     double_bigit borrow = 0;
-    int const min_exp   = minimum(minimum(lhs1.m_exp, lhs2.m_exp), rhs.m_exp);
+    const int min_exp   = minimum(minimum(lhs1.m_exp, lhs2.m_exp), rhs.m_exp);
     for(int i = num_rhs_bigits - 1; i >= min_exp; --i)
     {
-      double_bigit const sum = static_cast<double_bigit>(get_bigit(lhs1, i)) + get_bigit(lhs2, i);
-      bigit const rhs_bigit  = get_bigit(rhs, i);
+      const double_bigit sum = static_cast<double_bigit>(get_bigit(lhs1, i)) + get_bigit(lhs2, i);
+      const bigit rhs_bigit  = get_bigit(rhs, i);
       if(sum > rhs_bigit + borrow)
         return 1;
       borrow = rhs_bigit + borrow - sum;
@@ -3298,8 +3298,8 @@ public:
 
   FMT_CONSTEXPR20 void square()
   {
-    int const num_bigits        = static_cast<int>(m_bigits.size());
-    int const num_result_bigits = 2 * num_bigits;
+    const int num_bigits        = static_cast<int>(m_bigits.size());
+    const int num_result_bigits = 2 * num_bigits;
     basic_memory_buffer<bigit, bigits_capacity> n(rsl::move(m_bigits));
     m_bigits.resize(to_unsigned(num_result_bigits)); // NOLINT(cppcoreguidelines-narrowing-conversions)
     auto sum = uint128_t();
@@ -3331,10 +3331,10 @@ public:
   // exponents equal. This simplifies some operations such as subtraction.
   FMT_CONSTEXPR20 void align(const bigint& other)
   {
-    int const exp_difference = m_exp - other.m_exp;
+    const int exp_difference = m_exp - other.m_exp;
     if(exp_difference <= 0)
       return;
-    int const num_bigits = static_cast<int>(m_bigits.size());
+    const int num_bigits = static_cast<int>(m_bigits.size());
     m_bigits.resize(to_unsigned(num_bigits + exp_difference)); // NOLINT(cppcoreguidelines-narrowing-conversions)
     for(int i = num_bigits - 1, j = i + exp_difference; i >= 0; --i, --j)
       m_bigits[j] = m_bigits[i];
@@ -3383,8 +3383,8 @@ FMT_CONSTEXPR20 inline void format_dragon(basic_fp<uint128_t> value, unsigned fl
   // Shift numerator and denominator by an extra bit or two (if lower boundary
   // is closer) to make lower and upper integers. This eliminates multiplication
   // by 2 during later computations.
-  bool const is_predecessor_closer = (flags & dragon::predecessor_closer) != 0;
-  int const shift                  = is_predecessor_closer ? 2 : 1;
+  const bool is_predecessor_closer = (flags & dragon::predecessor_closer) != 0;
+  const int shift                  = is_predecessor_closer ? 2 : 1;
   if(value.e >= 0)
   {
     numerator = value.f;
@@ -3428,7 +3428,7 @@ FMT_CONSTEXPR20 inline void format_dragon(basic_fp<uint128_t> value, unsigned fl
       upper       = &upper_store;
     }
   }
-  int const even = static_cast<int>((value.f & 1) == 0);
+  const int even = static_cast<int>((value.f & 1) == 0);
   if(!upper) // NOLINT(readability-implicit-bool-conversion)
     upper = &lower;
   if((flags & dragon::fixup) != 0)
@@ -3455,10 +3455,10 @@ FMT_CONSTEXPR20 inline void format_dragon(basic_fp<uint128_t> value, unsigned fl
     char* data = buf.data();
     for(;;)
     {
-      int const digit = numerator.divmod_assign(denominator);
-      bool const low  = compare(numerator, lower) - even < 0; // numerator <[=] lower.
+      const int digit = numerator.divmod_assign(denominator);
+      const bool low  = compare(numerator, lower) - even < 0; // numerator <[=] lower.
       // numerator + upper >[=] pow10:
-      bool const high   = add_compare(numerator, *upper, denominator) + even > 0;
+      const bool high   = add_compare(numerator, *upper, denominator) + even > 0;
       data[numDigits++] = static_cast<char>('0' + digit);
       if(low || high)
       {
@@ -3468,7 +3468,7 @@ FMT_CONSTEXPR20 inline void format_dragon(basic_fp<uint128_t> value, unsigned fl
         }
         else if(high)
         {
-          int const result = add_compare(numerator, numerator, denominator);
+          const int result = add_compare(numerator, numerator, denominator);
           // Round half to even.
           if(result > 0 || (result == 0 && (digit % 2) != 0))
             ++data[numDigits - 1];
@@ -3495,7 +3495,7 @@ FMT_CONSTEXPR20 inline void format_dragon(basic_fp<uint128_t> value, unsigned fl
   buf.try_resize(to_unsigned(numDigits)); // NOLINT(cppcoreguidelines-narrowing-conversions)
   for(int i = 0; i < numDigits - 1; ++i)
   {
-    int const digit = numerator.divmod_assign(denominator);
+    const int digit = numerator.divmod_assign(denominator);
     buf[i]          = static_cast<char>('0' + digit);
     numerator *= 10;
   }
@@ -3599,7 +3599,7 @@ FMT_CONSTEXPR20 auto format_float(Float value, int precision, float_specs specs,
   if(use_dragon)
   {
     auto f                           = basic_fp<uint128_t>();
-    bool const is_predecessor_closer = specs.binary32 ? f.assign(static_cast<float>(value)) : f.assign(converted_value);
+    const bool is_predecessor_closer = specs.binary32 ? f.assign(static_cast<float>(value)) : f.assign(converted_value);
     if(is_predecessor_closer)
       dragon_flags |= dragon::predecessor_closer;
     if(fixed)
@@ -3681,7 +3681,7 @@ FMT_CONSTEXPR20 auto write(OutputIt out, T value, basic_format_specs<Char> specs
   }
   if(const_check(rsl::is_same<T, float>()))
     fspecs.binary32 = true;
-  int const exp    = format_float(convert_float(value), precision, fspecs, buffer);
+  const int exp    = format_float(convert_float(value), precision, fspecs, buffer);
   fspecs.precision = precision;
   auto f           = big_decimal_fp {buffer.data(), static_cast<int>(buffer.size()), exp};
   return write_float(out, f, specs, fspecs, loc);
@@ -3705,7 +3705,7 @@ FMT_CONSTEXPR20 auto write(OutputIt out, T value) -> OutputIt
   constexpr auto specs = basic_format_specs<Char>();
   using floaty         = conditional_t<rsl::is_same<T, long double>::value, double, T>;
   using uint           = typename dragonbox::float_info<floaty>::carrier_uint;
-  uint const mask      = exponent_mask<floaty>();
+  const uint mask      = exponent_mask<floaty>();
   if((bit_cast<uint>(value) & mask) == mask)
     return write_nonfinite(out, std::isnan(value), specs, fspecs);
 
@@ -3925,7 +3925,7 @@ private:
 template <template <typename> class Handler, typename FormatArg, typename ErrorHandler>
 FMT_CONSTEXPR auto get_dynamic_spec(FormatArg arg, ErrorHandler eh) -> int
 {
-  unsigned long long const value = visit_format_arg(Handler<ErrorHandler>(eh), arg);
+  const unsigned long long value = visit_format_arg(Handler<ErrorHandler>(eh), arg);
   if(value > to_unsigned(max_value<int>()))
     eh.on_error("number is too big");
   return static_cast<int>(value);
@@ -4151,7 +4151,7 @@ private:
   auto format_signed(Int value) -> char* // NOLINT(cppcoreguidelines-pro-type-member-init)
   {
     auto abs_value      = static_cast<detail::uint32_or_64_or_128_t<Int>>(value);
-    bool const negative = value < 0;
+    const bool negative = value < 0;
     if(negative)
       abs_value = 0 - abs_value;
     auto begin = format_unsigned(abs_value);
@@ -4652,7 +4652,7 @@ void vformat_to(buffer<Char>& buf, basic_string_view<Char> fmt, basic_format_arg
     }
     FMT_CONSTEXPR auto on_arg_id(basic_string_view<Char> id) -> int
     {
-      int const arg_id = context.arg_id(id);
+      const int arg_id = context.arg_id(id);
       if(arg_id < 0)
         on_error("argument not found");
       return arg_id;

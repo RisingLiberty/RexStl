@@ -616,7 +616,7 @@ public:
       on_error("cannot switch from manual to automatic argument indexing");
       return 0;
     }
-    int const id = m_next_arg_id++;
+    const int id = m_next_arg_id++;
     do_check_arg_id(id);
     return id;
   }
@@ -680,7 +680,7 @@ public:
 
   FMT_CONSTEXPR auto next_arg_id() -> int
   {
-    int const id = base::next_arg_id();
+    const int id = base::next_arg_id();
     if(id >= m_num_args)
       this->on_error("argument not found");
     return id;
@@ -2267,8 +2267,8 @@ private:
 
   FMT_CONSTEXPR auto type(int index) const -> detail::type
   {
-    int const shift         = index * detail::packed_arg_bits;
-    unsigned int const mask = (1 << detail::packed_arg_bits) - 1;
+    const int shift         = index * detail::packed_arg_bits;
+    const unsigned int mask = (1 << detail::packed_arg_bits) - 1;
     return static_cast<detail::type>((m_desc >> shift) & mask);
   }
 
@@ -2344,7 +2344,7 @@ public:
   template <typename Char>
   auto get(basic_string_view<Char> name) const -> format_arg
   {
-    int const id = get_id(name);
+    const int id = get_id(name);
     return id >= 0 ? get(id) : format_arg();
   }
 
@@ -2364,7 +2364,7 @@ public:
 
   auto max_size() const -> int
   {
-    unsigned long long const max_packed = detail::max_packed_args;
+    const unsigned long long max_packed = detail::max_packed_args;
     return static_cast<int>(is_packed() ? max_packed : m_desc & ~detail::is_unpacked_bit);
   }
 };
@@ -2686,7 +2686,7 @@ private:
 
   FMT_CONSTEXPR auto make_arg_ref(auto_id /*unused*/) -> arg_ref_type
   {
-    int const arg_id = m_context.next_arg_id();
+    const int arg_id = m_context.next_arg_id();
     m_context.check_dynamic_spec(arg_id);
     return arg_ref_type(arg_id);
   }
@@ -2694,7 +2694,7 @@ private:
   FMT_CONSTEXPR auto make_arg_ref(basic_string_view<char_type> argId) -> arg_ref_type
   {
     m_context.check_arg_id(argId);
-    basic_string_view<char_type> const format_str(rsl::iterator_to_pointer(m_context.begin()), to_unsigned(static_cast<count_t>(m_context.end() - m_context.begin())));
+    const basic_string_view<char_type> format_str(rsl::iterator_to_pointer(m_context.begin()), to_unsigned(static_cast<count_t>(m_context.end() - m_context.begin())));
     return arg_ref_type(argId);
   }
 };
@@ -2723,7 +2723,7 @@ FMT_CONSTEXPR auto code_point_length(const Char* begin) -> int
   if(const_check(sizeof(Char) != 1))
     return 1;
   const auto* lengths = "\1\1\1\1\1\1\1\1\1\1\1\1\1\1\1\1\0\0\0\0\0\0\0\0\2\2\2\2\3\3\4";
-  int const len       = lengths[static_cast<unsigned char>(*begin) >> 3]; // NOLINT(bugprone-signed-char-misuse)
+  const int len       = lengths[static_cast<unsigned char>(*begin) >> 3]; // NOLINT(bugprone-signed-char-misuse)
 
   // Compute the pointer to the next character early so that the next
   // iteration can start working on the next character. Neither Clang
@@ -2901,7 +2901,7 @@ FMT_CONSTEXPR auto parse_width(const Char* begin, const Char* end, Handler&& han
   FMT_ASSERT(begin != end, "");
   if('0' <= *begin && *begin <= '9')
   {
-    int const width = parse_nonnegative_int(begin, end, -1);
+    const int width = parse_nonnegative_int(begin, end, -1);
     if(width != -1)
     {
       handler.on_width(width);
@@ -3014,7 +3014,7 @@ FMT_CONSTEXPR FMT_INLINE auto parse_format_specs(const Char* begin, const Char* 
 {
   if(1 < end - begin && begin[1] == '}' && is_ascii_letter(*begin) && *begin != 'L')
   {
-    presentation_type const type = parse_presentation_type(*begin++);
+    const presentation_type type = parse_presentation_type(*begin++);
     if(type == presentation_type::none)
       handler.on_error("invalid type specifier");
     handler.on_type(type);
@@ -3084,7 +3084,7 @@ FMT_CONSTEXPR FMT_INLINE auto parse_format_specs(const Char* begin, const Char* 
   // Parse type.
   if(begin != end && *begin != '}')
   {
-    presentation_type const type = parse_presentation_type(*begin++);
+    const presentation_type type = parse_presentation_type(*begin++);
     if(type == presentation_type::none)
       handler.on_error("invalid type specifier");
     handler.on_type(type);

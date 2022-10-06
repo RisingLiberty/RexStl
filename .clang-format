@@ -39,6 +39,7 @@ Language: Cpp
 MaxEmptyLinesToKeep: '1'
 NamespaceIndentation: All
 PointerAlignment: Left
+QualifierAlignment: Left
 ReflowComments: 'true'
 SortIncludes: 'true'
 SpaceAfterCStyleCast: 'false'

@@ -36,7 +36,7 @@ namespace internal
   template <typename CharType>
   constexpr hash_result hash(const CharType* key)
   {
-    uint64 const p    = 31;
+    const uint64 p    = 31;
     const uint64 m    = static_cast<uint64>(1e9 + 9);
     int64 hash_value  = 0;
     int64 p_pow       = 1;
@@ -53,7 +53,7 @@ namespace internal
   template <typename CharType>
   constexpr hash_result hash(const CharType* key, count_t count)
   {
-    uint64 const p    = 31;
+    const uint64 p    = 31;
     const uint64 m    = static_cast<uint64>(1e9 + 9); // NOLINT(google-readability-casting)
     int64 hash_value  = 0;
     int64 p_pow       = 1;

@@ -1103,7 +1103,7 @@ namespace detail
         return {r.high(), r.low() == 0};
       }
 
-      static uint32_t compute_delta(cache_entry_type const& cache, int beta) noexcept
+      static uint32_t compute_delta(const cache_entry_type& cache, int beta) noexcept
       {
         return static_cast<uint32_t>(cache.high() >> (64 - 1 - beta));
       }

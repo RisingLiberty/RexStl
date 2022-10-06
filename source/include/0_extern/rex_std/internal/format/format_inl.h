@@ -39,7 +39,7 @@ namespace detail
   {
     // Use unchecked std::fprintf to avoid triggering another assertion when
     // writing to stderr fails
-    REX_MAYBE_UNUSED int const result = std::fprintf(stderr, "%s:%d: assertion failed: %s", file, line, message);
+    REX_MAYBE_UNUSED const int result = std::fprintf(stderr, "%s:%d: assertion failed: %s", file, line, message);
     // Chosen instead of rsl::abort to satisfy Clang in CUDA mode during device
     // code pass.
     std::terminate();
@@ -80,13 +80,13 @@ namespace detail
     func(full_message, errorCode, message);
     // Don't use fwrite_fully because the latter may throw.
     if(std::fwrite(full_message.data(), full_message.size(), 1, stderr) > 0)
-      REX_MAYBE_UNUSED int const res = std::fputc('\n', stderr);
+      REX_MAYBE_UNUSED const int res = std::fputc('\n', stderr);
   }
 
   // A wrapper around fwrite that throws on error.
   inline void fwrite_fully(const void* ptr, size_t size, size_t count, FILE* stream)
   {
-    size_t const written = std::fwrite(ptr, size, count, stream);
+    const size_t written = std::fwrite(ptr, size, count, stream);
     if(written < count)
       FMT_THROW(system_error(errno, FMT_STRING("cannot write to file")));
   }
@@ -230,8 +230,8 @@ namespace detail
     // 128-bit unsigned integer.
     inline uint128_fallback umul192_lower128(uint64_t x, uint128_fallback y) noexcept
     {
-      uint64_t const high             = x * y.high();
-      uint128_fallback const high_low = umul128(x, y.low());
+      const uint64_t high             = x * y.high();
+      const uint128_fallback high_low = umul128(x, y.low());
       return {high + high_low.high(), high_low.low()};
     }
 
@@ -291,7 +291,7 @@ namespace detail
       constexpr uint32_t magic_number = (1u << info.shift_amount) / info.divisor + 1;
       n *= magic_number;
       const uint32_t comparison_mask = (1u << info.shift_amount) - 1;
-      bool const result              = (n & comparison_mask) < magic_number;
+      const bool result              = (n & comparison_mask) < magic_number;
       n >>= info.shift_amount;
       return result;
     }
@@ -1063,9 +1063,9 @@ namespace detail
         static const int s_compression_ratio = 27;
 
         // Compute base index.
-        int const cache_index = (k - float_info<double>::min_k) / s_compression_ratio;
-        int const kb          = cache_index * s_compression_ratio + float_info<double>::min_k;
-        int const offset      = k - kb;
+        const int cache_index = (k - float_info<double>::min_k) / s_compression_ratio;
+        const int kb          = cache_index * s_compression_ratio + float_info<double>::min_k;
+        const int offset      = k - kb;
 
         // Get base cache.
         uint128_fallback base_cache = pow10_significands[cache_index];
@@ -1073,18 +1073,18 @@ namespace detail
           return base_cache;
 
         // Compute the required amount of bit-shift.
-        int const alpha = floor_log2_pow10(kb + offset) - floor_log2_pow10(kb) - offset;
+        const int alpha = floor_log2_pow10(kb + offset) - floor_log2_pow10(kb) - offset;
         FMT_ASSERT(alpha > 0 && alpha < 64, "shifting error detected");
 
         // Try to recover the real cache.
-        uint64_t const pow5               = powers_of_5_64[offset];
+        const uint64_t pow5               = powers_of_5_64[offset];
         uint128_fallback recovered_cache  = umul128(base_cache.high(), pow5);
-        uint128_fallback const middle_low = umul128(base_cache.low(), pow5);
+        const uint128_fallback middle_low = umul128(base_cache.low(), pow5);
 
         recovered_cache += middle_low.high();
 
-        uint64_t const high_to_middle = recovered_cache.high() << (64 - alpha);
-        uint64_t const middle_to_low  = recovered_cache.low() << (64 - alpha);
+        const uint64_t high_to_middle = recovered_cache.high() << (64 - alpha);
+        const uint64_t middle_to_low  = recovered_cache.low() << (64 - alpha);
 
         recovered_cache = uint128_fallback {(recovered_cache.low() >> alpha) | high_to_middle, ((middle_low.low() >> alpha) | middle_to_low)};
         FMT_ASSERT(recovered_cache.low() + 1 != 0, "");
@@ -1109,7 +1109,7 @@ namespace detail
         return {r.high(), r.low() == 0};
       }
 
-      static uint32_t compute_delta(cache_entry_type const& cache, int beta) noexcept
+      static uint32_t compute_delta(const cache_entry_type& cache, int beta) noexcept
       {
         return static_cast<uint32_t>(cache.high() >> (64 - 1 - beta));
       }
@@ -1419,7 +1419,7 @@ namespace detail
   {
     auto* args = va_list();
     va_start(args, fmt);
-    int const result = vsnprintf_s(buf, size, _TRUNCATE, fmt, args);
+    const int result = vsnprintf_s(buf, size, _TRUNCATE, fmt, args);
     va_end(args);
     return result;
   }

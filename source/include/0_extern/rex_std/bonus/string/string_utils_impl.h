@@ -66,7 +66,7 @@ namespace internal
       rnext = unsigned_integral_to_buff(rnext, unsigned_value);
     }
 
-    size_t const size = buff_end - rnext;
+    const size_t size = buff_end - rnext;
     return StringType(rnext, static_cast<count_t>(size));
   }
 
@@ -82,7 +82,7 @@ namespace internal
     char_type* buff_end = rsl::end(buff);
     char_type* rnext    = unsigned_integral_to_buff(buff_end, value);
 
-    size_t const size = buff_end - rnext;
+    const size_t size = buff_end - rnext;
     return StringType(rnext, static_cast<count_t>(size));
   }
 } // namespace internal
@@ -237,22 +237,22 @@ namespace internal
   template <typename StringType>
   constexpr StringType to_string(const float32 value, card32 precision)
   {
-    card32 const int_value = static_cast<card32>(value);
+    const card32 int_value = static_cast<card32>(value);
 
-    float32 const radix_value        = value - int_value;                     // NOLINT(cppcoreguidelines-narrowing-conversions)
-    float32 const radix_value_to_int = radix_value * rsl::pow(10, precision); // NOLINT(cppcoreguidelines-narrowing-conversions)
-    card32 const radix_value_as_int  = static_cast<card32>(radix_value_to_int);
+    const float32 radix_value        = value - int_value;                     // NOLINT(cppcoreguidelines-narrowing-conversions)
+    const float32 radix_value_to_int = radix_value * rsl::pow(10, precision); // NOLINT(cppcoreguidelines-narrowing-conversions)
+    const card32 radix_value_as_int  = static_cast<card32>(radix_value_to_int);
 
     return to_string<StringType>(int_value) + static_cast<typename StringType::value_type>('.') + to_string<StringType>(radix_value_as_int);
   }
   template <typename StringType>
   constexpr StringType to_string(const float64 value, card32 precision)
   {
-    card64 const int_value = static_cast<card64>(value);
+    const card64 int_value = static_cast<card64>(value);
 
-    float64 const radix_value        = value - int_value; // NOLINT(cppcoreguidelines-narrowing-conversions)
-    float64 const radix_value_to_int = radix_value * rsl::pow(10, precision);
-    card64 const radix_value_as_int  = static_cast<card64>(radix_value_to_int);
+    const float64 radix_value        = value - int_value; // NOLINT(cppcoreguidelines-narrowing-conversions)
+    const float64 radix_value_to_int = radix_value * rsl::pow(10, precision);
+    const card64 radix_value_as_int  = static_cast<card64>(radix_value_to_int);
 
     return to_string<StringType>(int_value) + static_cast<typename StringType::value_type>('.') + to_string<StringType>(radix_value_as_int);
   }
