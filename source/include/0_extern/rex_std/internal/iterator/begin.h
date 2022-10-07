@@ -14,27 +14,31 @@
 
 #include "rex_std/bonus/types.h"
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
-template <typename C>
-auto begin(C& c) -> decltype(c.begin())
-{
-  return c.begin();
-}
-template <typename C>
-auto begin(const C& c) -> decltype(c.begin())
-{
-  return c.begin();
-}
-template <typename T, card32 N>
-T* begin(T (&array)[N]) // NOLINT(modernize-avoid-c-arrays)
-{
-  return &array[0];
-}
-template <typename C>
-auto cbegin(const C& c) -> decltype(c.cbegin())
-{
-  return c.cbegin();
-}
+    template <typename C>
+    auto begin(C& c) -> decltype(c.begin())
+    {
+      return c.begin();
+    }
+    template <typename C>
+    auto begin(const C& c) -> decltype(c.begin())
+    {
+      return c.begin();
+    }
+    template <typename T, card32 N>
+    T* begin(T (&array)[N]) // NOLINT(modernize-avoid-c-arrays)
+    {
+      return &array[0];
+    }
+    template <typename C>
+    auto cbegin(const C& c) -> decltype(c.cbegin())
+    {
+      return c.cbegin();
+    }
 
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl

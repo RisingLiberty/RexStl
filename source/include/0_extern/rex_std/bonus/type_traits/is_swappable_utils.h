@@ -12,20 +12,24 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-namespace internal
+namespace rsl
 {
-  struct ArgumentSink
+  inline namespace v1
   {
-    template <typename... Args>
-    ArgumentSink(Args&&...)
+
+    namespace internal
     {
-    }
-  };
+      struct ArgumentSink
+      {
+        template <typename... Args>
+        ArgumentSink(Args&&...)
+        {
+        }
+      };
 
-  Unused swap(ArgumentSink, ArgumentSink);
+      Unused swap(ArgumentSink, ArgumentSink);
 
-} // namespace internal
+    } // namespace internal
 
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl

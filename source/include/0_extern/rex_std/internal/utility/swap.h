@@ -15,20 +15,24 @@
 #include "rex_std/internal/algorithm/swap_ranges.h"
 #include "rex_std/internal/utility/move.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-constexpr void swap(T& lhs, T& rhs)
+namespace rsl
 {
-  T tmp = rsl::move(lhs);
-  lhs   = rsl::move(rhs);
-  rhs   = rsl::move(tmp);
-}
+  inline namespace v1
+  {
 
-template <typename T, size_t N>
-constexpr void swap(T (&a)[N], T (&b)[N]) // NOLINT(modernize-avoid-c-arrays)
-{
-  swap_ranges(a, a + N, b);
-}
+    template <typename T>
+    constexpr void swap(T& lhs, T& rhs)
+    {
+      T tmp = rsl::move(lhs);
+      lhs   = rsl::move(rhs);
+      rhs   = rsl::move(tmp);
+    }
 
-REX_RSL_END_NAMESPACE
+    template <typename T, size_t N>
+    constexpr void swap(T (&a)[N], T (&b)[N]) // NOLINT(modernize-avoid-c-arrays)
+    {
+      swap_ranges(a, a + N, b);
+    }
+
+  } // namespace v1
+} // namespace rsl

@@ -14,14 +14,18 @@
 
 #include "rex_std/internal/type_traits/integral_constant.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-struct is_aggregate : public bool_constant<__is_aggregate(T)>
+namespace rsl
 {
-};
+  inline namespace v1
+  {
 
-template <typename T>
-inline constexpr bool is_aggregate_v = is_aggregate<T>::value;
+    template <typename T>
+    struct is_aggregate : public bool_constant<__is_aggregate(T)>
+    {
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    inline constexpr bool is_aggregate_v = is_aggregate<T>::value;
+
+  } // namespace v1
+} // namespace rsl

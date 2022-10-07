@@ -12,17 +12,21 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename InputIterator, typename Size, typename Func>
-InputIterator for_each_n(InputIterator first, Size n, Func func)
+namespace rsl
 {
-  auto it = first;
-  for(Size i = 0; i < n; ++i, ++it)
+  inline namespace v1
   {
-    func(*it);
-  }
-  return it;
-}
 
-REX_RSL_END_NAMESPACE
+    template <typename InputIterator, typename Size, typename Func>
+    InputIterator for_each_n(InputIterator first, Size n, Func func)
+    {
+      auto it = first;
+      for(Size i = 0; i < n; ++i, ++it)
+      {
+        func(*it);
+      }
+      return it;
+    }
+
+  } // namespace v1
+} // namespace rsl

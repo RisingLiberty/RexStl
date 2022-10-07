@@ -14,48 +14,52 @@
 
 #include "rex_std/bonus/defines.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-namespace internal
+namespace rsl
 {
-  template <bool IsScalarValue>
-  struct fill_n_impl
+  inline namespace v1
   {
-    template <typename OutputIterator, typename Size, typename T>
-    static OutputIterator do_fill(OutputIterator first, Size n, const T& value)
+
+    namespace internal
     {
-      for(; n-- > 0; ++first)
+      template <bool IsScalarValue>
+      struct fill_n_impl
       {
-        *first = value;
-      }
-      return first;
-    }
-  };
+        template <typename OutputIterator, typename Size, typename T>
+        static OutputIterator do_fill(OutputIterator first, Size n, const T& value)
+        {
+          for(; n-- > 0; ++first)
+          {
+            *first = value;
+          }
+          return first;
+        }
+      };
 
-  template <>
-  struct fill_n_impl<true>
-  {
+      template <>
+      struct fill_n_impl<true>
+      {
+        template <typename OutputIterator, typename Size, typename T>
+        static OutputIterator do_fill(OutputIterator first, Size n, const T& value)
+        {
+          using value_type = OutputIterator::value_type;
+
+          // We create a temp and fill from that because value might alias to the destination range
+          // the compiler would be forced into generating less efficient code
+          for(const T tmp = value; n-- > 0; ++first)
+          {
+            *first = static_cast<value_type>(tmp);
+          }
+
+          return first;
+        }
+      };
+    } // namespace internal
+
     template <typename OutputIterator, typename Size, typename T>
-    static OutputIterator do_fill(OutputIterator first, Size n, const T& value)
+    OutputIterator fill_n(OutputIterator first, Size n, const T& value)
     {
-      using value_type = OutputIterator::value_type;
-
-      // We create a temp and fill from that because value might alias to the destination range
-      // the compiler would be forced into generating less efficient code
-      for(const T tmp = value; n-- > 0; ++first)
-      {
-        *first = static_cast<value_type>(tmp);
-      }
-
-      return first;
+      return FillNImpl<is_scalar_v<T>>::do_fill(first, n, value);
     }
-  };
-} // namespace internal
 
-template <typename OutputIterator, typename Size, typename T>
-OutputIterator fill_n(OutputIterator first, Size n, const T& value)
-{
-  return FillNImpl<is_scalar_v<T>>::do_fill(first, n, value);
-}
-
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl

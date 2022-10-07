@@ -14,49 +14,53 @@
 
 #include <Windows.h>
 
-REX_RSL_BEGIN_NAMESPACE
-namespace win
+namespace rsl
 {
-  static_assert(sizeof(HANDLE) == sizeof(handle_t), "Rex internal handle should be the same as Windows' HANDLE");
+  inline namespace v1
+  {
+    namespace win
+    {
+      static_assert(sizeof(HANDLE) == sizeof(handle_t), "Rex internal handle should be the same as Windows' HANDLE");
 
-  handle::handle()
-      : m_handle(invalid_value())
-  {
-  }
-  handle::handle(handle_t handle)
-      : m_handle(handle)
-  {
-  }
-  handle::handle(handle&& other)
-      : m_handle(other.m_handle)
-  {
-    other.m_handle = INVALID_HANDLE_VALUE;
-  }
+      handle::handle()
+          : m_handle(invalid_value())
+      {
+      }
+      handle::handle(handle_t handle)
+          : m_handle(handle)
+      {
+      }
+      handle::handle(handle&& other)
+          : m_handle(other.m_handle)
+      {
+        other.m_handle = INVALID_HANDLE_VALUE;
+      }
 
-  handle::~handle()
-  {
-    CloseHandle(m_handle);
-  }
+      handle::~handle()
+      {
+        CloseHandle(m_handle);
+      }
 
-  handle& handle::operator=(handle&& other)
-  {
-    m_handle       = other.m_handle;
-    other.m_handle = nullptr;
-    return *this;
-  }
+      handle& handle::operator=(handle&& other)
+      {
+        m_handle       = other.m_handle;
+        other.m_handle = nullptr;
+        return *this;
+      }
 
-  bool handle::is_valid() const
-  {
-    return m_handle != invalid_value();
-  }
-  handle::operator bool() const
-  {
-    return is_valid();
-  }
+      bool handle::is_valid() const
+      {
+        return m_handle != invalid_value();
+      }
+      handle::operator bool() const
+      {
+        return is_valid();
+      }
 
-  handle_t handle::invalid_value()
-  {
-    return INVALID_HANDLE_VALUE;
-  }
-} // namespace win
-REX_RSL_END_NAMESPACE
+      handle_t handle::invalid_value()
+      {
+        return INVALID_HANDLE_VALUE;
+      }
+    } // namespace win
+  }   // namespace v1
+} // namespace rsl

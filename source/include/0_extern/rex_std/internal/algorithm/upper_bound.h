@@ -16,58 +16,62 @@
 #include "rex_std/internal/iterator/distance.h"
 #include "rex_std/internal/iterator/iterator_traits.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <class ForwardIterator, class T>
-ForwardIterator upper_bound(ForwardIterator first, ForwardIterator last, const T& value)
+namespace rsl
 {
-  ForwardIterator it;
-  using diff_type = typename iterator_traits<ForwardIterator>::difference_type;
-  diff_type count = 0;
-  diff_type step  = 0;
-  count           = rsl::distance(first, last);
-
-  while(count > 0)
+  inline namespace v1
   {
-    it   = first;
-    step = count / 2;
-    rsl::advance(it, step);
-    if(!(value < *it))
-    {
-      first = ++it;
-      count -= step + 1;
-    }
-    else
-    {
-      count = step;
-    }
-  }
-  return first;
-}
 
-template <class ForwardIterator, class T, class Compare>
-ForwardIterator upper_bound(ForwardIterator first, ForwardIterator last, const T& value, Compare comp)
-{
-  ForwardIterator it;
-  typename iterator_traits<ForwardIterator>::difference_type count, step;
-  count = rsl::distance(first, last);
-
-  while(count > 0)
-  {
-    it   = first;
-    step = count / 2;
-    rsl::advance(it, step);
-    if(!comp(value, *it))
+    template <class ForwardIterator, class T>
+    ForwardIterator upper_bound(ForwardIterator first, ForwardIterator last, const T& value)
     {
-      first = ++it;
-      count -= step + 1;
-    }
-    else
-    {
-      count = step;
-    }
-  }
-  return first;
-}
+      ForwardIterator it;
+      using diff_type = typename iterator_traits<ForwardIterator>::difference_type;
+      diff_type count = 0;
+      diff_type step  = 0;
+      count           = rsl::distance(first, last);
 
-REX_RSL_END_NAMESPACE
+      while(count > 0)
+      {
+        it   = first;
+        step = count / 2;
+        rsl::advance(it, step);
+        if(!(value < *it))
+        {
+          first = ++it;
+          count -= step + 1;
+        }
+        else
+        {
+          count = step;
+        }
+      }
+      return first;
+    }
+
+    template <class ForwardIterator, class T, class Compare>
+    ForwardIterator upper_bound(ForwardIterator first, ForwardIterator last, const T& value, Compare comp)
+    {
+      ForwardIterator it;
+      typename iterator_traits<ForwardIterator>::difference_type count, step;
+      count = rsl::distance(first, last);
+
+      while(count > 0)
+      {
+        it   = first;
+        step = count / 2;
+        rsl::advance(it, step);
+        if(!comp(value, *it))
+        {
+          first = ++it;
+          count -= step + 1;
+        }
+        else
+        {
+          count = step;
+        }
+      }
+      return first;
+    }
+
+  } // namespace v1
+} // namespace rsl

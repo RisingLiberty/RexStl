@@ -211,8 +211,14 @@
 #endif
 
 #ifndef FMT_BEGIN_NAMESPACE
-  #define FMT_BEGIN_NAMESPACE REX_RSL_BEGIN_NAMESPACE
-  #define FMT_END_NAMESPACE   REX_RSL_END_NAMESPACE
+  #define FMT_BEGIN_NAMESPACE                                                                                                                                                                                                                            \
+    namespace rsl                                                                                                                                                                                                                                        \
+    {                                                                                                                                                                                                                                                    \
+      inline namespace v1                                                                                                                                                                                                                                \
+      {
+  #define FMT_END_NAMESPACE                                                                                                                                                                                                                              \
+    }                                                                                                                                                                                                                                                    \
+    }
 
 #endif
 

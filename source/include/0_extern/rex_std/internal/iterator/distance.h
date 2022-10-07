@@ -16,40 +16,44 @@
 #include "rex_std/internal/iterator/iterator_traits.h"
 #include "rex_std/internal/type_traits/is_base_of.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-namespace internal
+namespace rsl
 {
-  template <typename Iterator>
-  auto random_access_distance(Iterator lhs, Iterator rhs)
+  inline namespace v1
   {
-    return rhs - lhs;
-  }
 
-  template <typename Iterator>
-  auto non_random_access_distance(Iterator lhs, Iterator rhs)
-  {
-    typename iterator_traits<Iterator>::difference_type result = 0;
-    while(lhs != rhs)
+    namespace internal
     {
-      ++lhs;
-      ++result;
+      template <typename Iterator>
+      auto random_access_distance(Iterator lhs, Iterator rhs)
+      {
+        return rhs - lhs;
+      }
+
+      template <typename Iterator>
+      auto non_random_access_distance(Iterator lhs, Iterator rhs)
+      {
+        typename iterator_traits<Iterator>::difference_type result = 0;
+        while(lhs != rhs)
+        {
+          ++lhs;
+          ++result;
+        }
+        return result;
+      }
+    } // namespace internal
+
+    template <typename Iterator>
+    auto distance(Iterator lhs, Iterator rhs)
+    {
+      if constexpr(is_base_of_v<random_access_iterator_tag, typename iterator_traits<Iterator>::iterator_category>)
+      {
+        return internal::random_access_distance(lhs, rhs);
+      }
+      else
+      {
+        return internal::non_random_access_distance(lhs, rhs);
+      }
     }
-    return result;
-  }
-} // namespace internal
 
-template <typename Iterator>
-auto distance(Iterator lhs, Iterator rhs)
-{
-  if constexpr(is_base_of_v<random_access_iterator_tag, typename iterator_traits<Iterator>::iterator_category>)
-  {
-    return internal::random_access_distance(lhs, rhs);
-  }
-  else
-  {
-    return internal::non_random_access_distance(lhs, rhs);
-  }
-}
-
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl

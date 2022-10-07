@@ -21,20 +21,24 @@
 
 #include <stack>
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
-class allocator;
+    class allocator;
 
-template <typename T, typename Container = rsl::deque<T, allocator>>
-REX_STD_TEMPLATED_CLASS_ALIAS(stack, T, Container);
+    template <typename T, typename Container = rsl::deque<T, allocator>>
+    REX_STD_TEMPLATED_CLASS_ALIAS(stack, T, Container);
 
-REX_STD_FUNC_ALIAS(operator==);
-REX_STD_FUNC_ALIAS(operator!=);
-REX_STD_FUNC_ALIAS(operator<);
-REX_STD_FUNC_ALIAS(operator<=);
-REX_STD_FUNC_ALIAS(operator>);
-REX_STD_FUNC_ALIAS(operator>=);
+    REX_STD_FUNC_ALIAS(operator==);
+    REX_STD_FUNC_ALIAS(operator!=);
+    REX_STD_FUNC_ALIAS(operator<);
+    REX_STD_FUNC_ALIAS(operator<=);
+    REX_STD_FUNC_ALIAS(operator>);
+    REX_STD_FUNC_ALIAS(operator>=);
 
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl
 
 #include "rex_std/enable_std_checking.h"

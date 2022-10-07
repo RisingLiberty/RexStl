@@ -18,15 +18,19 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-namespace chrono
+namespace rsl
 {
-  template <typename Rep>
-  struct treat_as_floating_point : public is_floating_point<Rep>
+  inline namespace v1
   {
-  };
+    namespace chrono
+    {
+      template <typename Rep>
+      struct treat_as_floating_point : public is_floating_point<Rep>
+      {
+      };
 
-  template <typename Rep>
-  inline constexpr bool tread_at_floating_point_v = treat_as_floating_point<Rep>::value;
-} // namespace chrono
-REX_RSL_END_NAMESPACE
+      template <typename Rep>
+      inline constexpr bool tread_at_floating_point_v = treat_as_floating_point<Rep>::value;
+    } // namespace chrono
+  }   // namespace v1
+} // namespace rsl

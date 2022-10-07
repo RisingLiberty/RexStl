@@ -19,35 +19,39 @@
 
   #include <spanstream>
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
-template <typename CharT, typename Traits = char_traits<CharT>>
-REX_STD_TEMPLATED_CLASS_ALIAS(basic_spanbuf, CharT, Traits);
+    template <typename CharT, typename Traits = char_traits<CharT>>
+    REX_STD_TEMPLATED_CLASS_ALIAS(basic_spanbuf, CharT, Traits);
 
-template <typename CharT, typename Traits = char_traits<CharT>>
-REX_STD_TEMPLATED_CLASS_ALIAS(basic_ispanstream, CharT, Traits);
+    template <typename CharT, typename Traits = char_traits<CharT>>
+    REX_STD_TEMPLATED_CLASS_ALIAS(basic_ispanstream, CharT, Traits);
 
-template <typename CharT, typename Traits = char_traits<CharT>>
-REX_STD_TEMPLATED_CLASS_ALIAS(basic_ospanstream, CharT, Traits);
+    template <typename CharT, typename Traits = char_traits<CharT>>
+    REX_STD_TEMPLATED_CLASS_ALIAS(basic_ospanstream, CharT, Traits);
 
-template <typename CharT, typename Traits = char_traits<CharT>>
-REX_STD_TEMPLATED_CLASS_ALIAS(basic_spanstream, CharT, Traits);
+    template <typename CharT, typename Traits = char_traits<CharT>>
+    REX_STD_TEMPLATED_CLASS_ALIAS(basic_spanstream, CharT, Traits);
 
-REX_STD_CLASS_ALIAS(spanbuf);
-REX_STD_CLASS_ALIAS(wspanbuf);
+    REX_STD_CLASS_ALIAS(spanbuf);
+    REX_STD_CLASS_ALIAS(wspanbuf);
 
-REX_STD_CLASS_ALIAS(ispanstream);
-REX_STD_CLASS_ALIAS(wispanstream);
+    REX_STD_CLASS_ALIAS(ispanstream);
+    REX_STD_CLASS_ALIAS(wispanstream);
 
-REX_STD_CLASS_ALIAS(ospanstream);
-REX_STD_CLASS_ALIAS(wospanstream);
+    REX_STD_CLASS_ALIAS(ospanstream);
+    REX_STD_CLASS_ALIAS(wospanstream);
 
-REX_STD_CLASS_ALIAS(spanstream);
-REX_STD_CLASS_ALIAS(wspanstream);
+    REX_STD_CLASS_ALIAS(spanstream);
+    REX_STD_CLASS_ALIAS(wspanstream);
 
-// REX_STD_FUNC_ALIAS(swap); // Doesn't work because rsl has its own swap
+    // REX_STD_FUNC_ALIAS(swap); // Doesn't work because rsl has its own swap
 
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl
 
   #include "rex_std/enable_std_checking.h"
 

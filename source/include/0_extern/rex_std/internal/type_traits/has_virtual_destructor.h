@@ -14,14 +14,18 @@
 
 #include "rex_std/internal/type_traits/integral_constant.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-struct has_virtual_destructor : public Boolconstant<__has_virtual_destructor(T)>
+namespace rsl
 {
-};
+  inline namespace v1
+  {
 
-template <typename T>
-inline constexpr bool has_virtual_destructor_v = has_virtual_destructor<T>::value;
+    template <typename T>
+    struct has_virtual_destructor : public Boolconstant<__has_virtual_destructor(T)>
+    {
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    inline constexpr bool has_virtual_destructor_v = has_virtual_destructor<T>::value;
+
+  } // namespace v1
+} // namespace rsl

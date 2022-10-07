@@ -16,14 +16,18 @@
 #include "rex_std/internal/type_traits/is_trivially_copyable.h"
 #include "rex_std/internal/type_traits/is_trivially_default_constructible.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-struct is_trivial : public bool_constant<is_trivially_copyable_v<T> || is_trivially_default_constructible_v<T>>
+namespace rsl
 {
-};
+  inline namespace v1
+  {
 
-template <typename T>
-inline constexpr bool is_trivial_v = is_trivial<T>::value;
+    template <typename T>
+    struct is_trivial : public bool_constant<is_trivially_copyable_v<T> || is_trivially_default_constructible_v<T>>
+    {
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    inline constexpr bool is_trivial_v = is_trivial<T>::value;
+
+  } // namespace v1
+} // namespace rsl

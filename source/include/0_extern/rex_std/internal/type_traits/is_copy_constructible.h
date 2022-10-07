@@ -15,14 +15,18 @@
 #include "rex_std/internal/type_traits/add_lvalue_reference.h"
 #include "rex_std/internal/type_traits/is_constructible.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-struct is_copy_constructible : bool_constant<__is_constructible(T, add_lvalue_reference_t<const T>)>
+namespace rsl
 {
-};
+  inline namespace v1
+  {
 
-template <typename T>
-inline constexpr bool is_copy_constructible_v = is_copy_constructible<T>::value;
+    template <typename T>
+    struct is_copy_constructible : bool_constant<__is_constructible(T, add_lvalue_reference_t<const T>)>
+    {
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    inline constexpr bool is_copy_constructible_v = is_copy_constructible<T>::value;
+
+  } // namespace v1
+} // namespace rsl

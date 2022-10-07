@@ -12,13 +12,17 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-namespace internal
+namespace rsl
 {
-  struct Unused
+  inline namespace v1
   {
-  };
-} // namespace internal
 
-REX_RSL_END_NAMESPACE
+    namespace internal
+    {
+      struct Unused
+      {
+      };
+    } // namespace internal
+
+  } // namespace v1
+} // namespace rsl

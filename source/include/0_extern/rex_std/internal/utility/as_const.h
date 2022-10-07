@@ -14,15 +14,19 @@
 
 #include "rex_std/internal/type_traits/add_const.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-constexpr add_const_t<T>& as_const(T& t)
+namespace rsl
 {
-  return t;
-}
+  inline namespace v1
+  {
 
-template <typename T>
-void as_const(const T&&) = delete;
+    template <typename T>
+    constexpr add_const_t<T>& as_const(T& t)
+    {
+      return t;
+    }
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    void as_const(const T&&) = delete;
+
+  } // namespace v1
+} // namespace rsl

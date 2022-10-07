@@ -14,17 +14,21 @@
 
 #include "rex_std/internal/type_traits/integral_constant.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename>
-inline constexpr bool is_volatile_v = false;
-
-template <typename T>
-inline constexpr bool is_volatile_v<volatile T> = true;
-
-template <typename T>
-struct is_volatile : public bool_constant<is_volatile_v<T>>
+namespace rsl
 {
-};
+  inline namespace v1
+  {
 
-REX_RSL_END_NAMESPACE
+    template <typename>
+    inline constexpr bool is_volatile_v = false;
+
+    template <typename T>
+    inline constexpr bool is_volatile_v<volatile T> = true;
+
+    template <typename T>
+    struct is_volatile : public bool_constant<is_volatile_v<T>>
+    {
+    };
+
+  } // namespace v1
+} // namespace rsl

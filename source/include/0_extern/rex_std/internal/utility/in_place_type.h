@@ -12,14 +12,18 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-struct in_place_type_t
+namespace rsl
 {
-  explicit in_place_type_t() = default;
-};
-template <typename T>
-constexpr in_place_type_t in_place {};
+  inline namespace v1
+  {
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    struct in_place_type_t
+    {
+      explicit in_place_type_t() = default;
+    };
+    template <typename T>
+    constexpr in_place_type_t in_place {};
+
+  } // namespace v1
+} // namespace rsl

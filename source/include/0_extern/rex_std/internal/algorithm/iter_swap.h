@@ -14,12 +14,16 @@
 
 #include "rex_std/internal/utility/swap.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename Iterator>
-void iter_swap(Iterator lhs, Iterator rhs)
+namespace rsl
 {
-  rsl::swap(*lhs, *rhs);
-}
+  inline namespace v1
+  {
 
-REX_RSL_END_NAMESPACE
+    template <typename Iterator>
+    void iter_swap(Iterator lhs, Iterator rhs)
+    {
+      rsl::swap(*lhs, *rhs);
+    }
+
+  } // namespace v1
+} // namespace rsl

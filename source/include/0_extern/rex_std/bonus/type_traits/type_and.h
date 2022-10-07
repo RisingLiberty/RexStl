@@ -12,21 +12,25 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <bool B1, bool B2, bool B3 = true, bool B4 = true, bool B5 = true>
-struct type_and;
-
-template <bool B1, bool B2, bool B3, bool B4, bool B5>
-struct type_and
+namespace rsl
 {
-  static constexpr bool value = false;
-};
+  inline namespace v1
+  {
 
-template <>
-struct type_and<true, true, true, true, true>
-{
-  static constexpr bool value = true;
-};
+    template <bool B1, bool B2, bool B3 = true, bool B4 = true, bool B5 = true>
+    struct type_and;
 
-REX_RSL_END_NAMESPACE
+    template <bool B1, bool B2, bool B3, bool B4, bool B5>
+    struct type_and
+    {
+      static constexpr bool value = false;
+    };
+
+    template <>
+    struct type_and<true, true, true, true, true>
+    {
+      static constexpr bool value = true;
+    };
+
+  } // namespace v1
+} // namespace rsl

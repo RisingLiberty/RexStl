@@ -16,14 +16,18 @@
 #include "rex_std/internal/type_traits/integral_constant.h"
 #include "rex_std/internal/type_traits/remove_cv.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-struct is_null_pointer : public bool_constant<rsl::is_same_v<remove_cv_t<T>, nullptr_t>>
+namespace rsl
 {
-};
+  inline namespace v1
+  {
 
-template <typename T>
-inline constexpr bool is_null_pointer_v = is_null_pointer<T>::value;
+    template <typename T>
+    struct is_null_pointer : public bool_constant<rsl::is_same_v<remove_cv_t<T>, nullptr_t>>
+    {
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    inline constexpr bool is_null_pointer_v = is_null_pointer<T>::value;
+
+  } // namespace v1
+} // namespace rsl

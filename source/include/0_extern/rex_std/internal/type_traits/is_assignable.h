@@ -14,14 +14,18 @@
 
 #include "rex_std/internal/type_traits/integral_constant.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T, typename U>
-struct is_assignable : bool_constant<__is_assignable(T, U)>
+namespace rsl
 {
-};
+  inline namespace v1
+  {
 
-template <typename T, typename U>
-inline constexpr bool is_assignable_v = is_assignable<T, U>::value;
+    template <typename T, typename U>
+    struct is_assignable : bool_constant<__is_assignable(T, U)>
+    {
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T, typename U>
+    inline constexpr bool is_assignable_v = is_assignable<T, U>::value;
+
+  } // namespace v1
+} // namespace rsl

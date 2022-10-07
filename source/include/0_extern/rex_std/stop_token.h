@@ -19,19 +19,23 @@
 
   #include <stop_token>
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
-REX_STD_CLASS_ALIAS(stop_token);
-REX_STD_CLASS_ALIAS(stop_source);
+    REX_STD_CLASS_ALIAS(stop_token);
+    REX_STD_CLASS_ALIAS(stop_source);
 
-template <typename Callback>
-REX_STD_TEMPLATED_CLASS_ALIAS(stop_callback, Callback);
+    template <typename Callback>
+    REX_STD_TEMPLATED_CLASS_ALIAS(stop_callback, Callback);
 
-REX_STD_CLASS_ALIAS(nostopstate_t);
+    REX_STD_CLASS_ALIAS(nostopstate_t);
 
-REX_STD_OBJECT_ALIAS(nostopstate);
+    REX_STD_OBJECT_ALIAS(nostopstate);
 
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl
 
   #include "rex_std/enable_std_checking.h"
 

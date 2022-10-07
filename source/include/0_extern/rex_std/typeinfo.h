@@ -18,10 +18,14 @@
 
 #include <typeinfo>
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
-REX_STD_CLASS_ALIAS(type_info);
+    REX_STD_CLASS_ALIAS(type_info);
 
-REX_RSL_END_NAMESPACE
+  }
+} // namespace rsl
 
 #include "rex_std/enable_std_checking.h"

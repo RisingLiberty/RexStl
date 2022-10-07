@@ -14,12 +14,16 @@
 
 #include "rex_std/internal/algorithm/find_if.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename InputIterator, typename Predicate>
-bool none_of(const InputIterator first, const InputIterator last, Predicate predicate)
+namespace rsl
 {
-  return find_if(first, last, predicate) == last;
-}
+  inline namespace v1
+  {
 
-REX_RSL_END_NAMESPACE
+    template <typename InputIterator, typename Predicate>
+    bool none_of(const InputIterator first, const InputIterator last, Predicate predicate)
+    {
+      return find_if(first, last, predicate) == last;
+    }
+
+  } // namespace v1
+} // namespace rsl

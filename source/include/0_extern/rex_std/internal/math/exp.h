@@ -14,11 +14,15 @@
 
 #include "rex_std_extra/math/pow.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-constexpr float32 exp(const card32 exp)
+namespace rsl
 {
-  return pow(Euler, exp);
-}
+  inline namespace v1
+  {
 
-REX_RSL_END_NAMESPACE
+    constexpr float32 exp(const card32 exp)
+    {
+      return pow(Euler, exp);
+    }
+
+  } // namespace v1
+} // namespace rsl

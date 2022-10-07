@@ -19,11 +19,15 @@
 
 #include <typeindex>
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
-REX_STD_CLASS_ALIAS(type_index);
-template <typename T>
-struct hash;
+    REX_STD_CLASS_ALIAS(type_index);
+    template <typename T>
+    struct hash;
 
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl
 #include "rex_std/enable_std_checking.h"

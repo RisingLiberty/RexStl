@@ -14,14 +14,18 @@
 
 #include "rex_std/bonus/types.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-struct mod_range_hashing
+namespace rsl
 {
-  uint32 operator()(count_t r, uint32 n) const
+  inline namespace v1
   {
-    return r % n;
-  }
-};
 
-REX_RSL_END_NAMESPACE
+    struct mod_range_hashing
+    {
+      uint32 operator()(count_t r, uint32 n) const
+      {
+        return r % n;
+      }
+    };
+
+  } // namespace v1
+} // namespace rsl

@@ -15,35 +15,39 @@
 #include <Windows.h>
 
 /// [06/Aug/2022] RSL Comment: We wrap the functions in internal calls to avoid C28113 on MSVC
-REX_RSL_BEGIN_NAMESPACE
-namespace internal
+namespace rsl
 {
-  int16 atomic_increment(int16* data)
+  inline namespace v1
   {
-    return _InterlockedIncrement16(data);
-  }
-  int32 atomic_increment(long* data)
-  {
-    return _InterlockedIncrement(data);
-  }
-  int64 atomic_increment(int64* data)
-  {
-    return _InterlockedIncrement64(data);
-  }
-  uint16 atomic_increment(uint16* data)
-  {
-    return static_cast<uint16>(atomic_increment(reinterpret_cast<int16*>(data))); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
-  }
-  uint32 atomic_increment(ulong* data)
-  {
-    return _InterlockedIncrement(data);
-  }
-  uint64 atomic_increment(uint64* data)
-  {
-    return static_cast<uint64>(atomic_increment(reinterpret_cast<int64*>(data))); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
-  }
-} // namespace internal
-REX_RSL_END_NAMESPACE
+    namespace internal
+    {
+      int16 atomic_increment(int16* data)
+      {
+        return _InterlockedIncrement16(data);
+      }
+      int32 atomic_increment(long* data)
+      {
+        return _InterlockedIncrement(data);
+      }
+      int64 atomic_increment(int64* data)
+      {
+        return _InterlockedIncrement64(data);
+      }
+      uint16 atomic_increment(uint16* data)
+      {
+        return static_cast<uint16>(atomic_increment(reinterpret_cast<int16*>(data))); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+      }
+      uint32 atomic_increment(ulong* data)
+      {
+        return _InterlockedIncrement(data);
+      }
+      uint64 atomic_increment(uint64* data)
+      {
+        return static_cast<uint64>(atomic_increment(reinterpret_cast<int64*>(data))); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+      }
+    } // namespace internal
+  }   // namespace v1
+} // namespace rsl
 
 int8 rsl::atomic_increment(int8& val)
 {

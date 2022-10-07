@@ -15,27 +15,31 @@
 #include "rex_std/internal/type_traits/integral_constant.h"
 #include "rex_std/internal/type_traits/is_arithmetic.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-namespace internal
+namespace rsl
 {
-  template <typename T, bool = is_arithmetic_v<T>>
-  struct is_unsigned_helper : bool_constant<static_cast<T>((0) < static_cast<T>(-1))>
+  inline namespace v1
   {
-  };
 
-  template <typename T>
-  struct is_unsigned_helper<T, false> : false_type
-  {
-  };
-} // namespace internal
+    namespace internal
+    {
+      template <typename T, bool = is_arithmetic_v<T>>
+      struct is_unsigned_helper : bool_constant<static_cast<T>((0) < static_cast<T>(-1))>
+      {
+      };
 
-template <typename T>
-struct is_unsigned : public internal::is_unsigned_helper<T>
-{
-};
+      template <typename T>
+      struct is_unsigned_helper<T, false> : false_type
+      {
+      };
+    } // namespace internal
 
-template <typename T>
-inline constexpr bool is_unsigned_v = is_unsigned<T>::value;
+    template <typename T>
+    struct is_unsigned : public internal::is_unsigned_helper<T>
+    {
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    inline constexpr bool is_unsigned_v = is_unsigned<T>::value;
+
+  } // namespace v1
+} // namespace rsl

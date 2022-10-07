@@ -12,12 +12,16 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-void uninitialized_default_construct(T* ptr)
+namespace rsl
 {
-  new(ptr) T();
-}
+  inline namespace v1
+  {
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    void uninitialized_default_construct(T* ptr)
+    {
+      new(ptr) T();
+    }
+
+  } // namespace v1
+} // namespace rsl

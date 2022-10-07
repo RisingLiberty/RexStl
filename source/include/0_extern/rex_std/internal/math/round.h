@@ -12,12 +12,16 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-constexpr T round(const T x)
+namespace rsl
 {
-  return abs(x) - 0.5f < static_cast<int32>(abs(x)) ? sign(x) * static_cast<T>(static_cast<int32>(abs(x))) : static_cast<T>(static_cast<int32>(x) + sign(x) * 1);
-}
+  inline namespace v1
+  {
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    constexpr T round(const T x)
+    {
+      return abs(x) - 0.5f < static_cast<int32>(abs(x)) ? sign(x) * static_cast<T>(static_cast<int32>(abs(x))) : static_cast<T>(static_cast<int32>(x) + sign(x) * 1);
+    }
+
+  } // namespace v1
+} // namespace rsl

@@ -13,14 +13,18 @@
 #include "rex_std/bonus/types.h"
 #include "rex_std/internal/type_traits/integral_constant.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <intmax Val>
-struct sign_of : integral_constant<intmax, (Val < 0 ? -1 : 1)>
+namespace rsl
 {
-};
+  inline namespace v1
+  {
 
-template <intmax Val>
-constexpr intmax sign_of_v = sign_of<Val>::value;
+    template <intmax Val>
+    struct sign_of : integral_constant<intmax, (Val < 0 ? -1 : 1)>
+    {
+    };
 
-REX_RSL_END_NAMESPACE
+    template <intmax Val>
+    constexpr intmax sign_of_v = sign_of<Val>::value;
+
+  } // namespace v1
+} // namespace rsl

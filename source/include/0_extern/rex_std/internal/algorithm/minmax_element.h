@@ -14,81 +14,85 @@
 
 #include "rex_std/internal/functional/less.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename Iterator>
-struct min_max_element_result
+namespace rsl
 {
-  Iterator min;
-  Iterator max;
-};
-
-template <typename InputIterator>
-min_max_element_result<InputIterator> minmax_element(InputIterator first, InputIterator last)
-{
-  using value_type = InputIterator::value_type;
-  return minmax_element(first, last, rsl::less<value_type>());
-}
-
-template <typename InputIterator, typename Compare>
-min_max_element_result<InputIterator> minmax_element(InputIterator first, InputIterator last, Compare compare)
-{
-  auto min = first, max = first;
-
-  if(first == last || ++first == last)
-    return {min, max};
-
-  if(compare(*first, *min))
+  inline namespace v1
   {
-    min = first;
-  }
-  else
-  {
-    max = first;
-  }
 
-  while(++first != last)
-  {
-    auto it = first;
-    if(++first == last)
+    template <typename Iterator>
+    struct min_max_element_result
     {
-      if(compare(*it, *min))
-      {
-        min = it;
-      }
-      else if(!(compare(*it, *max)))
-      {
-        max = it;
-      }
-      break;
+      Iterator min;
+      Iterator max;
+    };
+
+    template <typename InputIterator>
+    min_max_element_result<InputIterator> minmax_element(InputIterator first, InputIterator last)
+    {
+      using value_type = InputIterator::value_type;
+      return minmax_element(first, last, rsl::less<value_type>());
     }
-    else
+
+    template <typename InputIterator, typename Compare>
+    min_max_element_result<InputIterator> minmax_element(InputIterator first, InputIterator last, Compare compare)
     {
-      if(compare(*first, *it))
+      auto min = first, max = first;
+
+      if(first == last || ++first == last)
+        return {min, max};
+
+      if(compare(*first, *min))
       {
-        if(compare(*first, *min))
-        {
-          min = first;
-        }
-        if(!(compare(*it, *max)))
-        {
-          max = it;
-        }
+        min = first;
       }
       else
       {
-        if(compare(*it, *min))
+        max = first;
+      }
+
+      while(++first != last)
+      {
+        auto it = first;
+        if(++first == last)
         {
-          min = it;
+          if(compare(*it, *min))
+          {
+            min = it;
+          }
+          else if(!(compare(*it, *max)))
+          {
+            max = it;
+          }
+          break;
         }
-        if(!(compare(*first, *max)))
+        else
         {
-          max = first;
+          if(compare(*first, *it))
+          {
+            if(compare(*first, *min))
+            {
+              min = first;
+            }
+            if(!(compare(*it, *max)))
+            {
+              max = it;
+            }
+          }
+          else
+          {
+            if(compare(*it, *min))
+            {
+              min = it;
+            }
+            if(!(compare(*first, *max)))
+            {
+              max = first;
+            }
+          }
         }
       }
+      return {min, max};
     }
-  }
-  return {min, max};
-}
 
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl

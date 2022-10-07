@@ -14,14 +14,18 @@
 
 #include "rex_std/internal/type_traits/integral_constant.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-struct is_enum : public bool_constant<__is_enum(T)>
+namespace rsl
 {
-};
+  inline namespace v1
+  {
 
-template <typename T>
-inline constexpr bool is_enum_v = is_enum<T>::value;
+    template <typename T>
+    struct is_enum : public bool_constant<__is_enum(T)>
+    {
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    inline constexpr bool is_enum_v = is_enum<T>::value;
+
+  } // namespace v1
+} // namespace rsl

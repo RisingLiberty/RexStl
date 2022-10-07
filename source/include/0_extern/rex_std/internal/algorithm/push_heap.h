@@ -17,10 +17,14 @@
 
 #include <algorithm>
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
-REX_STD_FUNC_ALIAS(push_heap);
+    REX_STD_FUNC_ALIAS(push_heap);
 
-REX_RSL_END_NAMESPACE
+  }
+} // namespace rsl
 
 #include "rex_std/enable_std_checking.h"

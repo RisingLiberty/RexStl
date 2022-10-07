@@ -14,6 +14,10 @@
 
 #include "rex_std/internal/type_traits/integral_constant.h"
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
-REX_RSL_END_NAMESPACE
+  }
+} // namespace rsl

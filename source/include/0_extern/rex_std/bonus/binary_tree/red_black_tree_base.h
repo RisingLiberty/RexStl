@@ -15,142 +15,146 @@
 #include "rex_std/internal/type_traits/is_empty.h"
 #include "rex_std/internal/utility/pair.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename Compare, bool /*bIsEmpty*/ = is_empty_v<Compare>>
-class RedBlackCompareEmptyBaseOpt
+namespace rsl
 {
-protected:
-  RedBlackCompareEmptyBaseOpt()
-      : m_compare()
+  inline namespace v1
   {
-  }
-  RedBlackCompareEmptyBaseOpt(const Compare& compare)
-      : m_compare(compare)
-  {
-  }
 
-  Compare& get_compare()
-  {
-    return m_compare;
-  }
-  const Compare& get_compare() const
-  {
-    return m_compare;
-  }
+    template <typename Compare, bool /*bIsEmpty*/ = is_empty_v<Compare>>
+    class RedBlackCompareEmptyBaseOpt
+    {
+    protected:
+      RedBlackCompareEmptyBaseOpt()
+          : m_compare()
+      {
+      }
+      RedBlackCompareEmptyBaseOpt(const Compare& compare)
+          : m_compare(compare)
+      {
+      }
 
-  template <typename T>
-  bool compare(const T& lhs, const T& rhs)
-  {
-    return m_compare(lhs, rhs);
-  }
+      Compare& get_compare()
+      {
+        return m_compare;
+      }
+      const Compare& get_compare() const
+      {
+        return m_compare;
+      }
 
-  template <typename T>
-  bool compare(const T& lhs, const T& rhs) const
-  {
-    return m_compare(lhs, rhs);
-  }
+      template <typename T>
+      bool compare(const T& lhs, const T& rhs)
+      {
+        return m_compare(lhs, rhs);
+      }
 
-private:
-  Compare m_compare;
-};
+      template <typename T>
+      bool compare(const T& lhs, const T& rhs) const
+      {
+        return m_compare(lhs, rhs);
+      }
 
-template <typename Compare>
-class RedBlackCompareEmptyBaseOpt<Compare, true> : private Compare
-{
-protected:
-  RedBlackCompareEmptyBaseOpt() {}
-  RedBlackCompareEmptyBaseOpt(const Compare& compare)
-      : Compare(compare)
-  {
-  }
+    private:
+      Compare m_compare;
+    };
 
-  Compare& get_compare()
-  {
-    return *this;
-  }
-  const Compare& get_compare() const
-  {
-    return *this;
-  }
+    template <typename Compare>
+    class RedBlackCompareEmptyBaseOpt<Compare, true> : private Compare
+    {
+    protected:
+      RedBlackCompareEmptyBaseOpt() {}
+      RedBlackCompareEmptyBaseOpt(const Compare& compare)
+          : Compare(compare)
+      {
+      }
 
-  template <typename T, typename U = T>
-  bool compare(const T& lhs, const U& rhs)
-  {
-    return Compare::operator()(lhs, rhs);
-  }
+      Compare& get_compare()
+      {
+        return *this;
+      }
+      const Compare& get_compare() const
+      {
+        return *this;
+      }
 
-  template <typename T, typename U = T>
-  bool compare(const T& lhs, const U& rhs) const
-  {
-    return Compare::operator()(lhs, rhs);
-  }
-};
+      template <typename T, typename U = T>
+      bool compare(const T& lhs, const U& rhs)
+      {
+        return Compare::operator()(lhs, rhs);
+      }
 
-template <typename Key, typename Value, typename Compare, typename ExtractKey, bool bUniqueKeys, typename RBTree>
-class RedBlackTreeBase : public RedBlackCompareEmptyBaseOpt<Compare>
-{
-public:
-  using extract_key = ExtractKey;
+      template <typename T, typename U = T>
+      bool compare(const T& lhs, const U& rhs) const
+      {
+        return Compare::operator()(lhs, rhs);
+      }
+    };
 
-  RedBlackTreeBase() = default;
-  RedBlackTreeBase(const Compare& compare)
-      : RedBlackCompareEmptyBaseOpt<Compare>(compare)
-  {
-  }
+    template <typename Key, typename Value, typename Compare, typename ExtractKey, bool bUniqueKeys, typename RBTree>
+    class RedBlackTreeBase : public RedBlackCompareEmptyBaseOpt<Compare>
+    {
+    public:
+      using extract_key = ExtractKey;
 
-protected:
-  using RedBlackCompareEmptyBaseOpt<Compare>::compare;
-  using RedBlackCompareEmptyBaseOpt<Compare>::get_compare;
-};
+      RedBlackTreeBase() = default;
+      RedBlackTreeBase(const Compare& compare)
+          : RedBlackCompareEmptyBaseOpt<Compare>(compare)
+      {
+      }
 
-template <typename Key, typename Value, typename Compare, typename ExtractKey, typename RBTree>
-class RedBlackTreeBase<Key, Value, Compare, ExtractKey, true, RBTree> : public RedBlackCompareEmptyBaseOpt<Compare>
-{
-public:
-  using extract_key = ExtractKey;
+    protected:
+      using RedBlackCompareEmptyBaseOpt<Compare>::compare;
+      using RedBlackCompareEmptyBaseOpt<Compare>::get_compare;
+    };
 
-  RedBlackTreeBase() = default;
-  RedBlackTreeBase(const Compare& compare)
-      : RedBlackCompareEmptyBaseOpt<Compare>(compare)
-  {
-  }
+    template <typename Key, typename Value, typename Compare, typename ExtractKey, typename RBTree>
+    class RedBlackTreeBase<Key, Value, Compare, ExtractKey, true, RBTree> : public RedBlackCompareEmptyBaseOpt<Compare>
+    {
+    public:
+      using extract_key = ExtractKey;
 
-protected:
-  using RedBlackCompareEmptyBaseOpt<Compare>::compare;
-  using RedBlackCompareEmptyBaseOpt<Compare>::get_compare;
-};
-template <typename Key, typename Value, typename Compare, typename RBTree>
-class RedBlackTreeBase<Key, Value, Compare, rsl::use_first<Value>, true, RBTree> : public RedBlackCompareEmptyBaseOpt<Compare>
-{
-public:
-  using extract_key = rsl::use_first<Value>;
+      RedBlackTreeBase() = default;
+      RedBlackTreeBase(const Compare& compare)
+          : RedBlackCompareEmptyBaseOpt<Compare>(compare)
+      {
+      }
 
-  RedBlackTreeBase() = default;
-  RedBlackTreeBase(const Compare& compare)
-      : RedBlackCompareEmptyBaseOpt<Compare>(compare)
-  {
-  }
+    protected:
+      using RedBlackCompareEmptyBaseOpt<Compare>::compare;
+      using RedBlackCompareEmptyBaseOpt<Compare>::get_compare;
+    };
+    template <typename Key, typename Value, typename Compare, typename RBTree>
+    class RedBlackTreeBase<Key, Value, Compare, rsl::use_first<Value>, true, RBTree> : public RedBlackCompareEmptyBaseOpt<Compare>
+    {
+    public:
+      using extract_key = rsl::use_first<Value>;
 
-protected:
-  using RedBlackCompareEmptyBaseOpt<Compare>::compare;
-  using RedBlackCompareEmptyBaseOpt<Compare>::get_compare;
-};
-template <typename Key, typename Value, typename Compare, typename RBTree>
-class RedBlackTreeBase<Key, Value, Compare, rsl::use_first<Value>, false, RBTree> : public RedBlackCompareEmptyBaseOpt<Compare>
-{
-public:
-  using extract_key = rsl::use_first<Value>;
+      RedBlackTreeBase() = default;
+      RedBlackTreeBase(const Compare& compare)
+          : RedBlackCompareEmptyBaseOpt<Compare>(compare)
+      {
+      }
 
-  RedBlackTreeBase() = default;
-  RedBlackTreeBase(const Compare& compare)
-      : RedBlackCompareEmptyBaseOpt<Compare>(compare)
-  {
-  }
+    protected:
+      using RedBlackCompareEmptyBaseOpt<Compare>::compare;
+      using RedBlackCompareEmptyBaseOpt<Compare>::get_compare;
+    };
+    template <typename Key, typename Value, typename Compare, typename RBTree>
+    class RedBlackTreeBase<Key, Value, Compare, rsl::use_first<Value>, false, RBTree> : public RedBlackCompareEmptyBaseOpt<Compare>
+    {
+    public:
+      using extract_key = rsl::use_first<Value>;
 
-protected:
-  using RedBlackCompareEmptyBaseOpt<Compare>::compare;
-  using RedBlackCompareEmptyBaseOpt<Compare>::get_compare;
-};
+      RedBlackTreeBase() = default;
+      RedBlackTreeBase(const Compare& compare)
+          : RedBlackCompareEmptyBaseOpt<Compare>(compare)
+      {
+      }
 
-REX_RSL_END_NAMESPACE
+    protected:
+      using RedBlackCompareEmptyBaseOpt<Compare>::compare;
+      using RedBlackCompareEmptyBaseOpt<Compare>::get_compare;
+    };
+
+  } // namespace v1
+} // namespace rsl

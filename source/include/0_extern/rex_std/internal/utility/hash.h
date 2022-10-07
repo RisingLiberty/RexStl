@@ -18,43 +18,47 @@
 
 /// [22/Aug/2022] RSL Comment: there's a hash functor in functional
 
-REX_RSL_BEGIN_NAMESPACE
-
-using HashID = uint64;
-
-// Uses MSVC hash implemenation
-// Do we need to hash arithmetic types?
-template <typename T>
-struct hash
+namespace rsl
 {
-  static_assert(is_arithmetic_v<T>, "base hash implementation only supports arithmetic types!");
-
-  REX_NO_DISCARD HashID operator()(const T& key) const
+  inline namespace v1
   {
-    fnv1a_append_value(s_fnv_offset_basis, key);
-  }
 
-private:
-  // accumulate range [first, first + count) into partial FNV-1a hash val
-  REX_NO_DISCARD HashID fnv1a_append_bytes(HashID val, const unsigned char* const first, const HashID count) noexcept
-  {
-    for(HashID idx = 0; idx < count; ++idx)
+    using HashID = uint64;
+
+    // Uses MSVC hash implemenation
+    // Do we need to hash arithmetic types?
+    template <typename T>
+    struct hash
     {
-      val ^= static_cast<HashID>(first[idx]);
-      val *= s_fnv_prime;
-    }
+      static_assert(is_arithmetic_v<T>, "base hash implementation only supports arithmetic types!");
 
-    return val;
-  }
+      REX_NO_DISCARD HashID operator()(const T& key) const
+      {
+        fnv1a_append_value(s_fnv_offset_basis, key);
+      }
 
-  REX_NO_DISCARD HashID fnv1a_append_value(const HashID val, const T& key)
-  {
-    return fnv1a_append_bytes(val, &reinterpret_cast<const unsigned char&>(key), sizeof(T));
-  }
+    private:
+      // accumulate range [first, first + count) into partial FNV-1a hash val
+      REX_NO_DISCARD HashID fnv1a_append_bytes(HashID val, const unsigned char* const first, const HashID count) noexcept
+      {
+        for(HashID idx = 0; idx < count; ++idx)
+        {
+          val ^= static_cast<HashID>(first[idx]);
+          val *= s_fnv_prime;
+        }
 
-private:
-  constexpr static HashID s_fnv_offset_basis = 14695981039346656037ULL;
-  constexpr static HashID s_fnv_prime        = 14695981039346656037ULL;
-};
+        return val;
+      }
 
-REX_RSL_END_NAMESPACE
+      REX_NO_DISCARD HashID fnv1a_append_value(const HashID val, const T& key)
+      {
+        return fnv1a_append_bytes(val, &reinterpret_cast<const unsigned char&>(key), sizeof(T));
+      }
+
+    private:
+      constexpr static HashID s_fnv_offset_basis = 14695981039346656037ULL;
+      constexpr static HashID s_fnv_prime        = 14695981039346656037ULL;
+    };
+
+  } // namespace v1
+} // namespace rsl

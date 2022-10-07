@@ -4704,7 +4704,7 @@ inline namespace literals
 
       **Example**::
 
-        using REX_RSL_BEGIN_NAMESPACE::literals;
+        using namespace rsl { inline namespace v1 {::literals;
         rsl::print("Elapsed time: {s:.2f} seconds", "s"_a=1.23);
       \endrst
      */

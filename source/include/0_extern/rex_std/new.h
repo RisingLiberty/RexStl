@@ -18,23 +18,27 @@
 
 #include <new>
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
-REX_STD_CLASS_ALIAS(nothrow_t);
-REX_STD_CLASS_ALIAS(align_val_t);
-REX_STD_CLASS_ALIAS(destroying_delete_t);
+    REX_STD_CLASS_ALIAS(nothrow_t);
+    REX_STD_CLASS_ALIAS(align_val_t);
+    REX_STD_CLASS_ALIAS(destroying_delete_t);
 
-REX_STD_CLASS_ALIAS(new_handler);
+    REX_STD_CLASS_ALIAS(new_handler);
 
-REX_STD_OBJECT_ALIAS(nothrow);
-REX_STD_OBJECT_ALIAS(destroying_delete);
-REX_STD_OBJECT_ALIAS(hardware_destructive_interference_size);
-REX_STD_OBJECT_ALIAS(hardware_constructive_interference_size);
+    REX_STD_OBJECT_ALIAS(nothrow);
+    REX_STD_OBJECT_ALIAS(destroying_delete);
+    REX_STD_OBJECT_ALIAS(hardware_destructive_interference_size);
+    REX_STD_OBJECT_ALIAS(hardware_constructive_interference_size);
 
-REX_STD_FUNC_ALIAS(get_new_handler);
-REX_STD_FUNC_ALIAS(set_new_handler);
-REX_STD_FUNC_ALIAS(launder);
+    REX_STD_FUNC_ALIAS(get_new_handler);
+    REX_STD_FUNC_ALIAS(set_new_handler);
+    REX_STD_FUNC_ALIAS(launder);
 
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl
 
 #include "rex_std/enable_std_checking.h"

@@ -12,22 +12,26 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
-template <typename C>
-auto rend(C& c) -> decltype(c.rend())
-{
-  return c.rend();
-}
-template <typename C>
-auto rend(const C& c) -> decltype(c.rend())
-{
-  return c.rend();
-}
-template <typename C>
-auto crend(const C& c) -> decltype(c.crend())
-{
-  return c.crend();
-}
+    template <typename C>
+    auto rend(C& c) -> decltype(c.rend())
+    {
+      return c.rend();
+    }
+    template <typename C>
+    auto rend(const C& c) -> decltype(c.rend())
+    {
+      return c.rend();
+    }
+    template <typename C>
+    auto crend(const C& c) -> decltype(c.crend())
+    {
+      return c.crend();
+    }
 
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl

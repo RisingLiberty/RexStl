@@ -15,21 +15,25 @@
 #include "rex_std/internal/type_traits/remove_cv.h"
 #include "rex_std/internal/type_traits/remove_reference.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-namespace internal
+namespace rsl
 {
-  template <typename T>
-  using RemoveCVRefHelper = remove_cv_t<remove_reference_t<T>>;
-} // namespace internal
+  inline namespace v1
+  {
 
-template <typename T>
-using remove_cvref_t = internal::RemoveCVRefHelper<T>;
+    namespace internal
+    {
+      template <typename T>
+      using RemoveCVRefHelper = remove_cv_t<remove_reference_t<T>>;
+    } // namespace internal
 
-template <typename T>
-struct remove_cvref
-{
-  using type = remove_cvref_t<T>;
-};
+    template <typename T>
+    using remove_cvref_t = internal::RemoveCVRefHelper<T>;
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    struct remove_cvref
+    {
+      using type = remove_cvref_t<T>;
+    };
+
+  } // namespace v1
+} // namespace rsl

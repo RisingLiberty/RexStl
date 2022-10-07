@@ -12,20 +12,24 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <bool Test, typename T = void>
-struct enable_if
+namespace rsl
 {
-};
+  inline namespace v1
+  {
 
-template <typename T>
-struct enable_if<true, T>
-{
-  using type = T;
-};
+    template <bool Test, typename T = void>
+    struct enable_if
+    {
+    };
 
-template <bool Test, typename T = void>
-using enable_if_t = typename enable_if<Test, T>::type;
+    template <typename T>
+    struct enable_if<true, T>
+    {
+      using type = T;
+    };
 
-REX_RSL_END_NAMESPACE
+    template <bool Test, typename T = void>
+    using enable_if_t = typename enable_if<Test, T>::type;
+
+  } // namespace v1
+} // namespace rsl

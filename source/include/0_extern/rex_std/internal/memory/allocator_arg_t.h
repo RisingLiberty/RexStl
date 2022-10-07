@@ -19,13 +19,17 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-struct allocator_arg_t
+namespace rsl
 {
-  explicit allocator_arg_t() = default;
-};
+  inline namespace v1
+  {
 
-inline constexpr allocator_arg_t allocator_arg = allocator_arg_t();
+    struct allocator_arg_t
+    {
+      explicit allocator_arg_t() = default;
+    };
 
-REX_RSL_END_NAMESPACE
+    inline constexpr allocator_arg_t allocator_arg = allocator_arg_t();
+
+  } // namespace v1
+} // namespace rsl

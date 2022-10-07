@@ -19,30 +19,34 @@
 
 #include "rex_std/bonus/defines.h"
 
-REX_RSL_BEGIN_NAMESPACE
-namespace win
+namespace rsl
 {
-  using handle_t = void*;
-
-  class handle
+  inline namespace v1
   {
-  public:
-    handle();
-    explicit handle(handle_t handle);
-    handle(const handle&) = delete;
-    handle(handle&& other);
-    ~handle();
+    namespace win
+    {
+      using handle_t = void*;
 
-    handle& operator=(const handle&) = delete;
-    handle& operator=(handle&& other);
+      class handle
+      {
+      public:
+        handle();
+        explicit handle(handle_t handle);
+        handle(const handle&) = delete;
+        handle(handle&& other);
+        ~handle();
 
-    bool is_valid() const;
-    explicit operator bool() const;
+        handle& operator=(const handle&) = delete;
+        handle& operator=(handle&& other);
 
-    static handle_t invalid_value();
+        bool is_valid() const;
+        explicit operator bool() const;
 
-  private:
-    handle_t m_handle;
-  };
-} // namespace win
-REX_RSL_END_NAMESPACE
+        static handle_t invalid_value();
+
+      private:
+        handle_t m_handle;
+      };
+    } // namespace win
+  }   // namespace v1
+} // namespace rsl

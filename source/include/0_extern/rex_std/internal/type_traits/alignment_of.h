@@ -14,14 +14,18 @@
 
 #include "rex_std/internal/type_traits/integral_constant.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-struct alignment_of : integral_constant<size_t, alignof(T)>
+namespace rsl
 {
-};
+  inline namespace v1
+  {
 
-template <typename T>
-inline constexpr size_t alignment_of_v = alignof(T);
+    template <typename T>
+    struct alignment_of : integral_constant<size_t, alignof(T)>
+    {
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    inline constexpr size_t alignment_of_v = alignof(T);
+
+  } // namespace v1
+} // namespace rsl

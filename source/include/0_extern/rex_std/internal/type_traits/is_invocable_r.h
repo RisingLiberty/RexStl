@@ -14,25 +14,29 @@
 
 #include "rex_std/bonus/type_traits/is_invocable_utils.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-namespace internal
+namespace rsl
 {
-  template <typename Rx, typename Callable, typename... Args>
-  using IsInvocableRHelper = typename internal::SelectInvokeTraits<Callable, Args...>::template IsInvocableRHelper<Rx>;
-
-  template <typename Rx, typename Callable, typename... Args>
-  struct IsInvocableRHelper : IsInvocableRHelper<Rx, Callable, Args...>
+  inline namespace v1
   {
-  };
-} // namespace internal
 
-template <typename Rx, typename Callable, typename... Args>
-struct is_invocable_r : internal::IsInvocableRHelper<Rx, Callable, Args>
-{
-};
+    namespace internal
+    {
+      template <typename Rx, typename Callable, typename... Args>
+      using IsInvocableRHelper = typename internal::SelectInvokeTraits<Callable, Args...>::template IsInvocableRHelper<Rx>;
 
-template <typename Rx, typename Callable, typename... Args>
-inline constexpr bool is_invocable_r_v = is_convertible<Rx, Callable, Args...>;
+      template <typename Rx, typename Callable, typename... Args>
+      struct IsInvocableRHelper : IsInvocableRHelper<Rx, Callable, Args...>
+      {
+      };
+    } // namespace internal
 
-REX_RSL_END_NAMESPACE
+    template <typename Rx, typename Callable, typename... Args>
+    struct is_invocable_r : internal::IsInvocableRHelper<Rx, Callable, Args>
+    {
+    };
+
+    template <typename Rx, typename Callable, typename... Args>
+    inline constexpr bool is_invocable_r_v = is_convertible<Rx, Callable, Args...>;
+
+  } // namespace v1
+} // namespace rsl

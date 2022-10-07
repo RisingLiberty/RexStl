@@ -12,15 +12,19 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename Iterator>
-struct emplace_result
+namespace rsl
 {
-  Iterator inserted_element;
-  bool emplace_successful;
-};
-template <typename Iterator>
-using insert_result = emplace_result<Iterator>;
+  inline namespace v1
+  {
 
-REX_RSL_END_NAMESPACE
+    template <typename Iterator>
+    struct emplace_result
+    {
+      Iterator inserted_element;
+      bool emplace_successful;
+    };
+    template <typename Iterator>
+    using insert_result = emplace_result<Iterator>;
+
+  } // namespace v1
+} // namespace rsl

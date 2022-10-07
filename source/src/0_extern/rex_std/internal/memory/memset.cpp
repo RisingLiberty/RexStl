@@ -14,16 +14,20 @@
 
 #include "rex_std/internal/memory/byte.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-void* memset(void* dest, char val, count_t len)
+namespace rsl
 {
-  rsl::byte* dest_b = static_cast<byte*>(dest);
-  while(len-- > 0)
+  inline namespace v1
   {
-    *dest_b++ = static_cast<byte>(val);
-  }
-  return dest;
-}
 
-REX_RSL_END_NAMESPACE
+    void* memset(void* dest, char val, count_t len)
+    {
+      rsl::byte* dest_b = static_cast<byte*>(dest);
+      while(len-- > 0)
+      {
+        *dest_b++ = static_cast<byte>(val);
+      }
+      return dest;
+    }
+
+  } // namespace v1
+} // namespace rsl

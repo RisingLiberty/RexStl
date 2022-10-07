@@ -17,33 +17,37 @@
 
 #include <Windows.h>
 
-REX_RSL_BEGIN_NAMESPACE
-
-namespace internal
+namespace rsl
 {
-  console_buf_impl::console_buf_impl(win::handle_t handle)
-      : m_handle(handle)
-      , m_get_area()
+  inline namespace v1
   {
-  }
 
-  console_buf_impl::~console_buf_impl()
-  {
-    m_get_area.deallocate();
-  }
+    namespace internal
+    {
+      console_buf_impl::console_buf_impl(win::handle_t handle)
+          : m_get_area()
+          , m_handle(handle)
+      {
+      }
 
-  streamsize console_buf_impl::xsgetn(char8* s, size_t elemSize, streamsize count)
-  {
-    DWORD num_read = 0;
-    ReadFile(m_handle, s, static_cast<DWORD>(count * elemSize), &num_read, nullptr);
-    return static_cast<streamsize>(num_read);
-  }
-  streamsize console_buf_impl::xsputn(const char8* s, size_t elemSize, streamsize count)
-  {
-    DWORD num_written = 0;
-    WriteFile(m_handle, s, static_cast<DWORD>(count * elemSize), &num_written, nullptr);
-    return static_cast<streamsize>(num_written);
-  }
+      console_buf_impl::~console_buf_impl()
+      {
+        m_get_area.deallocate();
+      }
 
-  REX_RSL_END_NAMESPACE
-} // namespace internal
+      streamsize console_buf_impl::xsgetn(char8* s, size_t elemSize, streamsize count)
+      {
+        DWORD num_read = 0;
+        ReadFile(m_handle, s, static_cast<DWORD>(count * elemSize), &num_read, nullptr);
+        return static_cast<streamsize>(num_read);
+      }
+      streamsize console_buf_impl::xsputn(const char8* s, size_t elemSize, streamsize count)
+      {
+        DWORD num_written = 0;
+        WriteFile(m_handle, s, static_cast<DWORD>(count * elemSize), &num_written, nullptr);
+        return static_cast<streamsize>(num_written);
+      }
+
+    } // namespace internal
+  }   // namespace v1
+} // namespace rsl

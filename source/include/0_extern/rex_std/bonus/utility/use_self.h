@@ -12,17 +12,21 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-struct use_self
+namespace rsl
 {
-  using result_type = T;
-
-  const T& operator()(const T& x) const
+  inline namespace v1
   {
-    return x;
-  }
-};
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    struct use_self
+    {
+      using result_type = T;
+
+      const T& operator()(const T& x) const
+      {
+        return x;
+      }
+    };
+
+  } // namespace v1
+} // namespace rsl

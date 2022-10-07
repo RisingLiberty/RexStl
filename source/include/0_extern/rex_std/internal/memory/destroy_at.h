@@ -15,22 +15,26 @@
 #include "rex_std/internal/memory/addressof.h"
 #include "rex_std/internal/type_traits/is_array.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-constexpr void destroy_at(T* p)
+namespace rsl
 {
-  if constexpr(rsl::is_array_v<T>)
+  inline namespace v1
   {
-    for(auto& elem: *p)
-    {
-      rsl::destroy_at(rsl::addressof(elem));
-    }
-  }
-  else
-  {
-    p->~T();
-  }
-}
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    constexpr void destroy_at(T* p)
+    {
+      if constexpr(rsl::is_array_v<T>)
+      {
+        for(auto& elem: *p)
+        {
+          rsl::destroy_at(rsl::addressof(elem));
+        }
+      }
+      else
+      {
+        p->~T();
+      }
+    }
+
+  } // namespace v1
+} // namespace rsl

@@ -17,7 +17,10 @@
 // Due to time constrains we have different priorities right now.
 // Should you have any issues with floating points when using rsl, please contact @nick.debreuck
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
 // Define the floating point precision used.
 //
@@ -92,4 +95,5 @@ REX_RSL_BEGIN_NAMESPACE
 
 #define REX_DECIMAL_DIG DBL_DECIMAL_DIG
 
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl

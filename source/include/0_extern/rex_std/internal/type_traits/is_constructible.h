@@ -12,14 +12,18 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T, typename... Args>
-struct is_constructible : public bool_constant<__is_constructible(T, Args...)>
+namespace rsl
 {
-};
+  inline namespace v1
+  {
 
-template <typename T, typename... Args>
-inline constexpr bool is_constructible_v = is_constructible<T, Args...>::value;
+    template <typename T, typename... Args>
+    struct is_constructible : public bool_constant<__is_constructible(T, Args...)>
+    {
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T, typename... Args>
+    inline constexpr bool is_constructible_v = is_constructible<T, Args...>::value;
+
+  } // namespace v1
+} // namespace rsl

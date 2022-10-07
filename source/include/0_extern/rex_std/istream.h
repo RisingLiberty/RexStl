@@ -14,9 +14,13 @@
 
 #include "rex_std/internal/istream/basic_istream.h"
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
-using istream  = basic_istream<char8>;
-using wistream = basic_istream<tchar>;
+    using istream  = basic_istream<char8>;
+    using wistream = basic_istream<tchar>;
 
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl

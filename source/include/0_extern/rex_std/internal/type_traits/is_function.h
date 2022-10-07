@@ -16,24 +16,28 @@
 #include "rex_std/internal/type_traits/is_const.h"
 #include "rex_std/internal/type_traits/is_reference.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-struct is_function : public bool_constant<!is_const_v<const T> && !is_reference_v<T>>
+namespace rsl
 {
-};
+  inline namespace v1
+  {
 
-template <typename T>
-struct is_function<T&> : public false_type
-{
-};
+    template <typename T>
+    struct is_function : public bool_constant<!is_const_v<const T> && !is_reference_v<T>>
+    {
+    };
 
-template <typename T>
-struct is_function<T&&> : public false_type
-{
-};
+    template <typename T>
+    struct is_function<T&> : public false_type
+    {
+    };
 
-template <typename T>
-inline constexpr bool is_function_v = is_function<T>::value;
+    template <typename T>
+    struct is_function<T&&> : public false_type
+    {
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    inline constexpr bool is_function_v = is_function<T>::value;
+
+  } // namespace v1
+} // namespace rsl

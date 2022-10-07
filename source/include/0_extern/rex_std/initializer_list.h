@@ -66,64 +66,72 @@ namespace std // needs to be in std namespace
   };
 } // namespace std
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-using initializer_list = std::initializer_list<T>;
-
-template <typename T>
-constexpr const T* begin(rsl::initializer_list<T> ilist) noexcept
+namespace rsl
 {
-  return ilist.begin();
-}
+  inline namespace v1
+  {
 
-template <typename T>
-constexpr const T* end(rsl::initializer_list<T> ilist) noexcept
-{
-  return ilist.end();
-}
+    template <typename T>
+    using initializer_list = std::initializer_list<T>;
 
-template <typename T>
-reverse_iterator<typename initializer_list<T>::iterator> rbegin(initializer_list<T> ilist)
-{
-  return reverse_iterator<typename initializer_list<T>::iterator>(ilist.end());
-}
-template <typename T>
-reverse_iterator<typename initializer_list<T>::const_iterator> crbegin(initializer_list<T> ilist)
-{
-  return reverse_iterator<typename initializer_list<T>::iterator>(ilist.end());
-}
+    template <typename T>
+    constexpr const T* begin(rsl::initializer_list<T> ilist) noexcept
+    {
+      return ilist.begin();
+    }
 
-template <typename T>
-reverse_iterator<typename initializer_list<T>::iterator> rend(initializer_list<T> ilist)
-{
-  return reverse_iterator<typename initializer_list<T>::iterator>(ilist.begin());
-}
-template <typename T>
-reverse_iterator<typename initializer_list<T>::const_iterator> crend(initializer_list<T> ilist)
-{
-  return reverse_iterator<typename initializer_list<T>::iterator>(ilist.begin());
-}
+    template <typename T>
+    constexpr const T* end(rsl::initializer_list<T> ilist) noexcept
+    {
+      return ilist.end();
+    }
 
-template <typename T>
-constexpr bool empty(rsl::initializer_list<T> ilist)
-{
-  return ilist.size() == 0;
-}
+    template <typename T>
+    reverse_iterator<typename initializer_list<T>::iterator> rbegin(initializer_list<T> ilist)
+    {
+      return reverse_iterator<typename initializer_list<T>::iterator>(ilist.end());
+    }
+    template <typename T>
+    reverse_iterator<typename initializer_list<T>::const_iterator> crbegin(initializer_list<T> ilist)
+    {
+      return reverse_iterator<typename initializer_list<T>::iterator>(ilist.end());
+    }
 
-template <typename T>
-constexpr T* data(rsl::initializer_list<T> ilist)
-{
-  return ilist.begin();
-}
+    template <typename T>
+    reverse_iterator<typename initializer_list<T>::iterator> rend(initializer_list<T> ilist)
+    {
+      return reverse_iterator<typename initializer_list<T>::iterator>(ilist.begin());
+    }
+    template <typename T>
+    reverse_iterator<typename initializer_list<T>::const_iterator> crend(initializer_list<T> ilist)
+    {
+      return reverse_iterator<typename initializer_list<T>::iterator>(ilist.begin());
+    }
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    constexpr bool empty(rsl::initializer_list<T> ilist)
+    {
+      return ilist.size() == 0;
+    }
+
+    template <typename T>
+    constexpr T* data(rsl::initializer_list<T> ilist)
+    {
+      return ilist.begin();
+    }
+
+  } // namespace v1
+} // namespace rsl
 #endif
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
-// needs to be defined again here, in case std::intializer_list is already included in another header
-template <typename T>
-using initializer_list = std::initializer_list<T>;
+    // needs to be defined again here, in case std::intializer_list is already included in another header
+    template <typename T>
+    using initializer_list = std::initializer_list<T>;
 
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl

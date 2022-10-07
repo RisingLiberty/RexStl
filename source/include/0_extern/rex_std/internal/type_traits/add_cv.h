@@ -15,15 +15,19 @@
 #include "rex_std/internal/type_traits/add_const.h"
 #include "rex_std/internal/type_traits/add_volatile.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-struct add_cv
+namespace rsl
 {
-  using type = add_const_t<add_volatile_t<T>>;
-};
+  inline namespace v1
+  {
 
-template <typename T>
-using add_cv_t = typename add_cv<T>::type;
+    template <typename T>
+    struct add_cv
+    {
+      using type = add_const_t<add_volatile_t<T>>;
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    using add_cv_t = typename add_cv<T>::type;
+
+  } // namespace v1
+} // namespace rsl

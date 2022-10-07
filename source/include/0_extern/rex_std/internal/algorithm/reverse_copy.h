@@ -15,17 +15,21 @@
 #include "rex_std/internal/iterator/iterator_tags.h"
 #include "rex_std/internal/type_traits/is_base_of.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <class InputIterator, class OutputIterator>
-constexpr OutputIterator reverse_copy(InputIterator first, InputIterator last, OutputIterator d_first)
+namespace rsl
 {
-  while(first != last)
+  inline namespace v1
   {
-    *(d_first++) = *(--last);
-  }
 
-  return d_first;
-}
+    template <class InputIterator, class OutputIterator>
+    constexpr OutputIterator reverse_copy(InputIterator first, InputIterator last, OutputIterator d_first)
+    {
+      while(first != last)
+      {
+        *(d_first++) = *(--last);
+      }
 
-REX_RSL_END_NAMESPACE
+      return d_first;
+    }
+
+  } // namespace v1
+} // namespace rsl

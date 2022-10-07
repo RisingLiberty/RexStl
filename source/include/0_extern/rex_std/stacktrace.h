@@ -19,26 +19,30 @@
 
   #include <stacktrace>
 
-REX_RSL_BEGIN_NAMESPACE
-
-REX_STD_CLASS_ALIAS(stacktrace_entry);
-
-template <typename Allocator>
-REX_STD_TEMPLATED_CLASS_ALIAS(basic_stacktrace, Allocator);
-
-REX_STD_CLASS_ALIAS(stacktrace);
-namespace pmr
+namespace rsl
 {
-  using stacktrace = std::pmr::stacktrace;
-}
+  inline namespace v1
+  {
 
-template <typename T>
-REX_STD_TEMPLATED_CLASS_ALIAS(hash, T);
+    REX_STD_CLASS_ALIAS(stacktrace_entry);
 
-REX_STD_FUNC_ALIAS(to_string);
-REX_STD_FUNC_ALIAS(operator<<);
+    template <typename Allocator>
+    REX_STD_TEMPLATED_CLASS_ALIAS(basic_stacktrace, Allocator);
 
-REX_RSL_END_NAMESPACE
+    REX_STD_CLASS_ALIAS(stacktrace);
+    namespace pmr
+    {
+      using stacktrace = std::pmr::stacktrace;
+    }
+
+    template <typename T>
+    REX_STD_TEMPLATED_CLASS_ALIAS(hash, T);
+
+    REX_STD_FUNC_ALIAS(to_string);
+    REX_STD_FUNC_ALIAS(operator<<);
+
+  } // namespace v1
+} // namespace rsl
 
   #include "rex_std/enable_std_checking.h"
 

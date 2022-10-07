@@ -25,13 +25,17 @@
 
 #include "rex_std/bonus/types.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-struct mbstate_t
+namespace rsl
 {
-  ulong wchar; // the byte to convert
-  uint16 byte;
-  uint16 state; // the current state of the conversion
-};
+  inline namespace v1
+  {
 
-REX_RSL_END_NAMESPACE
+    struct mbstate_t
+    {
+      ulong wchar; // the byte to convert
+      uint16 byte;
+      uint16 state; // the current state of the conversion
+    };
+
+  } // namespace v1
+} // namespace rsl

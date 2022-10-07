@@ -18,27 +18,31 @@
 
 #include <thread>
 
-REX_RSL_BEGIN_NAMESPACE
-
-namespace this_thread
+namespace rsl
 {
-  using namespace std::this_thread;
-}
+  inline namespace v1
+  {
 
-REX_STD_CLASS_ALIAS(thread);
-REX_STD_CLASS_ALIAS(jthread);
+    namespace this_thread
+    {
+      using namespace std::this_thread;
+    }
 
-// REX_STD_FUNC_ALIAS(swap); // Doesn't work because rsl has its own swap
+    REX_STD_CLASS_ALIAS(thread);
+    REX_STD_CLASS_ALIAS(jthread);
 
-REX_STD_FUNC_ALIAS(operator==);
-REX_STD_FUNC_ALIAS(operator!=);
-REX_STD_FUNC_ALIAS(operator<);
-REX_STD_FUNC_ALIAS(operator<=);
-REX_STD_FUNC_ALIAS(operator>);
-REX_STD_FUNC_ALIAS(operator>=);
+    // REX_STD_FUNC_ALIAS(swap); // Doesn't work because rsl has its own swap
 
-REX_STD_FUNC_ALIAS(operator<<);
+    REX_STD_FUNC_ALIAS(operator==);
+    REX_STD_FUNC_ALIAS(operator!=);
+    REX_STD_FUNC_ALIAS(operator<);
+    REX_STD_FUNC_ALIAS(operator<=);
+    REX_STD_FUNC_ALIAS(operator>);
+    REX_STD_FUNC_ALIAS(operator>=);
 
-REX_RSL_END_NAMESPACE
+    REX_STD_FUNC_ALIAS(operator<<);
+
+  } // namespace v1
+} // namespace rsl
 
 #include "rex_std/enable_std_checking.h"

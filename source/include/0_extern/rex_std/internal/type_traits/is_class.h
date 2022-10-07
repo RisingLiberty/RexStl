@@ -12,14 +12,18 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-struct is_class : public bool_constant<__is_class(T)>
+namespace rsl
 {
-};
+  inline namespace v1
+  {
 
-template <typename T>
-inline constexpr bool is_class_v = is_class<T>::value;
+    template <typename T>
+    struct is_class : public bool_constant<__is_class(T)>
+    {
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    inline constexpr bool is_class_v = is_class<T>::value;
+
+  } // namespace v1
+} // namespace rsl

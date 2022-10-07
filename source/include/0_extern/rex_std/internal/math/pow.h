@@ -14,14 +14,18 @@
 
 #include "rex_std/internal/type_traits/is_arithmetic.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-constexpr T pow(const T base, const card32 exp) // NOLINT(misc-no-recursion)
+namespace rsl
 {
-  static_assert(rsl::is_arithmetic_v<T>, "T must be of an arithmetic type");
+  inline namespace v1
+  {
 
-  return exp == 0 ? static_cast<T>(1) : base * pow(base, exp - 1);
-}
+    template <typename T>
+    constexpr T pow(const T base, const card32 exp) // NOLINT(misc-no-recursion)
+    {
+      static_assert(rsl::is_arithmetic_v<T>, "T must be of an arithmetic type");
 
-REX_RSL_END_NAMESPACE
+      return exp == 0 ? static_cast<T>(1) : base * pow(base, exp - 1);
+    }
+
+  } // namespace v1
+} // namespace rsl

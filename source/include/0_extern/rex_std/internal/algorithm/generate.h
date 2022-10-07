@@ -12,17 +12,21 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename InputIterator, typename Generator>
-void generate(InputIterator first, InputIterator last, Generator g)
+namespace rsl
 {
-  auto it = first;
-  while(it != last)
+  inline namespace v1
   {
-    *it = g();
-    ++it;
-  }
-}
 
-REX_RSL_END_NAMESPACE
+    template <typename InputIterator, typename Generator>
+    void generate(InputIterator first, InputIterator last, Generator g)
+    {
+      auto it = first;
+      while(it != last)
+      {
+        *it = g();
+        ++it;
+      }
+    }
+
+  } // namespace v1
+} // namespace rsl

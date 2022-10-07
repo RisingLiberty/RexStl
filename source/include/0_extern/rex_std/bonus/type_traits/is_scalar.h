@@ -19,31 +19,35 @@
 #include "rex_std/internal/type_traits/is_member_pointer.h"
 #include "rex_std/internal/type_traits/is_pointer.h"
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
-template <typename T>
-struct is_scalar : public bool_constant<is_arithmetic_v<T> || is_enum_v<T> || is_pointer_v<T> || is_member_pointer_v<T> || is_null_pointer_v<T>>
-{
-};
+    template <typename T>
+    struct is_scalar : public bool_constant<is_arithmetic_v<T> || is_enum_v<T> || is_pointer_v<T> || is_member_pointer_v<T> || is_null_pointer_v<T>>
+    {
+    };
 
-template <typename T>
-struct is_scalar<T*> : public true_type
-{
-};
-template <typename T>
-struct is_scalar<T* const> : public true_type
-{
-};
-template <typename T>
-struct is_scalar<T* volatile> : public true_type
-{
-};
-template <typename T>
-struct is_scalar<T* const volatile> : public true_type
-{
-};
+    template <typename T>
+    struct is_scalar<T*> : public true_type
+    {
+    };
+    template <typename T>
+    struct is_scalar<T* const> : public true_type
+    {
+    };
+    template <typename T>
+    struct is_scalar<T* volatile> : public true_type
+    {
+    };
+    template <typename T>
+    struct is_scalar<T* const volatile> : public true_type
+    {
+    };
 
-template <typename T>
-inline constexpr bool is_scalar_v = is_scalar<T>::value;
+    template <typename T>
+    inline constexpr bool is_scalar_v = is_scalar<T>::value;
 
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl

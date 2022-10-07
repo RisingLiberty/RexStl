@@ -12,38 +12,42 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename InputIterator>
-InputIterator max_element(InputIterator first, InputIterator last)
+namespace rsl
 {
-  auto largest = first++;
-  auto it      = first;
-  while(it != last)
+  inline namespace v1
   {
-    if(*it > *largest)
+
+    template <typename InputIterator>
+    InputIterator max_element(InputIterator first, InputIterator last)
     {
-      largest = it;
+      auto largest = first++;
+      auto it      = first;
+      while(it != last)
+      {
+        if(*it > *largest)
+        {
+          largest = it;
+        }
+      }
+
+      return largest;
     }
-  }
 
-  return largest;
-}
-
-template <typename InputIterator, typename Compare>
-InputIterator max_element(InputIterator first, InputIterator last, Compare comp)
-{
-  auto largest = first++;
-  auto it      = first;
-  while(it != last)
-  {
-    if(comp(*it, largest) == false)
+    template <typename InputIterator, typename Compare>
+    InputIterator max_element(InputIterator first, InputIterator last, Compare comp)
     {
-      largest = it;
+      auto largest = first++;
+      auto it      = first;
+      while(it != last)
+      {
+        if(comp(*it, largest) == false)
+        {
+          largest = it;
+        }
+      }
+
+      return largest;
     }
-  }
 
-  return largest;
-}
-
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl

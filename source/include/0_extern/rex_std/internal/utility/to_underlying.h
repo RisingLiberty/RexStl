@@ -15,12 +15,16 @@
 #include "rex_std/bonus/defines.h"
 #include "rex_std/internal/type_traits/underlying_type.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename Enum>
-constexpr underlying_type_t<Enum> to_underlying(Enum e)
+namespace rsl
 {
-  return static_cast<underlying_type_t<Enum>>(e);
-}
+  inline namespace v1
+  {
 
-REX_RSL_END_NAMESPACE
+    template <typename Enum>
+    constexpr underlying_type_t<Enum> to_underlying(Enum e)
+    {
+      return static_cast<underlying_type_t<Enum>>(e);
+    }
+
+  } // namespace v1
+} // namespace rsl

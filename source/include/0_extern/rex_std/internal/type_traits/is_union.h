@@ -12,14 +12,18 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-struct is_union : public bool_constant<__is_union(T)>
+namespace rsl
 {
-};
+  inline namespace v1
+  {
 
-template <typename T>
-inline constexpr bool is_union_v = is_union<T>::value;
+    template <typename T>
+    struct is_union : public bool_constant<__is_union(T)>
+    {
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    inline constexpr bool is_union_v = is_union<T>::value;
+
+  } // namespace v1
+} // namespace rsl

@@ -22,7 +22,3 @@
 #include "rex_std/internal/memory/memmove.h"
 #include "rex_std/internal/memory/memset.h"
 #include "rex_std/internal/string/memchr.h"
-
-REX_RSL_BEGIN_NAMESPACE
-
-REX_RSL_END_NAMESPACE

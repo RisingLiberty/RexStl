@@ -14,18 +14,22 @@
 
 #include "rex_std/internal/type_traits/integral_constant.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-struct is_lvalue_reference : public false_type
+namespace rsl
 {
-};
-template <typename T>
-struct is_lvalue_reference<T&> : public true_type
-{
-};
+  inline namespace v1
+  {
 
-template <typename T>
-inline constexpr bool is_lvalue_reference_v = is_lvalue_reference<T>::value;
+    template <typename T>
+    struct is_lvalue_reference : public false_type
+    {
+    };
+    template <typename T>
+    struct is_lvalue_reference<T&> : public true_type
+    {
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    inline constexpr bool is_lvalue_reference_v = is_lvalue_reference<T>::value;
+
+  } // namespace v1
+} // namespace rsl

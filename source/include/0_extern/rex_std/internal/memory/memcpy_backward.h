@@ -15,20 +15,24 @@
 #include "rex_std/bonus/types.h"
 #include "rex_std/internal/memory/byte.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-constexpr void* memcpy_backward(void* dst, const void* src, card32 len)
+namespace rsl
 {
-  byte* dst_byte       = static_cast<byte*>(dst) + len;
-  const byte* src_byte = static_cast<const byte*>(src) + len;
-
-  for(card32 i = 0; i < len; ++i)
+  inline namespace v1
   {
-    *dst_byte = *src_byte;
-    --dst_byte;
-    --src_byte;
-  }
-  return dst;
-}
 
-REX_RSL_END_NAMESPACE
+    constexpr void* memcpy_backward(void* dst, const void* src, card32 len)
+    {
+      byte* dst_byte       = static_cast<byte*>(dst) + len;
+      const byte* src_byte = static_cast<const byte*>(src) + len;
+
+      for(card32 i = 0; i < len; ++i)
+      {
+        *dst_byte = *src_byte;
+        --dst_byte;
+        --src_byte;
+      }
+      return dst;
+    }
+
+  } // namespace v1
+} // namespace rsl

@@ -15,29 +15,33 @@
 #include "rex_std/internal/type_traits/remove_reference.h"
 #include "rex_std/internal/type_traits/void.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-namespace internal
+namespace rsl
 {
-  template <typename T, typename = void>
-  struct add_pointer_impl
+  inline namespace v1
   {
-    using type = T;
-  };
-  template <typename T>
-  struct add_pointer_impl<T, void_t<remove_reference_t<T>*>>
-  {
-    using type = remove_reference_t<T>*;
-  };
-} // namespace internal
 
-template <typename T>
-struct add_pointer
-{
-  using type = typename internal::add_pointer_impl<T>::type;
-};
+    namespace internal
+    {
+      template <typename T, typename = void>
+      struct add_pointer_impl
+      {
+        using type = T;
+      };
+      template <typename T>
+      struct add_pointer_impl<T, void_t<remove_reference_t<T>*>>
+      {
+        using type = remove_reference_t<T>*;
+      };
+    } // namespace internal
 
-template <typename T>
-using add_pointer_t = typename add_pointer<T>::type;
+    template <typename T>
+    struct add_pointer
+    {
+      using type = typename internal::add_pointer_impl<T>::type;
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    using add_pointer_t = typename add_pointer<T>::type;
+
+  } // namespace v1
+} // namespace rsl

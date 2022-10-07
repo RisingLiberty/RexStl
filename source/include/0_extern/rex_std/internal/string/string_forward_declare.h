@@ -10,20 +10,24 @@
 //
 // ============================================
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
-template <typename CharType>
-class char_traits;
+    template <typename CharType>
+    class char_traits;
 
-template <typename CharType, typename Traits>
-class basic_string_view;
+    template <typename CharType, typename Traits>
+    class basic_string_view;
 
-using string_view = basic_string_view<char8, char_traits<char8>>;
+    using string_view = basic_string_view<char8, char_traits<char8>>;
 
-class allocator;
-template <typename CharType, typename Traits, typename Allocator>
-class basic_string;
+    class allocator;
+    template <typename CharType, typename Traits, typename Allocator>
+    class basic_string;
 
-using string = basic_string<char8, char_traits<char8>, allocator>;
+    using string = basic_string<char8, char_traits<char8>, allocator>;
 
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl

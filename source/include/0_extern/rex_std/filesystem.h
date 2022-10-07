@@ -18,13 +18,17 @@
 
 #include <filesystem>
 
-REX_RSL_BEGIN_NAMESPACE
-
-namespace filesystem
+namespace rsl
 {
-  using namespace std::filesystem;
-}
+  inline namespace v1
+  {
 
-REX_RSL_END_NAMESPACE
+    namespace filesystem
+    {
+      using namespace std::filesystem;
+    }
+
+  } // namespace v1
+} // namespace rsl
 
 #include "rex_std/enable_std_checking.h"

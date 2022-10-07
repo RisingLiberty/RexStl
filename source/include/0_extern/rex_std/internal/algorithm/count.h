@@ -12,19 +12,23 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename InputIterator, typename T>
-typename InputIterator::difference_type count(InputIterator first, InputIterator last, const T& value)
+namespace rsl
 {
-  typename InputIterator::difference_type result = 0;
-
-  for(; first != last; ++first)
+  inline namespace v1
   {
-    if(*first == value)
-      ++result;
-  }
-  return result;
-}
 
-REX_RSL_END_NAMESPACE
+    template <typename InputIterator, typename T>
+    typename InputIterator::difference_type count(InputIterator first, InputIterator last, const T& value)
+    {
+      typename InputIterator::difference_type result = 0;
+
+      for(; first != last; ++first)
+      {
+        if(*first == value)
+          ++result;
+      }
+      return result;
+    }
+
+  } // namespace v1
+} // namespace rsl

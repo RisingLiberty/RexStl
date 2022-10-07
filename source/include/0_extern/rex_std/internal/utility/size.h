@@ -14,12 +14,16 @@
 
 #include "rex_std/bonus/types.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T, count_t N>
-constexpr count_t size(const T (&/*arr*/)[N]) // NOLINT
+namespace rsl
 {
-  return N;
-}
+  inline namespace v1
+  {
 
-REX_RSL_END_NAMESPACE
+    template <typename T, count_t N>
+    constexpr count_t size(const T (&/*arr*/)[N]) // NOLINT
+    {
+      return N;
+    }
+
+  } // namespace v1
+} // namespace rsl

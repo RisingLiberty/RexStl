@@ -12,40 +12,44 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename ForwardIterator>
-ForwardIterator adjacent_find(ForwardIterator first, ForwardIterator last)
+namespace rsl
 {
-  if(first != last)
+  inline namespace v1
   {
-    ForwardIterator i = first;
 
-    for(++i; i != last; ++i)
+    template <typename ForwardIterator>
+    ForwardIterator adjacent_find(ForwardIterator first, ForwardIterator last)
     {
-      if(*first == *i)
-        return first;
-      first = i;
+      if(first != last)
+      {
+        ForwardIterator i = first;
+
+        for(++i; i != last; ++i)
+        {
+          if(*first == *i)
+            return first;
+          first = i;
+        }
+      }
+      return last;
     }
-  }
-  return last;
-}
 
-template <typename ForwardIterator, typename BinaryPredicate>
-ForwardIterator adjacent_find(ForwardIterator first, ForwardIterator last, BinaryPredicate predicate)
-{
-  if(first != last)
-  {
-    ForwardIterator i = first;
-
-    for(++i; i != last; ++i)
+    template <typename ForwardIterator, typename BinaryPredicate>
+    ForwardIterator adjacent_find(ForwardIterator first, ForwardIterator last, BinaryPredicate predicate)
     {
-      if(predicate(*first, *i))
-        return first;
-      first = i;
-    }
-  }
-  return last;
-}
+      if(first != last)
+      {
+        ForwardIterator i = first;
 
-REX_RSL_END_NAMESPACE
+        for(++i; i != last; ++i)
+        {
+          if(predicate(*first, *i))
+            return first;
+          first = i;
+        }
+      }
+      return last;
+    }
+
+  } // namespace v1
+} // namespace rsl

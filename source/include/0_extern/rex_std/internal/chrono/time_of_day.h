@@ -18,15 +18,19 @@
 
   #include <chrono>
 
-REX_RSL_BEGIN_NAMESPACE::chrono
+namespace rsl
 {
-  using hh_mm_ss = std::chrono::hh_mm_ss;
+  inline namespace v1
+  {
+    ::chrono
+    {
+      using hh_mm_ss = std::chrono::hh_mm_ss;
 
-  using std::chrono::is_am;
-  using std::chrono::is_pm;
-  using std::chrono::make12;
-  using std::chrono::make24;
-}
+      using std::chrono::is_am;
+      using std::chrono::is_pm;
+      using std::chrono::make12;
+      using std::chrono::make24;
+    }
 
   #include "rex_std/enable_std_checking.h"
 

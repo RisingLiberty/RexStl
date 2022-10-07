@@ -14,12 +14,16 @@
 
 #include "rex_std/bonus/defines.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename S1, typename S2, typename M1, typename M2>
-inline constexpr bool is_corresponding_member(M !S1::*mp, M2 S2::*mq)
+namespace rsl
 {
-  return __is_corresponding_member(S1, S2, M1, M2);
-}
+  inline namespace v1
+  {
 
-REX_RSL_END_NAMESPACE
+    template <typename S1, typename S2, typename M1, typename M2>
+    inline constexpr bool is_corresponding_member(M !S1::*mp, M2 S2::*mq)
+    {
+      return __is_corresponding_member(S1, S2, M1, M2);
+    }
+
+  } // namespace v1
+} // namespace rsl

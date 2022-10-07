@@ -17,21 +17,25 @@
 
 #include <cuchar>
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
-REX_STD_CLASS_ALIAS(mbstate_t);
-REX_STD_CLASS_ALIAS(size_t);
+    REX_STD_CLASS_ALIAS(mbstate_t);
+    REX_STD_CLASS_ALIAS(size_t);
 
-REX_STD_FUNC_ALIAS(mbrtoc16);
-REX_STD_FUNC_ALIAS(c16rtomb);
-REX_STD_FUNC_ALIAS(mbrtoc32);
-REX_STD_FUNC_ALIAS(c32rtomb);
+    REX_STD_FUNC_ALIAS(mbrtoc16);
+    REX_STD_FUNC_ALIAS(c16rtomb);
+    REX_STD_FUNC_ALIAS(mbrtoc32);
+    REX_STD_FUNC_ALIAS(c32rtomb);
 
 #ifdef REX_ENABLE_WITH_CPP20
-REX_STD_FUNC_ALIAS(mbrtoc8);
-REX_STD_FUNC_ALIAS(c8rtomb);
+    REX_STD_FUNC_ALIAS(mbrtoc8);
+    REX_STD_FUNC_ALIAS(c8rtomb);
 #endif // REX_ENABLE_WITH_CPP20
 
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl
 
 #include "rex_std/enable_std_checking.h"

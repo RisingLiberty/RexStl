@@ -10,12 +10,16 @@
 //
 // ============================================
 
-REX_RSL_BEGIN_NAMESPACE
-
-namespace internal
+namespace rsl
 {
-  template <typename T>
-  T returns_exactly() noexcept;
-}
+  inline namespace v1
+  {
 
-REX_RSL_END_NAMESPACE
+    namespace internal
+    {
+      template <typename T>
+      T returns_exactly() noexcept;
+    }
+
+  } // namespace v1
+} // namespace rsl

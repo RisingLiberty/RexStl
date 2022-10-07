@@ -14,24 +14,28 @@
 
 #include "rex_std/bonus/defines.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-class c_string
+namespace rsl
 {
-public:
-  c_string(const T* ptr) // NOLINT(google-explicit-constructor): this needs to be explicit
-      : m_ptr(ptr)
+  inline namespace v1
   {
-  }
 
-  const T* ptr() const
-  {
-    return m_ptr;
-  }
+    template <typename T>
+    class c_string
+    {
+    public:
+      c_string(const T* ptr) // NOLINT(google-explicit-constructor): this needs to be explicit
+          : m_ptr(ptr)
+      {
+      }
 
-private:
-  const T* m_ptr;
-};
+      const T* ptr() const
+      {
+        return m_ptr;
+      }
 
-REX_RSL_END_NAMESPACE
+    private:
+      const T* m_ptr;
+    };
+
+  } // namespace v1
+} // namespace rsl

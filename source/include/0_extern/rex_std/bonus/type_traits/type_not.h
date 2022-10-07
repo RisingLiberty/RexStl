@@ -12,18 +12,22 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <bool B>
-struct type_not
+namespace rsl
 {
-  static constexpr bool value = true;
-};
+  inline namespace v1
+  {
 
-template <>
-struct type_not<true>
-{
-  static constexpr bool value = false;
-};
+    template <bool B>
+    struct type_not
+    {
+      static constexpr bool value = true;
+    };
 
-REX_RSL_END_NAMESPACE
+    template <>
+    struct type_not<true>
+    {
+      static constexpr bool value = false;
+    };
+
+  } // namespace v1
+} // namespace rsl

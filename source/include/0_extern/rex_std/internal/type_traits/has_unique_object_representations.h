@@ -16,14 +16,18 @@
 #include "rex_std/internal/type_traits/remove_all_extents.h"
 #include "rex_std/internal/type_traits/remove_cv.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-struct has_unique_object_representations : public bool_constant<__has_unique_object_representations(remove_cv_t<remove_all_extents_t<T>>)>
+namespace rsl
 {
-};
+  inline namespace v1
+  {
 
-template <typename T>
-inline constexpr bool has_unique_object_representations_v = has_unique_object_representations<T>::value;
+    template <typename T>
+    struct has_unique_object_representations : public bool_constant<__has_unique_object_representations(remove_cv_t<remove_all_extents_t<T>>)>
+    {
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    inline constexpr bool has_unique_object_representations_v = has_unique_object_representations<T>::value;
+
+  } // namespace v1
+} // namespace rsl

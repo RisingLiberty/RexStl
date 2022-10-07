@@ -16,14 +16,18 @@
 #include "rex_std/internal/type_traits/is_floating_point.h"
 #include "rex_std/internal/type_traits/is_integral.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-struct is_arithmetic : public bool_constant<is_integral_v<T> || is_floating_point_v<T>>
+namespace rsl
 {
-};
+  inline namespace v1
+  {
 
-template <typename T>
-inline constexpr bool is_arithmetic_v = is_arithmetic<T>::value;
+    template <typename T>
+    struct is_arithmetic : public bool_constant<is_integral_v<T> || is_floating_point_v<T>>
+    {
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    inline constexpr bool is_arithmetic_v = is_arithmetic<T>::value;
+
+  } // namespace v1
+} // namespace rsl

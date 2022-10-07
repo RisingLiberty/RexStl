@@ -15,25 +15,29 @@
 #include "rex_std/internal/algorithm/find.h"
 #include "rex_std/internal/utility/move.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename InputIterator, typename T>
-InputIterator remove(InputIterator first, InputIterator last, const T& value)
+namespace rsl
 {
-  first = rsl::find(first, last, value);
-
-  if(first != last)
+  inline namespace v1
   {
-    for(InputIterator it = first; ++it != last;)
+
+    template <typename InputIterator, typename T>
+    InputIterator remove(InputIterator first, InputIterator last, const T& value)
     {
-      if(*it != value)
+      first = rsl::find(first, last, value);
+
+      if(first != last)
       {
-        *first++ = rsl::move(*it);
+        for(InputIterator it = first; ++it != last;)
+        {
+          if(*it != value)
+          {
+            *first++ = rsl::move(*it);
+          }
+        }
       }
+
+      return first;
     }
-  }
 
-  return first;
-}
-
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl

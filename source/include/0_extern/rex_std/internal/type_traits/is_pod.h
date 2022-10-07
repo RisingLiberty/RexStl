@@ -12,14 +12,18 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-struct is_pod : public bool_constant<__is_pod(T)>
+namespace rsl
 {
-};
+  inline namespace v1
+  {
 
-template <typename T>
-inline constexpr bool is_pod_v = is_pod<T>::value;
+    template <typename T>
+    struct is_pod : public bool_constant<__is_pod(T)>
+    {
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    inline constexpr bool is_pod_v = is_pod<T>::value;
+
+  } // namespace v1
+} // namespace rsl

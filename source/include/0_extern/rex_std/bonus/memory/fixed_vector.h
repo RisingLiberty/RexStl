@@ -19,115 +19,119 @@
 #include "rex_std/internal/type_traits/remove_extent.h"
 #include "rex_std/internal/utility/exchange.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-class fixed_vector
+namespace rsl
 {
-public:
-  using pointer            = rsl::remove_extent_t<T>*;
-  using const_pointer      = const rsl::remove_extent_t<T>*;
-  using element_type       = rsl::remove_extent_t<T>;
-  using const_element_type = const rsl::remove_extent_t<T>;
-
-  fixed_vector()
-      : m_ptr(nullptr)
-      , m_count(0)
+  inline namespace v1
   {
-  }
-  fixed_vector(rsl::Nullptr)
-      : m_ptr(nullptr)
-      , m_count(0)
-  {
-  }
 
-  fixed_vector(pointer pointer, card32 count)
-      : m_ptr(pointer)
-      , m_count(count)
-  {
-  }
+    template <typename T>
+    class fixed_vector
+    {
+    public:
+      using pointer            = rsl::remove_extent_t<T>*;
+      using const_pointer      = const rsl::remove_extent_t<T>*;
+      using element_type       = rsl::remove_extent_t<T>;
+      using const_element_type = const rsl::remove_extent_t<T>;
 
-  fixed_vector(const fixed_vector&) = delete;
-  fixed_vector(fixed_vector&& other) noexcept
-      : m_ptr(other.release())
-      , m_count(other.count())
-  {
-  }
+      fixed_vector()
+          : m_ptr(nullptr)
+          , m_count(0)
+      {
+      }
+      fixed_vector(rsl::Nullptr)
+          : m_ptr(nullptr)
+          , m_count(0)
+      {
+      }
 
-  ~fixed_vector()
-  {
-    reset();
-  }
+      fixed_vector(pointer pointer, card32 count)
+          : m_ptr(pointer)
+          , m_count(count)
+      {
+      }
 
-  fixed_vector& operator=(const fixed_vector&) = delete;
-  fixed_vector& operator=(fixed_vector&& other) noexcept
-  {
-    reset(other.release());
-    m_count = other.m_count;
-    return *this;
-  }
+      fixed_vector(const fixed_vector&) = delete;
+      fixed_vector(fixed_vector&& other) noexcept
+          : m_ptr(other.release())
+          , m_count(other.count())
+      {
+      }
 
-  void swap(fixed_vector& other)
-  {
-    T* tmp_ptr       = m_ptr;
-    card32 tmp_count = m_count;
+      ~fixed_vector()
+      {
+        reset();
+      }
 
-    m_ptr   = other.m_ptr;
-    m_count = other.m_count;
+      fixed_vector& operator=(const fixed_vector&) = delete;
+      fixed_vector& operator=(fixed_vector&& other) noexcept
+      {
+        reset(other.release());
+        m_count = other.m_count;
+        return *this;
+      }
 
-    other.m_ptr   = tmp_ptr;
-    other.m_count = tmp_count;
-  }
+      void swap(fixed_vector& other)
+      {
+        T* tmp_ptr       = m_ptr;
+        card32 tmp_count = m_count;
 
-  REX_NO_DISCARD const_pointer get() const
-  {
-    return m_ptr;
-  }
-  REX_NO_DISCARD pointer get()
-  {
-    return m_ptr;
-  }
-  REX_NO_DISCARD pointer release()
-  {
-    return rsl::exchange(m_ptr, pointer());
-  }
+        m_ptr   = other.m_ptr;
+        m_count = other.m_count;
 
-  card32 count() const
-  {
-    return m_count;
-  }
+        other.m_ptr   = tmp_ptr;
+        other.m_count = tmp_count;
+      }
 
-  element_type& operator[](card32 idx)
-  {
-    return m_ptr[idx];
-  }
-  const_element_type& operator[](card32 idx) const
-  {
-    return m_ptr[idx];
-  }
+      REX_NO_DISCARD const_pointer get() const
+      {
+        return m_ptr;
+      }
+      REX_NO_DISCARD pointer get()
+      {
+        return m_ptr;
+      }
+      REX_NO_DISCARD pointer release()
+      {
+        return rsl::exchange(m_ptr, pointer());
+      }
 
-  explicit operator bool() const
-  {
-    return m_ptr != nullptr;
-  }
+      card32 count() const
+      {
+        return m_count;
+      }
 
-  void reset(pointer ptr = pointer(), card32 count = 0)
-  {
-    operator delete[](m_ptr, sizeof(element_type) * m_count);
-    m_ptr   = ptr;
-    m_count = count;
-  }
+      element_type& operator[](card32 idx)
+      {
+        return m_ptr[idx];
+      }
+      const_element_type& operator[](card32 idx) const
+      {
+        return m_ptr[idx];
+      }
 
-private:
-  rsl::remove_extent_t<T>* m_ptr;
-  card32 m_count;
-};
+      explicit operator bool() const
+      {
+        return m_ptr != nullptr;
+      }
 
-template <typename T, rsl::enable_if_t<rsl::is_array_v<T>, bool> = true>
-REX_NO_DISCARD fixed_vector<rsl::remove_extent_t<T>> make_unique(card32 size)
-{
-  using Elem = rsl::remove_extent_t<T>;
-  return fixed_vector<Elem>(new Elem[size](), size);
-}
+      void reset(pointer ptr = pointer(), card32 count = 0)
+      {
+        operator delete[](m_ptr, sizeof(element_type) * m_count);
+        m_ptr   = ptr;
+        m_count = count;
+      }
 
-REX_RSL_END_NAMESPACE
+    private:
+      rsl::remove_extent_t<T>* m_ptr;
+      card32 m_count;
+    };
+
+    template <typename T, rsl::enable_if_t<rsl::is_array_v<T>, bool> = true>
+    REX_NO_DISCARD fixed_vector<rsl::remove_extent_t<T>> make_unique(card32 size)
+    {
+      using Elem = rsl::remove_extent_t<T>;
+      return fixed_vector<Elem>(new Elem[size](), size);
+    }
+
+  } // namespace v1
+} // namespace rsl

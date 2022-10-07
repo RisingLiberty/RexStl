@@ -12,15 +12,19 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-struct is_trivially_copyable
+namespace rsl
 {
-  static inline constexpr bool value = __is_trivially_copyable(T);
-};
+  inline namespace v1
+  {
 
-template <typename T>
-inline constexpr bool is_trivially_copyable_v = is_trivially_copyable<T>::value;
+    template <typename T>
+    struct is_trivially_copyable
+    {
+      static inline constexpr bool value = __is_trivially_copyable(T);
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    inline constexpr bool is_trivially_copyable_v = is_trivially_copyable<T>::value;
+
+  } // namespace v1
+} // namespace rsl

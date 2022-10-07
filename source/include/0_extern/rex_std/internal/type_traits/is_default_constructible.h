@@ -14,14 +14,18 @@
 
 #include "rex_std/internal/type_traits/is_constructible.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-struct is_default_constructible : bool_constant<__is_constructible(T)>
+namespace rsl
 {
-};
+  inline namespace v1
+  {
 
-template <typename T>
-inline constexpr bool is_default_constructible_v = is_default_constructible<T>::value;
+    template <typename T>
+    struct is_default_constructible : bool_constant<__is_constructible(T)>
+    {
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    inline constexpr bool is_default_constructible_v = is_default_constructible<T>::value;
+
+  } // namespace v1
+} // namespace rsl

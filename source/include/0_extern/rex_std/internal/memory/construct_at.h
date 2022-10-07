@@ -20,12 +20,16 @@
 
 #include "rex_std/internal/utility/forward.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T, typename... Args>
-constexpr T* construct_at(T* p, Args&&... args)
+namespace rsl
 {
-  return ::new(const_cast<void*>(static_cast<const volatile void*>(p))) T(rsl::forward<Args>(args)...);
-}
+  inline namespace v1
+  {
 
-REX_RSL_END_NAMESPACE
+    template <typename T, typename... Args>
+    constexpr T* construct_at(T* p, Args&&... args)
+    {
+      return ::new(const_cast<void*>(static_cast<const volatile void*>(p))) T(rsl::forward<Args>(args)...);
+    }
+
+  } // namespace v1
+} // namespace rsl

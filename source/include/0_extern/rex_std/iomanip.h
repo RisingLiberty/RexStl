@@ -18,20 +18,24 @@
 
 #include <iomanip>
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
-REX_STD_FUNC_ALIAS(resetiosflags);
-REX_STD_FUNC_ALIAS(setiosflags);
-REX_STD_FUNC_ALIAS(setbase);
-REX_STD_FUNC_ALIAS(setfill);
-REX_STD_FUNC_ALIAS(setprecision);
-REX_STD_FUNC_ALIAS(setw);
-REX_STD_FUNC_ALIAS(get_money);
-REX_STD_FUNC_ALIAS(put_money);
-REX_STD_FUNC_ALIAS(get_time);
-REX_STD_FUNC_ALIAS(put_time);
-REX_STD_FUNC_ALIAS(quoted);
+    REX_STD_FUNC_ALIAS(resetiosflags);
+    REX_STD_FUNC_ALIAS(setiosflags);
+    REX_STD_FUNC_ALIAS(setbase);
+    REX_STD_FUNC_ALIAS(setfill);
+    REX_STD_FUNC_ALIAS(setprecision);
+    REX_STD_FUNC_ALIAS(setw);
+    REX_STD_FUNC_ALIAS(get_money);
+    REX_STD_FUNC_ALIAS(put_money);
+    REX_STD_FUNC_ALIAS(get_time);
+    REX_STD_FUNC_ALIAS(put_time);
+    REX_STD_FUNC_ALIAS(quoted);
 
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl
 
 #include "rex_std/enable_std_checking.h"

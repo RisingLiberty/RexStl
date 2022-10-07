@@ -12,19 +12,23 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <class InputIterator, class OutputIterator, class Predicate>
-OutputIterator remove_copy_if(InputIterator first, InputIterator last, OutputIterator d_first, Predicate p)
+namespace rsl
 {
-  for(; first != last; ++first)
+  inline namespace v1
   {
-    if(!p(*first))
-    {
-      *d_first++ = *first;
-    }
-  }
-  return d_first;
-}
 
-REX_RSL_END_NAMESPACE
+    template <class InputIterator, class OutputIterator, class Predicate>
+    OutputIterator remove_copy_if(InputIterator first, InputIterator last, OutputIterator d_first, Predicate p)
+    {
+      for(; first != last; ++first)
+      {
+        if(!p(*first))
+        {
+          *d_first++ = *first;
+        }
+      }
+      return d_first;
+    }
+
+  } // namespace v1
+} // namespace rsl

@@ -14,12 +14,16 @@
 
 #include "rex_std/internal/utility/cmp.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-bool in_range(T value, T min, T max)
+namespace rsl
 {
-  return rsl::cmp_greater_equal(value, min) && rsl::cmp_less_equal(value, max);
-}
+  inline namespace v1
+  {
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    bool in_range(T value, T min, T max)
+    {
+      return rsl::cmp_greater_equal(value, min) && rsl::cmp_less_equal(value, max);
+    }
+
+  } // namespace v1
+} // namespace rsl

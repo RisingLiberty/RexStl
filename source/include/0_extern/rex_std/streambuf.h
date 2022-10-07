@@ -15,9 +15,13 @@
 #include "rex_std/bonus/types.h"
 #include "rex_std/internal/streambuf/basic_streambuf.h"
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
-using streambuf  = basic_streambuf<char8>;
-using wstreambuf = basic_streambuf<tchar>;
+    using streambuf  = basic_streambuf<char8>;
+    using wstreambuf = basic_streambuf<tchar>;
 
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl

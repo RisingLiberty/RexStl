@@ -16,37 +16,41 @@
 #include "rex_std/internal/type_traits/integral_constant.h"
 #include "rex_std/internal/type_traits/remove_cv.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-namespace internal
+namespace rsl
 {
-  template <typename T>
-  struct is_floating_point_helper : public false_type
+  inline namespace v1
   {
-  };
 
-  template <>
-  struct is_floating_point_helper<float32> : public true_type
-  {
-  };
-  template <>
-  struct is_floating_point_helper<float64> : public true_type
-  {
-  };
+    namespace internal
+    {
+      template <typename T>
+      struct is_floating_point_helper : public false_type
+      {
+      };
 
-  // other types that aren't really used by rex engine, but we still need regardless
-  template <>
-  struct is_floating_point_helper<lfloat64> : public true_type
-  {
-  };
-} // namespace internal
+      template <>
+      struct is_floating_point_helper<float32> : public true_type
+      {
+      };
+      template <>
+      struct is_floating_point_helper<float64> : public true_type
+      {
+      };
 
-template <typename T>
-struct is_floating_point : public internal::is_floating_point_helper<typename rsl::remove_cv_t<T>>
-{
-};
+      // other types that aren't really used by rex engine, but we still need regardless
+      template <>
+      struct is_floating_point_helper<lfloat64> : public true_type
+      {
+      };
+    } // namespace internal
 
-template <typename T>
-inline constexpr bool is_floating_point_v = is_floating_point<T>::value;
+    template <typename T>
+    struct is_floating_point : public internal::is_floating_point_helper<typename rsl::remove_cv_t<T>>
+    {
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    inline constexpr bool is_floating_point_v = is_floating_point<T>::value;
+
+  } // namespace v1
+} // namespace rsl

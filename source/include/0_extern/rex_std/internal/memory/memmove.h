@@ -16,23 +16,27 @@
 #include "rex_std/internal/memory/memcpy.h"
 #include "rex_std/internal/memory/memcpy_backward.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-constexpr void* memmove(void* dst, const void* src, card32 len)
+namespace rsl
 {
-  // If the buffers don't overlap, it doesn't matter what direction
-  // we copy in. If they do overlap, we can't copy from front to back
-  // If they overlap and src sits before dst, we need to copy from
-  // back to front
-  // If the destination is below the source, we copy front to back
-  if(src < dst)
+  inline namespace v1
   {
-    return memcpy_backward(dst, src, len);
-  }
-  else
-  {
-    return memcpy(dst, src, len);
-  }
-}
 
-REX_RSL_END_NAMESPACE
+    constexpr void* memmove(void* dst, const void* src, card32 len)
+    {
+      // If the buffers don't overlap, it doesn't matter what direction
+      // we copy in. If they do overlap, we can't copy from front to back
+      // If they overlap and src sits before dst, we need to copy from
+      // back to front
+      // If the destination is below the source, we copy front to back
+      if(src < dst)
+      {
+        return memcpy_backward(dst, src, len);
+      }
+      else
+      {
+        return memcpy(dst, src, len);
+      }
+    }
+
+  } // namespace v1
+} // namespace rsl

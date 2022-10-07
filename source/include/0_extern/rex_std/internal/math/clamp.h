@@ -16,23 +16,27 @@
 #include "rex_std/internal/algorithm/min.h"
 #include "rex_std/internal/type_traits/type_identity.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-constexpr T clamp(const T& x, const rsl::type_identity_t<T>& min, const rsl::type_identity_t<T>& max)
+namespace rsl
 {
-  return rsl::min(rsl::max(x, min), max);
-}
+  inline namespace v1
+  {
 
-template <typename T>
-constexpr T clamp_min(const T& x, const rsl::type_identity_t<T>& min)
-{
-  return max(x, min);
-}
-template <typename T>
-constexpr T clamp_max(const T& x, const rsl::type_identity_t<T>& max)
-{
-  return min(x, max);
-}
+    template <typename T>
+    constexpr T clamp(const T& x, const rsl::type_identity_t<T>& min, const rsl::type_identity_t<T>& max)
+    {
+      return rsl::min(rsl::max(x, min), max);
+    }
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    constexpr T clamp_min(const T& x, const rsl::type_identity_t<T>& min)
+    {
+      return max(x, min);
+    }
+    template <typename T>
+    constexpr T clamp_max(const T& x, const rsl::type_identity_t<T>& max)
+    {
+      return min(x, max);
+    }
+
+  } // namespace v1
+} // namespace rsl

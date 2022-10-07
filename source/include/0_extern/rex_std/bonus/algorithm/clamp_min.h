@@ -14,12 +14,16 @@
 
 #include "rex_std/internal/algorithm/max.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-constexpr T clamp_min(const T& x, const T& min)
+namespace rsl
 {
-  return rsl::max(x, min);
-}
+  inline namespace v1
+  {
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    constexpr T clamp_min(const T& x, const T& min)
+    {
+      return rsl::max(x, min);
+    }
+
+  } // namespace v1
+} // namespace rsl

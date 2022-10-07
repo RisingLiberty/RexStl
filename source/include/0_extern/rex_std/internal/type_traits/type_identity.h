@@ -12,15 +12,19 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-struct type_identity
+namespace rsl
 {
-  using type = T;
-};
+  inline namespace v1
+  {
 
-template <typename T>
-using type_identity_t = typename type_identity<T>::type;
+    template <typename T>
+    struct type_identity
+    {
+      using type = T;
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    using type_identity_t = typename type_identity<T>::type;
+
+  } // namespace v1
+} // namespace rsl

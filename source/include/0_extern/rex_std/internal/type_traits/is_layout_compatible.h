@@ -14,14 +14,18 @@
 
 #include "rex_std/internal/type_traits/integral_constant.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T, typename U>
-struct is_layout_compatible : public bool_constant<__is_layout_compatible(T, U)>
+namespace rsl
 {
-};
+  inline namespace v1
+  {
 
-template <typename T, typename U>
-inline constexpr bool is_layout_compatible_v = is_layout_compatible<T, U>::value;
+    template <typename T, typename U>
+    struct is_layout_compatible : public bool_constant<__is_layout_compatible(T, U)>
+    {
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T, typename U>
+    inline constexpr bool is_layout_compatible_v = is_layout_compatible<T, U>::value;
+
+  } // namespace v1
+} // namespace rsl

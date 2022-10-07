@@ -12,12 +12,16 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename S, typename M>
-inline constexpr bool is_pointer_interconvertible_with_class(M S::*mp)
+namespace rsl
 {
-  return __is_pointer_interconvertible_with_class(S, M);
-}
+  inline namespace v1
+  {
 
-REX_RSL_END_NAMESPACE
+    template <typename S, typename M>
+    inline constexpr bool is_pointer_interconvertible_with_class(M S::*mp)
+    {
+      return __is_pointer_interconvertible_with_class(S, M);
+    }
+
+  } // namespace v1
+} // namespace rsl

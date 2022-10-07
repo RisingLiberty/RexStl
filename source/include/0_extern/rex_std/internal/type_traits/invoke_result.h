@@ -14,14 +14,18 @@
 
 #include "rex_std/bonus/type_traits/is_invocable_utils.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename Callable, typename... Args>
-struct invoke_result : internal::SelectInvokeTraits<Callable, Args...>
+namespace rsl
 {
-};
+  inline namespace v1
+  {
 
-template <typename Callable, typename... Args>
-using invoke_result_t = invoke_result<Callable, Args...>::type;
+    template <typename Callable, typename... Args>
+    struct invoke_result : internal::SelectInvokeTraits<Callable, Args...>
+    {
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename Callable, typename... Args>
+    using invoke_result_t = invoke_result<Callable, Args...>::type;
+
+  } // namespace v1
+} // namespace rsl

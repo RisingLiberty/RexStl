@@ -14,15 +14,19 @@
 
 #include "rex_std/internal/type_traits/integral_constant.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-struct add_volatile
+namespace rsl
 {
-  using type = volatile T;
-};
+  inline namespace v1
+  {
 
-template <typename T>
-using add_volatile_t = typename add_volatile<T>::type;
+    template <typename T>
+    struct add_volatile
+    {
+      using type = volatile T;
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    using add_volatile_t = typename add_volatile<T>::type;
+
+  } // namespace v1
+} // namespace rsl

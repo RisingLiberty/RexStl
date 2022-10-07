@@ -14,25 +14,29 @@
 
 #include "rex_std/internal/type_traits/void.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-namespace bonus
+namespace rsl
 {
-  // add reference (non-referenceable type)
-  template <typename T, typename = void>
-  struct add_reference
+  inline namespace v1
   {
-    using LValue = T;
-    using RValue = T;
-  };
 
-  // (referenceable type)
-  template <typename T>
-  struct add_reference<T, void_t<T&>>
-  {
-    using LValue = T&;
-    using RValue = T&&;
-  };
-} // namespace bonus
+    namespace bonus
+    {
+      // add reference (non-referenceable type)
+      template <typename T, typename = void>
+      struct add_reference
+      {
+        using LValue = T;
+        using RValue = T;
+      };
 
-REX_RSL_END_NAMESPACE
+      // (referenceable type)
+      template <typename T>
+      struct add_reference<T, void_t<T&>>
+      {
+        using LValue = T&;
+        using RValue = T&&;
+      };
+    } // namespace bonus
+
+  } // namespace v1
+} // namespace rsl

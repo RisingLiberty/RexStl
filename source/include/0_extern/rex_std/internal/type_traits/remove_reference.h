@@ -12,25 +12,29 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-struct remove_reference
+namespace rsl
 {
-  using type = T;
-};
-template <typename T>
-struct remove_reference<T&>
-{
-  using type = T;
-};
-template <typename T>
-struct remove_reference<T&&>
-{
-  using type = T;
-};
+  inline namespace v1
+  {
 
-template <typename T>
-using remove_reference_t = typename remove_reference<T>::type;
+    template <typename T>
+    struct remove_reference
+    {
+      using type = T;
+    };
+    template <typename T>
+    struct remove_reference<T&>
+    {
+      using type = T;
+    };
+    template <typename T>
+    struct remove_reference<T&&>
+    {
+      using type = T;
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    using remove_reference_t = typename remove_reference<T>::type;
+
+  } // namespace v1
+} // namespace rsl

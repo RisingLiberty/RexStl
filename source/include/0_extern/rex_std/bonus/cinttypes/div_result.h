@@ -12,22 +12,26 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-struct DivResult
+namespace rsl
 {
-  T quot;
-  T rem;
-};
+  inline namespace v1
+  {
 
-template <typename T>
-constexpr DivResult<T> div(T x, T y)
-{
-  DivResult<T> res {};
-  res.quot = x / y;
-  res.rem  = x % y;
-  return res;
-}
+    template <typename T>
+    struct DivResult
+    {
+      T quot;
+      T rem;
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    constexpr DivResult<T> div(T x, T y)
+    {
+      DivResult<T> res {};
+      res.quot = x / y;
+      res.rem  = x % y;
+      return res;
+    }
+
+  } // namespace v1
+} // namespace rsl

@@ -18,14 +18,18 @@
 #include "rex_std/internal/type_traits/is_scalar.h"
 #include "rex_std/internal/type_traits/is_union.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-struct is_object : public bool_constant<is_scalar_v<T> || is_array_v<T> || is_union_v<T> || is_class_v<T>>
+namespace rsl
 {
-};
+  inline namespace v1
+  {
 
-template <typename T>
-inline constexpr bool is_object_v = is_object<T>::value;
+    template <typename T>
+    struct is_object : public bool_constant<is_scalar_v<T> || is_array_v<T> || is_union_v<T> || is_class_v<T>>
+    {
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    inline constexpr bool is_object_v = is_object<T>::value;
+
+  } // namespace v1
+} // namespace rsl

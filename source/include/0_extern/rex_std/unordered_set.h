@@ -21,40 +21,44 @@
 
 #include <unordered_set>
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
-template <typename T>
-struct hash;
+    template <typename T>
+    struct hash;
 
-template <typename T>
-struct equal_to;
+    template <typename T>
+    struct equal_to;
 
-class allocator;
+    class allocator;
 
-template <typename Key, typename Hash = hash<Key>, typename KeyEqual = equal_to<Key>, typename Allocator = typed_allocator<Key>>
-REX_STD_TEMPLATED_CLASS_ALIAS(unordered_set, Key, Hash, KeyEqual, Allocator);
+    template <typename Key, typename Hash = hash<Key>, typename KeyEqual = equal_to<Key>, typename Allocator = typed_allocator<Key>>
+    REX_STD_TEMPLATED_CLASS_ALIAS(unordered_set, Key, Hash, KeyEqual, Allocator);
 
-template <typename Key, typename Hash = hash<Key>, typename KeyEqual = equal_to<Key>, typename Allocator = typed_allocator<Key>>
-REX_STD_TEMPLATED_CLASS_ALIAS(unordered_multiset, Key, Hash, KeyEqual, Allocator);
+    template <typename Key, typename Hash = hash<Key>, typename KeyEqual = equal_to<Key>, typename Allocator = typed_allocator<Key>>
+    REX_STD_TEMPLATED_CLASS_ALIAS(unordered_multiset, Key, Hash, KeyEqual, Allocator);
 
-REX_STD_FUNC_ALIAS(operator==);
-REX_STD_FUNC_ALIAS(operator!=);
+    REX_STD_FUNC_ALIAS(operator==);
+    REX_STD_FUNC_ALIAS(operator!=);
 
-REX_STD_FUNC_ALIAS(erase_if);
+    REX_STD_FUNC_ALIAS(erase_if);
 
-REX_STD_FUNC_ALIAS(begin);
-REX_STD_FUNC_ALIAS(cbegin);
-REX_STD_FUNC_ALIAS(end);
-REX_STD_FUNC_ALIAS(cend);
-REX_STD_FUNC_ALIAS(rbegin);
-REX_STD_FUNC_ALIAS(crbegin);
-REX_STD_FUNC_ALIAS(rend);
-REX_STD_FUNC_ALIAS(crend);
-REX_STD_FUNC_ALIAS(size);
-REX_STD_FUNC_ALIAS(ssize);
-REX_STD_FUNC_ALIAS(empty);
-REX_STD_FUNC_ALIAS(data);
+    REX_STD_FUNC_ALIAS(begin);
+    REX_STD_FUNC_ALIAS(cbegin);
+    REX_STD_FUNC_ALIAS(end);
+    REX_STD_FUNC_ALIAS(cend);
+    REX_STD_FUNC_ALIAS(rbegin);
+    REX_STD_FUNC_ALIAS(crbegin);
+    REX_STD_FUNC_ALIAS(rend);
+    REX_STD_FUNC_ALIAS(crend);
+    REX_STD_FUNC_ALIAS(size);
+    REX_STD_FUNC_ALIAS(ssize);
+    REX_STD_FUNC_ALIAS(empty);
+    REX_STD_FUNC_ALIAS(data);
 
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl
 
 #include "rex_std/enable_std_checking.h"

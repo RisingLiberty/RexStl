@@ -12,31 +12,35 @@
 
 #include "rex_std/bonus/types.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-struct prime_rehash_policy
+namespace rsl
 {
-public:
-  explicit prime_rehash_policy(float32 maxLoadFactor = 1.0f);
-
-  float32 get_max_load_factor() const;
-
-  static uint32 get_prev_bucket_count_only(uint32 bucketCountHint);
-  uint32 get_prev_bucket_count(uint32 bucketCountHint) const;
-  uint32 get_next_bucket_count(uint32 bucketCountHint) const;
-  uint32 get_bucket_count(uint32 elementCount) const;
-
-  struct hash_required_result
+  inline namespace v1
   {
-    count_t new_bucket_count;
-    bool is_hash_required;
-  };
-  hash_required_result is_rehash_required(uint32 bucketCount, uint32 elementCount, uint32 elementAdd) const;
 
-private:
-  float32 m_max_load_factor;
-  float32 m_growth_factor;
-  mutable uint32 m_next_resize;
-};
+    struct prime_rehash_policy
+    {
+    public:
+      explicit prime_rehash_policy(float32 maxLoadFactor = 1.0f);
 
-REX_RSL_END_NAMESPACE
+      float32 get_max_load_factor() const;
+
+      static uint32 get_prev_bucket_count_only(uint32 bucketCountHint);
+      uint32 get_prev_bucket_count(uint32 bucketCountHint) const;
+      uint32 get_next_bucket_count(uint32 bucketCountHint) const;
+      uint32 get_bucket_count(uint32 elementCount) const;
+
+      struct hash_required_result
+      {
+        count_t new_bucket_count;
+        bool is_hash_required;
+      };
+      hash_required_result is_rehash_required(uint32 bucketCount, uint32 elementCount, uint32 elementAdd) const;
+
+    private:
+      float32 m_max_load_factor;
+      float32 m_growth_factor;
+      mutable uint32 m_next_resize;
+    };
+
+  } // namespace v1
+} // namespace rsl

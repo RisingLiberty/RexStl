@@ -12,27 +12,31 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-struct remove_extent
+namespace rsl
 {
-  using type = T;
-};
+  inline namespace v1
+  {
 
-template <typename T, size_t I>
-struct remove_extent<T[I]> // NOLINT(modernize-avoid-c-arrays)
-{
-  using type = T;
-};
+    template <typename T>
+    struct remove_extent
+    {
+      using type = T;
+    };
 
-template <typename T>
-struct remove_extent<T[]> // NOLINT(modernize-avoid-c-arrays)
-{
-  using type = T;
-};
+    template <typename T, size_t I>
+    struct remove_extent<T[I]> // NOLINT(modernize-avoid-c-arrays)
+    {
+      using type = T;
+    };
 
-template <typename T>
-using remove_extent_t = typename remove_extent<T>::type;
+    template <typename T>
+    struct remove_extent<T[]> // NOLINT(modernize-avoid-c-arrays)
+    {
+      using type = T;
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    using remove_extent_t = typename remove_extent<T>::type;
+
+  } // namespace v1
+} // namespace rsl

@@ -20,34 +20,38 @@
 
 #include "rex_std/bonus/types.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T, typename CharT = char8, typename Traits = char_traits<CharT>>
-class ostream_iterator
+namespace rsl
 {
-public:
-  using iterator_category = output_iterator_tag;
-  using value_type        = void;
-  using difference_type   = ptrdiff;
-  using pointer           = void;
-  using reference         = void;
-  using char_type         = CharT;
-  using traits_type       = Traits;
-  using ostream_type      = basic_ostream<CharT, Traits>;
+  inline namespace v1
+  {
 
-  ostream_iterator(ostream_type& stream, const CharT* delim);
-  ostream_iterator(ostream_type& stream);
+    template <typename T, typename CharT = char8, typename Traits = char_traits<CharT>>
+    class ostream_iterator
+    {
+    public:
+      using iterator_category = output_iterator_tag;
+      using value_type        = void;
+      using difference_type   = ptrdiff;
+      using pointer           = void;
+      using reference         = void;
+      using char_type         = CharT;
+      using traits_type       = Traits;
+      using ostream_type      = basic_ostream<CharT, Traits>;
 
-  ~ostream_iterator();
+      ostream_iterator(ostream_type& stream, const CharT* delim);
+      ostream_iterator(ostream_type& stream);
 
-  ostream_iterator& operator=(const T& value);
+      ~ostream_iterator();
 
-  ostream_iterator& operator*();
+      ostream_iterator& operator=(const T& value);
 
-  ostream_iterator& operator++();
-  ostream_iterator& operator++(int);
+      ostream_iterator& operator*();
 
-private:
-};
+      ostream_iterator& operator++();
+      ostream_iterator& operator++(int);
 
-REX_RSL_END_NAMESPACE
+    private:
+    };
+
+  } // namespace v1
+} // namespace rsl

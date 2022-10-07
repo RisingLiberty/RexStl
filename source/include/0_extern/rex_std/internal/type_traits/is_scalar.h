@@ -19,14 +19,18 @@
 #include "rex_std/internal/type_traits/is_null_pointer.h"
 #include "rex_std/internal/type_traits/is_pointer.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-struct is_scalar : public bool_constant<is_arithmetic_v<T> || is_enum_v<T> || is_pointer_v<T> || is_member_pointer_v<T> || is_null_pointer_v<T>>
+namespace rsl
 {
-};
+  inline namespace v1
+  {
 
-template <typename T>
-inline constexpr bool is_scalar_v = is_scalar<T>::value;
+    template <typename T>
+    struct is_scalar : public bool_constant<is_arithmetic_v<T> || is_enum_v<T> || is_pointer_v<T> || is_member_pointer_v<T> || is_null_pointer_v<T>>
+    {
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    inline constexpr bool is_scalar_v = is_scalar<T>::value;
+
+  } // namespace v1
+} // namespace rsl

@@ -14,14 +14,18 @@
 
 #include "rex_std/bonus/type_traits/is_invocable_utils.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename Callable, typename... Args>
-struct is_nothrow_invocable : internal::SelectInvokeTraits<Callable, Args...>::is_nothrow_invocable_v
+namespace rsl
 {
-};
+  inline namespace v1
+  {
 
-template <typename Callable, typename... Args>
-inline constexpr bool is_nothrow_invocable_v = is_nothrow_invocable<Callable, Args...>::value;
+    template <typename Callable, typename... Args>
+    struct is_nothrow_invocable : internal::SelectInvokeTraits<Callable, Args...>::is_nothrow_invocable_v
+    {
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename Callable, typename... Args>
+    inline constexpr bool is_nothrow_invocable_v = is_nothrow_invocable<Callable, Args...>::value;
+
+  } // namespace v1
+} // namespace rsl

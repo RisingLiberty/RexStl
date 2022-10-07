@@ -14,8 +14,12 @@
 
 #include "rex_std/bonus/defines.h"
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
-STATIC_WARNING("Implement inplace merge");
+    STATIC_WARNING("Implement inplace merge");
 
-REX_RSL_END_NAMESPACE
+  }
+} // namespace rsl

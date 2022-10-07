@@ -14,20 +14,24 @@
 
 #include "rex_std/internal/type_traits/integral_constant.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename>
-inline constexpr bool is_array_v = false; // determine whether type argument is an array
-
-template <typename T, size_t N>
-inline constexpr bool is_array_v<T[N]> = true; // NOLINT(modernize-avoid-c-arrays)
-
-template <typename T>
-inline constexpr bool is_array_v<T[]> = true; // NOLINT(modernize-avoid-c-arrays)
-
-template <class T>
-struct is_array : public bool_constant<is_array_v<T>>
+namespace rsl
 {
-};
+  inline namespace v1
+  {
 
-REX_RSL_END_NAMESPACE
+    template <typename>
+    inline constexpr bool is_array_v = false; // determine whether type argument is an array
+
+    template <typename T, size_t N>
+    inline constexpr bool is_array_v<T[N]> = true; // NOLINT(modernize-avoid-c-arrays)
+
+    template <typename T>
+    inline constexpr bool is_array_v<T[]> = true; // NOLINT(modernize-avoid-c-arrays)
+
+    template <class T>
+    struct is_array : public bool_constant<is_array_v<T>>
+    {
+    };
+
+  } // namespace v1
+} // namespace rsl

@@ -66,16 +66,3 @@ MERGE(str, __LINE__)
 #else
   #error "Unknown Compiler"
 #endif
-
-// We're defining everything inside a inline namespace so we can safely upgrade to newer versions
-// without break ABI.
-#define REX_RSL_BEGIN_NAMESPACE                                                                                                                                                                                                                          \
-  namespace rsl                                                                                                                                                                                                                                          \
-  {                                                                                                                                                                                                                                                      \
-    inline namespace v1                                                                                                                                                                                                                                  \
-    {
-#define REX_RSL_END_NAMESPACE                                                                                                                                                                                                                            \
-  }                                                                                                                                                                                                                                                      \
-  }
-
-#define REX_RSL_NAMESPACE ::rsl::v1

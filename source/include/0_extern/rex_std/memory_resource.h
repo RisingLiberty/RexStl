@@ -18,13 +18,17 @@
 
 #include <memory_resource>
 
-REX_RSL_BEGIN_NAMESPACE
-
-namespace pmr
+namespace rsl
 {
-  using namespace std::pmr;
-}
+  inline namespace v1
+  {
 
-REX_RSL_END_NAMESPACE
+    namespace pmr
+    {
+      using namespace std::pmr;
+    }
+
+  } // namespace v1
+} // namespace rsl
 
 #include "rex_std/enable_std_checking.h"

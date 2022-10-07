@@ -20,34 +20,38 @@
 
 #include <deque>
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
-template <typename T, typename Allocator = typed_allocator<T>>
-REX_STD_TEMPLATED_CLASS_ALIAS(deque, T, Allocator);
+    template <typename T, typename Allocator = typed_allocator<T>>
+    REX_STD_TEMPLATED_CLASS_ALIAS(deque, T, Allocator);
 
-REX_STD_FUNC_ALIAS(operator==);
-REX_STD_FUNC_ALIAS(operator!=);
-REX_STD_FUNC_ALIAS(operator<);
-REX_STD_FUNC_ALIAS(operator<=);
-REX_STD_FUNC_ALIAS(operator>);
-REX_STD_FUNC_ALIAS(operator>=);
+    REX_STD_FUNC_ALIAS(operator==);
+    REX_STD_FUNC_ALIAS(operator!=);
+    REX_STD_FUNC_ALIAS(operator<);
+    REX_STD_FUNC_ALIAS(operator<=);
+    REX_STD_FUNC_ALIAS(operator>);
+    REX_STD_FUNC_ALIAS(operator>=);
 
-REX_STD_FUNC_ALIAS(erase);
-REX_STD_FUNC_ALIAS(erase_if);
+    REX_STD_FUNC_ALIAS(erase);
+    REX_STD_FUNC_ALIAS(erase_if);
 
-REX_STD_FUNC_ALIAS(begin);
-REX_STD_FUNC_ALIAS(cbegin);
-REX_STD_FUNC_ALIAS(end);
-REX_STD_FUNC_ALIAS(cend);
-REX_STD_FUNC_ALIAS(rbegin);
-REX_STD_FUNC_ALIAS(crbegin);
-REX_STD_FUNC_ALIAS(rend);
-REX_STD_FUNC_ALIAS(crend);
-REX_STD_FUNC_ALIAS(size);
-REX_STD_FUNC_ALIAS(ssize);
-REX_STD_FUNC_ALIAS(empty);
-REX_STD_FUNC_ALIAS(data);
+    REX_STD_FUNC_ALIAS(begin);
+    REX_STD_FUNC_ALIAS(cbegin);
+    REX_STD_FUNC_ALIAS(end);
+    REX_STD_FUNC_ALIAS(cend);
+    REX_STD_FUNC_ALIAS(rbegin);
+    REX_STD_FUNC_ALIAS(crbegin);
+    REX_STD_FUNC_ALIAS(rend);
+    REX_STD_FUNC_ALIAS(crend);
+    REX_STD_FUNC_ALIAS(size);
+    REX_STD_FUNC_ALIAS(ssize);
+    REX_STD_FUNC_ALIAS(empty);
+    REX_STD_FUNC_ALIAS(data);
 
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl
 
 #include "rex_std/enable_std_checking.h"

@@ -16,30 +16,34 @@
 #include "rex_std/internal/type_traits/is_function.h"
 #include "rex_std/internal/type_traits/remove_cv.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-namespace internal
+namespace rsl
 {
-  template <typename>
-  struct is_member_object_pointer
+  inline namespace v1
   {
-    static inline constexpr bool value = false;
-  };
 
-  template <typename T1, typename T2>
-  struct is_member_object_pointer<T1 T2::*>
-  {
-    static inline constexpr bool value = !is_function_v<T1>;
-    using class_type                   = T2;
-  };
-} // namespace internal
+    namespace internal
+    {
+      template <typename>
+      struct is_member_object_pointer
+      {
+        static inline constexpr bool value = false;
+      };
 
-template <typename _Ty>
-inline constexpr bool is_member_object_pointer_v = internal::is_member_object_pointer<remove_cv_t<_Ty>>::value;
+      template <typename T1, typename T2>
+      struct is_member_object_pointer<T1 T2::*>
+      {
+        static inline constexpr bool value = !is_function_v<T1>;
+        using class_type                   = T2;
+      };
+    } // namespace internal
 
-template <typename T>
-struct is_member_object_pointer : bool_constant<is_member_function_pointer_v<T>>
-{
-};
+    template <typename _Ty>
+    inline constexpr bool is_member_object_pointer_v = internal::is_member_object_pointer<remove_cv_t<_Ty>>::value;
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    struct is_member_object_pointer : bool_constant<is_member_function_pointer_v<T>>
+    {
+    };
+
+  } // namespace v1
+} // namespace rsl

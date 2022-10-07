@@ -14,36 +14,40 @@
 
 #include "rex_std/internal/type_traits/integral_constant.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-// determine whether type argument is const qualified
-
-namespace internal
+namespace rsl
 {
-  template <typename T>
-  struct is_const_value : public false_type
+  inline namespace v1
   {
-  };
-  template <typename T>
-  struct is_const_value<const T*> : public true_type
-  {
-  };
-  template <typename T>
-  struct is_const_value<const volatile T*> : public true_type
-  {
-  };
-} // namespace internal
 
-template <typename T>
-struct is_const : public internal::is_const_value<T*>
-{
-};
-template <typename T>
-struct is_const<T&> : public false_type
-{
-};
+    // determine whether type argument is const qualified
 
-template <typename T>
-inline constexpr bool is_const_v = is_const<T>::value;
+    namespace internal
+    {
+      template <typename T>
+      struct is_const_value : public false_type
+      {
+      };
+      template <typename T>
+      struct is_const_value<const T*> : public true_type
+      {
+      };
+      template <typename T>
+      struct is_const_value<const volatile T*> : public true_type
+      {
+      };
+    } // namespace internal
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    struct is_const : public internal::is_const_value<T*>
+    {
+    };
+    template <typename T>
+    struct is_const<T&> : public false_type
+    {
+    };
+
+    template <typename T>
+    inline constexpr bool is_const_v = is_const<T>::value;
+
+  } // namespace v1
+} // namespace rsl

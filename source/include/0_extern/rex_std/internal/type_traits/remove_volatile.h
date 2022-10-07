@@ -12,21 +12,25 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-struct remove_volatile
+namespace rsl
 {
-  using type = T;
-};
+  inline namespace v1
+  {
 
-template <typename T>
-struct remove_volatile<volatile T>
-{
-  using type = T;
-};
+    template <typename T>
+    struct remove_volatile
+    {
+      using type = T;
+    };
 
-template <typename T>
-using remove_volatile_t = typename remove_volatile<T>::type;
+    template <typename T>
+    struct remove_volatile<volatile T>
+    {
+      using type = T;
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    using remove_volatile_t = typename remove_volatile<T>::type;
+
+  } // namespace v1
+} // namespace rsl

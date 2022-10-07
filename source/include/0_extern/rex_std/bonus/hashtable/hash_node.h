@@ -12,17 +12,21 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename Value>
-struct hash_node
+namespace rsl
 {
-  hash_node()                 = default;
-  hash_node(const hash_node&) = default;
-  hash_node(hash_node&&)      = default;
+  inline namespace v1
+  {
 
-  Value value;
-  hash_node* next;
-};
+    template <typename Value>
+    struct hash_node
+    {
+      hash_node()                 = default;
+      hash_node(const hash_node&) = default;
+      hash_node(hash_node&&)      = default;
 
-REX_RSL_END_NAMESPACE
+      Value value;
+      hash_node* next;
+    };
+
+  } // namespace v1
+} // namespace rsl

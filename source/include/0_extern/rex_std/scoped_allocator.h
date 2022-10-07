@@ -18,14 +18,18 @@
 
 #include <scoped_allocator>
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
-template <typename OuterAlloc, typename... InnerAlloc>
-REX_STD_TEMPLATED_CLASS_ALIAS(scoped_allocator_adaptor, OuterAlloc, InnerAlloc...);
+    template <typename OuterAlloc, typename... InnerAlloc>
+    REX_STD_TEMPLATED_CLASS_ALIAS(scoped_allocator_adaptor, OuterAlloc, InnerAlloc...);
 
-REX_STD_FUNC_ALIAS(operator==);
-REX_STD_FUNC_ALIAS(operator!=);
+    REX_STD_FUNC_ALIAS(operator==);
+    REX_STD_FUNC_ALIAS(operator!=);
 
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl
 
 #include "rex_std/enable_std_checking.h"

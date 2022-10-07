@@ -18,13 +18,17 @@
 
 #include <csignal>
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
-using sig_atomic = int32;
+    using sig_atomic = int32;
 
-REX_STD_FUNC_ALIAS(signal);
-REX_STD_FUNC_ALIAS(raise);
+    REX_STD_FUNC_ALIAS(signal);
+    REX_STD_FUNC_ALIAS(raise);
 
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl
 
 #include "rex_std/enable_std_checking.h"

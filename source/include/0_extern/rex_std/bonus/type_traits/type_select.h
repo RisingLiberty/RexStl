@@ -10,21 +10,25 @@
 //
 // ============================================
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <bool Condition, typename TypeIfTrue, typename TypeIfFalse>
-struct type_select
+namespace rsl
 {
-  using type = TypeIfTrue;
-};
+  inline namespace v1
+  {
 
-template <typename TypeIfTrue, typename TypeIfFalse>
-struct type_select<false, TypeIfTrue, TypeIfFalse>
-{
-  using type = TypeIfFalse;
-};
+    template <bool Condition, typename TypeIfTrue, typename TypeIfFalse>
+    struct type_select
+    {
+      using type = TypeIfTrue;
+    };
 
-template <bool Condition, typename TypeIfTrue, typename TypeIfFalse>
-using type_select_t = typename type_select<Condition, TypeIfTrue, TypeIfFalse>;
+    template <typename TypeIfTrue, typename TypeIfFalse>
+    struct type_select<false, TypeIfTrue, TypeIfFalse>
+    {
+      using type = TypeIfFalse;
+    };
 
-REX_RSL_END_NAMESPACE
+    template <bool Condition, typename TypeIfTrue, typename TypeIfFalse>
+    using type_select_t = typename type_select<Condition, TypeIfTrue, TypeIfFalse>;
+
+  } // namespace v1
+} // namespace rsl

@@ -14,32 +14,36 @@
 
 #include "rex_std/bonus/hashtable/hash_node.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename Value>
-class node_iterator_base
+namespace rsl
 {
-public:
-  using node_type = hash_node<Value>;
-
-  node_iterator_base(node_type* node)
-      : m_node(node)
+  inline namespace v1
   {
-  }
 
-  void increment()
-  {
-    m_node = m_node->next;
-  }
+    template <typename Value>
+    class node_iterator_base
+    {
+    public:
+      using node_type = hash_node<Value>;
 
-protected:
-  node_type* node()
-  {
-    return m_node;
-  }
+      node_iterator_base(node_type* node)
+          : m_node(node)
+      {
+      }
 
-private:
-  node_type* m_node;
-};
+      void increment()
+      {
+        m_node = m_node->next;
+      }
 
-REX_RSL_END_NAMESPACE
+    protected:
+      node_type* node()
+      {
+        return m_node;
+      }
+
+    private:
+      node_type* m_node;
+    };
+
+  } // namespace v1
+} // namespace rsl

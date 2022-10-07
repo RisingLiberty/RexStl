@@ -16,175 +16,179 @@
 
 /// [21/Aug/2022] RSL Comment: deprecate this file
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-class bi_directional_iterator
+namespace rsl
 {
-public:
-  using value_type        = T;
-  using pointer           = T*;
-  using const_pointer     = const T*;
-  using reference         = T&;
-  using const_reference   = const T&;
-  using iterator_category = rsl::bidirectional_iterator_tag;
-  using difference_type   = int32;
+  inline namespace v1
+  {
 
-  constexpr explicit bi_directional_iterator(pointer value = nullptr)
-      : m_value(value)
-  {
-  }
+    template <typename T>
+    class bi_directional_iterator
+    {
+    public:
+      using value_type        = T;
+      using pointer           = T*;
+      using const_pointer     = const T*;
+      using reference         = T&;
+      using const_reference   = const T&;
+      using iterator_category = rsl::bidirectional_iterator_tag;
+      using difference_type   = int32;
 
-  constexpr reference operator*()
-  {
-    return *m_value;
-  }
-  constexpr pointer operator->()
-  {
-    return m_value;
-  }
+      constexpr explicit bi_directional_iterator(pointer value = nullptr)
+          : m_value(value)
+      {
+      }
 
-  constexpr const_reference operator*() const
-  {
-    return *m_value;
-  }
-  constexpr const_pointer operator->() const
-  {
-    return m_value;
-  }
+      constexpr reference operator*()
+      {
+        return *m_value;
+      }
+      constexpr pointer operator->()
+      {
+        return m_value;
+      }
 
-  constexpr bool operator==(const bi_directional_iterator other) const
-  {
-    return m_value == other.m_value;
-  }
-  constexpr bool operator!=(const bi_directional_iterator other) const
-  {
-    return m_value != other.m_value;
-  }
+      constexpr const_reference operator*() const
+      {
+        return *m_value;
+      }
+      constexpr const_pointer operator->() const
+      {
+        return m_value;
+      }
 
-  constexpr bool operator<(const bi_directional_iterator other) const
-  {
-    return m_value < other.m_value;
-  }
-  constexpr bool operator<=(const bi_directional_iterator other) const
-  {
-    return m_value <= other.m_value;
-  }
-  constexpr bool operator>(const bi_directional_iterator other) const
-  {
-    return m_value > other.m_value;
-  }
-  constexpr bool operator>=(const bi_directional_iterator other) const
-  {
-    return m_value >= other.m_value;
-  }
+      constexpr bool operator==(const bi_directional_iterator other) const
+      {
+        return m_value == other.m_value;
+      }
+      constexpr bool operator!=(const bi_directional_iterator other) const
+      {
+        return m_value != other.m_value;
+      }
 
-  constexpr bi_directional_iterator operator++()
-  {
-    ++m_value;
-    return *this;
-  }
-  constexpr bi_directional_iterator operator++(int)
-  {
-    bi_directional_iterator tmp = *this;
-    operator++();
-    return tmp;
-  }
+      constexpr bool operator<(const bi_directional_iterator other) const
+      {
+        return m_value < other.m_value;
+      }
+      constexpr bool operator<=(const bi_directional_iterator other) const
+      {
+        return m_value <= other.m_value;
+      }
+      constexpr bool operator>(const bi_directional_iterator other) const
+      {
+        return m_value > other.m_value;
+      }
+      constexpr bool operator>=(const bi_directional_iterator other) const
+      {
+        return m_value >= other.m_value;
+      }
 
-  constexpr bi_directional_iterator operator--()
-  {
-    m_value--;
-    return *this;
-  }
-  constexpr bi_directional_iterator operator--(int)
-  {
-    bi_directional_iterator tmp = *this;
-    operator--();
-    return tmp;
-  }
+      constexpr bi_directional_iterator operator++()
+      {
+        ++m_value;
+        return *this;
+      }
+      constexpr bi_directional_iterator operator++(int)
+      {
+        bi_directional_iterator tmp = *this;
+        operator++();
+        return tmp;
+      }
 
-private:
-  pointer m_value;
-};
+      constexpr bi_directional_iterator operator--()
+      {
+        m_value--;
+        return *this;
+      }
+      constexpr bi_directional_iterator operator--(int)
+      {
+        bi_directional_iterator tmp = *this;
+        operator--();
+        return tmp;
+      }
 
-template <typename T>
-class const_bi_directional_iterator
-{
-public:
-  using value_type        = T;
-  using pointer           = T*;
-  using const_pointer     = const T*;
-  using reference         = const T&;
-  using const_reference   = const T&;
-  using iterator_category = rsl::bidirectional_iterator_tag;
-  using difference_type   = int32;
+    private:
+      pointer m_value;
+    };
 
-  constexpr explicit const_bi_directional_iterator(pointer value = nullptr)
-      : m_value(value)
-  {
-  }
+    template <typename T>
+    class const_bi_directional_iterator
+    {
+    public:
+      using value_type        = T;
+      using pointer           = T*;
+      using const_pointer     = const T*;
+      using reference         = const T&;
+      using const_reference   = const T&;
+      using iterator_category = rsl::bidirectional_iterator_tag;
+      using difference_type   = int32;
 
-  constexpr const_reference operator*() const
-  {
-    return *m_value;
-  }
-  constexpr const_pointer operator->() const
-  {
-    return m_value;
-  }
+      constexpr explicit const_bi_directional_iterator(pointer value = nullptr)
+          : m_value(value)
+      {
+      }
 
-  constexpr bool operator==(const const_bi_directional_iterator other) const
-  {
-    return m_value == other.m_value;
-  }
-  constexpr bool operator!=(const const_bi_directional_iterator other) const
-  {
-    return m_value != other.m_value;
-  }
+      constexpr const_reference operator*() const
+      {
+        return *m_value;
+      }
+      constexpr const_pointer operator->() const
+      {
+        return m_value;
+      }
 
-  constexpr bool operator<(const const_bi_directional_iterator other) const
-  {
-    return m_value < other.m_value;
-  }
-  constexpr bool operator<=(const const_bi_directional_iterator other) const
-  {
-    return m_value <= other.m_value;
-  }
-  constexpr bool operator>(const const_bi_directional_iterator other) const
-  {
-    return m_value > other.m_value;
-  }
-  constexpr bool operator>=(const const_bi_directional_iterator other) const
-  {
-    return m_value >= other.m_value;
-  }
+      constexpr bool operator==(const const_bi_directional_iterator other) const
+      {
+        return m_value == other.m_value;
+      }
+      constexpr bool operator!=(const const_bi_directional_iterator other) const
+      {
+        return m_value != other.m_value;
+      }
 
-  constexpr const_bi_directional_iterator operator++()
-  {
-    ++m_value;
-    return *this;
-  }
-  constexpr const_bi_directional_iterator operator++(int)
-  {
-    const_bi_directional_iterator tmp = *this;
-    operator++();
-    return tmp;
-  }
+      constexpr bool operator<(const const_bi_directional_iterator other) const
+      {
+        return m_value < other.m_value;
+      }
+      constexpr bool operator<=(const const_bi_directional_iterator other) const
+      {
+        return m_value <= other.m_value;
+      }
+      constexpr bool operator>(const const_bi_directional_iterator other) const
+      {
+        return m_value > other.m_value;
+      }
+      constexpr bool operator>=(const const_bi_directional_iterator other) const
+      {
+        return m_value >= other.m_value;
+      }
 
-  constexpr const_bi_directional_iterator operator--()
-  {
-    m_value--;
-    return *this;
-  }
-  constexpr const_bi_directional_iterator operator--(int)
-  {
-    const_bi_directional_iterator tmp = *this;
-    operator--();
-    return tmp;
-  }
+      constexpr const_bi_directional_iterator operator++()
+      {
+        ++m_value;
+        return *this;
+      }
+      constexpr const_bi_directional_iterator operator++(int)
+      {
+        const_bi_directional_iterator tmp = *this;
+        operator++();
+        return tmp;
+      }
 
-private:
-  pointer m_value;
-};
+      constexpr const_bi_directional_iterator operator--()
+      {
+        m_value--;
+        return *this;
+      }
+      constexpr const_bi_directional_iterator operator--(int)
+      {
+        const_bi_directional_iterator tmp = *this;
+        operator--();
+        return tmp;
+      }
 
-REX_RSL_END_NAMESPACE
+    private:
+      pointer m_value;
+    };
+
+  } // namespace v1
+} // namespace rsl

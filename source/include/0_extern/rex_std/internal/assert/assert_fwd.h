@@ -19,12 +19,16 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
-template <typename... Args>
-bool assert(bool cond, Args&&... args);
+    template <typename... Args>
+    bool assert(bool cond, Args&&... args);
 
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl
 
 /// RSL Comment: Different from ISO C++ Standard at time of writing (15/Sep/2022)
 // The standard only accepts a condition in the assert macro,

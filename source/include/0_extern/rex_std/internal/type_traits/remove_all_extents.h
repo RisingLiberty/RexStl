@@ -12,27 +12,31 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-struct remove_all_extents
+namespace rsl
 {
-  using type = T;
-};
+  inline namespace v1
+  {
 
-template <typename T, size_t N>
-struct remove_all_extents<T[N]>
-{
-  using type = typename remove_all_extents<T>::type;
-};
+    template <typename T>
+    struct remove_all_extents
+    {
+      using type = T;
+    };
 
-template <typename T>
-struct remove_all_extents<T[]>
-{
-  using type = typename remove_all_extents<T>::type;
-};
+    template <typename T, size_t N>
+    struct remove_all_extents<T[N]>
+    {
+      using type = typename remove_all_extents<T>::type;
+    };
 
-template <typename T>
-using remove_all_extents_t = remove_all_extents<T>::type;
+    template <typename T>
+    struct remove_all_extents<T[]>
+    {
+      using type = typename remove_all_extents<T>::type;
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    using remove_all_extents_t = remove_all_extents<T>::type;
+
+  } // namespace v1
+} // namespace rsl

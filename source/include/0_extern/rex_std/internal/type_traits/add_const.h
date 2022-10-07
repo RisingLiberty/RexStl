@@ -12,15 +12,19 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-struct add_const
+namespace rsl
 {
-  using type = const T;
-};
+  inline namespace v1
+  {
 
-template <typename T>
-using add_const_t = typename add_const<T>::type;
+    template <typename T>
+    struct add_const
+    {
+      using type = const T;
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    using add_const_t = typename add_const<T>::type;
+
+  } // namespace v1
+} // namespace rsl

@@ -17,31 +17,35 @@
 #include "rex_std/internal/type_traits/integral_constant.h"
 #include "rex_std/internal/type_traits/is_member_pointer.h"
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
-template <typename T>
-struct is_pointer : public false_type
-{
-};
+    template <typename T>
+    struct is_pointer : public false_type
+    {
+    };
 
-template <typename T>
-struct is_pointer<T*> : public true_type
-{
-};
-template <typename T>
-struct is_pointer<T* const> : public true_type
-{
-};
-template <typename T>
-struct is_pointer<T* volatile> : public true_type
-{
-};
-template <typename T>
-struct is_pointer<T* const volatile> : public true_type
-{
-};
+    template <typename T>
+    struct is_pointer<T*> : public true_type
+    {
+    };
+    template <typename T>
+    struct is_pointer<T* const> : public true_type
+    {
+    };
+    template <typename T>
+    struct is_pointer<T* volatile> : public true_type
+    {
+    };
+    template <typename T>
+    struct is_pointer<T* const volatile> : public true_type
+    {
+    };
 
-template <typename T>
-inline constexpr bool is_pointer_v = is_pointer<T>::value;
+    template <typename T>
+    inline constexpr bool is_pointer_v = is_pointer<T>::value;
 
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl

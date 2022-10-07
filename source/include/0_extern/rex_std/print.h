@@ -19,14 +19,18 @@
 
   #include <print>
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
-REX_STD_FUNC_ALIAS(print);
-REX_STD_FUNC_ALIAS(println);
-REX_STD_FUNC_ALIAS(vprint_unicode);
-REX_STD_FUNC_ALIAS(vprint_nounicode);
+    REX_STD_FUNC_ALIAS(print);
+    REX_STD_FUNC_ALIAS(println);
+    REX_STD_FUNC_ALIAS(vprint_unicode);
+    REX_STD_FUNC_ALIAS(vprint_nounicode);
 
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl
 
   #include "rex_std/enable_std_checking.h"
 

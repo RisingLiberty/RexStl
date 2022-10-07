@@ -19,11 +19,14 @@
 
   #include <barrier>
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
 {
-  template <typename CompletionFunction>
-  REX_STD_TEMPLATED_CLASS_ALIAS(barrier, CompletionFunction);
-}
+  inline namespace v1
+  {
+    {
+      template <typename CompletionFunction>
+      REX_STD_TEMPLATED_CLASS_ALIAS(barrier, CompletionFunction);
+    }
 
   #include "rex_std/enable_std_checking.h"
 

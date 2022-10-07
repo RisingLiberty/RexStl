@@ -18,16 +18,20 @@
 
 #include <execution>
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-REX_STD_TEMPLATED_CLASS_ALIAS(is_execution_policy, T);
-
-namespace execution
+namespace rsl
 {
-  using namespace std::execution;
-}
+  inline namespace v1
+  {
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    REX_STD_TEMPLATED_CLASS_ALIAS(is_execution_policy, T);
+
+    namespace execution
+    {
+      using namespace std::execution;
+    }
+
+  } // namespace v1
+} // namespace rsl
 
 #include "rex_std/enable_std_checking.h"

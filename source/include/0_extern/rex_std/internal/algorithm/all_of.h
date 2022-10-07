@@ -12,17 +12,21 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename InputIterator, typename Predicate>
-bool all_of(InputIterator first, InputIterator last, Predicate p)
+namespace rsl
 {
-  for(; first != last; ++first)
+  inline namespace v1
   {
-    if(!p(*first))
-      return false;
-  }
-  return true;
-}
 
-REX_RSL_END_NAMESPACE
+    template <typename InputIterator, typename Predicate>
+    bool all_of(InputIterator first, InputIterator last, Predicate p)
+    {
+      for(; first != last; ++first)
+      {
+        if(!p(*first))
+          return false;
+      }
+      return true;
+    }
+
+  } // namespace v1
+} // namespace rsl

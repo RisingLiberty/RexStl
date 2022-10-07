@@ -16,30 +16,34 @@
 #include "rex_std/internal/iterator/iterator_tags.h"
 #include "rex_std/internal/type_traits/is_base_of.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename InputIterator>
-void reverse(InputIterator first, InputIterator last)
+namespace rsl
 {
-  using iter_cat = typename InputIterator::iterator_category;
-
-  if constexpr(is_base_of_v<random_access_iterator_tag, iter_cat>)
+  inline namespace v1
   {
-    if(first == last)
-      return;
 
-    for(--last; first < last; (void)++first, --last)
+    template <typename InputIterator>
+    void reverse(InputIterator first, InputIterator last)
     {
-      iter_swap(first, last);
-    }
-  }
-  else
-  {
-    while((first != last) && (first != --last))
-    {
-      iter_swap(first++, last);
-    }
-  }
-}
+      using iter_cat = typename InputIterator::iterator_category;
 
-REX_RSL_END_NAMESPACE
+      if constexpr(is_base_of_v<random_access_iterator_tag, iter_cat>)
+      {
+        if(first == last)
+          return;
+
+        for(--last; first < last; (void)++first, --last)
+        {
+          iter_swap(first, last);
+        }
+      }
+      else
+      {
+        while((first != last) && (first != --last))
+        {
+          iter_swap(first++, last);
+        }
+      }
+    }
+
+  } // namespace v1
+} // namespace rsl

@@ -21,37 +21,41 @@
 #include "rex_std/bonus/types.h"
 #include "rex_std/internal/iterator/iterator_tags.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T, typename CharT = char8, typename Traits = char_traits<CharT>, typename Distance = ptrdiff>
-class istream_iterator
+namespace rsl
 {
-  using iterator_category = input_iterator_tag;
-  using value_type        = T;
-  using difference_type   = Distance;
-  using pointer           = const T*;
-  using reference         = const T&;
-  using char_type         = CharT;
-  using traits_type       = Traits;
-  using istream_type      = basic_istream<CharT, Traits>;
+  inline namespace v1
+  {
 
-  constexpr istream_iterator();
-  istream_iterator(stream_type& stream);
-  istream_iterator(const istream_iterator& stream) = default;
+    template <typename T, typename CharT = char8, typename Traits = char_traits<CharT>, typename Distance = ptrdiff>
+    class istream_iterator
+    {
+      using iterator_category = input_iterator_tag;
+      using value_type        = T;
+      using difference_type   = Distance;
+      using pointer           = const T*;
+      using reference         = const T&;
+      using char_type         = CharT;
+      using traits_type       = Traits;
+      using istream_type      = basic_istream<CharT, Traits>;
 
-  ~istream_iterator() = default;
+      constexpr istream_iterator();
+      istream_iterator(stream_type& stream);
+      istream_iterator(const istream_iterator& stream) = default;
 
-  const T& operator*() const;
-  const T* operator->() const;
+      ~istream_iterator() = default;
 
-  istream_iterator& operator++();
-  istream_iterator operator++(int);
-};
+      const T& operator*() const;
+      const T* operator->() const;
 
-template <typename T, typename CharT, typename Traits, typename Dist>
-bool operator==(const istream_iterator<T, CharT, Traits, Dist>& lhs, const istream_iterator<T, CharT, Traits, Dist>& rhs);
+      istream_iterator& operator++();
+      istream_iterator operator++(int);
+    };
 
-template <typename T, typename CharT, typename Traits, typename Dist>
-bool operator!=(const istream_iterator<T, CharT, Traits, Dist>& lhs, const istream_iterator<T, CharT, Traits, Dist>& rhs);
+    template <typename T, typename CharT, typename Traits, typename Dist>
+    bool operator==(const istream_iterator<T, CharT, Traits, Dist>& lhs, const istream_iterator<T, CharT, Traits, Dist>& rhs);
 
-REX_RSL_END_NAMESPACE
+    template <typename T, typename CharT, typename Traits, typename Dist>
+    bool operator!=(const istream_iterator<T, CharT, Traits, Dist>& lhs, const istream_iterator<T, CharT, Traits, Dist>& rhs);
+
+  } // namespace v1
+} // namespace rsl

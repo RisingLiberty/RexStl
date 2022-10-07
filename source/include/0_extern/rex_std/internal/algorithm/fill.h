@@ -14,15 +14,19 @@
 
 #include "rex_std/bonus/type_traits/is_scalar.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename InputIterator, typename T>
-void fill(InputIterator first, InputIterator end, const T& value)
+namespace rsl
 {
-  for(auto dst = first; dst != end; ++dst)
+  inline namespace v1
   {
-    *dst = value;
-  }
-}
 
-REX_RSL_END_NAMESPACE
+    template <typename InputIterator, typename T>
+    void fill(InputIterator first, InputIterator end, const T& value)
+    {
+      for(auto dst = first; dst != end; ++dst)
+      {
+        *dst = value;
+      }
+    }
+
+  } // namespace v1
+} // namespace rsl

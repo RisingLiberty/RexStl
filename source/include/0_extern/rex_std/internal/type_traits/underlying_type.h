@@ -14,27 +14,31 @@
 
 #include "rex_std/internal/type_traits/is_enum.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-namespace internal
+namespace rsl
 {
-  template <typename T, bool = is_enum_v<T>>
-  struct underlying_type_helper
+  inline namespace v1
   {
-    using type = __underlying_type(T);
-  };
 
-  template <typename T>
-  struct underlying_type_helper<T, false>
-  {
-  };
-} // namespace internal
-template <typename T>
-struct underlying_type : internal::underlying_type_helper<T>
-{
-};
+    namespace internal
+    {
+      template <typename T, bool = is_enum_v<T>>
+      struct underlying_type_helper
+      {
+        using type = __underlying_type(T);
+      };
 
-template <typename T>
-using underlying_type_t = typename underlying_type<T>::type;
+      template <typename T>
+      struct underlying_type_helper<T, false>
+      {
+      };
+    } // namespace internal
+    template <typename T>
+    struct underlying_type : internal::underlying_type_helper<T>
+    {
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    using underlying_type_t = typename underlying_type<T>::type;
+
+  } // namespace v1
+} // namespace rsl

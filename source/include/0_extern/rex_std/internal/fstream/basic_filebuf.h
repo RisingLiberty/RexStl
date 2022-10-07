@@ -21,45 +21,49 @@
 
 #include "rex_std/internal/streambuf/basic_streambuf.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-namespace internal
+namespace rsl
 {
-  using handle = void*;
-
-  class filebuf_impl
+  inline namespace v1
   {
-  };
-} // namespace internal
 
-template <typename CharT, typename Traits>
-    class basic_filebuf : public basic_streambuf < CharT,
-    Traits >>
-{
-private:
-  using base = basic_streambuf<char8, char_traits<char8>>;
+    namespace internal
+    {
+      using handle = void*;
 
-public:
-  using char_type   = typename base::char_type;
-  using traits_type = typename base::traits_type;
-  using int_type    = typename base::int_type;
-  using pos_type    = typename base::pos_type;
-  using off_type    = typename base::off_type;
+      class filebuf_impl
+      {
+      };
+    } // namespace internal
 
-  basic_filebuf(internal::handle handle);
+    template <typename CharT, typename Traits>
+        class basic_filebuf : public basic_streambuf < CharT,
+        Traits >>
+    {
+    private:
+      using base = basic_streambuf<char8, char_traits<char8>>;
 
-protected:
-  streamsize xsgetn(char_type* s, streamsize count) final;
-  streamsize xsputn(const char_type* s, streamsize count) final;
+    public:
+      using char_type   = typename base::char_type;
+      using traits_type = typename base::traits_type;
+      using int_type    = typename base::int_type;
+      using pos_type    = typename base::pos_type;
+      using off_type    = typename base::off_type;
 
-  int_type overflow(int_type ch) final;
-  streamsize overflown(const char_type* s, streamsize count) final;
-  int_type underflow() final;
-  int_type uflow() final;
-  streamsize uflown(char_type* s, streamsize count) final;
+      basic_filebuf(internal::handle handle);
 
-private:
-  filebuf_impl m_impl;
-};
+    protected:
+      streamsize xsgetn(char_type* s, streamsize count) final;
+      streamsize xsputn(const char_type* s, streamsize count) final;
 
-REX_RSL_END_NAMESPACE
+      int_type overflow(int_type ch) final;
+      streamsize overflown(const char_type* s, streamsize count) final;
+      int_type underflow() final;
+      int_type uflow() final;
+      streamsize uflown(char_type* s, streamsize count) final;
+
+    private:
+      filebuf_impl m_impl;
+    };
+
+  } // namespace v1
+} // namespace rsl

@@ -15,14 +15,18 @@
 #include "rex_std/internal/type_traits/integral_constant.h"
 #include "rex_std/internal/type_traits/is_fundamental.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-struct is_compound : public bool_constant<!is_fundamental_v<T>>
+namespace rsl
 {
-};
+  inline namespace v1
+  {
 
-template <typename T>
-inline constexpr bool is_compound_v = is_compound<T>;
+    template <typename T>
+    struct is_compound : public bool_constant<!is_fundamental_v<T>>
+    {
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    inline constexpr bool is_compound_v = is_compound<T>;
+
+  } // namespace v1
+} // namespace rsl

@@ -14,9 +14,13 @@
 
 #include "rex_std/internal/iterator/iterator_traits.h"
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
-template <typename InputIt>
-using iter_val_t = typename iterator_traits<InputIt>::value_type::value_type;
+    template <typename InputIt>
+    using iter_val_t = typename iterator_traits<InputIt>::value_type::value_type;
 
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl

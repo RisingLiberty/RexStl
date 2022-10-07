@@ -15,31 +15,35 @@
 #include "rex_std/bonus/attributes.h"
 #include "rex_std/bonus/defines.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T, T Val>
-struct integral_constant
+namespace rsl
 {
-  using value_type = T;
-  using type       = integral_constant;
-
-  static constexpr value_type value = Val;
-
-  explicit constexpr operator value_type() const
+  inline namespace v1
   {
-    return value;
-  }
 
-  REX_NO_DISCARD constexpr value_type operator()() const
-  {
-    return value;
-  }
-};
+    template <typename T, T Val>
+    struct integral_constant
+    {
+      using value_type = T;
+      using type       = integral_constant;
 
-template <bool Val>
-using bool_constant = integral_constant<bool, Val>;
+      static constexpr value_type value = Val;
 
-using true_type  = bool_constant<true>;
-using false_type = bool_constant<false>;
+      explicit constexpr operator value_type() const
+      {
+        return value;
+      }
 
-REX_RSL_END_NAMESPACE
+      REX_NO_DISCARD constexpr value_type operator()() const
+      {
+        return value;
+      }
+    };
+
+    template <bool Val>
+    using bool_constant = integral_constant<bool, Val>;
+
+    using true_type  = bool_constant<true>;
+    using false_type = bool_constant<false>;
+
+  } // namespace v1
+} // namespace rsl

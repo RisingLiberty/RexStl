@@ -16,14 +16,18 @@
 #include "rex_std/internal/type_traits/is_same.h"
 #include "rex_std/internal/type_traits/remove_cv.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-struct is_void : public bool_constant<is_same_v<remove_cv_t<T>, void>>
+namespace rsl
 {
-};
+  inline namespace v1
+  {
 
-template <typename T>
-inline constexpr bool is_void_v = is_void<T>::value;
+    template <typename T>
+    struct is_void : public bool_constant<is_same_v<remove_cv_t<T>, void>>
+    {
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    inline constexpr bool is_void_v = is_void<T>::value;
+
+  } // namespace v1
+} // namespace rsl

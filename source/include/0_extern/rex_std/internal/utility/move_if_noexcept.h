@@ -17,12 +17,16 @@
 #include "rex_std/internal/type_traits/is_nothrow_move_constructible.h"
 #include "rex_std/internal/utility/move.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-constexpr conditional_t<!is_nothrow_move_constructible_v<T> && is_copy_constructible_v<T>, const T&, T&&> move_if_noexcept(T& arg)
+namespace rsl
 {
-  return move(arg);
-}
+  inline namespace v1
+  {
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    constexpr conditional_t<!is_nothrow_move_constructible_v<T> && is_copy_constructible_v<T>, const T&, T&&> move_if_noexcept(T& arg)
+    {
+      return move(arg);
+    }
+
+  } // namespace v1
+} // namespace rsl

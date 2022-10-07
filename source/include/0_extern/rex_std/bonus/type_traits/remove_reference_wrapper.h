@@ -12,22 +12,26 @@
 
 #include "rex_std/internal/functional/reference_wrapper.h"
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
-template <typename T>
-struct remove_reference_wrapper
-{
-  using type = T;
-};
-template <typename T>
-struct remove_reference_wrapper<reference_wrapper<T>>
-{
-  using type = T&;
-};
-template <typename T>
-struct remove_reference_wrapper<const reference_wrapper<T>>
-{
-  using type = T&;
-};
+    template <typename T>
+    struct remove_reference_wrapper
+    {
+      using type = T;
+    };
+    template <typename T>
+    struct remove_reference_wrapper<reference_wrapper<T>>
+    {
+      using type = T&;
+    };
+    template <typename T>
+    struct remove_reference_wrapper<const reference_wrapper<T>>
+    {
+      using type = T&;
+    };
 
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl

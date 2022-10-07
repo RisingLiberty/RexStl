@@ -18,19 +18,26 @@
 
 #include <cinttypes>
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
-REX_STD_FUNC_ALIAS(wcstoimax);
-REX_STD_FUNC_ALIAS(wcstoumax);
+    REX_STD_FUNC_ALIAS(wcstoimax);
+    REX_STD_FUNC_ALIAS(wcstoumax);
 
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl
 
 #include "rex_std/bonus/cinttypes/div_result.h"
 #include "rex_std/cstdint.h"
 #include "rex_std/enable_std_checking.h"
 #include "rex_std/internal/string/byte_strings.h"
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
 #define PRId8       "hhd"
 #define PRId16      "hd"
@@ -241,17 +248,18 @@ REX_RSL_BEGIN_NAMESPACE
   #define SCNxPTR SCNx64
 #endif
 
-constexpr intmax imaxabs(intmax n)
-{
-  return n > 0 ? n : -n;
-}
+    constexpr intmax imaxabs(intmax n)
+    {
+      return n > 0 ? n : -n;
+    }
 
-// type returned by rsl::imaxdiv
-using imaxdiv_t = DivResult<intmax>;
+    // type returned by rsl::imaxdiv
+    using imaxdiv_t = DivResult<intmax>;
 
-constexpr imaxdiv_t imaxdiv(intmax x, intmax y)
-{
-  return rsl::div<intmax>(x, y);
-}
+    constexpr imaxdiv_t imaxdiv(intmax x, intmax y)
+    {
+      return rsl::div<intmax>(x, y);
+    }
 
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl

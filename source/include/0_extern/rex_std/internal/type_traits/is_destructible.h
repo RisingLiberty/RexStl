@@ -14,14 +14,18 @@
 
 #include "rex_std/internal/type_traits/integral_constant.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-struct is_destructible : bool_constant<__is_destructible(T)>
+namespace rsl
 {
-};
+  inline namespace v1
+  {
 
-template <typename T>
-inline constexpr bool is_destructible_v = is_destructible<T>::value;
+    template <typename T>
+    struct is_destructible : bool_constant<__is_destructible(T)>
+    {
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    inline constexpr bool is_destructible_v = is_destructible<T>::value;
+
+  } // namespace v1
+} // namespace rsl

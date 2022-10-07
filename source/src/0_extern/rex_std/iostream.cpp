@@ -23,54 +23,58 @@
 
 #include <Windows.h>
 
-REX_RSL_BEGIN_NAMESPACE
-
-rsl::streambuf* cin_streambuf()
+namespace rsl
 {
-  HANDLE input_handle = GetStdHandle(STD_INPUT_HANDLE);
-
-  static console_buf<char8> buff(input_handle);
-  return &buff;
-}
-rsl::streambuf* cout_streambuf()
-{
-  HANDLE output_handle = GetStdHandle(STD_OUTPUT_HANDLE);
-
-  static console_buf<char8> buff(output_handle);
-  return &buff;
-}
-rsl::streambuf* cerr_streambuf()
-{
-  HANDLE error_handle = GetStdHandle(STD_ERROR_HANDLE);
-
-  static console_buf<char8> buff(error_handle);
-  return &buff;
-}
-
-rsl::istream cin(cin_streambuf());   // NOLINT(cppcoreguidelines-avoid-non-const-global-variables, fuchsia-statically-constructed-objects)
-rsl::ostream cout(cout_streambuf()); // NOLINT(cppcoreguidelines-avoid-non-const-global-variables, fuchsia-statically-constructed-objects)
-rsl::ostream cerr(cerr_streambuf()); // NOLINT(cppcoreguidelines-avoid-non-const-global-variables, fuchsia-statically-constructed-objects)
-rsl::ostream clog(cerr_streambuf()); // NOLINT(cppcoreguidelines-avoid-non-const-global-variables, fuchsia-statically-constructed-objects)
-
-namespace internal
-{
-  class init_cout // NOLINT(cppcoreguidelines-special-member-functions)
+  inline namespace v1
   {
-  public:
-    init_cout()
-    {
-      cin.tie(&cout);
-      cerr.tie(&cout);
-    }
-    ~init_cout()
-    {
-      clog.flush();
-      cout.flush();
-      cerr.flush();
-    }
-  };
 
-  init_cout g_init_cout; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables, fuchsia-statically-constructed-objects)
-} // namespace internal
+    rsl::streambuf* cin_streambuf()
+    {
+      HANDLE input_handle = GetStdHandle(STD_INPUT_HANDLE);
 
-REX_RSL_END_NAMESPACE
+      static console_buf<char8> buff(input_handle);
+      return &buff;
+    }
+    rsl::streambuf* cout_streambuf()
+    {
+      HANDLE output_handle = GetStdHandle(STD_OUTPUT_HANDLE);
+
+      static console_buf<char8> buff(output_handle);
+      return &buff;
+    }
+    rsl::streambuf* cerr_streambuf()
+    {
+      HANDLE error_handle = GetStdHandle(STD_ERROR_HANDLE);
+
+      static console_buf<char8> buff(error_handle);
+      return &buff;
+    }
+
+    rsl::istream cin(cin_streambuf());   // NOLINT(cppcoreguidelines-avoid-non-const-global-variables, fuchsia-statically-constructed-objects)
+    rsl::ostream cout(cout_streambuf()); // NOLINT(cppcoreguidelines-avoid-non-const-global-variables, fuchsia-statically-constructed-objects)
+    rsl::ostream cerr(cerr_streambuf()); // NOLINT(cppcoreguidelines-avoid-non-const-global-variables, fuchsia-statically-constructed-objects)
+    rsl::ostream clog(cerr_streambuf()); // NOLINT(cppcoreguidelines-avoid-non-const-global-variables, fuchsia-statically-constructed-objects)
+
+    namespace internal
+    {
+      class init_cout // NOLINT(cppcoreguidelines-special-member-functions)
+      {
+      public:
+        init_cout()
+        {
+          cin.tie(&cout);
+          cerr.tie(&cout);
+        }
+        ~init_cout()
+        {
+          clog.flush();
+          cout.flush();
+          cerr.flush();
+        }
+      };
+
+      init_cout g_init_cout; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables, fuchsia-statically-constructed-objects)
+    }                        // namespace internal
+
+  } // namespace v1
+} // namespace rsl

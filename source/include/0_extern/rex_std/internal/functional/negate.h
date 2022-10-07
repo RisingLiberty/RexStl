@@ -12,15 +12,19 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T = void>
-struct negate
+namespace rsl
 {
-  constexpr T operator()(const T& arg) const
+  inline namespace v1
   {
-    return -arg;
-  }
-};
 
-REX_RSL_END_NAMESPACE
+    template <typename T = void>
+    struct negate
+    {
+      constexpr T operator()(const T& arg) const
+      {
+        return -arg;
+      }
+    };
+
+  } // namespace v1
+} // namespace rsl

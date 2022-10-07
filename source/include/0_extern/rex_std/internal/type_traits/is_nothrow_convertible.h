@@ -16,29 +16,33 @@
 #include "rex_std/internal/type_traits/is_convertible.h"
 #include "rex_std/internal/type_traits/is_void.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-namespace internal
+namespace rsl
 {
-  template <typename T>
-  void implicitly_convert_to(T) noexcept;
+  inline namespace v1
+  {
 
-  template <typename From, typename To, bool = is_convertible_v<From, To>, bool = is_void_v<To>>
-  inline constexpr bool IsNoThrowConvertibleHelper = noexcept(implicitly_convert_to<To>(declval<From>()));
+    namespace internal
+    {
+      template <typename T>
+      void implicitly_convert_to(T) noexcept;
 
-  template <typename From, typename To, bool is_void_v>
-  inline constexpr bool IsNoThrowConvertibleHelper<From, To, false, is_void_v> = false;
+      template <typename From, typename To, bool = is_convertible_v<From, To>, bool = is_void_v<To>>
+      inline constexpr bool IsNoThrowConvertibleHelper = noexcept(implicitly_convert_to<To>(declval<From>()));
 
-  template <typename From, typename To>
-  inline constexpr bool IsNoThrowConvertibleHelper<From, To, true, true> = true;
-} // namespace internal
+      template <typename From, typename To, bool is_void_v>
+      inline constexpr bool IsNoThrowConvertibleHelper<From, To, false, is_void_v> = false;
 
-template <typename From, typename To>
-struct is_nothrow_convertible : public bool_constant<internal::IsNoThrowConvertibleHelper<From, To>>
-{
-};
+      template <typename From, typename To>
+      inline constexpr bool IsNoThrowConvertibleHelper<From, To, true, true> = true;
+    } // namespace internal
 
-template <typename From, typename To>
-inline constexpr bool is_nothrow_convertible_v = is_nothrow_convertible<From, To>::value;
+    template <typename From, typename To>
+    struct is_nothrow_convertible : public bool_constant<internal::IsNoThrowConvertibleHelper<From, To>>
+    {
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename From, typename To>
+    inline constexpr bool is_nothrow_convertible_v = is_nothrow_convertible<From, To>::value;
+
+  } // namespace v1
+} // namespace rsl

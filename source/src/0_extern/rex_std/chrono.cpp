@@ -14,28 +14,32 @@
 
 #include <Windows.h>
 
-REX_RSL_BEGIN_NAMESPACE
-namespace chrono::internal
+namespace rsl
 {
-  uint64 get_ticks()
+  inline namespace v1
   {
-    /// [24/Jul/2022] RSL TODO: Wrap this in ifdef for each platform
-    auto query_frequency = []()
+    namespace chrono::internal
     {
-      LARGE_INTEGER frequency;
-      QueryPerformanceFrequency(&frequency);
-      return double(1000000000.0L / frequency.QuadPart); // NOLINT nanoseconds per tick
-    };
+      uint64 get_ticks()
+      {
+        /// [24/Jul/2022] RSL TODO: Wrap this in ifdef for each platform
+        auto query_frequency = []()
+        {
+          LARGE_INTEGER frequency;
+          QueryPerformanceFrequency(&frequency);
+          return double(1000000000.0L / frequency.QuadPart); // NOLINT nanoseconds per tick
+        };
 
-    auto query_counter = []()
-    {
-      LARGE_INTEGER counter;
-      QueryPerformanceCounter(&counter);
-      return counter.QuadPart;
-    };
+        auto query_counter = []()
+        {
+          LARGE_INTEGER counter;
+          QueryPerformanceCounter(&counter);
+          return counter.QuadPart;
+        };
 
-    static auto s_frequency = query_frequency();
-    return static_cast<uint64>(s_frequency * query_counter()); // NOLINT(bugprone-narrowing-conversions,cppcoreguidelines-narrowing-conversions)
-  }
-} // namespace chrono::internal
-REX_RSL_END_NAMESPACE
+        static auto s_frequency = query_frequency();
+        return static_cast<uint64>(s_frequency * query_counter()); // NOLINT(bugprone-narrowing-conversions,cppcoreguidelines-narrowing-conversions)
+      }
+    } // namespace chrono::internal
+  }   // namespace v1
+} // namespace rsl

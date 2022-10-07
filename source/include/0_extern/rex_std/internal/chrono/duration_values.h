@@ -14,28 +14,32 @@
 
 #include "rex_std/limits.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-namespace chrono
+namespace rsl
 {
-  template <typename Rep>
-  struct duration_values
+  inline namespace v1
   {
-  public:
-    static constexpr Rep zero()
-    {
-      return Rep(0);
-    }
-    static constexpr Rep(max)()
-    {
-      return (rsl::numeric_limits<Rep>::max)();
-    }
-    static constexpr Rep(min)()
-    {
-      return (rsl::numeric_limits<Rep>::min)();
-    }
-  };
 
-} // namespace chrono
+    namespace chrono
+    {
+      template <typename Rep>
+      struct duration_values
+      {
+      public:
+        static constexpr Rep zero()
+        {
+          return Rep(0);
+        }
+        static constexpr Rep(max)()
+        {
+          return (rsl::numeric_limits<Rep>::max)();
+        }
+        static constexpr Rep(min)()
+        {
+          return (rsl::numeric_limits<Rep>::min)();
+        }
+      };
 
-REX_RSL_END_NAMESPACE
+    } // namespace chrono
+
+  } // namespace v1
+} // namespace rsl

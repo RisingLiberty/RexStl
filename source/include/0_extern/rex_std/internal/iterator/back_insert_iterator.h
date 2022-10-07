@@ -21,58 +21,62 @@
 #include "rex_std/bonus/types.h"
 #include "rex_std/internal/iterator/iterator_tags.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename Container>
-class back_insert_iterator
+namespace rsl
 {
-public:
-  using iterator_category = output_iterator_tag;
-  using value_type        = void;
-  using difference_type   = ptrdiff;
-  using pointer           = void;
-  using reference         = void;
-  using container_type    = Container;
-
-  constexpr back_insert_iterator()
-      : m_container(nullptr)
+  inline namespace v1
   {
-  }
 
-  constexpr back_insert_iterator(Container& c)
-      : m_container(&c)
-  {
-  }
+    template <typename Container>
+    class back_insert_iterator
+    {
+    public:
+      using iterator_category = output_iterator_tag;
+      using value_type        = void;
+      using difference_type   = ptrdiff;
+      using pointer           = void;
+      using reference         = void;
+      using container_type    = Container;
 
-  constexpr back_insert_iterator& operator=(const typename Container::value_type& value)
-  {
-    m_container->push_back(value);
+      constexpr back_insert_iterator()
+          : m_container(nullptr)
+      {
+      }
 
-    return *this;
-  }
-  constexpr back_insert_iterator& operator=(typename Container::value_type&& value)
-  {
-    m_container->push_back(rsl::move(value));
+      constexpr back_insert_iterator(Container& c)
+          : m_container(&c)
+      {
+      }
 
-    return *this;
-  }
+      constexpr back_insert_iterator& operator=(const typename Container::value_type& value)
+      {
+        m_container->push_back(value);
 
-  constexpr back_insert_iterator& operator*()
-  {
-    return *this;
-  }
+        return *this;
+      }
+      constexpr back_insert_iterator& operator=(typename Container::value_type&& value)
+      {
+        m_container->push_back(rsl::move(value));
 
-  constexpr back_insert_iterator& operator++()
-  {
-    return *this;
-  }
-  constexpr back_insert_iterator& operator++(int)
-  {
-    return *this;
-  }
+        return *this;
+      }
 
-private:
-  Container* m_container;
-};
+      constexpr back_insert_iterator& operator*()
+      {
+        return *this;
+      }
 
-REX_RSL_END_NAMESPACE
+      constexpr back_insert_iterator& operator++()
+      {
+        return *this;
+      }
+      constexpr back_insert_iterator& operator++(int)
+      {
+        return *this;
+      }
+
+    private:
+      Container* m_container;
+    };
+
+  } // namespace v1
+} // namespace rsl

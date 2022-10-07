@@ -17,12 +17,16 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename... Args>
-bool assert(bool cond, Args&&... args)
+namespace rsl
 {
-  return false;
-}
+  inline namespace v1
+  {
 
-REX_RSL_END_NAMESPACE
+    template <typename... Args>
+    bool assert(bool cond, Args&&... args)
+    {
+      return false;
+    }
+
+  } // namespace v1
+} // namespace rsl

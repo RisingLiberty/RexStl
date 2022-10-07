@@ -19,12 +19,16 @@
 
   #include <ranges>
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
-using namespace std::ranges;
-using namespace std::ranges::views;
+    using namespace std::ranges;
+    using namespace std::ranges::views;
 
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl
 
   #include "rex_std/enable_std_checking.h"
 

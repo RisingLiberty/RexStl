@@ -18,13 +18,17 @@
 
 #include <semaphore>
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
-template <ptrdiff LeastMaxValue>
-REX_STD_TEMPLATED_CLASS_ALIAS(counting_semaphore, LeastMaxValue);
+    template <ptrdiff LeastMaxValue>
+    REX_STD_TEMPLATED_CLASS_ALIAS(counting_semaphore, LeastMaxValue);
 
-REX_STD_CLASS_ALIAS(binary_semaphore);
+    REX_STD_CLASS_ALIAS(binary_semaphore);
 
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl
 
 #include "rex_std/enable_std_checking.h"

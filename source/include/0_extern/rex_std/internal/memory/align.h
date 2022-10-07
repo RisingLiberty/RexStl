@@ -15,25 +15,29 @@
 #include "rex_std/bonus/types.h"
 #include "rex_std/internal/memory/byte.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-void* align(count_t alignment, size_t size, void*& ptr, size_t space)
+namespace rsl
 {
-  if(space >= size)
+  inline namespace v1
   {
-    byte* ptrAligned = (byte*)(((size_t)ptr + (alignment - 1)) & -alignment);
-    size_t offset    = (size_t)(ptrAligned - (byte*)ptr);
 
-    if((space - size) >= offset) // have to implement this in terms of subtraction instead of addition in order to handle possible overflow.
+    void* align(count_t alignment, size_t size, void*& ptr, size_t space)
     {
-      ptr = ptrAligned;
-      space -= offset;
+      if(space >= size)
+      {
+        byte* ptrAligned = (byte*)(((size_t)ptr + (alignment - 1)) & -alignment);
+        size_t offset    = (size_t)(ptrAligned - (byte*)ptr);
 
-      return ptrAligned;
+        if((space - size) >= offset) // have to implement this in terms of subtraction instead of addition in order to handle possible overflow.
+        {
+          ptr = ptrAligned;
+          space -= offset;
+
+          return ptrAligned;
+        }
+      }
+
+      return nullptr;
     }
-  }
 
-  return nullptr;
-}
-
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl

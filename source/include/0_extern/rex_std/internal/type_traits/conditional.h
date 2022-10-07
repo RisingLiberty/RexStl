@@ -12,21 +12,25 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <bool Test, typename T1, typename T2>
-struct conditional
+namespace rsl
 {
-  using type = T1;
-};
+  inline namespace v1
+  {
 
-template <typename T1, typename T2>
-struct conditional<false, T1, T2>
-{
-  using type = T2;
-};
+    template <bool Test, typename T1, typename T2>
+    struct conditional
+    {
+      using type = T1;
+    };
 
-template <bool Test, typename T1, typename T2>
-using conditional_t = typename conditional<Test, T1, T2>::type;
+    template <typename T1, typename T2>
+    struct conditional<false, T1, T2>
+    {
+      using type = T2;
+    };
 
-REX_RSL_END_NAMESPACE
+    template <bool Test, typename T1, typename T2>
+    using conditional_t = typename conditional<Test, T1, T2>::type;
+
+  } // namespace v1
+} // namespace rsl

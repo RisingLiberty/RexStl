@@ -12,19 +12,23 @@
 
 #include "rex_std/internal/type_traits/integral_constant.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-struct IsUnboundedArrayStruct : public false_type
+namespace rsl
 {
-};
+  inline namespace v1
+  {
 
-template <typename T>
-struct IsUnboundedArrayStruct<T[]> : public true_type
-{
-};
+    template <typename T>
+    struct IsUnboundedArrayStruct : public false_type
+    {
+    };
 
-template <typename T>
-inline constexpr bool IsUnboundedArray = IsUnboundedArrayStruct<T>::value;
+    template <typename T>
+    struct IsUnboundedArrayStruct<T[]> : public true_type
+    {
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    inline constexpr bool IsUnboundedArray = IsUnboundedArrayStruct<T>::value;
+
+  } // namespace v1
+} // namespace rsl

@@ -12,22 +12,26 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename InputIterator, typename Predicate>
-InputIterator find_if_not(InputIterator first, InputIterator last, Predicate pred)
+namespace rsl
 {
-  auto it = first;
-  while(it != last)
+  inline namespace v1
   {
-    if(pred(*it) == false)
+
+    template <typename InputIterator, typename Predicate>
+    InputIterator find_if_not(InputIterator first, InputIterator last, Predicate pred)
     {
+      auto it = first;
+      while(it != last)
+      {
+        if(pred(*it) == false)
+        {
+          return it;
+        }
+        ++it;
+      }
+
       return it;
     }
-    ++it;
-  }
 
-  return it;
-}
-
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl

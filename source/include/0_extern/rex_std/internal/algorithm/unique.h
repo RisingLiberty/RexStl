@@ -12,40 +12,44 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <class ForwardIterator>
-ForwardIterator unique(ForwardIterator first, ForwardIterator last)
+namespace rsl
 {
-  if(first == last)
-    return last;
-
-  ForwardIterator result = first;
-  while(++first != last)
+  inline namespace v1
   {
-    if((*result != *first) && ++result != first)
+
+    template <class ForwardIterator>
+    ForwardIterator unique(ForwardIterator first, ForwardIterator last)
     {
-      *result = rsl::move(*first);
+      if(first == last)
+        return last;
+
+      ForwardIterator result = first;
+      while(++first != last)
+      {
+        if((*result != *first) && ++result != first)
+        {
+          *result = rsl::move(*first);
+        }
+      }
+      return ++result;
     }
-  }
-  return ++result;
-}
 
-template <class ForwardIterator, class Predicate>
-ForwardIterator unique(ForwardIterator first, ForwardIterator last, Predicate p)
-{
-  if(first == last)
-    return last;
-
-  ForwardIterator result = first;
-  while(++first != last)
-  {
-    if(!p(*result, *first) && ++result != first)
+    template <class ForwardIterator, class Predicate>
+    ForwardIterator unique(ForwardIterator first, ForwardIterator last, Predicate p)
     {
-      *result = rsl::move(*first);
-    }
-  }
-  return ++result;
-}
+      if(first == last)
+        return last;
 
-REX_RSL_END_NAMESPACE
+      ForwardIterator result = first;
+      while(++first != last)
+      {
+        if(!p(*result, *first) && ++result != first)
+        {
+          *result = rsl::move(*first);
+        }
+      }
+      return ++result;
+    }
+
+  } // namespace v1
+} // namespace rsl

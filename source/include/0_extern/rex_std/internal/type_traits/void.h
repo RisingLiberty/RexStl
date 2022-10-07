@@ -12,9 +12,12 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
+    template <typename... Args>
+    using void_t = void;
 
-template <typename... Args>
-using void_t = void;
-
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl

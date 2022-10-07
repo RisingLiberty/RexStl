@@ -20,19 +20,23 @@
 #include "rex_std/internal/type_traits/remove_extent.h"
 #include "rex_std/internal/type_traits/remove_reference.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-struct decay
+namespace rsl
 {
-private:
-  using U = remove_reference_t<T>;
+  inline namespace v1
+  {
 
-public:
-  using type = conditional_t<is_array_v<U>, remove_extent_t<U>*, conditional_t<is_function_v<U>, add_pointer_t<U>, remove_cv_t<U>>>;
-};
+    template <typename T>
+    struct decay
+    {
+    private:
+      using U = remove_reference_t<T>;
 
-template <typename T>
-using decay_t = typename decay<T>::type;
+    public:
+      using type = conditional_t<is_array_v<U>, remove_extent_t<U>*, conditional_t<is_function_v<U>, add_pointer_t<U>, remove_cv_t<U>>>;
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    using decay_t = typename decay<T>::type;
+
+  } // namespace v1
+} // namespace rsl

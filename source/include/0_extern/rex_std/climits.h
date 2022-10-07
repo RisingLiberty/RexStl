@@ -12,7 +12,10 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
 #define CHAR_BIT  8
 #define SCHAR_MIN (-128)
@@ -68,4 +71,5 @@ REX_RSL_BEGIN_NAMESPACE
 
 #define RSIZE_MAX (SIZE_MAX >> 1)
 
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl

@@ -12,12 +12,16 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-namespace internal
+namespace rsl
 {
-  template <typename T>
-  constexpr bool always_false = false;
-} // namespace internal
+  inline namespace v1
+  {
 
-REX_RSL_END_NAMESPACE
+    namespace internal
+    {
+      template <typename T>
+      constexpr bool always_false = false;
+    } // namespace internal
+
+  } // namespace v1
+} // namespace rsl

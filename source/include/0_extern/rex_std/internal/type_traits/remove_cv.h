@@ -12,38 +12,42 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-struct remove_cv
+namespace rsl
 {
-  using type = T;
-  template <template <typename> typename Fn>
-  using apply = Fn<T>;
-};
+  inline namespace v1
+  {
 
-template <typename T>
-struct remove_cv<const T>
-{
-  using type = T;
+    template <typename T>
+    struct remove_cv
+    {
+      using type = T;
+      template <template <typename> typename Fn>
+      using apply = Fn<T>;
+    };
 
-  template <template <typename> typename Fn>
-  using apply = const Fn<T>;
-};
+    template <typename T>
+    struct remove_cv<const T>
+    {
+      using type = T;
 
-template <typename T>
-struct remove_cv<volatile T>
-{
-  using type = T;
-};
+      template <template <typename> typename Fn>
+      using apply = const Fn<T>;
+    };
 
-template <typename T>
-struct remove_cv<const volatile T>
-{
-  using type = T;
-};
+    template <typename T>
+    struct remove_cv<volatile T>
+    {
+      using type = T;
+    };
 
-template <typename T>
-using remove_cv_t = typename remove_cv<T>::type;
+    template <typename T>
+    struct remove_cv<const volatile T>
+    {
+      using type = T;
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    using remove_cv_t = typename remove_cv<T>::type;
+
+  } // namespace v1
+} // namespace rsl

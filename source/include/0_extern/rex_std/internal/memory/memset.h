@@ -14,8 +14,12 @@
 
 #include "rex_std/bonus/types.h"
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
-void* memset(void* dest, char val, count_t len);
+    void* memset(void* dest, char val, count_t len);
 
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl

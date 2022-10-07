@@ -12,13 +12,17 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-struct piecewise_construct_t
+namespace rsl
 {
-  explicit piecewise_construct_t() = default;
-};
+  inline namespace v1
+  {
 
-constexpr piecewise_construct_t piecewise_construct = piecewise_construct_t();
+    struct piecewise_construct_t
+    {
+      explicit piecewise_construct_t() = default;
+    };
 
-REX_RSL_END_NAMESPACE
+    constexpr piecewise_construct_t piecewise_construct = piecewise_construct_t();
+
+  } // namespace v1
+} // namespace rsl

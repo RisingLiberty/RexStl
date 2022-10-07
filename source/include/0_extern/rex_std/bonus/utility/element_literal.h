@@ -14,11 +14,15 @@
 
 #include "rex_std/bonus/types.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-constexpr int32 operator"" _elem(unsigned long long int count)
+namespace rsl
 {
-  return static_cast<int32>(count);
-}
+  inline namespace v1
+  {
 
-REX_RSL_END_NAMESPACE
+    constexpr int32 operator"" _elem(unsigned long long int count)
+    {
+      return static_cast<int32>(count);
+    }
+
+  } // namespace v1
+} // namespace rsl

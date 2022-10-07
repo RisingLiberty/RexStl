@@ -14,14 +14,18 @@
 
 #include "rex_std/internal/type_traits/integral_constant.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename From, typename To>
-struct is_convertible : public bool_constant<__is_convertible_to(From, To)>
+namespace rsl
 {
-};
+  inline namespace v1
+  {
 
-template <typename From, typename To>
-inline constexpr bool is_convertible_v = is_convertible<From, To>::value;
+    template <typename From, typename To>
+    struct is_convertible : public bool_constant<__is_convertible_to(From, To)>
+    {
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename From, typename To>
+    inline constexpr bool is_convertible_v = is_convertible<From, To>::value;
+
+  } // namespace v1
+} // namespace rsl

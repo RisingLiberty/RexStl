@@ -14,14 +14,18 @@
 
 #include "rex_std/internal/type_traits/integral_constant.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T, typename... Args>
-struct is_nothrow_constructible : bool_constant<__is_nothrow_constructible(T, Args...)>
+namespace rsl
 {
-};
+  inline namespace v1
+  {
 
-template <typename T, typename... Args>
-inline constexpr bool is_nothrow_constructible_v = is_nothrow_constructible<T, Args>::value;
+    template <typename T, typename... Args>
+    struct is_nothrow_constructible : bool_constant<__is_nothrow_constructible(T, Args...)>
+    {
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T, typename... Args>
+    inline constexpr bool is_nothrow_constructible_v = is_nothrow_constructible<T, Args>::value;
+
+  } // namespace v1
+} // namespace rsl

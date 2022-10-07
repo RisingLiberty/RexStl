@@ -32,119 +32,123 @@
 #include "rex_std/internal/ios/io_types.h"
 #include "rex_std/internal/type_traits/underlying_type.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-namespace io
+namespace rsl
 {
-  /// [09/Sep/2022] RSL Comment: to avoid having the following enum classes
-  // be part of the ios_base class, we define them in an io namespace instead.
-  enum class openmode : uint32
+  inline namespace v1
   {
-    app,    // seek to the end of stream before each write
-    binary, // open in binary mode
-    in,     // open for reading
-    out,    // open for writing
-    trunc,  // discard the contents of the stream when opening
-    ate     // seek to the end of stream immediately after open
-  };
 
-  enum class iostate : uint32
-  {
-    goodbit   = 0,        // no error
-    badbit    = (1 << 0), // irrecoverable stream error
-    failbit   = (1 << 1), // input/output operation failed
-    eofbit    = (1 << 2), // associated input sequence has reached end-of-file
-    noinitbit = (1 << 3)  // the stream is not yet initialized /// RSL Comment: Not in ISO C++ Standard at time of writing (09/Sep/2022)
-  };
+    namespace io
+    {
+      /// [09/Sep/2022] RSL Comment: to avoid having the following enum classes
+      // be part of the ios_base class, we define them in an io namespace instead.
+      enum class openmode : uint32
+      {
+        app,    // seek to the end of stream before each write
+        binary, // open in binary mode
+        in,     // open for reading
+        out,    // open for writing
+        trunc,  // discard the contents of the stream when opening
+        ate     // seek to the end of stream immediately after open
+      };
 
-  namespace internal
-  {
-    using openmode_int = rsl::underlying_type_t<openmode>;
-    using iostate_int  = rsl::underlying_type_t<iostate>;
-  } // namespace internal
+      enum class iostate : uint32
+      {
+        goodbit   = 0,        // no error
+        badbit    = (1 << 0), // irrecoverable stream error
+        failbit   = (1 << 1), // input/output operation failed
+        eofbit    = (1 << 2), // associated input sequence has reached end-of-file
+        noinitbit = (1 << 3)  // the stream is not yet initialized /// RSL Comment: Not in ISO C++ Standard at time of writing (09/Sep/2022)
+      };
 
-  constexpr openmode operator&(openmode lhs, openmode rhs)
-  {
-    const internal::openmode_int lhs_int = static_cast<internal::openmode_int>(lhs);
-    const internal::openmode_int rhs_int = static_cast<internal::openmode_int>(rhs);
+      namespace internal
+      {
+        using openmode_int = rsl::underlying_type_t<openmode>;
+        using iostate_int  = rsl::underlying_type_t<iostate>;
+      } // namespace internal
 
-    return static_cast<openmode>(lhs_int & rhs_int);
-  }
-  constexpr openmode operator&=(openmode& lhs, openmode rhs)
-  {
-    lhs = lhs & rhs;
-    return lhs;
-  }
-  constexpr openmode operator|(openmode lhs, openmode rhs)
-  {
-    const internal::openmode_int lhs_int = static_cast<internal::openmode_int>(lhs);
-    const internal::openmode_int rhs_int = static_cast<internal::openmode_int>(rhs);
+      constexpr openmode operator&(openmode lhs, openmode rhs)
+      {
+        const internal::openmode_int lhs_int = static_cast<internal::openmode_int>(lhs);
+        const internal::openmode_int rhs_int = static_cast<internal::openmode_int>(rhs);
 
-    return static_cast<openmode>(lhs_int | rhs_int);
-  }
-  constexpr openmode operator|=(openmode& lhs, openmode rhs)
-  {
-    lhs = lhs | rhs;
-    return lhs;
-  }
+        return static_cast<openmode>(lhs_int & rhs_int);
+      }
+      constexpr openmode operator&=(openmode& lhs, openmode rhs)
+      {
+        lhs = lhs & rhs;
+        return lhs;
+      }
+      constexpr openmode operator|(openmode lhs, openmode rhs)
+      {
+        const internal::openmode_int lhs_int = static_cast<internal::openmode_int>(lhs);
+        const internal::openmode_int rhs_int = static_cast<internal::openmode_int>(rhs);
 
-  constexpr iostate operator&(iostate lhs, iostate rhs)
-  {
-    internal::iostate_int const lhs_int = static_cast<internal::iostate_int>(lhs);
-    internal::iostate_int const rhs_int = static_cast<internal::iostate_int>(rhs);
+        return static_cast<openmode>(lhs_int | rhs_int);
+      }
+      constexpr openmode operator|=(openmode& lhs, openmode rhs)
+      {
+        lhs = lhs | rhs;
+        return lhs;
+      }
 
-    return static_cast<iostate>(lhs_int & rhs_int);
-  }
-  constexpr iostate operator&=(iostate& lhs, iostate rhs)
-  {
-    lhs = lhs & rhs;
-    return lhs;
-  }
-  constexpr iostate operator|(iostate lhs, iostate rhs)
-  {
-    internal::iostate_int const lhs_int = static_cast<internal::iostate_int>(lhs);
-    internal::iostate_int const rhs_int = static_cast<internal::iostate_int>(rhs);
+      constexpr iostate operator&(iostate lhs, iostate rhs)
+      {
+        internal::iostate_int const lhs_int = static_cast<internal::iostate_int>(lhs);
+        internal::iostate_int const rhs_int = static_cast<internal::iostate_int>(rhs);
 
-    return static_cast<iostate>(lhs_int | rhs_int);
-  }
-  constexpr iostate operator|=(iostate& lhs, iostate rhs)
-  {
-    lhs = lhs | rhs;
-    return lhs;
-  }
+        return static_cast<iostate>(lhs_int & rhs_int);
+      }
+      constexpr iostate operator&=(iostate& lhs, iostate rhs)
+      {
+        lhs = lhs & rhs;
+        return lhs;
+      }
+      constexpr iostate operator|(iostate lhs, iostate rhs)
+      {
+        internal::iostate_int const lhs_int = static_cast<internal::iostate_int>(lhs);
+        internal::iostate_int const rhs_int = static_cast<internal::iostate_int>(rhs);
 
-  enum class seekdir
-  {
-    beg, // the beginning of a stream
-    end, // the ending of a stream
-    cur, // the current position of stream position indicator
-  };
-} // namespace io
+        return static_cast<iostate>(lhs_int | rhs_int);
+      }
+      constexpr iostate operator|=(iostate& lhs, iostate rhs)
+      {
+        lhs = lhs | rhs;
+        return lhs;
+      }
 
-class ios_base
-{
-public:
-  // you can't copy something that inherits from ios_base
-  ios_base(const ios_base&) = delete;
+      enum class seekdir
+      {
+        beg, // the beginning of a stream
+        end, // the ending of a stream
+        cur, // the current position of stream position indicator
+      };
+    } // namespace io
 
-  // destroys the ios_base object
-  virtual ~ios_base() = default;
+    class ios_base
+    {
+    public:
+      // you can't copy something that inherits from ios_base
+      ios_base(const ios_base&) = delete;
 
-  // you can't assign to an ios_base object
-  ios_base& operator=(const ios_base&) = delete;
+      // destroys the ios_base object
+      virtual ~ios_base() = default;
 
-  /// [09/Sep/2022] RSL Comment: Rex Standard Library ios_base provides no implemented member functions.
-  // This is because Rex Standard Library doesn't provide locales, nor does it allow the user
-  // to config global objects like rsl::cout with formatting rules.
+      // you can't assign to an ios_base object
+      ios_base& operator=(const ios_base&) = delete;
 
-  /// [09/Sep/2022] RSL Comment: Because Rex Standard Library wants to break the dependency on C.
-  // it makes little sense of having sync_with_stdio as a member function.
+      /// [09/Sep/2022] RSL Comment: Rex Standard Library ios_base provides no implemented member functions.
+      // This is because Rex Standard Library doesn't provide locales, nor does it allow the user
+      // to config global objects like rsl::cout with formatting rules.
 
-protected:
-  // only derived classes can construct an ios_base class.
-  // the derived class must call basic_ios::init() to complete initialization
-  // before first use and before destructor
-  ios_base() = default;
-};
+      /// [09/Sep/2022] RSL Comment: Because Rex Standard Library wants to break the dependency on C.
+      // it makes little sense of having sync_with_stdio as a member function.
 
-REX_RSL_END_NAMESPACE
+    protected:
+      // only derived classes can construct an ios_base class.
+      // the derived class must call basic_ios::init() to complete initialization
+      // before first use and before destructor
+      ios_base() = default;
+    };
+
+  } // namespace v1
+} // namespace rsl

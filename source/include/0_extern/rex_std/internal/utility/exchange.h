@@ -15,14 +15,18 @@
 #include "rex_std/internal/utility/forward.h"
 #include "rex_std/internal/utility/move.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T, typename Other = T>
-constexpr T exchange(T& val, Other&& newVal)
+namespace rsl
 {
-  T old_val = rsl::move(val);
-  val       = rsl::forward<Other>(newVal);
-  return old_val;
-}
+  inline namespace v1
+  {
 
-REX_RSL_END_NAMESPACE
+    template <typename T, typename Other = T>
+    constexpr T exchange(T& val, Other&& newVal)
+    {
+      T old_val = rsl::move(val);
+      val       = rsl::forward<Other>(newVal);
+      return old_val;
+    }
+
+  } // namespace v1
+} // namespace rsl

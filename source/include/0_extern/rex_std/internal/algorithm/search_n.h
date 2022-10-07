@@ -12,88 +12,92 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <class ForwardIterator, class Size, class T>
-ForwardIterator search_n(ForwardIterator first, ForwardIterator last, Size count, const T& value)
+namespace rsl
 {
-  if(count <= 0)
+  inline namespace v1
   {
-    return first;
-  }
-  for(; first != last; ++first)
-  {
-    if(!(*first == value))
+
+    template <class ForwardIterator, class Size, class T>
+    ForwardIterator search_n(ForwardIterator first, ForwardIterator last, Size count, const T& value)
     {
-      continue;
+      if(count <= 0)
+      {
+        return first;
+      }
+      for(; first != last; ++first)
+      {
+        if(!(*first == value))
+        {
+          continue;
+        }
+
+        ForwardIterator candidate = first;
+        Size cur_count            = 0;
+
+        while(true)
+        {
+          ++cur_count;
+          if(cur_count >= count)
+          {
+            // success
+            return candidate;
+          }
+          ++first;
+          if(first == last)
+          {
+            // exhausted the list
+            return last;
+          }
+          if(*first != value)
+          {
+            // too few in a row
+            break;
+          }
+        }
+      }
+      return last;
     }
 
-    ForwardIterator candidate = first;
-    Size cur_count            = 0;
-
-    while(true)
+    template <class ForwardIterator, class Size, class T, class Predicate>
+    ForwardIterator search_n(ForwardIterator first, ForwardIterator last, Size count, const T& value, Predicate p)
     {
-      ++cur_count;
-      if(cur_count >= count)
+      if(count <= 0)
       {
-        // success
-        return candidate;
+        return first;
       }
-      ++first;
-      if(first == last)
+      for(; first != last; ++first)
       {
-        // exhausted the list
-        return last;
+        if(!p(*first, value))
+        {
+          continue;
+        }
+
+        ForwardIterator candidate = first;
+        Size cur_count            = 0;
+
+        while(true)
+        {
+          ++cur_count;
+          if(cur_count >= count)
+          {
+            // success
+            return candidate;
+          }
+          ++first;
+          if(first == last)
+          {
+            // exhausted the list
+            return last;
+          }
+          if(!p(*first, value))
+          {
+            // too few in a row
+            break;
+          }
+        }
       }
-      if(*first != value)
-      {
-        // too few in a row
-        break;
-      }
+      return last;
     }
-  }
-  return last;
-}
 
-template <class ForwardIterator, class Size, class T, class Predicate>
-ForwardIterator search_n(ForwardIterator first, ForwardIterator last, Size count, const T& value, Predicate p)
-{
-  if(count <= 0)
-  {
-    return first;
-  }
-  for(; first != last; ++first)
-  {
-    if(!p(*first, value))
-    {
-      continue;
-    }
-
-    ForwardIterator candidate = first;
-    Size cur_count            = 0;
-
-    while(true)
-    {
-      ++cur_count;
-      if(cur_count >= count)
-      {
-        // success
-        return candidate;
-      }
-      ++first;
-      if(first == last)
-      {
-        // exhausted the list
-        return last;
-      }
-      if(!p(*first, value))
-      {
-        // too few in a row
-        break;
-      }
-    }
-  }
-  return last;
-}
-
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl

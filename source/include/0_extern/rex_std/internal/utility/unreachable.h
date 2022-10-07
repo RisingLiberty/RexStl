@@ -15,15 +15,19 @@
 #include "rex_std/bonus/attributes.h"
 #include "rex_std/bonus/defines.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-REX_NO_RETURN void unreachable()
+namespace rsl
 {
-#if defined(__GNUC__) // GCC, Clang, ICC
-  __builtin_unreachable();
-#elif defined(_MSC_VER) // MSVC
-  __assume(false);
-#endif
-}
+  inline namespace v1
+  {
 
-REX_RSL_END_NAMESPACE
+    REX_NO_RETURN void unreachable()
+    {
+#if defined(__GNUC__) // GCC, Clang, ICC
+      __builtin_unreachable();
+#elif defined(_MSC_VER) // MSVC
+      __assume(false);
+#endif
+    }
+
+  } // namespace v1
+} // namespace rsl

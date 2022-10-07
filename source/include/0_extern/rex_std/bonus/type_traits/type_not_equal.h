@@ -12,12 +12,16 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <int b1, int b2>
-struct type_not_equal
+namespace rsl
 {
-  static const bool value = (b1 != b2);
-};
+  inline namespace v1
+  {
 
-REX_RSL_END_NAMESPACE
+    template <int b1, int b2>
+    struct type_not_equal
+    {
+      static const bool value = (b1 != b2);
+    };
+
+  } // namespace v1
+} // namespace rsl

@@ -12,21 +12,25 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename InputIterator, typename OutputIterator, typename Func, typename Predicate>
-void transform(InputIterator first, InputIterator last, OutputIterator dst_first, Func func, Predicate predicate)
+namespace rsl
 {
-  auto it = first;
-  while(it != last)
+  inline namespace v1
   {
-    if(*it)
-    {
-      *dst_first = func(*it);
-      ++dst_first;
-    }
-    ++it;
-  }
-}
 
-REX_RSL_END_NAMESPACE
+    template <typename InputIterator, typename OutputIterator, typename Func, typename Predicate>
+    void transform(InputIterator first, InputIterator last, OutputIterator dst_first, Func func, Predicate predicate)
+    {
+      auto it = first;
+      while(it != last)
+      {
+        if(*it)
+        {
+          *dst_first = func(*it);
+          ++dst_first;
+        }
+        ++it;
+      }
+    }
+
+  } // namespace v1
+} // namespace rsl

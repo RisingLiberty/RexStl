@@ -14,15 +14,19 @@
 
 #include "rex_std/internal/memory/addressof.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename ForwardIt, typename Size>
-constexpr ForwardIt destroy_n(ForwardIt first, Size n)
+namespace rsl
 {
-  for(; n > 0; ++first, --n)
+  inline namespace v1
   {
-    destroy_at(addressof(*first));
-  }
-}
 
-REX_RSL_END_NAMESPACE
+    template <typename ForwardIt, typename Size>
+    constexpr ForwardIt destroy_n(ForwardIt first, Size n)
+    {
+      for(; n > 0; ++first, --n)
+      {
+        destroy_at(addressof(*first));
+      }
+    }
+
+  } // namespace v1
+} // namespace rsl

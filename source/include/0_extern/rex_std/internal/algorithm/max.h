@@ -12,17 +12,21 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-constexpr const T&(max)(const T& lhs, const T& rhs)
+namespace rsl
 {
-  return lhs > rhs ? lhs : rhs;
-}
-template <typename T, typename Compare>
-constexpr const T&(max)(const T& lhs, const T& rhs, Compare comp)
-{
-  return comp(lhs, rhs) ? rhs : lhs;
-}
+  inline namespace v1
+  {
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    constexpr const T&(max)(const T& lhs, const T& rhs)
+    {
+      return lhs > rhs ? lhs : rhs;
+    }
+    template <typename T, typename Compare>
+    constexpr const T&(max)(const T& lhs, const T& rhs, Compare comp)
+    {
+      return comp(lhs, rhs) ? rhs : lhs;
+    }
+
+  } // namespace v1
+} // namespace rsl

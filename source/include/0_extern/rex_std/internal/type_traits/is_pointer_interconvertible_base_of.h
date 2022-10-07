@@ -14,14 +14,18 @@
 
 #include "rex_std/internal/type_traits/integral_constant.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename Base, typename Derived>
-struct is_pointer_inter_convertible_base_of : public bool_constant<__is_pointer_interconvertible_base_of(Base, Derived)>
+namespace rsl
 {
-};
+  inline namespace v1
+  {
 
-template <typename Base, typename Derived>
-inline constexpr bool is_pointer_inter_convertible_base_of_v = is_pointer_inter_convertible_base_of<Base, Derived>::value;
+    template <typename Base, typename Derived>
+    struct is_pointer_inter_convertible_base_of : public bool_constant<__is_pointer_interconvertible_base_of(Base, Derived)>
+    {
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename Base, typename Derived>
+    inline constexpr bool is_pointer_inter_convertible_base_of_v = is_pointer_inter_convertible_base_of<Base, Derived>::value;
+
+  } // namespace v1
+} // namespace rsl

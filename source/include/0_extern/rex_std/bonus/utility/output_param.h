@@ -12,31 +12,35 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-class Out
+namespace rsl
 {
-public:
-  using value_type = T;
-
-  explicit Out(value_type& output)
-      : m_output(output)
+  inline namespace v1
   {
-  }
 
-  value_type& get()
-  {
-    return m_output;
-  }
+    template <typename T>
+    class Out
+    {
+    public:
+      using value_type = T;
 
-  Out& operator=(const value_type& rhs)
-  {
-    m_output = rhs;
-  }
+      explicit Out(value_type& output)
+          : m_output(output)
+      {
+      }
 
-private:
-  value_type& m_output;
-};
+      value_type& get()
+      {
+        return m_output;
+      }
 
-REX_RSL_END_NAMESPACE
+      Out& operator=(const value_type& rhs)
+      {
+        m_output = rhs;
+      }
+
+    private:
+      value_type& m_output;
+    };
+
+  } // namespace v1
+} // namespace rsl

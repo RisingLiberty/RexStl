@@ -19,41 +19,45 @@
 
 #include <variant>
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
-template <typename... Types>
-REX_STD_TEMPLATED_CLASS_ALIAS(variant, Types...);
+    template <typename... Types>
+    REX_STD_TEMPLATED_CLASS_ALIAS(variant, Types...);
 
-REX_STD_CLASS_ALIAS(monostate);
+    REX_STD_CLASS_ALIAS(monostate);
 
-template <typename T>
-REX_STD_TEMPLATED_CLASS_ALIAS(variant_size, T);
+    template <typename T>
+    REX_STD_TEMPLATED_CLASS_ALIAS(variant_size, T);
 
-template <typename T>
-REX_STD_TEMPLATED_OBJECT_ALIAS(variant_size_v, T);
+    template <typename T>
+    REX_STD_TEMPLATED_OBJECT_ALIAS(variant_size_v, T);
 
-template <size_t I, typename T>
-REX_STD_TEMPLATED_CLASS_ALIAS(variant_alternative, I, T);
+    template <size_t I, typename T>
+    REX_STD_TEMPLATED_CLASS_ALIAS(variant_alternative, I, T);
 
-template <size_t I, typename T>
-REX_STD_TEMPLATED_OBJECT_ALIAS(variant_alternative_t, I, T);
+    template <size_t I, typename T>
+    REX_STD_TEMPLATED_OBJECT_ALIAS(variant_alternative_t, I, T);
 
-template <typename T>
-struct hash;
+    template <typename T>
+    struct hash;
 
-REX_STD_OBJECT_ALIAS(variant_npos);
+    REX_STD_OBJECT_ALIAS(variant_npos);
 
-REX_STD_FUNC_ALIAS(visit);
-REX_STD_FUNC_ALIAS(holds_alternative);
-REX_STD_FUNC_ALIAS(get);
-REX_STD_FUNC_ALIAS(get_if);
-REX_STD_FUNC_ALIAS(operator==);
-REX_STD_FUNC_ALIAS(operator!=);
-REX_STD_FUNC_ALIAS(operator<);
-REX_STD_FUNC_ALIAS(operator<=);
-REX_STD_FUNC_ALIAS(operator>);
-REX_STD_FUNC_ALIAS(operator>=);
+    REX_STD_FUNC_ALIAS(visit);
+    REX_STD_FUNC_ALIAS(holds_alternative);
+    REX_STD_FUNC_ALIAS(get);
+    REX_STD_FUNC_ALIAS(get_if);
+    REX_STD_FUNC_ALIAS(operator==);
+    REX_STD_FUNC_ALIAS(operator!=);
+    REX_STD_FUNC_ALIAS(operator<);
+    REX_STD_FUNC_ALIAS(operator<=);
+    REX_STD_FUNC_ALIAS(operator>);
+    REX_STD_FUNC_ALIAS(operator>=);
 
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl
 
 #include "rex_std/enable_std_checking.h"

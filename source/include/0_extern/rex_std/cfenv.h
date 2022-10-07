@@ -18,23 +18,27 @@
 
 #include <cfenv>
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
-REX_STD_CLASS_ALIAS(fenv_t);
-REX_STD_CLASS_ALIAS(fexcept_t);
+    REX_STD_CLASS_ALIAS(fenv_t);
+    REX_STD_CLASS_ALIAS(fexcept_t);
 
-REX_STD_FUNC_ALIAS(feclearexcept);
-REX_STD_FUNC_ALIAS(fetestexcept);
-REX_STD_FUNC_ALIAS(feraiseexcept);
-REX_STD_FUNC_ALIAS(fegetexceptflag);
-REX_STD_FUNC_ALIAS(fesetexceptflag);
-REX_STD_FUNC_ALIAS(fegetround);
-REX_STD_FUNC_ALIAS(fesetround);
-REX_STD_FUNC_ALIAS(fegetenv);
-REX_STD_FUNC_ALIAS(fesetenv);
-REX_STD_FUNC_ALIAS(feholdexcept);
-REX_STD_FUNC_ALIAS(feupdateenv);
+    REX_STD_FUNC_ALIAS(feclearexcept);
+    REX_STD_FUNC_ALIAS(fetestexcept);
+    REX_STD_FUNC_ALIAS(feraiseexcept);
+    REX_STD_FUNC_ALIAS(fegetexceptflag);
+    REX_STD_FUNC_ALIAS(fesetexceptflag);
+    REX_STD_FUNC_ALIAS(fegetround);
+    REX_STD_FUNC_ALIAS(fesetround);
+    REX_STD_FUNC_ALIAS(fegetenv);
+    REX_STD_FUNC_ALIAS(fesetenv);
+    REX_STD_FUNC_ALIAS(feholdexcept);
+    REX_STD_FUNC_ALIAS(feupdateenv);
 
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl
 
 #include "rex_std/enable_std_checking.h"

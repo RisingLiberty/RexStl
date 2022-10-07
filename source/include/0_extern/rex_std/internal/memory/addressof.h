@@ -14,20 +14,24 @@
 
 #include "rex_std/bonus/attributes.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-REX_NO_DISCARD constexpr T* addressof(T& val)
+namespace rsl
 {
-  return __builtin_addressof(val);
-}
-template <typename T>
-REX_NO_DISCARD constexpr const T* addressof(const T& val) // Not in the standard
-{
-  return __builtin_addressof(val);
-}
+  inline namespace v1
+  {
 
-template <typename T>
-REX_NO_DISCARD const T* addressof(const T&&) = delete;
+    template <typename T>
+    REX_NO_DISCARD constexpr T* addressof(T& val)
+    {
+      return __builtin_addressof(val);
+    }
+    template <typename T>
+    REX_NO_DISCARD constexpr const T* addressof(const T& val) // Not in the standard
+    {
+      return __builtin_addressof(val);
+    }
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    REX_NO_DISCARD const T* addressof(const T&&) = delete;
+
+  } // namespace v1
+} // namespace rsl

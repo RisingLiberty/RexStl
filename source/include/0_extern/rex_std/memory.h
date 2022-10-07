@@ -45,12 +45,16 @@
 #include "rex_std/internal/memory/uninitialized_value_construct.h"     // yes, low priority
 #include "rex_std/internal/memory/uninitialized_value_construct_n.h"   // yes, low priority
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
-template <typename T>
-struct hash;
+    template <typename T>
+    struct hash;
 
-template <typename T>
-class atomic;
+    template <typename T>
+    class atomic;
 
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl

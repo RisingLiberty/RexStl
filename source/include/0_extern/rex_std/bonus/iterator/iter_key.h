@@ -12,9 +12,13 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl
+{
+  inline namespace v1
+  {
 
-template <typename InputIt>
-using iter_key_t = typename remove_const_t<typename iterator_traits<InputIt>::value_type>::key_type;
+    template <typename InputIt>
+    using iter_key_t = typename remove_const_t<typename iterator_traits<InputIt>::value_type>::key_type;
 
-REX_RSL_END_NAMESPACE
+  }
+} // namespace rsl

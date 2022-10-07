@@ -14,15 +14,19 @@
 
 #include "rex_std/bonus/type_traits/add_reference.h"
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename T>
-struct add_lvalue_reference
+namespace rsl
 {
-  using type = typename bonus::add_reference<T>::LValue;
-};
+  inline namespace v1
+  {
 
-template <typename T>
-using add_lvalue_reference_t = typename bonus::add_reference<T>::LValue;
+    template <typename T>
+    struct add_lvalue_reference
+    {
+      using type = typename bonus::add_reference<T>::LValue;
+    };
 
-REX_RSL_END_NAMESPACE
+    template <typename T>
+    using add_lvalue_reference_t = typename bonus::add_reference<T>::LValue;
+
+  } // namespace v1
+} // namespace rsl

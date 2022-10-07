@@ -12,21 +12,25 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
-
-template <typename InputIterator, typename OutputIterator, typename Predicate>
-OutputIterator copy_if(InputIterator first, InputIterator last, OutputIterator dst, Predicate predicate)
+namespace rsl
 {
-  // This implementation's performance could be improved by taking a more complicated approach like with the copy algorithm.
-  for(; first != last; ++first)
+  inline namespace v1
   {
-    if(predicate(*first))
+
+    template <typename InputIterator, typename OutputIterator, typename Predicate>
+    OutputIterator copy_if(InputIterator first, InputIterator last, OutputIterator dst, Predicate predicate)
     {
-      *dst++ = *first;
+      // This implementation's performance could be improved by taking a more complicated approach like with the copy algorithm.
+      for(; first != last; ++first)
+      {
+        if(predicate(*first))
+        {
+          *dst++ = *first;
+        }
+      }
+
+      return dst;
     }
-  }
 
-  return dst;
-}
-
-REX_RSL_END_NAMESPACE
+  } // namespace v1
+} // namespace rsl
