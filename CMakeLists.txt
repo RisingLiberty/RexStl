@@ -36,7 +36,6 @@ message("Generating project: \t${PROJECT_NAME} v${VERSION_MAJOR}.${VERSION_MINOR
 # -------------------------------
 # CMake dependencies
 # -------------------------------
-include(cmake\\precompiled_header.cmake)
 include(cmake\\utilities.cmake)
 include(cmake\\directories.cmake)
 
