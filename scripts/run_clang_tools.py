@@ -19,7 +19,7 @@ def run():
   logger.info("Running clang-tidy")
   os.system(f"py {script_path}/run_clang_tidy.py -p={root_path}/.rex/build/ninja/ -header-filter=.* -quiet")
   logger.info("Running clang-format")
-  os.system(f"py {script_path}/run_clang_format.py -r -i {root_path}/source")
+  os.system(f"py {script_path}/run_clang_format.py -r -i {root_path}/source/RexStd")
 
 if __name__ == "__main__":
   # arguments setups

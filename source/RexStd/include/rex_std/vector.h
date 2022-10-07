@@ -18,7 +18,9 @@
 #include "rex_std/initializer_list.h"
 #include "rex_std/internal/algorithm/lexicographical_compare.h"
 #include "rex_std/internal/algorithm/max.h"
+#include "rex_std/internal/iterator/random_access_iterator.h"
 #include "rex_std/internal/memory/allocator.h"
+#include "rex_std/internal/memory/allocator_traits.h"
 #include "rex_std/internal/utility/forward.h"
 #include "rex_std/internal/utility/move.h"
 
