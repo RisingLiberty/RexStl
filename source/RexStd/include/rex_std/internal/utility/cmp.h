@@ -24,13 +24,13 @@ namespace rsl
       using UT = make_unsigned_t<T>;
       using UU = make_unsigned_t<U>;
 
-      if constexpr(is_signed<T> == is_signed<U>)
+      if constexpr(is_signed_v<T> == is_signed_v<U>)
       {
         return t == u;
       }
-      else if constexpr(is_signed<T>)
+      else if constexpr(is_signed_v<T>)
       {
-        return t < 0 ? false : UT(T) == u;
+        return t < 0 ? false : UT(t) == u;
       }
       else
       {
@@ -50,11 +50,11 @@ namespace rsl
       using UT = make_unsigned_t<T>;
       using UU = make_unsigned_t<U>;
 
-      if constexpr(is_signed<T> == is_signed<U>)
+      if constexpr(is_signed_v<T> == is_signed_v<U>)
       {
         return t < u;
       }
-      else if constexpr(is_signed<T>)
+      else if constexpr(is_signed_v<T>)
       {
         return t < 0 ? true : UT(t) < u;
       }

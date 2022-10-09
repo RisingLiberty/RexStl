@@ -18,11 +18,18 @@
 #include "rex_std/initializer_list.h"
 #include "rex_std/internal/algorithm/lexicographical_compare.h"
 #include "rex_std/internal/algorithm/max.h"
+#include "rex_std/internal/algorithm/remove.h"
+#include "rex_std/internal/algorithm/remove_if.h"
+#include "rex_std/internal/iterator/distance.h"
 #include "rex_std/internal/iterator/random_access_iterator.h"
 #include "rex_std/internal/memory/allocator.h"
 #include "rex_std/internal/memory/allocator_traits.h"
+#include "rex_std/internal/type_traits/is_trivially_constructible.h"
+#include "rex_std/internal/type_traits/is_trivially_destructible.h"
 #include "rex_std/internal/utility/forward.h"
 #include "rex_std/internal/utility/move.h"
+#include "rex_std/internal/utility/swap.h"
+#include "rex_std/iterator.h"
 
 namespace rsl
 {
@@ -36,8 +43,8 @@ namespace rsl
     class vector
     {
     private:
-      static constexpr card32 ReallocNumerator   = 2;
-      static constexpr card32 ReallocDenumerator = 1;
+      static constexpr card32 realloc_numerator   = 2;
+      static constexpr card32 realloc_denumerator = 1;
 
     public:
       using value_type             = T;
@@ -64,7 +71,7 @@ namespace rsl
       }
 
       // Constructs an empty container with the given allocator alloc.
-      vector(const allocator& alloc)
+      explicit vector(const allocator& alloc)
           : m_begin(nullptr)
           , m_end(nullptr)
           , m_cp_last_and_allocator(nullptr, alloc)
@@ -360,10 +367,10 @@ namespace rsl
       }
 
       // modifiers
-      void resize(size_type new_size)
+      void resize(size_type newSize)
       {
         size_type old_size = size();
-        if(resize_internal(new_size))
+        if(resize_internal(newSize))
         {
           for(pointer dest = m_begin + old_size; dest != m_end; ++dest)
           {
@@ -371,10 +378,10 @@ namespace rsl
           }
         }
       }
-      void resize(size_type new_size, const_reference value)
+      void resize(size_type newSize, const_reference value)
       {
         size_type old_size = size();
-        if(resize_internal(new_size))
+        if(resize_internal(newSize))
         {
           for(pointer dest = m_begin + old_size; dest != m_end; ++dest)
           {
@@ -383,11 +390,11 @@ namespace rsl
         }
       }
       // Increase the capacity of the vector (the total number of elements that the vector can hold without requiring reallocation)
-      void reserve(size_type new_capacity)
+      void reserve(size_type newCapacity)
       {
-        if(new_capacity > capacity())
+        if(newCapacity > capacity())
         {
-          reallocate(new_capacity);
+          reallocate(newCapacity);
         }
       }
       // Removes unused capacity.
@@ -557,44 +564,44 @@ namespace rsl
     private:
       // Allocates a bigger buffer and copies over all elements
       // Also sets m_begin, m_end and m_cp_last_and_allocator.first() to point to the new buffer
-      void reallocate(size_type new_capacity)
+      void reallocate(size_type newCapacity)
       {
-        pointer new_buffer = static_cast<pointer>(get_allocator().allocate(calc_bytes_needed(new_capacity)));
+        pointer new_buffer = static_cast<pointer>(get_allocator().allocate(calc_bytes_needed(newCapacity)));
 
         pointer dest = new_buffer;
         move(dest, m_begin, capacity());
 
-        size_type old_size = size();
+        const size_type old_size = size();
 
         clear(); // to call the dtor of non trivially destructible types
         deallocate();
 
         m_begin                         = new_buffer;
         m_end                           = m_begin + old_size;
-        m_cp_last_and_allocator.first() = m_begin + new_capacity;
+        m_cp_last_and_allocator.first() = m_begin + newCapacity;
       }
 
       // Deallocates the buffer
       void deallocate()
       {
-        get_allocator().deallocate(data(), calc_bytes_needed(capacity()));
+        get_allocator().deallocate(data());
       }
 
       // calls reallocate if new required size is bigger than capacity
-      bool increase_capacity_if_needed(size_type new_required_size)
+      bool increase_capacity_if_needed(size_type newRequiredSize)
       {
-        if(new_required_size > capacity())
+        if(newRequiredSize > capacity())
         {
-          size_type num_elements_to_add = capacity() - new_required_size;
+          const size_type num_elements_to_add = capacity() - newRequiredSize;
           reallocate(new_buffer_size(num_elements_to_add));
           return true;
         }
         return false;
       }
       // returns the size of a new buffer on reallocation
-      size_type new_buffer_size(size_type num_elements_to_add) const
+      size_type new_buffer_size(size_type numElementsToAdd) const
       {
-        return (size() * ReallocNumerator / ReallocDenumerator) + num_elements_to_add;
+        return (size() * realloc_numerator / realloc_denumerator) + numElementsToAdd;
       }
 
       // reallocates if we surpassed our capacity with the new element
@@ -676,17 +683,17 @@ namespace rsl
       // reallocates if 'new_size' is bigger than the current capacity
       // sets m_end so it matches our size
       // returns true if a resize occurred
-      bool resize_internal(card32 new_size)
+      bool resize_internal(card32 newSize)
       {
-        increase_capacity_if_needed(new_size);
+        increase_capacity_if_needed(newSize);
         difference_type old_size = size();
-        m_end                    = m_begin + new_size;
-        return new_size > old_size;
+        m_end                    = m_begin + newSize;
+        return newSize > old_size;
       }
 
-      size_type calc_bytes_needed(card32 new_element_count)
+      size_type calc_bytes_needed(card32 newElementCount)
       {
-        return sizeof(T) * new_element_count;
+        return sizeof(T) * newElementCount;
       }
 
       template <typename InputIt>
@@ -711,6 +718,7 @@ namespace rsl
           new(dst) T(*src);
           ++dst;
           ++src;
+          --count;
         }
       }
       void move(pointer dst, pointer src, size_type count)
@@ -720,6 +728,7 @@ namespace rsl
           new(dst) T(rsl::move(*src));
           ++dst;
           ++src;
+          --count;
         }
       }
 
