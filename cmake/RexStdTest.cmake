@@ -1,5 +1,3 @@
-find_package(Catch2 3 REQUIRED)
-
 file(GLOB_RECURSE RexStdTest_LIBS_INC    ${CMAKE_SOURCE_DIR}/source/RexStdTest/include/*.h)
 file(GLOB_RECURSE RexStdTest_LIBS_SRC    ${CMAKE_SOURCE_DIR}/source/RexStdTest/src/*.cpp)
 
