@@ -14,6 +14,8 @@
 
 #include "rex_std/internal/type_traits/is_const.h"
 #include "rex_std/internal/type_traits/is_lvalue_reference.h"
+#include "rex_std/internal/type_traits/is_move_assignable.h"
+#include "rex_std/internal/type_traits/is_move_constructible.h"
 #include "rex_std/internal/type_traits/remove_reference.h"
 
 namespace rsl
@@ -26,8 +28,13 @@ namespace rsl
     template <typename T>
     constexpr typename rsl::remove_reference_t<T>&& move(T&& x) noexcept
     {
-      static_assert(!rsl::is_const_v<T>, "calling move with a const T");
       return static_cast<typename rsl::remove_reference_t<T>&&>(x);
+    }
+    template <typename T>
+    constexpr const T& move(const T& x)
+    {
+      static_assert(is_move_constructible_v<T> || is_move_assignable_v<T>, "calling move with a const T that can be moved");
+      return x;
     }
   } // namespace v1
 } // namespace rsl

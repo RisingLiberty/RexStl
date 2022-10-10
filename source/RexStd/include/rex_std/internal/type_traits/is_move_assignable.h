@@ -12,6 +12,7 @@
 
 #pragma once
 
+#include "rex_std/internal/type_traits/add_lvalue_reference.h"
 #include "rex_std/internal/type_traits/integral_constant.h"
 
 namespace rsl

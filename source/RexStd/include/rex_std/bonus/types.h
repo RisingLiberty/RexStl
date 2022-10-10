@@ -146,6 +146,9 @@ namespace rsl
   } // namespace v1
 } // namespace rsl
 
+REX_CREATE_LITERAL_FOR_STRONG_TYPE(rsl::Capacity, cap)
+REX_CREATE_LITERAL_FOR_STRONG_TYPE(rsl::Size, size)
+
 using rsl::int16; // NOLINT
 using rsl::int32; // NOLINT
 using rsl::int64; // NOLINT

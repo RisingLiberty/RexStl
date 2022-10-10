@@ -25,7 +25,7 @@ namespace rsl
   {
 
     template <typename... Args>
-    bool assert(bool cond, Args&&... args);
+    bool rex_assert(bool cond, Args&&... args);
 
   } // namespace v1
 } // namespace rsl
@@ -34,12 +34,12 @@ namespace rsl
 // The standard only accepts a condition in the assert macro,
 // Rex Standard Library however accepts condition as well a message.
 #ifdef REX_ENABLE_ASSERTS
-  #define assert(cond, ...) rsl::assert(cond, __VA_ARGS__)
+  // #define assert(cond, ...) rsl::assert(cond, __VA_ARGS__)
 
-  #define REX_ASSERT_X(cond, ...) assert(cond, __VA_ARGS__)
-  #define REX_ASSERT(...)         assert(false, __VA_ARGS__)
+  #define REX_ASSERT_X(cond, ...) rsl::rex_assert(cond, __VA_ARGS__)
+  #define REX_ASSERT(...)         rsl::rex_assert(false, __VA_ARGS__)
 #else
-  #define assert(cond, ...) // NOLINT(readability-identifier-naming)
+  // #define assert(cond, ...) // NOLINT(readability-identifier-naming)
 
   #define REX_ASSERT_X(cond, ...)
   #define REX_ASSERT(...)

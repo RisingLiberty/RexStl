@@ -20,6 +20,7 @@
 #include "rex_std/internal/algorithm/max.h"
 #include "rex_std/internal/algorithm/remove.h"
 #include "rex_std/internal/algorithm/remove_if.h"
+#include "rex_std/internal/assert/assert_fwd.h"
 #include "rex_std/internal/iterator/distance.h"
 #include "rex_std/internal/iterator/random_access_iterator.h"
 #include "rex_std/internal/memory/allocator.h"
@@ -92,7 +93,7 @@ namespace rsl
       /// RSL Comment: Not in ISO C++ Standard at time of writing time of writing (26/Jun/2022)
       // Construct the container with a given capacity but size remains 0.
       explicit vector(rsl::Capacity capacity, const allocator& alloc = allocator())
-          : vector()
+          : vector(alloc)
       {
         reserve(capacity.get());
       }
@@ -369,7 +370,7 @@ namespace rsl
       // modifiers
       void resize(size_type newSize)
       {
-        size_type old_size = size();
+        const size_type old_size = size();
         if(resize_internal(newSize))
         {
           for(pointer dest = m_begin + old_size; dest != m_end; ++dest)
@@ -569,7 +570,7 @@ namespace rsl
         pointer new_buffer = static_cast<pointer>(get_allocator().allocate(calc_bytes_needed(newCapacity)));
 
         pointer dest = new_buffer;
-        move(dest, m_begin, capacity());
+        move(dest, m_begin, size());
 
         const size_type old_size = size();
 
@@ -588,20 +589,20 @@ namespace rsl
       }
 
       // calls reallocate if new required size is bigger than capacity
-      bool increase_capacity_if_needed(size_type newRequiredSize)
+      bool increase_capacity_if_needed(size_type newRequiredCapacity)
       {
-        if(newRequiredSize > capacity())
+        if(newRequiredCapacity > capacity())
         {
-          const size_type num_elements_to_add = capacity() - newRequiredSize;
-          reallocate(new_buffer_size(num_elements_to_add));
+          const size_type num_elements_to_add = newRequiredCapacity - capacity();
+          reallocate(new_buffer_capacity(num_elements_to_add));
           return true;
         }
         return false;
       }
       // returns the size of a new buffer on reallocation
-      size_type new_buffer_size(size_type numElementsToAdd) const
+      size_type new_buffer_capacity(size_type numElementsToAdd) const
       {
-        return (size() * realloc_numerator / realloc_denumerator) + numElementsToAdd;
+        return (capacity() * realloc_numerator / realloc_denumerator) + numElementsToAdd;
       }
 
       // reallocates if we surpassed our capacity with the new element
@@ -621,8 +622,8 @@ namespace rsl
           // Please look at basic_string::prepare_for_new_insert if you want to have more
           // documentation about what goes on here
 
-          const size_type size_for_new_buffer = new_buffer_size(count);
-          pointer new_buffer                  = static_cast<pointer>(get_allocator().allocate(size_for_new_buffer));
+          const size_type size_for_new_buffer = new_buffer_capacity(count);
+          pointer new_buffer                  = static_cast<pointer>(get_allocator().allocate(calc_bytes_needed(size_for_new_buffer)));
 
           // move the first set of elements up to pos into the new buffer
           pointer dest  = new_buffer;
@@ -655,7 +656,7 @@ namespace rsl
       template <typename It>
       void copy_range(It begin, It last)
       {
-        difference_type count = static_cast<difference_type>(rsl::distance(begin, last));
+        const difference_type count = static_cast<difference_type>(rsl::distance(begin, last));
         resize_internal(count);
 
         for(difference_type i = 0; i < count; ++i)
@@ -686,8 +687,8 @@ namespace rsl
       bool resize_internal(card32 newSize)
       {
         increase_capacity_if_needed(newSize);
-        difference_type old_size = size();
-        m_end                    = m_begin + newSize;
+        const difference_type old_size = size();
+        m_end                          = m_begin + newSize;
         return newSize > old_size;
       }
 
@@ -824,3 +825,5 @@ namespace rsl
 
   } // namespace v1
 } // namespace rsl
+
+#include "rex_std/internal/assert/assert_impl.h"
