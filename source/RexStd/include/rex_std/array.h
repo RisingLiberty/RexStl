@@ -203,7 +203,8 @@ namespace rsl
       // Note that the member data is intentionally public.
       // This allows for aggregate initialization of the object
       // eg. array<int, 5> arr = { 1, 2, 3, 4, 5 };
-      T m_data[Size]; // NOLINT
+      /// RSL Comment: Different from ISO C++ Standard at time of writing (10/Oct/2022)
+      T m_data[Size] = {}; // NOLINT // adding " = {}" value initializes the array
     };
 
     // Checks if the contents of lhs and rhs are equal
