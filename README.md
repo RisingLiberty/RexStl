@@ -29,6 +29,19 @@ Some code is implementation defined and closely tied to the operating system (C 
 Supported platforms:
 - Windows
 
+## Clang tooling
+In C++, there's a lot of things you CAN do, but that doesn't mean you SHOULD do them. to add constrains to the codebase and have them automatically applied,
+clang-tidy and clang-format is fully integrated into the build system and added as post build events when building the library.
+These checks are enabled in .clang-tidy and .clang-format files which sit in the root directory of the library.
+
+## Unit tests
+Unit tests are a great way to make sure your code does exactly what it needs to do. They can catch bugs early on and are a great way to make sure every templated function
+is instantiated to make sure all templated code compiles on every compiler and platform.
+Currently, the library has unit tests for the following:
+    - vector
+    - array
+    - unordered_map
+
 ## Supported headers
 ### fully supported headers
 - Utilities library
@@ -195,12 +208,7 @@ bullet points marked with (?) are not yet decided.
     - this can be replaced with constructors that take pointers.
     - if the underlying data is writable of a class, it defeats the purpose of the class
 - support other platforms (Mac, Linux, Android, iOS)
-- support other compilers
-- support for clang-tidy
-- support for clang-format
-- write unit tests
 - write documentation
     - the documentation should clearly show where the code differs from the C++ standard library and why.
 - upload coding guidelines
-- use inline namespaces for versioning of the library
 - add natvis files for debugging
