@@ -16,7 +16,7 @@
 #include "rex_std/bonus/iterator/iter_key.h"
 #include "rex_std/bonus/iterator/iter_val.h"
 #include "rex_std/bonus/utility/emplace_result.h"
-#include "rex_std/bonus/utility/key_value_pair.h"
+#include "rex_std/bonus/utility/key_value.h"
 #include "rex_std/bonus/utility/range.h"
 #include "rex_std/initializer_list.h"
 #include "rex_std/internal/functional/less.h"
@@ -34,10 +34,10 @@ namespace rsl
     //
 
     template <typename Key, typename Value, typename Compare = rsl::less<Key>, typename Allocator = rsl::allocator>
-    class map : public RedBlackTree<Key, key_value_pair<const Key, Value>, Compare, allocator, rsl::use_first<key_value_pair<const Key, Value>>, true, true>
+    class map : public RedBlackTree<Key, key_value<const Key, Value>, Compare, allocator, rsl::use_first<key_value<const Key, Value>>, true, true>
     {
     private:
-      using base_type = RedBlackTree<Key, key_value_pair<Key, Value>, Compare, allocator, rsl::use_first<rsl::pair<const Key, Value>>, true, true>;
+      using base_type = RedBlackTree<Key, key_value<Key, Value>, Compare, allocator, rsl::use_first<rsl::pair<const Key, Value>>, true, true>;
       using this_type = map<Key, Value, Compare, allocator>;
 
     public:
@@ -297,23 +297,23 @@ namespace rsl
     map(InputIt, InputIt, Comp = Comp(), Alloc = allocator()) -> map<iter_key_t<InputIt>, iter_val_t<InputIt>, Comp, allocator>;
 
     template <typename Key, typename Value, typename Comp = rsl::less<Key>, typename Alloc = rsl::allocator>
-    map(rsl::initializer_list<key_value_pair<Key, Value>>, Comp = Comp(), allocator = allocator()) -> map<Key, Value, Comp, allocator>;
+    map(rsl::initializer_list<key_value<Key, Value>>, Comp = Comp(), allocator = allocator()) -> map<Key, Value, Comp, allocator>;
 
     template <typename InputIt, typename Allocator>
     map(InputIt, InputIt, allocator) -> map<iter_key_t<InputIt>, iter_val_t<InputIt>, rsl::less<iter_key_t<InputIt>>, allocator>;
 
     template <typename Key, typename Value, typename Allocator>
-    map(rsl::initializer_list<key_value_pair<Key, Value>>, allocator) -> map<Key, Value, rsl::less<Key>, allocator>;
+    map(rsl::initializer_list<key_value<Key, Value>>, allocator) -> map<Key, Value, rsl::less<Key>, allocator>;
 
     //
     // multimap
     //
 
     template <typename Key, typename Value, typename Compare = rsl::less<Key>, typename Allocator = rsl::allocator>
-    class multimap : public RedBlackTree<Key, key_value_pair<const Key, Value>, Compare, allocator, rsl::use_first<key_value_pair<const Key, Value>>, true, false>
+    class multimap : public RedBlackTree<Key, key_value<const Key, Value>, Compare, allocator, rsl::use_first<key_value<const Key, Value>>, true, false>
     {
     private:
-      using base_type   = RedBlackTree<Key, key_value_pair<const Key, Value>, Compare, allocator, rsl::use_first<key_value_pair<const Key, Value>>, true, false>;
+      using base_type   = RedBlackTree<Key, key_value<const Key, Value>, Compare, allocator, rsl::use_first<key_value<const Key, Value>>, true, false>;
       using this_type   = multimap<Key, Value, Compare, allocator>;
       using extract_key = typename base_type::extract_key;
 
@@ -474,13 +474,13 @@ namespace rsl
     multimap(InputIt, InputIt, Comp = Comp(), Alloc = Alloc()) -> multimap<iter_key_t<InputIt>, iter_val_t<InputIt>, Comp, Alloc>;
 
     template <typename Key, typename Value, typename Comp = rsl::less<Key>, typename Alloc = rsl::allocator>
-    multimap(rsl::initializer_list<key_value_pair<Key, Value>>, Comp = Comp(), Alloc = Alloc()) -> multimap<Key, Value, Comp, Alloc>;
+    multimap(rsl::initializer_list<key_value<Key, Value>>, Comp = Comp(), Alloc = Alloc()) -> multimap<Key, Value, Comp, Alloc>;
 
     template <typename InputIt, typename Alloc>
     multimap(InputIt, InputIt, Alloc) -> multimap<iter_key_t<InputIt>, iter_val_t<InputIt>, rsl::less<iter_key_t<InputIt>>, Alloc>;
 
     template <typename Key, typename Value, typename Allocator>
-    multimap(rsl::initializer_list<key_value_pair<Key, Value>>, allocator) -> multimap<Key, Value, rsl::less<Key>, allocator>;
+    multimap(rsl::initializer_list<key_value<Key, Value>>, allocator) -> multimap<Key, Value, rsl::less<Key>, allocator>;
 
   } // namespace v1
 } // namespace rsl

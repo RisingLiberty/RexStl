@@ -10,6 +10,8 @@
 //
 // ============================================
 
+#pragma once
+
 namespace rsl
 {
   inline namespace v1
@@ -28,7 +30,7 @@ namespace rsl
     };
 
     template <bool Condition, typename TypeIfTrue, typename TypeIfFalse>
-    using type_select_t = typename type_select<Condition, TypeIfTrue, TypeIfFalse>;
+    using type_select_t = typename type_select<Condition, TypeIfTrue, TypeIfFalse>::type;
 
   } // namespace v1
 } // namespace rsl

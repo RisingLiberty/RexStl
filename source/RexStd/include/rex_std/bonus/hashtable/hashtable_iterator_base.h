@@ -12,6 +12,8 @@
 
 #pragma once
 
+#include "rex_std/bonus/hashtable/hash_node.h"
+
 namespace rsl
 {
   inline namespace v1
@@ -41,7 +43,7 @@ namespace rsl
       }
 
     protected:
-      node_type* node()
+      node_type* node() const
       {
         return m_node;
       }

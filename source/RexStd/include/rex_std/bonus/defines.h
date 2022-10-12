@@ -22,12 +22,20 @@
 #define LINE_TO_STRING(L) #L
 #define CALL_MACRO(M, L)  M(L)
 
-#define THIS_LINE             CALL_MACRO(STRINGIZE2, __LINE__)
-#define STATIC_WARNING_PREFIX __FILE__ "(" THIS_LINE "): [WARNING] "
-#define STATIC_WARNING(expr)  __pragma(message(STATIC_WARNING_PREFIX##expr))
+#ifdef __clang__
+  #define STATIC_WARNING(expr)
+#else
+  #define THIS_LINE             CALL_MACRO(STRINGIZE2, __LINE__)
+  #define STATIC_WARNING_PREFIX __FILE__ "(" THIS_LINE "): [WARNING] "
+  #define STATIC_WARNING(expr)  __pragma(message(STATIC_WARNING_PREFIX##expr))
+#endif
 
-#define STATIC_INFO_PREFIX __FILE__ "(" THIS_LINE "): [INFO] "
-#define STATIC_INFO(expr)  __pragma(message(STATIC_INFO_PREFIX##expr))
+#ifdef __clang__
+  #define STATIC_INFO(expr)
+#else
+  #define STATIC_INFO_PREFIX __FILE__ "(" THIS_LINE "): [INFO] "
+  #define STATIC_INFO(expr)  __pragma(message(STATIC_INFO_PREFIX##expr))
+#endif
 
 #define MERGE2(A, B) A##B
 #define MERGE(A, B)  MERGE(A, B)

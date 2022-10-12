@@ -10,12 +10,19 @@
 //
 // ============================================
 
+#pragma once
+
 #include "rex_std/bonus/types.h"
 
 namespace rsl
 {
   inline namespace v1
   {
+    struct hash_required_result
+    {
+      count_t new_bucket_count;
+      bool is_hash_required;
+    };
 
     struct prime_rehash_policy
     {
@@ -29,11 +36,6 @@ namespace rsl
       uint32 get_next_bucket_count(uint32 bucketCountHint) const;
       uint32 get_bucket_count(uint32 elementCount) const;
 
-      struct hash_required_result
-      {
-        count_t new_bucket_count;
-        bool is_hash_required;
-      };
       hash_required_result is_rehash_required(uint32 bucketCount, uint32 elementCount, uint32 elementAdd) const;
 
     private:

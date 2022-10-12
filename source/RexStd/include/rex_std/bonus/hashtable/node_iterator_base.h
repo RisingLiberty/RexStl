@@ -25,7 +25,7 @@ namespace rsl
     public:
       using node_type = hash_node<Value>;
 
-      node_iterator_base(node_type* node)
+      explicit node_iterator_base(node_type* node)
           : m_node(node)
       {
       }

@@ -30,7 +30,7 @@ namespace rsl
 
       // stores a reference to x
       template <typename U>
-      constexpr reference_wrapper(U&& x)
+      constexpr explicit reference_wrapper(U&& x)
           : m_object(rsl::forward<U>(x))
       {
       }
@@ -41,6 +41,9 @@ namespace rsl
       {
       }
 
+      // default destructor, does nothing
+      ~reference_wrapper() = default;
+
       // drops the current reference and stores a reference to other.get()
       constexpr reference_wrapper& operator=(const reference_wrapper& other)
       {
@@ -49,7 +52,7 @@ namespace rsl
       }
 
       // returns the stored reference
-      constexpr operator T&() const
+      constexpr explicit operator T&() const
       {
         return m_object;
       }

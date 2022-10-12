@@ -25,7 +25,7 @@ namespace rsl
     };
 
     template <typename HashTable>
-    struct rehash_base<prime_rehash_policy, Hashtable>
+    struct rehash_base<prime_rehash_policy, HashTable>
     {
       float32 get_max_load_factor() const
       {

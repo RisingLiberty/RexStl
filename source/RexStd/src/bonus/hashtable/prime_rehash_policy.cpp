@@ -99,7 +99,7 @@ namespace rsl
       return prime;
     }
 
-    prime_rehash_policy::hash_required_result prime_rehash_policy::is_rehash_required(uint32 bucketCount, uint32 elementCount, uint32 elementAdd) const
+    hash_required_result prime_rehash_policy::is_rehash_required(uint32 bucketCount, uint32 elementCount, uint32 elementAdd) const
     {
       if((elementCount + elementAdd) > m_next_resize)
       {

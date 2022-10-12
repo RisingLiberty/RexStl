@@ -37,7 +37,7 @@ namespace rsl
           : base_type(node)
       {
       }
-      node_iterator(const node_iterator<Value, true>& other)
+      explicit node_iterator(const node_iterator<Value, true>& other)
           : base_type(other.node())
       {
       }

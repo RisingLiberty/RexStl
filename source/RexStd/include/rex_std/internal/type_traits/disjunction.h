@@ -45,7 +45,7 @@ namespace rsl
     };
 
     template <typename... Traits>
-    using disjunction_t = typename disjunction<Traits...>::type;
+    inline constexpr bool disjunction_v = disjunction<Traits...>::value;
 
   } // namespace v1
 } // namespace rsl

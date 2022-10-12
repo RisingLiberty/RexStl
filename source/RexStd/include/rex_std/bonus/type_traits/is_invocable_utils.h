@@ -27,8 +27,8 @@ namespace rsl
 
     namespace internal
     {
-      template <typename void_t, typename Callable>
-      struct InvokeTraitsZero
+      template <typename VoidT, typename Callable>
+      struct invoke_traits_zero
       {
         using is_invocable_v         = false_type;
         using is_nothrow_invocable_v = false_type;
@@ -39,34 +39,34 @@ namespace rsl
       };
 
       template <typename From, typename To, typename = void>
-      struct InvokeConvertible : public false_type
+      struct invoke_convertible : public false_type
       {
       };
 
       template <typename From, typename To>
-      struct InvokeConvertible<From, To, void_t<decltype(implicitly_convert_to<To>(returns_exactly<From>()))>> : true_type
+      struct invoke_convertible<From, To, void_t<decltype(implicitly_convert_to<To>(returns_exactly<From>()))>> : true_type
       {
       };
 
       template <typename From, typename To>
-      struct InvokeNothrowConvertible : bool_constant<noexcept(implicitly_convert_to<To>(returns_exactly<From>()))>
+      struct invoke_nothrow_convertible : bool_constant<noexcept(implicitly_convert_to<To>(returns_exactly<From>()))>
       {
       };
 
       template <typename Result, bool NoThrow>
-      struct InvokeTraitsCommon
+      struct invoke_traits_common
       {
         using type               = Result;
         using is_invocable_v     = true_type;
         using IsNothrowInvocable = bool_constant<NoThrow>;
         template <typename Rx>
-        using InInvocableR = bool_constant<disjunction_t<is_void<Rx>, InvokeConvertible<type, Rx>>>;
+        using is_invocable_r = bool_constant<disjunction_v<is_void<Rx>, invoke_convertible<type, Rx>>>;
         template <typename Rx>
-        using is_nothrow_invocable_r_v = bool_constant<conjunction_v<IsNothrowInvocable, disjunction<is_void_v<Rx>, conjunction<InvokeConvertible<type, Rx>, InvokeNothrowConvertible<type, Rx>>>>>;
+        using is_nothrow_invocable_r_v = bool_constant<conjunction_v<IsNothrowInvocable, disjunction<is_void_v<Rx>, conjunction<invoke_convertible<type, Rx>, invoke_nothrow_convertible<type, Rx>>>>>;
       };
 
       template <typename Void, typename... Types>
-      struct InvokeTraitsNonZero
+      struct invoke_traits_non_zero
       {
         using is_invocable         = false_type;
         using is_nothrow_invocable = false_type;
@@ -80,12 +80,12 @@ namespace rsl
       using DecltypeInvokeNonZero = decltype(declval<Callable>()());
 
       template <typename Callable>
-      struct InvokeTraitsNonZero<void_t<DecltypeInvokeNonZero<Callable>>, Callable> : InvokeTraitsCommon<DecltypeInvokeNonZero<Callable>, noexcept(declval<Callable>()())>
+      struct invoke_traits_non_zero<void_t<DecltypeInvokeNonZero<Callable>>, Callable> : invoke_traits_common<DecltypeInvokeNonZero<Callable>, noexcept(declval<Callable>()())>
       {
       };
 
       template <typename Callable, typename... Args>
-      using SelectInvokeTraits = conditional_t<sizeof...(Args) == 0, InvokeTraitsZero<void, Callable>, InvokeTraitsNonZero<void, Callable, Args...>>;
+      using SelectInvokeTraits = conditional_t<sizeof...(Args) == 0, invoke_traits_zero<void, Callable>, invoke_traits_non_zero<void, Callable, Args...>>;
     } // namespace internal
 
   } // namespace v1

@@ -19,7 +19,7 @@ namespace rsl
     {
       template <typename T>
       T returns_exactly() noexcept;
-    }
+    } // namespace internal
 
   } // namespace v1
 } // namespace rsl

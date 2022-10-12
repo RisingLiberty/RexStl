@@ -14,6 +14,8 @@
 
 #include "rex_std/bonus/defines.h"
 #include "rex_std/bonus/type_traits/remove_reference_wrapper.h"
+#include "rex_std/bonus/utility/use_first.h"
+#include "rex_std/bonus/utility/use_second.h"
 #include "rex_std/internal/type_traits/decay.h"
 #include "rex_std/internal/type_traits/enable_if.h"
 #include "rex_std/internal/type_traits/is_array.h"
@@ -336,32 +338,6 @@ namespace rsl
 
     template <typename T1, typename T2>
     pair(T1, T2) -> pair<T1, T2>;
-
-    /// RSL Comment: Not in ISO C++ Standard at time of writing (30/Aug/2022)
-    template <typename Pair>
-    struct use_first
-    {
-      using argument_type = Pair;
-      using result_type   = typename Pair::first_type;
-
-      const result_type& operator()(const Pair& x) const
-      {
-        return x.first;
-      }
-    };
-
-    /// RSL Comment: Not in ISO C++ Standard at time of writing (30/Aug/2022)
-    template <typename Pair>
-    struct use_second
-    {
-      using argument_type = Pair;
-      using result_type   = typename Pair::second_type;
-
-      const result_type& operator()(const Pair& x) const
-      {
-        return x.second;
-      }
-    };
 
     /// RSL Comment: Not in ISO C++ Standard at time of writing (30/Aug/2022)
     struct pair_first_construct_t

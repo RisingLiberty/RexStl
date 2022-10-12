@@ -25,7 +25,7 @@ namespace rsl
     };
 
     template <typename Callable, typename... Args>
-    using invoke_result_t = invoke_result<Callable, Args...>::type;
+    using invoke_result_t = typename invoke_result<Callable, Args...>::type;
 
   } // namespace v1
 } // namespace rsl

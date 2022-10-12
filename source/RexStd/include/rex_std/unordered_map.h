@@ -13,6 +13,7 @@
 #pragma once
 
 #include "rex_std/bonus/hashtable/hash_map.h"
+#include "rex_std/internal/functional/equal_to.h"
 
 namespace rsl
 {
