@@ -5,24 +5,10 @@
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
 //
-// File: unused.h
+// File: list_test.cpp
 // Copyright (c) Nick De Breuck 2022
 //
 // ============================================
 
-#pragma once
+#include "catch2/catch.hpp"
 
-namespace rsl
-{
-  inline namespace v1
-  {
-
-    namespace internal
-    {
-      struct unused
-      {
-      };
-    } // namespace internal
-
-  } // namespace v1
-} // namespace rsl

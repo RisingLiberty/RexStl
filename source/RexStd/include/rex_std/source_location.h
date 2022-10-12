@@ -39,10 +39,13 @@ namespace rsl
       static constexpr source_location current(const card32 line = __builtin_LINE(), card32 column = __builtin_COLUMN(), const char8* file = __builtin_FILE(), const char8* function = __builtin_FUNCTION())
       {
         source_location res {};
+
         res.m_line          = line;
         res.m_column        = column;
         res.m_file_name     = file;
         res.m_function_name = function;
+
+        return res;
       }
 
       card32 line() const

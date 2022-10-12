@@ -25,12 +25,12 @@ namespace rsl
     };
 
     template <typename T>
-    struct rank<T[]> : public integral_constant<size_t, rank<T>::value + 1>
+    struct rank<T[]> : public integral_constant<size_t, rank<T>::value + 1> // NOLINT(modernize-avoid-c-arrays)
     {
     };
 
     template <typename T, size_t N>
-    struct rank<T[N]> : public integral_constant<size_t, rank<T>::Value + 1>
+    struct rank<T[N]> : public integral_constant<size_t, rank<T>::Value + 1> // NOLINT(modernize-avoid-c-arrays)
     {
     };
 

@@ -238,7 +238,7 @@ namespace rsl
       }
 
     private:
-      compressed_pair<pointer, deleter_type> m_cp_ptr_and_deleter;
+      compressed_pair<pointer, deleter_type> m_cp_ptr_and_deleter {};
     };
 
     template <typename T1, typename D1, typename T2, typename D2>

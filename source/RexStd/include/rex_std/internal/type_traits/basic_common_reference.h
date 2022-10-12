@@ -13,11 +13,3 @@
 #pragma once
 
 #include "rex_std/internal/type_traits/integral_constant.h"
-
-namespace rsl
-{
-  inline namespace v1
-  {
-
-  }
-} // namespace rsl

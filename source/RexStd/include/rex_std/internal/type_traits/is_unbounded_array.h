@@ -18,17 +18,17 @@ namespace rsl
   {
 
     template <typename T>
-    struct IsUnboundedArrayStruct : public false_type
+    struct is_unbounded_array : public false_type
     {
     };
 
     template <typename T>
-    struct IsUnboundedArrayStruct<T[]> : public true_type
+    struct is_unbounded_array<T[]> : public true_type // NOLINT(modernize-avoid-c-arrays)
     {
     };
 
     template <typename T>
-    inline constexpr bool IsUnboundedArray = IsUnboundedArrayStruct<T>::value;
+    inline constexpr bool is_unbounded_array_v = is_unbounded_array<T>::value;
 
   } // namespace v1
 } // namespace rsl

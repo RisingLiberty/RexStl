@@ -17,13 +17,16 @@
 #include "rex_std/internal/assert/assert_fwd.h"
 #include "rex_std/internal/memory/addressof.h"
 #include "rex_std/internal/type_traits/aligned_storage.h"
+#include "rex_std/internal/type_traits/conjunction.h"
 #include "rex_std/internal/type_traits/decay.h"
 #include "rex_std/internal/type_traits/enable_if.h"
 #include "rex_std/internal/type_traits/is_constructible.h"
 #include "rex_std/internal/type_traits/is_reference.h"
 #include "rex_std/internal/type_traits/is_same.h"
 #include "rex_std/internal/type_traits/is_trivially_destructible.h"
+#include "rex_std/internal/type_traits/negation.h"
 #include "rex_std/internal/type_traits/remove_const.h"
+#include "rex_std/internal/type_traits/remove_cvref.h"
 #include "rex_std/internal/utility/forward.h"
 #include "rex_std/internal/utility/in_place.h"
 #include "rex_std/internal/utility/move.h"
@@ -126,10 +129,44 @@ namespace rsl
         {
           m_val = rsl::move(val);
         }
+        constexpr const value_type& val() const
+        {
+          return *m_val.get();
+        }
+        constexpr value_type& val()
+        {
+          return *m_val.get();
+        }
+
+        constexpr void swap(const optional_storage<value_type>& other)
+        {
+          if(has_value() == other.has_value())
+          {
+            if(has_value())
+            {
+              rsl::swap(val(), other.val());
+            }
+          }
+          else
+          {
+            if(has_value())
+            {
+              other.construct_value(rsl::move(val()));
+              destroy_value();
+            }
+            else
+            {
+              construct_value(rsl::move(other.val()));
+              other.destroy_value();
+            }
+
+            rsl::swap(m_has_value, other.m_has_value);
+          }
+        }
 
       private:
         bool m_has_value;
-        aligned_storage<value_type> m_val;
+        aligned_storage<value_type> m_val {};
       };
 
       template <typename T>
@@ -204,9 +241,35 @@ namespace rsl
           return *m_val.get();
         }
 
+        constexpr void swap(optional_storage<value_type>& other)
+        {
+          if(has_value() == other.has_value())
+          {
+            if(has_value())
+            {
+              rsl::swap(val(), other.val());
+            }
+          }
+          else
+          {
+            if(has_value())
+            {
+              other.construct_value(rsl::move(val()));
+              destroy_value();
+            }
+            else
+            {
+              construct_value(rsl::move(other.val()));
+              other.destroy_value();
+            }
+
+            rsl::swap(m_has_value, other.m_has_value);
+          }
+        }
+
       private:
         bool m_has_value;
-        aligned_storage<value_type> m_val;
+        aligned_storage<value_type> m_val {};
       };
     } // namespace internal
 
@@ -216,6 +279,9 @@ namespace rsl
     private:
       using storage_type = internal::optional_storage<T>;
 
+      template <typename T2>
+      using allow_direct_conversion =
+          bool_constant<conjunction_v<negation<is_same<remove_cvref_t<T2>, optional>>, negation<is_same<remove_cvref_t<T2>, in_place_t>>, is_constructible<T, T2>, negation<is_same<bool, T>>>>; // solving issues when assigning opt<int> to opt<bool>
     public:
       using value_type = T;
 
@@ -254,7 +320,7 @@ namespace rsl
       }
       // converting copy constructor, if other contains a value, it's copied in to this
       template <typename U>
-      constexpr optional(const optional<U>& other) // NOLINT(google-explicit-constructor)
+      explicit constexpr optional(const optional<U>& other)
       {
         m_storage.has_value(other.has_value());
 
@@ -289,10 +355,23 @@ namespace rsl
           : m_storage(in_place, ilist, rsl::forward<Args>(args)...)
       {
       }
+      /// RSL Comment: Not in ISO C++ Standard at time of writing (12/Oct/2022)
+      // copies val into this optional
+      // this overload is provided to avoid conflicts with optional bools
+      optional(const T& val) // NOLINT(google-explicit-constructor)
+          : m_storage(val)
+      {
+      }
+      /// RSL Comment: Not in ISO C++ Standard at time of writing (12/Oct/2022)
+      // moves val into this optional
+      // this overload is provided to avoid conflicts with optional bools
+      optional(T&& val) // NOLINT(google-explicit-constructor)
+          : m_storage(rsl::move(val))
+      {
+      }
       // construct an object initialized from the argument provided
-      REX_STATIC_TODO("clang tidy complains here because it checks for std::enable_if");
-      template <typename U = T, enable_if_t<is_constructible_v<T, U&&>, bool> = true>
-      constexpr optional(U&& value) // NOLINT(google-explicit-constructor, bugprone-forwarding-reference-overload): works with std::enable_if_t, not with rsl::enable_if_t
+      template <typename U = T, enable_if_t<allow_direct_conversion<U>::value, bool> = true>
+      optional(U&& value) // NOLINT(google-explicit-constructor)
           : m_storage(rsl::forward<U>(value))
       {
       }
@@ -547,6 +626,7 @@ namespace rsl
         }
 
         m_storage.construct_value(rsl::forward<Args>(args)...);
+        m_storage.has_value(true);
         return m_storage.val();
       }
       // constructs the contained value in place.
@@ -560,28 +640,7 @@ namespace rsl
       // swaps the contents with those of other
       constexpr void swap(optional& other)
       {
-        if(has_value() == other.swap())
-        {
-          if(has_value())
-          {
-            rsl::swap(m_storage.val(), other.m_storage.val());
-          }
-        }
-        else
-        {
-          if(has_value())
-          {
-            other.m_storage.construct_value(rsl::move(m_storage.val()));
-            m_storage.destruct_value();
-          }
-          else
-          {
-            m_storage.construct_value(rsl::move(other.m_storage.val()));
-            other.m_storage.destruct_value();
-          }
-
-          rsl::swap(m_storage.has_value, other.m_storage.has_value);
-        }
+        m_storage.swap(other.m_storage);
       }
 
       // if this contains a value, destroy that value by calling its constructor.
@@ -595,7 +654,7 @@ namespace rsl
       }
 
     private:
-      storage_type m_storage;
+      storage_type m_storage {};
     };
 
     // compares two optional objects

@@ -51,35 +51,35 @@ namespace rsl
     namespace internal
     {
       template <typename T1, typename T2, bool IsSameV, bool FirstEmpty, bool SecondEmpty>
-      struct CompressedPairSwitch;
+      struct compressed_pair_switch;
 
       template <typename T1, typename T2>
-      struct CompressedPairSwitch<T1, T2, false, false, false> : public integral_constant<card32, 0>
+      struct compressed_pair_switch<T1, T2, false, false, false> : public integral_constant<card32, 0>
       {
       };
 
       template <typename T1, typename T2>
-      struct CompressedPairSwitch<T1, T2, false, true, false> : public integral_constant<card32, 1>
+      struct compressed_pair_switch<T1, T2, false, true, false> : public integral_constant<card32, 1>
       {
       };
 
       template <typename T1, typename T2>
-      struct CompressedPairSwitch<T1, T2, false, false, true> : public integral_constant<card32, 2>
+      struct compressed_pair_switch<T1, T2, false, false, true> : public integral_constant<card32, 2>
       {
       };
 
       template <typename T1, typename T2>
-      struct CompressedPairSwitch<T1, T2, false, true, true> : public integral_constant<card32, 3>
+      struct compressed_pair_switch<T1, T2, false, true, true> : public integral_constant<card32, 3>
       {
       };
 
       template <typename T1, typename T2>
-      struct CompressedPairSwitch<T1, T2, true, false, false> : public integral_constant<card32, 4>
+      struct compressed_pair_switch<T1, T2, true, false, false> : public integral_constant<card32, 4>
       {
       };
 
       template <typename T1, typename T2>
-      struct CompressedPairSwitch<T1, T2, true, true, true> : public integral_constant<card32, 5>
+      struct compressed_pair_switch<T1, T2, true, true, true> : public integral_constant<card32, 5>
       {
       };
 
@@ -402,10 +402,10 @@ namespace rsl
     } // namespace internal
 
     template <typename T1, typename T2>
-    struct compressed_pair : private internal::compressed_pair_impl<T1, T2, internal::CompressedPairSwitch<T1, T2, is_same_v<remove_cv_t<T1>, remove_cv_t<T2>>, is_empty_v<T1>, is_empty_v<T2>>::value>
+    struct compressed_pair : private internal::compressed_pair_impl<T1, T2, internal::compressed_pair_switch<T1, T2, is_same_v<remove_cv_t<T1>, remove_cv_t<T2>>, is_empty_v<T1>, is_empty_v<T2>>::value>
     {
     private:
-      using base = internal::compressed_pair_impl<T1, T2, internal::CompressedPairSwitch<T1, T2, is_same_v<remove_cv_t<T1>, remove_cv_t<T2>>, is_empty_v<T1>, is_empty_v<T2>>::value>;
+      using base = internal::compressed_pair_impl<T1, T2, internal::compressed_pair_switch<T1, T2, is_same_v<remove_cv_t<T1>, remove_cv_t<T2>>, is_empty_v<T1>, is_empty_v<T2>>::value>;
 
     public:
       using first_type             = T1;
@@ -451,10 +451,10 @@ namespace rsl
     };
 
     template <typename T>
-    struct compressed_pair<T, T> : private internal::compressed_pair_impl<T, T, internal::CompressedPairSwitch<T, T, is_same_v<remove_cv_t<T>, remove_cv_t<T>>, is_empty_v<T>, is_empty_v<T>>::value>
+    struct compressed_pair<T, T> : private internal::compressed_pair_impl<T, T, internal::compressed_pair_switch<T, T, is_same_v<remove_cv_t<T>, remove_cv_t<T>>, is_empty_v<T>, is_empty_v<T>>::value>
     {
     private:
-      using base = internal::compressed_pair_impl<T, T, internal::CompressedPairSwitch<T, T, is_same_v<remove_cv_t<T>, remove_cv_t<T>>, is_empty_v<T>, is_empty_v<T>>::value>;
+      using base = internal::compressed_pair_impl<T, T, internal::compressed_pair_switch<T, T, is_same_v<remove_cv_t<T>, remove_cv_t<T>>, is_empty_v<T>, is_empty_v<T>>::value>;
 
     public:
       using first_type             = T;

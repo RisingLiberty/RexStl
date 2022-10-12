@@ -12,6 +12,8 @@
 
 #pragma once
 
+#ifdef REX_ENABLE_WITH_CPP20
+
 namespace rsl
 {
   inline namespace v1
@@ -25,3 +27,5 @@ namespace rsl
 
   } // namespace v1
 } // namespace rsl
+
+#endif

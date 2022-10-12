@@ -16,6 +16,8 @@
 #include "rex_std/internal/type_traits/integral_constant.h"
 #include "rex_std/internal/type_traits/is_same.h"
 #include "rex_std/internal/type_traits/is_void.h"
+#include "rex_std/internal/utility/declval.h"
+#include "rex_std/internal/utility/swap.h"
 
 namespace rsl
 {
@@ -25,20 +27,20 @@ namespace rsl
     namespace internal
     {
       template <typename T, typename U, bool OneTypeIsvoid = (is_void_v<T> || is_void_v<U>)>
-      struct IsSwappableWithHelper
+      struct is_swappable_with_helper
       {
-        static const bool value = !is_same_v<decltype(swap(declval<T>(), declval<U>())), Unused>::value && !is_same_v<decltype(swap(declval<U>(), declval<T>())), Unused>::value;
+        static constexpr bool value = !is_same_v<decltype(swap(declval<T>(), declval<U>())), unused> && !is_same_v<decltype(swap(declval<U>(), declval<T>())), unused>;
       };
 
       template <typename T, typename U>
-      struct IsSwappableWithHelper<T, U, true>
+      struct is_swappable_with_helper<T, U, true>
       {
-        static const bool value = false;
+        static constexpr bool value = false;
       };
     } // namespace internal
 
     template <typename T, typename U>
-        struct is_swappable_with : public bool_constant < internal::IsSwappableWithHelper<T, U>::value
+    struct is_swappable_with : public bool_constant<internal::is_swappable_with_helper<T, U>::value>
     {
     };
 

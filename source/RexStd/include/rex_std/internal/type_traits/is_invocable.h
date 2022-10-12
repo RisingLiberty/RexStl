@@ -19,13 +19,13 @@ namespace rsl
   inline namespace v1
   {
 
-    template <typename Callable, typename... Args>
-    struct is_invocable : internal::SelectInvokeTraits<Callable, Args...>::is_invocable_v
+    template <typename F, typename... Args>
+    struct is_invocable : public internal::is_invocable_impl<F, void, Args...>
     {
     };
 
-    template <typename Callable, typename... Args>
-    inline constexpr bool is_invocable_v = is_invocable<Callable, Args...>::value;
+    template <typename F, typename... Args>
+    inline constexpr bool is_invocable_v = is_invocable<F, Args...>::value;
 
   } // namespace v1
 } // namespace rsl

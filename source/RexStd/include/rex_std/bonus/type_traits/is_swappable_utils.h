@@ -12,6 +12,8 @@
 
 #pragma once
 
+#include "rex_std/bonus/type_traits/unused.h"
+
 namespace rsl
 {
   inline namespace v1
@@ -19,15 +21,15 @@ namespace rsl
 
     namespace internal
     {
-      struct ArgumentSink
+      struct argument_sink
       {
         template <typename... Args>
-        ArgumentSink(Args&&...)
+        explicit argument_sink(Args&&... /*unused*/)
         {
         }
       };
 
-      Unused swap(ArgumentSink, ArgumentSink);
+      internal::unused swap(argument_sink, argument_sink);
 
     } // namespace internal
 

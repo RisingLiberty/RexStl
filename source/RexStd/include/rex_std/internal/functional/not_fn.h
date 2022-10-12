@@ -20,29 +20,29 @@ namespace rsl
     namespace internal
     {
       template <typename F>
-      struct NotFnType
+      struct not_fn_t
       {
         F f;
         template <typename... Args>
-        constexpr auto operator()(Args&&... args) & noexcept(noexcept(!rsl::invoke(f, rsl::forward<Args>(args)...))) -> decltype(!rsl::invoke(f, rsl::forward<Args>(args)...))
+        constexpr auto operator()(Args&&... args) & -> decltype(!rsl::invoke(f, rsl::forward<Args>(args)...))
         {
           return !rsl::invoke(f, rsl::forward<Args>(args)...);
         }
 
         template <typename... Args>
-        constexpr auto operator()(Args&&... args) const& noexcept(noexcept(!rsl::invoke(f, rsl::forward<Args>(args)...))) -> decltype(!rsl::invoke(f, rsl::forward<Args>(args)...))
+        constexpr auto operator()(Args&&... args) const& -> decltype(!rsl::invoke(f, rsl::forward<Args>(args)...))
         {
           return !rsl::invoke(f, rsl::forward<Args>(args)...);
         }
 
         template <typename... Args>
-        constexpr auto operator()(Args&&... args) && noexcept(noexcept(!rsl::invoke(rsl::move(f), rsl::forward<Args>(args)...))) -> decltype(!rsl::invoke(rsl::move(f), rsl::forward<Args>(args)...))
+        constexpr auto operator()(Args&&... args) && -> decltype(!rsl::invoke(rsl::move(f), rsl::forward<Args>(args)...))
         {
           return !rsl::invoke(rsl::move(f), rsl::forward<Args>(args)...);
         }
 
         template <typename... Args>
-        constexpr auto operator()(Args&&... args) const&& noexcept(noexcept(!rsl::invoke(rsl::move(f), rsl::forward<Args>(args)...))) -> decltype(!rsl::invoke(rsl::move(f), rsl::forward<Args>(args)...))
+        constexpr auto operator()(Args&&... args) const&& -> decltype(!rsl::invoke(rsl::move(f), rsl::forward<Args>(args)...))
         {
           return !rsl::invoke(rsl::move(f), rsl::forward<Args>(args)...);
         }
@@ -51,7 +51,7 @@ namespace rsl
 
     // Creates a forwarding call wrapper that returns the negation of the callable object it holds.
     template <typename F>
-    constexpr internal::NotFnType<rsl::decay<F>> not_fn(F&& f)
+    constexpr internal::not_fn_t<F> not_fn(F&& f)
     {
       return {rsl::forward<F>(f)};
     }

@@ -25,7 +25,7 @@ namespace rsl
     };
 
     template <typename T, typename... Args>
-    inline constexpr bool is_nothrow_constructible_v = is_nothrow_constructible<T, Args>::value;
+    inline constexpr bool is_nothrow_constructible_v = is_nothrow_constructible<T, Args...>::value;
 
   } // namespace v1
 } // namespace rsl

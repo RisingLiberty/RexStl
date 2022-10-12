@@ -15,6 +15,7 @@
 #include "rex_std/internal/functional/reference_wrapper.h"
 #include "rex_std/internal/type_traits/conditional.h"
 #include "rex_std/internal/type_traits/is_base_of.h"
+#include "rex_std/internal/type_traits/is_member_function_pointer.h"
 #include "rex_std/internal/type_traits/is_member_object_pointer.h"
 #include "rex_std/internal/type_traits/remove_reference.h"
 
@@ -25,20 +26,20 @@ namespace rsl
 
     namespace internal
     {
-      enum class InvokerStrategy
+      enum class invoker_strategy
       {
-        Functor,
-        PmfObject,  // pointer member function object
-        PmfRewrap,  // pointer member function rewrap
-        PmfPointer, // pointer member function pointer
-        PmdObject,  // pointer data member
-        PmdRefwrap, // pointer data member
-        PmdPointer  // pointer data member
+        functor,
+        pmf_object,  // pointer member function object
+        pmf_rewrap,  // pointer member function rewrap
+        pmf_pointer, // pointer member function pointer
+        pmd_object,  // pointer data member
+        pmd_refwrap, // pointer data member
+        pmd_pointer  // pointer data member
       };
 
-      struct InvokerFunctor
+      struct invoker_functor
       {
-        static constexpr InvokerStrategy Strategy = InvokerStrategy::Functor;
+        static constexpr invoker_strategy strategy = invoker_strategy::functor;
 
         template <typename Callable, typename... Types>
         static constexpr auto call(Callable&& obj, Types&&... args) -> decltype(static_cast<Callable&&>(obj)(static_cast<Types&&>(args)...))
@@ -47,9 +48,9 @@ namespace rsl
         }
       };
 
-      struct InvokerPmfObject
+      struct invoker_pmf_object
       {
-        static constexpr InvokerStrategy Strategy = InvokerStrategy::PmfObject;
+        static constexpr invoker_strategy strategy = invoker_strategy::pmf_object;
 
         template <typename Decayed, typename T1, typename... Types2>
         static constexpr auto call(Decayed pmf, T1&& args1, Types2&&... args2) -> decltype((static_cast<T1&&>(args1).*pmf)(static_cast<Types2&&>(args2)...))
@@ -58,9 +59,9 @@ namespace rsl
         }
       };
 
-      struct InvokerPmfRewrap
+      struct invoker_pmf_rewrap
       {
-        static constexpr InvokerStrategy Strategy = InvokerStrategy::PmfRewrap;
+        static constexpr invoker_strategy strategy = invoker_strategy::pmf_rewrap;
 
         template <typename Decayed, typename Refwrap, typename... Types2>
         static constexpr auto call(Decayed pmf, Refwrap rw, Types2&&... args2) -> decltype((rw.get().*pmf)(static_cast<Types2&&>(args2)...))
@@ -69,9 +70,9 @@ namespace rsl
         }
       };
 
-      struct InvokerPmfPointer
+      struct invoker_pmf_pointer
       {
-        static constexpr InvokerStrategy Strategy = InvokerStrategy::PmfPointer;
+        static constexpr invoker_strategy strategy = invoker_strategy::pmf_pointer;
 
         template <typename Decayed, typename T1, typename... Types2>
         static constexpr auto call(Decayed pmf, T1&& args1, Types2&&... args2) -> decltype(((*static_cast<T1&&>(args1)).*pmf)(static_cast<Types2&&>(args2)...))
@@ -80,36 +81,36 @@ namespace rsl
         }
       };
 
-      struct InvokerPmdObject
+      struct invoker_pmd_object
       {
-        static constexpr InvokerStrategy Strategy = InvokerStrategy::PmdObject;
+        static constexpr invoker_strategy strategy = invoker_strategy::pmd_object;
 
         template <typename Decayed, typename T1>
-        static constexpr auto call(Decayed _Pmd, T1&& args1) noexcept -> decltype(static_cast<T1&&>(args1).*_Pmd)
+        static constexpr auto call(Decayed pmd, T1&& args1) noexcept -> decltype(static_cast<T1&&>(args1).*pmd)
         {
-          return static_cast<T1&&>(args1).*_Pmd;
+          return static_cast<T1&&>(args1).*pmd;
         }
       };
 
-      struct InvokerPmdRefwrap
+      struct invoker_pmd_refwrap
       {
-        static constexpr InvokerStrategy Strategy = InvokerStrategy::PmdRefwrap;
+        static constexpr invoker_strategy strategy = invoker_strategy::pmd_refwrap;
 
         template <typename Decayed, typename Refwrap>
-        static constexpr auto call(Decayed _Pmd, Refwrap rw) noexcept -> decltype(rw.get().*_Pmd)
+        static constexpr auto call(Decayed pmd, Refwrap rw) noexcept -> decltype(rw.get().*pmd)
         {
-          return rw.get().*_Pmd;
+          return rw.get().*pmd;
         }
       };
 
-      struct InvokerPmdPointer
+      struct invoker_pmd_pointer
       {
-        static constexpr InvokerStrategy Strategy = InvokerStrategy::PmdPointer;
+        static constexpr invoker_strategy strategy = invoker_strategy::pmd_pointer;
 
         template <typename Decayed, typename T1>
-        static constexpr auto call(Decayed _Pmd, T1&& args1) -> decltype((*static_cast<T1&&>(args1)).*_Pmd)
+        static constexpr auto call(Decayed pmd, T1&& args1) -> decltype((*static_cast<T1&&>(args1)).*pmd)
         {
-          return (*static_cast<T1&&>(args1)).*_Pmd;
+          return (*static_cast<T1&&>(args1)).*pmd;
         }
       };
 
@@ -131,19 +132,19 @@ namespace rsl
       };
 
       template <typename Callable, typename T1, typename RemovedCVRef>
-      struct Invoker1<Callable, T1, RemovedCVRef, true, false> : conditional_t<is_base_of_v<typename is_member_function_pointer<RemovedCVRef>::class_type, remove_reference_t<T1>>, InvokerPmfObject,
-                                                                               conditional_t<is_specialization_v<RemoveCVRef<T1>, reference_wrapper>, InvokerPmfRewrap, InvokerPmfPointer>>
+      struct Invoker1<Callable, T1, RemovedCVRef, true, false> : conditional_t<is_base_of_v<typename is_member_function_pointer<RemovedCVRef>::class_type, remove_reference_t<T1>>, invoker_pmf_object,
+                                                                               conditional_t<is_specialization_v<RemoveCVRef<T1>, reference_wrapper>, invoker_pmf_rewrap, invoker_pmf_pointer>>
       {
       }; // pointer to member function
 
       template <typename Callable, typename T1, typename RemovedCVRef>
-      struct Invoker1<Callable, T1, RemovedCVRef, false, true>
-          : conditional_t<is_base_of_v<typename is_member_object_pointer<RemovedCVRef>::class_type, remove_reference<T1>>, InvokerPmdObject, conditional_t<is_specialization_v<RemoveCVRef<T1>, reference_wrapper>, InvokerPmdRefwrap, InvokerPmdPointer>>
+      struct Invoker1<Callable, T1, RemovedCVRef, false, true> : conditional_t<is_base_of_v<typename is_member_object_pointer<RemovedCVRef>::class_type, remove_reference<T1>>, invoker_pmd_object,
+                                                                               conditional_t<is_specialization_v<RemoveCVRef<T1>, reference_wrapper>, invoker_pmd_refwrap, invoker_pmd_pointer>>
       {
       }; // pointer to member data
 
       template <typename Callable, typename T1, typename RemovedCVRef>
-      struct Invoker1<Callable, T1, RemovedCVRef, false, false> : InvokerFunctor
+      struct Invoker1<Callable, T1, RemovedCVRef, false, false> : invoker_functor
       {
       };
     } // namespace internal
@@ -157,33 +158,33 @@ namespace rsl
     template <typename Callable, typename T1, typename... Types2>
     constexpr auto invoke(Callable&& obj, T1&& args1, Types2&&... args2) -> decltype(internal::Invoker1<Callable, T1>::call(static_cast<Callable&&>(obj), static_cast<T1&&>(args1), static_cast<Types2&&>(args2)...))
     {
-      if constexpr(internal::Invoker1<Callable, T1>::Strategy == internal::InvokerStrategy::Functor)
+      if constexpr(internal::Invoker1<Callable, T1>::strategy == internal::invoker_strategy::functor)
       {
         return static_cast<Callable&&>(obj)(static_cast<T1&&>(args1), static_cast<Types2&&>(args2)...);
       }
-      else if constexpr(internal::Invoker1<Callable, T1>::Strategy == internal::InvokerStrategy::PmfObject)
+      else if constexpr(internal::Invoker1<Callable, T1>::strategy == internal::invoker_strategy::pmf_object)
       {
         return (static_cast<T1&&>(args1).*obj)(static_cast<Types2&&>(args2)...);
       }
-      else if constexpr(internal::Invoker1<Callable, T1>::Strategy == internal::InvokerStrategy::PmfRewrap)
+      else if constexpr(internal::Invoker1<Callable, T1>::strategy == internal::invoker_strategy::pmf_rewrap)
       {
         return (args1.get().*obj)(static_cast<Types2&&>(args2)...);
       }
-      else if constexpr(internal::Invoker1<Callable, T1>::Strategy == internal::InvokerStrategy::PmfPointer)
+      else if constexpr(internal::Invoker1<Callable, T1>::strategy == internal::invoker_strategy::pmf_pointer)
       {
         return ((*static_cast<T1&&>(args1)).*obj)(static_cast<Types2&&>(args2)...);
       }
-      else if constexpr(internal::Invoker1<Callable, T1>::Strategy == internal::InvokerStrategy::PmdObject)
+      else if constexpr(internal::Invoker1<Callable, T1>::strategy == internal::invoker_strategy::pmd_object)
       {
         return static_cast<T1&&>(args1).*obj;
       }
-      else if constexpr(internal::Invoker1<Callable, T1>::Strategy == internal::InvokerStrategy::PmdRefwrap)
+      else if constexpr(internal::Invoker1<Callable, T1>::strategy == internal::invoker_strategy::pmd_refwrap)
       {
         return args1.get().*obj;
       }
       else
       {
-        static_assert(internal::Invoker1<Callable, T1>::Strategy == internal::InvokerStrategy::PmdPointer, "bug in invoke");
+        static_assert(internal::Invoker1<Callable, T1>::strategy == internal::invoker_strategy::pmd_pointer, "bug in invoke");
         return (*static_cast<T1&&>(args1)).*obj;
       }
     }

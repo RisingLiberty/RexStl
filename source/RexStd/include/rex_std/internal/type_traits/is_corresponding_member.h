@@ -14,16 +14,20 @@
 
 #include "rex_std/bonus/defines.h"
 
+#ifdef REX_ENABLE_WITH_CPP20
+
 namespace rsl
 {
   inline namespace v1
   {
 
     template <typename S1, typename S2, typename M1, typename M2>
-    inline constexpr bool is_corresponding_member(M !S1::*mp, M2 S2::*mq)
+    constexpr bool is_corresponding_member(M1 S1::*pm1, M2 S2::*pm2) noexcept
     {
-      return __is_corresponding_member(S1, S2, M1, M2);
+      return __is_corresponding_member(S1, S2, pm1, pm2);
     }
 
   } // namespace v1
 } // namespace rsl
+
+#endif

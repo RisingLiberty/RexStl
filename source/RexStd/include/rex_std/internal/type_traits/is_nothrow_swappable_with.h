@@ -24,25 +24,25 @@ namespace rsl
     namespace internal
     {
       template <typename T, typename U, bool OneTypeIsVoid = (is_void_v<T> || is_void_v<U>)>
-      struct IsNoThrowSwappableWithHelper
+      struct is_nothrow_swappable_with_helper
       {
-        static const bool value = noexcept(swap(declval<T>(), declval<U>()))&& noexcept(swap(declval<U>(), declval<T>()));
+        static constexpr bool value = noexcept(swap(declval<T>(), declval<U>()))&& noexcept(swap(declval<U>(), declval<T>()));
       };
 
       template <typename T, typename U>
-      struct IsNoThrowSwappableWithHelper<T, U, true>
+      struct is_nothrow_swappable_with_helper<T, U, true>
       {
-        static const bool value = false;
+        static constexpr bool value = false;
       };
     } // namespace internal
 
     template <typename T, typename U>
-    struct is_nothrow_swappable_with : public bool_constant<internal::IsNoThrowSwappableWithHelper<T, U>::value>
+    struct is_nothrow_swappable_with : public bool_constant<internal::is_nothrow_swappable_with_helper<T, U>::value>
     {
     };
 
     template <typename T, typename U>
-    inline constexpr bool is_nothrow_swappable_with = is_nothrow_swappable_with<T>::value;
+    inline constexpr bool is_nothrow_swappable_with_v = is_nothrow_swappable_with<T, U>::value;
 
   } // namespace v1
 } // namespace rsl

@@ -21,11 +21,14 @@
 #include "rex_std/internal/iterator/distance.h"
 #include "rex_std/internal/iterator/reverse_iterator.h"
 #include "rex_std/internal/memory/addressof.h"
+#include "rex_std/internal/memory/allocator.h"
+#include "rex_std/internal/memory/allocator_traits.h"
 #include "rex_std/internal/memory/destroy_at.h"
 #include "rex_std/internal/utility/exchange.h"
 #include "rex_std/internal/utility/forward.h"
 #include "rex_std/internal/utility/move.h"
 #include "rex_std/internal/utility/swap.h"
+#include "rex_std/iterator.h"
 #include "rex_std/limits.h"
 
 namespace rsl
@@ -84,7 +87,7 @@ namespace rsl
     };
 
     template <typename T, typename Allocator>
-    class List;
+    class list;
 
     // TODO: Check if we can use the BiDirectional Iterator for this (it's implementation should change though)
     template <typename T>
@@ -102,7 +105,7 @@ namespace rsl
       using difference_type   = int32;
 
       template <typename T, typename Allocator>
-      friend class List;
+      friend class list;
 
       reference operator*()
       {
@@ -163,7 +166,7 @@ namespace rsl
       using difference_type   = int32;
 
       template <typename T, typename Allocator>
-      friend class List;
+      friend class list;
 
       const_reference operator*() const
       {
@@ -211,8 +214,8 @@ namespace rsl
     /// This is to avoid implementing try/catch blocks in every pathway in the container class as this makes hurts performance and increases code size.
     /// RSL disables exceptions in the entire codebase and we use asserts instead, for this reason, we don't implement base classes for our containers.
 
-    template <typename T, typename Alloc>
-    class List
+    template <typename T, typename Alloc = allocator>
+    class list
     {
     public:
       using value_type             = T;
@@ -228,9 +231,9 @@ namespace rsl
       using reverse_iterator       = rsl::reverse_iterator<iterator>;
       using const_reverse_iterator = rsl::reverse_iterator<const_iterator>;
       using node_type              = ListNode<T>;    /// RSL Comment: Not in ISO C++ Standard at time of writing time of writing (04/June/2022)
-      using this_type              = List<T, Alloc>; /// RSL Comment: Not in ISO C++ Standard at time of writing time of writing (04/June/2022)
+      using this_type              = list<T, Alloc>; /// RSL Comment: Not in ISO C++ Standard at time of writing time of writing (04/June/2022)
 
-      List()
+      list()
           : m_cp_head_tail_link_and_alloc()
 #ifdef REX_ENABLE_SIZE_IN_LISTS
           , m_size(0)
@@ -238,7 +241,7 @@ namespace rsl
       {
         init();
       }
-      explicit List(const allocator_type& alloc)
+      explicit list(const allocator_type& alloc)
           : m_cp_head_tail_link_and_alloc(alloc)
 #ifdef REX_ENABLE_SIZE_IN_LISTS
           , m_size(0)
@@ -246,7 +249,7 @@ namespace rsl
       {
         init();
       }
-      List(size_type count, const_reference value, const allocator_type& alloc = allocator_type())
+      list(size_type count, const_reference value, const allocator_type& alloc = allocator_type())
           : m_cp_head_tail_link_and_alloc(alloc)
 #ifdef REX_ENABLE_SIZE_IN_LISTS
           , m_size(count)
@@ -254,7 +257,7 @@ namespace rsl
       {
         insert(end(), count, value);
       }
-      explicit List(size_type count, const allocator_type& alloc = allocator_type())
+      explicit list(size_type count, const allocator_type& alloc = allocator_type())
           : m_cp_head_tail_link_and_alloc(alloc)
 #ifdef REX_ENABLE_SIZE_IN_LISTS
           , m_size(count)
@@ -263,7 +266,7 @@ namespace rsl
         insert(end(), count);
       }
       template <typename InputIt>
-      List(InputIt first, InputIt last, const allocator_type& alloc = allocator_type())
+      list(InputIt first, InputIt last, const allocator_type& alloc = allocator_type())
           : m_cp_head_tail_link_and_alloc(alloc)
 #ifdef REX_ENABLE_SIZE_IN_LISTS
           , m_size(0)
@@ -271,7 +274,7 @@ namespace rsl
       {
         insert(end(), first, last);
       }
-      List(const List& other)
+      list(const list& other)
           : m_cp_head_tail_link_and_alloc(other.get_allocator())
 #ifdef REX_ENABLE_SIZE_IN_LISTS
           , m_size(other.m_size)
@@ -279,7 +282,7 @@ namespace rsl
       {
         insert(end(), other.cbegin(), other.cend());
       }
-      List(const List& other, const allocator_type& alloc)
+      list(const list& other, const allocator_type& alloc)
           : m_cp_head_tail_link_and_alloc(alloc)
 #ifdef REX_ENABLE_SIZE_IN_LISTS
           , m_size(other.m_size)
@@ -287,7 +290,7 @@ namespace rsl
       {
         insert(end(), other.cbegin(), other.cend());
       }
-      List(List&& other)
+      list(list&& other)
           : m_cp_head_tail_link_and_alloc(rsl::move(other.get_allocator()))
 #ifdef REX_ENABLE_SIZE_IN_LISTS
           , m_size(0)
@@ -295,7 +298,7 @@ namespace rsl
       {
         swap(other);
       }
-      List(List&& other, const allocator_type& alloc)
+      list(list&& other, const allocator_type& alloc)
           : m_cp_head_tail_link_and_alloc(alloc)
 #ifdef REX_ENABLE_SIZE_IN_LISTS
           , m_size(0)
@@ -303,7 +306,7 @@ namespace rsl
       {
         swap(other);
       }
-      List(rsl::initializer_list<value_type> ilist, const allocator_type& alloc)
+      list(rsl::initializer_list<value_type> ilist, const allocator_type& alloc)
           : m_cp_head_tail_link_and_alloc(alloc)
 #ifdef REX_ENABLE_SIZE_IN_LISTS
           , m_size(0)
@@ -312,25 +315,25 @@ namespace rsl
         insert(end(), ilist.begin(), ilist.end());
       }
 
-      ~List()
+      ~list()
       {
         clear();
       }
 
-      List& operator=(const List& other)
+      list& operator=(const list& other)
       {
         assign(other.cbegin(), other.cend());
 
         return *this;
       }
-      List& operator=(List&& other) noexcept
+      list& operator=(list&& other) noexcept
       {
-        REX_ASSERT_X(this != &x, "Can't move assign to yourself!");
+        REX_ASSERT_X(this != &other, "Can't move assign to yourself!");
         swap(other);
 
         return *this;
       }
-      List& operator=(rsl::initializer_list<value_type> ilist)
+      list& operator=(rsl::initializer_list<value_type> ilist)
       {
         assign(ilist.begin(), ilist.end());
 
@@ -662,7 +665,7 @@ namespace rsl
           --num_new_elements;
         }
       }
-      void swap(List<T, allocator_type>& other)
+      void swap(list<T, allocator_type>& other)
       {
         rsl::swap(m_cp_head_tail_link_and_alloc, other.m_cp_head_tail_link_and_alloc);
         rsl::swap(get_allocator(), other.get_allocator());
@@ -1031,9 +1034,6 @@ namespace rsl
 {
   inline namespace v1
   {
-    template <typename T, typename Allocator>
-    REX_STD_TEMPLATED_CLASS_ALIAS(list, T, Allocator);
-
     REX_STD_FUNC_ALIAS(operator==);
     REX_STD_FUNC_ALIAS(operator!=);
     REX_STD_FUNC_ALIAS(operator<);

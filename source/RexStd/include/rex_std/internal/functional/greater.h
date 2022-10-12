@@ -25,7 +25,7 @@ namespace rsl
       // we do so we can, for example, compare a string with a const char*
       // without the second getting promoted to a string
       template <typename U = T>
-      constexpr T operator()(const T& lhs, const U& rhs) const
+      constexpr bool operator()(const T& lhs, const U& rhs) const
       {
         return lhs > rhs;
       }

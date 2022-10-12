@@ -15,6 +15,8 @@
 #include "rex_std/bonus/type_traits/is_swappable_utils.h"
 #include "rex_std/bonus/type_traits/unused.h"
 #include "rex_std/internal/type_traits/integral_constant.h"
+#include "rex_std/internal/utility/declval.h"
+#include "rex_std/internal/utility/swap.h"
 
 namespace rsl
 {
@@ -22,7 +24,7 @@ namespace rsl
   {
 
     template <typename T>
-    struct is_swappable : public bool_constant<!is_same_v<decltype(swap(declval<T&>(), declval<T&>())), Unused>>
+    struct is_swappable : public bool_constant<!is_same_v<decltype(swap(declval<T&>(), declval<T&>())), internal::unused>>
     {
     };
 

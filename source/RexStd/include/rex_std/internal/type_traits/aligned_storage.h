@@ -65,6 +65,10 @@ namespace rsl
       {
         rsl::memcpy(m_buff, newVal, sizeof(T));
       }
+      constexpr const T* get() const
+      {
+        return reinterpret_cast<const T*>(m_buff); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+      }
       constexpr T* get()
       {
         return reinterpret_cast<T*>(m_buff); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)

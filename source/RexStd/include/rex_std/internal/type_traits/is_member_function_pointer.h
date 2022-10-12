@@ -24,18 +24,18 @@ namespace rsl
     namespace internal
     {
       template <typename T>
-      struct IsMemberFunctionPointerHelper : false_type
+      struct is_member_function_pointer_helper : false_type
       {
       };
 
       template <typename T, typename U>
-      struct IsMemberFunctionPointerHelper<T U::*> : is_function<T>
+      struct is_member_function_pointer_helper<T U::*> : is_function<T>
       {
       };
     } // namespace internal
 
     template <typename T>
-    struct is_member_function_pointer : public bool_constant<internal::IsMemberFunctionPointerHelper<remove_cv_t<T>>::value>
+    struct is_member_function_pointer : public bool_constant<internal::is_member_function_pointer_helper<remove_cv_t<T>>::value>
     {
     };
 

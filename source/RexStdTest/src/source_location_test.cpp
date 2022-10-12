@@ -5,24 +5,17 @@
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
 //
-// File: unused.h
+// File: source_location_test.cpp
 // Copyright (c) Nick De Breuck 2022
 //
 // ============================================
 
-#pragma once
+#include "catch2/catch.hpp"
 
-namespace rsl
+#include "rex_std/source_location.h"
+
+TEST_CASE("source location")
 {
-  inline namespace v1
-  {
-
-    namespace internal
-    {
-      struct unused
-      {
-      };
-    } // namespace internal
-
-  } // namespace v1
-} // namespace rsl
+  rsl::source_location loc = rsl::source_location::current();
+  REQUIRE(loc.line() == 19);
+}

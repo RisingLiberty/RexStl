@@ -19,24 +19,13 @@ namespace rsl
   inline namespace v1
   {
 
-    namespace internal
-    {
-      template <typename Rx, typename Callable, typename... Args>
-      using IsInvocableRHelper = typename internal::SelectInvokeTraits<Callable, Args...>::template IsInvocableRHelper<Rx>;
-
-      template <typename Rx, typename Callable, typename... Args>
-      struct IsInvocableRHelper : IsInvocableRHelper<Rx, Callable, Args...>
-      {
-      };
-    } // namespace internal
-
-    template <typename Rx, typename Callable, typename... Args>
-    struct is_invocable_r : internal::IsInvocableRHelper<Rx, Callable, Args>
+    template <typename R, typename F, typename... Args>
+    struct is_invocable_r : public internal::is_invocable_r_impl<R, F, void, Args...>
     {
     };
 
-    template <typename Rx, typename Callable, typename... Args>
-    inline constexpr bool is_invocable_r_v = is_convertible<Rx, Callable, Args...>;
+    template <typename R, typename F, typename... Args>
+    inline constexpr bool is_invocable_r_v = is_invocable_r<R, F, Args...>::value;
 
   } // namespace v1
 } // namespace rsl

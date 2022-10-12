@@ -14,6 +14,7 @@
 
 #include "rex_std/bonus/type_traits/is_swappable_utils.h"
 #include "rex_std/internal/type_traits/integral_constant.h"
+#include "rex_std/internal/type_traits/is_swappable.h"
 
 namespace rsl
 {
@@ -23,24 +24,24 @@ namespace rsl
     namespace internal
     {
       template <typename T>
-      struct IsNoThrowSwappableHelperNoExceptWrapper
+      struct is_nothrow_swappable_helper_no_except_wrapper
       {
-        const static bool value = noexcept(swap(declval<T&>(), declval<T&>()));
+        const static bool s_value = noexcept(swap(declval<T&>(), declval<T&>()));
       };
 
       template <typename T, bool>
-      struct IsNoThrowSwappableHelper : public bool_constant<IsNoThrowSwappableHelperNoExceptWrapper<T>::value>
+      struct is_nothrow_swappable_helper : public bool_constant<is_nothrow_swappable_helper_no_except_wrapper<T>::value>
       {
       };
 
       template <typename T>
-      struct IsNoThrowSwappableHelper<T, false> : public false_type
+      struct is_nothrow_swappable_helper<T, false> : public false_type
       {
       };
     } // namespace internal
 
     template <typename T>
-    struct is_nothrow_swappable : internal::IsNoThrowSwappableHelper<T, is_swappable_v<T>>
+    struct is_nothrow_swappable : internal::is_nothrow_swappable_helper<T, is_swappable_v<T>>
     {
     };
 

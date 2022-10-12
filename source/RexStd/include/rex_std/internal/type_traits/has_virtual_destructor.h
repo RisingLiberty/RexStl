@@ -20,7 +20,7 @@ namespace rsl
   {
 
     template <typename T>
-    struct has_virtual_destructor : public Boolconstant<__has_virtual_destructor(T)>
+    struct has_virtual_destructor : public bool_constant<__has_virtual_destructor(T)>
     {
     };
 

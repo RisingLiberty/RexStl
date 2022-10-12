@@ -31,7 +31,7 @@ namespace rsl
     };
 
     template <typename... Types>
-    using common_reference_t = common_reference<Types>::type;
+    using common_reference_t = typename common_reference<Types...>::type;
 
     template <>
     struct common_reference<>
@@ -50,84 +50,84 @@ namespace rsl
       using CondRes = decltype(false ? returns_exactly<T1>() : returns_exactly<T2>());
 
       template <typename T1, typename T2, typename = void>
-      struct CommonReference2C : common_type<T1, T2>
+      struct common_reference2_c : common_type<T1, T2>
       {
       };
 
       template <typename T1, typename T2>
-      struct CommonReference2C<T1, T2, void_t<CondRes<T1, T2>>>
+      struct common_reference2_c<T1, T2, void_t<CondRes<T1, T2>>>
       {
         using type = CondRes<T1, T2>;
       };
 
       template <typename, typename, template <typename> typename, template <typename> typename>
-      struct BasicCommonReference
+      struct basic_common_reference
       {
       };
 
       template <typename From>
-      struct CopyCVImpl
+      struct copy_cv_impl
       {
         template <typename To>
         using Apply = To;
       };
       template <typename From>
-      struct CopyCVImpl<const From>
+      struct copy_cv_impl<const From>
       {
         template <typename To>
         using Apply = const To;
       };
       template <typename From>
-      struct CopyCVImpl<volatile From>
+      struct copy_cv_impl<volatile From>
       {
         template <typename To>
         using Apply = volatile To;
       };
       template <typename From>
-      struct CopyCVImpl<const volatile From>
+      struct copy_cv_impl<const volatile From>
       {
         template <typename To>
         using Apply = const volatile To;
       };
 
       template <typename From, typename To>
-      using CopyCV = typename CopyCVImpl<From>::template Apply<To>;
+      using CopyCV = typename copy_cv_impl<From>::template Apply<To>;
 
       template <typename T1>
-      struct AddQualifiers
+      struct add_qualifiers
       {
         template <typename T2>
         using Apply = CopyCV<T1, T2>;
       };
       template <typename T1>
-      struct AddQualifiers<T1&>
+      struct add_qualifiers<T1&>
       {
         template <typename T2>
         using Apply = add_lvalue_reference_t<CopyCV<T1, T2>>;
       };
       template <typename T1>
-      struct AddQualifiers<T1&&>
+      struct add_qualifiers<T1&&>
       {
         template <typename T2>
         using Apply = add_rvalue_reference_t<CopyCV<T1, T2>>;
       };
 
       template <typename T1, typename T2>
-      using BasicSpecialization = typename BasicCommonReference<RemoveCVRef<T1>, RemoveCVRef<T2>, AddQualifiers<T1>::template Apply, AddQualifiers<T2>::template Apply>::type;
+      using BasicSpecialization = typename basic_common_reference<RemoveCVRef<T1>, RemoveCVRef<T2>, add_qualifiers<T1>::template Apply, add_qualifiers<T2>::template Apply>::type;
 
       template <typename T1, typename T2, typename = void>
-      struct CommonReference2B : CommonReference2C<T1, T2>
+      struct common_reference2_b : common_reference2_c<T1, T2>
       {
       };
 
       template <typename T1, typename T2>
-      struct CommonReference2B<T1, T2, void_t<BasicSpecialization<T1, T2>>>
+      struct common_reference2_b<T1, T2, void_t<BasicSpecialization<T1, T2>>>
       {
         using type = BasicSpecialization<T1, T2>;
       };
 
       template <typename T1, typename T2, class = void>
-      struct CommonReference2A : CommonReference2B<T1, T2>
+      struct common_reference2_a : common_reference2_b<T1, T2>
       {
       };
 
@@ -135,19 +135,19 @@ namespace rsl
       using LLCommonRef = Result;
 
       template <typename T1, typename T2>
-      struct CommonReference2A<T1&, T2&, void_t<LLCommonRef<T1, T2>>>
+      struct common_reference2_a<T1&, T2&, void_t<LLCommonRef<T1, T2>>>
       {
         using type = LLCommonRef<T1, T2>;
       };
 
       template <typename T1, typename T2>
-      struct CommonReference2A<T1&&, T2&&, enable_if_t<is_convertible_v<T1&&, LLCommonRef<const T1, T2>>>>
+      struct common_reference2_a<T1&&, T2&&, enable_if_t<is_convertible_v<T1&&, LLCommonRef<const T1, T2>>>>
       {
         using type = LLCommonRef<const T1, T2>;
       };
 
       template <typename T1, typename T2>
-      struct CommonReference2A<T1&, T2&&, enable_if_t<is_convertible_v<T2&&, LLCommonRef<const T2, T1>>>>
+      struct common_reference2_a<T1&, T2&&, enable_if_t<is_convertible_v<T2&&, LLCommonRef<const T2, T1>>>>
       {
         using type = LLCommonRef<const T2, T1>;
       };
@@ -156,29 +156,29 @@ namespace rsl
       using RRCommonRef = remove_reference_t<LLCommonRef<T1, T2>>&&;
 
       template <typename T1, typename T2>
-      struct CommonReference2A<T1&&, T2&&, enable_if_t<is_convertible_v<T1&&, RRCommonRef<T1, T2>> && is_convertible_v<T2&&, RRCommonRef<T1, T2>>>>
+      struct common_reference2_a<T1&&, T2&&, enable_if_t<is_convertible_v<T1&&, RRCommonRef<T1, T2>> && is_convertible_v<T2&&, RRCommonRef<T1, T2>>>>
       {
         using type = RRCommonRef<T1, T2>;
       };
 
-      template <typename void_t, typename T1, typename T2, typename... Ts>
-      struct FoldCommonReference
+      template <typename VoidT, typename T1, typename T2, typename... Ts>
+      struct fold_common_reference
       {
       };
 
       template <typename T1, typename T2, typename... Ts>
-      struct FoldCommonReference<void_t<common_reference_t<T1, T2>>, T1, T2, Ts...> : common_reference<common_reference_t<T1, T2>, Ts...>
+      struct fold_common_reference<void_t<common_reference_t<T1, T2>>, T1, T2, Ts...> : common_reference<common_reference_t<T1, T2>, Ts...>
       {
       };
     } // namespace internal
 
     template <typename T1, typename T2>
-    struct common_reference<T1, T2> : internal::CommonReference2A<T1, T2>
+    struct common_reference<T1, T2> : internal::common_reference2_a<T1, T2>
     {
     };
 
     template <typename T1, typename T2, typename T3, typename... Rest>
-    struct common_reference<T1, T2, T3, Rest...> : internal::FoldCommonReference<void, T1, T2, T3, Rest...>
+    struct common_reference<T1, T2, T3, Rest...> : internal::fold_common_reference<void, T1, T2, T3, Rest...>
     {
     };
 

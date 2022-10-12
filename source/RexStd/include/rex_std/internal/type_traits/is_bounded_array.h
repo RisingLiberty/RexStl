@@ -23,7 +23,7 @@ namespace rsl
     };
 
     template <typename T, size_t N>
-    struct is_bounded_array<T[N]> : public true_type
+    struct is_bounded_array<T[N]> : public true_type // NOLINT(modernize-avoid-c-arrays)
     {
     };
 

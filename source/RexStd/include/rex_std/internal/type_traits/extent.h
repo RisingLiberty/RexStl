@@ -25,22 +25,22 @@ namespace rsl
     };
 
     template <typename T>
-    struct extent<T[], 0> : integral_constant<size_t, 0>
+    struct extent<T[], 0> : integral_constant<size_t, 0> // NOLINT(modernize-avoid-c-arrays)
     {
     };
 
     template <typename T, size_t N>
-    struct extent<T[], N> : extent_v<T, N - 1>
+    struct extent<T[], N> : extent<T, N - 1> // NOLINT(modernize-avoid-c-arrays)
     {
     };
 
     template <typename T, size_t I>
-    struct extent<T[I], 0> : integral_constant<size_t, I>
+    struct extent<T[I], 0> : integral_constant<size_t, I> // NOLINT(modernize-avoid-c-arrays)
     {
     };
 
     template <typename T, size_t I, unsigned N>
-    struct extent<T[I], N> : extent_v<T, N - 1>
+    struct extent<T[I], N> : extent<T, N - 1> // NOLINT(modernize-avoid-c-arrays)
     {
     };
 

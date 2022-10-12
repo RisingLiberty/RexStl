@@ -20,7 +20,7 @@ namespace rsl
   {
 
     template <typename T>
-    struct negation : bool_constant<!bool(T::value)>
+    struct negation : bool_constant<!static_cast<bool>(T::value)>
     {
     };
 

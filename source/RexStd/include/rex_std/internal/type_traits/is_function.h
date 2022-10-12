@@ -21,10 +21,13 @@ namespace rsl
   inline namespace v1
   {
 
+#pragma warning(push)
+#pragma warning(disable : 4180) // qualifier applied to function type has no meaning; ignored, disabling this warning as using this is a easy way to determine if something is a function
     template <typename T>
     struct is_function : public bool_constant<!is_const_v<const T> && !is_reference_v<T>>
     {
     };
+#pragma warning(pop)
 
     template <typename T>
     struct is_function<T&> : public false_type

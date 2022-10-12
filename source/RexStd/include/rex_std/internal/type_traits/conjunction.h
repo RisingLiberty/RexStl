@@ -23,16 +23,16 @@ namespace rsl
     {
       // handle false trait or last trait
       template <bool FirstValue, typename First, typename... Rest>
-      struct conjunction_helper_struct
+      struct conjunction_helper
       {
         using type = First;
       };
 
       // the first trait is true, try the next one
       template <typename True, typename Next, typename... Rest>
-      struct conjunction_helper_struct<true, True, Next, Rest...>
+      struct conjunction_helper<true, True, Next, Rest...>
       {
-        using type = typename conjunction_helper_struct<Next::value, Next, Rest...>::type;
+        using type = typename conjunction_helper<Next::value, Next, Rest...>::type;
       };
     } // namespace internal
 
@@ -42,7 +42,7 @@ namespace rsl
     }; // If _Traits is empty, true_type
 
     template <typename First, typename... Rest>
-    struct conjunction<First, Rest...> : internal::conjunction_helper_struct<First::value, First, Rest...>::type
+    struct conjunction<First, Rest...> : internal::conjunction_helper<First::value, First, Rest...>::type
     {
     };
 

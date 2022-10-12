@@ -50,10 +50,10 @@ namespace rsl
       return &buff;
     }
 
-    rsl::istream cin(cin_streambuf());   // NOLINT(cppcoreguidelines-avoid-non-const-global-variables, fuchsia-statically-constructed-objects)
-    rsl::ostream cout(cout_streambuf()); // NOLINT(cppcoreguidelines-avoid-non-const-global-variables, fuchsia-statically-constructed-objects)
-    rsl::ostream cerr(cerr_streambuf()); // NOLINT(cppcoreguidelines-avoid-non-const-global-variables, fuchsia-statically-constructed-objects)
-    rsl::ostream clog(cerr_streambuf()); // NOLINT(cppcoreguidelines-avoid-non-const-global-variables, fuchsia-statically-constructed-objects)
+    rsl::istream g_cin(cin_streambuf());   // NOLINT(cppcoreguidelines-avoid-non-const-global-variables, fuchsia-statically-constructed-objects)
+    rsl::ostream g_cout(cout_streambuf()); // NOLINT(cppcoreguidelines-avoid-non-const-global-variables, fuchsia-statically-constructed-objects)
+    rsl::ostream g_cerr(cerr_streambuf()); // NOLINT(cppcoreguidelines-avoid-non-const-global-variables, fuchsia-statically-constructed-objects)
+    rsl::ostream g_clog(cerr_streambuf()); // NOLINT(cppcoreguidelines-avoid-non-const-global-variables, fuchsia-statically-constructed-objects)
 
     namespace internal
     {

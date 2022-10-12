@@ -25,7 +25,7 @@ namespace rsl
     };
 
     template <typename T>
-    inline constexpr bool is_copy_assignable = is_copy_assignable<T>::value;
+    inline constexpr bool is_copy_assignable_v = is_copy_assignable<T>::value;
 
   } // namespace v1
 } // namespace rsl

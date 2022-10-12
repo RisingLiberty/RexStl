@@ -61,7 +61,7 @@ namespace rsl
       template <intmax X, intmax Y>
       struct lcm
       {
-        static const intmax s_value = (X * (Y / gcd<X, Y>::value));
+        static constexpr intmax value = (X * (Y / gcd<X, Y>::value));
       };
 
       template <typename Period1, typename Period2>

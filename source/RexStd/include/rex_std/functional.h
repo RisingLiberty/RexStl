@@ -18,9 +18,28 @@
 
 #pragma once
 
+#include "rex_std/internal/functional/bit_and.h"
+#include "rex_std/internal/functional/bit_not.h"
+#include "rex_std/internal/functional/bit_or.h"
+#include "rex_std/internal/functional/bit_xor.h"
+#include "rex_std/internal/functional/divides.h"
 #include "rex_std/internal/functional/equal_to.h"
 #include "rex_std/internal/functional/function.h"
+#include "rex_std/internal/functional/greater.h"
+#include "rex_std/internal/functional/greater_equal.h"
 #include "rex_std/internal/functional/hash.h"
+#include "rex_std/internal/functional/less.h"
+#include "rex_std/internal/functional/less_equal.h"
+#include "rex_std/internal/functional/logical_and.h"
+#include "rex_std/internal/functional/logical_not.h"
+#include "rex_std/internal/functional/logical_or.h"
+#include "rex_std/internal/functional/minus.h"
+#include "rex_std/internal/functional/modulus.h"
+#include "rex_std/internal/functional/multiplies.h"
+#include "rex_std/internal/functional/negate.h"
+#include "rex_std/internal/functional/not_equal_to.h"
+#include "rex_std/internal/functional/not_fn.h"
+#include "rex_std/internal/functional/plus.h"
 #include "rex_std/internal/iterator/iterator_traits.h"
 
 /// RSL Comment: Different from ISO C++ Standard at time of writing (17/Jul/2022)

@@ -28,7 +28,7 @@ namespace rsl
     };
 
     template <typename T>
-    inline constexpr bool is_fundamental_v = is_fundamental<T>;
+    inline constexpr bool is_fundamental_v = is_fundamental<T>::value;
 
   } // namespace v1
 } // namespace rsl

@@ -41,7 +41,7 @@ namespace rsl
         {
         }
         template <typename Duration2>
-        constexpr explicit time_point(const time_point<Clock, Duration2>& t, enable_if_t<is_convertible_v<Duration2, duration>>** /*unused*/ = 0)
+        constexpr explicit time_point(const time_point<Clock, Duration2>& t, enable_if_t<is_convertible_v<Duration2, duration>>** /*unused*/ = nullptr)
             : m_duration(t.time_since_epoch())
         {
         }
@@ -139,7 +139,7 @@ namespace rsl
       }
 
       template <typename ToDuration, typename Clock, typename Duration>
-      constexpr time_point<Clock, ToDuration> time_point_cast(const time_point<Clock, Duration>& t, typename enable_if<internal::is_duration<ToDuration>::value>::type** /*unused*/ = 0)
+      constexpr time_point<Clock, ToDuration> time_point_cast(const time_point<Clock, Duration>& t, typename enable_if<internal::is_duration<ToDuration>::value>::type** /*unused*/ = nullptr)
       {
         return time_point<Clock, ToDuration>(duration_cast<ToDuration>(t.time_since_epoch()));
       }

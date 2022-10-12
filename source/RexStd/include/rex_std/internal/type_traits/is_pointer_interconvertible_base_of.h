@@ -12,7 +12,9 @@
 
 #pragma once
 
-#include "rex_std/internal/type_traits/integral_constant.h"
+#ifdef REX_ENABLE_WITH_CPP20
+
+  #include "rex_std/internal/type_traits/integral_constant.h"
 
 namespace rsl
 {
@@ -29,3 +31,5 @@ namespace rsl
 
   } // namespace v1
 } // namespace rsl
+
+#endif

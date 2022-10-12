@@ -20,7 +20,7 @@ namespace rsl
   {
 
     template <typename T>
-            struct is_trivially_copy_constructible : bool_constant << __is_trivially_constructible(T, add_lvalue_reference_t<const T>) >
+    struct is_trivially_copy_constructible : bool_constant<__is_trivially_constructible(T, add_lvalue_reference_t<const T>)>
     {
     };
 

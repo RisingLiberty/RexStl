@@ -20,6 +20,7 @@
 #include "rex_std/internal/type_traits/add_lvalue_reference.h"
 #include "rex_std/internal/type_traits/add_volatile.h"
 #include "rex_std/internal/type_traits/conditional.h"
+#include "rex_std/internal/type_traits/conjunction.h"
 #include "rex_std/internal/type_traits/enable_if.h"
 #include "rex_std/internal/type_traits/integral_constant.h"
 #include "rex_std/internal/type_traits/is_assignable.h"

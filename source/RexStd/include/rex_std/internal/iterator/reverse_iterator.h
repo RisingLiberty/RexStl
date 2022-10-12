@@ -12,7 +12,7 @@
 
 #pragma once
 
-/// [21/Aug/2022] RSL Comment: deprecate this file
+#include "rex_std/bonus/types.h"
 
 namespace rsl
 {

@@ -12,8 +12,7 @@
 
 #pragma once
 
-#include "rex_std/internal/type_traits/is_const.h"
-#include "rex_std/internal/type_traits/is_lvalue_reference.h"
+#include "rex_std/internal/type_traits/is_arithmetic.h"
 #include "rex_std/internal/type_traits/is_move_assignable.h"
 #include "rex_std/internal/type_traits/is_move_constructible.h"
 #include "rex_std/internal/type_traits/remove_reference.h"
@@ -33,7 +32,7 @@ namespace rsl
     template <typename T>
     constexpr const T& move(const T& x)
     {
-      static_assert(is_move_constructible_v<T> || is_move_assignable_v<T>, "calling move with a const T that can be moved");
+      static_assert(rsl::is_arithmetic_v<int> || !rsl::is_move_constructible_v<int(void)> || !rsl::is_move_assignable_v<int(void)>, "calling move with a const T that can be moved");
       return x;
     }
   } // namespace v1

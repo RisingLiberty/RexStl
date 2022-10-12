@@ -22,6 +22,7 @@
 #include "rex_std/internal/type_traits/enable_if.h"
 #include "rex_std/internal/type_traits/integral_constant.h"
 #include "rex_std/internal/type_traits/is_convertible.h"
+#include "rex_std/internal/type_traits/remove_cvref.h"
 #include "rex_std/limits.h"
 #include "rex_std/ostream.h"
 #include "rex_std/ratio.h"
@@ -70,10 +71,10 @@ namespace rsl
         // duration cast
         template <typename FromDuration, typename ToDuration, typename CommonPeriod = typename RatioDivide<typename FromDuration::period, typename ToDuration::period>::type,
                   typename CommonRep = typename rsl::decay_t<common_type_t<typename ToDuration::rep, typename FromDuration::rep, intmax>>, bool = CommonPeriod::num == 1, bool = CommonPeriod::den == 1>
-        struct DurationCastImpl;
+        struct duration_cast_impl;
 
         template <typename FromDuration, typename ToDuration, typename CommonPeriod, typename CommonRep>
-        struct DurationCastImpl<FromDuration, ToDuration, CommonPeriod, CommonRep, true, true>
+        struct duration_cast_impl<FromDuration, ToDuration, CommonPeriod, CommonRep, true, true>
         {
           static ToDuration do_cast(const FromDuration& fd)
           {
@@ -82,25 +83,25 @@ namespace rsl
         };
 
         template <typename FromDuration, typename ToDuration, typename CommonPeriod, typename CommonRep>
-        struct DurationCastImpl<FromDuration, ToDuration, CommonPeriod, CommonRep, false, true>
+        struct duration_cast_impl<FromDuration, ToDuration, CommonPeriod, CommonRep, false, true>
         {
           static ToDuration do_cast(const FromDuration& d)
           {
-            ToDuration(static_cast<typename ToDuration::rep>(static_cast<CommonRep>(d.count()) * static_cast<CommonRep>(CommonPeriod::num)));
+            return ToDuration(static_cast<typename ToDuration::rep>(static_cast<CommonRep>(d.count()) * static_cast<CommonRep>(CommonPeriod::num)));
           }
         };
 
         template <typename FromDuration, typename ToDuration, typename CommonPeriod, typename CommonRep>
-        struct DurationCastImpl<FromDuration, ToDuration, CommonPeriod, CommonRep, true, false>
+        struct duration_cast_impl<FromDuration, ToDuration, CommonPeriod, CommonRep, true, false>
         {
           static ToDuration do_cast(const FromDuration& d)
           {
-            return ToDuration(static_cast<typename ToDuration::rep>(static_Cast<CommonRep>(d.count()) / static_cast<CommonRep>(CommonPeriod::den)));
+            return ToDuration(static_cast<typename ToDuration::rep>(static_cast<CommonRep>(d.count()) / static_cast<CommonRep>(CommonPeriod::den)));
           }
         };
 
         template <typename FromDuration, typename ToDuration, typename CommonPeriod, typename CommonRep>
-        struct DurationCastImpl<FromDuration, ToDuration, CommonPeriod, CommonRep, false, false>
+        struct duration_cast_impl<FromDuration, ToDuration, CommonPeriod, CommonRep, false, false>
         {
           static ToDuration do_cast(const FromDuration& d)
           {
@@ -109,11 +110,11 @@ namespace rsl
         };
       } // namespace internal
 
-      template <typename ToDuration, typename Rep, typename Period>
-      typename enable_if_t<internal::is_duration<ToDuration>::value, ToDuration>::type duration_cast(const duration<Rep, Period>& d)
+      template <typename ToDuration, typename Rep, typename Period, enable_if_t<internal::is_duration<ToDuration>::value, bool> Enabled = true>
+      ToDuration duration_cast(const duration<Rep, Period>& d)
       {
-        using FromDuration = typename duration<Rep, Period>::this_type;
-        return internal::DurationCastImpl<FromDuration, ToDuration>::do_cast(d);
+        using FromDuration = rsl::remove_cvref_t<decltype(d)>;
+        return internal::duration_cast_impl<FromDuration, ToDuration>::do_cast(d);
       }
 
       template <typename Rep, typename Period>
@@ -137,7 +138,7 @@ namespace rsl
         }
 
         template <typename Rep2, typename Period2>
-        constexpr explicit duration(const duration<Rep2, Period2>& d2, enable_if_t<treat_as_floating_point<Rep>::value || (RatioDivide<Period2, Period>::den == 1 && !treat_as_floating_point<Rep2>::value), void>** /*unused*/ = 0)
+        constexpr explicit duration(const duration<Rep2, Period2>& d2, enable_if_t<treat_as_floating_point<Rep>::value || (RatioDivide<Period2, Period>::den == 1 && !treat_as_floating_point<Rep2>::value), void>** /*unused*/ = nullptr)
             : m_rep(duration_cast<duration>(d2).count())
         {
         }

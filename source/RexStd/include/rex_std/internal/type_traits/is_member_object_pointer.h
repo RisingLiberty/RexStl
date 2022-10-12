@@ -37,11 +37,11 @@ namespace rsl
       };
     } // namespace internal
 
-    template <typename _Ty>
-    inline constexpr bool is_member_object_pointer_v = internal::is_member_object_pointer<remove_cv_t<_Ty>>::value;
+    template <typename T>
+    inline constexpr bool is_member_object_pointer_v = internal::is_member_object_pointer<remove_cv_t<T>>::value;
 
     template <typename T>
-    struct is_member_object_pointer : bool_constant<is_member_function_pointer_v<T>>
+    struct is_member_object_pointer : bool_constant<is_member_object_pointer_v<T>>
     {
     };
 

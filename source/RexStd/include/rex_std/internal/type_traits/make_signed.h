@@ -24,69 +24,70 @@ namespace rsl
     namespace internal
     {
       template <typename T, bool = is_enum_v<T> || is_integral_v<T>>
-      struct MakeSignedHelper0
+      struct make_signed_helper0
       {
-        struct CharHelper
+        struct char_helper
         {
           using type = int8;
         };
 
-        struct ShortHelper
+        struct short_helper
         {
           using type = int16;
         };
 
-        struct IntHelper
+        struct int_helper
         {
           using type = int32;
         };
 
-        struct LongHelper
+        struct long_helper
         {
           using type = long;
-        }
+        };
 
-        struct LongLongHelper
+        struct long_long_helper
         {
           using type = int64;
-        }
+        };
 
-        struct NoTypeHelper
+        struct no_type_helper
         {
         };
 
-        using type = conditional_t<sizeof(T) <= sizeof(int8), CharHelper,
-                                   conditional_t<sizeof(T) <= sizeof(int16), ShortHelper,
-                                                 conditional_t<sizeof(T) <= sizeof(int32), IntHelper, conditional_t<sizeof(T) <= sizeof(long), LongHelper, conditional_t<sizeof(T) <= sizeof(int64), LongLongHelper, NoTypeHelper>>>>>::type;
+        using type =
+            typename conditional_t<sizeof(T) <= sizeof(int8), char_helper,
+                                   conditional_t<sizeof(T) <= sizeof(int16), short_helper,
+                                                 conditional_t<sizeof(T) <= sizeof(int32), int_helper, conditional_t<sizeof(T) <= sizeof(long), long_helper, conditional_t<sizeof(T) <= sizeof(int64), long_long_helper, no_type_helper>>>>>::type;
+      };
 
-        template <typename T>
-        struct MakeSignedHelper0<T, false>
+      template <typename T>
+      struct make_signed_helper0<T, false>
+      {
+        struct no_type_helper
         {
-          struct NoTypeHelper
-          {
-          };
-
-          using type = NoTypeHelper;
         };
 
-        template <typename T>
-        struct MakeSignedHelper1
-        {
-          using type = typename T::type;
-        };
+        using type = no_type_helper;
+      };
 
-        template <typename T>
-        struct MakeSignedHelper
-        {
-          using type = typename MakeSignedHelper1<typename MakeSignedHelper0<T>::type>::type;
-        };
+      template <typename T>
+      struct make_signed_helper1
+      {
+        using type = typename T::type;
+      };
+
+      template <typename T>
+      struct make_signed_helper
+      {
+        using type = typename make_signed_helper1<typename make_signed_helper0<T>::type>::type;
       };
     } // namespace internal
 
     template <typename T>
     struct make_signed
     {
-      using type = MakeSignedHelper<T>::type;
+      using type = typename internal::make_signed_helper<T>::type;
     };
 
     template <>
@@ -143,16 +144,6 @@ namespace rsl
     {
       using type = long;
     };
-    template <>
-    struct make_signed<int64>
-    {
-      using type = int64;
-    };
-    template <>
-    struct make_signed<uint64>
-    {
-      using type = int64;
-    };
 
     template <>
     struct make_signed<char>
@@ -178,11 +169,11 @@ namespace rsl
     template <typename T>
     struct make_signed<const volatile T>
     {
-      using AddCV<typename make_signed<T>::type>::type;
+      using add_cv<typename make_signed<T>::type>::type;
     };
 
     template <typename T>
-    using make_signed_t = make_signed<T>::type;
+    using make_signed_t = typename make_signed<T>::type;
 
   } // namespace v1
 } // namespace rsl

@@ -18,14 +18,13 @@ namespace rsl
 {
   inline namespace v1
   {
-
-    template <typename Callable, typename... Args>
-    struct is_nothrow_invocable : internal::SelectInvokeTraits<Callable, Args...>::is_nothrow_invocable_v
+    template <typename F, typename... Args>
+    struct is_nothrow_invocable : public internal::is_nothrow_invocable_impl<F, void, Args...>
     {
     };
 
-    template <typename Callable, typename... Args>
-    inline constexpr bool is_nothrow_invocable_v = is_nothrow_invocable<Callable, Args...>::value;
+    template <typename F, typename... Args>
+    inline constexpr bool is_nothrow_invocable_v = is_nothrow_invocable<F, Args...>::value;
 
   } // namespace v1
 } // namespace rsl

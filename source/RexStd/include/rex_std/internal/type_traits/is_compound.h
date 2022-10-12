@@ -26,7 +26,7 @@ namespace rsl
     };
 
     template <typename T>
-    inline constexpr bool is_compound_v = is_compound<T>;
+    inline constexpr bool is_compound_v = is_compound<T>::value;
 
   } // namespace v1
 } // namespace rsl

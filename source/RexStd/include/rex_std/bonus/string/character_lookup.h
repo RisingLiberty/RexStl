@@ -55,7 +55,7 @@ namespace rsl
       }
 
     private:
-      rsl::array<bool, (numeric_limits<rsl::make_unsigned_t<CharType>>::max)() + 1> m_table; // NOLINT
+      rsl::array<bool, (numeric_limits<rsl::make_unsigned_t<CharType>>::max)() + 1> m_table {}; // NOLINT
     };
 
   } // namespace v1
