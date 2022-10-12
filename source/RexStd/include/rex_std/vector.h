@@ -436,7 +436,7 @@ namespace rsl
       iterator insert(const_iterator pos, T&& value)
       {
         // prepare_for_new_insert can reallocate, which would invalidate the input it
-        difference_type idx = rsl::distance(cbegin(), pos);
+        const difference_type idx = rsl::distance(cbegin(), pos);
         prepare_for_new_insert(pos);
         operator[](idx) = rsl::move(value);
         return (begin() + idx);
@@ -614,7 +614,7 @@ namespace rsl
       // moves every element starting at 'pos' one space to the right
       void prepare_for_new_insert(const_iterator pos, size_type count = 1)
       {
-        size_type idx = rsl::distance(cbegin(), pos);
+        const size_type idx = rsl::distance(cbegin(), pos);
 
         if(size() + count > capacity())
         {
