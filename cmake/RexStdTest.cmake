@@ -5,3 +5,5 @@ add_executable(RexStdTest ${RexStdTest_LIBS_INC} ${RexStdTest_LIBS_SRC})
 
 target_include_directories(RexStdTest PUBLIC ${CMAKE_SOURCE_DIR}/source/RexStdTest/include)
 target_include_directories(RexStdTest PUBLIC ${CMAKE_SOURCE_DIR}/source/RexStd/include)
+
+target_link_libraries(RexStdTest PUBLIC RexStd)
