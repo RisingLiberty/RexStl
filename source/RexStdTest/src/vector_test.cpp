@@ -10,7 +10,6 @@
 //
 // ============================================
 
-#define CATCH_CONFIG_MAIN
 #include <catch2/catch.hpp>
 
 #include "rex_std/vector.h"
@@ -105,6 +104,12 @@ TEST_CASE("vector size")
   
   vec.reserve(10);
   REQUIRE(vec.size() == 5);
+
+  vec.pop_back();
+  REQUIRE(vec.size() == 4);
+
+  vec.pop_back();
+  REQUIRE(vec.size() == 3);
 }
 
 TEST_CASE("vector element access")
