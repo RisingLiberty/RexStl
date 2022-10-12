@@ -5,7 +5,7 @@
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
 //
-// File: cwctype.h
+// File: wctype.h
 // Copyright (c) Nick De Breuck 2022
 //
 // ============================================

@@ -5,7 +5,7 @@
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
 //
-// File: cwchar.h
+// File: wchar.h
 // Copyright (c) Nick De Breuck 2022
 //
 // ============================================
@@ -15,7 +15,7 @@
 #include "rex_std/disable_std_checking.h"
 #include "rex_std/std_alias_defines.h"
 
-#include <cwchar>
+#include <wchar>
 
 namespace rsl
 {

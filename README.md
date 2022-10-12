@@ -197,6 +197,36 @@ Some other differences between Rex standard library and C++ standard library are
 - 32bit integers type aliases are used, even on 64-bit platforms (size_type, difference_type, ... are always 32 bit)
 
 
+## Removed C Headers
+Some C headers were created a long time ago and still exist to avoid breaking old code. Some of its contents are no longer useful in modern code however. platforms are now mostly 64-bit, with a few exceptions still being 32-bit. 
+
+Integer sizes are mostly consistent between platforms, and the "least" and "fast" versions no longer have their purposes in modern day code, that's why these have been removed.
+
+C++ also provides function overloading making a lot of C functions redundant, so these have also been removed to simplify the library.
+
+Some C headers are still useful in modern day code, but these headers got renamed, dropping the 'c' prefix, making them C++ headers.
+
+The removed C headers, or the mapped version to C++ headers are:
+- cassert -> assert.h
+- cctype -> ctype.h
+- cerrno -> errno.h
+- cfenv -> fenv.h
+- cinttypes -> inttypes.h
+- clocale -> removed
+- cmath -> math.h
+- csetjmp -> removed
+- csignal -> removed
+- cstdarg -> removed
+- cstddef -> stddef.h
+- cstdio -> stdio.h
+- cstdlib -> stdlib.h
+- cstring -> string.h
+- ctime -> time.h
+- cwchar -> wchar.h
+- cwctype -> wctype.h
+
+
+
 ## Future plans
 Not all standard library classes and functions are implemented in Rex standard library yet due to time constrains, but these will come in the future.
 

@@ -161,7 +161,7 @@ namespace rsl
           return overflow(ch);
         }
 
-        return Traits::to_int_type(*inc_pptr() = ch);
+        return Traits::to_int_type(inc_pptr() = ch);
       }
 
       // calls xsputn(s, count) of the most derived class

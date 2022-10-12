@@ -24,8 +24,8 @@
 
 #include "rex_std/bonus/string/stack_string.h"
 #include "rex_std/bonus/string/string_utils.h"
-#include "rex_std/internal/cstddef/nullptr.h"
 #include "rex_std/internal/ios/basic_ios.h"
+#include "rex_std/internal/stddef/nullptr.h"
 #include "rex_std/internal/type_traits/conjunction.h"
 #include "rex_std/internal/type_traits/is_convertible.h"
 #include "rex_std/internal/type_traits/is_same.h"
@@ -96,8 +96,8 @@ namespace rsl
         }
 
         // the copy assignment is deleted
-        sentry& operator=(const sentry&) = delete;
-        sentry& operator=(sentry&&)      = delete;
+        const sentry& operator=(const sentry&) = delete;
+        const sentry& operator=(sentry&&)      = delete;
 
         // checks whether the preparation of the output stream was successful.
         explicit operator bool() const
@@ -129,7 +129,7 @@ namespace rsl
       // writes an integer value to the stream
       basic_ostream& operator<<(int16 value)
       {
-        sentry sentry(*this);
+        const sentry sentry(*this);
 
         if(sentry)
         {
@@ -142,7 +142,7 @@ namespace rsl
       // writes an integer value to the stream
       basic_ostream& operator<<(uint16 value)
       {
-        sentry sentry(*this);
+        const sentry sentry(*this);
 
         if(sentry)
         {
@@ -155,7 +155,7 @@ namespace rsl
       // writes an integer value to the stream
       basic_ostream& operator<<(int32 value)
       {
-        sentry sentry(*this);
+        const sentry sentry(*this);
 
         if(sentry)
         {
@@ -168,7 +168,7 @@ namespace rsl
       // writes an integer value to the stream
       basic_ostream& operator<<(uint32 value)
       {
-        sentry sentry(*this);
+        const sentry sentry(*this);
 
         if(sentry)
         {
@@ -181,7 +181,7 @@ namespace rsl
       // writes an integer value to the stream
       basic_ostream& operator<<(int64 value)
       {
-        sentry sentry(*this);
+        const sentry sentry(*this);
 
         if(sentry)
         {
@@ -194,7 +194,7 @@ namespace rsl
       // writes an integer value to the stream
       basic_ostream& operator<<(uint64 value)
       {
-        sentry sentry(*this);
+        const sentry sentry(*this);
 
         if(sentry)
         {
@@ -207,7 +207,7 @@ namespace rsl
       // writes an integer value to the stream
       basic_ostream& operator<<(long value)
       {
-        sentry sentry(*this);
+        const sentry sentry(*this);
 
         if(sentry)
         {
@@ -220,7 +220,7 @@ namespace rsl
       // writes an integer value to the stream
       basic_ostream& operator<<(ulong value)
       {
-        sentry sentry(*this);
+        const sentry sentry(*this);
 
         if(sentry)
         {
@@ -234,7 +234,7 @@ namespace rsl
       // writes a float value to the stream
       basic_ostream& operator<<(float32 value)
       {
-        sentry sentry(*this);
+        const sentry sentry(*this);
 
         if(sentry)
         {
@@ -247,7 +247,7 @@ namespace rsl
       // writes a float value to the stream
       basic_ostream& operator<<(float64 value)
       {
-        sentry sentry(*this);
+        const sentry sentry(*this);
 
         if(sentry)
         {
@@ -260,7 +260,7 @@ namespace rsl
       // writes a float value to the stream
       basic_ostream& operator<<(lfloat64 value)
       {
-        sentry sentry(*this);
+        const sentry sentry(*this);
 
         if(sentry)
         {
@@ -274,7 +274,7 @@ namespace rsl
       // writes a bool to the stream
       basic_ostream& operator<<(bool value)
       {
-        sentry sentry(*this);
+        const sentry sentry(*this);
 
         if(sentry)
         {
@@ -288,7 +288,7 @@ namespace rsl
       // writes a pointer to the stream
       basic_ostream& operator<<(const void* value)
       {
-        sentry sentry(*this);
+        const sentry sentry(*this);
 
         if(sentry)
         {
@@ -308,7 +308,7 @@ namespace rsl
       // insert characters from the input sequence and inserts them into this.
       basic_ostream& operator<<(basic_streambuf<CharT, Traits>* sb)
       {
-        sentry sentry(*this);
+        const sentry sentry(*this);
 
         if(sentry)
         {
@@ -341,7 +341,7 @@ namespace rsl
       // inserts a character
       basic_ostream& put(char_type ch)
       {
-        sentry sentry(*this);
+        const sentry sentry(*this);
 
         if(sentry)
         {
@@ -354,7 +354,7 @@ namespace rsl
       // inserts blocks of characters
       basic_ostream& write(const char_type* s, streamsize count)
       {
-        sentry sentry(*this);
+        const sentry sentry(*this);
 
         if(sentry)
         {
@@ -367,7 +367,7 @@ namespace rsl
       // returns the output position indicator
       pos_type tellp()
       {
-        sentry sentry(*this);
+        const sentry sentry(*this);
 
         if(sentry)
         {
@@ -381,7 +381,7 @@ namespace rsl
       // sets the output position indicator
       basic_ostream& seekp(pos_type pos)
       {
-        sentry sentry(*this);
+        const sentry sentry(*this);
 
         if(sentry)
         {
@@ -397,7 +397,7 @@ namespace rsl
       // sets the output position indicator
       basic_ostream& seekp(off_type off, io::seekdir dir)
       {
-        sentry sentry(*this);
+        const sentry sentry(*this);
 
         if(sentry)
         {

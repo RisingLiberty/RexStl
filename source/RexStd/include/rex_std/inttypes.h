@@ -5,7 +5,7 @@
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
 //
-// File: cinttypes.h
+// File: inttypes.h
 // Copyright (c) Nick De Breuck 2022
 //
 // ============================================
@@ -30,7 +30,6 @@ namespace rsl
 } // namespace rsl
 
 #include "rex_std/bonus/cinttypes/div_result.h"
-#include "rex_std/cstdint.h"
 #include "rex_std/enable_std_checking.h"
 #include "rex_std/internal/string/byte_strings.h"
 

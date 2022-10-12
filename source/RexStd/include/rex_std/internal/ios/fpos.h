@@ -21,10 +21,10 @@
 #pragma once
 
 #include "rex_std/bonus/types.h"
-#include "rex_std/internal/cwchar/mbstate.h"
 #include "rex_std/internal/ios/io_types.h"
 #include "rex_std/internal/type_traits/enable_if.h"
 #include "rex_std/internal/type_traits/is_integral.h"
+#include "rex_std/internal/wchar/mbstate.h"
 
 namespace rsl
 {

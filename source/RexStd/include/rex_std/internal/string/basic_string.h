@@ -17,7 +17,6 @@
 #include "rex_std/bonus/string/stack_string.h"
 #include "rex_std/bonus/utility/compressed_pair.h"
 #include "rex_std/bonus/utility/element_literal.h"
-#include "rex_std/cstddef.h"
 #include "rex_std/initializer_list.h"
 #include "rex_std/internal/algorithm/memcmp.h"
 #include "rex_std/internal/algorithm/remove.h"
@@ -37,6 +36,7 @@
 #include "rex_std/internal/string/string_forward_declare.h"
 #include "rex_std/istream.h"
 #include "rex_std/ostream.h"
+#include "rex_std/stddef.h"
 
 // Strings are in theory just fancy vectors.
 // They act like a vector of chars, but have extra functionality,

@@ -5,7 +5,7 @@
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
 //
-// File: ctime
+// File: time.h
 // Copyright (c) Nick De Breuck 2022
 //
 // ============================================

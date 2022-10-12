@@ -5,7 +5,7 @@
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
 //
-// File: cmath.h
+// File: math.h
 // Copyright (c) Nick De Breuck 2022
 //
 // ============================================

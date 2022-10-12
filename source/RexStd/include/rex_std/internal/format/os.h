@@ -9,7 +9,7 @@
 // #define FMT_OS_H_
 //
 // #include <cerrno>
-// #include <cstddef>
+// #include <stddef>
 // #include <cstdio>
 // #include <system_error>  // rsl::system_error
 //

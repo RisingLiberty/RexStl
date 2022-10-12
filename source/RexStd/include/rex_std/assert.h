@@ -5,13 +5,12 @@
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
 //
-// File: cctype.h
+// File: assert.h
 // Copyright (c) Nick De Breuck 2022
 //
 // ============================================
 
 #pragma once
 
-#include "rex_std/enable_std_checking.h"
-
-#include <cctype>
+#include "rex_std/internal/assert/assert_fwd.h"
+#include "rex_std/internal/assert/assert_impl.h"

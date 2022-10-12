@@ -5,15 +5,15 @@
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
 //
-// File: cstddef.h
+// File: stddef.h
 // Copyright (c) Nick De Breuck 2022
 //
 // ============================================
 
 #pragma once
 
-#include "rex_std/internal/cstddef/nullptr.h"
 #include "rex_std/internal/memory/byte.h"
+#include "rex_std/internal/stddef/nullptr.h"
 #include "rex_std/internal/type_traits/enable_if.h"
 #include "rex_std/internal/type_traits/is_integral.h"
 

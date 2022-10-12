@@ -10,7 +10,7 @@
 
 #include "rex_std/format.h"
 
-#include <cwchar>
+#include <wchar>
 
 FMT_BEGIN_NAMESPACE
 namespace detail

@@ -13,9 +13,9 @@
 #pragma once
 
 #include "rex_std/bonus/types.h"
-#include "rex_std/internal/cstddef/nullptr.h"
 #include "rex_std/internal/functional/invoke.h"
 #include "rex_std/internal/memory/byte.h"
+#include "rex_std/internal/stddef/nullptr.h"
 #include "rex_std/internal/type_traits/alignment_of.h"
 #include "rex_std/internal/type_traits/is_member_function_pointer.h"
 

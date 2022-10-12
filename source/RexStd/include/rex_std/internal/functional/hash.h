@@ -14,7 +14,7 @@
 
 #include "rex_std/bonus/functional/hash_result.h"
 #include "rex_std/bonus/types.h"
-#include "rex_std/internal/cstddef/nullptr.h"
+#include "rex_std/internal/stddef/nullptr.h"
 #include "rex_std/internal/type_traits/is_enum.h"
 
 namespace rsl
