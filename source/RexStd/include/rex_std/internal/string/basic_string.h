@@ -25,6 +25,7 @@
 #include "rex_std/internal/functional/hash.h"
 #include "rex_std/internal/iterator/iterator_tags.h"
 #include "rex_std/internal/iterator/iterator_traits.h"
+#include "rex_std/internal/math/abs.h"
 #include "rex_std/internal/memory/allocator.h"
 #include "rex_std/internal/memory/allocator_traits.h"
 #include "rex_std/internal/memory/byte.h"
@@ -117,15 +118,6 @@ namespace rsl
       {
         assign(s, count);
       }
-      /// RSL Comment: Different from ISO C++ Standard at time of writing (28/Jun/2022)
-      // this overload uses c_string so that we can differentiate between a string and string literal
-      // marked explicit in RSL
-      explicit basic_string(c_string<value_type> s, const allocator& alloc = allocator())
-          : basic_string(alloc)
-      {
-        size_type length = traits_type::length(s.ptr());
-        assign(s.ptr(), length);
-      }
       /// RSL Comment: Not in ISO C++ Standard at time of writing time of writing (29/Jun/2022)
       // we add this overload so you're able to construct the string from a literal.
       template <count_t Size>
@@ -197,7 +189,7 @@ namespace rsl
         // and can therefore allocate the length straight away and then fill
         // in the buffer.
         // This avoid possible reallocation
-        assign(sv.begin(), sv.length());
+        assign(sv.data(), sv.length());
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (28/Jun/2022)
       // This is a template function in the standard due to ambiguous overload
@@ -209,7 +201,7 @@ namespace rsl
       explicit basic_string(const basic_string_view<value_type, traits_type> sv, size_type pos, size_type n, const allocator& alloc = allocator())
           : basic_string(alloc)
       {
-        assign(sv.begin() + pos, n);
+        assign(sv.data() + pos, n);
       }
       // A string cannot be constructed from a nullptr
       basic_string(rsl::nullptr_t) = delete;
@@ -1268,16 +1260,36 @@ namespace rsl
       // swaps the contents of the string with those of other
       void swap(basic_string& other)
       {
-        if(other.is_using_big_string())
-        {
-          rsl::swap(m_begin, other.m_begin);
-          rsl::swap(m_end, other.m_end);
-          rsl::swap(last(), other.last());
-        }
-        else
+        // if both strings are using the sso buffer
+        // then swap the contents, reassign the pointers
+        if(is_using_sso_string() && other.is_using_sso_string())
         {
           rsl::swap(m_sso_buffer, other.m_sso_buffer);
+          this->reset(m_sso_buffer.data(), m_sso_buffer.length(), m_sso_buffer.max_size());
+          other.reset(other.m_sso_buffer.data(), other.m_sso_buffer.length(), other.m_sso_buffer.max_size());
+          return;
         }
+        // one is using heap memory, one is using the sso buffer
+        // allocate heap memory for the one using the sso buffer
+        // then swap the pointer
+        else if(is_using_big_string() != other.is_using_big_string())
+        {
+          const size_type difference_in_size = rsl::abs(length() - other.length());
+          if(is_using_sso_string())
+          {
+            reallocate(new_buffer_size(difference_in_size), data(), size());
+          }
+          else
+          {
+            other.reallocate(other.new_buffer_size(difference_in_size), other.data(), other.size());
+          }
+        }
+
+        // this branch also gets executed if both strings use heap memory
+        // which is exactly what we want
+        rsl::swap(m_begin, other.m_begin);
+        rsl::swap(m_end, other.m_end);
+        rsl::swap(last(), other.last());
       }
 
       //
@@ -1629,7 +1641,7 @@ namespace rsl
 
         m_begin = new_buffer;
         m_end   = m_begin + length;
-        traits_type::assign(*--m_end, value_type());
+        traits_type::assign(*m_end, value_type());
         last() = m_begin + newCapacity;
       }
       // deallocates all heap data, if used.
