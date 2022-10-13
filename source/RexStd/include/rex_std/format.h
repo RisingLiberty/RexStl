@@ -32,6 +32,8 @@
 
 // NOLINTBEGIN(fuchsia-trailing-return, hicpp-signed-bitwise)
 
+#pragma once
+
 #ifdef __clang__
   #pragma clang diagnostic push
   #pragma clang diagnostic ignored "-Wheader-guard"

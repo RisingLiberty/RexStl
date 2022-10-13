@@ -200,7 +200,7 @@ Some other differences between Rex standard library and C++ standard library are
 ## Removed C Headers
 Some C headers were created a long time ago and still exist to avoid breaking old code. Some of its contents are no longer useful in modern code however. platforms are now mostly 64-bit, with a few exceptions still being 32-bit. 
 
-Integer sizes are mostly consistent between platforms, and the "least" and "fast" versions no longer have their purposes in modern day code, that's why these have been removed.
+Integer sizes are mostly consistent between platforms, and the "least", "fast" and "max" versions no longer have their purposes in modern day code, that's why these have been removed.
 
 C++ also provides function overloading making a lot of C functions redundant, so these have also been removed to simplify the library.
 

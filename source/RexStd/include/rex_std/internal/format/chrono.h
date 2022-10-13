@@ -284,7 +284,7 @@ namespace safe_duration_cast
     // this can't go wrong, right? den>0 is checked earlier.
     if(detail::const_check(Factor::den != 1))
     {
-      using common_t = typename rsl::common_type<IntermediateRep, intmax_t>::type;
+      using common_t = typename rsl::common_type<IntermediateRep, int64>::type;
       count /= static_cast<common_t>(Factor::den);
     }
 

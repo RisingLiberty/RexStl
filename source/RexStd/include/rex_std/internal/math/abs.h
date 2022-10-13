@@ -16,10 +16,9 @@ namespace rsl
 {
   inline namespace v1
   {
-    ::internal
 
-        template <typename T>
-        constexpr T abs(T value)
+    template <typename T>
+    constexpr T abs(T value)
     {
       return (value > 0) ? value : -value;
     }

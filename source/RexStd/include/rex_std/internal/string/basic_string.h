@@ -109,7 +109,7 @@ namespace rsl
           : basic_string(alloc)
       {
         size_type num_to_copy = count_or_obj_length(count);
-        assign(other.cbegin() + pos, rsl::min(count, other.size()));
+        assign(other.cbegin() + pos, (rsl::min)(count, other.size()));
       }
       // Construct a string from s ranging from s to s + count.
       basic_string(const_pointer s, size_type count, const allocator& alloc = allocator())
@@ -726,7 +726,7 @@ namespace rsl
       // removes min(count, size() - index) characters starting at index
       basic_string& erase(size_type index = 0, size_type count = s_npos)
       {
-        size_type num_to_erase = count != s_npos ? rsl::min(size() - index, count) : size() - index;
+        size_type num_to_erase = count != s_npos ? (rsl::min)(size() - index, count) : size() - index;
 
         traits_type::move(m_begin[index], m_begin[index + num_to_erase], (size() - (index + num_to_erase)));
 
@@ -1060,7 +1060,7 @@ namespace rsl
       {
         REX_ASSERT_X(pos >= 0 && pos < length(), "pos out of range");
 
-        count = rsl::min(count, size() - pos);
+        count = (rsl::min)(count, size() - pos);
         return replace(pos, count, str.data(), str.length());
       }
       // replaces the part of the string, indicated by [first, last) with a new string.
@@ -1077,8 +1077,8 @@ namespace rsl
       // replaces the part of the string, indicated by [pos, pos + count) with a new string [pos2, pos2 + count2).
       basic_string& replace(size_type pos1, size_type count1, const basic_string& str, size_type pos2, size_type count2)
       {
-        count1 = rsl::min(count1, size() - pos1);
-        count2 = rsl::min(count2, str.size() - pos2);
+        count1 = (rsl::min)(count1, size() - pos1);
+        count2 = (rsl::min)(count2, str.size() - pos2);
 
         REX_ASSERT_X(pos1 >= 0 && pos1 < length(), "pos1 out of range");
         REX_ASSERT_X(pos2 >= 0 && pos2 < str.length(), "pos2 out of range");
@@ -1121,7 +1121,7 @@ namespace rsl
       {
         REX_ASSERT_X(pos >= 0 && pos < length(), "pos out of range");
 
-        count = rsl::min(count, size() - pos);
+        count = (rsl::min)(count, size() - pos);
 
         return replace(pos, count, s, Size - 1);
       }
@@ -1154,7 +1154,7 @@ namespace rsl
       {
         REX_ASSERT_X(pos >= 0 && pos < length(), "pos out of range");
 
-        count = rsl::min(count, size() - pos);
+        count = (rsl::min)(count, size() - pos);
         if(count2 > count)
         {
           prepare_for_new_insert(pos + count, count2 - count);
@@ -1188,7 +1188,7 @@ namespace rsl
       // replaces the part of the string, indicated by [pos, pos + count) with the characters of a string view
       basic_string& replace(size_type pos, size_type count, const basic_string_view<value_type, traits_type>& sv)
       {
-        count = rsl::min(count, size() - pos);
+        count = (rsl::min)(count, size() - pos);
         return replace(pos, count, sv.data(), sv.length());
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (01/Jul/2022)
@@ -1215,7 +1215,7 @@ namespace rsl
       // replaces the part of the string, indicated by [pos, pos + count) with the characters of a string view [pos2, pos2 + count2)
       basic_string& replace(size_type pos, size_type count, const basic_string_view<value_type, traits_type>& sv, size_type pos2, size_type count2 = s_npos)
       {
-        count  = rsl::min(count, size() - pos);
+        count  = (rsl::min)(count, size() - pos);
         count2 = count_or_obj_length(sv, count2);
         return replace(pos, count, sv.data() + pos2, count2);
       }
@@ -1232,7 +1232,7 @@ namespace rsl
       // Copies a substring [pos, pos+count) to character string pointed to by dest.
       size_type copy(value_type* dst, size_type count, size_type pos = 0) const
       {
-        count = rsl::min(count, size() - pos);
+        count = (rsl::min)(count, size() - pos);
         traits_type::copy(dst, rsl::addressof(m_begin[pos]), count);
         return count;
       }
