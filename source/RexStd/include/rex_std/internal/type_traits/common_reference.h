@@ -113,7 +113,7 @@ namespace rsl
       };
 
       template <typename T1, typename T2>
-      using BasicSpecialization = typename basic_common_reference<RemoveCVRef<T1>, RemoveCVRef<T2>, add_qualifiers<T1>::template Apply, add_qualifiers<T2>::template Apply>::type;
+      using basic_specialization = typename basic_common_reference<remove_cvref<T1>, remove_cvref<T2>, add_qualifiers<T1>::template Apply, add_qualifiers<T2>::template Apply>::type;
 
       template <typename T1, typename T2, typename = void>
       struct common_reference2_b : common_reference2_c<T1, T2>
@@ -121,9 +121,9 @@ namespace rsl
       };
 
       template <typename T1, typename T2>
-      struct common_reference2_b<T1, T2, void_t<BasicSpecialization<T1, T2>>>
+      struct common_reference2_b<T1, T2, void_t<basic_specialization<T1, T2>>>
       {
-        using type = BasicSpecialization<T1, T2>;
+        using type = basic_specialization<T1, T2>;
       };
 
       template <typename T1, typename T2, class = void>

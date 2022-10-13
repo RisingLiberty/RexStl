@@ -10,6 +10,8 @@
 //
 // ============================================
 
+#pragma once
+
 #include "rex_std/internal/type_traits/is_signed.h"
 #include "rex_std/internal/type_traits/make_unsigned.h"
 
@@ -30,11 +32,11 @@ namespace rsl
       }
       else if constexpr(is_signed_v<T>)
       {
-        return t < 0 ? false : UT(t) == u;
+        return t < 0 ? false : static_cast<UT>(t) == u;
       }
       else
       {
-        return u < 0 ? false : t == UU(u);
+        return u < 0 ? false : t == static_cast<UU>(u);
       }
     }
 
@@ -56,11 +58,11 @@ namespace rsl
       }
       else if constexpr(is_signed_v<T>)
       {
-        return t < 0 ? true : UT(t) < u;
+        return t < 0 ? true : static_cast<UT>(t) < u;
       }
       else
       {
-        return u < 0 ? false : t < UU(u);
+        return u < 0 ? false : t < static_cast<UU>(u);
       }
     }
 

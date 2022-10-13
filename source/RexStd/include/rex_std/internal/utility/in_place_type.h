@@ -23,7 +23,7 @@ namespace rsl
       explicit in_place_type_t() = default;
     };
     template <typename T>
-    constexpr in_place_type_t in_place {};
+    constexpr in_place_type_t<T> in_place_type;
 
   } // namespace v1
 } // namespace rsl

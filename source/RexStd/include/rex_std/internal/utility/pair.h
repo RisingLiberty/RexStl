@@ -65,7 +65,7 @@ namespace rsl
       constexpr pair(const pair&) = default;
 
       template <typename U, typename V, typename = enable_if_t<is_convertible_v<const U&, T1> && is_convertible_v<const V&, T2>>>
-      constexpr pair(const pair<U, V>& p)
+      constexpr explicit pair(const pair<U, V>& p)
           : first(p.first)
           , second(p.second)
       {
@@ -93,7 +93,7 @@ namespace rsl
       }
 
       template <typename U, typename V, typename = enable_if_t<is_convertible_v<U, T1> && is_convertible_v<V, T2>>>
-      constexpr pair(pair<U, V>&& p)
+      constexpr explicit pair(pair<U, V>&& p)
           : first(forward<U>(p.first))
           , second(forward<V>(p.second))
       {
@@ -102,17 +102,19 @@ namespace rsl
       // Initializes first with arguments of types Args1... obtained by forwarding the elements of first_args and
       // initializes second with arguments of types Args2... obtained by forwarding the elements of second_args.
       template <typename... Args1, typename... Args2, typename = enable_if_t<is_constructible_v<first_type, Args1&&...> && is_constructible_v<second_type, Args2&&...>>>
-      pair(piecewise_construct_t pwc, tuple<Args1...> first_args, tuple<Args2...> second_args)
-          : pair(pwc, move(first_args), move(second_args), make_index_sequence<sizeof...(Args1)>(), make_index_sequence<sizeof...(Args2)>())
+      pair(piecewise_construct_t pwc, tuple<Args1...> firstArgs, tuple<Args2...> secondArgs)
+          : pair(pwc, move(firstArgs), move(secondArgs), make_index_sequence<sizeof...(Args1)>(), make_index_sequence<sizeof...(Args2)>())
       {
       }
+
+      ~pair() = default;
 
     private:
       // NOTE(rparolin): Internal constructor used to expand the index_sequence required to expand the tuple elements.
       template <typename... Args1, typename... Args2, count_t... I1, count_t... I2>
-      pair(piecewise_construct_t, tuple<Args1...> first_args, tuple<Args2...> second_args, index_sequence<I1...>, index_sequence<I2...>)
-          : first(forward<Args1>(get<I1>(first_args))...)
-          , second(forward<Args2>(get<I2>(second_args))...)
+      pair(piecewise_construct_t /*unused*/, tuple<Args1...> firstArgs, tuple<Args2...> secondArgs, index_sequence<I1...> /*unused*/, index_sequence<I2...> /*unused*/)
+          : first(forward<Args1>(get<I1>(firstArgs))...)
+          , second(forward<Args2>(get<I2>(secondArgs))...)
       {
       }
 
@@ -215,13 +217,13 @@ namespace rsl
 
     namespace internal
     {
-      template <typename Ret, typename pair>
-      constexpr Ret pair_get(pair& p, integral_constant<count_t, 0>)
+      template <typename Ret, typename Pair>
+      constexpr Ret pair_get(Pair& p, integral_constant<count_t, 0> /*unused*/)
       {
         return p.first;
       }
-      template <typename Ret, typename pair>
-      constexpr Ret pair_get(pair& p, integral_constant<count_t, 1>)
+      template <typename Ret, typename Pair>
+      constexpr Ret pair_get(Pair& p, integral_constant<count_t, 1> /*unused*/)
       {
         return p.second;
       }

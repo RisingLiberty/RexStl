@@ -19,7 +19,8 @@
 TEST_CASE("source location")
 {
   rsl::source_location loc = rsl::source_location::current();
-  REQUIRE(loc.line() == 19);
+  rsl::source_location loc2 = rsl::source_location::current();
+  REQUIRE(loc.line() + 1 == loc2.line());
 }
 
 //NOLINTEND

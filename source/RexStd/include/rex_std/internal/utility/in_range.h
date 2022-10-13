@@ -23,7 +23,7 @@ namespace rsl
     template <typename R, typename T>
     constexpr bool in_range(T t)
     {
-      return rsl::in_range(t, rsl::numeric_limits<R>::min(), rsl::numeric_limits<R>::max());
+      return rsl::in_range(t, static_cast<T>(rsl::numeric_limits<R>::lowest()), static_cast<T>(rsl::numeric_limits<R>::max()));
     }
 
   } // namespace v1

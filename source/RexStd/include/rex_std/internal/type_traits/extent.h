@@ -18,34 +18,36 @@ namespace rsl
 {
   inline namespace v1
   {
+    namespace internal
+    {
+      template <typename T, unsigned N>
+      struct extent_help : public rsl::integral_constant<size_t, 0>
+      {
+      };
 
-    template <typename T, size_t N = 0>
-    struct extent : integral_constant<size_t, 0>
+      template <typename T, unsigned I>
+      struct extent_help<T[I], 0> : public rsl::integral_constant<size_t, I> // NOLINT(modernize-avoid-c-arrays)
+      {
+      }; // NOLINT(modernize-avoid-c-arrays)
+
+      template <typename T, unsigned N, unsigned I>
+      struct extent_help<T[I], N> : public extent_help<T, N - 1> // NOLINT(modernize-avoid-c-arrays)
+      {
+      }; // NOLINT(modernize-avoid-c-arrays)
+
+      template <typename T, unsigned N>
+      struct extent_help<T[], N> : public extent_help<T, N - 1> // NOLINT(modernize-avoid-c-arrays)
+      {
+      }; // NOLINT(modernize-avoid-c-arrays)
+    }    // namespace internal
+
+    template <typename T, unsigned N = 0>                   // extent uses unsigned instead of size_t.
+    struct extent : public rsl::internal::extent_help<T, N> // NOLINT(modernize-avoid-c-arrays)
     {
     };
 
-    template <typename T>
-    struct extent<T[], 0> : integral_constant<size_t, 0> // NOLINT(modernize-avoid-c-arrays)
-    {
-    };
-
-    template <typename T, size_t N>
-    struct extent<T[], N> : extent<T, N - 1> // NOLINT(modernize-avoid-c-arrays)
-    {
-    };
-
-    template <typename T, size_t I>
-    struct extent<T[I], 0> : integral_constant<size_t, I> // NOLINT(modernize-avoid-c-arrays)
-    {
-    };
-
-    template <typename T, size_t I, unsigned N>
-    struct extent<T[I], N> : extent<T, N - 1> // NOLINT(modernize-avoid-c-arrays)
-    {
-    };
-
-    template <typename T, size_t N = 0>
-    inline constexpr size_t extent_v = extent<T, N>::value;
+    template <typename T, unsigned N = 0>
+    inline constexpr auto extent_v = extent<T, N>::value;
 
   } // namespace v1
 } // namespace rsl

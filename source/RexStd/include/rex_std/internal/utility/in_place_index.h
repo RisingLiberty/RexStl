@@ -23,9 +23,7 @@ namespace rsl
       explicit in_place_index_t() = default;
     };
     template <size_t I>
-    struct in_place_index_t<I> in_place_index
-    {
-    };
+    constexpr in_place_index_t<I> in_place_index;
 
   } // namespace v1
 } // namespace rsl

@@ -14,6 +14,7 @@
 
 #include "rex_std/internal/type_traits/decay.h"
 #include "rex_std/internal/type_traits/void.h"
+#include "rex_std/internal/utility/declval.h"
 
 namespace rsl
 {

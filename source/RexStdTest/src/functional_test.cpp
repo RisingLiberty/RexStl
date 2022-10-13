@@ -250,11 +250,11 @@ TEST_CASE("functional bit xor")
 }
 TEST_CASE("functional bit not")
 {
-  rsl::bit_not<unsigned int> op;
+  rsl::bit_not<unsigned char> op;
 
-  REQUIRE(op(0b00001111u) == 0b11110000ui8);
-  REQUIRE(op(0b00000000u) == 0b11111111ui8);
-  REQUIRE(op(0b00000110u) == 0b11111001ui8);
+  REQUIRE(op(0b00001111ui8) == 0b11110000ui8);
+  REQUIRE(op(0b00000000ui8) == 0b11111111ui8);
+  REQUIRE(op(0b00000110ui8) == 0b11111001ui8);
 }
 TEST_CASE("functional not fn")
 {

@@ -12,6 +12,8 @@
 
 #include <catch2/catch.hpp>
 
+//NOLINTBEGIN
+
 #include "rex_std/array.h"
 
 TEST_CASE("array construction")
@@ -54,3 +56,5 @@ TEST_CASE("array element access")
   REQUIRE(arr[2] == 3);
   REQUIRE(arr[3] == 0);
 }
+
+//NOLINTEND

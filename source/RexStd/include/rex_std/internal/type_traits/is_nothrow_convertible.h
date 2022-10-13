@@ -27,7 +27,7 @@ namespace rsl
       void implicitly_convert_to(T) noexcept;
 
       template <typename From, typename To, bool = is_convertible_v<From, To>, bool = is_void_v<To>>
-      inline constexpr bool is_no_throw_convertible_helper = noexcept(implicitly_convert_to<To>(declval<From>()));
+      inline constexpr bool is_no_throw_convertible_helper = noexcept(implicitly_convert_to<To>(declval<From>())); // NOLINT(cppcoreguidelines-narrowing-conversions)
 
       template <typename From, typename To, bool IsVoidV>
       inline constexpr bool is_no_throw_convertible_helper<From, To, false, IsVoidV> = false;
