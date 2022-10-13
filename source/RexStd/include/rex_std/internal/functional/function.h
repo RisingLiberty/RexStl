@@ -35,56 +35,56 @@ namespace rsl
     namespace internal
     {
       template <typename T>
-      bool is_null(const T&)
+      bool is_null(const T& /*arg*/)
       {
         return false;
       }
 
       template <typename Result, typename... Arguments>
-      bool is_null(Result (*const& function_pointer)(Arguments...))
+      bool is_null(Result (*const& functionPointer)(Arguments...))
       {
-        return function_pointer == nullptr;
+        return functionPointer == nullptr;
       }
 
       template <typename Result, typename Class, typename... Arguments>
-      bool is_null(Result (Class::*const& function_pointer)(Arguments...))
+      bool is_null(Result (Class::*const& functionPointer)(Arguments...))
       {
-        return function_pointer == nullptr;
+        return functionPointer == nullptr;
       }
 
       template <typename Result, typename Class, typename... Arguments>
-      bool is_null(Result (Class::*const& function_pointer)(Arguments...) const)
+      bool is_null(Result (Class::*const& functionPointer)(Arguments...) const)
       {
-        return function_pointer == nullptr;
+        return functionPointer == nullptr;
       }
 
-      class UnusedClass
+      class unused_class
       {
       };
 
-      union FunctorStorageAlignment
+      union functor_storage_alignment
       {
-        void (*unused_func_ptr)(void);
-        void (UnusedClass::*unused_func_mem_ptr)(void);
+        void (*unused_func_ptr)();
+        void (unused_class::*unused_func_mem_ptr)();
         void* unused_ptr;
       };
 
       template <count_t SizeInBytes>
-      struct alignas(sizeof(FunctorStorageAlignment)) FunctorStorage
+      struct alignas(sizeof(functor_storage_alignment)) functor_storage
       {
         static_assert(SizeInBytes >= 0, "functor storage must be a positive size");
 
         template <typename Ret>
         Ret& get_storage_type_ref() const
         {
-          return *reinterpret_cast<Ret*>(const_cast<byte*>(&storage[0]));
+          return *reinterpret_cast<Ret*>(const_cast<byte*>(&storage[0])); // NOLINT(cppcoreguidelines-pro-type-const-cast, cppcoreguidelines-pro-type-reinterpret-cast)
         }
 
-        byte storage[SizeInBytes];
+        byte storage[SizeInBytes]; // NOLINT(modernize-avoid-c-arrays)
       };
 
       template <>
-      struct FunctorStorage<0>
+      struct functor_storage<0>
       {
         template <typename Ret>
         Ret& get_storage_type_ref() const
@@ -92,26 +92,26 @@ namespace rsl
           return *reinterpret_cast<Ret*>(const_cast<byte*>(&storage[0]));
         }
 
-        byte storage[sizeof(FunctorStorageAlignment)];
+        byte storage[sizeof(functor_storage_alignment)]; // NOLINT(modernize-avoid-c-arrays)
       };
 
       template <typename Functor, count_t SizeInBytes>
-      struct IsFunctorInplaceAllocatable
+      struct is_functor_inplace_allocatable
       {
-        static constexpr bool value = sizeof(Functor) <= sizeof(FunctorStorage<SizeInBytes>) && (rsl::alignment_of_v<FunctorStorage<SizeInBytes>> % rsl::alignment_of_v<Functor>) == 0;
+        static constexpr bool value = sizeof(Functor) <= sizeof(functor_storage<SizeInBytes>) && (rsl::alignment_of_v<functor_storage<SizeInBytes>> % rsl::alignment_of_v<Functor>) == 0;
       };
 
       template <count_t SizeInBytes>
-      class function_detailBase
+      class function_detail_base
       {
       public:
-        using functor_storage_type = FunctorStorage<SizeInBytes>;
+        using functor_storage_type = functor_storage<SizeInBytes>;
 
-        enum class ManagerOperations
+        enum class manager_operations
         {
-          DestroyFunctor,
-          CopyFunctor,
-          MoveFunctor
+          destroy_functor,
+          copy_functor,
+          move_functor
         };
 
         // functor allocated inplace
@@ -145,21 +145,21 @@ namespace rsl
             new(get_functor_ptr(to)) Functor(rsl::move(*get_functor_ptr(from)));
           }
 
-          static void* manager(void* to, void* from, typename function_detailBase::ManagerOperations ops)
+          static void* manager(void* to, void* from, typename function_detail_base::manager_operations ops)
           {
             switch(ops)
             {
-              case function_detailBase::ManagerOperations::DestroyFunctor:
+              case function_detail_base::manager_operations::destroy_functor:
               {
                 destroy_functor(*static_cast<functor_storage_type*>(to));
               }
               break;
-              case function_detailBase::ManagerOperations::CopyFunctor:
+              case function_detail_base::manager_operations::copy_functor:
               {
                 copy_functor(*static_cast<functor_storage_type*>(to), *static_cast<const functor_storage_type*>(from));
               }
               break;
-              case function_detailBase::ManagerOperations::MoveFunctor:
+              case function_detail_base::manager_operations::move_functor:
               {
                 move_functor(*static_cast<functor_storage_type*>(to), *static_cast<functor_storage_type*>(from));
                 destroy_functor(*static_cast<functor_storage_type*>(from));
@@ -174,7 +174,7 @@ namespace rsl
 
         // functor allocated on the heap
         template <typename Functor>
-        class function_manager_base<Functor, typename enable_if_t<!IsFunctorInplaceAllocatable<Functor, SizeInBytes>::value>::type>
+        class function_manager_base<Functor, typename enable_if_t<!is_functor_inplace_allocatable<Functor, SizeInBytes>::value>::type>
         {
           static Functor* get_functor_ptr(const functor_storage_type& storage)
           {
@@ -226,21 +226,21 @@ namespace rsl
             get_functor_ptr_ref(from) = nullptr;
           }
 
-          static void* manager(void* to, void* from, typename function_detailBase::ManagerOperations ops)
+          static void* manager(void* to, void* from, typename function_detail_base::manager_operations ops)
           {
             switch(ops)
             {
-              case function_detailBase::ManagerOperations::DestroyFunctor:
+              case function_detail_base::manager_operations::destroy_functor:
               {
                 destroy_functor(*static_cast<functor_storage_type*>(to));
               }
               break;
-              case function_detailBase::ManagerOperations::CopyFunctor:
+              case function_detail_base::manager_operations::copy_functor:
               {
                 copy_functor(*static_cast<functor_storage_type*>(to), *static_cast<const functor_storage_type*>(from));
               }
               break;
-              case function_detailBase::ManagerOperations::MoveFunctor:
+              case function_detail_base::manager_operations::move_functor:
               {
                 move_functor(*static_cast<functor_storage_type*>(to, *static_cast<functor_storage_type>(from)));
               }
@@ -264,8 +264,8 @@ namespace rsl
           }
         };
 
-        function_detailBase()  = default;
-        ~function_detailBase() = default;
+        function_detail_base()  = default;
+        ~function_detail_base() = default;
 
       protected:
         const functor_storage_type& storage() const
@@ -289,10 +289,10 @@ namespace rsl
       class function_detail;
 
       template <count_t SizeInBytes, typename R, typename... Args>
-      class function_detail<SizeInBytes, R(Args...)> : public function_detailBase<SizeInBytes>
+      class function_detail<SizeInBytes, R(Args...)> : public function_detail_base<SizeInBytes>
       {
       private:
-        using base = function_detailBase<SizeInBytes>;
+        using base = function_detail_base<SizeInBytes>;
 
       public:
         function_detail()
@@ -300,7 +300,7 @@ namespace rsl
             , m_func_ptr_invoker(&invoke_bad_func_call)
         {
         }
-        function_detail(nullptr_t)
+        explicit function_detail(nullptr_t)
             : m_func_ptr_mgr(nullptr)
             , m_func_ptr_invoker(&invoke_bad_func_call)
         {
@@ -315,7 +315,7 @@ namespace rsl
           this->move(rsl::move(other));
         }
         template <typename Functor, typename = enable_if_t<internal::valid_function_args<function_detail, function_detail, Functor, R, Args...>, bool>>
-        function_detail(Functor f)
+        explicit function_detail(Functor f)
         {
           create_forward_functor(rsl::move(f));
         }
@@ -373,20 +373,20 @@ namespace rsl
         {
           REX_ASSERT_X(this != rsl::addressof(other));
 
-          FunctorStorage<SizeInBytes> tmp_storage;
+          functor_storage<SizeInBytes> tmp_storage {};
           if(other.has_manager())
           {
-            (*other.m_func_ptr_mgr)(static_cast<void*>(&tmp_storage), static_cast<void*>(&other.storage()), base::ManagerOperations::MoveFunctor);
+            (*other.m_func_ptr_mgr)(static_cast<void*>(&tmp_storage), static_cast<void*>(&other.storage()), base::manager_operations::move_functor);
           }
 
           if(has_manager())
           {
-            (*m_func_ptr_mgr)(static_cast<void*>(&other.storage()), static_cast<void*>(&base::storage()), base::ManagerOperations::MoveFunctor);
+            (*m_func_ptr_mgr)(static_cast<void*>(&other.storage()), static_cast<void*>(&base::storage()), base::manager_operations::move_functor);
           }
 
           if(other.has_manager())
           {
-            (*other.m_func_ptr_mgr)(static_cast<void*>(&base::storage()), static_cast<void*>(&tmp_storage), base::ManagerOperations::MoveFunctor);
+            (*other.m_func_ptr_mgr)(static_cast<void*>(&base::storage()), static_cast<void*>(&tmp_storage), base::manager_operations::move_functor);
           }
 
           rsl::swap(m_func_ptr_mgr, other.m_func_ptr_mgr);
@@ -413,7 +413,7 @@ namespace rsl
         {
           if(has_manager())
           {
-            (*m_func_ptr_mgr)(static_cast<void*>(&base::storage()), nullptr, base::ManagerOperations::DestroyFunctor);
+            (*m_func_ptr_mgr)(static_cast<void*>(&base::storage()), nullptr, base::manager_operations::destroy_functor);
           }
         }
 
@@ -421,7 +421,7 @@ namespace rsl
         {
           if(other.has_manager())
           {
-            (*other.m_func_ptr_mgr)(static_cast<void*>(&base::storage()), const_cast<void*>(static_cast<const void*>(&other.storage())), base::ManagerOperations::CopyFunctor);
+            (*other.m_func_ptr_mgr)(static_cast<void*>(&base::storage()), const_cast<void*>(static_cast<const void*>(&other.storage())), base::manager_operations::copy_functor); // NOLINT(cppcoreguidelines-pro-type-const-cast)
           }
 
           m_func_ptr_mgr     = other.m_func_ptr_mgr;
@@ -432,7 +432,7 @@ namespace rsl
         {
           if(other.has_manager())
           {
-            (*other.m_func_ptr_mgr)(static_cast<void*>(&base::storage()), static_cast<void*>(other.m_storage), base::ManagerOperations::MoveFunctor);
+            (*other.m_func_ptr_mgr)(static_cast<void*>(&base::storage()), static_cast<void*>(other.m_storage), base::manager_operations::move_functor);
           }
 
           m_func_ptr_mgr           = other.m_func_ptr_mgr;
@@ -462,16 +462,16 @@ namespace rsl
 
 #pragma warning(push)
 #pragma warning(disable : 4716) // 'function' must return a value
-        static R invoke_bad_func_call(Args..., const base::functor_storage_type&)
+        static R invoke_bad_func_call(Args... /*args*/, const typename base::functor_storage_type& /*storage*/)
         {
           // can't assume R is default constructible, so we disable no-return warning instead.
           REX_ASSERT("Bad function call!");
-        }
+        } // NOLINT(clang-diagnostic-return-type)
 #pragma warning(pop)
 
       private:
-        using FuncPtrManager = void* (*)(void*, void*, typename base::ManagerOperations);
-        using FuncPtrInvoker = R (*)(Args..., const base::functor_storage_type&);
+        using FuncPtrManager = void* (*)(void*, void*, typename base::manager_operations);
+        using FuncPtrInvoker = R (*)(Args... /*args*/, const typename base::functor_storage_type& /*storage*/);
 
         FuncPtrManager m_func_ptr_mgr;
         FuncPtrInvoker m_func_ptr_invoker;
@@ -491,7 +491,7 @@ namespace rsl
       // creates an empty function
       function() = default;
       // creates an empty function
-      function(nullptr_t p)
+      function(nullptr_t p) // NOLINT(google-explicit-constructor)
           : base(p)
       {
       }
@@ -507,7 +507,7 @@ namespace rsl
       }
       // initializes the target with rsl::forward<F>(f)
       template <typename F, typename = enable_if_t<internal::valid_function_args<function, base, F, R, Args...>, bool>>
-      function(F&& f)
+      function(F&& f) // NOLINT(google-explicit-constructor)
           : base(rsl::forward<F>(f))
       {
       }
@@ -621,18 +621,18 @@ namespace rsl
     {
 
       template <typename Fx, class = void>
-      struct DeduceSignature
+      struct deduce_signature
       {
       }; // can't deduce signature when &Fx::operator() is missing, inaccessible, or ambiguous
 
       template <typename Fx>
-      struct DeduceSignature<Fx, void_t<decltype(&Fx::operator())>> : is_member_function_pointer<decltype(&Fx::operator())>::GuideType
+      struct deduce_signature<Fx, void_t<decltype(&Fx::operator())>> : is_member_function_pointer<decltype(&Fx::operator())>::GuideType
       {
       };
     } // namespace internal
 
     template <typename Fx>
-    function(Fx) -> function<typename internal::DeduceSignature<Fx>::type>;
+    function(Fx) -> function<typename internal::deduce_signature<Fx>::type>;
 
   } // namespace v1
 } // namespace rsl

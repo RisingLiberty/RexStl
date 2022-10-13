@@ -14,6 +14,8 @@
 
 #include "rex_std/type_traits.h"
 
+//NOLINTBEGIN
+
 void dummy_function() noexcept
 {
 
@@ -85,7 +87,7 @@ private:
 
 class standard_layout_class
 {
-public: 
+public:
   standard_layout_class()
     : m_x(0)
   {}
@@ -162,7 +164,7 @@ public:
 class final_class final {};
 class non_final_class {};
 
-class constructible_test_class 
+class constructible_test_class
 {
 public:
   constructible_test_class(int n)
@@ -647,12 +649,12 @@ TEST_CASE("is const")
   static_assert(rsl::is_const_v<const int> == true);
   static_assert(rsl::is_const_v<volatile int> == false);
   static_assert(rsl::is_const_v<const volatile int> == true);
-  
+
   static_assert(rsl::is_const_v<int&> == false);
   static_assert(rsl::is_const_v<const int&> == false);
   static_assert(rsl::is_const_v<volatile int&> == false);
   static_assert(rsl::is_const_v<const volatile int&> == false);
-  
+
   static_assert(rsl::is_const_v<int*> == false);
   static_assert(rsl::is_const_v<const int*> == false);
   static_assert(rsl::is_const_v<volatile int*> == false);
@@ -1381,3 +1383,4 @@ TEST_CASE("is constant evaluated")
   static_assert(rsl::is_constant_evaluated() == true);
 }
 
+//NOLINTEND

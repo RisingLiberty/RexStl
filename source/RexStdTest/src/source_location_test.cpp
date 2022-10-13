@@ -12,6 +12,8 @@
 
 #include "catch2/catch.hpp"
 
+//NOLINTBEGIN
+
 #include "rex_std/source_location.h"
 
 TEST_CASE("source location")
@@ -19,3 +21,5 @@ TEST_CASE("source location")
   rsl::source_location loc = rsl::source_location::current();
   REQUIRE(loc.line() == 19);
 }
+
+//NOLINTEND

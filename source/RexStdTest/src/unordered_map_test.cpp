@@ -12,6 +12,8 @@
 
 #include <catch2/catch.hpp>
 
+//NOLINTBEGIN
+
 #include "rex_std/unordered_map.h"
 
 TEST_CASE("unordered_map construction")
@@ -37,3 +39,5 @@ TEST_CASE("unordered_map element access")
   REQUIRE(map[1] == 11);
   REQUIRE(map[2] == 0);
 }
+
+//NOLINTEND

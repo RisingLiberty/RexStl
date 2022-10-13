@@ -12,6 +12,8 @@
 
 #include "catch2/catch.hpp"
 
+//NOLINTBEGIN
+
 #include "rex_std/optional.h"
 
 TEST_CASE("optional creation")
@@ -68,3 +70,5 @@ TEST_CASE("optional modifiers")
   REQUIRE(opt.value() == 10);
   REQUIRE(*opt == 10);
 }
+
+//NOLINTEND

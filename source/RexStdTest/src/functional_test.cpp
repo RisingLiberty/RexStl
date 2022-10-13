@@ -12,6 +12,8 @@
 
 #include "catch2/catch.hpp"
 
+//NOLINTBEGIN
+
 #include "rex_std/functional.h"
 
 int foo()
@@ -214,45 +216,45 @@ TEST_CASE("functional logical not")
 }
 TEST_CASE("functional bit and")
 {
-  rsl::bit_and<int> op;
+  rsl::bit_and<unsigned int> op;
 
-  REQUIRE(op(0b1111, 0b0000) == 0b0000);
-  REQUIRE(op(0b1111, 0b0001) == 0b0001);
-  REQUIRE(op(0b1111, 0b0010) == 0b0010);
-  REQUIRE(op(0b1111, 0b1111) == 0b1111);
-  REQUIRE(op(0b1001, 0b1111) == 0b1001);
-  REQUIRE(op(0b1001, 0b0011) == 0b0001);
+  REQUIRE(op(0b1111u, 0b0000u) == 0b0000u);
+  REQUIRE(op(0b1111u, 0b0001u) == 0b0001u);
+  REQUIRE(op(0b1111u, 0b0010u) == 0b0010u);
+  REQUIRE(op(0b1111u, 0b1111u) == 0b1111u);
+  REQUIRE(op(0b1001u, 0b1111u) == 0b1001u);
+  REQUIRE(op(0b1001u, 0b0011u) == 0b0001u);
 
 }
 TEST_CASE("functional bit or")
 {
-  rsl::bit_or<int> op;
+  rsl::bit_or<unsigned int> op;
 
-  REQUIRE(op(0b1111, 0b0000) == 0b1111);
-  REQUIRE(op(0b1111, 0b0001) == 0b1111);
-  REQUIRE(op(0b1111, 0b0010) == 0b1111);
-  REQUIRE(op(0b1111, 0b1111) == 0b1111);
-  REQUIRE(op(0b1001, 0b1111) == 0b1111);
-  REQUIRE(op(0b1001, 0b0011) == 0b1011);
+  REQUIRE(op(0b1111u, 0b0000u) == 0b1111u);
+  REQUIRE(op(0b1111u, 0b0001u) == 0b1111u);
+  REQUIRE(op(0b1111u, 0b0010u) == 0b1111u);
+  REQUIRE(op(0b1111u, 0b1111u) == 0b1111u);
+  REQUIRE(op(0b1001u, 0b1111u) == 0b1111u);
+  REQUIRE(op(0b1001u, 0b0011u) == 0b1011u);
 }
 TEST_CASE("functional bit xor")
 {
-  rsl::bit_xor<int> op;
+  rsl::bit_xor<unsigned int> op;
 
-  REQUIRE(op(0b1111, 0b0000) == 0b1111);
-  REQUIRE(op(0b1111, 0b0001) == 0b1110);
-  REQUIRE(op(0b1111, 0b0010) == 0b1101);
-  REQUIRE(op(0b1111, 0b1111) == 0b0000);
-  REQUIRE(op(0b1001, 0b1111) == 0b0110);
-  REQUIRE(op(0b1001, 0b0011) == 0b1010);
+  REQUIRE(op(0b1111u, 0b0000u) == 0b1111u);
+  REQUIRE(op(0b1111u, 0b0001u) == 0b1110u);
+  REQUIRE(op(0b1111u, 0b0010u) == 0b1101u);
+  REQUIRE(op(0b1111u, 0b1111u) == 0b0000u);
+  REQUIRE(op(0b1001u, 0b1111u) == 0b0110u);
+  REQUIRE(op(0b1001u, 0b0011u) == 0b1010u);
 }
 TEST_CASE("functional bit not")
 {
-  rsl::bit_not<int> op;
+  rsl::bit_not<unsigned int> op;
 
-  REQUIRE(op(0b00001111) == 0b11110000i8);
-  REQUIRE(op(0b00000000) == 0b11111111i8);
-  REQUIRE(op(0b00000110) == 0b11111001i8);
+  REQUIRE(op(0b00001111u) == 0b11110000ui8);
+  REQUIRE(op(0b00000000u) == 0b11111111ui8);
+  REQUIRE(op(0b00000110u) == 0b11111001ui8);
 }
 TEST_CASE("functional not fn")
 {
@@ -266,3 +268,5 @@ TEST_CASE("functional not fn")
   REQUIRE(not_foobar(2) == false);
   REQUIRE(not_foobar(0) == true);
 }
+
+//NOLINTEND

@@ -12,6 +12,8 @@
 
 #include "catch2/catch.hpp"
 
+//NOLINTBEGIN
+
 #include "rex_std/initializer_list.h"
 
 TEST_CASE("initializer list creation")
@@ -26,3 +28,5 @@ TEST_CASE("initializer list creation")
   rsl::initializer_list<int> ilist2 = {};
   REQUIRE(ilist2.size() == 0);
 }
+
+//NOLINTEND

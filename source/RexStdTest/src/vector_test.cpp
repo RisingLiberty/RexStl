@@ -12,6 +12,8 @@
 
 #include <catch2/catch.hpp>
 
+//NOLINTBEGIN
+
 #include "rex_std/vector.h"
 
 TEST_CASE("vector construction")
@@ -152,3 +154,5 @@ TEST_CASE("vector insertion")
   REQUIRE(vec[0] == 2);
   REQUIRE(vec[1] == 1);
 }
+
+//NOLINTEND

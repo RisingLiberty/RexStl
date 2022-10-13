@@ -12,6 +12,8 @@
 
 #include "catch2/catch.hpp"
 
+//NOLINTBEGIN
+
 #include "rex_std/chrono.h"
 
 TEST_CASE("duration construction")
@@ -42,3 +44,4 @@ TEST_CASE("time_point operators")
   REQUIRE(dur.count() == 3600);
 }
 
+//NOLINTEND
