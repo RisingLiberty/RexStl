@@ -12,6 +12,8 @@
 
 #pragma once
 
+/// [13/Oct/2022] RSL Comment: Remove this file, see unit tests for reason why
+
 #include "rex_std/bonus/type_traits/is_swappable_utils.h"
 #include "rex_std/internal/type_traits/integral_constant.h"
 #include "rex_std/internal/type_traits/is_same.h"

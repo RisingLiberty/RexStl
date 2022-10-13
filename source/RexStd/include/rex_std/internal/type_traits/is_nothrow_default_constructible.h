@@ -13,6 +13,7 @@
 #pragma once
 
 #include "rex_std/internal/type_traits/integral_constant.h"
+#include "rex_std/internal/type_traits/is_nothrow_constructible.h"
 
 namespace rsl
 {
@@ -20,7 +21,7 @@ namespace rsl
   {
 
     template <typename T>
-    struct is_nothrow_default_constructible : bool_constant<is_nothrow_constructible(T)>
+    struct is_nothrow_default_constructible : bool_constant<is_nothrow_constructible_v<T>>
     {
     };
 

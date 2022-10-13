@@ -21,7 +21,7 @@ namespace rsl
   {
 
     template <typename T>
-    add_rvalue_reference_t<T> declval()
+    add_rvalue_reference_t<T> declval() noexcept
     {
       static_assert(internal::always_false<T>, "declval cannot be called in an evaluated expression");
     }

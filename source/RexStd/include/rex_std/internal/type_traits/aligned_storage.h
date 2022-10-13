@@ -75,7 +75,7 @@ namespace rsl
       }
 
     private:
-      alignas(T) rsl::byte m_buff[sizeof(T)]; // NOLINT(modernize-avoid-c-arrays)
+      alignas(T) rsl::byte m_buff[sizeof(T)] = {}; // NOLINT(modernize-avoid-c-arrays)
     };
 
   } // namespace v1

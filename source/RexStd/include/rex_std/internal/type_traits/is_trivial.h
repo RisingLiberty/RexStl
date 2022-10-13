@@ -22,7 +22,7 @@ namespace rsl
   {
 
     template <typename T>
-    struct is_trivial : public bool_constant<is_trivially_copyable_v<T> || is_trivially_default_constructible_v<T>>
+    struct is_trivial : public bool_constant<__is_trivially_constructible(T) && __is_trivially_copyable(T)>
     {
     };
 

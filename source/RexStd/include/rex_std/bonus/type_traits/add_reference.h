@@ -25,16 +25,16 @@ namespace rsl
       template <typename T, typename = void>
       struct add_reference
       {
-        using LValue = T;
-        using RValue = T;
+        using lvalue = T;
+        using rvalue = T;
       };
 
       // (referenceable type)
       template <typename T>
       struct add_reference<T, void_t<T&>>
       {
-        using LValue = T&;
-        using RValue = T&&;
+        using lvalue = T&;
+        using rvalue = T&&;
       };
     } // namespace bonus
 

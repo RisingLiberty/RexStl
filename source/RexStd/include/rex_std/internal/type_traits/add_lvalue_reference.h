@@ -22,11 +22,11 @@ namespace rsl
     template <typename T>
     struct add_lvalue_reference
     {
-      using type = typename bonus::add_reference<T>::LValue;
+      using type = typename bonus::add_reference<T>::lvalue;
     };
 
     template <typename T>
-    using add_lvalue_reference_t = typename bonus::add_reference<T>::LValue;
+    using add_lvalue_reference_t = typename bonus::add_reference<T>::lvalue;
 
   } // namespace v1
 } // namespace rsl

@@ -24,8 +24,8 @@ namespace rsl
     {
     };
 
-    template <typename T>
-    inline constexpr bool is_trivially_constructible_v = is_trivially_constructible<T>::value;
+    template <typename T, typename... Args>
+    inline constexpr bool is_trivially_constructible_v = is_trivially_constructible<T, Args...>::value;
 
   } // namespace v1
 } // namespace rsl

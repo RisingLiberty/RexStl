@@ -20,7 +20,7 @@ namespace rsl
     namespace internal
     {
       template <typename T>
-      constexpr bool always_false = false;
+      inline constexpr bool always_false = false;
     } // namespace internal
 
   } // namespace v1

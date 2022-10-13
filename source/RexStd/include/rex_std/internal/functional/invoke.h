@@ -42,7 +42,7 @@ namespace rsl
         static constexpr invoker_strategy strategy = invoker_strategy::functor;
 
         template <typename Callable, typename... Types>
-        static constexpr auto call(Callable&& obj, Types&&... args) -> decltype(static_cast<Callable&&>(obj)(static_cast<Types&&>(args)...))
+        static constexpr auto call(Callable&& obj, Types&&... args) noexcept -> decltype(static_cast<Callable&&>(obj)(static_cast<Types&&>(args)...))
         {
           return static_cast<Callable&&>(obj)(static_cast<Types&&>(args)...);
         }
@@ -53,7 +53,7 @@ namespace rsl
         static constexpr invoker_strategy strategy = invoker_strategy::pmf_object;
 
         template <typename Decayed, typename T1, typename... Types2>
-        static constexpr auto call(Decayed pmf, T1&& args1, Types2&&... args2) -> decltype((static_cast<T1&&>(args1).*pmf)(static_cast<Types2&&>(args2)...))
+        static constexpr auto call(Decayed pmf, T1&& args1, Types2&&... args2) noexcept -> decltype((static_cast<T1&&>(args1).*pmf)(static_cast<Types2&&>(args2)...))
         {
           return (static_cast<T1&&>(args1).*pmf)(static_cast<Types2&&>(args2)...);
         }
@@ -64,7 +64,7 @@ namespace rsl
         static constexpr invoker_strategy strategy = invoker_strategy::pmf_rewrap;
 
         template <typename Decayed, typename Refwrap, typename... Types2>
-        static constexpr auto call(Decayed pmf, Refwrap rw, Types2&&... args2) -> decltype((rw.get().*pmf)(static_cast<Types2&&>(args2)...))
+        static constexpr auto call(Decayed pmf, Refwrap rw, Types2&&... args2) noexcept -> decltype((rw.get().*pmf)(static_cast<Types2&&>(args2)...))
         {
           return (rw.get().*pmf)(static_cast<Types2&&>(args2)...);
         }
@@ -75,7 +75,7 @@ namespace rsl
         static constexpr invoker_strategy strategy = invoker_strategy::pmf_pointer;
 
         template <typename Decayed, typename T1, typename... Types2>
-        static constexpr auto call(Decayed pmf, T1&& args1, Types2&&... args2) -> decltype(((*static_cast<T1&&>(args1)).*pmf)(static_cast<Types2&&>(args2)...))
+        static constexpr auto call(Decayed pmf, T1&& args1, Types2&&... args2) noexcept -> decltype(((*static_cast<T1&&>(args1)).*pmf)(static_cast<Types2&&>(args2)...))
         {
           return ((*static_cast<T1&&>(args1)).*pmf)(static_cast<Types2&&>(args2)...);
         }
@@ -108,7 +108,7 @@ namespace rsl
         static constexpr invoker_strategy strategy = invoker_strategy::pmd_pointer;
 
         template <typename Decayed, typename T1>
-        static constexpr auto call(Decayed pmd, T1&& args1) -> decltype((*static_cast<T1&&>(args1)).*pmd)
+        static constexpr auto call(Decayed pmd, T1&& args1) noexcept -> decltype((*static_cast<T1&&>(args1)).*pmd)
         {
           return (*static_cast<T1&&>(args1)).*pmd;
         }
@@ -150,13 +150,13 @@ namespace rsl
     } // namespace internal
 
     template <typename Callable>
-    constexpr auto invoke(Callable&& obj) -> decltype(static_cast<Callable&&>(obj)())
+    constexpr auto invoke(Callable&& obj) noexcept -> decltype(static_cast<Callable&&>(obj)())
     {
       return static_cast<Callable&&>(obj)();
     }
 
     template <typename Callable, typename T1, typename... Types2>
-    constexpr auto invoke(Callable&& obj, T1&& args1, Types2&&... args2) -> decltype(internal::Invoker1<Callable, T1>::call(static_cast<Callable&&>(obj), static_cast<T1&&>(args1), static_cast<Types2&&>(args2)...))
+    constexpr auto invoke(Callable&& obj, T1&& args1, Types2&&... args2) noexcept -> decltype(internal::Invoker1<Callable, T1>::call(static_cast<Callable&&>(obj), static_cast<T1&&>(args1), static_cast<Types2&&>(args2)...))
     {
       if constexpr(internal::Invoker1<Callable, T1>::strategy == internal::invoker_strategy::functor)
       {
