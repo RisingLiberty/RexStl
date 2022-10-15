@@ -1046,7 +1046,6 @@ namespace rsl
 
     REX_STD_FUNC_ALIAS(begin);
     REX_STD_FUNC_ALIAS(cbegin);
-    REX_STD_FUNC_ALIAS(end);
     REX_STD_FUNC_ALIAS(cend);
     REX_STD_FUNC_ALIAS(rbegin);
     REX_STD_FUNC_ALIAS(crbegin);

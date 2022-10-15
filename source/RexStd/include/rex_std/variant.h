@@ -24,22 +24,17 @@ namespace rsl
   inline namespace v1
   {
 
-    template <typename... Types>
-    REX_STD_TEMPLATED_CLASS_ALIAS(variant, Types...);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename... Types>, variant, Types...);
 
     REX_STD_CLASS_ALIAS(monostate);
 
-    template <typename T>
-    REX_STD_TEMPLATED_CLASS_ALIAS(variant_size, T);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename T>, variant_size, T);
 
-    template <typename T>
-    REX_STD_TEMPLATED_OBJECT_ALIAS(variant_size_v, T);
+    REX_STD_TEMPLATED_OBJECT_ALIAS(template <typename T>, variant_size_v, T);
 
-    template <size_t I, typename T>
-    REX_STD_TEMPLATED_CLASS_ALIAS(variant_alternative, I, T);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <size_t I, typename T>, variant_alternative, I, T);
 
-    template <size_t I, typename T>
-    REX_STD_TEMPLATED_OBJECT_ALIAS(variant_alternative_t, I, T);
+    REX_STD_TEMPLATED_OBJECT_ALIAS(template <size_t I, typename T>, variant_alternative_t, I, T);
 
     template <typename T>
     struct hash;

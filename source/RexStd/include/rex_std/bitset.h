@@ -24,8 +24,7 @@ namespace rsl
   inline namespace v1
   {
 
-    template <size_t N>
-    REX_STD_TEMPLATED_CLASS_ALIAS(bitset, N);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <size_t N>, bitset, N);
 
     REX_STD_FUNC_ALIAS(operator&);
     REX_STD_FUNC_ALIAS(operator|);

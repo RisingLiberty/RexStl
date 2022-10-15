@@ -28,12 +28,11 @@ namespace rsl
     REX_STD_CLASS_ALIAS(recursive_mutex);
     REX_STD_CLASS_ALIAS(recursive_timed_mutex);
 
-    template <typename Mutex>
-    REX_STD_TEMPLATED_CLASS_ALIAS(lock_guard, Mutex);
-    template <typename Mutex>
-    REX_STD_TEMPLATED_CLASS_ALIAS(unique_lock, Mutex);
-    template <typename... Mutexes>
-    REX_STD_TEMPLATED_CLASS_ALIAS(scoped_lock, Mutexes...);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename Mutex>, lock_guard, Mutex);
+
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename Mutex>, unique_lock, Mutex);
+
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename... Mutexes>, scoped_lock, Mutexes...);
 
     REX_STD_CLASS_ALIAS(defer_lock_t);
     REX_STD_CLASS_ALIAS(try_to_lock_t);

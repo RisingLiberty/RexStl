@@ -25,8 +25,7 @@ namespace rsl
   inline namespace v1
   {
 
-    template <typename T, typename Allocator = typed_allocator<T>>
-    REX_STD_TEMPLATED_CLASS_ALIAS(deque, T, Allocator);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename T, typename Allocator = typed_allocator<T>>, deque, T, Allocator);
 
     REX_STD_FUNC_ALIAS(operator==);
     REX_STD_FUNC_ALIAS(operator!=);
@@ -40,7 +39,6 @@ namespace rsl
 
     REX_STD_FUNC_ALIAS(begin);
     REX_STD_FUNC_ALIAS(cbegin);
-    REX_STD_FUNC_ALIAS(end);
     REX_STD_FUNC_ALIAS(cend);
     REX_STD_FUNC_ALIAS(rbegin);
     REX_STD_FUNC_ALIAS(crbegin);

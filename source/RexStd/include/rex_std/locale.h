@@ -45,65 +45,45 @@ namespace rsl
     REX_STD_CLASS_ALIAS(time_base);
     REX_STD_CLASS_ALIAS(money_base);
 
-    template <typename CharT>
-    REX_STD_TEMPLATED_CLASS_ALIAS(ctype, CharT);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename CharT>, ctype, CharT);
 
-    template <typename InternT, typename ExternT, typename StateT>
-    REX_STD_TEMPLATED_CLASS_ALIAS(codecvt, InternT, ExternT, StateT);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename InternT, typename ExternT, typename StateT>, codecvt, InternT, ExternT, StateT);
 
-    template <typename CharT>
-    REX_STD_TEMPLATED_CLASS_ALIAS(collate, CharT);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename CharT>, collate, CharT);
 
-    template <typename CharT>
-    REX_STD_TEMPLATED_CLASS_ALIAS(messages, CharT);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename CharT>, messages, CharT);
 
-    template <typename CharT, typename InputIt = istreambuf_iterator<CharT>>
-    REX_STD_TEMPLATED_CLASS_ALIAS(time_get, CharT, InputIt);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename CharT, typename InputIt = istreambuf_iterator<CharT>>, time_get, CharT, InputIt);
 
-    template <typename CharT, typename OutputIt = ostreambuf_iterator<CharT>>
-    REX_STD_TEMPLATED_CLASS_ALIAS(time_put, CharT, OutputIt);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename CharT, typename OutputIt = ostreambuf_iterator<CharT>>, time_put, CharT, OutputIt);
 
-    template <typename CharT, typename InputIt = istreambuf_iterator<CharT>>
-    REX_STD_TEMPLATED_CLASS_ALIAS(num_get, CharT, InputIt);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename CharT, typename InputIt = istreambuf_iterator<CharT>>, num_get, CharT, InputIt);
 
-    template <typename CharT, typename OutputIt = ostreambuf_iterator<CharT>>
-    REX_STD_TEMPLATED_CLASS_ALIAS(num_put, CharT, OutputIt);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename CharT, typename OutputIt = ostreambuf_iterator<CharT>>, num_put, CharT, OutputIt);
 
-    template <typename CharT>
-    REX_STD_TEMPLATED_CLASS_ALIAS(numpunct, CharT);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename CharT>, numpunct, CharT);
 
-    template <typename CharT, typename InputIt = istreambuf_iterator<CharT>>
-    REX_STD_TEMPLATED_CLASS_ALIAS(money_get, CharT, InputIt);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename CharT, typename InputIt = istreambuf_iterator<CharT>>, money_get, CharT, InputIt);
 
-    template <typename CharT, typename OutputIt = ostreambuf_iterator<CharT>>
-    REX_STD_TEMPLATED_CLASS_ALIAS(money_put, CharT, OutputIt);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename CharT, typename OutputIt = ostreambuf_iterator<CharT>>, money_put, CharT, OutputIt);
 
-    template <typename CharT, bool International = false>
-    REX_STD_TEMPLATED_CLASS_ALIAS(moneypunct, CharT, International);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename CharT, bool International = false>, moneypunct, CharT, International);
 
-    template <typename CharT>
-    REX_STD_TEMPLATED_CLASS_ALIAS(ctype_byname, CharT);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename CharT>, ctype_byname, CharT);
 
-    template <typename InternT, typename ExternT, typename State>
-    REX_STD_TEMPLATED_CLASS_ALIAS(codecvt_byname, InternT, ExternT, State);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename InternT, typename ExternT, typename State>, codecvt_byname, InternT, ExternT, State);
 
-    template <typename CharT>
-    REX_STD_TEMPLATED_CLASS_ALIAS(messages_byname, CharT);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename CharT>, messages_byname, CharT);
 
-    template <typename CharT>
-    REX_STD_TEMPLATED_CLASS_ALIAS(collate_byname, CharT);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename CharT>, collate_byname, CharT);
 
-    template <typename CharT, typename InputIt = istreambuf_iterator<CharT>>
-    REX_STD_TEMPLATED_CLASS_ALIAS(time_get_byname, CharT, InputIt);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename CharT, typename InputIt = istreambuf_iterator<CharT>>, time_get_byname, CharT, InputIt);
 
-    template <typename CharT, typename OutputIt = ostreambuf_iterator<CharT>>
-    REX_STD_TEMPLATED_CLASS_ALIAS(time_put_byname, CharT, OutputIt);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename CharT, typename OutputIt = ostreambuf_iterator<CharT>>, time_put_byname, CharT, OutputIt);
 
-    template <typename CharT>
-    REX_STD_TEMPLATED_CLASS_ALIAS(numpunct_byname, CharT);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename CharT>, numpunct_byname, CharT);
 
-    template <typename CharT, bool International = false>
-    REX_STD_TEMPLATED_CLASS_ALIAS(moneypunct_byname, CharT, International);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename CharT, bool International = false>, moneypunct_byname, CharT, International);
 
     REX_STD_FUNC_ALIAS(use_facet);
     REX_STD_FUNC_ALIAS(has_facet);

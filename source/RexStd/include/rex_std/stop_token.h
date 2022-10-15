@@ -27,8 +27,7 @@ namespace rsl
     REX_STD_CLASS_ALIAS(stop_token);
     REX_STD_CLASS_ALIAS(stop_source);
 
-    template <typename Callback>
-    REX_STD_TEMPLATED_CLASS_ALIAS(stop_callback, Callback);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename Callback>, stop_callback, Callback);
 
     REX_STD_CLASS_ALIAS(nostopstate_t);
 

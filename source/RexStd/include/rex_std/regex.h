@@ -24,17 +24,14 @@ namespace rsl
   inline namespace v1
   {
 
-    template <typename CharT>
-    REX_STD_TEMPLATED_CLASS_ALIAS(regex_traits, CharT);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename CharT>, regex_traits, CharT);
 
-    template <typename CharT, typename Traits = regex_traits<CharT>>
-    REX_STD_TEMPLATED_CLASS_ALIAS(basic_regex, CharT, Traits);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename CharT, typename Traits = regex_traits<CharT>>, basic_regex, CharT, Traits);
 
     REX_STD_CLASS_ALIAS(regex);
     REX_STD_CLASS_ALIAS(wregex);
 
-    template <typename BiDirIt>
-    REX_STD_TEMPLATED_CLASS_ALIAS(sub_match, BiDirIt);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename BiDirIt>, sub_match, BiDirIt);
 
     REX_STD_CLASS_ALIAS(csub_match);
     REX_STD_CLASS_ALIAS(wcsub_match);
@@ -43,8 +40,7 @@ namespace rsl
 
     class allocator;
 
-    template <typename BiDirIt, typename Alloc = typed_allocator<typename iterator_traits<BiDirIt>::value_type>>
-    REX_STD_TEMPLATED_CLASS_ALIAS(match_results, BiDirIt, Alloc);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename BiDirIt, typename Alloc = typed_allocator<typename iterator_traits<BiDirIt>::value_type>>, match_results, BiDirIt, Alloc);
 
     REX_STD_CLASS_ALIAS(cmatch);
     REX_STD_CLASS_ALIAS(wcmatch);
@@ -54,16 +50,14 @@ namespace rsl
     template <typename Iterator>
     struct iterator_traits;
 
-    template <typename BiDirIt, typename CharT, typename iterator_traits<BiDirIt>::value_type, typename Traits = regex_traits<CharT>>
-    REX_STD_TEMPLATED_CLASS_ALIAS(regex_iterator, BiDirIt, CharT, Traits);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename BiDirIt, typename CharT, typename iterator_traits<BiDirIt>::value_type, typename Traits = regex_traits<CharT>>, regex_iterator, BiDirIt, CharT, Traits);
 
     REX_STD_CLASS_ALIAS(cregex_iterator);
     REX_STD_CLASS_ALIAS(wcregex_iterator);
     REX_STD_CLASS_ALIAS(sregex_iterator);
     REX_STD_CLASS_ALIAS(wsregex_iterator);
 
-    template <typename BiDirIt, typename CharT = typename iterator_traits<BiDirIt>::value_type, typename Traits = regex_traits<CharT>>
-    REX_STD_TEMPLATED_CLASS_ALIAS(regex_token_iterator, BiDirIt, CharT, Traits);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename BiDirIt, typename CharT = typename iterator_traits<BiDirIt>::value_type, typename Traits = regex_traits<CharT>>, regex_token_iterator, BiDirIt, CharT, Traits);
 
     REX_STD_CLASS_ALIAS(cregex_token_iterator);
     REX_STD_CLASS_ALIAS(wcregex_token_iterator);
@@ -92,7 +86,6 @@ namespace rsl
     REX_STD_FUNC_ALIAS(operator<<);
     REX_STD_FUNC_ALIAS(begin);
     REX_STD_FUNC_ALIAS(cbegin);
-    REX_STD_FUNC_ALIAS(end);
     REX_STD_FUNC_ALIAS(cend);
     REX_STD_FUNC_ALIAS(rbegin);
     REX_STD_FUNC_ALIAS(crbegin);

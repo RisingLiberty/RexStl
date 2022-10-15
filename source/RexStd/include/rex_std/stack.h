@@ -28,8 +28,7 @@ namespace rsl
 
     class allocator;
 
-    template <typename T, typename Container = rsl::deque<T, allocator>>
-    REX_STD_TEMPLATED_CLASS_ALIAS(stack, T, Container);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename T, typename Container = rsl::deque<T, allocator>>, stack, T, Container);
 
     REX_STD_FUNC_ALIAS(operator==);
     REX_STD_FUNC_ALIAS(operator!=);

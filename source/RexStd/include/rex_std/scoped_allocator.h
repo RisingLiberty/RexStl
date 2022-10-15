@@ -23,8 +23,7 @@ namespace rsl
   inline namespace v1
   {
 
-    template <typename OuterAlloc, typename... InnerAlloc>
-    REX_STD_TEMPLATED_CLASS_ALIAS(scoped_allocator_adaptor, OuterAlloc, InnerAlloc...);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename OuterAlloc, typename... InnerAlloc>, scoped_allocator_adaptor, OuterAlloc, InnerAlloc...);
 
     REX_STD_FUNC_ALIAS(operator==);
     REX_STD_FUNC_ALIAS(operator!=);

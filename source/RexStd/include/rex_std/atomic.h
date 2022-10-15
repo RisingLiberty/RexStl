@@ -22,11 +22,9 @@ namespace rsl
   inline namespace v1
   {
 
-    template <typename T>
-    REX_STD_TEMPLATED_CLASS_ALIAS(atomic, T);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename T>, atomic, T);
 
-    template <typename T>
-    REX_STD_TEMPLATED_CLASS_ALIAS(atomic, T);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename T>, atomic, T);
 
     REX_STD_CLASS_ALIAS(atomic_flag);
     REX_STD_CLASS_ALIAS(memory_order);

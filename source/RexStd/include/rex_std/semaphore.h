@@ -23,8 +23,7 @@ namespace rsl
   inline namespace v1
   {
 
-    template <ptrdiff LeastMaxValue>
-    REX_STD_TEMPLATED_CLASS_ALIAS(counting_semaphore, LeastMaxValue);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <ptrdiff LeastMaxValue>, counting_semaphore, LeastMaxValue);
 
     REX_STD_CLASS_ALIAS(binary_semaphore);
 

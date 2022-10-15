@@ -24,8 +24,7 @@ namespace rsl
   inline namespace v1
   {
     {
-      template <typename CompletionFunction>
-      REX_STD_TEMPLATED_CLASS_ALIAS(barrier, CompletionFunction);
+      REX_STD_TEMPLATED_CLASS_ALIAS(template <typename CompletionFunction>, barrier, CompletionFunction);
     }
 
   #include "rex_std/enable_std_checking.h"

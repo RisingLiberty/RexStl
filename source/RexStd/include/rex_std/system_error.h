@@ -30,15 +30,13 @@ namespace rsl
     REX_STD_CLASS_ALIAS(error_code);
     REX_STD_CLASS_ALIAS(system_error);
 
-    template <typename T>
-    REX_STD_TEMPLATED_CLASS_ALIAS(is_error_code_enum, T);
-    template <typename T>
-    REX_STD_TEMPLATED_CLASS_ALIAS(is_error_condition_enum, T);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename T>, is_error_code_enum, T);
 
-    template <typename T>
-    REX_STD_TEMPLATED_OBJECT_ALIAS(is_error_code_enum_v, T);
-    template <typename T>
-    REX_STD_TEMPLATED_OBJECT_ALIAS(is_error_condition_enum_v, T);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename T>, is_error_condition_enum, T);
+
+    REX_STD_TEMPLATED_OBJECT_ALIAS(template <typename T>, is_error_code_enum_v, T);
+
+    REX_STD_TEMPLATED_OBJECT_ALIAS(template <typename T>, is_error_condition_enum_v, T);
 
     REX_STD_FUNC_ALIAS(generic_category);
     REX_STD_FUNC_ALIAS(system_category);

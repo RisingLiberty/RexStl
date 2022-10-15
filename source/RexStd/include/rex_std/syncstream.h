@@ -28,11 +28,9 @@ namespace rsl
   inline namespace v1
   {
 
-    template <typename CharT, typename Traits = char_traits<CharT>, typename Allocator = typed_allocator<CharT>>
-    REX_STD_TEMPLATED_CLASS_ALIAS(basic_syncbuf, CharT, Traits, Allocator);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename CharT, typename Traits = char_traits<CharT>, typename Allocator = typed_allocator<CharT>>, basic_syncbuf, CharT, Traits, Allocator);
 
-    template <typename CharT, typename Traits = char_traits<CharT>, typename Allocator = typed_allocator<CharT>>
-    REX_STD_TEMPLATED_CLASS_ALIAS(basic_osyncstream, CharT, Traits, Allocator);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename CharT, typename Traits = char_traits<CharT>, typename Allocator = typed_allocator<CharT>>, basic_osyncstream, CharT, Traits, Allocator);
 
     REX_STD_CLASS_ALIAS(syncbuf);
     REX_STD_CLASS_ALIAS(wsyncbuf);

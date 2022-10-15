@@ -24,15 +24,13 @@ namespace rsl
 
     REX_STD_OBJECT_ALIAS(dynamic_extent);
 
-    template <typename T, size_t Extent = rsl::dynamic_extent>
-    REX_STD_TEMPLATED_CLASS_ALIAS(span, T, Extent);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename T, size_t Extent = rsl::dynamic_extent>, span, T, Extent);
 
     REX_STD_FUNC_ALIAS(as_bytes);
     REX_STD_FUNC_ALIAS(as_writable_bytes);
 
     REX_STD_FUNC_ALIAS(begin);
     REX_STD_FUNC_ALIAS(cbegin);
-    REX_STD_FUNC_ALIAS(end);
     REX_STD_FUNC_ALIAS(cend);
     REX_STD_FUNC_ALIAS(rbegin);
     REX_STD_FUNC_ALIAS(crbegin);

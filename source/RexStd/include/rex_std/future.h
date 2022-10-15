@@ -24,17 +24,13 @@ namespace rsl
   inline namespace v1
   {
 
-    template <typename R>
-    REX_STD_TEMPLATED_CLASS_ALIAS(promise, R);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename R>, promise, R);
 
-    template <typename R>
-    REX_STD_TEMPLATED_CLASS_ALIAS(packaged_task, R);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename R>, packaged_task, R);
 
-    template <typename T>
-    REX_STD_TEMPLATED_CLASS_ALIAS(future, T);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename T>, future, T);
 
-    template <typename T>
-    REX_STD_TEMPLATED_CLASS_ALIAS(shared_future, T);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename T>, shared_future, T);
 
     REX_STD_CLASS_ALIAS(launch);
     REX_STD_CLASS_ALIAS(future_status);

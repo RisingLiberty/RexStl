@@ -60,26 +60,20 @@ namespace rsl
   {
     // No C++20 symbols added here
 
-    template <typename Container>
-    REX_STD_TEMPLATED_CLASS_ALIAS(back_insert_iterator, Container);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename Container>, back_insert_iterator, Container);
 
-    template <typename Container>
-    REX_STD_TEMPLATED_CLASS_ALIAS(front_insert_iterator, Container);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename Container>, front_insert_iterator, Container);
 
-    template <typename Container>
-    REX_STD_TEMPLATED_CLASS_ALIAS(insert_iterator, Container);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename Container>, insert_iterator, Container);
 
     template <typename CharT>
     class char_traits;
 
-    template <typename T, typename CharT = char8, typename Traits = rsl::char_traits<CharT>, typename Distance = ptrdiff>
-    REX_STD_TEMPLATED_CLASS_ALIAS(istream_iterator, T, CharT, Traits, Distance);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename T, typename CharT = char8, typename Traits = rsl::char_traits<CharT>, typename Distance = ptrdiff>, istream_iterator, T, CharT, Traits, Distance);
 
-    template <typename T, typename CharT = char8, typename Traits = rsl::char_traits<CharT>>
-    REX_STD_TEMPLATED_CLASS_ALIAS(ostream_iterator, T, CharT, Traits);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename T, typename CharT = char8, typename Traits = rsl::char_traits<CharT>>, ostream_iterator, T, CharT, Traits);
 
-    template <typename CharT, typename Traits = char_traits<CharT>>
-    REX_STD_TEMPLATED_CLASS_ALIAS(ostreambuf_iterator, CharT, Traits);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename CharT, typename Traits = char_traits<CharT>>, ostreambuf_iterator, CharT, Traits);
 
     REX_STD_FUNC_ALIAS(front_inserter);
     REX_STD_FUNC_ALIAS(back_inserter);

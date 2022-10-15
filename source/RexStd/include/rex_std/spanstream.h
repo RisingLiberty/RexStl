@@ -24,17 +24,13 @@ namespace rsl
   inline namespace v1
   {
 
-    template <typename CharT, typename Traits = char_traits<CharT>>
-    REX_STD_TEMPLATED_CLASS_ALIAS(basic_spanbuf, CharT, Traits);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename CharT, typename Traits = char_traits<CharT>>, basic_spanbuf, CharT, Traits);
 
-    template <typename CharT, typename Traits = char_traits<CharT>>
-    REX_STD_TEMPLATED_CLASS_ALIAS(basic_ispanstream, CharT, Traits);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename CharT, typename Traits = char_traits<CharT>>, basic_ispanstream, CharT, Traits);
 
-    template <typename CharT, typename Traits = char_traits<CharT>>
-    REX_STD_TEMPLATED_CLASS_ALIAS(basic_ospanstream, CharT, Traits);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename CharT, typename Traits = char_traits<CharT>>, basic_ospanstream, CharT, Traits);
 
-    template <typename CharT, typename Traits = char_traits<CharT>>
-    REX_STD_TEMPLATED_CLASS_ALIAS(basic_spanstream, CharT, Traits);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename CharT, typename Traits = char_traits<CharT>>, basic_spanstream, CharT, Traits);
 
     REX_STD_CLASS_ALIAS(spanbuf);
     REX_STD_CLASS_ALIAS(wspanbuf);

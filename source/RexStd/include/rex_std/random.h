@@ -24,23 +24,18 @@ namespace rsl
   inline namespace v1
   {
 
-    template <typename UIntType, UIntType a, UIntType c, UIntType m>
-    REX_STD_TEMPLATED_CLASS_ALIAS(linear_congruential_engine, UIntType, a, c, m);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename UIntType, UIntType a, UIntType c, UIntType m>, linear_congruential_engine, UIntType, a, c, m);
 
-    template <typename UIntType, size_t w, size_t n, size_t m, size_t r, UIntType a, size_t u, UIntType d, size_t s, UIntType b, size_t t, UIntType c, size_t l, UIntType f>
-    REX_STD_TEMPLATED_CLASS_ALIAS(mersenne_twister_engine, UIntType, w, n, m, r, a, u, d, s, b, t, c, l, f);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename UIntType, size_t w, size_t n, size_t m, size_t r, UIntType a, size_t u, UIntType d, size_t s, UIntType b, size_t t, UIntType c, size_t l, UIntType f>, mersenne_twister_engine, UIntType, w, n, m, r,
+                                  a, u, d, s, b, t, c, l, f);
 
-    template <typename UIntType, size_t w, size_t s, size_t r>
-    REX_STD_TEMPLATED_CLASS_ALIAS(subtract_with_carry_engine, UIntType, w, s, r);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename UIntType, size_t w, size_t s, size_t r>, subtract_with_carry_engine, UIntType, w, s, r);
 
-    template <typename Engine, size_t P, size_t R>
-    REX_STD_TEMPLATED_CLASS_ALIAS(discard_block_engine, Engine, P, R);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename Engine, size_t P, size_t R>, discard_block_engine, Engine, P, R);
 
-    template <typename Engine, size_t W, typename UIntType>
-    REX_STD_TEMPLATED_CLASS_ALIAS(independent_bits_engine, Engine, W, UIntType);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename Engine, size_t W, typename UIntType>, independent_bits_engine, Engine, W, UIntType);
 
-    template <typename Engine, size_t K>
-    REX_STD_TEMPLATED_CLASS_ALIAS(shuffle_order_engine, Engine, K);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename Engine, size_t K>, shuffle_order_engine, Engine, K);
 
     REX_STD_CLASS_ALIAS(minstd_rand0);
     REX_STD_CLASS_ALIAS(minstd_rand);
@@ -53,64 +48,45 @@ namespace rsl
 
     REX_STD_CLASS_ALIAS(random_device);
 
-    template <typename IntType = int32>
-    REX_STD_TEMPLATED_CLASS_ALIAS(uniform_int_distribution, IntType);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename IntType = int32>, uniform_int_distribution, IntType);
 
-    template <typename RealType = float64>
-    REX_STD_TEMPLATED_CLASS_ALIAS(uniform_real_distribution, RealType);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename RealType = float64>, uniform_real_distribution, RealType);
 
     REX_STD_CLASS_ALIAS(bernoulli_distribution);
 
-    template <typename IntType = int32>
-    REX_STD_TEMPLATED_CLASS_ALIAS(binomial_distribution, IntType);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename IntType = int32>, binomial_distribution, IntType);
 
-    template <typename IntType = int32>
-    REX_STD_TEMPLATED_CLASS_ALIAS(negative_binomial_distribution, IntType);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename IntType = int32>, negative_binomial_distribution, IntType);
 
-    template <typename IntType = int32>
-    REX_STD_TEMPLATED_CLASS_ALIAS(geometric_distribution, IntType);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename IntType = int32>, geometric_distribution, IntType);
 
-    template <typename IntType = int32>
-    REX_STD_TEMPLATED_CLASS_ALIAS(poisson_distribution, IntType);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename IntType = int32>, poisson_distribution, IntType);
 
-    template <typename RealType = float64>
-    REX_STD_TEMPLATED_CLASS_ALIAS(exponential_distribution, RealType);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename RealType = float64>, exponential_distribution, RealType);
 
-    template <typename RealType = float64>
-    REX_STD_TEMPLATED_CLASS_ALIAS(gamma_distribution, RealType);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename RealType = float64>, gamma_distribution, RealType);
 
-    template <typename RealType = float64>
-    REX_STD_TEMPLATED_CLASS_ALIAS(weibull_distribution, RealType);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename RealType = float64>, weibull_distribution, RealType);
 
-    template <typename RealType = float64>
-    REX_STD_TEMPLATED_CLASS_ALIAS(extreme_value_distribution, RealType);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename RealType = float64>, extreme_value_distribution, RealType);
 
-    template <typename RealType = float64>
-    REX_STD_TEMPLATED_CLASS_ALIAS(normal_distribution, RealType);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename RealType = float64>, normal_distribution, RealType);
 
-    template <typename RealType = float64>
-    REX_STD_TEMPLATED_CLASS_ALIAS(lognormal_distribution, RealType);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename RealType = float64>, lognormal_distribution, RealType);
 
-    template <typename RealType = float64>
-    REX_STD_TEMPLATED_CLASS_ALIAS(chi_squared_distribution, RealType);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename RealType = float64>, chi_squared_distribution, RealType);
 
-    template <typename RealType = float64>
-    REX_STD_TEMPLATED_CLASS_ALIAS(cauchy_distribution, RealType);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename RealType = float64>, cauchy_distribution, RealType);
 
-    template <typename RealType = float64>
-    REX_STD_TEMPLATED_CLASS_ALIAS(fisher_f_distribution, RealType);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename RealType = float64>, fisher_f_distribution, RealType);
 
-    template <typename RealType = float64>
-    REX_STD_TEMPLATED_CLASS_ALIAS(student_t_distribution, RealType);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename RealType = float64>, student_t_distribution, RealType);
 
-    template <typename IntType = int32>
-    REX_STD_TEMPLATED_CLASS_ALIAS(discrete_distribution, IntType);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename IntType = int32>, discrete_distribution, IntType);
 
-    template <typename RealType = float64>
-    REX_STD_TEMPLATED_CLASS_ALIAS(piecewise_constant_distribution, RealType);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename RealType = float64>, piecewise_constant_distribution, RealType);
 
-    template <typename RealType = float64>
-    REX_STD_TEMPLATED_CLASS_ALIAS(piecewise_linear_distribution, RealType);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename RealType = float64>, piecewise_linear_distribution, RealType);
 
     REX_STD_CLASS_ALIAS(seed_seq);
 

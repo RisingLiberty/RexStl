@@ -31,14 +31,11 @@ namespace rsl
     template <typename T, typename Allocator>
     class vector;
 
-    template <typename T, typename Container = rsl::deque<T, rsl::allocator>>
-    REX_STD_TEMPLATED_CLASS_ALIAS(queue, T, Container);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename T, typename Container = rsl::deque<T, rsl::allocator>>, queue, T, Container);
 
-    template <typename T, typename Container = rsl::deque<T, rsl::allocator>, typename Compare = rsl::less<typename Container::value_type>>
-    REX_STD_TEMPLATED_CLASS_ALIAS(priority_queue, T, Container, Compare);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename T, typename Container = rsl::deque<T, rsl::allocator>, typename Compare = rsl::less<typename Container::value_type>>, priority_queue, T, Container, Compare);
 
-    template <typename T, typename Alloc>
-    REX_STD_TEMPLATED_CLASS_ALIAS(uses_allocator, T, Alloc);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename T, typename Alloc>, uses_allocator, T, Alloc);
 
     REX_STD_FUNC_ALIAS(operator==);
     REX_STD_FUNC_ALIAS(operator!=);

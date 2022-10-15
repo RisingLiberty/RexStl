@@ -23,27 +23,21 @@ namespace rsl
   inline namespace v1
   {
 
-    template <typename T>
-    REX_STD_TEMPLATED_CLASS_ALIAS(valarray, T);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename T>, valarray, T);
 
     REX_STD_CLASS_ALIAS(slice);
 
-    template <typename T>
-    REX_STD_TEMPLATED_CLASS_ALIAS(slice_array, T);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename T>, slice_array, T);
 
     REX_STD_CLASS_ALIAS(gslice);
 
-    template <typename T>
-    REX_STD_TEMPLATED_CLASS_ALIAS(gslice_array, T);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename T>, gslice_array, T);
 
-    template <typename T>
-    REX_STD_TEMPLATED_CLASS_ALIAS(mask_array, T);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename T>, mask_array, T);
 
-    template <typename T>
-    REX_STD_TEMPLATED_CLASS_ALIAS(indirect_array, T);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename T>, indirect_array, T);
 
     REX_STD_FUNC_ALIAS(begin);
-    REX_STD_FUNC_ALIAS(end);
     REX_STD_FUNC_ALIAS(operator+);
     REX_STD_FUNC_ALIAS(operator-);
     REX_STD_FUNC_ALIAS(operator*);

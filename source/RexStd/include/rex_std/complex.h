@@ -21,9 +21,7 @@ namespace rsl
 {
   inline namespace v1
   {
-
-    template <typename T>
-    REX_STD_TEMPLATED_CLASS_ALIAS(complex, T);
+    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename T>, complex, T);
 
     REX_STD_FUNC_ALIAS(operator+);
     REX_STD_FUNC_ALIAS(operator-);
