@@ -23,7 +23,7 @@ namespace rsl
     class c_string
     {
     public:
-      c_string(const T* ptr) // NOLINT(google-explicit-constructor): this needs to be explicit
+      c_string(const T* ptr) // NOLINT(google-explicit-constructor): this needs to be implicit
           : m_ptr(ptr)
       {
       }
