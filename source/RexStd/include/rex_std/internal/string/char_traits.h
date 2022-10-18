@@ -73,7 +73,7 @@ namespace rsl
         {
           if(src < dest)
           {
-            return memcpy_backward(dest, src, count);
+            return copy_backward(dest, src, count);
           }
           else
           {

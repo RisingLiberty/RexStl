@@ -23,6 +23,8 @@
 #include "rex_std/internal/algorithm/remove_if.h"
 #include "rex_std/internal/assert/assert_fwd.h"
 #include "rex_std/internal/functional/hash.h"
+#include "rex_std/internal/iterator/begin.h"
+#include "rex_std/internal/iterator/end.h"
 #include "rex_std/internal/iterator/iterator_tags.h"
 #include "rex_std/internal/iterator/iterator_traits.h"
 #include "rex_std/internal/math/abs.h"
@@ -103,14 +105,14 @@ namespace rsl
       basic_string(const basic_string& other, size_type pos, const allocator& alloc = allocator())
           : basic_string(alloc)
       {
-        assign(other.begin() + pos, other.size());
+        REX_ASSERT_X(other.size() - pos >= 0, "invalid pos value given to string ctor");
+        assign(rsl::iterator_to_pointer(other.begin() + pos), other.size() - pos);
       }
       // Constructs the string with a substring of other. starting at pos and going to count
       basic_string(const basic_string& other, size_type pos, size_type count, const allocator& alloc = allocator())
           : basic_string(alloc)
       {
-        size_type num_to_copy = count_or_obj_length(count);
-        assign(other.cbegin() + pos, (rsl::min)(count, other.size()));
+        assign(rsl::iterator_to_pointer(other.cbegin() + pos), (rsl::min)(count, other.size()));
       }
       // Construct a string from s ranging from s to s + count.
       basic_string(const_pointer s, size_type count, const allocator& alloc = allocator())
@@ -118,24 +120,26 @@ namespace rsl
       {
         assign(s, count);
       }
-      /// RSL Comment: Not in ISO C++ Standard at time of writing time of writing (29/Jun/2022)
-      // we add this overload so you're able to construct the string from a literal.
-      template <count_t Size>
-      explicit basic_string(value_type (&arr)[Size], const allocator alloc = allocator()) // NOLINT(modernize-avoid-c-arrays)
+      /// RSL Comment: Different from ISO C++ Standard at time of writing (28/Jun/2022)
+      // by adding a reference to the const_pointer overload, this one will only get selected if the argument
+      // is a pointer type, and array arguments will get passed to the array overload ctor
+      explicit basic_string(const_pointer& s, const allocator& alloc = allocator())
           : basic_string(alloc)
       {
-        assign(arr, Size);
+        size_type length = traits_type::length(s);
+        assign(s, length);
       }
       // constructs the string with the contents of the range [first, last)
       template <typename InputIt>
       basic_string(InputIt first, InputIt last, const allocator& alloc = allocator())
+          : basic_string(alloc)
       {
         assign(first, last);
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (28/Jun/2022)
       // marked explicit in RSL
       // copy constructor. copies the contents of other.
-      basic_string(const basic_string& other)
+      explicit basic_string(const basic_string& other) // NOLINT(google-explicit-constructor)
           : basic_string(other.get_allocator())
       {
         assign(other.data(), other.length());
@@ -154,17 +158,15 @@ namespace rsl
       }
       // swaps the contents of other with the current string if allocs are equal
       // copies the contents over otherwise using the allocator provided
+      // this overload is not necessary, but if it's removed, then the following code
+      // rsl::string str;
+      // rsl::string str2(rsl::move(str), rsl::allocator);
+      // would call the copy constructor with a new allocator, which is not what we want.
       basic_string(basic_string&& other, const allocator& alloc)
           : basic_string(alloc)
       {
-        if(other.get_allocator() != alloc)
-        {
-          insert(other.cbegin(), other.cend());
-        }
-        else
-        {
-          swap(other);
-        }
+        REX_ASSERT_X(other.get_allocator() == alloc, "different allocators in move constructor, this is not allowed");
+        swap(other);
       }
       // Construct the string from the given initializer_list
       basic_string(rsl::initializer_list<value_type> ilist, const allocator& alloc = allocator())
@@ -235,36 +237,21 @@ namespace rsl
         move_assign(rsl::move(other));
         return *this;
       }
-      /// RSL Comment: Not in ISO C++ Standard at time of writing time of writing (30/Jun/2022)
-      // The standard doesn't provide a assignment operator for a string literal without having to calculate its length
-      // Assigns the string literal to the string.
-      template <count_t Size>
-      basic_string& operator=(const_pointer (&str)[Size]) // NOLINT(modernize-avoid-c-arrays)
-      {
-        assign(str, Size);
-        return *this;
-      }
-      /// RSL Comment: Different from ISO C++ Standard at time of writing (30/Jun/2022)
-      // Because we have the above function declared, we don't overload an assignment operator
-      // taking just a "const_pointer"
-      // basic_string& operator=(const_pointer str;
-
+      /// RSL Comment: Different from ISO C++ Standard at time of writing (15/Oct/2022)
+      // implicit assigning from a pointer is not supported because this makes it easier to
+      // allocate heap memory. A user should use the "assign" function to do so.
+      // the overload to assign from a string_view is not defined for the same reason
+      // template <count_t Size>
+      // basic_string& operator=(const_pointer (&str)[Size]);
+      // basic_string& operator=(const_pointer str);
+      // basic_string& operator=(const rsl::basic_string_view<CharType>& view);
+      //
       // copies the contents of the string by replacing the entire array with a single char
       basic_string& operator=(value_type ch)
       {
-        assign(rsl::addressof(ch), 1);
+        return assign(rsl::addressof(ch), 1);
       }
-      /// RSL Comment: Different from ISO C++ Standard at time of writing (30/Jun/2022)
-      // This is a template function in the standard due to ambiguous overload
-      // as both basic_string and basic_string_view<value_type, traits_type> can be implicitly created with a const char*.
-      // This is not possible in RSL though as the ctor for const char* for string is explicit.
-      // Therefore this takes a basic_string_view
-      // assigns the content of the string view to the string.
-      basic_string& operator=(const rsl::basic_string_view<CharType>& view)
-      {
-        assign(view.data(), view.length());
-        return *this;
-      }
+
       // a string cannot be assigned from a nullptr.
       basic_string& operator=(rsl::nullptr_t) = delete;
 
@@ -304,7 +291,7 @@ namespace rsl
         REX_ASSERT_X(this, &other, "Can't assign to yourself");
         REX_ASSERT_X(get_allocator() == other.get_allocator(), "Different allocators in assignment, this is not allowed");
 
-        size_type num_to_copy = count_or_obj_length(other, count);
+        size_type num_to_copy = calc_num_to_copy(other, count, pos);
         assign(other.data() + pos, num_to_copy);
         return *this;
       }
@@ -333,11 +320,10 @@ namespace rsl
 
         return *this;
       }
-      /// RSL Comment: Not in ISO C++ Standard at time of writing time of writing (30/Jun/2022)
+      /// RSL Comment: Different from ISO C++ Standard at time of writing time of writing (30/Jun/2022)
       // the standard doesn't provide an overload for a string literal
       // replaces the contents of the string array
-      template <count_t Size>
-      basic_string& assign(const_pointer (&str)[Size]) // NOLINT(modernize-avoid-c-arrays)
+      basic_string& assign(const_pointer& str) // NOLINT(modernize-avoid-c-arrays)
       {
         return assign(str, Size);
       }
@@ -354,8 +340,11 @@ namespace rsl
         // so this is very slow as it has to check for a possible resize after every insertion.
         while(first != last)
         {
-          insert(*first);
+          insert(cend(), *first);
+          ++first;
         }
+
+        return *this;
       }
       // replaces the contents with those of the initializer list
       basic_string& assign(rsl::initializer_list<value_type> ilist)
@@ -394,7 +383,7 @@ namespace rsl
       // replaces the contents with the content of the string view.
       basic_string& assign(basic_string_view<value_type, traits_type> sv)
       {
-        assign(sv.data(), sv.length());
+        return assign(sv.data(), sv.length());
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (30/Jun/2022)
       // This is a template function in the standard due to ambiguous overload
@@ -404,8 +393,8 @@ namespace rsl
       // start at pos and going till pos + count.
       basic_string& assign(basic_string_view<value_type, traits_type> sv, size_type pos, size_type count = s_npos)
       {
-        size_type num_to_copy = count_or_obj_length(sv, count);
-        assign(sv.data() + pos, num_to_copy);
+        size_type num_to_copy = calc_num_to_copy(sv, count, pos);
+        return assign(sv.data() + pos, num_to_copy);
       }
 
       /// RSL Comment: Different from ISO C++ Standard at time of writing (01/Jul/2022)
@@ -519,32 +508,32 @@ namespace rsl
       // returns a reverse iterator to the first character of the reversed string
       reverse_iterator rbegin()
       {
-        return reverse_iterator(begin());
+        return reverse_iterator(end());
       }
       // returns a reverse iterator to the first character of the reversed string
       reverse_iterator rbegin() const
       {
-        return reverse_iterator(begin());
+        return reverse_iterator(end());
       }
       // returns a reverse iterator to the first character of the reversed string
       const_reverse_iterator crbegin() const
       {
-        return const_reverse_iterator(cbegin());
+        return const_reverse_iterator(cend());
       }
       // returns a reverse iterator to the character following the last character of the reversed string
       reverse_iterator rend()
       {
-        return reverse_iterator(end());
+        return reverse_iterator(begin());
       }
       // returns a reverse iterator to the character following the last character of the reversed string
       reverse_iterator rend() const
       {
-        return reverse_iterator(end());
+        return reverse_iterator(begin());
       }
       // returns a reverse iterator to the character following the last character of the reversed string
       const_reverse_iterator crend() const
       {
-        return const_reverse_iterator(cend());
+        return const_reverse_iterator(cbegin());
       }
 
       //
@@ -605,11 +594,11 @@ namespace rsl
         prepare_for_new_insert(index, count);
 
         pointer offset_loc = data() + index;
-        traits_type::assign(offset_loc, ch, count);
+        traits_type::assign(offset_loc, count, ch);
 
         return *this;
       }
-      /// RSL Comment: Not in ISO C++ Standard at time of writing time of writing (30/Jun/2022)
+      /// RSL Comment: Not in ISO C++ Standard at time of writing (30/Jun/2022)
       // the standard doesn't provide an overload for a string literal
       // Inserts character string pointed to by s at the position index
       template <count_t Size>
@@ -639,24 +628,24 @@ namespace rsl
       // inserts a string obtained by str.substr(index_str, count) at the position index
       basic_string& insert(size_type index, const basic_string& str, size_type indexStr, size_type count = s_npos)
       {
-        size_type num_to_copy = count_or_obj_length(str, count);
+        size_type num_to_copy = calc_num_to_copy(str, count, indexStr);
         return insert(index, str.data(), num_to_copy);
       }
       // inserts character ch before the character pointed by pos
       iterator insert(const_iterator pos, value_type ch)
       {
-        return insert(pos, &ch, 1);
+        return insert(pos, 1, ch);
       }
       // inserts count copies of character ch before the element (if any) pointed by pos
       iterator insert(const_iterator pos, size_type count, value_type ch)
       {
         size_type pos_idx = rsl::distance(cbegin(), pos);
 
-        prepare_for_new_insert(pos, count);
+        prepare_for_new_insert(pos_idx, count);
 
         traits_type::assign(&m_begin[pos_idx], count, ch);
 
-        return iterator(m_begin[pos_idx]);
+        return iterator(&m_begin[pos_idx]);
       }
       // inserts characters from teh range [first, last) before the element (if any) pointed by pos.
       template <typename InputIt>
@@ -711,7 +700,7 @@ namespace rsl
       // inserts the elements from sv starting at index_str before the element (if any) pointed by pos.
       basic_string& insert(size_type pos, const basic_string_view<value_type, traits_type>& sv, size_type indexStr, size_type count = s_npos)
       {
-        size_type num_chars_to_insert = count_or_obj_length(sv, count);
+        size_type num_chars_to_insert = calc_num_to_copy(sv, count, indexStr);
         return insert(pos, sv.data() + indexStr, num_chars_to_insert);
       }
 
@@ -789,7 +778,7 @@ namespace rsl
       // appends a substr [pos, pos + count) of str.
       basic_string& append(const basic_string& str, size_type pos, size_type count = s_npos)
       {
-        return append(str.data() + pos, count_or_obj_length(str, count));
+        return append(str.data() + pos, calc_num_to_copy(str, count, pos));
       }
       // appends characters in the range [s, s + count)
       basic_string& append(const_pointer s, size_type count)
@@ -801,13 +790,11 @@ namespace rsl
 
         return *this;
       }
-      /// RSL Comment: Not in ISO C++ Standard at time of writing time of writing (30/Jun/2022)
-      // the standard doesn't provide an overload for a string literal
-      // Appends character string pointed to by s.
-      template <count_t Size>
-      basic_string& append(const value_type (&s)[Size]) // NOLINT(modernize-avoid-c-arrays)
+      /// RSL Comment: Different from ISO C++ Standard at time of writing (30/Jun/2022)
+      // this takes a pointer reference to let literal strings overload to the string view overload.
+      basic_string& append(const_pointer& s) // NOLINT(modernize-avoid-c-arrays)
       {
-        return append(s, Size - 1);
+        return append(s, traits_type::length(s));
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (01/Jul/2022)
       // Because we have the above function, we don't specify the following.
@@ -865,7 +852,7 @@ namespace rsl
       // appends all characters from the range [pos, count) from sv.
       basic_string& append(const basic_string_view<value_type, traits_type>& sv, size_type pos, size_type count = s_npos)
       {
-        return append(sv.data() + pos, count_or_obj_length(sv, count));
+        return append(sv.data() + pos, calc_num_to_copy(sv, count, pos));
       }
 
       // Appends string str
@@ -879,7 +866,7 @@ namespace rsl
         push_back(ch);
         return *this;
       }
-      /// RSL Comment: Not in ISO C++ Standard at time of writing time of writing (30/Jun/2022)
+      /// RSL Comment: Not in ISO C++ Standard at time of writing (30/Jun/2022)
       // the standard doesn't provide an overload for a string literal
       // Appends character string pointed to by s.
       template <count_t Size>
@@ -887,7 +874,7 @@ namespace rsl
       {
         return append(s, Size - 1);
       }
-      /// RSL Comment: Not in ISO C++ Standard at time of writing time of writing (30/Jun/2022)
+      /// RSL Comment: Not in ISO C++ Standard at time of writing (30/Jun/2022)
       // Because we have the above function, we don't specify the following.
       // basic_string& operator+=(const_pointer s);
 
@@ -907,6 +894,8 @@ namespace rsl
         return append(sv);
       }
 
+      // comparison and queries
+
       // compares this string to str
       REX_NO_DISCARD int32 compare(const basic_string& str) const
       {
@@ -922,7 +911,7 @@ namespace rsl
       {
         return internal::string_utils::compare(data() + pos1, str.data() + pos2, count1, count2);
       }
-      /// RSL Comment: Not in ISO C++ Standard at time of writing time of writing (30/Jun/2022)
+      /// RSL Comment: Not in ISO C++ Standard at time of writing (30/Jun/2022)
       // the standard doesn't provide an overload for a string literal
       // Compares the string to a string literal.
       template <count_t Size>
@@ -980,7 +969,7 @@ namespace rsl
       // compares [pos1, pos1+count1) substring of this string to a substring [pos2, pos2+count2) of sv
       REX_NO_DISCARD int32 compare(size_type pos1, size_type count1, const basic_string_view<value_type, traits_type> sv, size_type pos2, size_type count2 = s_npos) const
       {
-        return internal::string_utils::compare(data() + pos1, sv.data() + pos2, count1, count_or_obj_length(sv, count2));
+        return internal::string_utils::compare(data() + pos1, sv.data() + pos2, count1, calc_num_to_copy(sv, count2, pos2));
       }
 
       // checks if the string begins with the given prefix
@@ -1208,7 +1197,7 @@ namespace rsl
       basic_string& replace(size_type pos, size_type count, const basic_string_view<value_type, traits_type>& sv, size_type pos2, size_type count2 = s_npos)
       {
         count  = (rsl::min)(count, size() - pos);
-        count2 = count_or_obj_length(sv, count2);
+        count2 = calc_num_to_copy(sv, count2, pos2);
         return replace(pos, count, sv.data() + pos2, count2);
       }
 
@@ -1217,7 +1206,7 @@ namespace rsl
       // returns a substring [pos, pos + count).
       basic_string_view<value_type, traits_type> substr(size_type pos = 0, size_type count = s_npos) const
       {
-        count = count_or_obj_length(*this, count);
+        count = calc_num_to_copy(*this, count, pos);
         return basic_string_view<value_type, traits_type>(data() + pos, count);
       }
 
@@ -1698,6 +1687,7 @@ namespace rsl
           // using move here as the dst and src could overlap
           pointer dst_in_buffer = data() + idx + count;
           traits_type::move(dst_in_buffer, data() + idx, calc_bytes_needed(length() - idx));
+          m_end += count;
         }
       }
       // moves every element starting at 'pos' 'count' space(s) to the right
@@ -1743,14 +1733,14 @@ namespace rsl
         return sizeof(value_type) * length;
       }
       // returns the minimum between either the length of sv or count
-      size_type count_or_obj_length(const basic_string_view<value_type, traits_type>& sv, size_type count) const
+      size_type calc_num_to_copy(const basic_string_view<value_type, traits_type>& sv, size_type count, size_type startPos = 0) const
       {
-        return (count == s_npos || count > sv.length()) ? sv.length() : count;
+        return (count == s_npos || count > sv.length()) ? sv.length() - startPos : count;
       }
       // returns the minimum between either the length of s or count
-      size_type count_or_obj_length(const basic_string& s, size_type count)
+      size_type calc_num_to_copy(const basic_string& s, size_type count, size_type startPos = 0)
       {
-        return (count == s_npos || count > s.length()) ? s.length() : count;
+        return (count == s_npos || count > s.length()) ? s.length() - startPos : count;
       }
       // returns the size of a new buffer on reallocation
       size_type new_buffer_size(size_type numElementsToAdd) const
@@ -1977,7 +1967,7 @@ namespace rsl
         return false;
       }
 
-      return Traits::compare(lhs.data(), rhs, lhs.length());
+      return Traits::compare(lhs.data(), rhs, lhs.length()) == 0;
     }
     // compares if 2 strings are equal
     template <typename Char, typename Traits, typename Alloc, count_t Size>

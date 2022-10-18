@@ -1508,7 +1508,7 @@ namespace detail
 {
 #ifdef _WIN32
   using dword = conditional_t<sizeof(long) == 4, unsigned long, unsigned>;
-  extern "C" __declspec(dllimport) int __stdcall write_console_w( //
+  extern "C" __declspec(dllimport) int __stdcall WriteConsoleW( // NOLINT(readability-identifier-naming)
       void*, const void*, dword, dword*, void*);
 
   FMT_FUNC bool write_console(std::FILE* f, string_view text) // NOLINT(misc-definitions-in-headers)
@@ -1519,7 +1519,7 @@ namespace detail
       detail::utf8_to_utf16 const u16(string_view(text.data(), text.size()));
       auto written = detail::dword();
       // NOLINTNEXTLINE(performance-no-int-to-ptr, cppcoreguidelines-pro-type-reinterpret-cast, readability-implicit-bool-conversion)
-      if(detail::write_console_w(reinterpret_cast<void*>(_get_osfhandle(fd)), u16.c_str(), static_cast<uint32_t>(u16.size()), &written, nullptr) != 0)
+      if(detail::WriteConsoleW(reinterpret_cast<void*>(_get_osfhandle(fd)), u16.c_str(), static_cast<uint32_t>(u16.size()), &written, nullptr) != 0)
       {
         return true;
       }

@@ -149,7 +149,7 @@ namespace rsl
       using value_type        = T;
       using pointer           = const T*;
       using const_pointer     = const T*;
-      using reference         = T&;
+      using reference         = const T&;
       using const_reference   = const T&;
       using iterator_category = rsl::random_access_iterator_tag;
       using difference_type   = int32;

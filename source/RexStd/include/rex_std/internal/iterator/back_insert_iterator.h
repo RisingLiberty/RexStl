@@ -42,7 +42,7 @@ namespace rsl
       {
       }
 
-      constexpr back_insert_iterator(Container& c)
+      constexpr back_insert_iterator(Container& c) // NOLINT(google-explicit-constructor)
           : m_container(&c)
       {
       }
@@ -74,9 +74,20 @@ namespace rsl
         return *this;
       }
 
+    protected:
+      Container* container()
+      {
+        return m_container;
+      }
+
     private:
       Container* m_container;
     };
 
+    template <class Container>
+    REX_NO_DISCARD constexpr back_insert_iterator<Container> back_inserter(Container& cont)
+    {
+      return back_insert_iterator<Container>(cont);
+    }
   } // namespace v1
 } // namespace rsl

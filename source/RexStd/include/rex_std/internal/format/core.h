@@ -10,6 +10,7 @@
 #ifndef FMT_CORE_H_
 #define FMT_CORE_H_
 
+#include "rex_std/internal/iterator/back_insert_iterator.h"
 #include "rex_std/internal/type_traits/is_class.h"
 #include "rex_std/internal/type_traits/is_constant_evaluated.h"
 #include "rex_std/internal/type_traits/is_convertible.h"
@@ -794,7 +795,7 @@ inline auto get_container(rsl::back_insert_iterator<Container> it) -> Container&
     }
     using base::container;
   };
-  return *accessor(it).container;
+  return *accessor(it).container();
 }
 
 template <typename Char, typename InputIt, typename OutputIt>
