@@ -353,7 +353,12 @@ TEST_CASE("string insertion and erasion")
     str.insert(6, 5, 'c');
 
     REQUIRE(str == "hello cccccworld");
+
+    rsl::string str2("hello world");
+    str2.insert(6, 2, 'c');
+    REQUIRE(str2 == "hello ccworld");
   }
+
   // 2) template <count_t Size> basic_string& insert(size_type index, const value_type (&s)[Size])
   // 3) basic_string& insert(size_type index, const_pointer s, size_type count)
   // 4) basic_string& insert(size_type index, const basic_string& str)

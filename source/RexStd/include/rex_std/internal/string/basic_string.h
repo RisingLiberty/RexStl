@@ -126,7 +126,7 @@ namespace rsl
       explicit basic_string(const_pointer& s, const allocator& alloc = allocator())
           : basic_string(alloc)
       {
-        size_type length = traits_type::length(s);
+        const size_type length = traits_type::length(s);
         assign(s, length);
       }
       // constructs the string with the contents of the range [first, last)
@@ -249,7 +249,7 @@ namespace rsl
       // copies the contents of the string by replacing the entire array with a single char
       basic_string& operator=(value_type ch)
       {
-        return assign(rsl::addressof(ch), 1);
+        return assign(rsl::addressof(ch), 1); // NOLINT(misc-unconventional-assign-operator)
       }
 
       // a string cannot be assigned from a nullptr.
@@ -258,7 +258,7 @@ namespace rsl
       // replaces the contents with count copies of character
       basic_string& assign(size_type count, value_type ch)
       {
-        size_type new_size = count + 1;
+        const size_type new_size = count + 1;
 
         if(new_size > capacity())
         {
@@ -291,7 +291,7 @@ namespace rsl
         REX_ASSERT_X(this, &other, "Can't assign to yourself");
         REX_ASSERT_X(get_allocator() == other.get_allocator(), "Different allocators in assignment, this is not allowed");
 
-        size_type num_to_copy = calc_num_to_copy(other, count, pos);
+        const size_type num_to_copy = calc_num_to_copy(other, count, pos);
         assign(other.data() + pos, num_to_copy);
         return *this;
       }
@@ -355,7 +355,7 @@ namespace rsl
 
         // don't use reserve here as it'd copy the current values over.
         // we'll overwrite them anyway so there's no point in doing that
-        size_type new_size = static_cast<size_type>(ilist.size()) + 1; // +1 for the null termination char
+        const size_type new_size = static_cast<size_type>(ilist.size()) + 1; // +1 for the null termination char
 
         if(new_size > capacity())
         {
@@ -365,7 +365,7 @@ namespace rsl
         }
 
         pointer dst = m_begin;
-        for(value_type c: ilist)
+        for(const value_type c: ilist)
         {
           traits_type::assign(*dst, c);
           ++dst;
@@ -393,7 +393,7 @@ namespace rsl
       // start at pos and going till pos + count.
       basic_string& assign(basic_string_view<value_type, traits_type> sv, size_type pos, size_type count = s_npos)
       {
-        size_type num_to_copy = calc_num_to_copy(sv, count, pos);
+        const size_type num_to_copy = calc_num_to_copy(sv, count, pos);
         return assign(sv.data() + pos, num_to_copy);
       }
 
@@ -639,7 +639,7 @@ namespace rsl
       // inserts count copies of character ch before the element (if any) pointed by pos
       iterator insert(const_iterator pos, size_type count, value_type ch)
       {
-        size_type pos_idx = rsl::distance(cbegin(), pos);
+        const size_type pos_idx = rsl::distance(cbegin(), pos);
 
         prepare_for_new_insert(pos_idx, count);
 
@@ -1644,13 +1644,13 @@ namespace rsl
       // moves every element starting at str[idx] 'count' space(s) to the right
       void prepare_for_new_insert(size_type idx, size_type count = 1)
       {
-        if(size() + count > capacity())
+        if(size() + count >= capacity())
         {
           // if we have to reallocate, we want to copy over elements in the range [0, idx)
           // and then copy the remaining elements in [idx, end())
           // then release the old buffer.
           const size_type size_for_new_buffer = new_buffer_size(count);
-          pointer new_buffer                  = static_cast<pointer>(get_allocator().allocate(size_for_new_buffer));
+          pointer new_buffer                  = static_cast<pointer>(get_allocator().allocate(calc_bytes_needed(size_for_new_buffer)));
 
           // we now have 2 buffers, 1 buffer holding our data, and 1 that is prepared to receive a copy of this data
           // +---+---+---+---+---+---+---+---+---+---+---+---+
@@ -1678,9 +1678,10 @@ namespace rsl
           // all that's left is to deallocate the old buffer and reset the data pointers.
           deallocate();
 
-          m_begin = new_buffer;
-          m_end   = m_begin + size_for_new_buffer;
-          last()  = m_begin + size_for_new_buffer;
+          const size_type new_size = size() + count;
+          m_begin                  = new_buffer;
+          m_end                    = m_begin + new_size;
+          last()                   = m_begin + size_for_new_buffer;
         }
         else
         {
@@ -1689,6 +1690,8 @@ namespace rsl
           traits_type::move(dst_in_buffer, data() + idx, calc_bytes_needed(length() - idx));
           m_end += count;
         }
+
+        traits_type::assign(*m_end, value_type());
       }
       // moves every element starting at 'pos' 'count' space(s) to the right
       void prepare_for_new_insert(const_iterator pos, size_type count = 1)
