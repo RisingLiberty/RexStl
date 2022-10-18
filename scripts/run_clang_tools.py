@@ -17,7 +17,7 @@ def run():
   script_path = os.path.dirname(__file__)
   root_path = os.path.normpath(f"{script_path}/..")
   logger.info("Running clang-tidy")
-  os.system(f"py {script_path}/run_clang_tidy.py -p={root_path}/.rex/build/ninja/ -header-filter=.* -quiet -fix")
+  os.system(f"py {script_path}/run_clang_tidy.py -config-file={root_path}/source/.clang-tidy -p={root_path}/.rex/build/ninja/ -header-filter=.* -quiet")
   logger.info("Running clang-format")
   os.system(f"py {script_path}/run_clang_format.py -r -i {root_path}/source/RexStd")
 
