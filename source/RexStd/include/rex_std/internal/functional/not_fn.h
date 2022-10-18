@@ -22,7 +22,7 @@ namespace rsl
       template <typename F>
       struct not_fn_t
       {
-        F f;
+        F f; // NOLINT(cppcoreguidelines-avoid-const-or-ref-data-members)
         template <typename... Args>
         constexpr auto operator()(Args&&... args) & -> decltype(!rsl::invoke(f, rsl::forward<Args>(args)...))
         {
