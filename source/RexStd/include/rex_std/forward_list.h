@@ -155,7 +155,7 @@ namespace rsl
       using const_iterator  = rsl::forward_list_iterator<value_type, const_pointer, const_reference>;
       using node_type       = rsl::internal::ForwardListNode<T>;
       using base_node_type  = rsl::internal::ForwardListNodeBase;
-      using this_type       = forward_list<T, Alloc>; /// RSL Comment: Not in ISO C++ Standard at time of writing time of writing (04/June/2022)
+      using this_type       = forward_list<T, Alloc>; /// RSL Comment: Not in ISO C++ Standard at time of writing (04/June/2022)
 
       forward_list()
           : m_cp_pre_head_node_and_allocator()

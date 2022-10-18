@@ -230,8 +230,8 @@ namespace rsl
       using const_iterator         = ListIterator<const value_type>;
       using reverse_iterator       = rsl::reverse_iterator<iterator>;
       using const_reverse_iterator = rsl::reverse_iterator<const_iterator>;
-      using node_type              = ListNode<T>;    /// RSL Comment: Not in ISO C++ Standard at time of writing time of writing (04/June/2022)
-      using this_type              = list<T, Alloc>; /// RSL Comment: Not in ISO C++ Standard at time of writing time of writing (04/June/2022)
+      using node_type              = ListNode<T>;    /// RSL Comment: Not in ISO C++ Standard at time of writing (04/June/2022)
+      using this_type              = list<T, Alloc>; /// RSL Comment: Not in ISO C++ Standard at time of writing (04/June/2022)
 
       list()
           : m_cp_head_tail_link_and_alloc()

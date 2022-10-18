@@ -90,7 +90,7 @@ namespace rsl
       {
         resize(count.get());
       }
-      /// RSL Comment: Not in ISO C++ Standard at time of writing time of writing (26/Jun/2022)
+      /// RSL Comment: Not in ISO C++ Standard at time of writing (26/Jun/2022)
       // Construct the container with a given capacity but size remains 0.
       explicit vector(rsl::Capacity capacity, const allocator& alloc = allocator())
           : vector(alloc)
