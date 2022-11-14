@@ -751,7 +751,21 @@ namespace rsl
         template <typename Traits, typename Pointer, typename SizeType>
         int32 compare(Pointer lhs, Pointer rhs, SizeType lhsLength, SizeType rhsLength)
         {
-          return Traits::compare(lhs, rhs, (rsl::min)(lhsLength, rhsLength));
+          int32 result = Traits::compare(lhs, rhs, (rsl::min)(lhsLength, rhsLength));
+
+          if(result != 0)
+          {
+            return result;
+          }
+          if(lhsLength < rhsLength)
+          {
+            return -1;
+          }
+          if(lhsLength > rhsLength)
+          {
+            return 1;
+          }
+          return 0;
         }
         // finds the first substring [str, str + toFindLength) within [lhsStr, lhsStr + lhsLength), starting from pos
         template <typename Traits, typename Pointer, typename SizeType>

@@ -497,7 +497,13 @@ namespace rsl
         return false;
       }
 
-      return Traits::compare(lhs.data(), rhs.data(), lhs.length());
+      return Traits::compare(lhs.data(), rhs.data(), lhs.length()) == 0;
+    }
+
+    template <typename CharType, typename Traits, count_t Size>
+    constexpr bool operator==(basic_string_view<CharType, Traits> lhs, const CharType(&rhs)[Size])
+    {
+      return lhs == rsl::basic_string_view<CharType, Traits>(rhs);
     }
 
     // compares if 2 string views are not equal
@@ -507,15 +513,32 @@ namespace rsl
       return !(lhs == rhs);
     }
 
+    template <typename CharType, typename Traits, count_t Size>
+    constexpr bool operator!=(basic_string_view<CharType, Traits> lhs, const CharType(&rhs)[Size])
+    {
+      return lhs != rsl::basic_string_view<CharType, Traits>(rhs);
+    }
+
     // lexicographically compares 2 string views
     template <typename CharType, typename Traits>
     constexpr bool operator<(basic_string_view<CharType, Traits> lhs, basic_string_view<CharType, Traits> rhs)
     {
       return lhs.compare(rhs) < 0;
     }
+    template <typename CharType, typename Traits, count_t Size>
+    constexpr bool operator<(basic_string_view<CharType, Traits> lhs, const CharType(&rhs)[Size])
+    {
+      return lhs.compare(rhs) < 0;
+    }
+
     // lexicographically compares 2 string views
     template <typename CharType, typename Traits>
     constexpr bool operator<=(basic_string_view<CharType, Traits> lhs, basic_string_view<CharType, Traits> rhs)
+    {
+      return lhs.compare(rhs) <= 0;
+    }
+    template <typename CharType, typename Traits, count_t Size>
+    constexpr bool operator<=(basic_string_view<CharType, Traits> lhs, const  CharType(&rhs)[Size])
     {
       return lhs.compare(rhs) <= 0;
     }
@@ -525,13 +548,22 @@ namespace rsl
     {
       return lhs.compare(rhs) > 0;
     }
+    template <typename CharType, typename Traits, count_t Size>
+    constexpr bool operator>(basic_string_view<CharType, Traits> lhs, const CharType(&rhs)[Size])
+    {
+      return lhs.compare(rhs) > 0;
+    }
     // lexicographically compares 2 string views
     template <typename CharType, typename Traits>
     constexpr bool operator>=(basic_string_view<CharType, Traits> lhs, basic_string_view<CharType, Traits> rhs)
     {
       return lhs.compare(rhs) >= 0;
     }
-
+    template <typename CharType, typename Traits, count_t Size>
+    constexpr bool operator>=(basic_string_view<CharType, Traits> lhs, const CharType(&rhs)[Size])
+    {
+      return lhs.compare(rhs) >= 0;
+    }
     // stores each characters from the resulting sequence to the output stream
     // template <typename CharType, typename Traits>
     // class basic_ostream;

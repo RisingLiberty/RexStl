@@ -104,12 +104,13 @@ namespace rsl
           char_type* dest_str      = dest + count;
           const char_type* src_str = src + count;
 
-          while(count > 0)
+          count_t actual_amount_to_copy = count + 1; // +1 to also copy the null termination char, if it's there
+          while(actual_amount_to_copy > 0)
           {
             assign(*dest_str, *src_str);
             --dest_str;
             --src_str;
-            --count;
+            --actual_amount_to_copy;
           }
 
           return dest;
@@ -145,7 +146,7 @@ namespace rsl
         {
           while(count > 0)
           {
-            if(eq(*p, ch) == 0)
+            if(eq(*p, ch))
             {
               return p;
             }

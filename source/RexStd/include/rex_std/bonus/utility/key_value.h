@@ -47,7 +47,7 @@ namespace rsl
       }
 
     public:
-      Key key; // NOLINT(readability-identifier-naming)
+      Key key; // NOLINT(readability-identifier-naming, cppcoreguidelines-avoid-const-or-ref-data-members)
       Value value;
     };
 

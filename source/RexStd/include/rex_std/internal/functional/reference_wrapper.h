@@ -70,7 +70,7 @@ namespace rsl
       }
 
     private:
-      T& m_object;
+      T& m_object; // NOLINT(cppcoreguidelines-avoid-const-or-ref-data-members)
     };
 
     // provides a member type alias that names U&

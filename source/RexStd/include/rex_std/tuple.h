@@ -365,7 +365,7 @@ namespace rsl
         }
 
       private:
-        ValueType& m_value;
+        ValueType& m_value; // NOLINT(cppcoreguidelines-avoid-const-or-ref-data-members)
       };
 
       // tuple_leaf: partial specialization for when we can use the Empty Base Class Optimization
