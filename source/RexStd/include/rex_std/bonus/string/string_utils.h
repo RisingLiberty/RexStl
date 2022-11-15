@@ -504,8 +504,9 @@ namespace rsl
         }
 
         // process string
-        optional<T> result = nullopt;
-        T value            = 0;
+        T value = 0;
+        bool value_set = false;
+
         while(*str != '\0')
         {
           auto c = *str;
@@ -529,6 +530,7 @@ namespace rsl
           }
           else
           {
+            value_set = true;
             value *= base;
             value += c;
           }
@@ -541,9 +543,15 @@ namespace rsl
         {
           /**str_end = const_cast<Iterator>(str);*/
         }
-        result = optional<T>(value * sign);
 
-        return result;
+        if (value_set)
+        {
+          return optional<T>(value * sign);
+        }
+        else
+        {
+          return nullopt;
+        }
       }
 
       template <typename T, typename Iterator>
@@ -580,8 +588,8 @@ namespace rsl
         }
 
         // process string
-        T value            = 0;
-        optional<T> result = nullopt;
+        T value = 0;
+        bool value_set = false;
         while(*str != '\0')
         {
           auto c = *str;
@@ -605,6 +613,7 @@ namespace rsl
           }
           else
           {
+            value_set = true;
             value *= base;
             value += c;
           }
@@ -617,9 +626,14 @@ namespace rsl
         //{
         //  *str_end = const_cast<Iterator>(str);
         //}
-        result = optional<T>(value);
-
-        return result;
+        if (value_set)
+        {
+          return optional<T>(value);
+        }
+        else
+        {
+          return nullopt;
+        }
       }
 
       template <typename T, typename Iterator>
@@ -667,6 +681,7 @@ namespace rsl
           if(*c == '.')
           {
             assigning_before_radix = false;
+            ++c;
             continue;
           }
 
@@ -679,6 +694,7 @@ namespace rsl
             after_radix_value = ctoi(*c) + after_radix_value * 10.0f;
             ++num_digits_after_radix;
           }
+          ++c;
         }
 
         // if (str_end)
@@ -800,6 +816,7 @@ namespace rsl
         SizeType rfind(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer toFindStr, SizeType toFindLength, SizeType defaultValue)
         {
           pos = (rsl::min)(pos, lhsLength - 1);
+          REX_ASSERT_X(pos < lhsLength, "pos out of bounds");
 
           // the string must be found between [begin, pos]
 
@@ -813,10 +830,10 @@ namespace rsl
           {
             while(start != end)
             {
-              const Pointer start = start - (toFindLength + 1);
-              if(Traits::compare(start, toFindStr, toFindLength - 1) == 0)
+              const Pointer new_start = start - (toFindLength - 1);
+              if(Traits::compare(new_start, toFindStr, toFindLength - 1) == 0)
               {
-                return start - lhsStr;
+                return new_start - lhsStr;
               }
               --start;
               start = Traits::rfind(start, start - end, *to_find_last);

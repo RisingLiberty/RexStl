@@ -776,33 +776,168 @@ TEST_CASE("string resize")
 }
 TEST_CASE("string find")
 {
-  rsl::string str("Hello World");
+  rsl::string str("Hello Hello World");
   REQUIRE(str.find("Hello") == 0);
-  REQUIRE(str.find("World") == 6);
+  REQUIRE(str.find("Hello", 1) == 6);
+  REQUIRE(str.find("World") == 12);
   REQUIRE(str.find("asdfghj") == rsl::string::npos());
+
+  REQUIRE(str.find(rsl::string("Hello")) == 0);
+  REQUIRE(str.find(rsl::string("Hello"), 1) == 6);
+  REQUIRE(str.find(rsl::string("World")) == 12);
+  REQUIRE(str.find(rsl::string("asdfghj")) == rsl::string::npos());
+
+  REQUIRE(str.find(rsl::string_view("Hello")) == 0);
+  REQUIRE(str.find(rsl::string_view("Hello"), 1) == 6);
+  REQUIRE(str.find(rsl::string_view("World")) == 12);
+  REQUIRE(str.find(rsl::string_view("asdfghj")) == rsl::string::npos());
+
+  REQUIRE(str.find('H') == 0);
+  REQUIRE(str.find('d') == 16);
+  REQUIRE(str.find('y') == rsl::string::npos());
+
 }
 TEST_CASE("string rfind")
 {
+  rsl::string str("Hello Hello World");
+  REQUIRE(str.rfind("Hello") == 6);
+  REQUIRE(str.rfind("Hello", 7) == 0);
+  REQUIRE(str.rfind("World") == 12);
+  REQUIRE(str.rfind("asdfghj") == rsl::string::npos());
 
+  REQUIRE(str.rfind(rsl::string("Hello")) == 6);
+  REQUIRE(str.rfind(rsl::string("Hello"), 7) == 0);
+  REQUIRE(str.rfind(rsl::string("World")) == 12);
+  REQUIRE(str.rfind(rsl::string("asdfghj")) == rsl::string::npos());
+
+  REQUIRE(str.rfind(rsl::string_view("Hello")) == 6);
+  REQUIRE(str.rfind(rsl::string_view("Hello"), 7) == 0);
+  REQUIRE(str.rfind(rsl::string_view("World")) == 12);
+  REQUIRE(str.rfind(rsl::string_view("asdfghj")) == rsl::string::npos());
+
+  REQUIRE(str.rfind('H') == 6);
+  REQUIRE(str.rfind('d') == 16);
+  REQUIRE(str.rfind('y') == rsl::string::npos());
 }
 TEST_CASE("string find first of")
 {
+  rsl::string str("Hello Hello World");
+  REQUIRE(str.find_first_of("he") == 1);
+  REQUIRE(str.find_first_of("He") == 0);
+  REQUIRE(str.find_first_of("ll") == 2);
+  REQUIRE(str.find_first_of("W") == 12);
+  REQUIRE(str.find_first_of("w") == str.npos());
 
+  REQUIRE(str.find_first_of(rsl::string("he")) == 1);
+  REQUIRE(str.find_first_of(rsl::string("He")) == 0);
+  REQUIRE(str.find_first_of(rsl::string("ll")) == 2);
+  REQUIRE(str.find_first_of(rsl::string("W")) == 12);
+  REQUIRE(str.find_first_of(rsl::string("w")) == str.npos());
+
+  REQUIRE(str.find_first_of(rsl::string_view("he")) == 1);
+  REQUIRE(str.find_first_of(rsl::string_view("He")) == 0);
+  REQUIRE(str.find_first_of(rsl::string_view("ll")) == 2);
+  REQUIRE(str.find_first_of(rsl::string_view("W")) == 12);
+  REQUIRE(str.find_first_of(rsl::string_view("w")) == str.npos());
+
+  REQUIRE(str.find_first_of('H') == 0);
+  REQUIRE(str.find_first_of('d') == 16);
+  REQUIRE(str.find_first_of('y') == rsl::string::npos());
 }
 TEST_CASE("string find first not of")
 {
+  rsl::string str("Hello Hello World");
+  REQUIRE(str.find_first_not_of("he") == 0);
+  REQUIRE(str.find_first_not_of("He") == 2);
+  REQUIRE(str.find_first_not_of("ll") == 0);
+  REQUIRE(str.find_first_not_of("W") == 0);
+  REQUIRE(str.find_first_not_of("w") == 0);
 
+  REQUIRE(str.find_first_not_of(rsl::string("he")) == 0);
+  REQUIRE(str.find_first_not_of(rsl::string("He")) == 2);
+  REQUIRE(str.find_first_not_of(rsl::string("ll")) == 0);
+  REQUIRE(str.find_first_not_of(rsl::string("W")) == 0);
+  REQUIRE(str.find_first_not_of(rsl::string("w")) == 0);
+
+  REQUIRE(str.find_first_not_of(rsl::string_view("he")) == 0);
+  REQUIRE(str.find_first_not_of(rsl::string_view("He")) == 2);
+  REQUIRE(str.find_first_not_of(rsl::string_view("ll")) == 0);
+  REQUIRE(str.find_first_not_of(rsl::string_view("W")) == 0);
+  REQUIRE(str.find_first_not_of(rsl::string_view("w")) == 0);
+
+  REQUIRE(str.find_first_not_of('H') == 1);
+  REQUIRE(str.find_first_not_of('d') == 0);
+  REQUIRE(str.find_first_not_of('y') == 0);
 }
 TEST_CASE("string find last of")
 {
+  rsl::string str("Hello Hello World");
+  REQUIRE(str.find_last_of("he") == 7);
+  REQUIRE(str.find_last_of("He") == 7);
+  REQUIRE(str.find_last_of("ll") == 15);
+  REQUIRE(str.find_last_of("W") == 12);
+  REQUIRE(str.find_last_of("w") == str.npos());
 
+  REQUIRE(str.find_last_of(rsl::string("he")) == 7);
+  REQUIRE(str.find_last_of(rsl::string("He")) == 7);
+  REQUIRE(str.find_last_of(rsl::string("ll")) == 15);
+  REQUIRE(str.find_last_of(rsl::string("W")) == 12);
+  REQUIRE(str.find_last_of(rsl::string("w")) == str.npos());
+
+  REQUIRE(str.find_last_of(rsl::string_view("he")) == 7);
+  REQUIRE(str.find_last_of(rsl::string_view("He")) == 7);
+  REQUIRE(str.find_last_of(rsl::string_view("ll")) == 15);
+  REQUIRE(str.find_last_of(rsl::string_view("W")) == 12);
+  REQUIRE(str.find_last_of(rsl::string_view("w")) == str.npos());
+
+  REQUIRE(str.find_last_of('H') == 6);
+  REQUIRE(str.find_last_of('d') == 16);
+  REQUIRE(str.find_last_of('y') == rsl::string::npos());
 }
 TEST_CASE("string find last not of")
 {
+  rsl::string str("Hello Hello World");
+  REQUIRE(str.find_last_not_of("he") == 17);
+  REQUIRE(str.find_last_not_of("He") == 17);
+  REQUIRE(str.find_last_not_of("ll") == 17);
+  REQUIRE(str.find_last_not_of("W") == 17);
+  REQUIRE(str.find_last_not_of("w") == 17);
 
+  REQUIRE(str.find_last_not_of(rsl::string("he")) == 17);
+  REQUIRE(str.find_last_not_of(rsl::string("He")) == 17);
+  REQUIRE(str.find_last_not_of(rsl::string("ll")) == 17);
+  REQUIRE(str.find_last_not_of(rsl::string("W")) == 17);
+  REQUIRE(str.find_last_not_of(rsl::string("w")) == 17);
+
+  REQUIRE(str.find_last_not_of(rsl::string_view("he")) == 17);
+  REQUIRE(str.find_last_not_of(rsl::string_view("He")) == 17);
+  REQUIRE(str.find_last_not_of(rsl::string_view("ll")) == 17);
+  REQUIRE(str.find_last_not_of(rsl::string_view("W")) == 17);
+  REQUIRE(str.find_last_not_of(rsl::string_view("w")) == 17);
+
+  REQUIRE(str.find_last_not_of('H') == 17);
+  REQUIRE(str.find_last_not_of('d') == 17);
+  REQUIRE(str.find_last_not_of('y') == 17);
 }
 TEST_CASE("string integer conversions")
 {
+  {
+    rsl::string intstr("123");
+    REQUIRE(intstr.to_int().value() == 123);
+    REQUIRE(intstr.to_uint().value() == 123);
+  }
 
+  { 
+    rsl::string nointstr("hello");
+    REQUIRE(nointstr.to_int().has_value() == false);
+    REQUIRE(nointstr.to_uint().has_value() == false);
+  }
+
+  {
+    rsl::string floatstr("1.23");
+    REQUIRE(floatstr.to_float().value() == 1.23f);
+    REQUIRE(floatstr.to_int().has_value() == true);
+    REQUIRE(floatstr.to_uint().has_value() == true);
+  }
 }
 // NOLINTEND

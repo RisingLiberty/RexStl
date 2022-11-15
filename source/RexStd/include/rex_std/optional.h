@@ -567,7 +567,7 @@ namespace rsl
       constexpr T&& value() &&
       {
         REX_ASSERT_X(has_value(), "bad optional access!");
-        return m_storage.val();
+        return rsl::move(m_storage.val());
       }
       // if this contains a value, returns a reference to the contained value.
       // asserts otherwise

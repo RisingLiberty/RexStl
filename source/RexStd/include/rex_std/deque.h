@@ -37,7 +37,6 @@ namespace rsl
     REX_STD_FUNC_ALIAS(erase);
     REX_STD_FUNC_ALIAS(erase_if);
 
-    REX_STD_FUNC_ALIAS(begin);
     REX_STD_FUNC_ALIAS(cbegin);
     REX_STD_FUNC_ALIAS(cend);
     REX_STD_FUNC_ALIAS(rbegin);

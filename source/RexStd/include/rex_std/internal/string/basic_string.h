@@ -12,7 +12,6 @@
 
 #pragma once
 
-#include "rex_std/bonus/string/c_string.h"
 #include "rex_std/bonus/string/character_lookup.h"
 #include "rex_std/bonus/string/stack_string.h"
 #include "rex_std/bonus/string/string_utils.h"
@@ -1329,6 +1328,10 @@ namespace rsl
       // finds the last substring equal to str
       REX_NO_DISCARD size_type rfind(const basic_string& str, size_type pos = s_npos) const
       {
+        if (pos == s_npos)
+        {
+          pos = length();
+        }
         return internal::string_utils::rfind<traits_type, const_pointer>(m_begin, length(), pos, str.data(), str.length(), s_npos);
       }
 
@@ -1348,6 +1351,10 @@ namespace rsl
       // finds the last character equal to ch
       REX_NO_DISCARD size_type rfind(value_type ch, size_type pos = s_npos) const
       {
+        if (pos == s_npos)
+        {
+          pos = length();
+        }
         return internal::string_utils::rfind<traits_type, const_pointer>(m_begin, length(), pos, rsl::addressof(ch), 1_elem, s_npos);
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (01/Jul/2022)
@@ -1358,6 +1365,10 @@ namespace rsl
       // find the last substring equal to sv
       REX_NO_DISCARD size_type rfind(const basic_string_view<value_type, traits_type>& sv, size_type pos = s_npos) const
       {
+        if (pos == s_npos)
+        {
+          pos = length();
+        }
         return internal::string_utils::rfind<traits_type, const_pointer>(m_begin, length(), pos, sv.data(), sv.length(), s_npos);
       }
 
@@ -1458,7 +1469,7 @@ namespace rsl
       // This is not possible in RSL though as the ctor for const char* for string is explicit.
       // Therefore this takes a basic_string_view
       // finds the last character equal to a character in sv
-      REX_NO_DISCARD size_type find_last_of(const basic_string_view<value_type, traits_type>& sv, size_type pos = s_npos)
+      REX_NO_DISCARD size_type find_last_of(const basic_string_view<value_type, traits_type>& sv, size_type pos = s_npos) const
       {
         return internal::string_utils::find_last_of<traits_type, const_pointer>(m_begin, length(), pos, sv.data(), sv.length(), s_npos);
       }
@@ -1508,59 +1519,59 @@ namespace rsl
 
       /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
       // converts the string to an int32. same as rsl::stoi
-      REX_NO_DISCARD int32 to_int(value_type* strEnd, int32 base = 10) const
+      REX_NO_DISCARD rsl::optional<int32> to_int(int32 base = 10) const
       {
-        return rsl::strtoi(data(), &strEnd, base);
+        return rsl::strtoi(data(), nullptr, base);
       }
       /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
       // converts the string to a long. same as rsl::stol
-      REX_NO_DISCARD long to_long(value_type* strEnd, int32 base = 10) const
+      REX_NO_DISCARD rsl::optional<long> to_long(int32 base = 10) const
       {
-        return rsl::strtol(data(), &strEnd, base);
+        return rsl::strtol(data(), nullptr, base);
       }
       /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
       // converts the string to a long long. same as rsl::stoll
-      REX_NO_DISCARD int64 to_long64(value_type* strEnd, int32 base = 10) const
+      REX_NO_DISCARD rsl::optional<int64> to_long64(int32 base = 10) const
       {
-        return rsl::strtoll(data(), &strEnd, base);
+        return rsl::strtoll(data(), nullptr, base);
       }
 
       /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
       // converts the string to an unsigned int32. same as rsl::stoui
-      REX_NO_DISCARD uint32 to_uint(value_type* strEnd, int32 base = 10) const
+      REX_NO_DISCARD rsl::optional<uint32> to_uint(int32 base = 10) const
       {
-        return rsl::strtoui(data(), &strEnd, base);
+        return rsl::strtoui(data(), nullptr, base);
       }
       /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
       // converts the string to an unsigned long. same as rsl::stoul
-      REX_NO_DISCARD ulong to_ulong(value_type* strEnd, int32 base = 10) const
+      REX_NO_DISCARD rsl::optional<ulong> to_ulong(int32 base = 10) const
       {
-        return rsl::strtoul(data(), &strEnd, base);
+        return rsl::strtoul(data(), nullptr, base);
       }
       /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
       // converts the string to an unsigned long long. same as rsl::stoull
-      REX_NO_DISCARD uint64 to_ulong64(value_type* strEnd, int32 base = 10) const
+      REX_NO_DISCARD rsl::optional<uint64> to_ulong64(int32 base = 10) const
       {
-        return rsl::strtoull(data(), &strEnd, base);
+        return rsl::strtoull(data(), nullptr, base);
       }
 
       /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
       // converts the string to a float. same as rsl::stof
-      REX_NO_DISCARD float32 to_float(value_type* strEnd, int32 base = 10) const
+      REX_NO_DISCARD rsl::optional<float32> to_float(int32 /*base*/ = 10) const
       {
-        return rsl::strtof(data(), &strEnd, base);
+        return rsl::strtof(data(), nullptr);
       }
       /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
       // converts the string to a double. same as rsl::stod
-      REX_NO_DISCARD float64 to_double(value_type* strEnd, int32 base = 10) const
+      REX_NO_DISCARD rsl::optional<float64> to_double(int32 /*base*/ = 10) const
       {
-        return rsl::strtod(data(), &strEnd, base);
+        return rsl::strtod(data(), nullptr);
       }
       /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
       // converts the string to a long double. same as rsl::stold
-      REX_NO_DISCARD lfloat64 to_lfloat(value_type* strEnd, int32 base = 10) const
+      REX_NO_DISCARD rsl::optional<lfloat64> to_lfloat(int32 /*base*/ = 10) const
       {
-        return rsl::strtold(data(), &strEnd, base);
+        return rsl::strtold(data(), nullptr);
       }
 
     private:
