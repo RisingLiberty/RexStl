@@ -1072,7 +1072,7 @@ namespace rsl
         REX_ASSERT_X(first_idx < size(), "'first' iterator out of range");
         REX_ASSERT_X(last_idx <= size(), "'last' iterator out of range");
 
-        const_pointer s = rsl::iterator_to_pointer(first2);
+        const_pointer s        = rsl::iterator_to_pointer(first2);
         const size_type length = rsl::distance(first2, last2);
         return replace(first_idx, last_idx - first_idx, s, length);
       }
@@ -1096,19 +1096,19 @@ namespace rsl
         REX_ASSERT_X(pos >= 0 && pos < length(), "pos out of range");
 
         const size_type num_chars_to_add = count2 - count;
-        const size_type old_size = size();
+        const size_type old_size         = size();
 
         // can't do this if we're shrinking because
         // we might drop data that we need in the second copy phase
-        if (num_chars_to_add > 0)
+        if(num_chars_to_add > 0)
         {
           resize(size() + num_chars_to_add);
         }
 
         // copy the elements substring after pos + count to where they will be after replacement
         const size_type num_chars_after_copy = length() - (pos + count);
-        const_pointer src = &m_begin[pos] + count;
-        pointer dst = &m_begin[pos] + count2;
+        const_pointer src                    = &m_begin[pos] + count;
+        pointer dst                          = &m_begin[pos] + count2;
         traits_type::move(dst, src, num_chars_after_copy);
 
         // now copy the replacement string into the current string
@@ -1300,7 +1300,7 @@ namespace rsl
       // The standard doesn't provide an overload for a string literal
       // finds the first substring equal to s
       template <count_t Size>
-      REX_NO_DISCARD size_type find(const value_type(&s)[Size], size_type pos = 0) const // NOLINT(modernize-avoid-c-arrays)
+      REX_NO_DISCARD size_type find(const value_type (&s)[Size], size_type pos = 0) const // NOLINT(modernize-avoid-c-arrays)
       {
         return internal::string_utils::find<traits_type, const_pointer>(m_begin, length(), pos, s, Size - 1, s_npos);
       }
@@ -1328,7 +1328,7 @@ namespace rsl
       // finds the last substring equal to str
       REX_NO_DISCARD size_type rfind(const basic_string& str, size_type pos = s_npos) const
       {
-        if (pos == s_npos)
+        if(pos == s_npos)
         {
           pos = length();
         }
@@ -1351,7 +1351,7 @@ namespace rsl
       // finds the last character equal to ch
       REX_NO_DISCARD size_type rfind(value_type ch, size_type pos = s_npos) const
       {
-        if (pos == s_npos)
+        if(pos == s_npos)
         {
           pos = length();
         }
@@ -1365,7 +1365,7 @@ namespace rsl
       // find the last substring equal to sv
       REX_NO_DISCARD size_type rfind(const basic_string_view<value_type, traits_type>& sv, size_type pos = s_npos) const
       {
-        if (pos == s_npos)
+        if(pos == s_npos)
         {
           pos = length();
         }

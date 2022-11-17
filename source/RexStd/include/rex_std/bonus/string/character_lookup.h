@@ -44,7 +44,7 @@ namespace rsl
       {
         for(size_type i = 0; i < length; ++i)
         {
-          value_type c = str[i];
+          const value_type c = str[i];
           m_table[c]   = true;
         }
       }

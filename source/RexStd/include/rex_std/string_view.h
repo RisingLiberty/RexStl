@@ -70,7 +70,7 @@ namespace rsl
       {
       }
       // Constructs a view starting at s, reaching to the first null termination char.
-      constexpr explicit basic_string_view(const_pointer const& s)
+      constexpr explicit basic_string_view(const const_pointer& s)
           : m_data(s)
           , m_length(traits_type::length(s))
       {
@@ -344,7 +344,7 @@ namespace rsl
       // finds the last substring equal to the given character sequence in this view
       constexpr size_type rfind(basic_string_view view, card32 pos = s_npos) const
       {
-        if (pos == s_npos)
+        if(pos == s_npos)
         {
           pos = length();
         }
@@ -353,7 +353,7 @@ namespace rsl
       // finds the last substring equal to the given character sequence in this view
       constexpr size_type rfind(value_type c, card32 pos = s_npos) const
       {
-        if (pos == s_npos)
+        if(pos == s_npos)
         {
           pos = length();
         }
@@ -367,7 +367,7 @@ namespace rsl
       // finds the last substring equal to the given character sequence in this view
       constexpr size_type rfind(const_pointer str, card32 pos = s_npos) const
       {
-        if (pos == s_npos)
+        if(pos == s_npos)
         {
           pos = length();
         }
@@ -511,7 +511,7 @@ namespace rsl
     }
 
     template <typename CharType, typename Traits, count_t Size>
-    constexpr bool operator==(basic_string_view<CharType, Traits> lhs, const CharType(&rhs)[Size])
+    constexpr bool operator==(basic_string_view<CharType, Traits> lhs, const CharType (&rhs)[Size]) // NOLINT(modernize-avoid-c-arrays)
     {
       return lhs == rsl::basic_string_view<CharType, Traits>(rhs);
     }
@@ -524,7 +524,7 @@ namespace rsl
     }
 
     template <typename CharType, typename Traits, count_t Size>
-    constexpr bool operator!=(basic_string_view<CharType, Traits> lhs, const CharType(&rhs)[Size])
+    constexpr bool operator!=(basic_string_view<CharType, Traits> lhs, const CharType (&rhs)[Size]) // NOLINT(modernize-avoid-c-arrays)
     {
       return lhs != rsl::basic_string_view<CharType, Traits>(rhs);
     }
@@ -536,7 +536,7 @@ namespace rsl
       return lhs.compare(rhs) < 0;
     }
     template <typename CharType, typename Traits, count_t Size>
-    constexpr bool operator<(basic_string_view<CharType, Traits> lhs, const CharType(&rhs)[Size])
+    constexpr bool operator<(basic_string_view<CharType, Traits> lhs, const CharType (&rhs)[Size]) // NOLINT(modernize-avoid-c-arrays)
     {
       return lhs.compare(rhs) < 0;
     }
@@ -548,7 +548,7 @@ namespace rsl
       return lhs.compare(rhs) <= 0;
     }
     template <typename CharType, typename Traits, count_t Size>
-    constexpr bool operator<=(basic_string_view<CharType, Traits> lhs, const  CharType(&rhs)[Size])
+    constexpr bool operator<=(basic_string_view<CharType, Traits> lhs, const CharType (&rhs)[Size]) // NOLINT(modernize-avoid-c-arrays)
     {
       return lhs.compare(rhs) <= 0;
     }
@@ -559,7 +559,7 @@ namespace rsl
       return lhs.compare(rhs) > 0;
     }
     template <typename CharType, typename Traits, count_t Size>
-    constexpr bool operator>(basic_string_view<CharType, Traits> lhs, const CharType(&rhs)[Size])
+    constexpr bool operator>(basic_string_view<CharType, Traits> lhs, const CharType (&rhs)[Size]) // NOLINT(modernize-avoid-c-arrays)
     {
       return lhs.compare(rhs) > 0;
     }
@@ -570,7 +570,7 @@ namespace rsl
       return lhs.compare(rhs) >= 0;
     }
     template <typename CharType, typename Traits, count_t Size>
-    constexpr bool operator>=(basic_string_view<CharType, Traits> lhs, const CharType(&rhs)[Size])
+    constexpr bool operator>=(basic_string_view<CharType, Traits> lhs, const CharType (&rhs)[Size]) // NOLINT(modernize-avoid-c-arrays)
     {
       return lhs.compare(rhs) >= 0;
     }

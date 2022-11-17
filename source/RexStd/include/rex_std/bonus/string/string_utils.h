@@ -504,7 +504,7 @@ namespace rsl
         }
 
         // process string
-        T value = 0;
+        T value        = 0;
         bool value_set = false;
 
         while(*str != '\0')
@@ -544,7 +544,7 @@ namespace rsl
           /**str_end = const_cast<Iterator>(str);*/
         }
 
-        if (value_set)
+        if(value_set)
         {
           return optional<T>(value * sign);
         }
@@ -588,7 +588,7 @@ namespace rsl
         }
 
         // process string
-        T value = 0;
+        T value        = 0;
         bool value_set = false;
         while(*str != '\0')
         {
@@ -626,7 +626,7 @@ namespace rsl
         //{
         //  *str_end = const_cast<Iterator>(str);
         //}
-        if (value_set)
+        if(value_set)
         {
           return optional<T>(value);
         }
@@ -767,7 +767,7 @@ namespace rsl
         template <typename Traits, typename Pointer, typename SizeType>
         int32 compare(Pointer lhs, Pointer rhs, SizeType lhsLength, SizeType rhsLength)
         {
-          int32 result = Traits::compare(lhs, rhs, (rsl::min)(lhsLength, rhsLength));
+          const int32 result = Traits::compare(lhs, rhs, (rsl::min)(lhsLength, rhsLength));
 
           if(result != 0)
           {
@@ -845,7 +845,7 @@ namespace rsl
         template <typename Traits, typename Pointer, typename SizeType>
         SizeType find_first_of(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer rhsStr, SizeType rhsLength, SizeType defaultValue)
         {
-          character_lookup<typename Traits::char_type> lookup(rhsStr, rhsLength);
+          const character_lookup<typename Traits::char_type> lookup(rhsStr, rhsLength);
 
           for(SizeType i = pos; i < lhsLength; ++i)
           {
@@ -864,7 +864,7 @@ namespace rsl
         {
           character_lookup<typename Traits::char_type> lookup(rhsStr, rhsLength);
 
-          for(SizeType i = lhsLength; i >= 0; --i)
+          for(SizeType i = lhsLength; i >= pos; --i)
           {
             auto c = lhsStr[i];
             if(lookup.exists(c))
