@@ -4,6 +4,6 @@
     <StartAction>Program</StartAction>
     <StartProgram>D:\Tools\sharpmake\install\sharpmake.Application.exe</StartProgram>
     <StartArguments>/sources%28"src/main.sharpmake.cs"%29</StartArguments>
-    <StartWorkingDirectory>D:\Libraries\STL_Sharpmake\build\sharpmake\</StartWorkingDirectory>
+    <StartWorkingDirectory>D:\Libraries\STL\build\sharpmake\</StartWorkingDirectory>
   </PropertyGroup>
 </Project>

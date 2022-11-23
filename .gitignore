@@ -40,3 +40,7 @@ build/scripts/__pycache__/
 build/sharpmake/.vs/
 build/sharpmake/bin/
 build/sharpmake/obj/
+.vs/
+rex-standard-library.ninja
+rex-standard-library.sln
+build/sharpmake/.ninja/
