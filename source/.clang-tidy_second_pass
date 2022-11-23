@@ -3,7 +3,7 @@
 # Author: Nick De Breuck
 # Twitter: @nick_debreuck
 # 
-# File: .clang-tidy
+# File: .clang-tidy_second_pass
 # Copyright (c) Nick De Breuck 2022
 #
 # ============================================
@@ -274,7 +274,6 @@
 # [hicpp-vararg]
 # [llvm-else-after-return]
 # [llvm-qualified-auto]
-
 
 Checks: >
   *,
