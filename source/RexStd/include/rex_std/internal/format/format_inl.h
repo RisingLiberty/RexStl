@@ -42,7 +42,8 @@ namespace detail
     REX_MAYBE_UNUSED const int result = std::fprintf(stderr, "%s:%d: assertion failed: %s", file, line, message);
     // Chosen instead of rsl::abort to satisfy Clang in CUDA mode during device
     // code pass.
-    std::terminate();
+
+    // std::terminate();
   }
 
   FMT_FUNC void throw_format_error(const char* message) // NOLINT(misc-definitions-in-headers)

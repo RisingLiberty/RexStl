@@ -323,7 +323,7 @@ constexpr FMT_INLINE auto is_constant_evaluated(bool defaultValue = false) noexc
   ignore_unused(defaultValue);
   return rsl::is_constant_evaluated();
 #else
-  return default_value;
+  return defaultValue;
 #endif
 }
 
@@ -539,14 +539,14 @@ constexpr bool is_arithmetic_type(type t)
   return t > type::none_type && t <= type::last_numeric_type;
 }
 
-FMT_NORETURN FMT_API void throw_format_error(const char* message);
+FMT_API void throw_format_error(const char* message);
 
 struct error_handler
 {
   constexpr error_handler()                     = default;
   constexpr error_handler(const error_handler&) = default;
 
-  constexpr ~error_handler() = default;
+  ~error_handler() = default;
 
   error_handler& operator=(const error_handler&) = default;
 
@@ -2019,20 +2019,20 @@ FMT_CONSTEXPR FMT_INLINE auto make_value(T&& val) -> value<Context>
 {
   const auto& arg = arg_mapper<Context>().map(FMT_FORWARD(val));
 
-  static constexpr bool formattable_char = !rsl::is_same<decltype(arg), const unformattable_char&>::value;
+  constexpr bool formattable_char = !rsl::is_same<decltype(arg), const unformattable_char&>::value;
   static_assert(formattable_char, "Mixing character types is disallowed.");
 
-  static constexpr bool formattable_const = !rsl::is_same<decltype(arg), const unformattable_const&>::value;
+  constexpr bool formattable_const = !rsl::is_same<decltype(arg), const unformattable_const&>::value;
   static_assert(formattable_const, "Cannot format a const argument.");
 
   // Formatting of arbitrary pointers is disallowed. If you want to output
   // a pointer cast it to "void *" or "const void *". In particular, this
   // forbids formatting of "[const] volatile char *" which is printed as bool
   // by iostreams.
-  static constexpr bool formattable_pointer = !rsl::is_same<decltype(arg), const unformattable_pointer&>::value;
+  constexpr bool formattable_pointer = !rsl::is_same<decltype(arg), const unformattable_pointer&>::value;
   static_assert(formattable_pointer, "Formatting of non-void pointers is disallowed.");
 
-  static constexpr bool formattable = !rsl::is_same<decltype(arg), const unformattable&>::value;
+  constexpr bool formattable = !rsl::is_same<decltype(arg), const unformattable&>::value;
   static_assert(formattable, "Cannot format an argument. To make type T formattable provide a "
                              "formatter<T> specialization: https://fmt.dev/latest/api.html#udt");
   return {arg};
@@ -2587,7 +2587,7 @@ public:
       : m_specs(other.m_specs)
   {
   }
-  FMT_CONSTEXPR ~specs_setter() = default;
+  ~specs_setter() = default; // constexpr dtor exists in C++20
 
   FMT_CONSTEXPR void on_align(align_t align)
   {
@@ -2657,7 +2657,7 @@ public:
   {
   }
 
-  FMT_CONSTEXPR ~dynamic_specs_handler() = default;
+  ~dynamic_specs_handler() = default; // constexpr dtor exists in C++20
 
   FMT_CONSTEXPR dynamic_specs_handler& operator=(const dynamic_specs_handler&) = default;
 

@@ -129,7 +129,7 @@ namespace rsl
 
         constexpr duration()      = default;
         duration(const duration&) = default;
-        constexpr ~duration()     = default;
+        ~duration()               = default;
 
         template <typename Rep2>
         constexpr explicit duration(const Rep2& rep2, enable_if_t<is_convertible_v<Rep2, Rep> && (treat_as_floating_point<Rep>::value || !treat_as_floating_point<Rep2>::value)>** /*unused*/ = nullptr)
@@ -500,8 +500,13 @@ namespace rsl
   {
     namespace chrono_literals
     {
-#pragma warning(push)
-#pragma warning(disable : 4455)                             // literal suffix identifiers that do not start with an underscore are reserved
+#if defined(REX_MSVC_COMPILER)
+  #pragma warning(push)
+  #pragma warning(disable : 4455) // literal suffix identifiers that do not start with an underscore are reserved
+#elif defined(REX_CLANG_COMPILER)
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wuser-defined-literals" // literal suffix identifiers that do not start with an underscore are reserved
+#endif
       constexpr rsl::chrono::hours operator"" h(uint64 val) // NOLINT(clang-diagnostic-user-defined-literals)
       {
         return rsl::chrono::hours(val);
@@ -550,7 +555,11 @@ namespace rsl
       {
         return rsl::chrono::duration<float64, nano>(val);
       }
-#pragma warning(pop)
+#if defined(REX_MSVC_COMPILER)
+  #pragma warning(pop)
+#else // defined(REX_CLANG_COMPILER)
+  #pragma clang diagnostic pop
+#endif
     } // namespace chrono_literals
   }   // namespace v1
 } // namespace rsl

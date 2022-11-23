@@ -76,10 +76,12 @@ namespace rsl
       struct is_integral_helper<tchar> : public true_type
       {
       };
+#ifdef REX_ENABLE_WITH_CPP20
       template <>
       struct is_integral_helper<char8_t> : public true_type
       {
       };
+#endif
       template <>
       struct is_integral_helper<char16_t> : public true_type
       {

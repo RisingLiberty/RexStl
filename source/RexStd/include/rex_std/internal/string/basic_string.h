@@ -2191,8 +2191,13 @@ namespace rsl
 
     namespace string_literals
     {
-#pragma warning(push)
-#pragma warning(disable : 4455) // literal suffix identifiers that do not start with an underscore are reserved
+#if defined(REX_MSVC_COMPILER)
+  #pragma warning(push)
+  #pragma warning(disable : 4455) // literal suffix identifiers that do not start with an underscore are reserved
+#elif defined(REX_CLANG_COMPILER)
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wuser-defined-literals" // literal suffix identifiers that do not start with an underscore are reserved
+#endif
       // returns a string of the desired type
       string operator""s(const char8* s, size_t len); // NOLINT(clang-diagnostic-user-defined-literals)
       // returns a string of the desired type
@@ -2201,7 +2206,11 @@ namespace rsl
       u32string operator""s(const char32_t* s, size_t len); // NOLINT(clang-diagnostic-user-defined-literals)
       // returns a string of the desired type
       wstring operator""s(const tchar* s, size_t len); // NOLINT(clang-diagnostic-user-defined-literals)
-#pragma warning(pop)
+#if defined(REX_MSVC_COMPILER)
+  #pragma warning(pop)
+#else // defined(REX_CLANG_COMPILER)
+  #pragma clang diagnostic pop
+#endif
     } // namespace string_literals
 
     template <typename T>

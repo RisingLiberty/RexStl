@@ -592,7 +592,7 @@ namespace detail
   template <typename T>
   using checked_ptr = T*;
   template <typename T>
-  constexpr auto make_checked(T* p, count_t) -> T*
+  constexpr auto make_checked(T* p, count_t /*unused*/) -> T*
   {
     return p;
   }

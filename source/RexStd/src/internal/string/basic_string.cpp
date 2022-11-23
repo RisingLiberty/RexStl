@@ -16,7 +16,6 @@ namespace rsl
 {
   inline namespace v1
   {
-
     rsl::optional<int32> stoi(const string& str, char8* strEnd, int32 base)
     {
       return rsl::strtol(str.data(), &strEnd, base);
@@ -93,8 +92,13 @@ namespace rsl
 
     namespace string_literals
     {
-#pragma warning(push)
-#pragma warning(disable : 4455) // literal suffix identifiers that do not start with an underscore are reserved
+#if defined(REX_MSVC_COMPILER)
+  #pragma warning(push)
+  #pragma warning(disable : 4455) // literal suffix identifiers that do not start with an underscore are reserved
+#elif defined(REX_CLANG_COMPILER)
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wuser-defined-literals" // literal suffix identifiers that do not start with an underscore are reserved
+#endif
       // returns a string of the desired type
       string operator""s(const char8* s, size_t len) // NOLINT(clang-diagnostic-user-defined-literals)
       {
@@ -119,8 +123,11 @@ namespace rsl
         const count_t len_as_count = static_cast<count_t>(len);
         return wstring(s, len_as_count);
       }
-#pragma warning(pop)
+#if defined(REX_MSVC_COMPILER)
+  #pragma warning(pop)
+#else // defined(REX_CLANG_COMPILER)
+  #pragma clang diagnostic pop
+#endif
     } // namespace string_literals
-
-  } // namespace v1
+  }   // namespace v1
 } // namespace rsl

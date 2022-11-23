@@ -92,7 +92,7 @@ namespace rsl
         constexpr optional_storage(const optional_storage&) = default;
         constexpr optional_storage(optional_storage&&)      = default;
 
-        constexpr ~optional_storage()
+        ~optional_storage()
         {
           if(m_has_value)
           {
@@ -207,7 +207,7 @@ namespace rsl
         }
 
         // default to make optional trivially destructible
-        constexpr ~optional_storage() = default;
+        ~optional_storage() = default;
 
         template <typename... Args>
         constexpr void construct_value(Args&&... args)
@@ -377,7 +377,7 @@ namespace rsl
       }
 
       // if this contains a value and is not trivially destructible, it calls its constructor
-      constexpr ~optional() = default;
+      ~optional() = default;
 
       // if this contains a value, it's destroyed, afterwards this object contains no value
       constexpr optional& operator=(nullopt_t /*unused*/)

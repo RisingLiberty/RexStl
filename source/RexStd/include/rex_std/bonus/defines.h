@@ -68,9 +68,3 @@ MERGE(str, __LINE__)
 #else
   #error No REX_ALIGN specified for the current compiler
 #endif
-
-#ifdef _MSC_VER
-  #define REX_COMPILER_MSVC
-#else
-  #error "Unknown Compiler"
-#endif

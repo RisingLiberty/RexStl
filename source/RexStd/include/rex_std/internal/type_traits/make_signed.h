@@ -150,11 +150,13 @@ namespace rsl
     {
       using type = int8;
     };
+#ifdef REX_ENABLE_WITH_CPP20
     template <>
     struct make_signed<char8_t>
     {
       using type = int8;
     };
+#endif
 
     template <typename T>
     struct make_signed<const T>

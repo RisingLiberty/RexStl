@@ -103,7 +103,7 @@ namespace rsl
             return result;
 
           // We could use memcpy here if there's no range overlap, but memcpy is rarely much faster than memmove.
-          card32 len = static_cast<card32>(reinterpret_cast<uintptr>(last) - reinterpret_cast<uintptr>(first)); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+          const card32 len = static_cast<card32>(reinterpret_cast<uintptr>(last) - reinterpret_cast<uintptr>(first)); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
           return static_cast<T*>(memmove(result, first, len)) + len;
         }
       };

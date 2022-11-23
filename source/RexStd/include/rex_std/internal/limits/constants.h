@@ -39,7 +39,7 @@ namespace rsl
 
     namespace limits_32bit
     {
-      inline constexpr int32 signed_min    = -2'147'483'648;
+      inline constexpr int32 signed_min    = -2'147'483'647 - 1;
       inline constexpr int32 signed_max    = 2'147'483'647;
       inline constexpr uint32 unsigned_max = 4'294'967'295;
 

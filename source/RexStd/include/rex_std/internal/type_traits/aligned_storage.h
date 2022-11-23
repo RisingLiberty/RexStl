@@ -41,7 +41,7 @@ namespace rsl
         memcpy(m_buff, other.m_buff, sizeof(T));
       }
 
-      constexpr ~aligned_storage() = default;
+      ~aligned_storage() = default;
 
       constexpr aligned_storage& operator=(const aligned_storage& other) // NOLINT(bugprone-unhandled-self-assignment)
       {

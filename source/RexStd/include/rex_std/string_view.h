@@ -12,6 +12,7 @@
 
 #pragma once
 
+#include "rex_std/bonus/compiler.h"
 #include "rex_std/bonus/defines.h"
 #include "rex_std/bonus/string/string_utils.h"
 #include "rex_std/bonus/types.h"
@@ -97,7 +98,7 @@ namespace rsl
       constexpr basic_string_view(rsl::nullptr_t) = delete;
 
       // default destructor
-      constexpr ~basic_string_view() = default;
+      ~basic_string_view() = default;
 
       // assigns a new view
       constexpr basic_string_view& operator=(const basic_string_view&) = default;
@@ -592,8 +593,13 @@ namespace rsl
 
     namespace string_view_literals
     {
-#pragma warning(push)
-#pragma warning(disable : 4455) // literal suffix identifiers that do not start with an underscore are reserved
+#if defined(REX_MSVC_COMPILER)
+  #pragma warning(push)
+  #pragma warning(disable : 4455) // literal suffix identifiers that do not start with an underscore are reserved
+#elif defined(REX_CLANG_COMPILER)
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wuser-defined-literals" // literal suffix identifiers that do not start with an underscore are reserved
+#endif
       // returns a string view of the desired type
       constexpr string_view operator""s(const char8* s, size_t len) // NOLINT(clang-diagnostic-user-defined-literals)
       {
@@ -618,7 +624,11 @@ namespace rsl
         const count_t len_as_count = static_cast<count_t>(len);
         return WStringView(s, len_as_count);
       }
-#pragma warning(pop)
+#if defined(REX_MSVC_COMPILER)
+  #pragma warning(pop)
+#else // defined(REX_CLANG_COMPILER)
+  #pragma clang diagnostic pop
+#endif
     } // namespace string_view_literals
 
     template <typename CharType, typename Traits>

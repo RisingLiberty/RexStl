@@ -153,12 +153,13 @@ namespace rsl
     {
       using type = uint8;
     };
+#ifdef REX_ENABLE_WITH_CPP20
     template <>
     struct make_unsigned<char8_t>
     {
       using type = uint8;
     };
-
+#endif
     template <typename T>
     struct make_unsigned<const T>
     {
