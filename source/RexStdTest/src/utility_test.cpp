@@ -12,7 +12,7 @@
 
 #include "catch2/catch.hpp"
 
-//NOLINTBEGIN
+// NOLINTBEGIN
 
 #include "rex_std/internal/type_traits/add_const.h"
 #include "rex_std/internal/type_traits/add_lvalue_reference.h"
@@ -29,7 +29,7 @@ namespace utility_test
 
 TEST_CASE("as const")
 {
-  int x = 0;
+  int x               = 0;
   const auto& const_x = rsl::as_const(x);
 
   static_assert(rsl::is_same_v<decltype(const_x), rsl::add_lvalue_reference_t<rsl::add_const_t<decltype(x)>>>);
@@ -45,8 +45,8 @@ TEST_CASE("swap")
 }
 TEST_CASE("exchange")
 {
-  int x = 1;
-  int const y = rsl::exchange(x, 2);
+  int x       = 1;
+  const int y = rsl::exchange(x, 2);
 
   REQUIRE(x == 2);
   REQUIRE(y == 1);
@@ -149,4 +149,4 @@ TEST_CASE("integer sequence")
   REQUIRE(integers.size() == 3);
 }
 
-//NOLINTEND
+// NOLINTEND

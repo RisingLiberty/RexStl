@@ -279,9 +279,9 @@ public class BaseProject : Project
 }
 
 [Generate]
-public class AppProject : BaseProject
+public class RexStandardLibraryExe : BaseProject
 {
-  public AppProject() : base()
+  public RexStandardLibraryExe() : base()
   {
     // The name of the project in Visual Studio. The default is the name of
     // the class, but you usually want to override that.
@@ -305,14 +305,48 @@ public class AppProject : BaseProject
 
     conf.Output = Configuration.OutputType.Exe;
 
-    conf.add_dependency<LibProject>(target);
+    conf.add_dependency<RexStandardLibrary>(target);
   }
 }
 
 [Generate]
-public class LibProject : BaseProject
+public class RexStandardLibraryTests : BaseProject
 {
-  public LibProject() : base()
+  public RexStandardLibraryTests() : base()
+  {
+    // The name of the project in Visual Studio. The default is the name of
+    // the class, but you usually want to override that.
+    Name = "RexStdTest";
+
+    // The directory that contains the source code we want to build is the
+    // same as this one. This string essentially means "the directory of
+    // the script you're reading right now."
+    SourceRootPath = Path.Combine(Globals.SourceRoot, "RexStdTest");
+
+    RexTarget vsTarget = new RexTarget(Platform.win64, DevEnv.vs2019, Config.debug | Config.debug_opt | Config.release, Compiler.MSVC);
+    RexTarget ninjaTarget = new RexTarget(Platform.win64, DevEnv.ninja, Config.debug | Config.debug_opt | Config.release, Compiler.MSVC | Compiler.Clang);
+
+    // Specify the targets for which we want to generate a configuration for.
+    AddTargets(vsTarget, ninjaTarget);
+  }
+
+  public override void Configure(RexConfiguration conf, RexTarget target)
+  {
+    base.Configure(conf, target);
+
+    conf.Output = Configuration.OutputType.Exe;
+
+    conf.Options.Remove(Options.Vc.Compiler.JumboBuild.Enable);
+    conf.EventPostBuild.Clear();
+
+    conf.add_dependency<RexStandardLibrary>(target);
+  }
+}
+
+[Generate]
+public class RexStandardLibrary : BaseProject
+{
+  public RexStandardLibrary() : base()
   {
     // The name of the project in Visual Studio. The default is the name of
     // the class, but you usually want to override that.
@@ -384,7 +418,8 @@ public class MainSolution : Solution
     //
     // You could, for example, exclude a project that only supports 64-bit
     // from the 32-bit targets.
-    conf.AddProject<AppProject>(target);
+    conf.AddProject<RexStandardLibraryExe>(target);
+    conf.AddProject<RexStandardLibraryTests>(target);
   }
 }
 

@@ -12,6 +12,7 @@
 
 #pragma once
 
+#include "rex_std/bonus/compiler.h"
 #include "rex_std/bonus/types.h"
 #include "rex_std/internal/assert/assert_fwd.h"
 #include "rex_std/internal/functional/invoke.h"
@@ -460,14 +461,24 @@ namespace rsl
           }
         }
 
-#pragma warning(push)
-#pragma warning(disable : 4716) // 'function' must return a value
+#if defined(REX_MSVC_COMPILER)
+  #pragma warning(push)
+  #pragma warning(disable : 4716) // 'function' must return a value
+#elif defined(REX_CLANG_COMPILER)
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wreturn-type" // non-void function should return a value
+#endif
         static R invoke_bad_func_call(Args... /*args*/, const typename base::functor_storage_type& /*storage*/)
         {
           // can't assume R is default constructible, so we disable no-return warning instead.
           REX_ASSERT("Bad function call!");
+          // if R is not default constructible, we'll get a compiler error here, meaning we did something wrong.
         } // NOLINT(clang-diagnostic-return-type)
-#pragma warning(pop)
+#if defined(REX_MSVC_COMPILER)
+  #pragma warning(pop)
+#elif defined(REX_CLANG_COMPILER)
+  #pragma clang diagnostic push
+#endif
 
       private:
         using FuncPtrManager = void* (*)(void*, void*, typename base::manager_operations);

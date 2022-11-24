@@ -34,7 +34,13 @@ namespace rsl
     class source_location
     {
     public:
-      REX_CONSTEVAL_WITH_CPP20 source_location() = default;
+      REX_CONSTEVAL_WITH_CPP20 source_location()
+          : m_line(0)
+          , m_column(0)
+          , m_file_name(nullptr)
+          , m_function_name(nullptr)
+      {
+      }
 
       static constexpr source_location current(const card32 line = __builtin_LINE(), card32 column = __builtin_COLUMN(), const char8* file = __builtin_FILE(), const char8* function = __builtin_FUNCTION())
       {

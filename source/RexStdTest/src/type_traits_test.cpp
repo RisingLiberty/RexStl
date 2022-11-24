@@ -11,26 +11,20 @@
 // ============================================
 
 #include "catch2/catch.hpp"
-
 #include "rex_std/type_traits.h"
 
-//NOLINTBEGIN
+// NOLINTBEGIN
 
-void dummy_function() noexcept
-{
-
-}
+void dummy_function() noexcept {}
 
 class dummy_class
 {
 public:
-  void dummy_member_func()
-  {}
+  void dummy_member_func() {}
 };
 
 union dummy_union
 {
-
 };
 
 enum dummy_enum
@@ -44,7 +38,8 @@ enum class dummy_enum_class
 };
 
 enum class dummy_enum_class_short : short
-{};
+{
+};
 
 // trivial type:
 // - scalar types
@@ -54,19 +49,20 @@ enum class dummy_enum_class_short : short
 // - arrays of trivial types
 class trivial_class
 {
-
 };
 
 class non_trivial_class
 {
 public:
   non_trivial_class(int x)
-    : m_x(x)
-  {}
+      : m_x(x)
+  {
+  }
 
   non_trivial_class(const non_trivial_class& other)
-    : m_x(other.m_x)
-  {}
+      : m_x(other.m_x)
+  {
+  }
 
 private:
   int m_x;
@@ -77,7 +73,7 @@ private:
 // - has no virtual functions and no virtual base classes
 // - has the same access controll for all non-static data members
 // - only one class in the hierarchy has non-static data members, and
-// - informally, none of the base classes has the same type as the first non - static data member. 
+// - informally, none of the base classes has the same type as the first non - static data member.
 // - formally: given the class as S, has no element of the set M(S) of types as a base class, where M(X) for a type X is defined as :
 //    -if X is a non - union class type with no(possibly inherited) non - static data members, the set M(X) is empty.
 //    -if X is a non - union class type whose first non - static data member has type X0(where said member may be an anonymous union), the set M(X) consists of X0and the elements of M(X0).
@@ -89,8 +85,9 @@ class standard_layout_class
 {
 public:
   standard_layout_class()
-    : m_x(0)
-  {}
+      : m_x(0)
+  {
+  }
 
 private:
   int m_x;
@@ -132,7 +129,8 @@ struct non_has_unique_object_represenations_class
 };
 
 class empty_class
-{};
+{
+};
 
 class non_empty_class
 {
@@ -161,20 +159,26 @@ public:
   virtual void foo() {}
 };
 
-class final_class final {};
-class non_final_class {};
+class final_class final
+{
+};
+class non_final_class
+{
+};
 
 class constructible_test_class
 {
 public:
   constructible_test_class(int n)
-    : m_v1(n)
-    , m_v2()
-  {}
+      : m_v1(n)
+      , m_v2()
+  {
+  }
   constructible_test_class(int n, double f) noexcept
-    : m_v1(n)
-    , m_v2(f)
-  {}
+      : m_v1(n)
+      , m_v2(f)
+  {
+  }
 
 private:
   int m_v1;
@@ -182,7 +186,8 @@ private:
 };
 
 class default_constructible_test_class
-{};
+{
+};
 
 struct trivially_default_constructible_test_class
 {
@@ -211,12 +216,10 @@ class no_move_assignment
 
 class base
 {
-
 };
 
 class derived : public base
 {
-
 };
 
 TEST_CASE("integral constant")
@@ -488,7 +491,7 @@ TEST_CASE("is rvalue reference")
 TEST_CASE("is member object pointer")
 {
   STATIC_REQUIRE(rsl::is_member_object_pointer_v<int(dummy_class::*)> == true);
-  STATIC_REQUIRE(rsl::is_member_object_pointer_v<int(dummy_class::*)()> == false);
+  STATIC_REQUIRE(rsl::is_member_object_pointer_v<int (dummy_class::*)()> == false);
 }
 TEST_CASE("is member function pointer")
 {
@@ -633,12 +636,11 @@ TEST_CASE("is reference")
   STATIC_REQUIRE(rsl::is_reference_v<const int&> == true);
   STATIC_REQUIRE(rsl::is_reference_v<volatile int&> == true);
   STATIC_REQUIRE(rsl::is_reference_v<const volatile int&> == true);
-
 }
 TEST_CASE("is member pointer")
 {
   STATIC_REQUIRE(rsl::is_member_pointer_v<int(dummy_class::*)> == true);
-  STATIC_REQUIRE(rsl::is_member_pointer_v<int(dummy_class::*)()> == true);
+  STATIC_REQUIRE(rsl::is_member_pointer_v<int (dummy_class::*)()> == true);
 
   STATIC_REQUIRE(rsl::is_member_pointer_v<decltype(&dummy_class::dummy_member_func)> == true);
   STATIC_REQUIRE(rsl::is_member_pointer_v<decltype(dummy_function)> == false);
@@ -1047,36 +1049,36 @@ TEST_CASE("has virtual destructor")
 TEST_CASE("is swappable with")
 {
   // NOTE
-  // This trait does not check anything outside the immediate context of the swap expressions: 
-  // if the use of T or U would trigger template specializations, 
-  // generation of implicitly-defined special member functions etc, and those have errors, 
+  // This trait does not check anything outside the immediate context of the swap expressions:
+  // if the use of T or U would trigger template specializations,
+  // generation of implicitly-defined special member functions etc, and those have errors,
   // the actual swap may not compile even if std::is_swappable_with<T,U>::value compiles and evaluates to true.
   // because of this, we can't properly write unit tests because you can't rely on the result.
 }
 TEST_CASE("is swappable")
 {
   // NOTE
-  // This trait does not check anything outside the immediate context of the swap expressions: 
-  // if the use of T or U would trigger template specializations, 
-  // generation of implicitly-defined special member functions etc, and those have errors, 
+  // This trait does not check anything outside the immediate context of the swap expressions:
+  // if the use of T or U would trigger template specializations,
+  // generation of implicitly-defined special member functions etc, and those have errors,
   // the actual swap may not compile even if std::is_swappable_with<T,U>::value compiles and evaluates to true.
   // because of this, we can't properly write unit tests because you can't rely on the result.
 }
 TEST_CASE("is nothrow swappable")
 {
   // NOTE
-  // This trait does not check anything outside the immediate context of the swap expressions: 
-  // if the use of T or U would trigger template specializations, 
-  // generation of implicitly-defined special member functions etc, and those have errors, 
+  // This trait does not check anything outside the immediate context of the swap expressions:
+  // if the use of T or U would trigger template specializations,
+  // generation of implicitly-defined special member functions etc, and those have errors,
   // the actual swap may not compile even if std::is_swappable_with<T,U>::value compiles and evaluates to true.
   // because of this, we can't properly write unit tests because you can't rely on the result.
 }
 TEST_CASE("is nothrow swappable with")
 {
   // NOTE
-  // This trait does not check anything outside the immediate context of the swap expressions: 
-  // if the use of T or U would trigger template specializations, 
-  // generation of implicitly-defined special member functions etc, and those have errors, 
+  // This trait does not check anything outside the immediate context of the swap expressions:
+  // if the use of T or U would trigger template specializations,
+  // generation of implicitly-defined special member functions etc, and those have errors,
   // the actual swap may not compile even if std::is_swappable_with<T,U>::value compiles and evaluates to true.
   // because of this, we can't properly write unit tests because you can't rely on the result.
 }
@@ -1124,10 +1126,11 @@ TEST_CASE("is convertible")
   STATIC_REQUIRE(rsl::is_convertible_v<float, int> == true);
   STATIC_REQUIRE(rsl::is_convertible_v<constructible_test_class, float> == false);
 }
-TEST_CASE("is nothrow comvertible")
+TEST_CASE("is nothrow convertible")
 {
-  STATIC_REQUIRE(rsl::is_nothrow_convertible_v<int, float> == true);
-  STATIC_REQUIRE(rsl::is_nothrow_convertible_v<float, int> == true);
+  STATIC_REQUIRE(rsl::is_nothrow_convertible_v<int, int> == true);
+  // STATIC_REQUIRE(rsl::is_nothrow_convertible_v<int, float> == true); // Emits a implicit conversion warning
+  // STATIC_REQUIRE(rsl::is_nothrow_convertible_v<float, int> == true); // Emits a implicit conversion warning
   STATIC_REQUIRE(rsl::is_nothrow_convertible_v<constructible_test_class, float> == false);
 }
 TEST_CASE("is invocable")
@@ -1145,13 +1148,13 @@ TEST_CASE("is invocable r")
 }
 TEST_CASE("is nothrow invocable")
 {
-  //STATIC_REQUIRE(rsl::is_nothrow_invocable_v<decltype(dummy_function)> == true); // Fails we don't use exceptions anyway
+  // STATIC_REQUIRE(rsl::is_nothrow_invocable_v<decltype(dummy_function)> == true); // Fails we don't use exceptions anyway
   STATIC_REQUIRE(rsl::is_nothrow_invocable_v<decltype(dummy_function), void> == false);
   STATIC_REQUIRE(rsl::is_nothrow_invocable_v<decltype(dummy_function), int> == false);
 }
 TEST_CASE("is nothrow invocable r")
 {
-  //STATIC_REQUIRE(rsl::is_nothrow_invocable_r_v<void, decltype(dummy_function)> == true); // Fails we don't use exceptions anyway
+  // STATIC_REQUIRE(rsl::is_nothrow_invocable_r_v<void, decltype(dummy_function)> == true); // Fails we don't use exceptions anyway
   STATIC_REQUIRE(rsl::is_nothrow_invocable_r_v<int, decltype(dummy_function)> == false);
   STATIC_REQUIRE(rsl::is_nothrow_invocable_r_v<void, decltype(dummy_function), void> == false);
   STATIC_REQUIRE(rsl::is_nothrow_invocable_r_v<void, decltype(dummy_function), int> == false);
@@ -1195,7 +1198,6 @@ TEST_CASE("add const")
   STATIC_REQUIRE(rsl::is_same_v<rsl::add_const_t<volatile int>, const volatile int> == true);
   STATIC_REQUIRE(rsl::is_same_v<rsl::add_const_t<const int*>, const int* const> == true);
   STATIC_REQUIRE(rsl::is_same_v<rsl::add_const_t<int* const>, int* const> == true);
-
 }
 TEST_CASE("add volatile")
 {
@@ -1370,17 +1372,15 @@ TEST_CASE("disjunction")
   STATIC_REQUIRE(rsl::disjunction_v<rsl::is_same<int, int>> == true);
   STATIC_REQUIRE(rsl::disjunction_v<rsl::is_same<int, int>, rsl::is_same<int, float>> == true);
   STATIC_REQUIRE(rsl::disjunction_v<rsl::is_same<char, int>, rsl::is_same<int, float>> == false);
-
 }
 TEST_CASE("negation")
 {
   STATIC_REQUIRE(rsl::negation_v<rsl::is_same<int, int>> == false);
   STATIC_REQUIRE(rsl::negation_v<rsl::is_same<int, float>> == true);
-
 }
 TEST_CASE("is constant evaluated")
 {
   STATIC_REQUIRE(rsl::is_constant_evaluated() == true);
 }
 
-//NOLINTEND
+// NOLINTEND

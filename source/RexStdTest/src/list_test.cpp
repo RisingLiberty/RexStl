@@ -12,6 +12,5 @@
 
 #include "catch2/catch.hpp"
 
-//NOLINTBEGIN
-//NOLINTEND
-
+// NOLINTBEGIN
+// NOLINTEND

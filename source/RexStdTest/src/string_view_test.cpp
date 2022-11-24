@@ -11,7 +11,6 @@
 // ============================================
 
 #include "catch2/catch.hpp"
-
 #include "rex_std/string_view.h"
 
 // NOLINTBEGIN
@@ -26,7 +25,7 @@ TEST_CASE("string view constructor")
   }
   // 2) basic_string_view(const basic_string_view&)
   {
-    rsl::string_view view = "Hello";
+    rsl::string_view view  = "Hello";
     rsl::string_view view2 = view;
     REQUIRE(view == view2);
     REQUIRE(view == "Hello");
@@ -34,7 +33,7 @@ TEST_CASE("string view constructor")
   }
   // 3) basic_string_view(basic_string_view&&)
   {
-    rsl::string_view view = "Hello";
+    rsl::string_view view  = "Hello";
     rsl::string_view view2 = rsl::move(view);
     REQUIRE(view == view2);
     REQUIRE(view == "Hello");
@@ -45,7 +44,7 @@ TEST_CASE("string view constructor")
     rsl::string_view view("Hello", 5);
     REQUIRE(view == "Hello");
   }
-  // 5) basic_string_view(const_pointer& s) 
+  // 5) basic_string_view(const_pointer& s)
   {
     const char8* ptr = "Hello";
     rsl::string_view view(ptr);
@@ -68,17 +67,17 @@ TEST_CASE("string view constructor")
 TEST_CASE("string view assignment")
 {
   {
-    rsl::string_view str = "Hello";
+    rsl::string_view str  = "Hello";
     rsl::string_view str2 = "World";
-    str = str2;
+    str                   = str2;
     REQUIRE(str == str2);
     REQUIRE(str == "World");
     REQUIRE(str2 == "World");
   }
   {
-    rsl::string_view str = "Hello";
+    rsl::string_view str  = "Hello";
     rsl::string_view str2 = "World";
-    str = rsl::move(str2);
+    str                   = rsl::move(str2);
     REQUIRE(str == str2);
     REQUIRE(str == "World");
     REQUIRE(str2 == "World");
@@ -147,7 +146,7 @@ TEST_CASE("string view remove suffix")
 }
 TEST_CASE("string view swap")
 {
-  rsl::string_view str = "Hello";
+  rsl::string_view str  = "Hello";
   rsl::string_view str2 = "View";
   str.swap(str2);
   REQUIRE(str == "View");
@@ -161,7 +160,7 @@ TEST_CASE("string view copy")
 }
 TEST_CASE("string view substr")
 {
-  rsl::string_view str = "Hello";
+  rsl::string_view str  = "Hello";
   rsl::string_view str2 = str.substr(0, 3);
   REQUIRE(str2 == "Hel");
 }
@@ -305,7 +304,6 @@ TEST_CASE("string view find first of")
   REQUIRE(str.find_first_of('H') == 0);
   REQUIRE(str.find_first_of('d') == 16);
   REQUIRE(str.find_first_of('y') == rsl::string_view::npos());
-
 }
 TEST_CASE("string view find_last of")
 {
@@ -325,7 +323,6 @@ TEST_CASE("string view find_last of")
   REQUIRE(str.find_first_not_of('H') == 1);
   REQUIRE(str.find_first_not_of('d') == 0);
   REQUIRE(str.find_first_not_of('y') == 0);
-
 }
 TEST_CASE("string view first not of")
 {
@@ -345,7 +342,6 @@ TEST_CASE("string view first not of")
   REQUIRE(str.find_last_of('H') == 6);
   REQUIRE(str.find_last_of('d') == 16);
   REQUIRE(str.find_last_of('y') == rsl::string_view::npos());
-
 }
 TEST_CASE("string view last not of")
 {

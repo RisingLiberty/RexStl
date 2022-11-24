@@ -669,7 +669,7 @@ namespace rsl
       iterator insert(const_iterator pos, rsl::initializer_list<value_type> ilist)
       {
         const size_type pos_idx                = rsl::distance(cbegin(), pos);
-        const size_type num_elements_to_insert = ilist.size();
+        const size_type num_elements_to_insert = static_cast<size_type>(ilist.size());
 
         prepare_for_new_insert(pos, num_elements_to_insert);
 
@@ -700,14 +700,14 @@ namespace rsl
       // inserts the elements from sv starting at index_str before the element (if any) pointed by pos.
       basic_string& insert(size_type pos, const basic_string_view<value_type, traits_type>& sv, size_type indexStr, size_type count = s_npos)
       {
-        size_type num_chars_to_insert = obj_length_or_count(sv, count, indexStr);
+        const size_type num_chars_to_insert = obj_length_or_count(sv, count, indexStr);
         return insert(pos, sv.data() + indexStr, num_chars_to_insert);
       }
 
       // removes min(count, size() - index) characters starting at index
       basic_string& erase(size_type index = 0, size_type count = s_npos)
       {
-        size_type num_to_erase = count != s_npos ? (rsl::min)(size() - index, count) : size() - index;
+        const size_type num_to_erase = count != s_npos ? (rsl::min)(size() - index, count) : size() - index;
 
         traits_type::move(&m_begin[index], &m_begin[index + num_to_erase], (size() - (index + num_to_erase)));
 
@@ -719,7 +719,7 @@ namespace rsl
       // removes the character at position
       iterator erase(const_iterator position)
       {
-        size_type pos_idx = rsl::distance(cbegin(), position);
+        const size_type pos_idx = rsl::distance(cbegin(), position);
 
         traits_type::move(&m_begin[pos_idx], &m_begin[pos_idx + 1], size() - pos_idx);
 
@@ -731,9 +731,9 @@ namespace rsl
       // removes the characters in the range [frist, last)
       iterator erase(const_iterator first, const_iterator last)
       {
-        size_type first_idx = rsl::distance(cbegin(), first);
-        size_type last_idx  = rsl::distance(cbegin(), last);
-        size_type count     = last_idx - first_idx;
+        const size_type first_idx = rsl::distance(cbegin(), first);
+        const size_type last_idx  = rsl::distance(cbegin(), last);
+        const size_type count     = last_idx - first_idx;
 
         traits_type::move(&m_begin[first_idx], &m_begin[last_idx], count);
 
@@ -804,7 +804,7 @@ namespace rsl
       template <typename InputIt>
       basic_string& append(InputIt first, InputIt last)
       {
-        size_type count = rsl::distance(first, last);
+        const size_type count = rsl::distance(first, last);
 
         increase_capacity_if_needed(count);
 
@@ -822,9 +822,9 @@ namespace rsl
       // appends characters from the initializer list
       basic_string& append(rsl::initializer_list<value_type> ilist)
       {
-        increase_capacity_if_needed(ilist.size());
+        increase_capacity_if_needed(static_cast<size_type>(ilist.size()));
 
-        for(value_type ch: ilist)
+        for(const value_type ch: ilist)
         {
           traits_type::assign(*m_end, ch);
           ++m_end;
@@ -1043,8 +1043,8 @@ namespace rsl
       // replaces the part of the string, indicated by [first, last) with a new string.
       basic_string& replace(const_iterator first, const_iterator last, const basic_string& str)
       {
-        size_type first_idx = rsl::distance(cbegin(), first);
-        size_type last_idx  = rsl::distance(cbegin(), last);
+        const size_type first_idx = rsl::distance(cbegin(), first);
+        const size_type last_idx  = rsl::distance(cbegin(), last);
 
         REX_ASSERT_X(first_idx < size(), "'first' iterator out of range");
         REX_ASSERT_X(last_idx <= size(), "'last' iterator out of range");
@@ -1066,14 +1066,14 @@ namespace rsl
       template <typename InputIt>
       basic_string& replace(const_iterator first, const_iterator last, InputIt first2, InputIt last2)
       {
-        size_type first_idx = rsl::distance(cbegin(), first);
-        size_type last_idx  = rsl::distance(cbegin(), last);
+        const size_type first_idx = rsl::distance(cbegin(), first);
+        const size_type last_idx  = rsl::distance(cbegin(), last);
 
         REX_ASSERT_X(first_idx < size(), "'first' iterator out of range");
         REX_ASSERT_X(last_idx <= size(), "'last' iterator out of range");
 
         const_pointer s        = rsl::iterator_to_pointer(first2);
-        const size_type length = rsl::distance(first2, last2);
+        const size_type length = static_cast<size_type>(rsl::distance(first2, last2));
         return replace(first_idx, last_idx - first_idx, s, length);
       }
       /// RSL Comment: Not in ISO C++ Standard at time of writing (01/Jul/2022)
@@ -1127,8 +1127,8 @@ namespace rsl
       template <count_t Size>
       basic_string& replace(const_iterator first, const_iterator last, const value_type (&s)[Size]) // NOLINT(modernize-avoid-c-arrays)
       {
-        size_type first_idx = rsl::distance(cbegin(), first);
-        size_type last_idx  = rsl::distance(cbegin(), last);
+        const size_type first_idx = rsl::distance(cbegin(), first);
+        const size_type last_idx  = rsl::distance(cbegin(), last);
 
         REX_ASSERT_X(first_idx < size(), "'first' iterator out of range");
         REX_ASSERT_X(last_idx <= size(), "'last' iterator out of range");
@@ -1158,8 +1158,8 @@ namespace rsl
       // replaces the part of the string, indicated by [first, last) with count2 copies of ch
       basic_string& replace(const_iterator first, const_iterator last, size_type count2, value_type ch)
       {
-        size_type first_idx = rsl::distance(cbegin(), first);
-        size_type last_idx  = rsl::distance(cbegin(), last);
+        const size_type first_idx = rsl::distance(cbegin(), first);
+        const size_type last_idx  = rsl::distance(cbegin(), last);
 
         REX_ASSERT_X(first_idx < size(), "'first' iterator out of range");
         REX_ASSERT_X(last_idx <= size(), "'last' iterator out of range");
@@ -1190,8 +1190,8 @@ namespace rsl
       // replaces the part of the string, indicated by [first, last) with the characters of a string view
       basic_string& replace(const_iterator first, const_iterator last, const basic_string_view<value_type, traits_type>& sv)
       {
-        size_type first_idx = rsl::distance(cbegin(), first);
-        size_type last_idx  = rsl::distance(cbegin(), last);
+        const size_type first_idx = rsl::distance(cbegin(), first);
+        const size_type last_idx  = rsl::distance(cbegin(), last);
 
         REX_ASSERT_X(first_idx < size(), "'first' iterator out of range");
         REX_ASSERT_X(last_idx <= size(), "'last' iterator out of range");
@@ -2208,7 +2208,7 @@ namespace rsl
       wstring operator""s(const tchar* s, size_t len); // NOLINT(clang-diagnostic-user-defined-literals)
 #if defined(REX_MSVC_COMPILER)
   #pragma warning(pop)
-#else // defined(REX_CLANG_COMPILER)
+#elif defined(REX_CLANG_COMPILER)
   #pragma clang diagnostic pop
 #endif
     } // namespace string_literals

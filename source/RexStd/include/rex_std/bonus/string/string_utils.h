@@ -795,7 +795,7 @@ namespace rsl
           const Pointer lhs_end = lhsStr + lhsLength;
 
           const Pointer end = lhs_end - toFindLength + 1;
-          start             = Traits::find(start, end - start, *toFindStr);
+          start             = Traits::find(start, static_cast<count_t>(end - start), *toFindStr);
 
           if(start != nullptr)
           {
@@ -803,10 +803,10 @@ namespace rsl
             {
               if(Traits::compare(start + 1, toFindStr + 1, toFindLength - 1) == 0)
               {
-                return start - lhsStr;
+                return static_cast<SizeType>(start - lhsStr);
               }
               ++start;
-              start = Traits::find(start, lhs_end - start, *toFindStr);
+              start = Traits::find(start, static_cast<count_t>(lhs_end - start), *toFindStr);
             }
           }
           return defaultValue;
@@ -824,7 +824,7 @@ namespace rsl
           Pointer start              = lhsStr + pos;
           const Pointer end          = (lhsStr - 1) + toFindLength - 1;
           const Pointer to_find_last = toFindStr + toFindLength - 1;
-          start                      = Traits::rfind(start, start - end, *to_find_last);
+          start                      = Traits::rfind(start, static_cast<count_t>(start - end), *to_find_last);
 
           if(start != nullptr)
           {
@@ -833,10 +833,10 @@ namespace rsl
               const Pointer new_start = start - (toFindLength - 1);
               if(Traits::compare(new_start, toFindStr, toFindLength - 1) == 0)
               {
-                return new_start - lhsStr;
+                return static_cast<SizeType>(new_start - lhsStr);
               }
               --start;
-              start = Traits::rfind(start, start - end, *to_find_last);
+              start = Traits::rfind(start, static_cast<count_t>(start - end), *to_find_last);
             }
           }
           return defaultValue;
@@ -862,7 +862,7 @@ namespace rsl
         template <typename Traits, typename Pointer, typename SizeType>
         SizeType find_last_of(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer rhsStr, SizeType rhsLength, SizeType defaultValue)
         {
-          character_lookup<typename Traits::char_type> lookup(rhsStr, rhsLength);
+          const character_lookup<typename Traits::char_type> lookup(rhsStr, rhsLength);
 
           for(SizeType i = lhsLength; i >= pos; --i)
           {
@@ -879,9 +879,9 @@ namespace rsl
         template <typename Traits, typename Pointer, typename SizeType>
         SizeType find_first_not_of(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer rhsStr, SizeType rhsLength, SizeType defaultValue)
         {
-          character_lookup<typename Traits::char_type> lookup(rhsStr, rhsLength);
+          const character_lookup<typename Traits::char_type> lookup(rhsStr, rhsLength);
 
-          for(SizeType i = 0; i < lhsLength; ++i)
+          for(SizeType i = pos; i < lhsLength; ++i)
           {
             auto c = lhsStr[i];
             if(!lookup.exists(c))
@@ -896,9 +896,9 @@ namespace rsl
         template <typename Traits, typename Pointer, typename SizeType>
         SizeType find_last_not_of(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer rhsStr, SizeType rhsLength, SizeType defaultValue)
         {
-          character_lookup<typename Traits::char_type> lookup(rhsStr, rhsLength);
+          const character_lookup<typename Traits::char_type> lookup(rhsStr, rhsLength);
 
-          for(SizeType i = lhsLength; i >= 0; --i)
+          for(SizeType i = lhsLength; i >= pos; --i)
           {
             auto c = lhsStr[i];
             if(!lookup.exists(c))

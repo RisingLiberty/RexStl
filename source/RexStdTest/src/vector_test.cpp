@@ -12,7 +12,7 @@
 
 #include <catch2/catch.hpp>
 
-//NOLINTBEGIN
+// NOLINTBEGIN
 
 #include "rex_std/vector.h"
 
@@ -30,7 +30,7 @@ TEST_CASE("vector construction")
   REQUIRE(vec3.size() == 0); // NOLINT
   REQUIRE(vec3.capacity() == 10);
 
-  rsl::vector<int> vec4 = { 1,2,3 };
+  rsl::vector<int> vec4 = {1, 2, 3};
   REQUIRE(vec4.size() == 3);
   REQUIRE(vec4[0] == 1);
   REQUIRE(vec4[1] == 2);
@@ -66,9 +66,9 @@ TEST_CASE("vector construction")
 TEST_CASE("vector assignment")
 {
   rsl::vector<int> vec;
-  rsl::vector<int> vec2 = { 1, 2, 3 };
-  rsl::vector<int> vec3 = { 4, 5 };
-  
+  rsl::vector<int> vec2 = {1, 2, 3};
+  rsl::vector<int> vec3 = {4, 5};
+
   vec = vec2;
   REQUIRE(vec.size() == vec2.size());
   REQUIRE(vec.size() == 3);
@@ -100,10 +100,10 @@ TEST_CASE("vector size")
 
   vec.resize(10);
   REQUIRE(vec.size() == 10);
-  
+
   vec.resize(5);
   REQUIRE(vec.size() == 5);
-  
+
   vec.reserve(10);
   REQUIRE(vec.size() == 5);
 
@@ -117,7 +117,7 @@ TEST_CASE("vector size")
 TEST_CASE("vector element access")
 {
   rsl::vector<int> vec;
-  
+
   vec.push_back(1);
   REQUIRE(vec[0] == 1);
   REQUIRE(vec.front() == 1);
@@ -155,4 +155,4 @@ TEST_CASE("vector insertion")
   REQUIRE(vec[1] == 1);
 }
 
-//NOLINTEND
+// NOLINTEND

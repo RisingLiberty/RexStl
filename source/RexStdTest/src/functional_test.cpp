@@ -12,7 +12,7 @@
 
 #include "catch2/catch.hpp"
 
-//NOLINTBEGIN
+// NOLINTBEGIN
 
 #include "rex_std/functional.h"
 
@@ -31,9 +31,9 @@ int foobar(int x)
 
 TEST_CASE("function creation")
 {
-  rsl::function<int(void)> f = foo;
+  rsl::function<int(void)> f  = foo;
   rsl::function<int(void)> f2 = bar;
-  rsl::function f3 = foobar;
+  rsl::function f3            = foobar;
 
   REQUIRE(f() == 0);
   REQUIRE(f2() == 1);
@@ -66,8 +66,8 @@ TEST_CASE("function swapping")
 }
 TEST_CASE("reference wrapper")
 {
-  int i1 = 1;
-  int i2 = 2;
+  int i1                            = 1;
+  int i2                            = 2;
   rsl::reference_wrapper<int> i1ref = rsl::ref(i1);
   rsl::reference_wrapper<int> i2ref = rsl::ref(i2);
 
@@ -78,7 +78,7 @@ TEST_CASE("reference wrapper")
 
   REQUIRE(i1ref.get() == 3);
   REQUIRE(i1 == 3);
-  
+
   i1 = i2;
   REQUIRE(i2ref.get() == i1ref.get());
   REQUIRE(i1ref.get() == 2);
@@ -224,7 +224,6 @@ TEST_CASE("functional bit and")
   REQUIRE(op(0b1111u, 0b1111u) == 0b1111u);
   REQUIRE(op(0b1001u, 0b1111u) == 0b1001u);
   REQUIRE(op(0b1001u, 0b0011u) == 0b0001u);
-
 }
 TEST_CASE("functional bit or")
 {
@@ -258,8 +257,8 @@ TEST_CASE("functional bit not")
 }
 TEST_CASE("functional not fn")
 {
-  auto not_foo = rsl::not_fn(foo);
-  auto not_bar = rsl::not_fn(bar);
+  auto not_foo    = rsl::not_fn(foo);
+  auto not_bar    = rsl::not_fn(bar);
   auto not_foobar = rsl::not_fn(foobar);
 
   REQUIRE(not_foo() == true);
@@ -269,4 +268,4 @@ TEST_CASE("functional not fn")
   REQUIRE(not_foobar(0) == true);
 }
 
-//NOLINTEND
+// NOLINTEND

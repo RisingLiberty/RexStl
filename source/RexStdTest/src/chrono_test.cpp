@@ -12,7 +12,7 @@
 
 #include "catch2/catch.hpp"
 
-//NOLINTBEGIN
+// NOLINTBEGIN
 
 #include "rex_std/chrono.h"
 
@@ -37,11 +37,11 @@ TEST_CASE("duration operators")
 
 TEST_CASE("time_point operators")
 {
-  auto now = rsl::chrono::high_resolution_clock::now();
+  auto now            = rsl::chrono::high_resolution_clock::now();
   auto one_hour_later = now + rsl::chrono::hours(1);
-  
+
   auto dur = rsl::chrono::duration_cast<rsl::chrono::seconds>(one_hour_later - now);
   REQUIRE(dur.count() == 3600);
 }
 
-//NOLINTEND
+// NOLINTEND

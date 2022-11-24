@@ -12,13 +12,13 @@
 
 #include "catch2/catch.hpp"
 
-//NOLINTBEGIN
+// NOLINTBEGIN
 
 #include "rex_std/initializer_list.h"
 
 TEST_CASE("initializer list creation")
 {
-  rsl::initializer_list<int> ilist = { 1,2,3 };
+  rsl::initializer_list<int> ilist = {1, 2, 3};
 
   REQUIRE(ilist.size() == 3);
   REQUIRE(*ilist.begin() + 0 == 1);
@@ -29,4 +29,4 @@ TEST_CASE("initializer list creation")
   REQUIRE(ilist2.size() == 0);
 }
 
-//NOLINTEND
+// NOLINTEND

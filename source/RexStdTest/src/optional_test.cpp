@@ -12,7 +12,7 @@
 
 #include "catch2/catch.hpp"
 
-//NOLINTBEGIN
+// NOLINTBEGIN
 
 #include "rex_std/optional.h"
 
@@ -53,7 +53,7 @@ TEST_CASE("optional creation")
 
 TEST_CASE("optional modifiers")
 {
-  rsl::optional<int> opt = 3;
+  rsl::optional<int> opt  = 3;
   rsl::optional<int> opt2 = 4;
 
   opt.swap(opt2);
@@ -71,4 +71,4 @@ TEST_CASE("optional modifiers")
   REQUIRE(*opt == 10);
 }
 
-//NOLINTEND
+// NOLINTEND

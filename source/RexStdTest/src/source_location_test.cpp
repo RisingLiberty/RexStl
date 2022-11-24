@@ -12,15 +12,15 @@
 
 #include "catch2/catch.hpp"
 
-//NOLINTBEGIN
+// NOLINTBEGIN
 
 #include "rex_std/source_location.h"
 
 TEST_CASE("source location")
 {
-  rsl::source_location loc = rsl::source_location::current();
+  rsl::source_location loc  = rsl::source_location::current();
   rsl::source_location loc2 = rsl::source_location::current();
   REQUIRE(loc.line() + 1 == loc2.line());
 }
 
-//NOLINTEND
+// NOLINTEND

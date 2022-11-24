@@ -125,7 +125,7 @@ namespace rsl
       }
 #if defined(REX_MSVC_COMPILER)
   #pragma warning(pop)
-#else // defined(REX_CLANG_COMPILER)
+#elif defined(REX_CLANG_COMPILER)
   #pragma clang diagnostic pop
 #endif
     } // namespace string_literals

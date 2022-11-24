@@ -11,7 +11,6 @@
 // ============================================
 
 #include "catch2/catch.hpp"
-
 #include "rex_std/ctype.h"
 
 TEST_CASE("is alnum")
@@ -118,7 +117,6 @@ TEST_CASE("is alnum")
   REQUIRE(rsl::is_alnum('\t') == false);
   REQUIRE(rsl::is_alnum('\v') == false);
   REQUIRE(rsl::is_alnum('\r') == false);
-
 }
 TEST_CASE("is alpha")
 {
@@ -1485,4 +1483,3 @@ TEST_CASE("to upper")
   REQUIRE(rsl::to_upper('\v') == '\v');
   REQUIRE(rsl::to_upper('\r') == '\r');
 }
-

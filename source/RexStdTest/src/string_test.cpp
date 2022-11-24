@@ -116,11 +116,11 @@ TEST_CASE("string creation")
   }
   // 14) basic_string(rsl::initializer_list<value_type> ilist, const allocator& alloc = allocator())
   {
-    rsl::string str({'s','o','m','e','t','h','i','n','g'});
+    rsl::string str({'s', 'o', 'm', 'e', 't', 'h', 'i', 'n', 'g'});
     REQUIRE(str == "something");
   }
   // 15) explicit basic_string(const basic_string_view<CharType>& sv, const allocator& alloc = allocator())
-  {  
+  {
     rsl::string str(rsl::string_view("something"));
     REQUIRE(str == "something");
   }
@@ -131,7 +131,7 @@ TEST_CASE("string creation")
   }
   // 17) basic_string(rsl::nullptr_t)
   // the following should not compile
-  //rsl::string str = nullptr;
+  // rsl::string str = nullptr;
 }
 TEST_CASE("string assignment")
 {
@@ -168,11 +168,10 @@ TEST_CASE("string assignment")
   }
   // 4) basic_string& operator=(rsl::nullptr_t) = delete
   {
-     // this should not compile;
-    //rsl::string str;
-    //str = nullptr;
-  }
-  // 5) basic_string& assign(size_type count, value_type ch)
+      // this should not compile;
+      // rsl::string str;
+      // str = nullptr;
+  } // 5) basic_string& assign(size_type count, value_type ch)
   {
     rsl::string str;
     str.assign(5, 'c');
@@ -208,7 +207,7 @@ TEST_CASE("string assignment")
   {
     rsl::string str;
     str.assign("something", 4);
-    
+
     REQUIRE(str == "some");
     REQUIRE(str.size() == 4);
 
@@ -238,7 +237,7 @@ TEST_CASE("string assignment")
   // 12) basic_string& assign(rsl::initializer_list<value_type> ilist)
   {
     rsl::string str;
-    str.assign({ 's', 'o', 'm', 'e', 't', 'h', 'i', 'n', 'g'});
+    str.assign({'s', 'o', 'm', 'e', 't', 'h', 'i', 'n', 'g'});
 
     REQUIRE(str.size() == 9);
     REQUIRE(str == "something");
@@ -293,7 +292,7 @@ TEST_CASE("string swap")
     rsl::string str5(stack_string);
     rsl::string str6(stack_string);
     str5.swap(str6);
-    
+
     REQUIRE(str5.size() == stack_string.size());
     REQUIRE(str6.size() == stack_string.size());
   }
@@ -302,7 +301,7 @@ TEST_CASE("string swap")
     rsl::string str7(heap_string);
     rsl::string str8(heap_string);
     str7.swap(str8);
-    
+
     REQUIRE(str7.size() == heap_string.size());
     REQUIRE(str8.size() == heap_string.size());
   }
@@ -343,7 +342,7 @@ TEST_CASE("string capacity")
 
   REQUIRE(str2.size() == 0);
   REQUIRE(str2.empty() == true);
-  REQUIRE(str2.capacity() == 20);  
+  REQUIRE(str2.capacity() == 20);
 }
 TEST_CASE("string insertion and erasion")
 {
@@ -408,7 +407,7 @@ TEST_CASE("string insertion and erasion")
   // 9) iterator insert(const_iterator pos, rsl::initializer_list<value_type> ilist)
   {
     rsl::string str("Hello world");
-    str.insert(str.cbegin() + 6, { 'n', 'e', 'w', ' ' });
+    str.insert(str.cbegin() + 6, {'n', 'e', 'w', ' '});
     REQUIRE(str == "Hello new world");
   }
   // 10) basic_string& insert(size_type pos, const basic_string_view<value_type, traits_type>& sv)
@@ -508,7 +507,7 @@ TEST_CASE("string insertion and erasion")
   // 24) basic_string& append(rsl::initializer_list<value_type> ilist)
   {
     rsl::string str("Hello world");
-    str.append({ 'a', 'g', 'a', 'i', 'n' });
+    str.append({'a', 'g', 'a', 'i', 'n'});
     REQUIRE(str == "Hello worldagain");
   }
   // 25) basic_string& append(const basic_string_view<value_type, traits_type> sv)
@@ -719,7 +718,7 @@ TEST_CASE("string replace")
   // 9) replace(const_iterator first, const_iterator last, rsl::initializer_list<value_type> ilist)
   {
     rsl::string str("Hello World");
-    str.replace(str.cbegin(), str.cbegin() + 5, { 'S', 'o', 'm', 'e' });
+    str.replace(str.cbegin(), str.cbegin() + 5, {'S', 'o', 'm', 'e'});
     REQUIRE(str == "Some World");
   }
   // 10) replace(size_type pos, size_type count, const basic_string_view<value_type, traits_type>& sv)
@@ -795,7 +794,6 @@ TEST_CASE("string find")
   REQUIRE(str.find('H') == 0);
   REQUIRE(str.find('d') == 16);
   REQUIRE(str.find('y') == rsl::string::npos());
-
 }
 TEST_CASE("string rfind")
 {
@@ -927,7 +925,7 @@ TEST_CASE("string integer conversions")
     REQUIRE(intstr.to_uint().value() == 123);
   }
 
-  { 
+  {
     rsl::string nointstr("hello");
     REQUIRE(nointstr.to_int().has_value() == false);
     REQUIRE(nointstr.to_uint().has_value() == false);
