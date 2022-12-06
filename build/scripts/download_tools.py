@@ -38,7 +38,6 @@ def download_tools_archive():
   threads.append(__launch_download_thread(("https://github.com/RisingLiberty/RegisZip/raw/main/data/Tools.zip.012")))
   threads.append(__launch_download_thread(("https://github.com/RisingLiberty/RegisZip/raw/main/data/Tools.zip.013")))
   threads.append(__launch_download_thread(("https://github.com/RisingLiberty/RegisZip/raw/main/data/Tools.zip.014")))
-  threads.append(__launch_download_thread(("https://github.com/RisingLiberty/RegisZip/raw/main/data/Tools.zip.015")))
 
   for thread in threads:
     thread.join()

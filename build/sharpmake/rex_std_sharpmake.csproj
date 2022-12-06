@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{AD458CE7-D071-406C-B7F1-B3F86DA08925}</ProjectGuid>
+    <ProjectGuid>{E5DC45C5-D3BC-482B-B774-983CCAD10B1F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>toolchain_sharpmake</RootNamespace>
@@ -46,7 +46,9 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\config.sharpmake.cs" />
+    <Compile Include="src\globals.sharpmake.cs" />
     <Compile Include="src\main.sharpmake.cs" />
+    <Compile Include="src\target.sharpmake.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -325,7 +325,7 @@ namespace rsl
       // replaces the contents of the string array
       basic_string& assign(const_pointer& str) // NOLINT(modernize-avoid-c-arrays)
       {
-        return assign(str, Size);
+        return assign(str, rsl::strlen(str));
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (30/Jun/2022)
       // Because we have the above function defined, we don't overload the assign function
@@ -2191,10 +2191,10 @@ namespace rsl
 
     namespace string_literals
     {
-#if defined(REX_MSVC_COMPILER)
+#if defined(REX_COMPILER_MSVC)
   #pragma warning(push)
   #pragma warning(disable : 4455) // literal suffix identifiers that do not start with an underscore are reserved
-#elif defined(REX_CLANG_COMPILER)
+#elif defined(REX_COMPILER_CLANG)
   #pragma clang diagnostic push
   #pragma clang diagnostic ignored "-Wuser-defined-literals" // literal suffix identifiers that do not start with an underscore are reserved
 #endif
@@ -2206,9 +2206,9 @@ namespace rsl
       u32string operator""s(const char32_t* s, size_t len); // NOLINT(clang-diagnostic-user-defined-literals)
       // returns a string of the desired type
       wstring operator""s(const tchar* s, size_t len); // NOLINT(clang-diagnostic-user-defined-literals)
-#if defined(REX_MSVC_COMPILER)
+#if defined(REX_COMPILER_MSVC)
   #pragma warning(pop)
-#elif defined(REX_CLANG_COMPILER)
+#elif defined(REX_COMPILER_CLANG)
   #pragma clang diagnostic pop
 #endif
     } // namespace string_literals

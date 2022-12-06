@@ -62,9 +62,3 @@ MERGE(str, __LINE__)
 #else
   #define REX_STATIC_TODO(msg)
 #endif
-
-#ifdef _MSC_VER
-  #define REX_ALIGN(x) __declspec(align(n))
-#else
-  #error No REX_ALIGN specified for the current compiler
-#endif

@@ -36,7 +36,6 @@ namespace rsl
 {
   inline namespace v1
   {
-
     namespace io
     {
       /// [09/Sep/2022] RSL Comment: to avoid having the following enum classes
@@ -58,6 +57,13 @@ namespace rsl
         failbit   = (1 << 1), // input/output operation failed
         eofbit    = (1 << 2), // associated input sequence has reached end-of-file
         noinitbit = (1 << 3)  // the stream is not yet initialized /// RSL Comment: Not in ISO C++ Standard at time of writing (09/Sep/2022)
+      };
+
+      enum class seekdir
+      {
+        beg, // the beginning of a stream
+        end, // the ending of a stream
+        cur, // the current position of stream position indicator
       };
 
       namespace internal
@@ -93,8 +99,8 @@ namespace rsl
 
       constexpr iostate operator&(iostate lhs, iostate rhs)
       {
-        internal::iostate_int const lhs_int = static_cast<internal::iostate_int>(lhs);
-        internal::iostate_int const rhs_int = static_cast<internal::iostate_int>(rhs);
+        const internal::iostate_int lhs_int = static_cast<internal::iostate_int>(lhs);
+        const internal::iostate_int rhs_int = static_cast<internal::iostate_int>(rhs);
 
         return static_cast<iostate>(lhs_int & rhs_int);
       }
@@ -105,8 +111,8 @@ namespace rsl
       }
       constexpr iostate operator|(iostate lhs, iostate rhs)
       {
-        internal::iostate_int const lhs_int = static_cast<internal::iostate_int>(lhs);
-        internal::iostate_int const rhs_int = static_cast<internal::iostate_int>(rhs);
+        const internal::iostate_int lhs_int = static_cast<internal::iostate_int>(lhs);
+        const internal::iostate_int rhs_int = static_cast<internal::iostate_int>(rhs);
 
         return static_cast<iostate>(lhs_int | rhs_int);
       }
@@ -115,13 +121,12 @@ namespace rsl
         lhs = lhs | rhs;
         return lhs;
       }
-
-      enum class seekdir
+      constexpr iostate operator~(iostate state)
       {
-        beg, // the beginning of a stream
-        end, // the ending of a stream
-        cur, // the current position of stream position indicator
-      };
+        const internal::iostate_int state_int = static_cast<internal::iostate_int>(state);
+        return static_cast<iostate>(~state_int);
+      }
+
     } // namespace io
 
     class ios_base
@@ -149,6 +154,5 @@ namespace rsl
       // before first use and before destructor
       ios_base() = default;
     };
-
   } // namespace v1
 } // namespace rsl

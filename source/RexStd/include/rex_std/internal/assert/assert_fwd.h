@@ -23,7 +23,6 @@ namespace rsl
 {
   inline namespace v1
   {
-
     template <typename... Args>
     bool rex_assert(bool cond, Args&&... args);
 

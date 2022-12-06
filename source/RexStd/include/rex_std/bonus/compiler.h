@@ -26,13 +26,13 @@ namespace rsl
       };
 
 #ifdef __clang__
-  #define REX_CLANG_COMPILER
+  #define REX_COMPILER_CLANG
       constexpr compiler g_compiler = compiler::clang;
 #elif _MSC_VER
-  #define REX_MSVC_COMPILER
+  #define REX_COMPILER_MSVC
       constexpr compiler g_compiler = compiler::msvc;
 #elif __GNUC__
-  #define REX_GCC_COMPILER
+  #define REX_COMPILER_GCC
       constexpr compiler g_compiler = compiler::gcc;
 #else
   #error unknown compiler used

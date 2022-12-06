@@ -349,8 +349,8 @@ namespace rsl
 
       card32 find(basic_string_view<CharType> view, card32 pos = 0) const
       {
-        basic_string_view<CharType> view = to_view();
-        return view.find(view, pos);
+        basic_string_view<CharType> view_of_this = to_view();
+        return view_of_this.find(view, pos);
       }
       card32 find(value_type c, card32 pos = 0) const
       {
@@ -370,8 +370,8 @@ namespace rsl
 
       card32 rfind(basic_string_view<CharType> view, card32 pos = npos()) const
       {
-        basic_string_view<CharType> view = to_view();
-        return view.rfind(view, pos);
+        basic_string_view<CharType> view_of_this = to_view();
+        return view_of_this.rfind(view, pos);
       }
       card32 rfind(value_type c, card32 pos = npos()) const
       {

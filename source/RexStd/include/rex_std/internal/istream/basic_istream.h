@@ -72,17 +72,17 @@ namespace rsl
         {
           if(inStream->good() == false)
           {
-            m_istream.setstate(io::iostate::failbit);
+            m_istream->setstate(io::iostate::failbit);
             return;
           }
 
-          basic_ostream<CharT, Traits>* tied_str = m_istream.tie();
+          basic_ostream<CharT, Traits>* tied_str = m_istream->tie();
           if(tied_str)
           {
             tied_str->flush();
           }
 
-          m_is_ok = m_istream.good();
+          m_is_ok = m_istream->good();
         }
 
         sentry(const sentry&) = delete;
@@ -770,7 +770,7 @@ namespace rsl
 
         if(!sentry)
         {
-          state != io::iostate::failbit;
+          state |= io::iostate::failbit;
         }
         else if((num = base::rdbuf()->in_avail()) < 0)
         {
@@ -812,7 +812,7 @@ namespace rsl
 
         if(!base::fail())
         {
-          return base::rdbuf()->pubseekoff(0, io::iostate::cur, io::openmode::in);
+          return base::rdbuf()->pubseekoff(0, io::seekdir::cur, io::openmode::in);
         }
         else
         {

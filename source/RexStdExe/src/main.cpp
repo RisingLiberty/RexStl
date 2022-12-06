@@ -1,4 +1,6 @@
-#include "rex_std/internal/algorithm/lexicographical_compare.h"
-#include "rex_std/type_traits.h"
+#include "rex_std/chrono.h"
 
-int main() {}
+int main() 
+{
+  return static_cast<int>(rsl::chrono::internal::get_ticks());
+}

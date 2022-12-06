@@ -596,11 +596,14 @@ namespace rsl
 
       REX_NO_DISCARD static constexpr wchar_t(max)() noexcept
       {
-#ifdef _MSC_VER
-        return limits_16bit::unsigned_max;
-#else
-        return limits_32bit::UnsignedMax;
-#endif
+        if constexpr(sizeof(wchar_t) == 2)
+        {
+          return limits_16bit::unsigned_max;
+        }
+        else
+        {
+          return limits_32bit::unsigned_max;
+        }
       }
 
       REX_NO_DISCARD static constexpr wchar_t lowest() noexcept

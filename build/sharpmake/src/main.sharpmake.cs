@@ -13,201 +13,12 @@
 using System.IO;
 using System.Linq;
 using Sharpmake;
+using System;
+using System.Collections.Generic;
 
+[module: Sharpmake.Include("globals.sharpmake.cs")]
+[module: Sharpmake.Include("target.sharpmake.cs")]
 [module: Sharpmake.Include("config.sharpmake.cs")]
-
-public class Globals
-{
-  static readonly private string folder_in_root = "source";
-  static private string root;
-  static private string source_root;
-
-  static public string Root
-  {
-    get
-    {
-      return root;
-    }
-  }
-  static public string SourceRoot
-  {
-    get
-    {
-      return source_root;
-    }
-  }
-
-  static public void Init()
-  {
-    string current_directory = Directory.GetCurrentDirectory();
-
-    while (Directory.GetDirectories(current_directory).ToList().FindIndex(x => Path.GetFileName(x) == folder_in_root) == -1)
-    {
-      if (Directory.GetDirectoryRoot(current_directory) == current_directory)
-      {
-        throw new System.Exception("Failed to find root directory");
-      }
-      current_directory = Directory.GetParent(current_directory).FullName;
-    }
-
-    root = current_directory;
-    source_root = Path.Combine(root, "source");
-    System.Console.WriteLine($"Root path:{root}");
-  }
-}
-
-[Fragment, System.Flags]
-public enum Optimization
-{
-  NoOpt = (1 << 0),
-  FullOptWithPdb = (1 << 1),
-  FullOpt = (1 << 2)
-}
-
-public class RexTarget : ITarget
-{
-  public DevEnv DevEnv;
-  public Platform Platform;
-  public Config Config;
-  public Compiler Compiler;
-  public RexTarget()
-  { }
-  public RexTarget(Platform platform, DevEnv devEnv, Config config, Compiler compiler)
-  {
-    DevEnv = devEnv;
-    Platform = platform;
-    Config = config;
-    Compiler = compiler;
-  }
-
-  // This is the display name of the configuration dropdown in visual studio
-  public override string Name
-  {
-    get
-    {
-      string config_str = string.Concat(Config.ToString().ToString().Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x.ToString() : x.ToString()));
-
-      return (config_str).ToLowerInvariant();
-    }
-  }
-
-  public Optimization Optimization
-  {
-    get { return ConfigManager.get_optimization_for_config(Config); }
-  }
-}
-
-public class RexConfiguration : Sharpmake.Project.Configuration
-{
-  public RexConfiguration()
-  {
-  }
-
-  public void enable_exceptions()
-  {
-    Options.Add(Sharpmake.Options.Vc.Compiler.Exceptions.Enable);
-    Defines.Add("_HAS_EXCEPTIONS=1");
-  }
-
-  public void disable_exceptions()
-  {
-    Options.Add(Sharpmake.Options.Vc.Compiler.Exceptions.Disable);
-    Defines.Add("_HAS_EXCEPTIONS=0");
-  }
-
-  public void use_general_options()
-  {
-    //Options.Add(Sharpmake.Options.Vc.General.JumboBuild.Enable);
-    Options.Add(Sharpmake.Options.Vc.General.CharacterSet.MultiByte);
-    Options.Add(Sharpmake.Options.Vc.General.PlatformToolset.v142);
-    //Options.Add(Sharpmake.Options.Vc.General.VCToolsVersion.v14_21_27702);
-    Options.Add(Sharpmake.Options.Vc.General.WarningLevel.Level4);
-    Options.Add(Sharpmake.Options.Vc.General.TreatWarningsAsErrors.Enable);
-  }
-
-  public void use_compiler_options()
-  {
-    Options.Add(Sharpmake.Options.Vc.Compiler.SupportJustMyCode.No); // this adds a call to __CheckForDebuggerJustMyCode into every function that slows down runtime significantly
-    Options.Add(Sharpmake.Options.Vc.Compiler.CppLanguageStandard.CPP17);
-    Options.Add(Sharpmake.Options.Vc.Compiler.RTTI.Disable);
-    Options.Add(Sharpmake.Options.Vc.Compiler.RuntimeChecks.Default);
-    Options.Add(Sharpmake.Options.Vc.Compiler.FloatingPointModel.Fast);
-    Options.Add(Sharpmake.Options.Vc.Compiler.MultiProcessorCompilation.Enable);
-    Options.Add(Sharpmake.Options.Vc.Compiler.StringPooling.Enable);
-    Options.Add(Sharpmake.Options.Vc.Compiler.BufferSecurityCheck.Enable);
-    Options.Add(Sharpmake.Options.Vc.Compiler.FunctionLevelLinking.Disable);
-    Options.Add(Sharpmake.Options.Vc.Compiler.FloatingPointExceptions.Disable);
-    Options.Add(Sharpmake.Options.Vc.Compiler.OpenMP.Disable);
-    Options.Add(Sharpmake.Options.Vc.Compiler.JumboBuild.Enable);
-  }
-
-  public void use_linker_options()
-  {
-    Options.Add(Sharpmake.Options.Vc.Linker.LargeAddress.SupportLargerThan2Gb);
-    Options.Add(Sharpmake.Options.Vc.Linker.GenerateMapFile.Disable);
-    Options.Add(Sharpmake.Options.Vc.Linker.GenerateManifest.Disable);
-    Options.Add(Sharpmake.Options.Vc.Linker.TreatLinkerWarningAsErrors.Enable);
-  }
-
-  public void enable_optimization()
-  {
-    Options.Add(Sharpmake.Options.Vc.Compiler.Optimization.MaximizeSpeed);
-    Options.Add(Sharpmake.Options.Vc.Compiler.Intrinsic.Enable);
-    Options.Add(Sharpmake.Options.Vc.Compiler.RuntimeLibrary.MultiThreaded);
-    Options.Add(Sharpmake.Options.Vc.Compiler.Inline.AnySuitable);
-    Options.Add(Sharpmake.Options.Vc.Compiler.FiberSafe.Enable);
-    Options.Add(Sharpmake.Options.Vc.Compiler.RuntimeChecks.Default);
-
-    Options.Add(Sharpmake.Options.Vc.Compiler.MinimalRebuild.Enable);
-    Options.Add(Sharpmake.Options.Vc.Compiler.FavorSizeOrSpeed.FastCode);
-    Options.Add(Sharpmake.Options.Vc.Compiler.FunctionLevelLinking.Enable);
-    Options.Add(Sharpmake.Options.Vc.Compiler.OmitFramePointers.Enable);
-
-    Options.Add(Sharpmake.Options.Vc.Linker.LinkTimeCodeGeneration.UseLinkTimeCodeGeneration);
-    Options.Add(Sharpmake.Options.Vc.Linker.EnableCOMDATFolding.RemoveRedundantCOMDATs);
-    Options.Add(Sharpmake.Options.Vc.Linker.Reference.EliminateUnreferencedData);
-    //Options.Add(Sharpmake.Options.Vc.Linker.Incremental.Enable);
-  }
-
-  public void disable_optimization()
-  {
-    Defines.Add("USING_DEBUG_RUNTIME_LIBS");
-
-    Options.Add(Sharpmake.Options.Vc.Compiler.Optimization.Disable);
-    Options.Add(Sharpmake.Options.Vc.Compiler.Intrinsic.Disable);
-    Options.Add(Sharpmake.Options.Vc.Compiler.RuntimeLibrary.MultiThreadedDebug);
-    Options.Add(Sharpmake.Options.Vc.Compiler.Inline.Default);
-    Options.Add(Sharpmake.Options.Vc.Compiler.FiberSafe.Disable);
-    Options.Add(Sharpmake.Options.Vc.Compiler.RuntimeChecks.Both);
-    Options.Add(Sharpmake.Options.Vc.Compiler.MinimalRebuild.Enable);
-    Options.Add(Sharpmake.Options.Vc.Compiler.FavorSizeOrSpeed.Neither);
-    Options.Add(Sharpmake.Options.Vc.Compiler.OmitFramePointers.Disable);
-    Options.Add(Sharpmake.Options.Vc.Compiler.FunctionLevelLinking.Enable);
-
-    Options.Add(Sharpmake.Options.Vc.Linker.LinkTimeCodeGeneration.Default);
-    Options.Add(Sharpmake.Options.Vc.Linker.EnableCOMDATFolding.DoNotRemoveRedundantCOMDATs);
-    Options.Add(Sharpmake.Options.Vc.Linker.CreateHotPatchableImage.Enable);
-    Options.Add(Sharpmake.Options.Vc.Linker.Incremental.Enable);
-    //Options.Add(Sharpmake.Options.Vc.Linker.GenerateDebugInformation.Enable);
-  }
-
-  public void add_dependency<TPROJECT>(ITarget target)
-  {
-    AddPublicDependency<TPROJECT>(target, DependencySetting.Default | DependencySetting.Defines);
-  }
-
-  public void add_public_define(string define)
-  {
-    Defines.Add(define);
-    ExportDefines.Add(define);
-  }
-
-  public void set_precomp_header(string projectFolderName, string preCompHeaderName)
-  {
-    PrecompHeader = projectFolderName + @"/" + preCompHeaderName + @".h";
-    PrecompSource = preCompHeaderName + @".cpp";
-  }
-}
 
 // Represents the project that will be generated by Sharpmake and that contains
 // the sample C++ code.
@@ -256,6 +67,11 @@ public class BaseProject : Project
     conf.use_compiler_options();
     conf.use_linker_options();
 
+    if (target.DevEnv == DevEnv.vs2019)
+    {
+      conf.add_dependency<SharpmakeProject>(target);
+    }
+
     switch (target.Optimization)
     {
       case Optimization.NoOpt:
@@ -274,8 +90,66 @@ public class BaseProject : Project
         conf.enable_optimization();
         break;
     }
+
+    switch (target.Platform)
+    {
+      case Platform.win32:
+      case Platform.win64:
+        conf.add_public_define("REX_PLATFORM_WINDOWS");
+        break;
+      default:
+        break;
+    }
   }
 
+}
+
+// The sharpmake project that generates the solution
+// It makes life a lot easier if this is directly in the solution.
+[Generate]
+public class SharpmakeProject : CSharpProject
+{
+  public SharpmakeProject() : base(typeof(RexTarget), typeof(RexConfiguration))
+  {
+    SourceRootPath = "[project.SharpmakeCsPath]";
+
+    RexTarget vsTarget = new RexTarget(Platform.win64, DevEnv.vs2019, Config.debug | Config.debug_opt | Config.release, Compiler.MSVC);
+    //RexTarget ninjaTarget = new RexTarget(Platform.win64, DevEnv.ninja, Config.debug | Config.debug_opt | Config.release, Compiler.MSVC | Compiler.Clang);
+
+    // Specify the targets for which we want to generate a configuration for.
+    AddTargets(vsTarget);
+  }
+
+  [Configure()]
+  public virtual void ConfigureAll(RexConfiguration conf, RexTarget target)
+  {
+    conf.ProjectPath = Path.Combine(Globals.Root, ".rex", "build", target.DevEnv.ToString(), Name);
+    conf.IntermediatePath = Path.Combine(conf.ProjectPath, "intermediate", conf.Name, target.Compiler.ToString());
+    conf.TargetPath = Path.Combine(conf.ProjectPath, "bin", conf.Name);
+    conf.Output = Configuration.OutputType.DotNetClassLibrary;
+    conf.StartWorkingDirectory = Globals.SharpmakeRoot;
+
+    string sharpmakeAppPath = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
+    string sharpmakeDllPath = Path.Combine(Path.GetDirectoryName(sharpmakeAppPath), "sharpmake.dll");
+
+    conf.ReferencesByPath.Add(sharpmakeDllPath);
+    conf.ReferencesByName.AddRange(new Strings("System",
+                                               "System.Core",
+                                               "System.Xml.Linq",
+                                               "System.Data.DataSetExtensions",
+                                               "System.Data",
+                                               "System.Xml"));
+
+    conf.CsprojUserFile = new Configuration.CsprojUserFileSettings();
+    conf.CsprojUserFile.StartAction = Configuration.CsprojUserFileSettings.StartActionSetting.Program;
+
+    string quote = "\'"; // Use single quote that is cross platform safe
+    conf.CsprojUserFile.StartArguments = $@"/sources(@{quote}{string.Join($"{quote},@{quote}", Path.Combine(Globals.SharpmakeRoot, "src/main.sharpmake.cs /diagnostics"))}{quote})";
+    conf.CsprojUserFile.StartProgram = sharpmakeAppPath;
+    conf.CsprojUserFile.WorkingDirectory = Directory.GetCurrentDirectory();
+
+    conf.EventPostBuild.Add($"{sharpmakeAppPath} {$@"/sources(@{quote}{string.Join($"{quote},@{quote}", Path.Combine(Globals.SharpmakeRoot, "src/main.sharpmake.cs"))}{quote})"}");
+  }
 }
 
 [Generate]
@@ -425,6 +299,25 @@ public class MainSolution : Solution
 
 public static class Main
 {
+  private static bool MsvcInitialized = false;
+  private static bool ClangInitialized = false;
+  private static bool GccInitialized = false;
+  private static bool NinjaInitialized = false;
+
+  private static readonly string MsvcCompilerName = "cl.exe";
+  private static readonly string ClangCompilerName = "clang.exe";
+  private static readonly string GccCompilerName = "g++.exe";
+  private static readonly string MsvcLinkerName = "link.exe";
+  private static readonly string ClangLinkerName = "clang.exe";
+  private static readonly string GccLinkerName = "g++.exe";
+
+  private static readonly string MsvcArchiverName = "lib.exe";
+  private static readonly string ClangArchiverName = "llvm-ar.exe";
+  private static readonly string ClangRanLibName = "llvm-ranlib.exe";
+  private static readonly string GccArchiverName = "ar.exe";
+
+  const string NinjaName = "ninja.exe";
+
   [Sharpmake.Main]
   public static void SharpmakeMain(Arguments arguments)
   {
@@ -438,9 +331,181 @@ public static class Main
 
   private static void InitializeSharpmake()
   {
-    KitsRootPaths.InitializeForNinja();
+    InitializeNinja();
 
     // Initialize Visual Studio settings
     KitsRootPaths.SetUseKitsRootForDevEnv(DevEnv.vs2019, KitsRootEnum.KitsRoot10, Options.Vc.General.WindowsTargetPlatformVersion.v10_0_19041_0);
+  }
+
+  private static void InitializeFromEnvPath()
+  {
+    string MsvcCompilerPath = "";
+    string ClangCompilerPath = "";
+    string GccCompilerPath = "";
+    string MsvcLinkerPath = "";
+    string ClangLinkerPath = "";
+    string GccLinkerPath = "";
+
+    string MsvcArchiver = "";
+    string ClangArchiver = "";
+    string ClangRanLib = "";
+    string GccArchiver = "";
+
+    string NinjaPath = "";
+
+    var envPath = Environment.GetEnvironmentVariable("PATH");
+    string[] paths = envPath.Split(';');
+
+    foreach (var path in paths)
+    {
+      if (!Directory.Exists(path))
+      {
+        continue;
+      }
+
+      List<string> files = Directory.EnumerateFiles(path).ToList();
+
+      foreach (string file in files)
+      {
+        string filename = Path.GetFileName(file);
+
+        if (filename == MsvcCompilerName)
+        {
+          MsvcCompilerPath = file;
+        }
+        if (filename == ClangCompilerName)
+        {
+          ClangCompilerPath = file;
+        }
+        if (filename == GccCompilerName)
+        {
+          GccCompilerPath = file;
+        }
+        if (filename == MsvcLinkerName)
+        {
+          MsvcLinkerPath = file;
+        }
+        if (filename == ClangLinkerName)
+        {
+          ClangLinkerPath = file;
+        }
+        if (filename == GccLinkerName)
+        {
+          GccLinkerPath = file;
+        }
+        if (filename == MsvcArchiverName)
+        {
+          MsvcArchiver = file;
+        }
+        if (filename == ClangArchiverName)
+        {
+          ClangArchiver = file;
+        }
+        if (filename == ClangRanLibName)
+        {
+          ClangRanLib = file;
+        }
+        if (filename == GccArchiverName)
+        {
+          GccArchiver = file;
+        }
+        if (filename == NinjaName)
+        {
+          NinjaPath = file;
+        }
+      }
+    }
+
+    MsvcInitialized = SetCompilerPathsChecked(Compiler.MSVC, MsvcCompilerPath, MsvcLinkerPath, MsvcArchiver, "");
+    ClangInitialized = SetCompilerPathsChecked(Compiler.Clang, ClangCompilerPath, ClangLinkerPath, ClangArchiver, ClangRanLib);
+    GccInitialized = SetCompilerPathsChecked(Compiler.GCC, GccCompilerPath, GccLinkerPath, GccArchiver, "");
+
+    if (string.IsNullOrEmpty(NinjaPath))
+    {
+      Util.LogWrite($"Ninja Path not found");
+      NinjaInitialized = false;
+    }
+    else
+    {
+      KitsRootPaths.SetNinjaPath(NinjaPath);
+      NinjaInitialized = true;
+    }
+  }
+
+  private static void InitializeNinja()
+  {
+    // First look for the exeuctables in PATH env variable
+    InitializeFromEnvPath();
+
+    if (MsvcInitialized == false)
+    {
+      if (InitializeFromToolsPath(Compiler.MSVC, Path.Combine("msvc", "14.29.30133", "bin", "Hostx64", "x64"), MsvcCompilerName, MsvcLinkerName, MsvcArchiverName, "not used") == false)
+      {
+        throw new Error("Failed to find msvc path");
+      }
+    }
+    if (ClangInitialized == false)
+    {
+      if (InitializeFromToolsPath(Compiler.Clang, Path.Combine("llvm", "bin"), ClangCompilerName, ClangLinkerName, ClangArchiverName, ClangRanLibName) == false)
+      {
+        throw new Error("Failed to find llvm path");
+      }
+    }
+    if (NinjaInitialized == false)
+    {
+      string ninjaPath = Path.Combine(Globals.ToolsRoot, "ninja");
+      if (Directory.Exists(ninjaPath) == false)
+      {
+        Util.LogWrite($"Error: ninja path '{ninjaPath}' does not exist");
+        throw new Error("Failed to find ninja path");
+      }
+      else
+      {
+        KitsRootPaths.SetNinjaPath(ninjaPath);
+      }
+    }
+  }
+
+  private static bool InitializeFromToolsPath(Compiler compiler, string folderName, string compilerName, string linkerName, string archiverName, string ranlibName)
+  {
+    string path = Path.Combine(Globals.ToolsRoot, folderName);
+    if (Directory.Exists(path) == false)
+    {
+      Util.LogWrite($"Error: {folderName} path '{path}' does not exist");
+      return false;
+    }
+
+    string compilerPath = Path.Combine(path, compilerName);
+    string linkerPath = Path.Combine(path, linkerName);
+    string archiverPath = Path.Combine(path, archiverName);
+    string ranLibPath = Path.Combine(path, ranlibName);
+
+    KitsRootPaths.SetCompilerPaths(compiler, compilerPath, linkerPath, archiverPath, ranLibPath);
+    return true;
+  }
+  private static bool SetCompilerPathsChecked(Compiler compiler, string compilerPath, string linkerPath, string archiverPath, string ranLibPath)
+  {
+    if (string.IsNullOrEmpty(compilerPath) || string.IsNullOrEmpty(linkerPath) || string.IsNullOrEmpty(archiverPath))
+    {
+      Util.LogWrite($"Warning: {compiler} paths not found:");
+      if (string.IsNullOrEmpty(compilerPath))
+        Util.LogWrite($"Warning: {compiler} Compiler Path not found");
+      if (string.IsNullOrEmpty(linkerPath))
+        Util.LogWrite($"Warning: {compiler} Linker Path not found");
+      if (string.IsNullOrEmpty(archiverPath))
+        Util.LogWrite($"Warning: {compiler} Archiver Path not found");
+      if (compiler == Compiler.Clang)
+      {
+        if (string.IsNullOrEmpty(ranLibPath))
+          Util.LogWrite($"Warning: {compiler} RanLib Path not found");
+      }
+
+      return false;
+    }
+    else
+    {
+      KitsRootPaths.SetCompilerPaths(compiler, compilerPath, linkerPath, archiverPath, ranLibPath);
+      return true;
+    }
   }
 }

@@ -14,8 +14,10 @@
 
 #include "rex_std/internal/iterator/reverse_iterator.h"
 
-#ifndef _INITIALIZER_LIST_ // MSVC STD Include guard
+// MSVC STD include guard               LIBC++ STD include guard
+#if !defined(_INITIALIZER_LIST_) && !defined(_LIBCPP_INITIALIZER_LIST)
   #define _INITIALIZER_LIST_
+  #define _LIBCPP_INITIALIZER_LIST
 namespace std // needs to be in std namespace
 {
   // See the C++11 Standard, section 18.9.

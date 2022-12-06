@@ -12,6 +12,7 @@
 
 #pragma once
 
+#include "rex_std/bonus/compiler.h"
 #include "rex_std/bonus/defines.h"
 #include "rex_std/bonus/utility/strong_type.h"
 
@@ -69,12 +70,8 @@ namespace rsl
     static_assert(sizeof(char16) == 2, "char16 must be 2 byte big"); // NOLINT
     static_assert(sizeof(char32) == 4, "char32 must be 4 byte big"); // NOLINT
 
-// with MSVC, wchar_t is 2 bytes big, while with clang and gcc, it's 4 bytes big
-#ifdef _MSC_VER
+    // with MSVC, wchar_t is 2 bytes big, while with clang and gcc, it's 4 bytes big
     static_assert(sizeof(tchar) == 2, "tchar must be 2 bytes big");
-#else
-    static_assert(sizeof(tchar) == 4, "tchar must be 4 bytes big");
-#endif
 
     // floating-point
     using float32 = float;
@@ -84,7 +81,12 @@ namespace rsl
     static_assert(sizeof(float64) == 8, "float64 must be 8 bytes big"); // NOLINT
 
     using lfloat64 = long double;
-    static_assert(sizeof(lfloat64) == 8, "long float must be 8 bytes big"); // NOLINT
+    // Due to the incosistency of long double size on different platforms
+    // it's not recommended to use them.
+    // MSVC: size == 8
+    // clang-tidy on Windows == 8
+    // Clang: size == 16
+    // GCC: size == 16
 
     // bool
     static_assert(sizeof(bool) == 1, "bool must be 1 byte big");

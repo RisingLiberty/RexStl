@@ -62,7 +62,7 @@ namespace rsl
     {
       inline constexpr int64 signed_min    = (-9'223'372'036'854'775'807) - 1;
       inline constexpr int64 signed_max    = 9'223'372'036'854'775'807;
-      inline constexpr uint64 unsigned_max = 18'446'744'073'709'551'615ui64;
+      inline constexpr uint64 unsigned_max = 18'446'744'073'709'551'615u;
 
       inline constexpr card32 num_rounding_digits   = 17;
       inline constexpr card32 num_precision_digits  = 15;

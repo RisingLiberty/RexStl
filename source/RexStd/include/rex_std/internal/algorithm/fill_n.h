@@ -13,6 +13,7 @@
 #pragma once
 
 #include "rex_std/bonus/defines.h"
+#include "rex_std/internal/type_traits/is_scalar.h"
 
 namespace rsl
 {
@@ -41,7 +42,7 @@ namespace rsl
         template <typename OutputIterator, typename Size, typename T>
         static OutputIterator do_fill(OutputIterator first, Size n, const T& value)
         {
-          using value_type = OutputIterator::value_type;
+          using value_type = typename OutputIterator::value_type;
 
           // We create a temp and fill from that because value might alias to the destination range
           // the compiler would be forced into generating less efficient code
@@ -58,7 +59,7 @@ namespace rsl
     template <typename OutputIterator, typename Size, typename T>
     OutputIterator fill_n(OutputIterator first, Size n, const T& value)
     {
-      return FillNImpl<is_scalar_v<T>>::do_fill(first, n, value);
+      return internal::fill_n_impl<is_scalar_v<T>>::do_fill(first, n, value);
     }
 
   } // namespace v1
