@@ -5,7 +5,7 @@
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
 //
-// File: array_test.cpp
+// File: initializer_list_test.cpp
 // Copyright (c) Nick De Breuck 2022
 //
 // ============================================
