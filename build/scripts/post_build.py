@@ -6,7 +6,7 @@ def run(projectName, config):
   # run_clang_tools.run(projectName, config)
   return
 
-def main():
+if __name__ == "__main__":
   parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
 
   parser.add_argument("-p", "--project", help="project name")

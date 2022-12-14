@@ -13,10 +13,10 @@
 #pragma once
 
 #include "rex_std/internal/type_traits/integral_constant.h"
+#include "rex_std/internal/type_traits/is_destructible.h"
 #include "rex_std/internal/type_traits/is_reference.h"
 #include "rex_std/internal/type_traits/is_scalar.h"
 #include "rex_std/internal/type_traits/remove_all_extents.h"
-#include "rex_std/internal/type_traits/is_destructible.h"
 
 namespace rsl
 {
@@ -36,7 +36,7 @@ namespace rsl
       struct is_nothrow_destructible<true, Tp> : public bool_constant<noexcept(rsl::declval<Tp>().~Tp()) >
       {
       };
-    }
+    } // namespace internal
 
     template <typename Tp>
     struct is_nothrow_destructible : public internal::is_nothrow_destructible<is_destructible_v<Tp>, Tp>

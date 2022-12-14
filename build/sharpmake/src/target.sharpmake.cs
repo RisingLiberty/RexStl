@@ -7,7 +7,7 @@ public class RexTarget : ITarget
   public Platform Platform;
   public Config Config;
   public Compiler Compiler;
-  public DotNetFramework DotNetFramework = DotNetFramework.v4_7_2;
+  public DotNetFramework DotNetFramework = DotNetFramework.v4_8;
   public RexTarget()
   { }
   public RexTarget(Platform platform, DevEnv devEnv, Config config, Compiler compiler = Compiler.MSVC)
@@ -33,5 +33,33 @@ public class RexTarget : ITarget
   {
     get { return ConfigManager.get_optimization_for_config(Config); }
   }
+
+  public static RexTarget[] GetDefaultTargets()
+  {
+    return new RexTarget[]
+    { 
+      new RexTarget(Platform.win64, DevEnv.vs2019, Config.debug | Config.debug_opt | Config.release, Compiler.MSVC),
+      new RexTarget(Platform.win64, DevEnv.ninja, Config.debug | Config.debug_opt | Config.release, Compiler.MSVC | Compiler.Clang)
+    };
+  }
+
+  public static RexTarget GetCoverageTarget()
+  {
+    return new RexTarget(Platform.win64, DevEnv.ninja, Config.coverage, Compiler.Clang);
+  }
+
+  public static RexTarget GetAsanTarget()
+  {
+    return new RexTarget(Platform.win64, DevEnv.ninja, Config.address_sanitizer, Compiler.Clang);
+  }
+  public static RexTarget GetUBsanTarget()
+  {
+    return new RexTarget(Platform.win64, DevEnv.ninja, Config.undefined_behavior_sanitizer, Compiler.Clang);
+  }
+  public static RexTarget GetFuzzyTarget()
+  {
+    return new RexTarget(Platform.win64, DevEnv.ninja, Config.fuzzy, Compiler.Clang);
+  }
+
 }
 

@@ -1,21 +1,13 @@
 import install_modules
-import download_tools
-import relocate_tools
-import verify
-import input
+import os
+from pathlib import Path
 
-def main():
+def run():
   install_modules.run()
   
-  if not verify.verify_tools():
-    download_tools.run()
-    relocate_tools.run()
-    
-    print("Please add the directory provided to PATH environment variable.")
-    input.ask("When finished, press Enter")
+  # can't call this directly in case some modules aren't installed
+  script_folder = Path(__file__).parent
+  os.system(f"{os.path.join(script_folder, 'required_tools.py')}")
 
-    while verify.run() == False:
-      input.ask("Not all tools were found in PATH, please check..")
-  
 if __name__ == "__main__":
-  main()
+  run()

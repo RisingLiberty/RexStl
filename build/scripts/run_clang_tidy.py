@@ -217,7 +217,7 @@ def run_tidy(args, clang_tidy_binary, tmpdir, build_path, queue, lock,
     queue.task_done()
 
 
-def main():
+def run():
   parser = argparse.ArgumentParser(description='Runs clang-tidy over all files '
                                    'in a compilation database. Requires '
                                    'clang-tidy and clang-apply-replacements in '
@@ -395,4 +395,4 @@ def main():
 
 
 if __name__ == '__main__':
-  main()
+  run()

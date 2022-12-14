@@ -14,7 +14,6 @@ import subprocess
 import diagnostics
 import util
 import logging
-import verify
 
 logger = diagnostics.StreamLogger("logger", logging.INFO)
 
@@ -23,15 +22,14 @@ def __run_command(command):
   streamdata = proc.communicate()[0]
   return proc.returncode
 
-
 def run(projectName, config):
   script_path = os.path.dirname(__file__)
   root_path = util.find_in_parent(script_path, ".rex")
 
   llvm_path = os.path.join(root_path, "build", "tools", "llvm", "bin")
-  clang_tidy_path = verify.find_file("clang-tidy.exe", llvm_path)
-  clang_format_path = verify.find_file("clang-format.exe", llvm_path)
-  clang_apply_replacements_path = verify.find_file("clang-apply-replacements.exe", llvm_path)
+  clang_tidy_path = util.find_file_in_folder("clang-tidy.exe", llvm_path)
+  clang_format_path = util.find_file_in_folder("clang-format.exe", llvm_path)
+  clang_apply_replacements_path = util.find_file_in_folder("clang-apply-replacements.exe", llvm_path)
 
   logger.info(f"llvm path: {llvm_path}")
   logger.info(f"clang-tidy path: {clang_tidy_path}")

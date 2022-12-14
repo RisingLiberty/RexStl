@@ -8,6 +8,10 @@ public enum Config
   debug_opt = (1 << 2),
   release = (1 << 3),
   tests = (1 << 4),
+  coverage = (1 << 5),
+  address_sanitizer = (1 << 6),
+  undefined_behavior_sanitizer = (1 << 7),
+  fuzzy = (1 << 8)
 }
 
 [Fragment, System.Flags]
@@ -143,7 +147,11 @@ public class ConfigManager
     {
       case Config.assert: return Optimization.FullOptWithPdb;
       case Config.debug: return Optimization.NoOpt;
+      case Config.coverage: return Optimization.NoOpt;
       case Config.debug_opt: return Optimization.FullOptWithPdb;
+      case Config.address_sanitizer: return Optimization.FullOptWithPdb;
+      case Config.undefined_behavior_sanitizer: return Optimization.FullOptWithPdb;
+      case Config.fuzzy: return Optimization.FullOptWithPdb;
       case Config.release: return Optimization.FullOpt;
       case Config.tests: return Optimization.NoOpt;
     }

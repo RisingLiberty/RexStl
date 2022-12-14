@@ -54,7 +54,7 @@ public class Globals
     root = current_directory;
     source_root = Path.Combine(root, "source");
     sharpmake_root = Path.Combine(root, "build", "sharpmake");
-    tools_root = Path.Combine(root, "build", "tools");
+    tools_root = Path.Combine(root, ".rex", "tools");
     System.Console.WriteLine($"Root path:{root}");
   }
 }

@@ -1,0 +1,10 @@
+# !! Sharpmake generated file !!
+# All edits will be overwritten on the next sharpmake run
+#
+# Make sure we have the right version of Ninja
+ninja_required_version = 1.1
+builddir = .ninja/main-solution_fuzzy
+
+# Solution for main-solution_fuzzy
+include d$:\libraries\stl\.rex\build\ninja\rexstd_fuzzy\RexStd_fuzzy.ninja
+include d$:\libraries\stl\.rex\tests\fuzzy\build\ninja\rexstdfuzzy_fuzzy\RexStdFuzzy_fuzzy.ninja

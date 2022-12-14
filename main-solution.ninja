@@ -1,0 +1,10 @@
+# !! Sharpmake generated file !!
+# All edits will be overwritten on the next sharpmake run
+#
+# Make sure we have the right version of Ninja
+ninja_required_version = 1.1
+builddir = .ninja/main-solution
+
+# Solution for main-solution
+include d$:\libraries\stl\.rex\build\ninja\rexstd\RexStd.ninja
+include d$:\libraries\stl\.rex\tests\build\ninja\rexstdtest\RexStdTest.ninja

@@ -248,7 +248,7 @@ def print_trouble(prog, message, use_colors):
     print("{}: {} {}".format(prog, error_text, message), file=sys.stderr)
 
 
-def main():
+def run():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         '--clang-format-executable',
@@ -405,4 +405,4 @@ def main():
 
 
 if __name__ == '__main__':
-    sys.exit(main())
+    sys.exit(run())

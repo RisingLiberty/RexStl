@@ -1,0 +1,74 @@
+{
+  "msvc_compiler" : {
+    "stem": "cl",
+    "path": "MSVC/14.29.30133/bin/Hostx64/x64",
+    "config_name": "msvc_compiler_path"  
+  },
+  "msvc_linker" : {
+    "stem": "link",
+    "path": "MSVC/14.29.30133/bin/Hostx64/x64",
+    "config_name": "msvc_linker_path"  
+  },
+  "msvc_archiver" : {
+    "stem": "lib",
+    "path": "MSVC/14.29.30133/bin/Hostx64/x64",
+    "config_name": "msvc_archiver_path"  
+  },
+  "clang_compiler" : {
+    "stem": "clang++",
+    "path": "LLVM/bin",
+    "config_name": "clang_compiler_path"  
+  },
+  "clang_linker" : {
+    "stem": "clang++",
+    "path": "LLVM/bin",
+    "config_name": "clang_linker_path"  
+  },
+  "clang_archiver" : {
+    "stem": "llvm-ar",
+    "path": "LLVM/bin",
+    "config_name": "clang_archiver_path"  
+  },
+  "clang_ranlib" : {
+    "stem": "llvm-ranlib",
+    "path": "LLVM/bin",
+    "config_name": "clang_ranlib_path"  
+  },
+  "clang_tidy" : {
+    "stem": "clang-tidy",
+    "path": "LLVM/bin",
+    "config_name": "clang_tidy_path"
+  },
+  "clang_format" : {
+    "stem": "clang-format",
+    "path": "LLVM/bin",
+    "config_name": "clang_format_path"
+  },
+  "clang_apply_replacements" : {
+    "stem": "clang-apply-replacements",
+    "path": "LLVM/bin",
+    "config_name": "clang_apply_replacements_path"
+  },
+  "ninja" : {
+    "stem": "ninja",
+    "path": "Ninja",
+    "config_name": "ninja_path"  
+  },
+  "sharpmake" : {
+    "stem": "sharpmake.application",
+    "path": "Sharpmake",
+    "config_name": "sharpmake_path"  
+  },
+  "llvm_profdata" : 
+  {
+    "stem": "llvm-profdata",
+    "path": "LLVM/bin",
+    "config_name": "llvm_profdata_path"
+  },
+  "llvm_cov" : 
+  {
+    "stem": "llvm-cov",
+    "path": "LLVM/bin",
+    "config_name": "llvm_cov_path"
+  }
+}
