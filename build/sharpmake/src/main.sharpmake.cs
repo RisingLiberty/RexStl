@@ -68,19 +68,6 @@ public class BaseProject : Project
         Console.WriteLine(path);
         conf.LibraryPaths.Add(path);
       }
-
-      //conf.IncludeSystemPaths.Add(@"D:\Tools\Windows SDK\10.0.19041.0\include\um");
-      //conf.IncludeSystemPaths.Add(@"D:\Tools\Windows SDK\10.0.19041.0\include\shared");
-      //conf.IncludeSystemPaths.Add(@"D:\Tools\Windows SDK\10.0.19041.0\include\winrt");
-      //conf.IncludeSystemPaths.Add(@"D:\Tools\Windows SDK\10.0.19041.0\include\cppwinrt");
-      //conf.IncludeSystemPaths.Add(@"D:\Tools\Windows SDK\10.0.19041.0\include\ucrt");
-      //conf.IncludeSystemPaths.Add(@"D:\Tools\MSVC\install\14.29.30133\include");
-      //conf.IncludeSystemPaths.Add(@"D:\Tools\MSVC\install\14.29.30133\atlmfc\include");
-
-      //conf.LibraryPaths.Add(@"D:/Tools/MSVC/install/14.29.30133/lib/x64");
-      //conf.LibraryPaths.Add(@"D:/Tools/MSVC/install/14.29.30133/atlmfc/lib/x64");
-      //conf.LibraryPaths.Add(@"D:/Tools/Windows SDK/10.0.19041.0/lib/ucrt/x64");
-      //conf.LibraryPaths.Add(@"D:/Tools/Windows SDK/10.0.19041.0/lib/um/x64");
     }
 
     if (target.Compiler == Compiler.GCC && conf.Output == Configuration.OutputType.Dll) // Sharpmake doesn't support DLLs for GCC
@@ -166,27 +153,19 @@ public class BaseProject : Project
   {
     if (GenerateSettings.CoverageEnabled)
     {
-      AddTargets(RexTarget.GetCoverageTarget());
       baseName += "_coverage";
     }
     else if (GenerateSettings.AddressSanitizerEnabled)
     {
-      AddTargets(RexTarget.GetAsanTarget());
       baseName += "_asan";
     }
     else if (GenerateSettings.UndefinedBehaviorSanitizerEnabled)
     {
-      AddTargets(RexTarget.GetUBsanTarget());
       baseName += "_ubsan";
     }
     else if (GenerateSettings.FuzzyTestingEnabled)
     {
-      AddTargets(RexTarget.GetFuzzyTarget());
       baseName += "_fuzzy";
-    }
-    else
-    {
-      AddTargets(RexTarget.GetDefaultTargets());
     }
 
     return baseName;
@@ -194,7 +173,11 @@ public class BaseProject : Project
 
   protected void GenerateTargets()
   {
-    if (GenerateSettings.CoverageEnabled)
+    if (GenerateSettings.VisualStudioOnly)
+    {
+      AddTargets(RexTarget.GetVsOnlyTarget());
+    }
+    else if (GenerateSettings.CoverageEnabled)
     {
       AddTargets(RexTarget.GetCoverageTarget());
     }
@@ -419,27 +402,19 @@ public class MainSolution : Solution
   {
     if (GenerateSettings.CoverageEnabled)
     {
-      AddTargets(RexTarget.GetCoverageTarget());
       baseName += "_coverage";
     }
     else if (GenerateSettings.AddressSanitizerEnabled)
     {
-      AddTargets(RexTarget.GetAsanTarget());
       baseName += "_asan";
     }
     else if (GenerateSettings.UndefinedBehaviorSanitizerEnabled)
     {
-      AddTargets(RexTarget.GetUBsanTarget());
       baseName += "_ubsan";
     }
     else if (GenerateSettings.FuzzyTestingEnabled)
     {
-      AddTargets(RexTarget.GetFuzzyTarget());
       baseName += "_fuzzy";
-    }
-    else
-    {
-      AddTargets(RexTarget.GetDefaultTargets());
     }
 
     return baseName;
@@ -447,7 +422,11 @@ public class MainSolution : Solution
 
   protected void GenerateTargets()
   {
-    if (GenerateSettings.CoverageEnabled)
+    if (GenerateSettings.VisualStudioOnly)
+    {
+      AddTargets(RexTarget.GetVsOnlyTarget());
+    }
+    else if (GenerateSettings.CoverageEnabled)
     {
       AddTargets(RexTarget.GetCoverageTarget());
     }
@@ -509,5 +488,6 @@ public static class Main
     GenerateSettings.AddressSanitizerEnabled = CommandLine.GetParameters().ToList().FindIndex(x => x.ToString() == "/enableAddressSanitizer") != -1;
     GenerateSettings.UndefinedBehaviorSanitizerEnabled = CommandLine.GetParameters().ToList().FindIndex(x => x.ToString() == "/enableUBSanitizer") != -1;
     GenerateSettings.FuzzyTestingEnabled = CommandLine.GetParameters().ToList().FindIndex(x => x.ToString() == "/enableFuzzyTesting") != -1;
+    GenerateSettings.VisualStudioOnly = CommandLine.GetParameters().ToList().FindIndex(x => x.ToString() == "/vsOnly") != -1;
   }
 }

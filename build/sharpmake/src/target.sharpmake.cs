@@ -38,9 +38,13 @@ public class RexTarget : ITarget
   {
     return new RexTarget[]
     { 
-      new RexTarget(Platform.win64, DevEnv.vs2019, Config.debug | Config.debug_opt | Config.release, Compiler.MSVC),
+      GetVsOnlyTarget(),
       new RexTarget(Platform.win64, DevEnv.ninja, Config.debug | Config.debug_opt | Config.release, Compiler.MSVC | Compiler.Clang)
     };
+  }
+  public static RexTarget GetVsOnlyTarget()
+  {
+    return new RexTarget(Platform.win64, DevEnv.vs2019, Config.debug | Config.debug_opt | Config.release, Compiler.MSVC);
   }
 
   public static RexTarget GetCoverageTarget()

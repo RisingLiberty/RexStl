@@ -11,4 +11,5 @@ public class GenerateSettings
   static public bool AddressSanitizerEnabled { get; set; }
   static public bool UndefinedBehaviorSanitizerEnabled { get; set; }
   static public bool FuzzyTestingEnabled { get; set; }
+  static public bool VisualStudioOnly { get; set; }
 }

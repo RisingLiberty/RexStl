@@ -1,7 +1,17 @@
 import os
+import argparse
 
-def run():
-  os.system("py build/scripts/setup.py")
+def run(lightMode):
+  args = ""
+  if lightMode:
+    args += "-light"
+
+  os.system(f"py build/scripts/setup.py {args}")
 
 if __name__ == "__main__":
-  run()
+  parser = argparse.ArgumentParser()
+
+  parser.add_argument("-light", help="run in light mode", action="store_true")
+  args, unknown = parser.parse_known_args()
+
+  run(args.light)

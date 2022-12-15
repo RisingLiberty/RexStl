@@ -4,12 +4,14 @@ import util
 import rex_json
 import diagnostics
 import copy
+import argparse
 
 root = util.find_root()
-build_dir = os.path.join(root, "build")
-temp_dir = os.path.join(root, ".rex")
-libs_install_dir = os.path.join(temp_dir, "tools")
-tools_install_dir = os.path.join(temp_dir, "tools")
+settings = rex_json.load_file(os.path.join(root, "build", "config", "settings.json"))
+build_dir = os.path.join(root, settings["build_folder"])
+temp_dir = os.path.join(root, settings["intermediate_directory"])
+libs_install_dir = os.path.join(temp_dir, settings["tools_folder"])
+tools_install_dir = os.path.join(temp_dir, settings["tools_folder"])
 lib_paths_filepath = os.path.join(tools_install_dir, "lib_paths.json")
 lib_paths_dict = {}
 if os.path.exists(lib_paths_filepath):
@@ -28,7 +30,7 @@ def __load_lib_requirements():
 def __print_lib_found(tool, path : str):
   diagnostics.log_info(f"{tool['config_name']} found at {path}")
 
-def are_installed():
+def are_installed(lightMode):
   task_print = task_raii_printing.TaskRaiiPrint("Checking if libs are installed")
 
   global required_libs
@@ -61,8 +63,9 @@ def are_installed():
 
     # if not, add the paths of the lib directory where it'd be downloaded to
     paths_to_use = copy.deepcopy(env_paths)
-    for required_lib_path in required_lib_paths:
-      paths_to_use.append(os.path.join(libs_install_dir, required_lib_path))
+    if lightMode == False:
+      for required_lib_path in required_lib_paths:
+        paths_to_use.append(os.path.join(libs_install_dir, required_lib_path))
       
     # look for the lib
     for required_lib_path in required_lib_paths:
@@ -81,14 +84,16 @@ def are_installed():
     rex_json.save_file(lib_paths_filepath, lib_paths_dict)
     return True
   else:
-    diagnostics.log_warn(f"Libs that weren't found: ")
+    diagnostics.log_warn(f"Lib paths that weren't found: ")
     for lib in not_found_libs:
       diagnostics.log_warn(f"\t-{lib}")
 
     return False
 
 if __name__ == "__main__":
-  are_installed()
-  # if not are_installed():
-    # download()
-    # install()
+  parser = argparse.ArgumentParser()
+
+  parser.add_argument("-light", help="run in light mode", action="store_true")
+  args, unknown = parser.parse_known_args()
+
+  are_installed(args.light)

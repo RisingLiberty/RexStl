@@ -8,6 +8,7 @@ import zipfile
 import shutil
 import threading
 import diagnostics
+import argparse
 
 from pathlib import Path
 
@@ -187,7 +188,15 @@ def install():
   rex_json.save_file(tool_paths_filepath, tool_paths)
 
 if __name__ == "__main__":
+  parser = argparse.ArgumentParser()
+
+  parser.add_argument("-light", help="run in light mode", action="store_true")
+  args, unknown = parser.parse_known_args()
+
   if not are_installed():
-    download()
-    install()
+    if not args.light:
+      download()
+      install()
+    else:
+      diagnostics.log_info("Some tools weren't found, but setup is in light mode, no tools will get downloaded")
 
