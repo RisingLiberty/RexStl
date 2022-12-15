@@ -45,24 +45,42 @@ public class BaseProject : Project
     conf.LinkerPdbFilePath = Path.Combine(conf.TargetPath, $"{Name}_{conf.Name}_{target.Compiler}{conf.LinkerPdbSuffix}.pdb");
     conf.CompilerPdbFilePath = Path.Combine(conf.TargetPath, $"{Name}_{conf.Name}_{target.Compiler}{conf.CompilerPdbSuffix}.pdb");
 
-    if (target.Compiler == Compiler.MSVC)
+    if (conf.Compiler == DevEnv.ninja && target.Compiler == Compiler.MSVC)
     {
-      string tools_json_path = Path.Combine(Globals.ToolsRoot, "paths.json");
+      string tools_json_path = Path.Combine(Globals.ToolsRoot, "lib_paths.json");
       string json_blob = File.ReadAllText(tools_json_path);
-      Dictionary<string, string> paths = JsonSerializer.Deserialize<Dictionary<string, string>>(json_blob);
+      Dictionary<string, string[]> paths = JsonSerializer.Deserialize<Dictionary<string, string[]>>(json_blob);
 
-      conf.IncludeSystemPaths.Add(@"D:\Tools\Windows SDK\10.0.19041.0\include\um");
-      conf.IncludeSystemPaths.Add(@"D:\Tools\Windows SDK\10.0.19041.0\include\shared");
-      conf.IncludeSystemPaths.Add(@"D:\Tools\Windows SDK\10.0.19041.0\include\winrt");
-      conf.IncludeSystemPaths.Add(@"D:\Tools\Windows SDK\10.0.19041.0\include\cppwinrt");
-      conf.IncludeSystemPaths.Add(@"D:\Tools\Windows SDK\10.0.19041.0\include\ucrt");
-      conf.IncludeSystemPaths.Add(@"D:\Tools\MSVC\install\14.29.30133\include");
-      conf.IncludeSystemPaths.Add(@"D:\Tools\MSVC\install\14.29.30133\atlmfc\include");
+      List<string> include_paths = new List<string>();
+      include_paths.AddRange(paths["windows_sdk_includes"].ToList());
+      include_paths.AddRange(paths["msvc_includes"].ToList());
+      foreach (var path in include_paths)
+      {
+        Console.WriteLine(path);
+        conf.IncludeSystemPaths.Add(path);
+      }
 
-      conf.LibraryPaths.Add(@"D:/Tools/MSVC/install/14.29.30133/lib/x64");
-      conf.LibraryPaths.Add(@"D:/Tools/MSVC/install/14.29.30133/atlmfc/lib/x64");
-      conf.LibraryPaths.Add(@"D:/Tools/Windows SDK/10.0.19041.0/lib/ucrt/x64");
-      conf.LibraryPaths.Add(@"D:/Tools/Windows SDK/10.0.19041.0/lib/um/x64");
+      List<string> lib_paths = new List<string>();
+      lib_paths.AddRange(paths["windows_sdk_lib"].ToList());
+      lib_paths.AddRange(paths["msvc_libs"].ToList());
+      foreach (var path in lib_paths)
+      {
+        Console.WriteLine(path);
+        conf.LibraryPaths.Add(path);
+      }
+
+      //conf.IncludeSystemPaths.Add(@"D:\Tools\Windows SDK\10.0.19041.0\include\um");
+      //conf.IncludeSystemPaths.Add(@"D:\Tools\Windows SDK\10.0.19041.0\include\shared");
+      //conf.IncludeSystemPaths.Add(@"D:\Tools\Windows SDK\10.0.19041.0\include\winrt");
+      //conf.IncludeSystemPaths.Add(@"D:\Tools\Windows SDK\10.0.19041.0\include\cppwinrt");
+      //conf.IncludeSystemPaths.Add(@"D:\Tools\Windows SDK\10.0.19041.0\include\ucrt");
+      //conf.IncludeSystemPaths.Add(@"D:\Tools\MSVC\install\14.29.30133\include");
+      //conf.IncludeSystemPaths.Add(@"D:\Tools\MSVC\install\14.29.30133\atlmfc\include");
+
+      //conf.LibraryPaths.Add(@"D:/Tools/MSVC/install/14.29.30133/lib/x64");
+      //conf.LibraryPaths.Add(@"D:/Tools/MSVC/install/14.29.30133/atlmfc/lib/x64");
+      //conf.LibraryPaths.Add(@"D:/Tools/Windows SDK/10.0.19041.0/lib/ucrt/x64");
+      //conf.LibraryPaths.Add(@"D:/Tools/Windows SDK/10.0.19041.0/lib/um/x64");
     }
 
     if (target.Compiler == Compiler.GCC && conf.Output == Configuration.OutputType.Dll) // Sharpmake doesn't support DLLs for GCC

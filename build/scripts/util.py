@@ -56,7 +56,10 @@ def find_directory_in_paths(dir : str, directories : list[str]):
       path_idx -= 1
 
     if dir_idx == -1:
-      return path
+      if os.path.exists(path):
+        return path
+      else:
+        diagnostics.log_err(f"matching directory found, but doesn't exist: {path}")
 
   return None
 

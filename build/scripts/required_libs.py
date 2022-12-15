@@ -10,7 +10,7 @@ build_dir = os.path.join(root, "build")
 temp_dir = os.path.join(root, ".rex")
 libs_install_dir = os.path.join(temp_dir, "tools")
 tools_install_dir = os.path.join(temp_dir, "tools")
-lib_paths_filepath = os.path.join(tools_install_dir, "paths.json")
+lib_paths_filepath = os.path.join(tools_install_dir, "lib_paths.json")
 lib_paths_dict = {}
 if os.path.exists(lib_paths_filepath):
   lib_paths_dict = rex_json.load_file(lib_paths_filepath)
@@ -46,43 +46,39 @@ def are_installed():
     config_name = required_lib["config_name"]
 
     # check if the lib path is already in the cached paths
+    lib_paths_to_remove = []
     if config_name in lib_paths_dict:
       lib_paths = lib_paths_dict[config_name]
-
       for lib_path in lib_paths:
         if (os.path.exists(lib_path)):
           __print_lib_found(required_lib, lib_path)
         else:
           diagnostics.log_err(f"Error: lib path cached, but path doesn't exist: {lib_path}")
+          lib_paths_to_remove.append(lib_path)
 
-      # if not, add the path of the lib directory where it'd be downloaded to
-      paths_to_use = copy.deepcopy(env_paths)
-      for required_lib_path in required_lib_paths:
-        paths_to_use.append(os.path.join(libs_install_dir, required_lib_path))
-        
-      # look for the lib
-      for required_lib_path in required_lib_paths:
-        abs_path = util.find_directory_in_paths(required_lib_path, paths_to_use)
-        if abs_path == None:
-          not_found_libs.append(required_lib_path)
-          continue
+    for lib_path in lib_paths_to_remove:
+      lib_paths.remove(lib_path)
 
-        __print_lib_found(required_lib, required_lib_path)
-        lib_paths.append(abs_path)
+    # if not, add the paths of the lib directory where it'd be downloaded to
+    paths_to_use = copy.deepcopy(env_paths)
+    for required_lib_path in required_lib_paths:
+      paths_to_use.append(os.path.join(libs_install_dir, required_lib_path))
+      
+    # look for the lib
+    for required_lib_path in required_lib_paths:
+      abs_path = util.find_directory_in_paths(required_lib_path, paths_to_use)
+      if abs_path == None:
+        not_found_libs.append(required_lib_path)
+        continue
 
-  #   # lib is found, add it to the cached paths
-  #   if absPath != '':
-  #     __print_lib_found(required_lib, absPath)
-  #     lib_config_name = required_lib["config_name"]
-  #     lib_paths[lib_config_name] = absPath
-
-  #   # lib is not found, add it to the list to be looked for later
-  #   else:
-  #     not_found_libs.append(required_lib)
+      __print_lib_found(required_lib, abs_path)
+      if config_name not in lib_paths_dict:
+        lib_paths_dict[config_name] = [] 
+      lib_paths_dict[config_name].append(abs_path)
 
   if len(not_found_libs) == 0:
     diagnostics.log_info("All libs found")
-    rex_json.save_file(lib_paths_filepath, lib_paths)
+    rex_json.save_file(lib_paths_filepath, lib_paths_dict)
     return True
   else:
     diagnostics.log_warn(f"Libs that weren't found: ")
