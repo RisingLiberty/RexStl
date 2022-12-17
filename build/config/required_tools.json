@@ -70,5 +70,11 @@
     "stem": "llvm-cov",
     "path": "LLVM/bin",
     "config_name": "llvm_cov_path"
-  }
+  },
+  "include_what_you_use" :
+  {
+    "stem": "include-what-you-use",
+    "path": "IncludeWhatYouUse",
+    "config_name": "include_what_you_use_path"
+  } 
 }

@@ -5,10 +5,10 @@ def run(generateUnitTests, lightMode):
 
   sharpmakeArgs = ""
   if generateUnitTests != None:
-    sharpmakeArgs += "/generateTests"
+    sharpmakeArgs += " /generateTests"
 
   if lightMode:
-    sharpmakeArgs += "/vsOnly"
+    sharpmakeArgs += " /vsOnly"
 
   os.system(f"py build/scripts/generate.py -sharpmake_main=build/sharpmake/src/main.sharpmake.cs -sharpmake_args={sharpmakeArgs}")
 

@@ -17,6 +17,7 @@ import rex_json
 import coverage_tests
 import traceback
 import diagnostics
+import shutil
 
 from pathlib import Path
 
@@ -24,6 +25,24 @@ root_path = util.find_root()
 tool_paths = required_tools.tool_paths
 settings = rex_json.load_file(os.path.join(root_path, "build", "config", "settings.json"))
 __pass_results = {}
+
+def __run_include_what_you_use(fixIncludes = False):
+  task_print = task_raii_printing.TaskRaiiPrint("running include-what-you-use")
+
+  intermediate_directory = os.path.join(root_path, settings["intermediate_directory"], settings["build_folder"])
+  result = util.find_all_files_in_folder(intermediate_directory, "compile_commands.json")
+    
+  for compiler_db in result:
+    iwyu_path = tool_paths["include_what_you_use_path"]
+    iwyu_tool_path = os.path.join(Path(iwyu_path).parent, "iwyu_tool.py")
+    fix_includes_path = os.path.join(Path(iwyu_path).parent, "fix_includes.py")
+    compiler_db_folder = Path(compiler_db).parent
+    output_path = os.path.join(compiler_db_folder, "iwyu_output.log")
+    os.system(f"py {iwyu_tool_path} -v -p={compiler_db_folder} > {output_path}") # needs to use os.system or iwyu will parse the command incorrectly
+    if fixIncludes:
+      os.system(f"py {fix_includes_path} --update_comments --safe_headers < {output_path}")
+
+  return 0
 
 def __run_clang_tidy():
   task_print = task_raii_printing.TaskRaiiPrint("running clang-tidy")
@@ -80,7 +99,7 @@ def __build_coverage():
 
 def __run_coverage():
   task_print = task_raii_printing.TaskRaiiPrint("running coverage")
-  unit_test_programs = __find_test_programs(os.path.join(settings["intermediate_directory"], settings["tests_folder"], settings["coverage_folder"]))
+  unit_test_programs = __find_test_programs(os.path.join(settings["intermediate_directory"], settings["coverage_folder"]))
 
   rc = 0
   for program in unit_test_programs:
@@ -308,6 +327,15 @@ def __find_test_programs(folder):
 
   return coverage_programs
 
+def __include_what_you_use_pass():
+  diagnostics.log_no_color("-----------------------------------------------------------------------------")
+  rc = __run_include_what_you_use()
+
+  if rc != 0:
+    diagnostics.log_err(f"include-what-you-use pass failed")
+
+  __pass_results["include-what-you-use"] = rc
+
 def __clang_tidy_pass():
   diagnostics.log_no_color("-----------------------------------------------------------------------------")
   rc = __run_clang_tidy() # works
@@ -426,17 +454,27 @@ def __fuzzy_testing_pass():
     diagnostics.log_err(f"invalid code found with fuzzy")
   __pass_results["fuzzy testing result"] = rc
 
+def __clean():
+  intermediate_tests_path = os.path.join(root_path, settings["intermediate_directory"], settings["tests_folder"])
+  if os.path.exists(intermediate_tests_path):
+    shutil.rmtree(intermediate_tests_path)
+
 def run():
   try:
     parser = argparse.ArgumentParser()
-    args = parser.parse_args()
+    parser.add_argument("-clean", help="clean run, as if run for the first time", action="store_true")
+    args,unknown = parser.parse_known_args()
         
-    __clang_tidy_pass()
-    __unit_tests_pass()
+    if args.clean:
+      __clean()
+
+    # __include_what_you_use_pass()
+    # __clang_tidy_pass()
+    # __unit_tests_pass()
     __coverage_tests_pass()
-    __asan_pass()
-    __ubsan_pass()
-    __fuzzy_testing_pass()
+    # __asan_pass()
+    # __ubsan_pass()
+    # __fuzzy_testing_pass()
 
   except Exception as Ex:
     traceback.print_exc()

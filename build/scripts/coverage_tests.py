@@ -60,13 +60,14 @@ class CoverageCategory:
     else:
       return float(self._cover.strip('%'))
 
-  def to_string(self):
-    res : str = ""
-    res += f"total: {self._total}\n"
-    res += f"missed: {self._missed}\n"
-    res += f"covered: {self._cover}"
+  def total_str(self):
+    return f"total: {self._total}"
 
-    return res
+  def missed_str(self):
+    return f"missed: {self._total}"
+
+  def covered_str(self):
+    return f"covered: {self._total}"
 
 class FileSummary:
   def __init__(self, line : str):
@@ -82,16 +83,24 @@ class FileSummary:
     diagnostics.log_info(f"coverage for file: {self._filename}")
     diagnostics.log_info(f"REGIONS:")
     diagnostics.log_info(f"---------------------------------")
-    diagnostics.log_info(self._regions_summary.to_string())
+    diagnostics.log_info(self._regions_summary.total_str())
+    diagnostics.log_info(self._regions_summary.missed_str())
+    diagnostics.log_info(self._regions_summary.covered_str())
     diagnostics.log_info(f"FUNCTIONS:")
     diagnostics.log_info(f"---------------------------------")
-    diagnostics.log_info(self._functions_summary.to_string())
+    diagnostics.log_info(self._functions_summary.total_str())
+    diagnostics.log_info(self._functions_summary.missed_str())
+    diagnostics.log_info(self._functions_summary.covered_str())
     diagnostics.log_info(f"LINES:")
     diagnostics.log_info(f"---------------------------------")
-    diagnostics.log_info(self._lines_summary.to_string())
+    diagnostics.log_info(self._lines_summary.total_str())
+    diagnostics.log_info(self._lines_summary.missed_str())
+    diagnostics.log_info(self._lines_summary.covered_str())
     diagnostics.log_info(f"BRANCHES:")
     diagnostics.log_info(f"---------------------------------")
-    diagnostics.log_info(self._branches_summary.to_string())
+    diagnostics.log_info(self._branches_summary.total_str())
+    diagnostics.log_info(self._branches_summary.missed_str())
+    diagnostics.log_info(self._branches_summary.covered_str())
 
   def filename(self):
     return self._filename
@@ -128,7 +137,7 @@ def parse_file_summary(filepath):
     if line.startswith('#'):
       continue
 
-    if re.search(r'[^-]', line).start() == 232: # report files use 232 tokens of '-' as separators
+    if re.search(r'[^-]', line).start() >= 200: # report files use a lot of '-' tokens as separators
       column_names_processed = True
       continue
 
@@ -141,7 +150,7 @@ def parse_file_summary(filepath):
     else:
       file_summaries.append(FileSummary(line))
 
-  result - 0
+  result = 0
   for file_summary in file_summaries:
     if file_summary.coverage() != 100:
       result = 1

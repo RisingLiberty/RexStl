@@ -111,6 +111,7 @@ def __download_tools_archive():
 
   threads = []
 
+  # Yes I know we can download this using GitPython, but that's incredibly slow..
   threads.append(__launch_download_thread(("https://github.com/RisingLiberty/RegisZip/raw/main/data/Tools.zip.001")))
   threads.append(__launch_download_thread(("https://github.com/RisingLiberty/RegisZip/raw/main/data/Tools.zip.002")))
   threads.append(__launch_download_thread(("https://github.com/RisingLiberty/RegisZip/raw/main/data/Tools.zip.003")))
@@ -125,6 +126,7 @@ def __download_tools_archive():
   threads.append(__launch_download_thread(("https://github.com/RisingLiberty/RegisZip/raw/main/data/Tools.zip.012")))
   threads.append(__launch_download_thread(("https://github.com/RisingLiberty/RegisZip/raw/main/data/Tools.zip.013")))
   threads.append(__launch_download_thread(("https://github.com/RisingLiberty/RegisZip/raw/main/data/Tools.zip.014")))
+  threads.append(__launch_download_thread(("https://github.com/RisingLiberty/RegisZip/raw/main/data/Tools.zip.015")))
 
   for thread in threads:
     thread.join()
@@ -178,11 +180,11 @@ def install():
     # if not found, something is wrong and we have to investigate manually
     if path == '':
       tool_name = tool["stem"]
-      raise Exception(f"Error: failed to find {tool_name}")
-
-    # if found, add it to the cached paths
-    tool_config_name = tool["config_name"]
-    tool_paths[tool_config_name] = path
+      diagnostics.log_err(f"failed to find {tool_name}")
+    else:
+      # if found, add it to the cached paths
+      tool_config_name = tool["config_name"]
+      tool_paths[tool_config_name] = path
   
   # save cached paths to disk
   rex_json.save_file(tool_paths_filepath, tool_paths)
