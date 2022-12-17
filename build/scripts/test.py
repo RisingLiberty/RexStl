@@ -468,13 +468,13 @@ def run():
     if args.clean:
       __clean()
 
-    # __include_what_you_use_pass()
-    # __clang_tidy_pass()
-    # __unit_tests_pass()
+    __include_what_you_use_pass()
+    __clang_tidy_pass()
+    __unit_tests_pass()
     __coverage_tests_pass()
-    # __asan_pass()
-    # __ubsan_pass()
-    # __fuzzy_testing_pass()
+    __asan_pass()
+    __ubsan_pass()
+    __fuzzy_testing_pass()
 
   except Exception as Ex:
     traceback.print_exc()

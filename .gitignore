@@ -46,3 +46,5 @@ rex-standard-library.sln
 build/sharpmake/.ninja/
 .ninja/
 build/tools/
+*.ninja
+*.sln

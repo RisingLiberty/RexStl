@@ -78,29 +78,32 @@ class FileSummary:
     self._lines_summary = CoverageCategory(words[7], words[8], words[9])    
     self._branches_summary = CoverageCategory(words[10], words[11], words[12])    
 
-  def print(self):
-    diagnostics.log_info(f"#################################")
-    diagnostics.log_info(f"coverage for file: {self._filename}")
-    diagnostics.log_info(f"REGIONS:")
-    diagnostics.log_info(f"---------------------------------")
-    diagnostics.log_info(self._regions_summary.total_str())
-    diagnostics.log_info(self._regions_summary.missed_str())
-    diagnostics.log_info(self._regions_summary.covered_str())
-    diagnostics.log_info(f"FUNCTIONS:")
-    diagnostics.log_info(f"---------------------------------")
-    diagnostics.log_info(self._functions_summary.total_str())
-    diagnostics.log_info(self._functions_summary.missed_str())
-    diagnostics.log_info(self._functions_summary.covered_str())
-    diagnostics.log_info(f"LINES:")
-    diagnostics.log_info(f"---------------------------------")
-    diagnostics.log_info(self._lines_summary.total_str())
-    diagnostics.log_info(self._lines_summary.missed_str())
-    diagnostics.log_info(self._lines_summary.covered_str())
-    diagnostics.log_info(f"BRANCHES:")
-    diagnostics.log_info(f"---------------------------------")
-    diagnostics.log_info(self._branches_summary.total_str())
-    diagnostics.log_info(self._branches_summary.missed_str())
-    diagnostics.log_info(self._branches_summary.covered_str())
+  def to_string(self):
+    result = ""
+    result += f"#################################"
+    result += f"coverage for file: {self._filename}"
+    result += f"REGIONS:"
+    result += f"---------------------------------"
+    result += self._regions_summary.total_str()
+    result += self._regions_summary.missed_str()
+    result += self._regions_summary.covered_str()
+    result += f"FUNCTIONS:"
+    result += f"---------------------------------"
+    result += self._functions_summary.total_str()
+    result += self._functions_summary.missed_str()
+    result += self._functions_summary.covered_str()
+    result += f"LINES:"
+    result += f"---------------------------------"
+    result += self._lines_summary.total_str()
+    result += self._lines_summary.missed_str()
+    result += self._lines_summary.covered_str()
+    result += f"BRANCHES:"
+    result += f"---------------------------------"
+    result += self._branches_summary.total_str()
+    result += self._branches_summary.missed_str()
+    result += self._branches_summary.covered_str()
+
+    return result
 
   def filename(self):
     return self._filename
@@ -151,12 +154,13 @@ def parse_file_summary(filepath):
       file_summaries.append(FileSummary(line))
 
   result = 0
+
   for file_summary in file_summaries:
     if file_summary.coverage() != 100:
       result = 1
       diagnostics.log_err(f"File {file_summary.filename()} was not fully covered, please see below for more details")
-      diagnostics.log_err(f"Alternatively, investigate the line coverage report file for this file")
-      file_summary.print()
+      diagnostics.log_err(f"Alternatively, investigate the line coverage report file for this file")    
+      diagnostics.log_err(f"This file is located at {Path(filepath).parent}")    
 
   if result != 0:
     diagnostics.log_err(f"Errors reported for file: {filepath}")
