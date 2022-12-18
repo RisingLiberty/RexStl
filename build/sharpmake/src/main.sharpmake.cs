@@ -56,7 +56,6 @@ public class BaseProject : Project
       include_paths.AddRange(paths["msvc_includes"].ToList());
       foreach (var path in include_paths)
       {
-        Console.WriteLine(path);
         conf.IncludeSystemPaths.Add(path);
       }
 
@@ -65,7 +64,6 @@ public class BaseProject : Project
       lib_paths.AddRange(paths["msvc_libs"].ToList());
       foreach (var path in lib_paths)
       {
-        Console.WriteLine(path);
         conf.LibraryPaths.Add(path);
       }
     }
