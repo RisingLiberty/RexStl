@@ -101,10 +101,10 @@ namespace rsl
         // Copies count character backwards from the character string pointed to by src, to the character string pointed to by dest
         constexpr static char_type* copy_backward(char_type* dest, const char_type* src, count_t count)
         {
-          char_type* dest_str      = dest + count;
-          const char_type* src_str = src + count;
+          char_type* dest_str      = dest + count - 1;
+          const char_type* src_str = src + count - 1;
 
-          count_t actual_amount_to_copy = count + 1; // +1 to also copy the null termination char, if it's there
+          count_t actual_amount_to_copy = count;// +1; // +1 to also copy the null termination char, if it's there
           while(actual_amount_to_copy > 0)
           {
             assign(*dest_str, *src_str);
