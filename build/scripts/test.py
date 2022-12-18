@@ -463,18 +463,35 @@ def run():
   try:
     parser = argparse.ArgumentParser()
     parser.add_argument("-clean", help="clean run, as if run for the first time", action="store_true")
+
+    parser.add_argument("-all", help="run all tests", action="store_true")
+    parser.add_argument("-iwyu", help="run include-what-you-use", action="store_true")
+    parser.add_argument("-clang_tidy", help="run clang-tidy", action="store_true")
+    parser.add_argument("-unit_tests", help="run unit tests", action="store_true")
+    parser.add_argument("-coverage", help="run coverage tests", action="store_true")
+    parser.add_argument("-asan", help="run address sanitizer", action="store_true")
+    parser.add_argument("-ubsan", help="run undefined behavior sanitizer", action="store_true")
+    parser.add_argument("-fuzzy", help="run fuzzy testing", action="store_true")
+    
     args,unknown = parser.parse_known_args()
         
     if args.clean:
       __clean()
 
-    __include_what_you_use_pass()
-    __clang_tidy_pass()
-    __unit_tests_pass()
-    __coverage_tests_pass()
-    __asan_pass()
-    __ubsan_pass()
-    __fuzzy_testing_pass()
+    if args.all or args.iwyu:
+      __include_what_you_use_pass()
+    if args.all or args.clang_tidy:
+      __clang_tidy_pass()
+    if args.all or args.unit_tests:
+      __unit_tests_pass()
+    if args.all or args.coverage:
+      __coverage_tests_pass()
+    if args.all or args.asan:
+      __asan_pass()
+    if args.all or args.ubsan:
+      __ubsan_pass()
+    if args.all or args.fuzzy:
+      __fuzzy_testing_pass()
 
   except Exception as Ex:
     traceback.print_exc()

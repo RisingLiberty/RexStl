@@ -6,7 +6,7 @@ def run(clean):
   if clean:
     args += " -clean"
 
-  os.system(f"py build/scripts/test.py {args}")
+  os.system(f"py build/scripts/test.py -all {args}")
 
 if __name__ == "__main__":
   parser = argparse.ArgumentParser()
