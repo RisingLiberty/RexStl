@@ -841,7 +841,7 @@ namespace rsl
           }
           return defaultValue;
         }
-        // finds the first occurrence of a char in the substring [str, str + length) within [lhsStr, lhsStr + lhsLength), starting from pos
+        // finds the first occurrence of a char in the substring [lhsStr, lhsStr + lhsLength) within [rhsStr, rhsStr + rhsLength), starting from pos
         template <typename Traits, typename Pointer, typename SizeType>
         SizeType find_first_of(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer rhsStr, SizeType rhsLength, SizeType defaultValue)
         {
@@ -858,13 +858,13 @@ namespace rsl
 
           return defaultValue;
         }
-        // finds the last occurrence of a char in the substring [rhsStr, rhsStr + rhsLength) within [lhsStr, lhsStr + lhsLength), starting from pos
+        // finds the last occurrence of a char in the substring [lhsStr, lhsStr + lhsLength) within [rhsStr, rhsStr + rhsLength), starting from pos
         template <typename Traits, typename Pointer, typename SizeType>
         SizeType find_last_of(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer rhsStr, SizeType rhsLength, SizeType defaultValue)
         {
           const character_lookup<typename Traits::char_type> lookup(rhsStr, rhsLength);
 
-          for(SizeType i = lhsLength; i >= pos; --i)
+          for (SizeType i = lhsLength; i > pos; --i)
           {
             auto c = lhsStr[i];
             if(lookup.exists(c))
@@ -875,7 +875,7 @@ namespace rsl
 
           return defaultValue;
         }
-        // finds the first occurrence of a char not in the substring [str, str + length) within [lhsStr, lhsStr + lhsLength), starting from pos
+        // finds the first occurrence of a char not in the substring [lhsStr, lhsStr + lhsLength) within [rhsStr, rhsStr + rhsLength), starting from pos
         template <typename Traits, typename Pointer, typename SizeType>
         SizeType find_first_not_of(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer rhsStr, SizeType rhsLength, SizeType defaultValue)
         {
@@ -892,13 +892,13 @@ namespace rsl
 
           return defaultValue;
         }
-        // finds the last occurrence of a char not in the substring [str, str + length) within [lhsStr, lhsStr + lhsLength), starting from pos
+        // finds the last occurrence of a char not in the substring [lhsStr, lhsStr + lhsLength) within [rhsStr, rhsStr + rhsLength), starting from pos
         template <typename Traits, typename Pointer, typename SizeType>
         SizeType find_last_not_of(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer rhsStr, SizeType rhsLength, SizeType defaultValue)
         {
           const character_lookup<typename Traits::char_type> lookup(rhsStr, rhsLength);
 
-          for(SizeType i = lhsLength; i >= pos; --i)
+          for(SizeType i = lhsLength; i > pos; --i)
           {
             auto c = lhsStr[i];
             if(!lookup.exists(c))
