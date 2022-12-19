@@ -14,6 +14,12 @@
     "path": "MSVC/14.29.30133/bin/Hostx64/x64",
     "config_name": "msvc_archiver_path"  
   },
+  "undname" :
+  {
+    "stem": "undname",
+    "path": "MSVC/14.29.30133/bin/Hostx64/x64",
+    "config_name": "undname_path"
+  },
   "clang_compiler" : {
     "stem": "clang++",
     "path": "LLVM/bin",
@@ -76,5 +82,12 @@
     "stem": "include-what-you-use",
     "path": "IncludeWhatYouUse",
     "config_name": "include_what_you_use_path"
-  } 
+  },
+  "lcov" :
+  {
+    "stem": "genhtml",
+    "path": "lcov/tools/bin",
+    "config_name": "lcov_path",
+    "extension": ""
+  }
 }

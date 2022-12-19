@@ -68,7 +68,9 @@ def are_installed():
 
     # look for the tool
     exe_extension = "" 
-    if util.is_windows():
+    if "extension" in required_tool:
+      exe_extension = required_tool["extension"]
+    elif util.is_windows():
       exe_extension = ".exe"
 
     absPath = util.find_file_in_paths(f"{stem}{exe_extension}", paths_to_use)

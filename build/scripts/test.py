@@ -150,6 +150,7 @@ def __create_coverage_reports(programsRun, indexdataFiles):
 
     coverage_tests.create_line_oriented_report(program, indexdata_file)
     coverage_tests.create_file_level_summary(program, indexdata_file)
+    coverage_tests.create_lcov_report(program, indexdata_file)
 
   return rc
 
