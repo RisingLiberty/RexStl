@@ -7,6 +7,8 @@ import re
 import diagnostics
 import shutil
 
+htlm_report_folder = "lcov"
+
 def index_rawdata(rawdataPath):
   folder = Path(rawdataPath).parent
   output_path = os.path.join(folder, f"{Path(rawdataPath).stem}.profdata")
@@ -55,16 +57,15 @@ def create_file_level_summary(programPath, profDataPath):
   os.system(cmd) # using >> is a hack to get the logs into a file, capturing stdout lines crashes llvm
   return log_file_path
 
-def create_lcov_report(programPath, profDataPath):
+def __create_mangled_lcov_info(programPath, profDataPath):
   llvm_cov_path = required_tools.tool_paths["llvm_cov_path"]
   log_file_path = lcov_filename(profDataPath)
-  if os.path.exists("lcov"):
-    shutil.rmtree("lcov")
-  
   cmd = f"{llvm_cov_path} export -format=lcov {programPath} -instr-profile={profDataPath} >> {log_file_path}"
   os.system(cmd)
+  return log_file_path
 
-  # the lcov info file will have mangled names, unfortunately using -Xdemangler doesn't work so we have to manually let it be parsed by undname (on Windows)
+def __unmangle_function_names(logFilePath, profDataPath):
+  # the lcov info file will have mangled names, unfortunately using -Xdemangler doesn't work so we have to manually parse by undname (on Windows)
   # this works, but will result in a bit of an invalid .info file as it parsed ',' to get to the next value, and templated functions will use ',' tokens to separate arguments
   # so we'll parse these .info files ourselves after they're unmangled, changing all ',' to a different token to have a proper html report
 
@@ -90,17 +91,17 @@ def create_lcov_report(programPath, profDataPath):
   undname_path = required_tools.tool_paths["undname_path"]
   flags : int = 0x0001 | 0x0002 | 0x0080 | 0x8000
   unmangled_log_file_path = lcov_unmangled_filename(profDataPath)
-  cmd = f"{undname_path} {flags} {log_file_path} > {unmangled_log_file_path}"
+  cmd = f"{undname_path} {flags} {logFilePath} > {unmangled_log_file_path}"
   os.system(cmd)
 
-  # now parse it and change the templated tokens to '| '
+  # now parse it and change the templated tokens
   f = open(unmangled_log_file_path, "r+")
   lines = f.readlines()
   f.seek(0)
 
   new_lines : list[str] = []
   for line in lines:
-    if "FN:" not in line and "FNDA:" not in line: #function names start with FN:
+    if "FN:" not in line and "FNDA:" not in line: #function names start with FN, function execution counts with FNDA
       new_lines.append(line)
       continue
 
@@ -117,9 +118,20 @@ def create_lcov_report(programPath, profDataPath):
   f.truncate()
   f.close()
 
+  return unmangled_log_file_path
+
+def __generate_html_reports(unmangledLogFilePath):
   lcov_path = required_tools.tool_paths["lcov_path"]
-  cmd = f"perl {lcov_path} {unmangled_log_file_path} -q -o {os.path.join(Path(log_file_path).parent, 'lcov')}"
+  cmd = f"perl {lcov_path} {unmangledLogFilePath} -q -o {os.path.join(Path(unmangledLogFilePath).parent, htlm_report_folder)}"
   os.system(cmd)
+
+def create_lcov_report(programPath, profDataPath):
+  if os.path.exists(htlm_report_folder):
+    shutil.rmtree(htlm_report_folder)
+  
+  log_file_path = __create_mangled_lcov_info(programPath, profDataPath)
+  unmangled_log_file_path = __unmangle_function_names(log_file_path, profDataPath)
+  __generate_html_reports(unmangled_log_file_path)
 
 class CoverageCategory:
   def __init__(self, total, missed, cover):
@@ -231,12 +243,12 @@ def parse_file_summary(filepath):
   for file_summary in file_summaries:
     if file_summary.coverage() != 100:
       result = 1
-      diagnostics.log_err(f"File {file_summary.filename()} was not fully covered, please see below for more details")
-      diagnostics.log_err(f"Alternatively, investigate the line coverage report file for this file")    
-      diagnostics.log_err(f"This file is located at {Path(filepath).parent}")    
+      # diagnostics.log_err(f"File {file_summary.filename()} was not fully covered, please see below for more details")
+      # diagnostics.log_err(f"Alternatively, investigate the line coverage report file for this file")    
+      # diagnostics.log_err(f"This file is located at {Path(filepath).parent}")    
 
   if result != 0:
-    diagnostics.log_err(f"Errors reported for file: {filepath}")
-    diagnostics.log_err(f"To unmangle function names, please use undname.exe")
+    diagnostics.log_err(f"Errors reported in file: {filepath}")
+    diagnostics.log_err(f"Alternatively, investigate the line coverage file or html report located at {Path(filepath).parent}")    
 
   return result
