@@ -177,6 +177,11 @@ TEST_CASE("string assignment")
     str.assign(5, 'c');
     REQUIRE(str == "ccccc");
     REQUIRE(str.size() == 5);
+
+
+    str.assign(20, 'c');
+    REQUIRE(str == "cccccccccccccccccccc");
+    REQUIRE(str.size() == 20);
   }
   // 6) basic_string& assign(const basic_string& other)
   {
@@ -202,6 +207,9 @@ TEST_CASE("string assignment")
     str.assign(rsl::move(str2));
     REQUIRE(str == "something");
     REQUIRE(str.size() == 9);
+
+    str2.assign("a very big string to make sure we get heap allocation");
+    str.assign(rsl::move(str2));
   }
   // 9) basic_string& assign(const_pointer str, size_type count)
   {
@@ -241,6 +249,10 @@ TEST_CASE("string assignment")
 
     REQUIRE(str.size() == 9);
     REQUIRE(str == "something");
+
+    str.assign({ 's', 'o', 'm', 'e', 't', 'h', 'i', 'n', 'g', ' ', 'e', 'l', 's', 'e', ' ', 'a','n','d',' ','t','h','e','n',' ','s','o','m','e','t','h','i','n','g'});
+    REQUIRE(str.size() == 33);
+    REQUIRE(str == "something else and then something");
   }
   // 13) basic_string& assign(basic_string_view<value_type, traits_type> sv)
   {
@@ -622,6 +634,15 @@ TEST_CASE("string compare")
     REQUIRE(str.compare(0, 5, rsl::string_view("Hello Again"), 0, 5) == 0);
     REQUIRE(str.compare(0, 11, rsl::string_view("Hello World"), 6, 5) < 0);
   }
+
+  // operator==
+  {
+    rsl::string str("Hello");
+    rsl::string str2("Something");
+
+    REQUIRE_FALSE(str == str2);
+    REQUIRE_FALSE(str == "Something");
+  }
 }
 TEST_CASE("string starts with")
 {
@@ -708,6 +729,10 @@ TEST_CASE("string replace")
     rsl::string str("Hello World");
     str.replace(0, 5, 5, 'c');
     REQUIRE(str == "ccccc World");
+
+    str.assign("Hello World");
+    str.replace(0, 5, 10, 'c');
+    REQUIRE(str == "cccccccccc World");
   }
   // 8) replace(const_iterator first, const_iterator last, size_type count2, value_type ch)
   {
