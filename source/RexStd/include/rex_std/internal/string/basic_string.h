@@ -1641,7 +1641,7 @@ namespace rsl
       // setting m_begin, m_end and m_last
       void reallocate(size_type newCapacity, const_pointer beginSrc, size_type length)
       {
-        pointer new_buffer = static_cast<pointer>(get_allocator().allocate(newCapacity));
+        pointer new_buffer = static_cast<pointer>(get_allocator().allocate(calc_bytes_needed(newCapacity)));
 
         traits_type::copy(new_buffer, beginSrc, length);
         deallocate();

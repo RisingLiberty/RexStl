@@ -963,4 +963,26 @@ TEST_CASE("string integer conversions")
     REQUIRE(floatstr.to_uint().has_value() == true);
   }
 }
+TEST_CASE("wide string test")
+{
+  {
+    rsl::wstring str(L"something");
+    rsl::wstring str2(L"");
+    str.swap(str2);
+
+    REQUIRE(str.size() == 0);
+    REQUIRE(str2.size() == 9);
+    REQUIRE(str.length() == 0);
+    REQUIRE(str2.length() == 9);
+    REQUIRE(str.capacity() > 0);
+    REQUIRE(str2.capacity() > 0);
+
+    str.resize(20);
+    REQUIRE(str.size() == 20);
+
+    str.assign(L"this is a very long string that should be assigned on the heap");
+    REQUIRE(str == L"this is a very long string that should be assigned on the heap");
+
+  }
+}
 // NOLINTEND
