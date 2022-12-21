@@ -57,7 +57,7 @@ def __run_clang_tidy():
     clang_apply_replacements_path = tool_paths["clang_apply_replacements_path"]
     compiler_db_folder = Path(compiler_db).parent
     config_file_path = f"{root_path}/source/.clang-tidy_first_pass"
-    proc = util.run_subprocess(f"py {script_path}/run_clang_tidy.py -clang-tidy-binary={clang_tidy_path} -clang-apply-replacements-binary={clang_apply_replacements_path} -config-file={config_file_path} -p={compiler_db_folder} -header-filter=.* -quiet -fix") # force clang compiler, as clang-tools expect it
+    proc = util.run_subprocess(f"py {script_path}/run_clang_tidy.py -clang-tidy-binary={clang_tidy_path} -clang-apply-replacements-binary={clang_apply_replacements_path} -config-file={config_file_path} -p={compiler_db_folder} -header-filter=.* -quiet") # force clang compiler, as clang-tools expect it
     new_rc = util.wait_for_process(proc)
     if new_rc != 0:
       diagnostics.log_err(f"clang-tidy failed for {compiler_db}")
@@ -455,10 +455,13 @@ def __fuzzy_testing_pass():
     diagnostics.log_err(f"invalid code found with fuzzy")
   __pass_results["fuzzy testing result"] = rc
 
+def __shutil_error(func, path, exec_info):
+  diagnostics.log_err(f"shutil error: {func}, {path}, {exec_info}")
+
 def __clean():
   intermediate_tests_path = os.path.join(root_path, settings["intermediate_directory"], settings["tests_folder"])
   if os.path.exists(intermediate_tests_path):
-    shutil.rmtree(intermediate_tests_path)
+    shutil.rmtree(intermediate_tests_path, onerror=__shutil_error)
 
 def run():
   try:
