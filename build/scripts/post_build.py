@@ -3,7 +3,7 @@ import diagnostics
 import argparse
 
 def run(projectName, config):
-  # run_clang_tools.run(projectName, config)
+  run_clang_tools.run(projectName, config)
   return
 
 if __name__ == "__main__":
@@ -35,6 +35,3 @@ if __name__ == "__main__":
   logger.info("Done.")
 
   exit(0)
-
-if __name__ == "__main__":
-  main()

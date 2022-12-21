@@ -35,17 +35,11 @@ def run(projectName, config):
   logger.info(f"clang-tidy path: {clang_tidy_path}")
   logger.info(f"clang-apply-replacements path: {clang_apply_replacements_path}")
 
-  logger.info("Running clang-tidy - first pass")
-  rc = __run_command(f"py {script_path}/run_clang_tidy.py -clang-tidy-binary={clang_tidy_path} -clang-apply-replacements-binary={clang_apply_replacements_path} -config-file={root_path}/source/.clang-tidy_first_pass -p={root_path}/.rex/build/ninja/{projectName}/clang_tools/clang/{config} -header-filter=.* -quiet -fix") # force clang compiler, as clang-tools expect it
-
-  if rc != 0:
-    raise Exception("clang-tidy first pass failed")
-  
-  logger.info("Running clang-tidy - second pass")
+  logger.info("Running clang-tidy - auto fixes")
   rc = __run_command(f"py {script_path}/run_clang_tidy.py -clang-tidy-binary={clang_tidy_path} -clang-apply-replacements-binary={clang_apply_replacements_path} -config-file={root_path}/source/.clang-tidy_second_pass -p={root_path}/.rex/build/ninja/{projectName}/clang_tools/clang/{config} -header-filter=.* -quiet") # force clang compiler, as clang-tools expect it
 
   if rc != 0:
-    raise Exception("clang-tidy second pass failed")
+    raise Exception("clang-tidy auto fixes failed")
 
   logger.info("Running clang-format")
   rc = __run_command(f"py {script_path}/run_clang_format.py --clang-format-executable={clang_format_path} -r -i {root_path}/source/{projectName}")
