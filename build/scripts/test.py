@@ -56,7 +56,7 @@ def __run_clang_tidy():
     clang_tidy_path = tool_paths["clang_tidy_path"]
     clang_apply_replacements_path = tool_paths["clang_apply_replacements_path"]
     compiler_db_folder = Path(compiler_db).parent
-    config_file_path = f"{root_path}/source/.clang-tidy_first_pass"
+    config_file_path = f"{root_path}/source/.clang-tidy_second_pass"
     proc = util.run_subprocess(f"py {script_path}/run_clang_tidy.py -clang-tidy-binary={clang_tidy_path} -clang-apply-replacements-binary={clang_apply_replacements_path} -config-file={config_file_path} -p={compiler_db_folder} -header-filter=.* -quiet") # force clang compiler, as clang-tools expect it
     new_rc = util.wait_for_process(proc)
     if new_rc != 0:
@@ -482,7 +482,7 @@ def run():
     if args.clean:
       __clean()
 
-    if args.all or args.iwyu:
+    if args.iwyu: # include-what-you-use is not automatically
       __include_what_you_use_pass()
     if args.all or args.clang_tidy:
       __clang_tidy_pass()
