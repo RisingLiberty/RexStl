@@ -5,6 +5,9 @@ It is mainly used in the [Rex Engine](https://github.com/Dyronix/Rex), but can b
 
 The library is written using C++17 and will support future C++ versions.
 
+The entire library is written by Nick De Breuck, if you have any questions, please reach out on one of the below channels:
+twitter: [@nick_debreuck](https://twitter.com/nick_debreuck)
+discord: Rising Liberty#2195
 
 ## Usage
 If you're familiar with C++ and with the standard library that comes with every major compiler, the library doesn't come with many new features.
@@ -15,7 +18,6 @@ We keep configuration to a minimum to avoid maintaining code that's rarely used.
 If the user would like to change some code for any reason whatsoever, he/she/they are free to do so.
 
 A pull request can always be made if you think it's useful for other people to know about your request.
-
 
 ## Features
 This library was written from scratch, using [C++ standard library](https://github.com/microsoft/STL) (MSVC's implementation) as a reference, as well as a few others (mainly [EASTL](https://github.com/electronicarts/EASTL)). like any software that reaches a certain age, the C++ standard has a lot of legacy code. 
@@ -38,25 +40,90 @@ These checks are enabled in .clang-tidy and .clang-format files which sit in the
 Unit tests are a great way to make sure your code does exactly what it needs to do. They can catch bugs early on and are a great way to make sure every templated function
 is instantiated to make sure all templated code compiles on every compiler and platform.
 Currently, the library has unit tests for the following:
-    - vector
     - array
+    - chrono
+    - ctype
+    - functional
+    - initializer_list
+    - list
+    - optional
+    - source_location
+    - string
+    - string_view
+    - type_traits
     - unordered_map
+    - utility
+    - vector
+
+Other than unit tests, other tests are also performed on the code to better tests and catch edge cases, memory issues and undefined behavior.
+
+these additional tests are: 
+### include-what-you-use
+https://include-what-you-use.org
+
+
+Include-what-you-use is a tool that parses your code to verify you're only including headers where needed. If you can get away with a forward declare, it'll do that instead, making the header smaller in size and easier to compile.
+
+### Code Coverage
+https://clang.llvm.org/docs/SourceBasedCodeCoverage.html
+
+We're applying code coverage on our unit tests to make sure that all the code is properly executed and tested. This is to make sure that when you're writing unit tests, all the code that should be tested (which is all the code) is properly tested.
+File summaries, line summaries and lcov reports get auto generated which you can inspect in your browser to verify which files need more tests.
+
+### Address Sanitizer
+https://clang.llvm.org/docs/AddressSanitizer.html
+
+This is used for fast memory error detection. Address sanitizer can detect the following errors:
+- out-of-bounds access to heap, stack and globals
+- use-after-free
+- use-after-return
+- use-after-scope
+- double free
+- memory leaks (experimental)
+
+Code does suffer a performance hit when address sanitizer is enabled so this should not be enabled on shipping builds it's great to run unit tests with, especially if those unit tests have 100% code coverage, then you know you're not doing anything bad within your code.
+
+### Undefined Behavior Sanitizer
+https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html
+
+Like the address sanitizer detects memory errors, the undefined behavior sanitizer detects undefined behavior in your code.
+it can detect the following errors:
+- array subscript out of bounds (where the array bounds are statically determined)
+- bitwise shifts that are out of bounds for their data type
+- dereferencing misaligned or null pointers
+- signed integer overflow
+- conversion to, from or between floating-point types which would overflow the destination
+- float division by zero
+
+more checks are available but these are the ones we enable at the moment.
+
+### Fuzzy testing
+https://llvm.org/docs/LibFuzzer.html
+
+Fuzzy testing is a special way of testing your code. You don't necessarily know the output of your code but the goal is to call your code with a lot of different kind of input and make sure it doesn't crash. This works exceptionally well when address sanitizer and undefined behavior sanitizer is enabled
+
+This is enabled for Rex Standard Library but hasn't been properly set up yet, this will get added later.
 
 ## Supported headers
 ### fully supported headers
 - Utilities library
+    - chrono
+    - functional
     - initializer_list
     - optional
     - tuple
     - type_traits
     - utility
+- Error Handling
+    - cassert
 - Numeric Limits
-    - cfloat
-    - climits
-    - cstdint
+    - cfloat (as float.h)
+    - cinttypes ( as inttypes.h)
+    - climits (as limits.h)
+    - cstdint (as stdint.h)
     - limits
 - Strings library
-    - cctype
+    - cctype (as ctype.h)
     - format
     - string
     - string_view
@@ -67,23 +134,22 @@ Currently, the library has unit tests for the following:
 - Numerics Library
     - numbers
     - ratio
+- Input/Output Library
+    - iosfwd
+    - iostream
+    - istream
+    - ostream
 
 ### partially supported headers
 - Utilities library
-    - chrono
     - csignal
     - cstddef
     - cstdlib
     - ctime
-    - functional
 - Dynamic Memory Management
     - memory
-- Numeric Limits
-    - cinttypes
-- Error Handling
-    - cassert
 - Strings library
-    - cstring
+    - cstring (as string.h)
 - Containers Library
     - forward_list
     - list
@@ -96,6 +162,8 @@ Currently, the library has unit tests for the following:
 - Numerics Library
     - cmath
     - numeric
+- Input/Output Library
+    - ios
 
 ### not supported headers
 files marked with [x] are not supported as a design choice
@@ -104,7 +172,7 @@ files marked with [x] are not supported as a design choice
     - bitset
     - compare
     - csetjmp [x]
-    - cstdarg
+    - cstdarg [x]
     - expected (C++23)
     - source_location(C++20)
     - typeindex
@@ -152,11 +220,6 @@ files marked with [x] are not supported as a design choice
     - cstdio
     - fstream
     - iomanip
-    - ios
-    - iosfwd
-    - iostream
-    - istream
-    - ostream
     - spanstream (C++23)
     - sstream
     - streambuf
