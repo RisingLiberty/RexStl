@@ -18,6 +18,7 @@ import coverage_tests
 import traceback
 import diagnostics
 import shutil
+import time
 
 from pathlib import Path
 
@@ -479,10 +480,12 @@ def run():
     
     args,unknown = parser.parse_known_args()
         
+    start = time.perf_counter()
+
     if args.clean:
       __clean()
 
-    if args.iwyu: # include-what-you-use is not automatically
+    if args.all or args.iwyu: # include-what-you-use is not automatically run
       __include_what_you_use_pass()
     if args.all or args.clang_tidy:
       __clang_tidy_pass()
@@ -511,6 +514,11 @@ def run():
       diagnostics.log_info(f"{key} - success")
     else:
       diagnostics.log_err(f"{key} - failed")
+
+  end = time.perf_counter()
+  diagnostics.log_no_color("")
+  diagnostics.log_no_color("--------------------------------------")
+  diagnostics.log_info(f"Tests took {end - start:0.4f} seconds")
 
   return
 
