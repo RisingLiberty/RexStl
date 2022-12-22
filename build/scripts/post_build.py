@@ -2,8 +2,8 @@ import run_clang_tools
 import diagnostics
 import argparse
 
-def run(projectName, config):
-  run_clang_tools.run(projectName, config)
+def run(projectName, compdb):
+  run_clang_tools.run(projectName, compdb)
   return
 
 if __name__ == "__main__":
@@ -12,6 +12,7 @@ if __name__ == "__main__":
   parser.add_argument("-p", "--project", help="project name")
   parser.add_argument("-comp", "--compiler", help="compiler")
   parser.add_argument("-conf", "--config", help="configuration")
+  parser.add_argument("-compdb", help="compiler db folder")
 
   parser.add_argument("-l", "--level", default="info", help="logging level")
   args, unknown = parser.parse_known_args()
@@ -19,6 +20,7 @@ if __name__ == "__main__":
   project_name = args.project
   compiler = args.compiler
   config = args.config
+  compdb = args.compdb
 
  # initialize the logger
   log_level_str = args.level
@@ -29,7 +31,7 @@ if __name__ == "__main__":
   logger.info(f"Executing {__file__}")
 
  # execute the script
-  run(project_name, config)
+  run(project_name, compdb)
 
  # print. We're done.
   logger.info("Done.")
