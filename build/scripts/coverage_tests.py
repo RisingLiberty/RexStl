@@ -91,7 +91,7 @@ def __unmangle_function_names(logFilePath, profDataPath):
   undname_path = required_tools.tool_paths["undname_path"]
   flags : int = 0x0001 | 0x0002 | 0x0080 | 0x8000
   unmangled_log_file_path = lcov_unmangled_filename(profDataPath)
-  cmd = f"{undname_path} {flags} {logFilePath} > {unmangled_log_file_path}"
+  cmd = f"\"{undname_path}\" {flags} {logFilePath} > {unmangled_log_file_path}"
   os.system(cmd)
 
   # now parse it and change the templated tokens
