@@ -132,6 +132,27 @@ public class RexConfiguration : Sharpmake.Project.Configuration
     PrecompHeader = projectFolderName + @"/" + preCompHeaderName + @".h";
     PrecompSource = preCompHeaderName + @".cpp";
   }
+
+  public bool is_config_for_testing()
+  {
+    RexTarget rex_target = Target as RexTarget;
+    switch (rex_target.Config)
+    {
+      case Config.tests:
+      case Config.coverage:
+      case Config.address_sanitizer:
+      case Config.undefined_behavior_sanitizer:
+      case Config.fuzzy:
+        return true;
+
+      case Config.assert:
+      case Config.debug:
+      case Config.debug_opt:
+      case Config.release:
+      default:
+        return false;
+    }
+  }
 }
 
 public class ConfigManager

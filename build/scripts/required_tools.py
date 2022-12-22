@@ -173,7 +173,9 @@ def install():
 
     # look for tool in the folder where it'd be downloaded to
     exe_extension = "" 
-    if util.is_windows():
+    if "extension" in tool:
+      exe_extension = tool["extension"]
+    elif util.is_windows():
       exe_extension = ".exe"
 
     diagnostics.log_info(f"looking for {tool['stem']}{exe_extension} in {os.path.join(tools_install_dir, tool['path'])}")

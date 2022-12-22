@@ -864,7 +864,7 @@ namespace rsl
         {
           const character_lookup<typename Traits::char_type> lookup(rhsStr, rhsLength);
 
-          for (SizeType i = lhsLength; i > pos; --i)
+          for(SizeType i = lhsLength; i > pos; --i)
           {
             auto c = lhsStr[i];
             if(lookup.exists(c))

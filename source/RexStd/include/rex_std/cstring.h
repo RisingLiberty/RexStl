@@ -37,7 +37,7 @@ namespace rsl
     {
       Char* res = dest;
 
-      while (*src) // NOLINT
+      while(*src) // NOLINT
       {
         *dest = *src;
         ++src;
@@ -55,7 +55,7 @@ namespace rsl
     {
       Char* res = dest;
 
-      while (count > 0 && *src) // NOLINT
+      while(count > 0 && *src) // NOLINT
       {
         *dest = *src;
         ++dest;
@@ -63,7 +63,7 @@ namespace rsl
         --count;
       }
 
-      while (count > 0)
+      while(count > 0)
       {
         *dest = '\0';
         ++dest;
@@ -77,12 +77,12 @@ namespace rsl
     Char* strcat(Char* dest, const Char* src)
     {
       Char* res = dest;
-      while (*dest) // NOLINT
+      while(*dest) // NOLINT
       {
         ++dest;
       }
 
-      while (*src) // NOLINT
+      while(*src) // NOLINT
       {
         *dest = *src;
         ++dest;
@@ -101,12 +101,12 @@ namespace rsl
     {
       Char* res = dest;
 
-      while (*dest) // NOLINT
+      while(*dest) // NOLINT
       {
         ++dest;
       }
 
-      while (count > 0 && *src) // NOLINT(readability-implicit-bool-conversion)
+      while(count > 0 && *src) // NOLINT(readability-implicit-bool-conversion)
       {
         *dest = *src;
         ++dest;
@@ -126,7 +126,7 @@ namespace rsl
     count_t strlen(const Char* str)
     {
       count_t len = 0;
-      while (*str) // NOLINT
+      while(*str) // NOLINT
       {
         ++len;
         ++str;
@@ -137,7 +137,7 @@ namespace rsl
     template <typename Char, typename rsl::v1::enable_if_t<is_character_v<Char>, int> = 0>
     int32 strcmp(const Char* lhs, const Char* rhs)
     {
-      while (*lhs && *rhs && *lhs == *rhs) // NOLINT
+      while(*lhs && *rhs && *lhs == *rhs) // NOLINT
       {
         ++lhs;
         ++rhs;
@@ -148,7 +148,7 @@ namespace rsl
     template <typename Char, typename rsl::v1::enable_if_t<is_character_v<Char>, int> = 0>
     int32 strncmp(const Char* lhs, const Char* rhs, count_t count)
     {
-      while (count != 0 && *lhs && *rhs && *lhs == *rhs) // NOLINT(readability-implicit-bool-conversion)
+      while(count != 0 && *lhs && *rhs && *lhs == *rhs) // NOLINT(readability-implicit-bool-conversion)
       {
         lhs++;
         rhs++;
@@ -164,11 +164,11 @@ namespace rsl
     {
       do
       {
-        if (*str == ch) // NOLINT
+        if(*str == ch) // NOLINT
         {
           return str;
         }
-      } while (*str++); // NOLINT(readability-implicit-bool-conversion)
+      } while(*str++); // NOLINT(readability-implicit-bool-conversion)
 
       return nullptr;
     }
@@ -178,11 +178,11 @@ namespace rsl
     {
       do
       {
-        if (*str == ch) // NOLINT
+        if(*str == ch) // NOLINT
         {
           return str;
         }
-      } while (*str++); // NOLINT(readability-implicit-bool-conversion)
+      } while(*str++); // NOLINT(readability-implicit-bool-conversion)
 
       return nullptr;
     }
@@ -193,11 +193,11 @@ namespace rsl
       const Char* res = nullptr;
       do
       {
-        if (*str == ch) // NOLINT
+        if(*str == ch) // NOLINT
         {
           res = str;
         }
-      } while (*str++); // NOLINT(readability-implicit-bool-conversion)
+      } while(*str++); // NOLINT(readability-implicit-bool-conversion)
       return res;
     }
     // finds the last occurrence of a character
@@ -207,11 +207,11 @@ namespace rsl
       Char* res = nullptr;
       do
       {
-        if (*str == ch) // NOLINT
+        if(*str == ch) // NOLINT
         {
           res = str;
         }
-      } while (*str++); // NOLINT(readability-implicit-bool-conversion)
+      } while(*str++); // NOLINT(readability-implicit-bool-conversion)
       return res;
     }
     // calculates the length of the initial segment in "target"
@@ -222,14 +222,14 @@ namespace rsl
       const Char* s = target;
       const Char* c = nullptr;
 
-      while (*target) // NOLINT
+      while(*target) // NOLINT
       {
-        for (c = toFind; *c; ++c) // NOLINT(readability-implicit-bool-conversion)
+        for(c = toFind; *c; ++c) // NOLINT(readability-implicit-bool-conversion)
         {
-          if (*target == *c)
+          if(*target == *c)
             break;
         }
-        if (*c == '\0')
+        if(*c == '\0')
           break;
         target++;
       }
@@ -244,14 +244,14 @@ namespace rsl
       const Char* s = target;
       const Char* c = nullptr;
 
-      while (*target) // NOLINT
+      while(*target) // NOLINT
       {
-        for (c = notToFind; *c; ++c) // NOLINT
+        for(c = notToFind; *c; ++c) // NOLINT
         {
-          if (*target != *c)
+          if(*target != *c)
             break;
         }
-        if (*c == '\0')
+        if(*c == '\0')
           break;
         target++;
       }
@@ -264,11 +264,11 @@ namespace rsl
     {
       const Char* c = nullptr;
 
-      while (*target) // NOLINT
+      while(*target) // NOLINT
       {
-        for (c = toFind; *c; ++c) // NOLINT
+        for(c = toFind; *c; ++c) // NOLINT
         {
-          if (*target == *c)
+          if(*target == *c)
             return target;
         }
         ++target;
@@ -282,11 +282,11 @@ namespace rsl
     {
       const Char* c = nullptr;
 
-      while (*target) // NOLINT
+      while(*target) // NOLINT
       {
-        for (c = toFind; *c; ++c) // NOLINT
+        for(c = toFind; *c; ++c) // NOLINT
         {
-          if (*target == *c)
+          if(*target == *c)
             return target;
         }
         ++target;
@@ -301,17 +301,17 @@ namespace rsl
       const Char* s = nullptr;
       const Char* c = nullptr;
 
-      while (*str) // NOLINT
+      while(*str) // NOLINT
       {
         s = str;
-        for (c = substr; *c; ++c) // NOLINT
+        for(c = substr; *c; ++c) // NOLINT
         {
-          if (*c != *str)
+          if(*c != *str)
           {
             break;
           }
         }
-        if (*c == '\0')
+        if(*c == '\0')
         {
           return s;
         }
@@ -323,20 +323,20 @@ namespace rsl
     template <typename Char, typename rsl::v1::enable_if_t<is_character_v<Char>, int> = 0>
     Char* strstr(Char* str, const Char* substr)
     {
-      Char* s = nullptr;
+      Char* s       = nullptr;
       const Char* c = nullptr;
 
-      while (*str) // NOLINT
+      while(*str) // NOLINT
       {
         s = str;
-        for (c = substr; *c; ++c) // NOLINT(readability-implicit-bool-conversion)
+        for(c = substr; *c; ++c) // NOLINT(readability-implicit-bool-conversion)
         {
-          if (*c != *str)
+          if(*c != *str)
           {
             break;
           }
         }
-        if (*c == '\0')
+        if(*c == '\0')
         {
           return s;
         }

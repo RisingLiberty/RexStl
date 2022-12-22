@@ -24,7 +24,7 @@ namespace rsl
   {
     namespace internal
     {
-      template <bool, typename Tp> 
+      template <bool, typename Tp>
       struct is_nothrow_destructible;
 
       template <typename Tp>
@@ -33,7 +33,7 @@ namespace rsl
       };
 
       template <typename Tp>
-      struct is_nothrow_destructible<true, Tp> : public bool_constant<noexcept(rsl::declval<Tp>().~Tp()) >
+      struct is_nothrow_destructible<true, Tp> : public bool_constant<noexcept(rsl::declval<Tp>().~Tp())>
       {
       };
     } // namespace internal

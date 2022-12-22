@@ -73,11 +73,6 @@ public class BaseProject : Project
       conf.Output = Configuration.OutputType.Lib;
     }
 
-    if (target.Compiler == Compiler.Clang)
-    {
-      conf.NinjaGenerateCompilerDB = true;
-    }
-
     if (target.Config == Config.coverage)
     {
       conf.NinjaGenerateCodeCoverage = true;
@@ -101,10 +96,6 @@ public class BaseProject : Project
     }
 
     conf.IncludePaths.Add($@"{SourceRootPath}\include");
-
-    string postbuildCommandScript = Path.Combine(Globals.Root, "build", "scripts", $"post_build.py -p={Name} -comp={target.Compiler} -conf={conf.Name}");
-
-    conf.EventPostBuild.Add(postbuildCommandScript);
 
     conf.disable_exceptions();
 
@@ -198,6 +189,22 @@ public class BaseProject : Project
   }
 }
 
+public class BasicCPPProject : BaseProject
+{
+  public override void Configure(RexConfiguration conf, RexTarget target)
+  {
+    base.Configure(conf, target);
+
+    if (target.Compiler == Compiler.Clang && conf.is_config_for_testing() == false)
+    {
+      conf.NinjaGenerateCompilerDB = true;
+      string compdbPath = Path.Combine(conf.ProjectPath, "clang_tools", target.Compiler.ToString(), conf.Name);
+      string postbuildCommandScript = Path.Combine(Globals.Root, "build", "scripts", $"post_build.py -p={Name} -comp={target.Compiler} -conf={conf.Name} -compdb={compdbPath}");
+      conf.EventPostBuild.Add(postbuildCommandScript);
+    }
+  }
+}
+
 public class TestProject : BaseProject
 {
   public override void Configure(RexConfiguration conf, RexTarget target)
@@ -281,7 +288,7 @@ public class SharpmakeProject : CSharpProject
 }
 
 [Generate]
-public class RexStd : BaseProject
+public class RexStd : BasicCPPProject
 {
   public RexStd() : base()
   {
