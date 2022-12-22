@@ -6,8 +6,8 @@ It is mainly used in the [Rex Engine](https://github.com/Dyronix/Rex), but can b
 The library is written using C++17 and will support future C++ versions.
 
 The entire library is written by Nick De Breuck, if you have any questions, please reach out on one of the below channels:
-twitter: [@nick_debreuck](https://twitter.com/nick_debreuck)
-discord: Rising Liberty#2195
+- twitter: [@nick_debreuck](https://twitter.com/nick_debreuck)
+- discord: Rising Liberty#2195
 
 ## Usage
 If you're familiar with C++ and with the standard library that comes with every major compiler, the library doesn't come with many new features.
