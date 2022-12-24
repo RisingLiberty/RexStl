@@ -362,4 +362,17 @@ TEST_CASE("string view last not of")
   REQUIRE(str.find_last_not_of('d') == 17);
   REQUIRE(str.find_last_not_of('y') == 17);
 }
+TEST_CASE("string view literals")
+{
+  using namespace rsl::string_view_literals;
+  auto view1 = "hello"s;
+  auto view2 = u"hello"s;
+  auto view3 = U"hello"s;
+  auto view4 = L"hello"s;
+
+  REQUIRE(view1 == "hello");
+  REQUIRE(view2 == u"hello");
+  REQUIRE(view3 == U"hello");
+  REQUIRE(view4 == L"hello");
+}
 // NOLINTEND
