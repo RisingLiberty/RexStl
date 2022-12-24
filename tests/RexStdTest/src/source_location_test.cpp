@@ -21,6 +21,10 @@ TEST_CASE("source location")
   rsl::source_location loc  = rsl::source_location::current();
   rsl::source_location loc2 = rsl::source_location::current();
   REQUIRE(loc.line() + 1 == loc2.line());
+  REQUIRE(loc.column() == 2);
+  REQUIRE(loc.file_name() == __FILE__);
+  REQUIRE(loc.function_name() == __FUNCSIG__);
+
 }
 
 // NOLINTEND
