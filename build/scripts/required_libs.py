@@ -30,6 +30,55 @@ def __load_lib_requirements():
 def __print_lib_found(tool, path : str):
   diagnostics.log_info(f"{tool['config_name']} found at {path}")
 
+def __find_paths_to_search(lib):
+  config_name = lib["config_name"]
+  required_lib_paths = lib["paths"]
+  cached_lib_paths = []
+  if config_name in lib_paths_dict:
+    cached_lib_paths = lib_paths_dict[config_name]
+  
+  lib_paths_to_search = []
+  for lib_path in required_lib_paths:
+    # first let's check if the path is already in the cached paths
+    # if it's not in there, then we have to look for it later
+    abs_path = util.find_directory_in_paths(lib_path, cached_lib_paths)
+
+    if abs_path == None:
+      diagnostics.log_warn(f"will look for: {lib_path}")
+      lib_paths_to_search.append(lib_path)
+      continue
+
+    # if it is there, check if exists, if not, we'll have to look for it later as well
+    elif not os.path.exists(abs_path):
+      diagnostics.log_warn(f"lib path cached but doesn't exist: {lib_path}")
+      lib_paths_to_search.append(lib_path)
+      continue
+
+    # otherwise print that we've found the path
+    __print_lib_found(lib, abs_path)
+    
+  return lib_paths_to_search
+
+def __install_lib_paths(lib, pathsToSearch):
+  paths_to_search = util.env_paths()
+  for required_lib_path in pathsToSearch:
+    paths_to_search.append(os.path.join(libs_install_dir, required_lib_path))
+
+  not_found_paths = []
+  for path in pathsToSearch:
+    abs_path = util.find_directory_in_paths(path, paths_to_search)
+    if abs_path == None:
+      not_found_paths.append(path)
+      continue
+
+    __print_lib_found(lib, abs_path)
+    config_name = lib["config_name"]
+    if config_name not in lib_paths_dict:
+      lib_paths_dict[config_name] = [] 
+    lib_paths_dict[config_name].append(abs_path)
+
+  return not_found_paths
+
 def are_installed(lightMode):
   task_print = task_raii_printing.TaskRaiiPrint("Checking if libs are installed")
 
@@ -40,55 +89,18 @@ def are_installed(lightMode):
   if lib_paths_dict == None:
     lib_paths_dict = {}
     
+  all_libs_found = True
   global not_found_libs
-
-  env_paths = util.env_paths()
   for required_lib in required_libs:
-    required_lib_paths = required_lib["paths"]
-    config_name = required_lib["config_name"]
+    paths_to_search = __find_paths_to_search(required_lib)
+    paths_not_found = __install_lib_paths(required_lib, paths_to_search)
+    
+    for path in paths_not_found:
+      diagnostics.log_err(f"{required_lib} path not found {path}")
+      all_libs_found = False
 
-    # check if the lib path is already in the cached paths
-    lib_paths_to_remove = []
-    if config_name in lib_paths_dict:
-      lib_paths = lib_paths_dict[config_name]
-      for lib_path in lib_paths:
-        if (os.path.exists(lib_path)):
-          __print_lib_found(required_lib, lib_path)
-        else:
-          diagnostics.log_err(f"Error: lib path cached, but path doesn't exist: {lib_path}")
-          lib_paths_to_remove.append(lib_path)
-
-    for lib_path in lib_paths_to_remove:
-      lib_paths.remove(lib_path)
-
-    # if not, add the paths of the lib directory where it'd be downloaded to
-    paths_to_use = copy.deepcopy(env_paths)
-    if lightMode == False:
-      for required_lib_path in required_lib_paths:
-        paths_to_use.append(os.path.join(libs_install_dir, required_lib_path))
-      
-    # look for the lib
-    for required_lib_path in required_lib_paths:
-      abs_path = util.find_directory_in_paths(required_lib_path, paths_to_use)
-      if abs_path == None:
-        not_found_libs.append(required_lib_path)
-        continue
-
-      __print_lib_found(required_lib, abs_path)
-      if config_name not in lib_paths_dict:
-        lib_paths_dict[config_name] = [] 
-      lib_paths_dict[config_name].append(abs_path)
-
-  if len(not_found_libs) == 0:
-    diagnostics.log_info("All libs found")
-    rex_json.save_file(lib_paths_filepath, lib_paths_dict)
-    return True
-  else:
-    diagnostics.log_warn(f"Lib paths that weren't found: ")
-    for lib in not_found_libs:
-      diagnostics.log_warn(f"\t-{lib}")
-
-    return False
+  rex_json.save_file(lib_paths_filepath, lib_paths_dict)
+  return all_libs_found
 
 if __name__ == "__main__":
   parser = argparse.ArgumentParser()
