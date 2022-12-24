@@ -49,6 +49,12 @@ TEST_CASE("optional creation")
   REQUIRE(opt5.has_value() == true);
   REQUIRE(opt5.value() == true);
   REQUIRE(opt5.value_or(false) == true);
+
+  rsl::optional<int> opt6 = rsl::nullopt_t{};
+
+  REQUIRE(opt6.has_value() == false);
+  REQUIRE(opt6.value_or(2) == 2);
+
 }
 
 TEST_CASE("optional modifiers")
@@ -63,12 +69,29 @@ TEST_CASE("optional modifiers")
   opt.reset();
   REQUIRE(opt.has_value() == false);
   REQUIRE(opt.value_or(2) == 2);
+  opt.swap(opt2);
+  REQUIRE(opt.has_value() == true);
+  REQUIRE(opt.value_or(2) == 3);
+  REQUIRE(opt2.has_value() == false);
+  REQUIRE(opt2.value_or(2) == 2);
+  opt.swap(opt2);
+  REQUIRE(opt.has_value() == false);
+  REQUIRE(opt.value_or(2) == 2);
+  REQUIRE(opt2.has_value() == true);
+  REQUIRE(opt2.value_or(2) == 3);
 
   opt.emplace(10);
   REQUIRE(opt.has_value() == true);
   REQUIRE(opt.value_or(2) == 10);
   REQUIRE(opt.value() == 10);
   REQUIRE(*opt == 10);
+
+  opt.emplace(20);
+  REQUIRE(opt.has_value() == true);
+  REQUIRE(opt.value_or(2) == 20);
+  REQUIRE(opt.value() == 20);
+  REQUIRE(*opt == 20);
+
 }
 
 // NOLINTEND
