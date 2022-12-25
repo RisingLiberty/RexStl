@@ -6,10 +6,10 @@ import argparse
 import diagnostics
 
 root = util.find_root()
-tool_paths = required_tools.tool_paths
+tool_paths_dict = required_tools.tool_paths_dict
 
 def run(sharpmakeMain, sharpmakeArguments, lightMode):
-  sharpmake_path = tool_paths["sharpmake_path"]
+  sharpmake_path = tool_paths_dict["sharpmake_path"]
   
   if len(sharpmake_path) == 0:
     raise Exception("Failed to find sharpmake path")

@@ -23,7 +23,7 @@ import time
 from pathlib import Path
 
 root_path = util.find_root()
-tool_paths = required_tools.tool_paths
+tool_paths_dict = required_tools.tool_paths_dict
 settings = rex_json.load_file(os.path.join(root_path, "build", "config", "settings.json"))
 __pass_results = {}
 
@@ -34,7 +34,7 @@ def __run_include_what_you_use(fixIncludes = False):
   result = util.find_all_files_in_folder(intermediate_directory, "compile_commands.json")
     
   for compiler_db in result:
-    iwyu_path = tool_paths["include_what_you_use_path"]
+    iwyu_path = tool_paths_dict["include_what_you_use_path"]
     iwyu_tool_path = os.path.join(Path(iwyu_path).parent, "iwyu_tool.py")
     fix_includes_path = os.path.join(Path(iwyu_path).parent, "fix_includes.py")
     compiler_db_folder = Path(compiler_db).parent
@@ -54,8 +54,8 @@ def __run_clang_tidy():
   rc = 0
   for compiler_db in result:
     script_path = os.path.dirname(__file__)
-    clang_tidy_path = tool_paths["clang_tidy_path"]
-    clang_apply_replacements_path = tool_paths["clang_apply_replacements_path"]
+    clang_tidy_path = tool_paths_dict["clang_tidy_path"]
+    clang_apply_replacements_path = tool_paths_dict["clang_apply_replacements_path"]
     compiler_db_folder = Path(compiler_db).parent
     config_file_path = f"{root_path}/source/.clang-tidy_second_pass"
     proc = util.run_subprocess(f"py {script_path}/run_clang_tidy.py -clang-tidy-binary={clang_tidy_path} -clang-apply-replacements-binary={clang_apply_replacements_path} -config-file={config_file_path} -p={compiler_db_folder} -header-filter=.* -quiet") # force clang compiler, as clang-tools expect it
@@ -300,7 +300,7 @@ def __ninja_output_callback(output):
       diagnostics.log_no_color(new_line)
 
 def __run_ninja_process(command):
-  ninja_path = tool_paths["ninja_path"]
+  ninja_path = tool_paths_dict["ninja_path"]
   global ninja_rc
   ninja_rc = 0
   proc = util.run_subprocess_with_callback(f"{ninja_path} {command}", __ninja_output_callback)

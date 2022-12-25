@@ -6,11 +6,11 @@ from pathlib import Path
 import argparse
 import diagnostics
 
-tool_paths = required_tools.tool_paths
+tool_paths_dict = required_tools.tool_paths_dict
 
 def run(ninjaFile, clean): 
 
-  ninja_path = tool_paths["ninja_path"]
+  ninja_path = tool_paths_dict["ninja_path"]
   if clean:
     os.system(f"{ninja_path} -f {ninjaFile} -t clean")
 

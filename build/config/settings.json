@@ -3,6 +3,7 @@
   "build_folder": "build",
   "tests_folder": "tests",
   "tools_folder": "tools",
+  "libs_folder": "tools",
   "coverage_folder": "tests/coverage",
   "asan_folder": "tests/coverage",
   "ubsan_folder": "tests/ubsan"

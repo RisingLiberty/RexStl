@@ -5,17 +5,21 @@ import rex_json
 import diagnostics
 import copy
 import argparse
+import threading
+import requests
+import zipfile 
+from pathlib import Path
 
 root = util.find_root()
 settings = rex_json.load_file(os.path.join(root, "build", "config", "settings.json"))
 build_dir = os.path.join(root, settings["build_folder"])
 temp_dir = os.path.join(root, settings["intermediate_directory"])
-libs_install_dir = os.path.join(temp_dir, settings["tools_folder"])
-tools_install_dir = os.path.join(temp_dir, settings["tools_folder"])
-lib_paths_filepath = os.path.join(tools_install_dir, "lib_paths.json")
+libs_install_dir = os.path.join(temp_dir, settings["libs_folder"])
+lib_paths_filepath = os.path.join(libs_install_dir, "lib_paths.json")
 lib_paths_dict = {}
 if os.path.exists(lib_paths_filepath):
   lib_paths_dict = rex_json.load_file(lib_paths_filepath)
+zip_downloads_path = os.path.join(libs_install_dir, "zips")
 required_libs = []
 not_found_libs = []
 
@@ -27,10 +31,10 @@ def __load_lib_requirements():
 
   return libs_required
 
-def __print_lib_found(tool, path : str):
-  diagnostics.log_info(f"{tool['config_name']} found at {path}")
+def __print_lib_found(lib_path, path : str):
+  diagnostics.log_info(f"{lib_path} found at {path}")
 
-def __find_paths_to_search(lib):
+def __find_uncached_paths(lib):
   config_name = lib["config_name"]
   required_lib_paths = lib["paths"]
   cached_lib_paths = []
@@ -44,7 +48,7 @@ def __find_paths_to_search(lib):
     abs_path = util.find_directory_in_paths(lib_path, cached_lib_paths)
 
     if abs_path == None:
-      diagnostics.log_warn(f"will look for: {lib_path}")
+      diagnostics.log_warn(f"path not cached yet: {lib_path}")
       lib_paths_to_search.append(lib_path)
       continue
 
@@ -55,14 +59,16 @@ def __find_paths_to_search(lib):
       continue
 
     # otherwise print that we've found the path
-    __print_lib_found(lib, abs_path)
+    __print_lib_found(lib_path, abs_path)
     
   return lib_paths_to_search
 
-def __install_lib_paths(lib, pathsToSearch):
+def __look_for_paths(lib, pathsToSearch : list[str]):
   paths_to_search = util.env_paths()
   for required_lib_path in pathsToSearch:
-    paths_to_search.append(os.path.join(libs_install_dir, required_lib_path))
+    path_in_install_dir = os.path.join(libs_install_dir, required_lib_path)
+    if os.path.exists(path_in_install_dir):
+      paths_to_search.append(os.path.join(libs_install_dir, required_lib_path))
 
   not_found_paths = []
   for path in pathsToSearch:
@@ -71,7 +77,7 @@ def __install_lib_paths(lib, pathsToSearch):
       not_found_paths.append(path)
       continue
 
-    __print_lib_found(lib, abs_path)
+    __print_lib_found(path, abs_path)
     config_name = lib["config_name"]
     if config_name not in lib_paths_dict:
       lib_paths_dict[config_name] = [] 
@@ -79,7 +85,66 @@ def __install_lib_paths(lib, pathsToSearch):
 
   return not_found_paths
 
-def are_installed(lightMode):
+def __download_file(url):
+  filename = os.path.basename(url)
+  filePath = os.path.join(zip_downloads_path, filename)
+  
+  if not os.path.exists(filePath):
+    response = requests.get(url)
+    open(filePath, "wb").write(response.content)
+
+def __launch_download_thread(url):
+    thread = threading.Thread(target=__download_file, args=(url,))
+    thread.start()
+    return thread  
+
+def __download_lib(name, numZipFiles):
+  task_print = task_raii_printing.TaskRaiiPrint(f"Downloading lib {name}")
+
+  threads = []
+  for i in range(numZipFiles):
+    threads.append(__launch_download_thread((f"https://github.com/RisingLiberty/RegisZip/raw/main/data/{name}.zip.{(i + 1):03d}")))
+
+  for thread in threads:
+    thread.join()
+
+def __enumerate_libs(zipsFolder):
+  zips = os.listdir(zipsFolder)
+  libs = []
+  for zip in zips:
+    stem = Path(zip).stem
+    if stem not in libs:
+      libs.append(stem)
+
+  return libs
+
+def __zip_files_for_lib(stem, folder):
+  zips = os.listdir(folder)
+  lib_zip_files = []
+  for zip in zips:
+    if Path(zip).stem == stem:
+      lib_zip_files.append(os.path.join(folder, zip))
+
+  return lib_zip_files
+
+def __unzip_lib(name):
+  task_print = task_raii_printing.TaskRaiiPrint("Unzipping files")
+  libs_to_unzip = __enumerate_libs(zip_downloads_path)
+
+  for lib in libs_to_unzip:
+    lib_zip_files = __zip_files_for_lib(lib, zip_downloads_path)
+    lib_master_zip = os.path.join(zip_downloads_path, f"{lib}.zip")
+    with open(lib_master_zip, "ab") as f:
+      for lib_zip in lib_zip_files:
+        with open(lib_zip, "rb") as z:
+            f.write(z.read())
+
+    with zipfile.ZipFile(lib_master_zip, "r") as zip_obj:
+        zip_obj.extractall(libs_install_dir)
+
+  diagnostics.log_info(f"libs unzipped to {libs_install_dir}")
+
+def are_installed():
   task_print = task_raii_printing.TaskRaiiPrint("Checking if libs are installed")
 
   global required_libs
@@ -89,16 +154,35 @@ def are_installed(lightMode):
   if lib_paths_dict == None:
     lib_paths_dict = {}
     
-  all_libs_found = True
   global not_found_libs
+  
+  paths = util.env_paths()
+  all_libs_found = True
   for required_lib in required_libs:
-    paths_to_search = __find_paths_to_search(required_lib)
-    paths_not_found = __install_lib_paths(required_lib, paths_to_search)
+    verify_req_lib_task = task_raii_printing.TaskRaiiPrint(f"Checking {required_lib['config_name']}")
     
-    for path in paths_not_found:
-      diagnostics.log_err(f"{required_lib} path not found {path}")
-      all_libs_found = False
+    uncached_paths = __find_uncached_paths(required_lib)
+    paths_not_found = __look_for_paths(required_lib, uncached_paths)
+    
+    if len(paths_not_found) > 0:
+      diagnostics.log_warn("Couldn't find some paths")
+      
+      for path in paths_not_found:
+        diagnostics.log_warn(path)
+      
+      if not os.path.exists(zip_downloads_path):
+        os.makedirs(zip_downloads_path)
 
+      __download_lib(required_lib["archive_name"], required_lib["num_zip_files"])
+      __unzip_lib(required_lib)
+
+      diagnostics.log_info(f"lib is now downloaded")
+      diagnostics.log_info(f"will look for {required_lib['config_name']} in {libs_install_dir}")
+
+      paths_not_found = __look_for_paths(required_lib, paths_not_found)
+      if len(paths_not_found) > 0:
+        diagnostics.log_err(f"not all paths found for {required_lib}")
+      
   rex_json.save_file(lib_paths_filepath, lib_paths_dict)
   return all_libs_found
 
@@ -108,4 +192,9 @@ if __name__ == "__main__":
   parser.add_argument("-light", help="run in light mode", action="store_true")
   args, unknown = parser.parse_known_args()
 
-  are_installed(args.light)
+  if not are_installed():
+    if not args.light:
+      download()
+      intall()
+    else:
+      diagnostics.log_info("Some libraries weren't found, but setup is in light mode, no libs will get downloaded")

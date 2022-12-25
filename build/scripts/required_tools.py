@@ -18,10 +18,10 @@ temp_dir = os.path.join(root, ".rex")
 tools_install_dir = os.path.join(temp_dir, "tools")
 config_dir = os.path.join(root, "build")
 tool_paths_filepath = os.path.join(tools_install_dir, "paths.json")
-tool_paths = {}
+tool_paths_dict = {}
 if os.path.exists(tool_paths_filepath):
-  tool_paths = rex_json.load_file(tool_paths_filepath)
-zipDownloads = os.path.join(tools_install_dir, "zips")
+  tool_paths_dict = rex_json.load_file(tool_paths_filepath)
+zip_downloads_path = os.path.join(tools_install_dir, "zips")
 required_tools = []
 not_found_tools = []
 
@@ -42,9 +42,9 @@ def are_installed():
   global required_tools
   required_tools = __load_tool_requirements()
   
-  global tool_paths
-  if tool_paths == None:
-    tool_paths = {}
+  global tool_paths_dict
+  if tool_paths_dict == None:
+    tool_paths_dict = {}
     
   global not_found_tools
 
@@ -54,8 +54,8 @@ def are_installed():
     config_name = required_tool["config_name"]
 
     # check if the tool path is already in the cached paths
-    if config_name in tool_paths:
-      tool_path = tool_paths[config_name]
+    if config_name in tool_paths_dict:
+      tool_path = tool_paths_dict[config_name]
       if (os.path.exists(tool_path)):
         __print_tool_found(required_tool, tool_path)
         continue
@@ -79,7 +79,7 @@ def are_installed():
     if absPath != '':
       __print_tool_found(required_tool, absPath)
       tool_config_name = required_tool["config_name"]
-      tool_paths[tool_config_name] = absPath
+      tool_paths_dict[tool_config_name] = absPath
 
     # tool is not found, add it to the list to be looked for later
     else:
@@ -87,7 +87,7 @@ def are_installed():
 
   if len(not_found_tools) == 0:
     diagnostics.log_info("All tools found")
-    rex_json.save_file(tool_paths_filepath, tool_paths)
+    rex_json.save_file(tool_paths_filepath, tool_paths_dict)
     return True
   else:
     diagnostics.log_warn(f"Tools that weren't found: ")
@@ -98,59 +98,85 @@ def are_installed():
 
 def __download_file(url):
   filename = os.path.basename(url)
-  filePath = os.path.join(zipDownloads, filename)
+  filePath = os.path.join(zip_downloads_path, filename)
   
   if not os.path.exists(filePath):
     response = requests.get(url)
     open(filePath, "wb").write(response.content)
   
 def __make_zip_download_path():
-  if not os.path.exists(zipDownloads):
-    os.makedirs(zipDownloads)
+  if not os.path.exists(zip_downloads_path):
+    os.makedirs(zip_downloads_path)
 
-def __download_tools_archive():
-  task_print = task_raii_printing.TaskRaiiPrint("Downloading tools archive")
+def __download_tool(name, numZipFiles):
+  task_print = task_raii_printing.TaskRaiiPrint(f"Downloading tool {name}")
 
   threads = []
-
-  # Yes I know we can download this using GitPython, but that's incredibly slow..
-  threads.append(__launch_download_thread(("https://github.com/RisingLiberty/RegisZip/raw/main/data/Tools.zip.001")))
-  threads.append(__launch_download_thread(("https://github.com/RisingLiberty/RegisZip/raw/main/data/Tools.zip.002")))
-  threads.append(__launch_download_thread(("https://github.com/RisingLiberty/RegisZip/raw/main/data/Tools.zip.003")))
-  threads.append(__launch_download_thread(("https://github.com/RisingLiberty/RegisZip/raw/main/data/Tools.zip.004")))
-  threads.append(__launch_download_thread(("https://github.com/RisingLiberty/RegisZip/raw/main/data/Tools.zip.005")))
-  threads.append(__launch_download_thread(("https://github.com/RisingLiberty/RegisZip/raw/main/data/Tools.zip.006")))
-  threads.append(__launch_download_thread(("https://github.com/RisingLiberty/RegisZip/raw/main/data/Tools.zip.007")))
-  threads.append(__launch_download_thread(("https://github.com/RisingLiberty/RegisZip/raw/main/data/Tools.zip.008")))
-  threads.append(__launch_download_thread(("https://github.com/RisingLiberty/RegisZip/raw/main/data/Tools.zip.009")))
-  threads.append(__launch_download_thread(("https://github.com/RisingLiberty/RegisZip/raw/main/data/Tools.zip.010")))
-  threads.append(__launch_download_thread(("https://github.com/RisingLiberty/RegisZip/raw/main/data/Tools.zip.011")))
-  threads.append(__launch_download_thread(("https://github.com/RisingLiberty/RegisZip/raw/main/data/Tools.zip.012")))
-  threads.append(__launch_download_thread(("https://github.com/RisingLiberty/RegisZip/raw/main/data/Tools.zip.013")))
-  threads.append(__launch_download_thread(("https://github.com/RisingLiberty/RegisZip/raw/main/data/Tools.zip.014")))
-  threads.append(__launch_download_thread(("https://github.com/RisingLiberty/RegisZip/raw/main/data/Tools.zip.015")))
+  for i in range(numZipFiles):
+    threads.append(__launch_download_thread((f"https://github.com/RisingLiberty/RegisZip/raw/main/data/{name}.zip.{(i + 1):03d}")))
 
   for thread in threads:
     thread.join()
 
+def __download_tools_archive():
+  task_print = task_raii_printing.TaskRaiiPrint("Downloading tools")
+
+  # filter duplicate tools
+  tools_to_download = []
+  for not_found_tool in not_found_tools:
+    archive_name = not_found_tool["archive_name"]
+    should_add = True
+    for tool_to_download in tools_to_download:
+      if archive_name == tool_to_download["archive_name"]:
+        should_add = False
+        break
+    
+    if should_add:
+      tools_to_download.append(not_found_tool)
+
+  for not_found_tool in tools_to_download:
+    arch_name = not_found_tool["archive_name"]
+    num_zip_files = not_found_tool["num_zip_files"]
+    __download_tool(arch_name, num_zip_files)
+    
+def __enumerate_tools(zipsFolder):
+  zips = os.listdir(zipsFolder)
+  tools = []
+  for zip in zips:
+    stem = Path(zip).stem
+    if stem not in tools:
+      tools.append(stem)
+
+  return tools
+
+def __zip_files_for_tool(stem, folder):
+  zips = os.listdir(folder)
+  tool_zip_files = []
+  for zip in zips:
+    if Path(zip).stem == stem:
+      tool_zip_files.append(os.path.join(folder, zip))
+
+  return tool_zip_files
+
 def __unzip_tools():
   task_print = task_raii_printing.TaskRaiiPrint("Unzipping files")
+  tools_to_unzip = __enumerate_tools(zip_downloads_path)
 
-  zipPath = zipDownloads
-  toolsZipFile = "tools.zip"
-  zips = os.listdir(zipPath)
-  for zipName in zips:
-      with open(os.path.join(zipPath, toolsZipFile), "ab") as f:
-          with open(os.path.join(zipPath, zipName), "rb") as z:
-              f.write(z.read())
+  for tool in tools_to_unzip:
+    tool_zip_files = __zip_files_for_tool(tool, zip_downloads_path)
+    tool_master_zip = os.path.join(zip_downloads_path, f"{tool}.zip")
+    with open(tool_master_zip, "ab") as f:
+      for tool_zip in tool_zip_files:
+        with open(tool_zip, "rb") as z:
+            f.write(z.read())
 
-  with zipfile.ZipFile(os.path.join(zipPath, toolsZipFile), "r") as zipObj:
-      zipObj.extractall(tools_install_dir)
+    with zipfile.ZipFile(tool_master_zip, "r") as zip_obj:
+        zip_obj.extractall(tools_install_dir)
 
   diagnostics.log_info(f"tools unzipped to {tools_install_dir}")
 
 def __delete_tmp_folders():
-  shutil.rmtree(zipDownloads)
+  shutil.rmtree(zip_downloads_path)
 
 def __launch_download_thread(url):
     thread = threading.Thread(target=__download_file, args=(url,))
@@ -167,7 +193,7 @@ def download():
 def install():
   task_print = task_raii_printing.TaskRaiiPrint("installing tools")
 
-  global tool_paths
+  global tool_paths_dict
   global not_found_tools
   for tool in not_found_tools:
 
@@ -188,10 +214,10 @@ def install():
     else:
       # if found, add it to the cached paths
       tool_config_name = tool["config_name"]
-      tool_paths[tool_config_name] = path
+      tool_paths_dict[tool_config_name] = path
   
   # save cached paths to disk
-  rex_json.save_file(tool_paths_filepath, tool_paths)
+  rex_json.save_file(tool_paths_filepath, tool_paths_dict)
 
 if __name__ == "__main__":
   parser = argparse.ArgumentParser()
