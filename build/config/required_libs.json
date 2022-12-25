@@ -13,13 +13,13 @@
   },
   "msvc_includes" : {
     "archive_name": "MSVC",
-    "num_zip_files": 3,
+    "num_zip_files": 4,
     "paths": ["MSVC/14.29.30133/include", "MSVC/14.29.30133/atlmfc/include"],
     "config_name": "msvc_includes"  
   },
   "msvc_libs" : {
     "archive_name": "MSVC",
-    "num_zip_files": 3,
+    "num_zip_files": 4,
     "paths": ["MSVC/14.29.30133/lib/x64", "MSVC/14.29.30133/atlmfc/lib/x64"],
     "config_name": "msvc_libs"  
   }
