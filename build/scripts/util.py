@@ -40,6 +40,11 @@ def find_directory_in_paths(dir : str, directories : list[str]):
     path = path.replace('\\', '/')
     path_folders = path.split('/')
 
+    dir_idx = -1
+
+    if os.path.exists(os.path.join(path, dir)):
+      return os.path.join(path, dir)
+
     dir_idx = num_folders - 1
     path_idx = len(path_folders) - 1
     if (len(path_folders) < num_folders):

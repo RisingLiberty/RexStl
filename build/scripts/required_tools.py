@@ -204,7 +204,6 @@ def install():
     elif util.is_windows():
       exe_extension = ".exe"
 
-    diagnostics.log_info(f"looking for {tool['stem']}{exe_extension} in {os.path.join(tools_install_dir, tool['path'])}")
     path = util.find_file_in_folder(f"{tool['stem']}{exe_extension}", os.path.join(tools_install_dir, tool["path"]))
 
     # if not found, something is wrong and we have to investigate manually
@@ -213,6 +212,7 @@ def install():
       diagnostics.log_err(f"failed to find {tool_name}")
     else:
       # if found, add it to the cached paths
+      __print_tool_found(tool, path)
       tool_config_name = tool["config_name"]
       tool_paths_dict[tool_config_name] = path
   
