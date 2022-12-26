@@ -27,6 +27,32 @@ tool_paths_dict = required_tools.tool_paths_dict
 settings = rex_json.load_file(os.path.join(root_path, "build", "config", "settings.json"))
 __pass_results = {}
 
+def __is_in_line(line : str, keywords : list[str]):
+  for keyword in keywords:
+    if keyword.lower() in line.lower():
+      return True
+
+  return False
+
+def __default_output_callback(output):
+  error_keywords = ["failed", "error"]
+  warn_keywords = ["warning"]
+
+  for line in iter(output.readline, b''):
+    new_line : str = line.decode('UTF-8')
+    if new_line.endswith('\n'):
+      new_line = new_line.removesuffix('\n')
+
+    if "0 errors, 0 warnings" not in new_line: # sharpmake post-gen statement
+      if __is_in_line(new_line, error_keywords):
+        diagnostics.log_err(new_line)
+        continue
+      elif __is_in_line(new_line, warn_keywords):
+        diagnostics.log_warn(new_line)
+        continue
+    
+    diagnostics.log_no_color(new_line)
+
 def __run_include_what_you_use(fixIncludes = False):
   task_print = task_raii_printing.TaskRaiiPrint("running include-what-you-use")
 
@@ -42,6 +68,8 @@ def __run_include_what_you_use(fixIncludes = False):
     os.system(f"py {iwyu_tool_path} -v -p={compiler_db_folder} > {output_path}") # needs to use os.system or iwyu will parse the command incorrectly
     if fixIncludes:
       os.system(f"py {fix_includes_path} --update_comments --safe_headers < {output_path}")
+    
+    diagnostics.log_info(f"include what you use info saved to {output_path}")
 
   return 0
 
@@ -58,7 +86,16 @@ def __run_clang_tidy():
     clang_apply_replacements_path = tool_paths_dict["clang_apply_replacements_path"]
     compiler_db_folder = Path(compiler_db).parent
     config_file_path = f"{root_path}/source/.clang-tidy_second_pass"
-    proc = util.run_subprocess(f"py {script_path}/run_clang_tidy.py -clang-tidy-binary={clang_tidy_path} -clang-apply-replacements-binary={clang_apply_replacements_path} -config-file={config_file_path} -p={compiler_db_folder} -header-filter=.* -quiet") # force clang compiler, as clang-tools expect it
+
+    cmd = f"py {script_path}/run_clang_tidy.py"
+    cmd += f" -clang-tidy-binary={clang_tidy_path}"
+    cmd += f" -clang-apply-replacements-binary={clang_apply_replacements_path}"
+    cmd += f" -config-file={config_file_path}"
+    cmd += f" -p={compiler_db_folder}"
+    cmd += f" -header-filter=.*"
+    cmd += f" -quiet"
+
+    proc = util.run_subprocess_with_callback(cmd, __default_output_callback)
     new_rc = util.wait_for_process(proc)
     if new_rc != 0:
       diagnostics.log_err(f"clang-tidy failed for {compiler_db}")
@@ -282,7 +319,7 @@ def __run_fuzzy_testing():
 def __generate_test_files(sharpmakeArgs):
   generate_script = os.path.join(root_path, "build", "scripts", "generate.py")
   sharpmake_main_path = os.path.join(root_path, 'build', 'sharpmake', 'src', 'main.sharpmake.cs')
-  proc = util.run_subprocess(f"py {generate_script} -sharpmake_main={sharpmake_main_path} -sharpmake_args=\"{sharpmakeArgs}\"")
+  proc = util.run_subprocess_with_callback(f"py {generate_script} -sharpmake_main={sharpmake_main_path} -sharpmake_args=\"{sharpmakeArgs}\"", __default_output_callback)
   return util.wait_for_process(proc)
 
 ninja_rc = True
@@ -292,7 +329,7 @@ def __ninja_output_callback(output):
     if new_line.endswith('\n'):
       new_line = new_line.removesuffix('\n')
 
-    if "FAILED:" in new_line:
+    if "FAILED:".lower() in new_line.lower():
       global ninja_rc
       ninja_rc = 1
       diagnostics.log_err(new_line)
