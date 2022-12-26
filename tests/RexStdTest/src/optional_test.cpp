@@ -94,4 +94,15 @@ TEST_CASE("optional modifiers")
 
 }
 
+TEST_CASE("coverage tests")
+{
+  rsl::optional<uint64> opt = 3ui64;
+  REQUIRE(opt.has_value() == true);
+  REQUIRE(opt.value() == 3);
+  REQUIRE(*opt == 3);
+
+  rsl::optional<uint32> opt2 = 3;
+  REQUIRE(opt2.has_value() == true);
+}
+
 // NOLINTEND
