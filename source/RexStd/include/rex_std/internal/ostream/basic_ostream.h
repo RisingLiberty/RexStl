@@ -497,13 +497,26 @@ namespace rsl
     }
 
     /// RSL Comment: Different from ISO C++ Standard at time of writing (07/Sep/2022)
-    // Rex Standard Library only supports a string literal overload of operator<<.
-    // outputting a CharT pointer is not supported, for performance reasons.
     // writes a string literal to the stream
     template <typename CharT, typename Traits, count_t N>
     basic_ostream<CharT, Traits>& operator<<(basic_ostream<CharT, Traits>& os, const CharT (&s)[N]) // NOLINT(modernize-avoid-c-arrays)
     {
       os.write(s, N);
+      return os;
+    }
+
+    // writes a string to the stream
+    // this is overloaded on const CharT*& const to make sure literals go to const CharT (&s)[N]
+    template <typename CharT, typename Traits>
+    basic_ostream<CharT, Traits>& operator<<(basic_ostream<CharT, Traits>& os, const CharT* const & ptr) // NOLINT(modernize-avoid-c-arrays)
+    {
+      const CharT* ptr_copy = ptr;
+      while (*ptr_copy)
+      {
+        CharT c = *ptr_copy;
+        os.put(c);
+        ++ptr_copy;
+      }
       return os;
     }
 
