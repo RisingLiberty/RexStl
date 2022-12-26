@@ -522,7 +522,7 @@ def run():
     if args.clean:
       __clean()
 
-    if args.all or args.iwyu: # include-what-you-use is not automatically run
+    if args.all or args.iwyu:
       __include_what_you_use_pass()
     if args.all or args.clang_tidy:
       __clang_tidy_pass()
