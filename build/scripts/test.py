@@ -21,6 +21,7 @@ import shutil
 import time
 
 from pathlib import Path
+from datetime import datetime
 
 root_path = util.find_root()
 tool_paths_dict = required_tools.tool_paths_dict
@@ -43,13 +44,12 @@ def __default_output_callback(output):
     if new_line.endswith('\n'):
       new_line = new_line.removesuffix('\n')
 
-    if "0 errors, 0 warnings" not in new_line: # sharpmake post-gen statement
-      if __is_in_line(new_line, error_keywords):
-        diagnostics.log_err(new_line)
-        continue
-      elif __is_in_line(new_line, warn_keywords):
-        diagnostics.log_warn(new_line)
-        continue
+    if __is_in_line(new_line, error_keywords):
+      diagnostics.log_err(new_line)
+      continue
+    elif __is_in_line(new_line, warn_keywords):
+      diagnostics.log_warn(new_line)
+      continue
     
     diagnostics.log_no_color(new_line)
 
@@ -319,7 +319,7 @@ def __run_fuzzy_testing():
 def __generate_test_files(sharpmakeArgs):
   generate_script = os.path.join(root_path, "build", "scripts", "generate.py")
   sharpmake_main_path = os.path.join(root_path, 'build', 'sharpmake', 'src', 'main.sharpmake.cs')
-  proc = util.run_subprocess_with_callback(f"py {generate_script} -sharpmake_main={sharpmake_main_path} -sharpmake_args=\"{sharpmakeArgs}\"", __default_output_callback)
+  proc = util.run_subprocess(f"py {generate_script} -sharpmake_main={sharpmake_main_path} -sharpmake_args=\"{sharpmakeArgs}\"")
   return util.wait_for_process(proc)
 
 ninja_rc = True
@@ -555,6 +555,7 @@ def run():
   end = time.perf_counter()
   diagnostics.log_no_color("")
   diagnostics.log_no_color("--------------------------------------")
+  diagnostics.log_info(f"Finished at: {datetime.now().strftime('%d %B %Y - %H:%M:%S %p')}")
   diagnostics.log_info(f"Tests took {end - start:0.4f} seconds")
 
   return

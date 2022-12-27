@@ -56,7 +56,7 @@ def __find_uncached_paths(lib):
       continue
 
     # if it is there, check if exists, if not, we'll have to look for it later as well
-    elif not os.path.exists(abs_path):
+    if not os.path.exists(abs_path):
       diagnostics.log_warn(f"lib path cached but doesn't exist: {lib_path}")
       lib_paths_to_search.append(lib_path)
       continue
@@ -210,8 +210,6 @@ def install():
     if len(paths_not_found) > 0:
       diagnostics.log_err(f"failed to install {config_name}")
   
-  rex_json.save_file(lib_paths_filepath, lib_paths_dict)
-
 if __name__ == "__main__":
   parser = argparse.ArgumentParser()
 
@@ -224,3 +222,5 @@ if __name__ == "__main__":
       install()
     else:
       diagnostics.log_info("Some libraries weren't found, but setup is in light mode, no libs will get downloaded")
+
+  rex_json.save_file(lib_paths_filepath, lib_paths_dict)
