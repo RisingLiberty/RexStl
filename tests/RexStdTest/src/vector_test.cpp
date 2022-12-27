@@ -153,6 +153,31 @@ TEST_CASE("vector insertion")
   vec.insert(vec.cbegin(), 2);
   REQUIRE(vec[0] == 2);
   REQUIRE(vec[1] == 1);
+
+  vec.reserve(100);
+  vec.insert(vec.cbegin(), 2);
+  REQUIRE(vec[0] == 2);
+  REQUIRE(vec[1] == 2);
+  REQUIRE(vec[2] == 1);
+}
+
+TEST_CASE("vector non trivial type")
+{
+  class non_trivial_type
+  {
+  public:
+    non_trivial_type() {}
+    virtual ~non_trivial_type() {}
+  };
+
+  rsl::vector<non_trivial_type> vec;
+  REQUIRE(vec.size() == 0);
+
+  vec.emplace_back();
+  REQUIRE(vec.size() == 1);
+
+  vec.clear();
+  REQUIRE(vec.size() == 0);
 }
 
 // NOLINTEND
