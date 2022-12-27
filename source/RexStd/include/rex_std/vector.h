@@ -622,6 +622,7 @@ namespace rsl
           // Please look at basic_string::prepare_for_new_insert if you want to have more
           // documentation about what goes on here
 
+          const size_type old_size            = size();
           const size_type size_for_new_buffer = new_buffer_capacity(count);
           pointer new_buffer                  = static_cast<pointer>(get_allocator().allocate(calc_bytes_needed(size_for_new_buffer)));
 
@@ -640,7 +641,7 @@ namespace rsl
 
           // reset the data pointers.
           m_begin                         = new_buffer;
-          m_end                           = m_begin + size_for_new_buffer;
+          m_end                           = m_begin + old_size + count;
           m_cp_last_and_allocator.first() = m_begin + size_for_new_buffer;
         }
         else
@@ -724,11 +725,13 @@ namespace rsl
       }
       void move(pointer dst, pointer src, size_type count)
       {
+        pointer dst_bwd = dst + count - 1;
+        pointer src_bwd = src + count - 1;
         while(count > 0)
         {
-          new(dst) T(rsl::move(*src));
-          ++dst;
-          ++src;
+          new(dst_bwd) T(rsl::move(*src_bwd));
+          --dst_bwd;
+          --src_bwd;
           --count;
         }
       }
