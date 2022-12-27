@@ -233,7 +233,14 @@ def parse_file_summary(filepath):
     if column_names_processed == False:
       continue
 
-    if line.split()[0] == "TOTAL":  # filename == TOTAL
+    line_words = line.split()
+    if len(line_words) == 0:
+      continue
+
+    if "Files which contain no functions" in line:
+      continue
+
+    if line_words[0] == "TOTAL":  # filename == TOTAL
       total_summary = FileSummary(line)
     else:
       file_summaries.append(FileSummary(line))
