@@ -648,7 +648,7 @@ namespace rsl
         {
           // using memmove here as the dst and src could overlap
           pointer dst_in_buffer = data() + idx + count;
-          move(dst_in_buffer, data() + idx, size() - idx);
+          move_bwd(dst_in_buffer, data() + idx, size() - idx);
         }
       }
 
@@ -724,6 +724,16 @@ namespace rsl
         }
       }
       void move(pointer dst, pointer src, size_type count)
+      {
+        while(count > 0)
+        {
+          new(dst) T(rsl::move(*src));
+          ++dst;
+          ++src;
+          --count;
+        }
+      }
+      void move_bwd(pointer dst, pointer src, size_type count)
       {
         pointer dst_bwd = dst + count - 1;
         pointer src_bwd = src + count - 1;
