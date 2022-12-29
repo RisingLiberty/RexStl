@@ -71,7 +71,7 @@ namespace rsl
       {
       }
       // Constructs a view starting at s, reaching to the first null termination char.
-      constexpr explicit basic_string_view(const const_pointer& s)
+      constexpr explicit basic_string_view(const_pointer& s)
           : m_data(s)
           , m_length(traits_type::length(s))
       {
