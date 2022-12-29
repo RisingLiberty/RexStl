@@ -17,8 +17,11 @@
 #include "rex_std/internal/functional/less.h"
 #include "rex_std/internal/memory/default_delete.h"
 #include "rex_std/internal/memory/nullptr.h"
+#include "rex_std/internal/type_traits/is_array.h"
+#include "rex_std/internal/type_traits/is_assignable.h"
 #include "rex_std/internal/type_traits/common_type.h"
 #include "rex_std/internal/type_traits/conjunction.h"
+#include "rex_std/internal/type_traits/is_convertible.h"
 #include "rex_std/internal/type_traits/is_default_constructible.h"
 #include "rex_std/internal/type_traits/is_move_constructible.h"
 #include "rex_std/internal/type_traits/is_pointer.h"
@@ -119,6 +122,18 @@ namespace rsl
       }
 
       // transfers ownership from other to this
+      template <class T2, class Deleter2,
+        rsl::enable_if_t<conjunction_v<rsl::negation<rsl::is_array<T2>>, rsl::is_assignable<Deleter&, Deleter2>,
+        rsl::is_convertible<typename rsl::unique_ptr<T2, Deleter2>::pointer, pointer>>,
+        int> = 0>
+        unique_ptr & operator=(unique_ptr<T2, Deleter2> && other)
+      {
+        reset(other.release());
+        m_cp_ptr_and_deleter.second() = rsl::forward<Deleter>(other.get_deleter());
+        return *this;
+      }
+      // transfers ownership from other to this
+      template <typename Deleter2 = Deleter, rsl::enable_if_t<is_move_assignable_v<Deleter2>, int> = 0>
       unique_ptr& operator=(unique_ptr&& other) noexcept
       {
         reset(other.release());
