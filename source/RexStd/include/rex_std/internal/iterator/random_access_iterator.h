@@ -159,6 +159,10 @@ namespace rsl
       {
       }
 
+      constexpr const_random_access_iterator(random_access_iterator<T> it)
+        : m_value(it.operator->())
+      {}
+
       constexpr const_reference operator*() const
       {
         return *m_value;
