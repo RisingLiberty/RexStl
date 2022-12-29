@@ -508,10 +508,10 @@ namespace rsl
     // writes a string to the stream
     // this is overloaded on const CharT*& const to make sure literals go to const CharT (&s)[N]
     template <typename CharT, typename Traits>
-    basic_ostream<CharT, Traits>& operator<<(basic_ostream<CharT, Traits>& os, const CharT* const & ptr) // NOLINT(modernize-avoid-c-arrays)
+    basic_ostream<CharT, Traits>& operator<<(basic_ostream<CharT, Traits>& os, const CharT* const& ptr) // NOLINT(modernize-avoid-c-arrays)
     {
       const CharT* ptr_copy = ptr;
-      while (*ptr_copy)
+      while(*ptr_copy)
       {
         CharT c = *ptr_copy;
         os.put(c);
