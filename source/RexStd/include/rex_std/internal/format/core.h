@@ -2043,7 +2043,7 @@ FMT_CONSTEXPR auto make_arg(T&& value) -> basic_format_arg<Context>
 {
   basic_format_arg<Context> arg;
   arg.m_type = mapped_type_constant<T, Context>::value;
-  arg.value_ = make_value<Context>(value);
+  arg.m_value = make_value<Context>(value);
   return arg;
 }
 

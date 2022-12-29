@@ -12,7 +12,9 @@
 
 #include <functional> // rsl::reference_wrapper
 #include <memory>     // rsl::unique_ptr
-#include <vector>
+#include "rex_std/vector.h"
+#include "rex_std/internal/utility/move.h"
+#include "rex_std/bonus/type_traits/is_char_array.h"
 
 FMT_BEGIN_NAMESPACE
 
@@ -86,12 +88,12 @@ namespace detail
 
 /**
   \rst
-  A dynamic version of `fmt::format_arg_store`.
+  A dynamic version of `rsl::format_arg_store`.
   It's equipped with a storage to potentially temporary objects which lifetimes
   could be shorter than the format arguments object.
 
-  It can be implicitly converted into `~fmt::basic_format_args` for passing
-  into type-erased formatting functions such as `~fmt::vformat`.
+  It can be implicitly converted into `~rsl::basic_format_args` for passing
+  into type-erased formatting functions such as `~rsl::vformat`.
   \endrst
  */
 template <typename Context>
@@ -117,7 +119,7 @@ private:
   };
 
   template <typename T>
-  using stored_type = conditional_t<rsl::is_convertible<T, rsl::basic_string<char_type>>::value && !detail::is_reference_wrapper<T>::value, rsl::basic_string<char_type>, T>;
+  using stored_type = conditional_t<rsl::is_char_array_v<T> && !detail::is_reference_wrapper<T>::value, rsl::basic_string<char_type>, T>;
 
   // Storage of basic_format_arg must be contiguous.
   rsl::vector<basic_format_arg<Context>> data_;
@@ -157,8 +159,8 @@ private:
     auto pop_one = [](rsl::vector<basic_format_arg<Context>>* data) { data->pop_back(); };
     rsl::unique_ptr<rsl::vector<basic_format_arg<Context>>, decltype(pop_one)> guard {&data_, pop_one};
     named_info_.push_back({arg.name, static_cast<int>(data_.size() - 2u)});
-    data_[0].value_.named_args = {named_info_.data(), named_info_.size()};
-    guard.release();
+    data_[0].m_value.named_args = {named_info_.data(), named_info_.size()};
+    [[maybe_unused]] auto ptr = guard.release();
   }
 
 public:
@@ -174,11 +176,11 @@ public:
 
     **Example**::
 
-      fmt::dynamic_format_arg_store<fmt::format_context> store;
+      rsl::dynamic_format_arg_store<rsl::format_context> store;
       store.push_back(42);
       store.push_back("abc");
       store.push_back(1.5f);
-      rsl::string result = fmt::vformat("{} and {} and {}", store);
+      rsl::string result = rsl::vformat("{} and {} and {}", store);
     \endrst
   */
   template <typename T>
@@ -197,11 +199,11 @@ public:
 
     **Example**::
 
-      fmt::dynamic_format_arg_store<fmt::format_context> store;
+      rsl::dynamic_format_arg_store<rsl::format_context> store;
       char band[] = "Rolling Stones";
       store.push_back(rsl::cref(band));
       band[9] = 'c'; // Changing str affects the output.
-      rsl::string result = fmt::vformat("{}", store);
+      rsl::string result = rsl::vformat("{}", store);
       // result == "Rolling Scones"
     \endrst
   */
@@ -223,11 +225,11 @@ public:
     const char_type* arg_name = dynamic_args_.push<rsl::basic_string<char_type>>(arg.name).c_str();
     if(detail::const_check(need_copy<T>::value))
     {
-      emplace_arg(fmt::arg(arg_name, dynamic_args_.push<stored_type<T>>(arg.value)));
+      emplace_arg(rsl::arg(arg_name, dynamic_args_.push<stored_type<T>>(arg.value)));
     }
     else
     {
-      emplace_arg(fmt::arg(arg_name, arg.value));
+      emplace_arg(rsl::arg(arg_name, arg.value));
     }
   }
 
@@ -245,7 +247,7 @@ public:
     *new_cap_named* named arguments.
     \endrst
   */
-  void reserve(size_t new_cap, size_t new_cap_named)
+  void reserve(count_t new_cap, count_t new_cap_named)
   {
     FMT_ASSERT(new_cap >= new_cap_named, "Set of arguments includes set of named arguments");
     data_.reserve(new_cap);

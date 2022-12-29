@@ -734,7 +734,7 @@ FMT_MODULE_EXPORT_BEGIN
   **Example**::
 
     rsl::tuple<int, char> t = {1, 'a'};
-    fmt::print("{}", fmt::join(t, ", "));
+    rsl::print("{}", rsl::join(t, ", "));
     // Output: "1, a"
   \endrst
  */
@@ -757,7 +757,7 @@ FMT_CONSTEXPR auto join(const rsl::tuple<T...>& tuple, basic_string_view<wchar_t
 
   **Example**::
 
-    fmt::print("{}", fmt::join({1, 2, 3}, ", "));
+    rsl::print("{}", rsl::join({1, 2, 3}, ", "));
     // Output: "1, 2, 3"
   \endrst
  */

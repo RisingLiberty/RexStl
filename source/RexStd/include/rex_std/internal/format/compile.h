@@ -151,7 +151,7 @@ namespace detail
 
     // Converts 42 into rsl::string using the most efficient method and no
     // runtime format string processing.
-    rsl::string s = fmt::format(FMT_COMPILE("{}"), 42);
+    rsl::string s = rsl::format(FMT_COMPILE("{}"), 42);
   \endrst
  */
 #if defined(__cpp_if_constexpr) && defined(__cpp_return_type_deduction)

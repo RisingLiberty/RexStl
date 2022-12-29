@@ -50,7 +50,7 @@ namespace detail
   // it's handled by standard (non-ostream) formatters.
   template <typename T, typename Char>
   struct is_streamable<T, Char,
-                       enable_if_t<rsl::is_arithmetic<T>::value || rsl::is_array<T>::value || rsl::is_pointer<T>::value || rsl::is_same<T, char8_type>::value || rsl::is_convertible<T, fmt::basic_string_view<Char>>::value ||
+                       enable_if_t<rsl::is_arithmetic<T>::value || rsl::is_array<T>::value || rsl::is_pointer<T>::value || rsl::is_same<T, char8_type>::value || rsl::is_convertible<T, rsl::basic_string_view<Char>>::value ||
                                    rsl::is_same<T, std_string_view<Char>>::value || (rsl::is_convertible<T, int>::value && !rsl::is_enum<T>::value)>> : rsl::false_type
   {
   };
@@ -183,8 +183,8 @@ struct formatter<detail::streamed_view<T>, Char> : basic_ostream_formatter<Char>
 
   **Example**::
 
-    fmt::print("Current thread id: {}\n",
-               fmt::streamed(rsl::this_thread::get_id()));
+    rsl::print("Current thread id: {}\n",
+               rsl::streamed(rsl::this_thread::get_id()));
   \endrst
  */
 template <typename T>
@@ -228,7 +228,7 @@ void vprint(rsl::basic_ostream<Char>& os, basic_string_view<type_identity_t<Char
 
   **Example**::
 
-    fmt::print(cerr, "Don't {}!", "panic");
+    rsl::print(cerr, "Don't {}!", "panic");
   \endrst
  */
 FMT_MODULE_EXPORT template <typename... T>

@@ -8,7 +8,7 @@
 #ifndef FMT_COLOR_H_
 #define FMT_COLOR_H_
 
-#include "format.h"
+#include "rex_std/format.h"
 
 FMT_BEGIN_NAMESPACE
 FMT_MODULE_EXPORT_BEGIN
@@ -601,7 +601,7 @@ void vprint(rsl::FILE* f, const text_style& ts, const S& format, basic_format_ar
 
   **Example**::
 
-    fmt::print(fmt::emphasis::bold | fg(fmt::color::red),
+    rsl::print(rsl::emphasis::bold | fg(rsl::color::red),
                "Elapsed time: {0:.2f} seconds", 1.23);
   \endrst
  */
@@ -618,7 +618,7 @@ void print(rsl::FILE* f, const text_style& ts, const S& format_str, const Args&.
 
   **Example**::
 
-    fmt::print(fmt::emphasis::bold | fg(fmt::color::red),
+    rsl::print(rsl::emphasis::bold | fg(rsl::color::red),
                "Elapsed time: {0:.2f} seconds", 1.23);
   \endrst
  */
@@ -633,7 +633,7 @@ inline rsl::basic_string<Char> vformat(const text_style& ts, const S& format_str
 {
   basic_memory_buffer<Char> buf;
   detail::vformat_to(buf, ts, detail::to_string_view(format_str), args);
-  return fmt::to_string(buf);
+  return rsl::to_string(buf);
 }
 
 /**
@@ -644,7 +644,7 @@ inline rsl::basic_string<Char> vformat(const text_style& ts, const S& format_str
   **Example**::
 
     #include <fmt/color.h>
-    rsl::string message = fmt::format(fmt::emphasis::bold | fg(fmt::color::red),
+    rsl::string message = rsl::format(rsl::emphasis::bold | fg(rsl::color::red),
                                       "The answer is {}", 42);
   \endrst
 */
@@ -673,8 +673,8 @@ OutputIt vformat_to(OutputIt out, const text_style& ts, basic_string_view<Char> 
   **Example**::
 
     rsl::vector<char> out;
-    fmt::format_to(rsl::back_inserter(out),
-                   fmt::emphasis::bold | fg(fmt::color::red), "{}", 42);
+    rsl::format_to(rsl::back_inserter(out),
+                   rsl::emphasis::bold | fg(rsl::color::red), "{}", 42);
   \endrst
 */
 template <typename OutputIt, typename S, typename... Args, bool enable = detail::is_output_iterator<OutputIt, char_t<S>>::value&& detail::is_string<S>::value>
@@ -729,9 +729,9 @@ struct formatter<detail::styled_arg<T>, Char> : formatter<T, Char>
 
   **Example**::
 
-    fmt::print("Elapsed time: {0:.2f} seconds",
-               fmt::styled(1.23, fmt::fg(fmt::color::green) |
-                                 fmt::bg(fmt::color::blue)));
+    rsl::print("Elapsed time: {0:.2f} seconds",
+               rsl::styled(1.23, rsl::fg(rsl::color::green) |
+                                 rsl::bg(rsl::color::blue)));
   \endrst
  */
 template <typename T>
