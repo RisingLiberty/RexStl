@@ -14,6 +14,7 @@
 
 #include "rex_std/bonus/compiler.h"
 #include "rex_std/bonus/defines.h"
+#include "rex_std/bonus/string/string_literal.h"
 #include "rex_std/bonus/string/string_utils.h"
 #include "rex_std/bonus/types.h"
 #include "rex_std/bonus/utility/element_literal.h"
@@ -71,7 +72,8 @@ namespace rsl
       {
       }
       // Constructs a view starting at s, reaching to the first null termination char.
-      constexpr explicit basic_string_view(const_pointer& s)
+      template <typename T, typename rsl::enable_if_t<rsl::is_same_v<T, CharType>, bool> = true>
+      constexpr explicit basic_string_view(const T* const& s)
           : m_data(s)
           , m_length(traits_type::length(s))
       {
@@ -88,10 +90,9 @@ namespace rsl
       /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
       // The standard doesn't provide an overload for a string literal
       // Constructs a view using a string literal
-      template <size_t Size>
-      constexpr basic_string_view(const value_type (&s)[Size]) // NOLINT(google-explicit-constructor, modernize-avoid-c-arrays)
-          : m_data(s)
-          , m_length(Size - 1)
+      constexpr basic_string_view(string_literal<CharType> s) // NOLINT(google-explicit-constructor, modernize-avoid-c-arrays)
+          : m_data(s.data())
+          , m_length(s.length())
       {
       }
       // can't construct a string view from a nullptr
@@ -272,13 +273,18 @@ namespace rsl
       {
         return traits_type::compare(data(), sv.data(), sv.length()) == 0;
       }
+      REX_NO_DISCARD constexpr bool starts_with(string_literal<CharType> s) const
+      {
+        return traits_type::compare(data(), s.data(), s.length()) == 0;
+      }
       // checks if the string view starts with the given prefix
       REX_NO_DISCARD constexpr bool starts_with(const value_type c) const
       {
         return traits_type::eq(front(), c);
       }
       // checks if the string view starts with the given prefix
-      REX_NO_DISCARD constexpr bool starts_with(const_pointer& s) const
+      template <typename T, typename rsl::enable_if_t<rsl::is_same_v<T, CharType>, bool> = true>
+      REX_NO_DISCARD constexpr bool starts_with(const T* const& s) const
       {
         return starts_with(basic_string_view(s));
       }
@@ -287,8 +293,13 @@ namespace rsl
       {
         return internal::string_utils::compare<traits_type>(data() + (length() - rhs.size()), rhs.data(), rhs.length(), rhs.length()) == 0;
       }
+      REX_NO_DISCARD constexpr bool ends_with(string_literal<CharType> s) const
+      {
+        return internal::string_utils::compare<traits_type>(data() + (length() - s.size()), s.data(), s.length(), s.length()) == 0;
+      }
       // checks if the string view ends with the given suffix
-      REX_NO_DISCARD constexpr bool ends_with(const_pointer& s) const
+      template <typename T, typename rsl::enable_if_t<rsl::is_same_v<T, CharType>, bool> = true>
+      REX_NO_DISCARD constexpr bool ends_with(const T* const& s) const
       {
         return ends_with(basic_string_view(s));
       }
@@ -303,13 +314,18 @@ namespace rsl
       {
         return find(sv) != s_npos;
       }
+      REX_NO_DISCARD constexpr bool contains(string_literal<CharType> s) const
+      {
+        return find(basic_string_view(s)) != s_npos;
+      }
       // checks if the string view contains the given substring
       REX_NO_DISCARD constexpr bool contains(value_type c) const
       {
         return find(c) != s_npos;
       }
       // checks if the string view contains the given substring
-      REX_NO_DISCARD constexpr bool contains(const_pointer& s) const
+      template <typename T, typename rsl::enable_if_t<rsl::is_same_v<T, CharType>, bool> = true>
+      REX_NO_DISCARD constexpr bool contains(const T* const& s) const
       {
         return contains(basic_string_view(s));
       }

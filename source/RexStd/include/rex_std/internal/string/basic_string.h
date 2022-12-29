@@ -14,6 +14,7 @@
 
 #include "rex_std/bonus/string/character_lookup.h"
 #include "rex_std/bonus/string/stack_string.h"
+#include "rex_std/bonus/string/string_literal.h"
 #include "rex_std/bonus/string/string_utils.h"
 #include "rex_std/bonus/utility/compressed_pair.h"
 #include "rex_std/bonus/utility/element_literal.h"
@@ -120,10 +121,16 @@ namespace rsl
       {
         assign(s, count);
       }
+      basic_string(string_literal<CharType> s, const allocator& alloc = allocator())
+        : basic_string(alloc)
+      {
+        assign(s.data(), s.length());
+      }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (28/Jun/2022)
       // by adding a reference to the const_pointer overload, this one will only get selected if the argument
       // is a pointer type, and array arguments will get passed to the string_view overload ctor
-      explicit basic_string(const_pointer& s, const allocator& alloc = allocator())
+      template <typename T, typename rsl::enable_if_t<rsl::is_same_v<T, CharType>, bool> = true>
+      explicit basic_string(const T* const& s, const allocator& alloc = allocator())
           : basic_string(alloc)
       {
         const size_type length = traits_type::length(s);
@@ -320,10 +327,15 @@ namespace rsl
 
         return *this;
       }
+      basic_string& assign(string_literal<CharType> str) // NOLINT(modernize-avoid-c-arrays)
+      {
+        return assign(str.data(), str.length());
+      }
       /// RSL Comment: Different from ISO C++ Standard at time of writing time of writing (30/Jun/2022)
       // the standard doesn't provide an overload for a string literal
       // replaces the contents of the string array
-      basic_string& assign(const_pointer& str) // NOLINT(modernize-avoid-c-arrays)
+      template <typename T, typename rsl::enable_if_t<rsl::is_same_v<T, CharType>, bool> = true>
+      basic_string& assign(const T* const& str) // NOLINT(modernize-avoid-c-arrays)
       {
         return assign(str, rsl::strlen(str));
       }
@@ -914,10 +926,9 @@ namespace rsl
       /// RSL Comment: Not in ISO C++ Standard at time of writing (30/Jun/2022)
       // the standard doesn't provide an overload for a string literal
       // Compares the string to a string literal.
-      template <count_t Size>
-      REX_NO_DISCARD int32 compare(const_pointer (&s)[Size]) const // NOLINT(modernize-avoid-c-arrays)
+      REX_NO_DISCARD int32 compare(string_literal<CharType> s) const // NOLINT(modernize-avoid-c-arrays)
       {
-        return Traits::compare(data(), s);
+        return Traits::compare(data(), s.data());
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (01/Jul/2022)
       // Because we have the above function, we don't specify the following.
@@ -926,10 +937,9 @@ namespace rsl
       /// RSL Comment: Not in ISO C++ Standard at time of writing (01/Jul/2022)
       // the standard doesn't provide an overload for a string literal
       // compares a [pos1, pos1_count1) substring of this string to a string literal
-      template <count_t Size>
-      REX_NO_DISCARD int32 compare(size_type pos1, size_type count1, const_pointer (&s)[Size]) const // NOLINT(modernize-avoid-c-arrays)
+      REX_NO_DISCARD int32 compare(size_type pos1, size_type count1, string_literal<CharType> s) const // NOLINT(modernize-avoid-c-arrays)
       {
-        return internal::string_utils::compare<traits_type>(data() + pos1, s, count1, Size - 1);
+        return internal::string_utils::compare<traits_type>(data() + pos1, s.data(), count1, s.length());
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (01/Jul/2022)
       // Because we have the above function, we don't specify the following.
@@ -978,13 +988,19 @@ namespace rsl
         return traits_type::compare(data(), sv.data(), sv.length()) == 0;
       }
       // checks if the string begins with the given prefix
+      REX_NO_DISCARD bool starts_with(string_literal<CharType> s) const
+      {
+        return traits_type::compare(data(), s.data(), s.length()) == 0;
+      }
+      // checks if the string begins with the given prefix
       REX_NO_DISCARD bool starts_with(value_type c) const
       {
         return traits_type::eq(front(), c);
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (13/Nov/2022)
       // by adding a reference to the const_pointer overload, this one will only get selected if the argument
-      REX_NO_DISCARD bool starts_with(const_pointer& s) const
+      template <typename T, typename rsl::enable_if_t<rsl::is_same_v<T, CharType>, bool> = true>
+      REX_NO_DISCARD bool starts_with(const T* const& s) const
       {
         return starts_with(rsl::string_view(s));
       }
@@ -997,6 +1013,10 @@ namespace rsl
       {
         return traits_type::compare(data() + (size() - sv.length()), sv.data(), sv.length()) == 0;
       }
+      REX_NO_DISCARD bool ends_with(string_literal<CharType> s) const
+      {
+        return traits_type::compare(data() + (size() - s.length()), s.data(), s.length()) == 0;
+      }
       // checks if the string ends with the given suffix
       REX_NO_DISCARD bool ends_with(value_type c) const
       {
@@ -1004,7 +1024,8 @@ namespace rsl
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (13/Nov/2022)
       // by adding a reference to the const_pointer overload, this one will only get selected if the argument
-      REX_NO_DISCARD bool ends_with(const_pointer& s) const
+      template <typename T, typename rsl::enable_if_t<rsl::is_same_v<T, CharType>, bool> = true>
+      REX_NO_DISCARD bool ends_with(const T* const& s) const
       {
         return ends_with(rsl::string_view(s));
       }
@@ -1017,6 +1038,10 @@ namespace rsl
       {
         return find(sv) != s_npos;
       }
+      REX_NO_DISCARD bool contains(string_literal<CharType> s) const
+      {
+        return find(string_view(s)) != s_npos;
+      }
       // checks if the string contains the given substring
       REX_NO_DISCARD bool contains(value_type c) const
       {
@@ -1024,7 +1049,8 @@ namespace rsl
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (13/Nov/2022)
       // by adding a reference to the const_pointer overload, this one will only get selected if the argument
-      REX_NO_DISCARD bool contains(const_pointer& s) const
+      template <typename T, typename rsl::enable_if_t<rsl::is_same_v<T, CharType>, bool> = true>
+      REX_NO_DISCARD bool contains(const T* const& s) const
       {
         return contains(rsl::string_view(s));
       }
@@ -1338,10 +1364,9 @@ namespace rsl
       /// RSL Comment: Not in ISO C++ Standard at time of writing (03/Jul/2022)
       // The standard doesn't provide an overload for a string literal
       // finds the last substring equal to s
-      template <count_t Size>
-      REX_NO_DISCARD size_type rfind(const value_type (&s)[Size], size_type pos, size_type count) const // NOLINT(modernize-avoid-c-arrays)
+      REX_NO_DISCARD size_type rfind(string_literal<CharType> s, size_type pos = s_npos) const // NOLINT(modernize-avoid-c-arrays)
       {
-        return internal::string_utils::rfind<traits_type, const_pointer>(m_begin, length(), pos, s, Size - 1, s_npos);
+        return internal::string_utils::rfind<traits_type, const_pointer>(m_begin, length(), pos, s.data(), s.length(), s_npos);
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (03/Jul/2022)
       // because we define the above function, we don't define the following
@@ -1380,10 +1405,9 @@ namespace rsl
       /// RSL Comment: Not in ISO C++ Standard at time of writing (03/Jul/2022)
       // The standard doesn't provide an overload for a string literal
       // finds the first character equal to one of the characters in the string literal
-      template <count_t Size>
-      REX_NO_DISCARD size_type find_first_of(const value_type (&s)[Size], size_type pos) const // NOLINT(modernize-avoid-c-arrays)
+      REX_NO_DISCARD size_type find_first_of(string_literal<CharType> s, size_type pos = s_npos) const // NOLINT(modernize-avoid-c-arrays)
       {
-        return internal::string_utils::find_first_of<traits_type, const_pointer>(m_begin, length(), pos, s, Size - 1, s_npos);
+        return internal::string_utils::find_first_of<traits_type, const_pointer>(m_begin, length(), pos, s.data(), s.length(), s_npos);
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (03/Jul/2022)
       // because we define the function above, we don't specify the following
@@ -1414,10 +1438,9 @@ namespace rsl
       /// RSL Comment: Not in ISO C++ Standard at time of writing (03/Jul/2022)
       // The standard doesn't provide an overload for a string literal
       // finds the first character equal to none of the characters in the string literal
-      template <count_t Size>
-      REX_NO_DISCARD size_type find_first_not_of(const value_type (&s)[Size], size_type pos = 0) const // NOLINT(modernize-avoid-c-arrays)
+      REX_NO_DISCARD size_type find_first_not_of(string_literal<CharType> s, size_type pos = 0) const // NOLINT(modernize-avoid-c-arrays)
       {
-        return internal::string_utils::find_first_not_of<traits_type, const_pointer>(m_begin, length(), pos, s, Size - 1, s_npos);
+        return internal::string_utils::find_first_not_of<traits_type, const_pointer>(m_begin, length(), pos, s.data(), s.length(), s_npos);
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (03/Jul/2022)
       // because we define the above function, we don't define the following
@@ -1448,10 +1471,9 @@ namespace rsl
       /// RSL Comment: Not in ISO C++ Standard at time of writing (03/Jul/2022)
       // The standard doesn't provide an overload for a string literal
       // finds the last character equal to one of the characters in the string literal
-      template <count_t Size>
-      REX_NO_DISCARD size_type find_last_of(const value_type (&s)[Size], size_type pos) const // NOLINT(modernize-avoid-c-arrays)
+      REX_NO_DISCARD size_type find_last_of(string_literal<CharType> s, size_type pos = s_npos) const // NOLINT(modernize-avoid-c-arrays)
       {
-        return internal::string_utils::find_last_of<traits_type, const_pointer>(m_begin, length(), pos, s, Size - 1, s_npos);
+        return internal::string_utils::find_last_of<traits_type, const_pointer>(m_begin, length(), pos, s.data(), s.length(), s_npos);
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (03/Jul/2022)
       // because we define the above function, we don't define the following
@@ -1482,10 +1504,9 @@ namespace rsl
       /// RSL Comment: Not in ISO C++ Standard at time of writing (03/Jul/2022)
       // The standard doesn't provide an overload for a string literal
       // finds the last character equal to one of the characters in the string literal
-      template <count_t Size>
-      REX_NO_DISCARD size_type find_last_not_of(const value_type (&s)[Size], size_type pos) const // NOLINT(modernize-avoid-c-arrays)
+      REX_NO_DISCARD size_type find_last_not_of(string_literal<CharType> s, size_type pos = s_npos) const // NOLINT(modernize-avoid-c-arrays)
       {
-        return internal::string_utils::find_last_not_of<traits_type, const_pointer>(m_begin, length(), pos, s, Size - 1, s_npos);
+        return internal::string_utils::find_last_not_of<traits_type, const_pointer>(m_begin, length(), pos, s.data(), s.length(), s_npos);
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (03/Jul/2022)
       // because we define the above function, we don't define the following
