@@ -118,7 +118,10 @@ namespace rsl
       // the owner object is destroyed via the deleter
       ~unique_ptr()
       {
-        delete_ptr();
+        if (get())
+        {
+          delete_ptr();
+        }
       }
 
       // transfers ownership from other to this

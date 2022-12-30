@@ -3702,6 +3702,8 @@ inline auto runtime(string_view s) -> basic_runtime<char>
 }
 #endif
 
+FMT_API auto vformat(string_literal<char> fmt, format_args args)->rsl::string;
+
 FMT_API auto vformat(string_view fmt, format_args args) -> rsl::string;
 
 /**
@@ -3747,6 +3749,12 @@ template <typename OutputIt, typename... T, FMT_ENABLE_IF(detail::is_output_iter
 FMT_INLINE auto format_to(OutputIt out, format_string<T...> fmt, T&&... args) -> OutputIt
 {
   return vformat_to(out, fmt, rsl::make_format_args(args...));
+}
+
+template <typename OutputIt, typename... T, FMT_ENABLE_IF(detail::is_output_iterator<OutputIt, char>::value)>
+FMT_INLINE auto format_to(OutputIt out, string_literal<char> fmt, T&&... args) -> OutputIt
+{
+  return format_to(out, format_string<T...>(fmt), rsl::forward<T>(args)...);
 }
 
 template <typename OutputIt>

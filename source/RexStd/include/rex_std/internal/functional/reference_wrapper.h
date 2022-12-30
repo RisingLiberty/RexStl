@@ -110,13 +110,13 @@ namespace rsl
 
     // helper function that returns a reference wrapper to const T
     template <typename T>
-    void cref(const T& t)
+    constexpr reference_wrapper<const T> cref(const T& t)
     {
       return reference_wrapper<const T>(t);
     }
     // helper function that returns a reference wrapper to const T
     template <typename T>
-    void cref(reference_wrapper<T> t)
+    constexpr reference_wrapper<const T> cref(reference_wrapper<T> t)
     {
       return reference_wrapper<const T>(t);
     }
