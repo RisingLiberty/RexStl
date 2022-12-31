@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+	<Type Name="rsl::v1::stack_string&lt;*&gt;">
+		<Intrinsic Name="length" Expression="m_null_terminator_offset" />
+		<Intrinsic Name="max_size" Expression="$T2" />
+		<Intrinsic Name="data" Expression="m_data.m_data" />
+		<DisplayString Condition="m_null_terminator_offset == 0xcccccccc">Uninitialized</DisplayString>
+		<DisplayString>{data(), na}</DisplayString>
+		<StringView>data(), na</StringView>
+		<Expand>
+			<Item Name="[length]">length()</Item>
+			<Item Name="[max size]">max_size()</Item>
+			<Item Name="[data]">data()</Item>
+			<ArrayItems>
+				<Size>length()</Size>
+				<ValuePointer>m_data.m_data</ValuePointer>
+			</ArrayItems>
+		</Expand>
+	</Type>
+  <Type Name="rsl::v1::basic_string&lt;*&gt;">
+    <Intrinsic Name="length" Expression="m_end - m_begin" />
+    <Intrinsic Name="capacity" Expression="m_cp_last_and_allocator.m_first-m_begin" />
+    <Intrinsic Name="data" Expression="m_begin" />
+    <DisplayString Condition="m_begin == 0xcccccccc">Uninitialized</DisplayString>
+    <DisplayString>{data(), na}</DisplayString>
+    <StringView>data(), na</StringView>
+    <Expand>
+      <Item Name="[length]">length()</Item>
+      <Item Name="[capacity]">capacity()</Item>
+      <Item Name="[data]">data()</Item>
+      <ArrayItems>
+        <Size>length()</Size>
+        <ValuePointer>m_begin</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+  <Type Name="rsl::v1::unique_ptr&lt;*&gt;">
+    <DisplayString Condition="m_ptr == 0xcccccccc">Uninitialized</DisplayString>
+    <DisplayString Condition="m_ptr == 0">Null</DisplayString>
+    <DisplayString>{m_ptr}</DisplayString>
+  </Type>
+  <Type Name="rsl::v1::unique_array&lt;*&gt;">
+    <DisplayString Condition="m_ptr == 0xcccccccc">Uninitialized</DisplayString>
+    <DisplayString>{m_ptr}</DisplayString>
+    <Expand>
+      <Item Name="[ptr]">m_ptr</Item>
+      <Item Name="[length]">m_count</Item>
+      <ArrayItems>
+        <Size>m_count</Size>
+        <ValuePointer>m_ptr</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+  <Type Name="rsl::v1::basic_string_id&lt;*&gt;">
+    <DisplayString>{m_str}</DisplayString>
+    <Expand>
+      <Item Name="[string]">m_str</Item>
+      <Item Name="[hash]">m_hash</Item>
+      <Item Name="[hash table]">g_hash_table</Item>
+    </Expand>
+  </Type>
+  <Type Name="rsl::v1::vector&lt;*&gt;">
+    <Intrinsic Name="size" Expression="m_end-m_begin" />
+    <Intrinsic Name="capacity" Expression="m_cp_last_and_allocator.m_first-m_begin" />
+    <DisplayString>size = {size()} | cap = {capacity()}</DisplayString>
+    <Expand>
+      <Item Name="[size]">size()</Item>
+      <Item Name="[capacity]">capacity()</Item>
+      <ArrayItems>
+        <Size>size()</Size>
+        <ValuePointer>m_begin</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+  <Type Name="rsl::v1::array&lt;*&gt;">
+    <Intrinsic Name="size" Expression="$T2" />
+    <Intrinsic Name="data" Expression="m_data" />
+    <DisplayString>{{ size={size()} }}</DisplayString>
+    <Expand>
+      <Item Name="[size]">size()</Item>
+      <ArrayItems>
+        <Size>$T2</Size>
+        <ValuePointer>m_data</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+  <Type Name="rsl::v1::basic_string_view&lt;*&gt;">
+    <Intrinsic Name="size" Expression="m_length" />
+    <Intrinsic Name="data" Expression="m_data" />
+    <DisplayString>{m_data,[m_length]}</DisplayString>
+    <Expand>
+      <Item Name="[size]" ExcludeView="simple">size()</Item>
+      <ArrayItems>
+        <Size>size()</Size>
+        <ValuePointer>data()</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+</AutoVisualizer>

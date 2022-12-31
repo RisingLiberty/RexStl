@@ -1,11 +1,11 @@
-// ============================================ 
+﻿// ============================================ 
 //
 // REX - STANDARD LIBRARY IMPLEMENTATION
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
 // 
-// File: fmt_test.cpp
+// File: fmt_arg_test.cpp
 // Copyright (c) Nick De Breuck 2022
 //
 // ============================================
@@ -213,3 +213,4 @@ TEST_CASE("args_test, move_constructor") {
   store.reset();
   REQUIRE(rsl::vformat("{} {} {a1}", moved_store) == rsl::string("42 foo foo"));
 }
+
