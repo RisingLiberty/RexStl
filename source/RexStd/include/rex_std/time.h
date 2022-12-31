@@ -50,7 +50,7 @@ namespace rsl
       int32 tm_hour : 6;   // hours since midnight [0, 23)
       int32 tm_mon : 5;    // months since january [0, 11)
       int32 tm_wday : 4;   // day since sunday [0 , 6)
-      int32 tm_isddst : 2; // is Daylight Saving Time in effect
+      int32 tm_isdst : 2; // is Daylight Saving Time in effect
     };
 
     // structure holding an interval broken down into seconds and nanoseconds
