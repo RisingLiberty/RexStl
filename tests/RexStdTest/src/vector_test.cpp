@@ -149,16 +149,22 @@ TEST_CASE("vector insertion")
 
   vec.insert(vec.cend(), 1);
   REQUIRE(vec[0] == 1);
+  REQUIRE(vec.size() == 1);
+  REQUIRE(vec.capacity() >= 1);
 
   vec.insert(vec.cbegin(), 2);
   REQUIRE(vec[0] == 2);
   REQUIRE(vec[1] == 1);
+  REQUIRE(vec.size() == 2);
+  REQUIRE(vec.capacity() >= 2);
 
   vec.reserve(100);
   vec.insert(vec.cbegin(), 2);
   REQUIRE(vec[0] == 2);
   REQUIRE(vec[1] == 2);
   REQUIRE(vec[2] == 1);
+  REQUIRE(vec.size() == 3);
+  REQUIRE(vec.capacity() == 100);
 }
 
 TEST_CASE("vector non trivial type")
