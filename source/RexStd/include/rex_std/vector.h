@@ -649,6 +649,7 @@ namespace rsl
           // using memmove here as the dst and src could overlap
           pointer dst_in_buffer = data() + idx + count;
           move_bwd(dst_in_buffer, data() + idx, size() - idx);
+          ++m_end;
         }
       }
 
