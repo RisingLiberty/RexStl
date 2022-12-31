@@ -285,7 +285,7 @@ namespace detail
   }
 
   template <typename CharT, CharT... C>
-  struct string_literal
+  struct basic_string_literal
   {
     static constexpr CharT value[sizeof...(C)] = {C...}; // NOLINT(modernize-avoid-c-arrays)
     constexpr operator basic_string_view<CharT>() const  // NOLINT(google-explicit-constructor)

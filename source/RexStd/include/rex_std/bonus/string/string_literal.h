@@ -21,13 +21,13 @@ namespace rsl
   inline namespace v1
   {
     template <typename Char>
-    class string_literal
+    class basic_string_literal
     {
     public:
       static_assert(rsl::is_character_v<Char>, "Char must be a character type");
 
       template <count_t N>
-      constexpr string_literal(const Char(&arr)[N])
+      constexpr basic_string_literal(const Char(&arr)[N])
         : m_data(arr)
         , m_length(N - 1)
       {}
@@ -50,4 +50,7 @@ namespace rsl
       count_t m_length;
     };
   }
+
+  using string_literal = basic_string_literal<char8>;
+  using wstring_literal = basic_string_literal<tchar>;
 }

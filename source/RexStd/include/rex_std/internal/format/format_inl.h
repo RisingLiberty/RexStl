@@ -1496,7 +1496,7 @@ FMT_FUNC void report_system_error(int errorCode, const char* message) noexcept /
   report_error(format_system_error, errorCode, message);
 }
 
-FMT_FUNC rsl::string vformat(string_literal<char> fmt, format_args args) // NOLINT(misc-definitions-in-headers)
+FMT_FUNC rsl::string vformat(basic_string_literal<char> fmt, format_args args) // NOLINT(misc-definitions-in-headers)
 {
   return vformat(string_view(fmt), rsl::move(args));
 }

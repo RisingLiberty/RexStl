@@ -366,9 +366,9 @@ template <typename TupleT, typename Char>
 struct formatter<TupleT, Char, enable_if_t<rsl::is_tuple_like<TupleT>::value && rsl::is_tuple_formattable<TupleT, Char>::value>>
 {
 private:
-  basic_string_view<Char> separator_       = detail::string_literal<Char, ',', ' '> {};
-  basic_string_view<Char> opening_bracket_ = detail::string_literal<Char, '('> {};
-  basic_string_view<Char> closing_bracket_ = detail::string_literal<Char, ')'> {};
+  basic_string_view<Char> separator_       = detail::basic_string_literal<Char, ',', ' '> {};
+  basic_string_view<Char> opening_bracket_ = detail::basic_string_literal<Char, '('> {};
+  basic_string_view<Char> closing_bracket_ = detail::basic_string_literal<Char, ')'> {};
 
   // C++11 generic lambda for format().
   template <typename FormatContext>
@@ -468,9 +468,9 @@ struct range_formatter<T, Char, enable_if_t<conjunction<rsl::is_same<T, remove_c
 private:
   detail::range_formatter_type<Char, T> underlying_;
   bool custom_specs_                       = false;
-  basic_string_view<Char> separator_       = detail::string_literal<Char, ',', ' '> {};
-  basic_string_view<Char> opening_bracket_ = detail::string_literal<Char, '['> {};
-  basic_string_view<Char> closing_bracket_ = detail::string_literal<Char, ']'> {};
+  basic_string_view<Char> separator_       = detail::basic_string_literal<Char, ',', ' '> {};
+  basic_string_view<Char> opening_bracket_ = detail::basic_string_literal<Char, '['> {};
+  basic_string_view<Char> closing_bracket_ = detail::basic_string_literal<Char, ']'> {};
 
   template <class U>
   FMT_CONSTEXPR static auto maybe_set_debug_format(U& u, int) -> decltype(u.set_debug_format())
@@ -599,14 +599,14 @@ namespace detail
 
     FMT_CONSTEXPR void init(range_format_constant<range_format::set>)
     {
-      underlying_.set_brackets(detail::string_literal<Char, '{'> {}, detail::string_literal<Char, '}'> {});
+      underlying_.set_brackets(detail::basic_string_literal<Char, '{'> {}, detail::basic_string_literal<Char, '}'> {});
     }
 
     FMT_CONSTEXPR void init(range_format_constant<range_format::map>)
     {
-      underlying_.set_brackets(detail::string_literal<Char, '{'> {}, detail::string_literal<Char, '}'> {});
+      underlying_.set_brackets(detail::basic_string_literal<Char, '{'> {}, detail::basic_string_literal<Char, '}'> {});
       underlying_.underlying().set_brackets({}, {});
-      underlying_.underlying().set_separator(detail::string_literal<Char, ':', ' '> {});
+      underlying_.underlying().set_separator(detail::basic_string_literal<Char, ':', ' '> {});
     }
 
     FMT_CONSTEXPR void init(range_format_constant<range_format::sequence>) {}

@@ -90,7 +90,7 @@ namespace rsl
       /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
       // The standard doesn't provide an overload for a string literal
       // Constructs a view using a string literal
-      constexpr basic_string_view(string_literal<CharType> s) // NOLINT(google-explicit-constructor, modernize-avoid-c-arrays)
+      constexpr basic_string_view(basic_string_literal<CharType> s) // NOLINT(google-explicit-constructor, modernize-avoid-c-arrays)
           : m_data(s.data())
           , m_length(s.length())
       {
@@ -273,7 +273,7 @@ namespace rsl
       {
         return traits_type::compare(data(), sv.data(), sv.length()) == 0;
       }
-      REX_NO_DISCARD constexpr bool starts_with(string_literal<CharType> s) const
+      REX_NO_DISCARD constexpr bool starts_with(basic_string_literal<CharType> s) const
       {
         return traits_type::compare(data(), s.data(), s.length()) == 0;
       }
@@ -293,7 +293,7 @@ namespace rsl
       {
         return internal::string_utils::compare<traits_type>(data() + (length() - rhs.size()), rhs.data(), rhs.length(), rhs.length()) == 0;
       }
-      REX_NO_DISCARD constexpr bool ends_with(string_literal<CharType> s) const
+      REX_NO_DISCARD constexpr bool ends_with(basic_string_literal<CharType> s) const
       {
         return internal::string_utils::compare<traits_type>(data() + (length() - s.size()), s.data(), s.length(), s.length()) == 0;
       }
@@ -314,7 +314,7 @@ namespace rsl
       {
         return find(sv) != s_npos;
       }
-      REX_NO_DISCARD constexpr bool contains(string_literal<CharType> s) const
+      REX_NO_DISCARD constexpr bool contains(basic_string_literal<CharType> s) const
       {
         return find(basic_string_view(s)) != s_npos;
       }
