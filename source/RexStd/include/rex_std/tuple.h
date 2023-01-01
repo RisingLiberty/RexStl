@@ -79,28 +79,28 @@ namespace rsl
 
     // tuple_size helper
     template <typename T>
-    class tuple_size
+    struct tuple_size
     {
     };
     template <typename T>
-    class tuple_size<const T> : public tuple_size<T>
+    struct tuple_size<const T> : public tuple_size<T>
     {
     };
     template <typename T>
-    class tuple_size<volatile T> : public tuple_size<T>
+    struct tuple_size<volatile T> : public tuple_size<T>
     {
     };
     template <typename T>
-    class tuple_size<const volatile T> : public tuple_size<T>
+    struct tuple_size<const volatile T> : public tuple_size<T>
     {
     };
 
     template <typename... Ts>
-    class tuple_size<tuple_types<Ts...>> : public integral_constant<count_t, sizeof...(Ts)>
+    struct tuple_size<tuple_types<Ts...>> : public integral_constant<count_t, sizeof...(Ts)>
     {
     };
     template <typename... Ts>
-    class tuple_size<tuple<Ts...>> : public integral_constant<count_t, sizeof...(Ts)>
+    struct tuple_size<tuple<Ts...>> : public integral_constant<count_t, sizeof...(Ts)>
     {
     };
 
@@ -114,7 +114,7 @@ namespace rsl
     } // namespace internal
 
     template <typename Indices, typename... Ts>
-    class tuple_size<internal::TupleImpl<Indices, Ts...>> : public integral_constant<count_t, sizeof...(Ts)>
+    struct tuple_size<internal::TupleImpl<Indices, Ts...>> : public integral_constant<count_t, sizeof...(Ts)>
     {
     };
 

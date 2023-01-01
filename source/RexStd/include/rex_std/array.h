@@ -322,7 +322,7 @@ namespace rsl
 
     // Provides access to the number of elements in an rsl::array as a compile-time constant expression.
     template <typename T>
-    class tuple_size;
+    struct tuple_size;
 
     template <typename T, count_t Size>
     struct tuple_size<rsl::array<T, Size>> : rsl::integral_constant<card32, Size>

@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: is_char_array.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -15,8 +15,8 @@
 #include "rex_std/bonus/type_traits/is_character.h"
 #include "rex_std/internal/type_traits/integral_constant.h"
 #include "rex_std/internal/type_traits/is_array.h"
-#include "rex_std/internal/type_traits/remove_extent.h"
 #include "rex_std/internal/type_traits/remove_const.h"
+#include "rex_std/internal/type_traits/remove_extent.h"
 
 namespace rsl
 {
@@ -27,6 +27,7 @@ namespace rsl
 
     template <typename T>
     struct is_char_array : rsl::bool_constant<is_char_array_v<T>>
-    {};
-  }
-}
+    {
+    };
+  } // namespace v1
+} // namespace rsl

@@ -9,12 +9,12 @@
 #define FMT_ARGS_H_
 
 #include "core.h"
+#include "rex_std/bonus/type_traits/is_char_array.h"
+#include "rex_std/internal/utility/move.h"
+#include "rex_std/vector.h"
 
 #include <functional> // rsl::reference_wrapper
 #include <memory>     // rsl::unique_ptr
-#include "rex_std/vector.h"
-#include "rex_std/internal/utility/move.h"
-#include "rex_std/bonus/type_traits/is_char_array.h"
 
 FMT_BEGIN_NAMESPACE
 
@@ -160,7 +160,7 @@ private:
     rsl::unique_ptr<rsl::vector<basic_format_arg<Context>>, decltype(pop_one)> guard {&data_, pop_one};
     named_info_.push_back({arg.name, static_cast<int>(data_.size() - 2u)});
     data_[0].m_value.named_args = {named_info_.data(), named_info_.size()};
-    [[maybe_unused]] auto ptr = guard.release();
+    [[maybe_unused]] auto ptr   = guard.release();
   }
 
 public:

@@ -220,8 +220,8 @@ namespace rsl
       // init() must be called before the first use of the object or before the destructor.
       basic_ios()
           : m_stream_buf(nullptr)
-          , m_iostate(io::iostate::noinitbit)
           , m_tied_stream(nullptr)
+          , m_iostate(io::iostate::noinitbit)
           , m_fill_ch()
       {
       }

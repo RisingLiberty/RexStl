@@ -42,14 +42,14 @@ namespace rsl
     // structure holding a calendar date and time broken down into its components
     struct tm
     {
-      int32 tm_year;       // year since 1900
-      int32 tm_yday : 10;  // days since january 1 [0, 365)
-      int32 tm_sec : 7;    // seconds after the minute [0, 61)
-      int32 tm_min : 7;    // minutes after the hour [0, 60)
-      int32 tm_mday : 6;   // day of the month [1, 31)
-      int32 tm_hour : 6;   // hours since midnight [0, 23)
-      int32 tm_mon : 5;    // months since january [0, 11)
-      int32 tm_wday : 4;   // day since sunday [0 , 6)
+      int32 tm_year;      // year since 1900
+      int32 tm_yday : 10; // days since january 1 [0, 365)
+      int32 tm_sec : 7;   // seconds after the minute [0, 61)
+      int32 tm_min : 7;   // minutes after the hour [0, 60)
+      int32 tm_mday : 6;  // day of the month [1, 31)
+      int32 tm_hour : 6;  // hours since midnight [0, 23)
+      int32 tm_mon : 5;   // months since january [0, 11)
+      int32 tm_wday : 4;  // day since sunday [0 , 6)
       int32 tm_isdst : 2; // is Daylight Saving Time in effect
     };
 

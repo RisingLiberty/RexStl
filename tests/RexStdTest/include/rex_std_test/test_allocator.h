@@ -16,7 +16,7 @@
 #include "rex_std/internal/utility/forward.h"
 #include "rex_std/limits.h"
 
-namespace rsl
+namespace rsl::test
 {
   inline namespace v1
   {
@@ -28,15 +28,15 @@ namespace rsl
 
       test_allocator() = default;
       test_allocator(const test_allocator&) = default;
-      test_allocator(test_allocator&&) = default;
+      test_allocator(test_allocator&&);
 
       ~test_allocator() = default;
 
       test_allocator& operator=(const test_allocator&) = default;
-      test_allocator& operator=(test_allocator&&) = default;
+      test_allocator& operator=(test_allocator&&);
 
       REX_NO_DISCARD void* allocate(const size_type count);
-      void deallocate(void* const ptr);
+      void deallocate(void* const ptr, size_type size);
 
       size_type max_size() const;
 
@@ -71,6 +71,13 @@ namespace rsl
       static card32 s_all_num_allocs;
       static card32 s_all_num_frees;
       static card32 s_all_num_bytes_allocated;
+
+      //struct ptr_size
+      //{
+      //  const void* ptr;
+      //  size_type size;
+      //};
+      //ptr_size ptr_map[100]{};
     };
 
     constexpr bool operator==(const test_allocator& /*unused*/, const test_allocator& /*unused*/)

@@ -13,7 +13,7 @@
 // This file holds tests cases for all code that's generated but not explicitly tested in other files
 // This mostly happens because a templated function is instantiated through complex means but not executed
 
-#include "catch2/catch.hpp"
+#include "rex_std_test/catch2/catch.hpp"
 
 #include "rex_std/format.h"
 #include "rex_std/tuple.h"

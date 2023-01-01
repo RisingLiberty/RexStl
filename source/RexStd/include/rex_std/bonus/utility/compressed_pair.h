@@ -84,7 +84,7 @@ namespace rsl
       };
 
       template <typename T1, typename T2, card32 Version>
-      struct compressed_pair_impl;
+      class compressed_pair_impl;
 
       // Derived from neither
       template <typename T1, typename T2>

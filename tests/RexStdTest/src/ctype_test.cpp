@@ -10,7 +10,7 @@
 //
 // ============================================
 
-#include "catch2/catch.hpp"
+#include "rex_std_test/catch2/catch.hpp"
 #include "rex_std/ctype.h"
 
 TEST_CASE("is alnum")

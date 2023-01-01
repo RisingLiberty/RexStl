@@ -8,7 +8,7 @@
 //
 // ============================================
 
-#include "catch2/catch.hpp"
+#include "rex_std_test/catch2/catch.hpp"
 
 #include "rex_std/memory.h"
 #include <memory>

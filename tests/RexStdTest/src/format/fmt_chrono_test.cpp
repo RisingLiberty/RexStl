@@ -12,7 +12,7 @@
 
 #ifdef REX_ENABLE_FMT_TESTING
 
-#include "catch2/catch.hpp"
+#include "rex_std_test/catch2/catch.hpp"
 
 #include "rex_std/chrono.h"
 #include "rex_std/time.h"

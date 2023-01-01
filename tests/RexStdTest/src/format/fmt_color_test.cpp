@@ -10,7 +10,7 @@
 //
 // ============================================
 
-#include "catch2/catch.hpp"
+#include "rex_std_test/catch2/catch.hpp"
 #include "rex_std/format.h"
 #include "rex_std/internal/format/color.h"
 

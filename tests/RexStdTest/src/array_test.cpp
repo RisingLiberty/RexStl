@@ -10,7 +10,7 @@
 //
 // ============================================
 
-#include <catch2/catch.hpp>
+#include "rex_std_test/catch2/catch.hpp"
 
 // NOLINTBEGIN
 
@@ -22,7 +22,7 @@ TEST_CASE("array construction")
   REQUIRE(arr.size() == 10);
 
   const rsl::array<int, 10> arr2 = {1, 2, 3};
-  REQUIRE(arr.size() == 10);
+  REQUIRE(arr2.size() == 10);
 }
 
 TEST_CASE("array assignment")
@@ -51,10 +51,10 @@ TEST_CASE("array element access")
   REQUIRE(arr[2] == 3);
 
   const rsl::array<int, 10> arr2 = {1, 2, 3};
-  REQUIRE(arr[0] == 1);
-  REQUIRE(arr[1] == 2);
-  REQUIRE(arr[2] == 3);
-  REQUIRE(arr[3] == 0);
+  REQUIRE(arr2[0] == 1);
+  REQUIRE(arr2[1] == 2);
+  REQUIRE(arr2[2] == 3);
+  REQUIRE(arr2[3] == 0);
 }
 
 // NOLINTEND

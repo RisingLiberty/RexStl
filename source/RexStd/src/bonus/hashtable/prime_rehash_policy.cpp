@@ -92,8 +92,7 @@ namespace rsl
 
     uint32 prime_rehash_policy::get_bucket_count(uint32 elementCount) const
     {
-      const uint32 min_bucket_count = static_cast<uint32>(elementCount / m_max_load_factor); // NOLINT
-      const uint32 prime            = *rsl::lower_bound(g_prime_number_array, g_prime_number_array + g_prime_count, elementCount);
+      const uint32 prime = *rsl::lower_bound(g_prime_number_array, g_prime_number_array + g_prime_count, elementCount);
 
       m_next_resize = static_cast<uint32>(ceil(prime * m_max_load_factor)); // NOLINT
       return prime;

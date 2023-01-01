@@ -1,0 +1,55 @@
+// ============================================
+//
+// REX - STANDARD LIBRARY IMPLEMENTATION
+//
+// Author: Nick De Breuck
+// Twitter: @nick_debreuck
+// 
+// File: test_object.h
+// Copyright (c) Nick De Breuck 2022
+//
+// ============================================
+
+#pragma once
+
+#include "rex_std/bonus/types.h"
+
+namespace rsl::test
+{
+  inline namespace v1
+  {
+    class test_object
+    {
+    public:
+      test_object(card32 x = 0);
+      test_object(const test_object& obj);
+      test_object(test_object&& obj);
+      ~test_object();
+
+      test_object& operator=(const test_object& obj);
+      test_object& operator=(test_object&& obj);
+
+      card32 x() const;
+      operator card32() const; // this is to easily compare with integers
+
+      static void reset();
+      static card32 num_alive();
+      static card32 num_ctor_calls();
+      static card32 num_dtor_calls();
+      static card32 num_copy_ctor_calls();
+      static card32 num_move_ctor_calls();
+      static card32 num_copy_assignment_calls();
+      static card32 num_move_assignment_calls();
+
+    private:
+      card32 m_x; // value for this instance
+      static card32 s_num_alive; // number of current alive test objects
+      static card32 s_num_ctor_calls; // number of constructor calls
+      static card32 s_num_dtor_calls; // number of constructor calls
+      static card32 s_num_copy_ctor_calls; // number of copy constructor calls
+      static card32 s_num_move_ctor_calls; // number of move constructor calls
+      static card32 s_num_copy_assignment_calls; // number of copy assignment calls
+      static card32 s_num_move_assignment_calls; // number of move assignment calls
+    };
+  }
+}
