@@ -10,61 +10,172 @@
 //
 // ============================================
 
-#include <catch2/catch.hpp>
+#include "rex_std_test/catch2/catch.hpp"
 
 // NOLINTBEGIN
 
 #include "rex_std/vector.h"
+#include "rex_std/bonus/utility/scopeguard.h"
 
-#include "test_allocator.h"
+#include "rex_std_test/test_allocator.h"
+#include "rex_std_test/test_object.h"
 
 TEST_CASE("vector construction")
 {
-  const rsl::vector<int, rsl::test_allocator> vec;
-  REQUIRE(vec.empty());
-  REQUIRE(vec.size() == 0); // NOLINT
-  REQUIRE(vec.capacity() == 0);
-  REQUIRE(vec.get_allocator().num_allocs() == 0);
-  REQUIRE(vec.get_allocator().num_bytes_allocated() == 0);
+  using namespace rsl::test;
+  test_object::reset();
 
-  const rsl::vector<int, rsl::test_allocator> vec2(10_size);
-  REQUIRE(vec2.size() == 10);
+  {
+    rsl::scopeguard guard = []() { test_object::reset(); };
+    const rsl::vector<test_object, test_allocator> vec;
+    REQUIRE(vec.empty());
+    REQUIRE(vec.size() == 0); // NOLINT
+    REQUIRE(vec.capacity() == 0);
+    REQUIRE(vec.get_allocator().num_allocs() == 0);
+    REQUIRE(vec.get_allocator().num_frees() == 0);
+    REQUIRE(vec.get_allocator().num_bytes_allocated() == 0);
+    REQUIRE(test_object::num_alive() == 0);
+    REQUIRE(test_object::num_ctor_calls() == 0);
+    REQUIRE(test_object::num_dtor_calls() == 0);
+    REQUIRE(test_object::num_copy_ctor_calls() == 0);
+    REQUIRE(test_object::num_move_ctor_calls() == 0);
+    REQUIRE(test_object::num_copy_assignment_calls() == 0);
+    REQUIRE(test_object::num_move_assignment_calls() == 0);
+  }
 
-  const rsl::vector<int> vec3(10_cap);
-  REQUIRE(vec3.size() == 0); // NOLINT
-  REQUIRE(vec3.capacity() == 10);
+  {
+    rsl::scopeguard guard = []() { test_object::reset(); };
 
-  rsl::vector<int> vec4 = {1, 2, 3};
-  REQUIRE(vec4.size() == 3);
-  REQUIRE(vec4[0] == 1);
-  REQUIRE(vec4[1] == 2);
-  REQUIRE(vec4[2] == 3);
+    const rsl::vector<test_object, test_allocator> vec(10_size);
+    REQUIRE(vec.size() == 10);
+    REQUIRE(vec.capacity() == 10);
+    REQUIRE(vec.get_allocator().num_allocs() == 1);
+    REQUIRE(vec.get_allocator().num_bytes_allocated() == vec.capacity() * sizeof(decltype(vec)::value_type));
+    REQUIRE(vec.get_allocator().num_frees() == 0);
+    REQUIRE(test_object::num_alive() == 10);
+    REQUIRE(test_object::num_ctor_calls() == 10);
+    REQUIRE(test_object::num_dtor_calls() == 0);
+    REQUIRE(test_object::num_copy_ctor_calls() == 0);
+    REQUIRE(test_object::num_move_ctor_calls() == 0);
+    REQUIRE(test_object::num_copy_assignment_calls() == 0);
+    REQUIRE(test_object::num_move_assignment_calls() == 0);
+  }
 
-  rsl::vector<int> vec5 = vec4;
-  REQUIRE(vec4.size() == 3);
-  REQUIRE(vec4[0] == 1);
-  REQUIRE(vec4[1] == 2);
-  REQUIRE(vec4[2] == 3);
-  REQUIRE(vec5.size() == 3);
-  REQUIRE(vec5[0] == 1);
-  REQUIRE(vec5[1] == 2);
-  REQUIRE(vec5[2] == 3);
+  {
+    rsl::scopeguard guard = []() { test_object::reset(); };
 
-  vec4.clear();
-  REQUIRE(vec4.empty());
-  REQUIRE(vec4.size() == 0); // NOLINT
-  REQUIRE(vec5.size() == 3);
-  REQUIRE(vec5[0] == 1);
-  REQUIRE(vec5[1] == 2);
-  REQUIRE(vec5[2] == 3);
+    const rsl::vector<test_object, test_allocator> vec(10_cap);
+    REQUIRE(vec.size() == 0);
+    REQUIRE(vec.capacity() == 10);
+    REQUIRE(vec.get_allocator().num_allocs() == 1);
+    REQUIRE(vec.get_allocator().num_bytes_allocated() == vec.capacity() * sizeof(decltype(vec)::value_type));
+    REQUIRE(vec.get_allocator().num_frees() == 0);
+    REQUIRE(test_object::num_alive() == 0);
+    REQUIRE(test_object::num_ctor_calls() == 0);
+    REQUIRE(test_object::num_dtor_calls() == 0);
+    REQUIRE(test_object::num_copy_ctor_calls() == 0);
+    REQUIRE(test_object::num_move_ctor_calls() == 0);
+    REQUIRE(test_object::num_copy_assignment_calls() == 0);
+    REQUIRE(test_object::num_move_assignment_calls() == 0);
+  }
 
-  const rsl::vector<int> vec6 = rsl::move(vec5);
-  REQUIRE(vec5.empty());
-  REQUIRE(vec5.size() == 0); // NOLINT
-  REQUIRE(vec6.size() == 3);
-  REQUIRE(vec6[0] == 1);
-  REQUIRE(vec6[1] == 2);
-  REQUIRE(vec6[2] == 3);
+  {
+    rsl::scopeguard guard = []() { test_object::reset(); };
+
+    rsl::vector<test_object, test_allocator> vec = { 1, 2, 3 }; // don't forget that this creates an destroys 3 elements through the initializer list
+    REQUIRE(vec.size() == 3);
+    REQUIRE(vec.capacity() == 3);
+    REQUIRE(vec[0] == 1);
+    REQUIRE(vec[1] == 2);
+    REQUIRE(vec[2] == 3);
+    REQUIRE(vec.get_allocator().num_allocs() == 1);
+    REQUIRE(vec.get_allocator().num_bytes_allocated() == vec.capacity() * sizeof(decltype(vec)::value_type));
+    REQUIRE(vec.get_allocator().num_frees() == 0);
+    REQUIRE(test_object::num_alive() == 3);
+    REQUIRE(test_object::num_ctor_calls() == 3);
+    REQUIRE(test_object::num_dtor_calls() == 3);
+    REQUIRE(test_object::num_copy_ctor_calls() == 3);
+    REQUIRE(test_object::num_move_ctor_calls() == 0);
+    REQUIRE(test_object::num_copy_assignment_calls() == 0);
+    REQUIRE(test_object::num_move_assignment_calls() == 0);
+  }
+
+  {
+    rsl::scopeguard guard = []() { test_object::reset(); };
+
+    rsl::vector<test_object, test_allocator> to_copy = { 1, 2, 3 };
+    rsl::vector<test_object, test_allocator> vec = to_copy;
+    REQUIRE(to_copy.size() == 3);
+    REQUIRE(to_copy.capacity() == 3);
+    REQUIRE(to_copy[0] == 1);
+    REQUIRE(to_copy[1] == 2);
+    REQUIRE(to_copy[2] == 3);
+    REQUIRE(to_copy.get_allocator().num_allocs() == 1);
+    REQUIRE(to_copy.get_allocator().num_bytes_allocated() == to_copy.capacity() * sizeof(decltype(to_copy)::value_type));
+    REQUIRE(to_copy.get_allocator().num_frees() == 0);
+    REQUIRE(vec.size() == 3);
+    REQUIRE(vec.capacity() == 3);
+    REQUIRE(vec[0] == 1);
+    REQUIRE(vec[1] == 2);
+    REQUIRE(vec[2] == 3);
+    REQUIRE(vec.get_allocator().num_allocs() == 1);
+    REQUIRE(vec.get_allocator().num_bytes_allocated() == vec.capacity() * sizeof(decltype(to_copy)::value_type));
+    REQUIRE(vec.get_allocator().num_frees() == 0);
+    REQUIRE(test_object::num_alive() == 6);
+    REQUIRE(test_object::num_ctor_calls() == 3);
+    REQUIRE(test_object::num_dtor_calls() == 3);
+    REQUIRE(test_object::num_copy_ctor_calls() == 6);
+    REQUIRE(test_object::num_move_ctor_calls() == 0);
+    REQUIRE(test_object::num_copy_assignment_calls() == 0);
+    REQUIRE(test_object::num_move_assignment_calls() == 0);
+  }
+
+  {
+    rsl::scopeguard guard = []() { test_object::reset(); };
+
+    rsl::vector<test_object, test_allocator> vec = { 1, 2, 3 };
+
+    vec.clear();
+    REQUIRE(vec.empty());
+    REQUIRE(vec.size() == 0);
+    REQUIRE(vec.capacity() == 3);
+    REQUIRE(vec.get_allocator().num_allocs() == 1);
+    REQUIRE(vec.get_allocator().num_bytes_allocated() == vec.capacity() * sizeof(decltype(vec)::value_type));
+    REQUIRE(vec.get_allocator().num_frees() == 0);
+    REQUIRE(test_object::num_alive() == 0);
+    REQUIRE(test_object::num_ctor_calls() == 3);
+    REQUIRE(test_object::num_dtor_calls() == 6);
+    REQUIRE(test_object::num_copy_ctor_calls() == 3);
+    REQUIRE(test_object::num_move_ctor_calls() == 0);
+    REQUIRE(test_object::num_copy_assignment_calls() == 0);
+    REQUIRE(test_object::num_move_assignment_calls() == 0);
+  }
+
+  {
+    rsl::scopeguard guard = []() { test_object::reset(); };
+
+    rsl::vector<test_object, test_allocator> to_move = { 1, 2, 3 };
+    const rsl::vector<test_object, test_allocator> vec = rsl::move(to_move);
+    REQUIRE(to_move.empty());
+    REQUIRE(to_move.size() == 0);
+    REQUIRE(to_move.get_allocator().num_allocs() == 0);
+    REQUIRE(to_move.get_allocator().num_bytes_allocated() == 0);
+    REQUIRE(to_move.get_allocator().num_frees() == 0);
+    REQUIRE(vec.size() == 3);
+    REQUIRE(vec[0] == 1);
+    REQUIRE(vec[1] == 2);
+    REQUIRE(vec[2] == 3);
+    REQUIRE(vec.get_allocator().num_allocs() == 1);
+    REQUIRE(vec.get_allocator().num_bytes_allocated() == vec.capacity() * sizeof(decltype(vec)::value_type));
+    REQUIRE(vec.get_allocator().num_frees() == 0);
+    REQUIRE(test_object::num_alive() == 3);
+    REQUIRE(test_object::num_ctor_calls() == 3);
+    REQUIRE(test_object::num_dtor_calls() == 3);
+    REQUIRE(test_object::num_copy_ctor_calls() == 3);
+    REQUIRE(test_object::num_move_ctor_calls() == 0);
+    REQUIRE(test_object::num_copy_assignment_calls() == 0);
+    REQUIRE(test_object::num_move_assignment_calls() == 0);
+  }
 }
 
 TEST_CASE("vector assignment")

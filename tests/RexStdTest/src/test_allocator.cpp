@@ -10,15 +10,35 @@
 //
 // ============================================
 
-#include "test_allocator.h"
+#include "rex_std_test/test_allocator.h"
+#include "rex_std/internal/utility/swap.h"
 
-namespace rsl
+namespace rsl::test
 {
   inline namespace v1
   {
     card32 test_allocator::s_all_num_allocs = 0;
     card32 test_allocator::s_all_num_frees = 0;
     card32 test_allocator::s_all_num_bytes_allocated = 0;
+
+    test_allocator::test_allocator(test_allocator&& other)
+      : m_num_allocs(other.m_num_allocs)
+      , m_num_frees(other.m_num_frees)
+      , m_num_bytes_allocated(other.m_num_bytes_allocated)
+    {
+      other.m_num_allocs = 0;
+      other.m_num_bytes_allocated = 0;
+      other.m_num_frees = 0;
+    }
+
+    test_allocator& test_allocator::operator=(test_allocator&& other)
+    {
+      rsl::swap(m_num_allocs, other.m_num_allocs);
+      rsl::swap(m_num_bytes_allocated, other.m_num_bytes_allocated);
+      rsl::swap(m_num_frees, other.m_num_frees);
+
+      return *this;
+    }
 
     REX_NO_DISCARD void* test_allocator::allocate(const size_type count) // NOLINT(readability-convert-member-functions-to-static)
     {
