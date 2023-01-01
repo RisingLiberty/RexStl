@@ -51,11 +51,11 @@ namespace rsl
       using value_type             = T;
       using size_type              = count_t; /// RSL Comment: Different from ISO C++ Standard at time of writing (26/Jun/2022)
       using difference_type        = int32;
-      using allocator_type         = allocator;
+      using allocator_type         = Allocator;
       using reference              = value_type&;
       using const_reference        = const value_type&;
-      using pointer                = typename rsl::allocator_traits<allocator>::template pointer_or<value_type*>;
-      using const_pointer          = typename rsl::allocator_traits<allocator>::template const_pointer_or<const value_type*>;
+      using pointer                = typename rsl::allocator_traits<Allocator>::template pointer_or<value_type*>;
+      using const_pointer          = typename rsl::allocator_traits<Allocator>::template const_pointer_or<const value_type*>;
       using iterator               = random_access_iterator<T>;
       using const_iterator         = const_random_access_iterator<T>;
       using reverse_iterator       = rsl::reverse_iterator<iterator>;
@@ -72,27 +72,27 @@ namespace rsl
       }
 
       // Constructs an empty container with the given allocator alloc.
-      explicit vector(const allocator& alloc)
+      explicit vector(const allocator_type& alloc)
           : m_begin(nullptr)
           , m_end(nullptr)
           , m_cp_last_and_allocator(nullptr, alloc)
       {
       }
       // Constructs the container with count copies of elements with value value.
-      explicit vector(rsl::Size count, const_reference rhs, const allocator& alloc = allocator())
-          : vector()
+      explicit vector(rsl::Size count, const_reference rhs, const allocator_type& alloc = allocator_type())
+          : vector(alloc)
       {
-        resize(count.get(), rhs);
+        fill_n(count.get(), rhs);
       }
       // Constructs the container with count default-inserted instances of T. No copies are made.
-      explicit vector(rsl::Size count)
-          : vector()
+      explicit vector(rsl::Size count, const allocator_type& alloc = allocator_type())
+          : vector(alloc)
       {
-        resize(count.get());
+        fill_n(count.get());
       }
       /// RSL Comment: Not in ISO C++ Standard at time of writing (26/Jun/2022)
       // Construct the container with a given capacity but size remains 0.
-      explicit vector(rsl::Capacity capacity, const allocator& alloc = allocator())
+      explicit vector(rsl::Capacity capacity, const allocator_type& alloc = allocator_type())
           : vector(alloc)
       {
         reserve(capacity.get());
@@ -111,7 +111,7 @@ namespace rsl
         copy_range(other.cbegin(), other.cend());
       }
       // Constructs the container with the copy of the contents of other, using alloc as the allocator.
-      vector(const vector& other, const allocator& alloc)
+      vector(const vector& other, const allocator_type& alloc)
           : m_begin(nullptr)
           , m_end(nullptr)
           , m_cp_last_and_allocator(nullptr, alloc)
@@ -130,7 +130,7 @@ namespace rsl
       // Using alloc as the allocator for the new container, moving the contents from other;
       // if alloc != other.get_allocator(), this results in an element-wise move.
       // (In that case, other is not guaranteed to be empty after the move.)
-      vector(vector&& other, const allocator& alloc)
+      vector(vector&& other, const allocator_type& alloc)
           : vector()
       {
         if(other.get_allocator() != alloc)
@@ -683,6 +683,33 @@ namespace rsl
         }
       }
 
+      // fills the vector with n elements
+      void fill_n(size_type count)
+      {
+        const size_type new_capacity = new_buffer_capacity(count);
+        m_begin = static_cast<pointer>(get_allocator().allocate(calc_bytes_needed(new_capacity)));
+        m_end = m_begin + count;
+        m_cp_last_and_allocator.first() = m_end;
+
+        for (pointer dest = m_begin; dest != m_end; ++dest)
+        {
+          new(dest) T();
+        }
+      }
+      // fills the vector with n elements of value val
+      void fill_n(size_type count, const value_type& val)
+      {
+        const size_type new_capacity = new_buffer_capacity(count);
+        m_begin = static_cast<pointer>(get_allocator().allocate(calc_bytes_needed(new_capacity)));
+        m_end = m_begin + count;
+        m_cp_last_and_allocator.first() = m_end;
+
+        for (pointer dest = m_begin; dest != m_end; ++dest)
+        {
+          new(dest) T(val);
+        }
+      }
+
       // reallocates if 'new_size' is bigger than the current capacity
       // sets m_end so it matches our size
       // returns true if a resize occurred
@@ -755,7 +782,7 @@ namespace rsl
     private:
       pointer m_begin;
       pointer m_end;
-      rsl::compressed_pair<pointer, allocator> m_cp_last_and_allocator;
+      rsl::compressed_pair<pointer, Allocator> m_cp_last_and_allocator;
     };
 
     // Checks if the contents of lhs and rhs are equal, that is, they have the same number of elements and each element in lhs compares equal with the element in rhs at the same position.
