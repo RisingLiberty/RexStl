@@ -23,4 +23,4 @@ if __name__ == "__main__":
   parser.add_argument("-clean", help="clean all intermediate files first", action="store_true")
   args, unknown = parser.parse_known_args()
   
-  run(args.ninja_file, run.clean)
+  run(args.ninja_file, args.clean)
