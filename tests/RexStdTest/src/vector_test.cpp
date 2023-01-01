@@ -16,14 +16,18 @@
 
 #include "rex_std/vector.h"
 
+#include "test_allocator.h"
+
 TEST_CASE("vector construction")
 {
-  const rsl::vector<int> vec;
+  const rsl::vector<int, rsl::test_allocator> vec;
   REQUIRE(vec.empty());
   REQUIRE(vec.size() == 0); // NOLINT
   REQUIRE(vec.capacity() == 0);
+  REQUIRE(vec.get_allocator().num_allocs() == 0);
+  REQUIRE(vec.get_allocator().num_bytes_allocated() == 0);
 
-  const rsl::vector<int> vec2(10_size);
+  const rsl::vector<int, rsl::test_allocator> vec2(10_size);
   REQUIRE(vec2.size() == 10);
 
   const rsl::vector<int> vec3(10_cap);
