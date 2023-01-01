@@ -10,6 +10,8 @@
 //
 // ============================================
 
+#ifdef REX_ENABLE_FMT_TESTING
+
 TEST(scan_test, read_text) {
   auto s = fmt::string_view("foo");
   auto end = fmt::scan(s, "foo");
@@ -110,3 +112,5 @@ TEST(scan_test, example) {
   EXPECT_EQ(key, "answer");
   EXPECT_EQ(value, 42);
 }
+
+#endif

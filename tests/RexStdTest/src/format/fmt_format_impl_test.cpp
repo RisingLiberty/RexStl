@@ -10,6 +10,8 @@
 //
 // ============================================
 
+#ifdef REX_ENABLE_FMT_TESTING
+
 using fmt::detail::bigint;
 using fmt::detail::fp;
 using fmt::detail::max_value;
@@ -553,3 +555,5 @@ TEST(format_impl_test, utf8_decode_bogus_byte_sequences) {
   EXPECT_NE(e, 0);    // "bogus [c0 0a] 0x%02x U+%04lx", e, (unsigned long)c
   EXPECT_EQ(len, 2);  // "bogus [c0 0a] recovery %d", len);
 }
+
+#endif

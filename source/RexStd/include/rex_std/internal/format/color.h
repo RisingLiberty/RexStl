@@ -507,21 +507,21 @@ FMT_CONSTEXPR ansi_color_escape<Char> make_emphasis(emphasis em) noexcept
   return ansi_color_escape<Char>(em);
 }
 
-template <typename Char>
-inline void fputs(const Char* chars, FILE* stream)
-{
-  int result = rsl::fputs(chars, stream);
-  if(result < 0)
-    FMT_THROW(system_error(errno, FMT_STRING("cannot write to file")));
-}
+//template <typename Char>
+//inline void fputs(const Char* chars, FILE* stream)
+//{
+//  int result = rsl::fputs(chars, stream);
+//  if(result < 0)
+//    FMT_THROW(system_error(errno, FMT_STRING("cannot write to file")));
+//}
 
-template <>
-inline void fputs<wchar_t>(const wchar_t* chars, FILE* stream)
-{
-  int result = rsl::fputws(chars, stream);
-  if(result < 0)
-    FMT_THROW(system_error(errno, FMT_STRING("cannot write to file")));
-}
+//template <>
+//inline void fputs<wchar_t>(const wchar_t* chars, FILE* stream)
+//{
+//  int result = rsl::fputws(chars, stream);
+//  if(result < 0)
+//    FMT_THROW(system_error(errno, FMT_STRING("cannot write to file")));
+//}
 
 template <typename Char>
 inline void reset_color(FILE* stream)
@@ -529,17 +529,17 @@ inline void reset_color(FILE* stream)
   fputs("\x1b[0m", stream);
 }
 
-template <>
-inline void reset_color<wchar_t>(FILE* stream)
-{
-  fputs(L"\x1b[0m", stream);
-}
+//template <>
+//inline void reset_color<wchar_t>(FILE* stream)
+//{
+//  fputs(L"\x1b[0m", stream);
+//}
 
 template <typename Char>
 inline void reset_color(buffer<Char>& buffer)
 {
   auto reset_color = string_view("\x1b[0m");
-  buffer.append(reset_color.begin(), reset_color.end());
+  buffer.append(rsl::iterator_to_pointer(reset_color.begin()), rsl::iterator_to_pointer(reset_color.end()));
 }
 
 template <typename T>
@@ -578,21 +578,21 @@ void vformat_to(buffer<Char>& buf, const text_style& ts, basic_string_view<Char>
 
 FMT_END_DETAIL_NAMESPACE
 
-template <typename S, typename Char = char_t<S>>
-void vprint(rsl::FILE* f, const text_style& ts, const S& format, basic_format_args<buffer_context<type_identity_t<Char>>> args)
-{
-  basic_memory_buffer<Char> buf;
-  detail::vformat_to(buf, ts, detail::to_string_view(format), args);
-  if(detail::is_utf8())
-  {
-    detail::print(f, basic_string_view<Char>(buf.begin(), buf.size()));
-  }
-  else
-  {
-    buf.push_back(Char(0));
-    detail::fputs(buf.data(), f);
-  }
-}
+//template <typename S, typename Char = char_t<S>>
+//void vprint(rsl::FILE* f, const text_style& ts, const S& format, basic_format_args<buffer_context<type_identity_t<Char>>> args)
+//{
+//  basic_memory_buffer<Char> buf;
+//  detail::vformat_to(buf, ts, detail::to_string_view(format), args);
+//  if(detail::is_utf8())
+//  {
+//    detail::print(f, basic_string_view<Char>(buf.begin(), buf.size()));
+//  }
+//  else
+//  {
+//    buf.push_back(Char(0));
+//    detail::fputs(buf.data(), f);
+//  }
+//}
 
 /**
   \rst
@@ -605,11 +605,11 @@ void vprint(rsl::FILE* f, const text_style& ts, const S& format, basic_format_ar
                "Elapsed time: {0:.2f} seconds", 1.23);
   \endrst
  */
-template <typename S, typename... Args, FMT_ENABLE_IF(detail::is_string<S>::value)>
-void print(rsl::FILE* f, const text_style& ts, const S& format_str, const Args&... args)
-{
-  vprint(f, ts, format_str, rsl::make_format_args<buffer_context<char_t<S>>>(args...));
-}
+//template <typename S, typename... Args, FMT_ENABLE_IF(detail::is_string<S>::value)>
+//void print(rsl::FILE* f, const text_style& ts, const S& format_str, const Args&... args)
+//{
+//  vprint(f, ts, format_str, rsl::make_format_args<buffer_context<char_t<S>>>(args...));
+//}
 
 /**
   \rst

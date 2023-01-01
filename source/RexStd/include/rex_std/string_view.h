@@ -72,8 +72,7 @@ namespace rsl
       {
       }
       // Constructs a view starting at s, reaching to the first null termination char.
-      template <typename T, typename rsl::enable_if_t<rsl::is_same_v<T, CharType>, bool> = true>
-      constexpr explicit basic_string_view(const T* const& s)
+      constexpr explicit basic_string_view(const CharType* s)
           : m_data(s)
           , m_length(traits_type::length(s))
       {
@@ -90,9 +89,10 @@ namespace rsl
       /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
       // The standard doesn't provide an overload for a string literal
       // Constructs a view using a string literal
-      constexpr basic_string_view(basic_string_literal<CharType> s) // NOLINT(google-explicit-constructor, modernize-avoid-c-arrays)
-          : m_data(s.data())
-          , m_length(s.length())
+      template <count_t N>
+      constexpr basic_string_view(const CharType (&str)[N]) // NOLINT(google-explicit-constructor, modernize-avoid-c-arrays)
+          : m_data(str)
+          , m_length(N - 1)
       {
       }
       // can't construct a string view from a nullptr
@@ -273,10 +273,6 @@ namespace rsl
       {
         return traits_type::compare(data(), sv.data(), sv.length()) == 0;
       }
-      REX_NO_DISCARD constexpr bool starts_with(basic_string_literal<CharType> s) const
-      {
-        return traits_type::compare(data(), s.data(), s.length()) == 0;
-      }
       // checks if the string view starts with the given prefix
       REX_NO_DISCARD constexpr bool starts_with(const value_type c) const
       {
@@ -292,10 +288,6 @@ namespace rsl
       REX_NO_DISCARD constexpr bool ends_with(const basic_string_view rhs) const
       {
         return internal::string_utils::compare<traits_type>(data() + (length() - rhs.size()), rhs.data(), rhs.length(), rhs.length()) == 0;
-      }
-      REX_NO_DISCARD constexpr bool ends_with(basic_string_literal<CharType> s) const
-      {
-        return internal::string_utils::compare<traits_type>(data() + (length() - s.size()), s.data(), s.length(), s.length()) == 0;
       }
       // checks if the string view ends with the given suffix
       template <typename T, typename rsl::enable_if_t<rsl::is_same_v<T, CharType>, bool> = true>
@@ -313,10 +305,6 @@ namespace rsl
       REX_NO_DISCARD constexpr bool contains(basic_string_view sv) const
       {
         return find(sv) != s_npos;
-      }
-      REX_NO_DISCARD constexpr bool contains(basic_string_literal<CharType> s) const
-      {
-        return find(basic_string_view(s)) != s_npos;
       }
       // checks if the string view contains the given substring
       REX_NO_DISCARD constexpr bool contains(value_type c) const
@@ -527,10 +515,16 @@ namespace rsl
       return Traits::compare(lhs.data(), rhs.data(), lhs.length()) == 0;
     }
 
-    template <typename CharType, typename Traits, count_t Size>
-    constexpr bool operator==(basic_string_view<CharType, Traits> lhs, const CharType (&rhs)[Size]) // NOLINT(modernize-avoid-c-arrays)
+    template <typename CharType, typename Traits>
+    constexpr bool operator==(basic_string_view<CharType, Traits> lhs, const CharType* rhs) // NOLINT(modernize-avoid-c-arrays)
     {
       return lhs == rsl::basic_string_view<CharType, Traits>(rhs);
+    }
+
+    template <typename CharType, typename Traits>
+    constexpr bool operator==(const CharType* lhs, basic_string_view<CharType, Traits> rhs) // NOLINT(modernize-avoid-c-arrays)
+    {
+      return rsl::basic_string_view<CharType, Traits>(lhs) == rhs;
     }
 
     // compares if 2 string views are not equal
@@ -540,11 +534,18 @@ namespace rsl
       return !(lhs == rhs);
     }
 
-    template <typename CharType, typename Traits, count_t Size>
-    constexpr bool operator!=(basic_string_view<CharType, Traits> lhs, const CharType (&rhs)[Size]) // NOLINT(modernize-avoid-c-arrays)
+    template <typename CharType, typename Traits>
+    constexpr bool operator!=(basic_string_view<CharType, Traits> lhs, const CharType* rhs) // NOLINT(modernize-avoid-c-arrays)
     {
       return lhs != rsl::basic_string_view<CharType, Traits>(rhs);
     }
+
+    template <typename CharType, typename Traits, count_t Size>
+    constexpr bool operator!=(const CharType* lhs, basic_string_view<CharType, Traits> rhs) // NOLINT(modernize-avoid-c-arrays)
+    {
+      return rsl::basic_string_view<CharType, Traits>(lhs) != rhs;
+    }
+
 
     // lexicographically compares 2 string views
     template <typename CharType, typename Traits>
@@ -552,10 +553,15 @@ namespace rsl
     {
       return lhs.compare(rhs) < 0;
     }
-    template <typename CharType, typename Traits, count_t Size>
-    constexpr bool operator<(basic_string_view<CharType, Traits> lhs, const CharType (&rhs)[Size]) // NOLINT(modernize-avoid-c-arrays)
+    template <typename CharType, typename Traits>
+    constexpr bool operator<(basic_string_view<CharType, Traits> lhs, const CharType* rhs) // NOLINT(modernize-avoid-c-arrays)
     {
       return lhs.compare(rhs) < 0;
+    }
+    template <typename CharType, typename Traits>
+    constexpr bool operator<(const CharType* lhs, basic_string_view<CharType, Traits> rhs) // NOLINT(modernize-avoid-c-arrays)
+    {
+      return rhs.compare(lhs) < 0;
     }
 
     // lexicographically compares 2 string views
@@ -564,10 +570,15 @@ namespace rsl
     {
       return lhs.compare(rhs) <= 0;
     }
-    template <typename CharType, typename Traits, count_t Size>
-    constexpr bool operator<=(basic_string_view<CharType, Traits> lhs, const CharType (&rhs)[Size]) // NOLINT(modernize-avoid-c-arrays)
+    template <typename CharType, typename Traits>
+    constexpr bool operator<=(basic_string_view<CharType, Traits> lhs, const CharType* rhs) // NOLINT(modernize-avoid-c-arrays)
     {
       return lhs.compare(rhs) <= 0;
+    }
+    template <typename CharType, typename Traits>
+    constexpr bool operator<=(const CharType* lhs, basic_string_view<CharType, Traits> rhs) // NOLINT(modernize-avoid-c-arrays)
+    {
+      return rhs.compare(lhs) <= 0;
     }
     // lexicographically compares 2 string views
     template <typename CharType, typename Traits>
@@ -575,21 +586,32 @@ namespace rsl
     {
       return lhs.compare(rhs) > 0;
     }
-    template <typename CharType, typename Traits, count_t Size>
-    constexpr bool operator>(basic_string_view<CharType, Traits> lhs, const CharType (&rhs)[Size]) // NOLINT(modernize-avoid-c-arrays)
+    template <typename CharType, typename Traits>
+    constexpr bool operator>(basic_string_view<CharType, Traits> lhs, const CharType* rhs) // NOLINT(modernize-avoid-c-arrays)
     {
       return lhs.compare(rhs) > 0;
     }
+    template <typename CharType, typename Traits>
+    constexpr bool operator>(const CharType* lhs, basic_string_view<CharType, Traits> rhs) // NOLINT(modernize-avoid-c-arrays)
+    {
+      return rhs.compare(lhs) > 0;
+    }
+
     // lexicographically compares 2 string views
     template <typename CharType, typename Traits>
     constexpr bool operator>=(basic_string_view<CharType, Traits> lhs, basic_string_view<CharType, Traits> rhs)
     {
       return lhs.compare(rhs) >= 0;
     }
-    template <typename CharType, typename Traits, count_t Size>
-    constexpr bool operator>=(basic_string_view<CharType, Traits> lhs, const CharType (&rhs)[Size]) // NOLINT(modernize-avoid-c-arrays)
+    template <typename CharType, typename Traits>
+    constexpr bool operator>=(basic_string_view<CharType, Traits> lhs, const CharType* rhs) // NOLINT(modernize-avoid-c-arrays)
     {
       return lhs.compare(rhs) >= 0;
+    }
+    template <typename CharType, typename Traits, count_t Size>
+    constexpr bool operator>=(const CharType* lhs, basic_string_view<CharType, Traits> rhs) // NOLINT(modernize-avoid-c-arrays)
+    {
+      return rhs.compare(lhs) >= 0;
     }
     // stores each characters from the resulting sequence to the output stream
     // template <typename CharType, typename Traits>

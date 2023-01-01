@@ -10,6 +10,8 @@
 //
 // ============================================
 
+#ifdef REX_ENABLE_FMT_TESTING
+
 using testing::Contains;
 
 TEST(unicode_test, is_utf8) { EXPECT_TRUE(fmt::detail::is_utf8()); }
@@ -44,3 +46,5 @@ TEST(unicode_test, legacy_locale) {
   EXPECT_THAT((std::vector<std::string>{"Дзень тыдня: пн", "Дзень тыдня: Пан"}),
     Contains(s));
 }
+
+#endif

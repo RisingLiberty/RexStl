@@ -4254,7 +4254,7 @@ struct formatter<Char[N], Char> : formatter<basic_string_view<Char>, Char> // NO
   template <typename FormatContext>
   FMT_CONSTEXPR auto format(const Char* val, FormatContext& ctx) const -> decltype(ctx.out())
   {
-    return formatter<basic_string_view<Char>, Char>::format(val, ctx);
+    return formatter<basic_string_view<Char>, Char>::format(rsl::string_view(val), ctx);
   }
 };
 

@@ -10,6 +10,8 @@
 //
 // ============================================
 
+#ifdef REX_ENABLE_FMT_TESTING
+
 using fmt::format;
 using fmt::format_error;
 using fmt::detail::max_value;
@@ -577,3 +579,5 @@ TEST(printf_test, vsprintf_make_wargs_example) {
     fmt::vsprintf(L"[%d] %s happened",
       { fmt::make_wprintf_args(42, L"something") }));
 }
+
+#endif

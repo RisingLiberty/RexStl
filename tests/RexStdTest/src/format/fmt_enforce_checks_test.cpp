@@ -10,6 +10,8 @@
 //
 // ============================================
 
+#ifdef REX_ENABLE_FMT_TESTING
+
 void test_format_api() {
   (void)fmt::format(FMT_STRING("{}"), 42);
   (void)fmt::format(FMT_STRING(L"{}"), 42);
@@ -55,3 +57,5 @@ int main() {
   test_text_style();
   test_range();
 }
+
+#endif

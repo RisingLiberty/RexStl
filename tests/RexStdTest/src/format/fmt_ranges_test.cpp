@@ -10,6 +10,8 @@
 //
 // ============================================
 
+#ifdef REX_ENABLE_FMT_TESTING
+
 #if !FMT_GCC_VERSION || FMT_GCC_VERSION >= 601
 #  define FMT_RANGES_TEST_ENABLE_C_STYLE_ARRAY
 #endif
@@ -423,3 +425,5 @@ TEST(ranges_test, range_of_range_of_mixed_const) {
 TEST(ranges_test, vector_char) {
   EXPECT_EQ(fmt::format("{}", std::vector<char>{'a', 'b'}), "['a', 'b']");
 }
+
+#endif

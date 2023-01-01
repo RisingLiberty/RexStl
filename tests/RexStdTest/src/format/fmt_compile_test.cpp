@@ -10,50 +10,57 @@
 //
 // ============================================
 
-TEST(iterator_test, counting_iterator) {
-  auto it = fmt::detail::counting_iterator();
+#ifdef REX_ENABLE_FMT_TESTING
+
+#include "catch2/catch.hpp"
+
+#include "rex_std/format.h"
+#include "rex_std/internal/format/compile.h"
+
+TEST_CASE("iterator_test, counting_iterator") {
+  auto it = rsl::detail::counting_iterator();
   auto prev = it++;
-  EXPECT_EQ(prev.count(), 0);
-  EXPECT_EQ(it.count(), 1);
-  EXPECT_EQ((it + 41).count(), 42);
+  REQUIRE(prev.count() == 0);
+  REQUIRE(it.count() == 1);
+  REQUIRE((it + 41).count() == 42);
 }
 
-TEST(iterator_test, truncating_iterator) {
+TEST_CASE("iterator_test, truncating_iterator") {
   char* p = nullptr;
-  auto it = fmt::detail::truncating_iterator<char*>(p, 3);
+  auto it = rsl::detail::truncating_iterator<char*>(p, 3);
   auto prev = it++;
-  EXPECT_EQ(prev.base(), p);
-  EXPECT_EQ(it.base(), p + 1);
+  REQUIRE(prev.base() == p);
+  REQUIRE(it.base() == p + 1);
 }
 
-TEST(iterator_test, truncating_iterator_default_construct) {
-  auto it = fmt::detail::truncating_iterator<char*>();
-  EXPECT_EQ(nullptr, it.base());
-  EXPECT_EQ(std::size_t{ 0 }, it.count());
+TEST_CASE("iterator_test, truncating_iterator_default_construct") {
+  auto it = rsl::detail::truncating_iterator<char*>();
+  REQUIRE(nullptr == it.base());
+  REQUIRE(std::size_t{ 0 } == it.count());
 }
 
 #ifdef __cpp_lib_ranges
-TEST(iterator_test, truncating_iterator_is_output_iterator) {
+TEST_CASE(iterator_test, truncating_iterator_is_output_iterator) {
   static_assert(
-    std::output_iterator<fmt::detail::truncating_iterator<char*>, char>);
+    std::output_iterator<rsl::detail::truncating_iterator<char*>, char>);
 }
 #endif
 
-TEST(iterator_test, truncating_back_inserter) {
+TEST_CASE("iterator_test, truncating_back_inserter") {
   auto buffer = std::string();
   auto bi = std::back_inserter(buffer);
-  auto it = fmt::detail::truncating_iterator<decltype(bi)>(bi, 2);
+  auto it = rsl::detail::truncating_iterator<decltype(bi)>(bi, 2);
   *it++ = '4';
   *it++ = '2';
   *it++ = '1';
-  EXPECT_EQ(buffer.size(), 2);
-  EXPECT_EQ(buffer, "42");
+  REQUIRE(buffer.size() == 2);
+  REQUIRE(buffer == "42");
 }
 
-TEST(compile_test, compile_fallback) {
+TEST_CASE("compile_test, compile_fallback") {
   // FMT_COMPILE should fallback on runtime formatting when `if constexpr` is
   // not available.
-  EXPECT_EQ("42", fmt::format(FMT_COMPILE("{}"), 42));
+  REQUIRE("42" == rsl::format(FMT_COMPILE("{}"), 42));
 }
 
 struct type_with_get {
@@ -69,8 +76,8 @@ template <> struct formatter<type_with_get> : formatter<int> {
 };
 FMT_END_NAMESPACE
 
-TEST(compile_test, compile_type_with_get) {
-  EXPECT_EQ("42", fmt::format(FMT_COMPILE("{}"), type_with_get()));
+TEST_CASE("compile_test, compile_type_with_get") {
+  REQUIRE("42" == rsl::format(FMT_COMPILE("{}"), type_with_get()));
 }
 
 #if defined(__cpp_if_constexpr) && defined(__cpp_return_type_deduction)
@@ -95,170 +102,163 @@ template <> struct formatter<test_formattable> : formatter<const char*> {
 };
 FMT_END_NAMESPACE
 
-TEST(compile_test, format_default) {
-  EXPECT_EQ("42", fmt::format(FMT_COMPILE("{}"), 42));
-  EXPECT_EQ("42", fmt::format(FMT_COMPILE("{}"), 42u));
-  EXPECT_EQ("42", fmt::format(FMT_COMPILE("{}"), 42ll));
-  EXPECT_EQ("42", fmt::format(FMT_COMPILE("{}"), 42ull));
-  EXPECT_EQ("true", fmt::format(FMT_COMPILE("{}"), true));
-  EXPECT_EQ("x", fmt::format(FMT_COMPILE("{}"), 'x'));
-  EXPECT_EQ("4.2", fmt::format(FMT_COMPILE("{}"), 4.2));
-  EXPECT_EQ("foo", fmt::format(FMT_COMPILE("{}"), "foo"));
-  EXPECT_EQ("foo", fmt::format(FMT_COMPILE("{}"), std::string("foo")));
-  EXPECT_EQ("foo", fmt::format(FMT_COMPILE("{}"), test_formattable()));
+TEST_CASE("compile_test, format_default") {
+  REQUIRE("42" == rsl::format(FMT_COMPILE("{}"), 42));
+  REQUIRE("42" == rsl::format(FMT_COMPILE("{}"), 42u));
+  REQUIRE("42" == rsl::format(FMT_COMPILE("{}"), 42ll));
+  REQUIRE("42" == rsl::format(FMT_COMPILE("{}"), 42ull));
+  REQUIRE("true" == rsl::format(FMT_COMPILE("{}"), true));
+  REQUIRE("x" == rsl::format(FMT_COMPILE("{}"), 'x'));
+  REQUIRE("4.2" == rsl::format(FMT_COMPILE("{}"), 4.2));
+  REQUIRE("foo" == rsl::format(FMT_COMPILE("{}"), "foo"));
+  REQUIRE("foo" == rsl::format(FMT_COMPILE("{}"), std::string("foo")));
+  REQUIRE("foo" == rsl::format(FMT_COMPILE("{}"), test_formattable()));
   auto t = std::chrono::system_clock::now();
-  EXPECT_EQ(fmt::format("{}", t), fmt::format(FMT_COMPILE("{}"), t));
+  REQUIRE(rsl::format("{}", t) == rsl::format(FMT_COMPILE("{}"), t));
 #  ifdef __cpp_lib_byte
-  EXPECT_EQ("42", fmt::format(FMT_COMPILE("{}"), std::byte{ 42 }));
+  REQUIRE("42" == rsl::format(FMT_COMPILE("{}"), std::byte{ 42 }));
 #  endif
 }
 
-TEST(compile_test, format_wide_string) {
-  EXPECT_EQ(L"42", fmt::format(FMT_COMPILE(L"{}"), 42));
+TEST_CASE("compile_test, format_wide_string") {
+  REQUIRE(L"42" == rsl::format(FMT_COMPILE(L"{}"), 42));
 }
 
-TEST(compile_test, format_specs) {
-  EXPECT_EQ("42", fmt::format(FMT_COMPILE("{:x}"), 0x42));
-  EXPECT_EQ("1.2 ms ",
-    fmt::format(FMT_COMPILE("{:7.1%Q %q}"),
-      std::chrono::duration<double, std::milli>(1.234)));
+TEST_CASE("compile_test, format_specs") {
+  REQUIRE("42" == rsl::format(FMT_COMPILE("{:x}"), 0x42));
+  REQUIRE("1.2 ms " == rsl::format(FMT_COMPILE("{:7.1%Q %q}"), std::chrono::duration<double, std::milli>(1.234)));
 }
 
-TEST(compile_test, dynamic_format_specs) {
-  EXPECT_EQ("foo  ", fmt::format(FMT_COMPILE("{:{}}"), "foo", 5));
-  EXPECT_EQ("  3.14", fmt::format(FMT_COMPILE("{:{}.{}f}"), 3.141592, 6, 2));
-  EXPECT_EQ(
-    "=1.234ms=",
-    fmt::format(FMT_COMPILE("{:=^{}.{}}"),
-      std::chrono::duration<double, std::milli>(1.234), 9, 3));
+TEST_CASE("compile_test, dynamic_format_specs") {
+  REQUIRE("foo  " == rsl::format(FMT_COMPILE("{:{}}"), "foo", 5));
+  REQUIRE("  3.14" == rsl::format(FMT_COMPILE("{:{}.{}f}"), 3.141592, 6, 2));
+  REQUIRE("=1.234ms=" == rsl::format(FMT_COMPILE("{:=^{}.{}}"), std::chrono::duration<double, std::milli>(1.234), 9, 3));
 }
 
-TEST(compile_test, manual_ordering) {
-  EXPECT_EQ("42", fmt::format(FMT_COMPILE("{0}"), 42));
-  EXPECT_EQ(" -42", fmt::format(FMT_COMPILE("{0:4}"), -42));
-  EXPECT_EQ("41 43", fmt::format(FMT_COMPILE("{0} {1}"), 41, 43));
-  EXPECT_EQ("41 43", fmt::format(FMT_COMPILE("{1} {0}"), 43, 41));
-  EXPECT_EQ("41 43", fmt::format(FMT_COMPILE("{0} {2}"), 41, 42, 43));
-  EXPECT_EQ("  41   43", fmt::format(FMT_COMPILE("{1:{2}} {0:4}"), 43, 41, 4));
-  EXPECT_EQ("42 1.2 ms ",
-    fmt::format(FMT_COMPILE("{0} {1:7.1%Q %q}"), 42,
-      std::chrono::duration<double, std::milli>(1.234)));
-  EXPECT_EQ(
-    "true 42 42 foo 0x1234 foo",
-    fmt::format(FMT_COMPILE("{0} {1} {2} {3} {4} {5}"), true, 42, 42.0f,
-      "foo", reinterpret_cast<void*>(0x1234), test_formattable()));
-  EXPECT_EQ(L"42", fmt::format(FMT_COMPILE(L"{0}"), 42));
+TEST_CASE("compile_test, manual_ordering") {
+  REQUIRE("42" == rsl::format(FMT_COMPILE("{0}"), 42));
+  REQUIRE(" -42" == rsl::format(FMT_COMPILE("{0:4}"), -42));
+  REQUIRE("41 43" == rsl::format(FMT_COMPILE("{0} {1}"), 41, 43));
+  REQUIRE("41 43" == rsl::format(FMT_COMPILE("{1} {0}"), 43, 41));
+  REQUIRE("41 43" == rsl::format(FMT_COMPILE("{0} {2}"), 41, 42, 43));
+  REQUIRE("  41   43" == rsl::format(FMT_COMPILE("{1:{2}} {0:4}"), 43, 41, 4));
+  REQUIRE("42 1.2 ms " == rsl::format(FMT_COMPILE("{0} {1:7.1%Q %q}"), 42, std::chrono::duration<double, std::milli>(1.234)));
+  REQUIRE("true 42 42 foo 0x1234 foo" == rsl::format(FMT_COMPILE("{0} {1} {2} {3} {4} {5}"), true, 42, 42.0f, "foo", reinterpret_cast<void*>(0x1234), test_formattable()));
+  REQUIRE(L"42", rsl::format(FMT_COMPILE(L"{0}"), 42));
 }
 
-TEST(compile_test, named) {
+TEST_CASE("compile_test, manual_ordering") {
   auto runtime_named_field_compiled =
-    fmt::detail::compile<decltype(fmt::arg("arg", 42))>(FMT_COMPILE("{arg}"));
+    rsl::detail::compile<decltype(rsl::arg("arg", 42))>(FMT_COMPILE("{arg}"));
   static_assert(std::is_same_v<decltype(runtime_named_field_compiled),
-    fmt::detail::runtime_named_field<char>>);
+    rsl::detail::runtime_named_field<char>>);
 
-  EXPECT_EQ("42", fmt::format(FMT_COMPILE("{}"), fmt::arg("arg", 42)));
-  EXPECT_EQ("41 43", fmt::format(FMT_COMPILE("{} {}"), fmt::arg("arg", 41),
-    fmt::arg("arg", 43)));
+  REQUIRE("42", rsl::format(FMT_COMPILE("{}"), rsl::arg("arg", 42)));
+  REQUIRE("41 43", rsl::format(FMT_COMPILE("{} {}"), rsl::arg("arg", 41),
+    rsl::arg("arg", 43)));
 
-  EXPECT_EQ("foobar",
-    fmt::format(FMT_COMPILE("{a0}{a1}"), fmt::arg("a0", "foo"),
-      fmt::arg("a1", "bar")));
-  EXPECT_EQ("foobar", fmt::format(FMT_COMPILE("{}{a1}"), fmt::arg("a0", "foo"),
-    fmt::arg("a1", "bar")));
-  EXPECT_EQ("foofoo", fmt::format(FMT_COMPILE("{a0}{}"), fmt::arg("a0", "foo"),
-    fmt::arg("a1", "bar")));
-  EXPECT_EQ("foobar", fmt::format(FMT_COMPILE("{0}{a1}"), fmt::arg("a0", "foo"),
-    fmt::arg("a1", "bar")));
-  EXPECT_EQ("foobar", fmt::format(FMT_COMPILE("{a0}{1}"), fmt::arg("a0", "foo"),
-    fmt::arg("a1", "bar")));
+  REQUIRE("foobar",
+    rsl::format(FMT_COMPILE("{a0}{a1}"), rsl::arg("a0", "foo"),
+      rsl::arg("a1", "bar")));
+  REQUIRE("foobar", rsl::format(FMT_COMPILE("{}{a1}"), rsl::arg("a0", "foo"),
+    rsl::arg("a1", "bar")));
+  REQUIRE("foofoo", rsl::format(FMT_COMPILE("{a0}{}"), rsl::arg("a0", "foo"),
+    rsl::arg("a1", "bar")));
+  REQUIRE("foobar", rsl::format(FMT_COMPILE("{0}{a1}"), rsl::arg("a0", "foo"),
+    rsl::arg("a1", "bar")));
+  REQUIRE("foobar", rsl::format(FMT_COMPILE("{a0}{1}"), rsl::arg("a0", "foo"),
+    rsl::arg("a1", "bar")));
 
-  EXPECT_EQ("foobar",
-    fmt::format(FMT_COMPILE("{}{a1}"), "foo", fmt::arg("a1", "bar")));
-  EXPECT_EQ("foobar",
-    fmt::format(FMT_COMPILE("{a0}{a1}"), fmt::arg("a1", "bar"),
-      fmt::arg("a2", "baz"), fmt::arg("a0", "foo")));
-  EXPECT_EQ(" bar foo ",
-    fmt::format(FMT_COMPILE(" {foo} {bar} "), fmt::arg("foo", "bar"),
-      fmt::arg("bar", "foo")));
+  REQUIRE("foobar",
+    rsl::format(FMT_COMPILE("{}{a1}"), "foo", rsl::arg("a1", "bar")));
+  REQUIRE("foobar",
+    rsl::format(FMT_COMPILE("{a0}{a1}"), rsl::arg("a1", "bar"),
+      rsl::arg("a2", "baz"), rsl::arg("a0", "foo")));
+  REQUIRE(" bar foo ",
+    rsl::format(FMT_COMPILE(" {foo} {bar} "), rsl::arg("foo", "bar"),
+      rsl::arg("bar", "foo")));
 
-  EXPECT_THROW(fmt::format(FMT_COMPILE("{invalid}"), fmt::arg("valid", 42)),
-    fmt::format_error);
+  EXPECT_THROW(rsl::format(FMT_COMPILE("{invalid}"), rsl::arg("valid", 42)),
+    rsl::format_error);
 
 #  if FMT_USE_NONTYPE_TEMPLATE_ARGS
-  using namespace fmt::literals;
+  using namespace rsl::literals;
   auto statically_named_field_compiled =
-    fmt::detail::compile<decltype("arg"_a = 42)>(FMT_COMPILE("{arg}"));
+    rsl::detail::compile<decltype("arg"_a = 42)>(FMT_COMPILE("{arg}"));
   static_assert(std::is_same_v<decltype(statically_named_field_compiled),
-    fmt::detail::field<char, int, 0>>);
+    rsl::detail::field<char, int, 0>>);
 
-  EXPECT_EQ("41 43",
-    fmt::format(FMT_COMPILE("{a0} {a1}"), "a0"_a = 41, "a1"_a = 43));
-  EXPECT_EQ("41 43",
-    fmt::format(FMT_COMPILE("{a1} {a0}"), "a0"_a = 43, "a1"_a = 41));
+  REQUIRE("41 43",
+    rsl::format(FMT_COMPILE("{a0} {a1}"), "a0"_a = 41, "a1"_a = 43));
+  REQUIRE("41 43",
+    rsl::format(FMT_COMPILE("{a1} {a0}"), "a0"_a = 43, "a1"_a = 41));
 #  endif
 }
 
-TEST(compile_test, join) {
+TEST_CASE("compile_test, join") {
   unsigned char data[] = { 0x1, 0x2, 0xaf };
-  EXPECT_EQ("0102af", fmt::format(FMT_COMPILE("{:02x}"), fmt::join(data, "")));
+  REQUIRE("0102af", rsl::format(FMT_COMPILE("{:02x}"), rsl::join(data, "")));
 }
 
-TEST(compile_test, format_to) {
+TEST_CASE("compile_test, format_to") {
   char buf[8];
-  auto end = fmt::format_to(buf, FMT_COMPILE("{}"), 42);
+  auto end = rsl::format_to(buf, FMT_COMPILE("{}"), 42);
   *end = '\0';
   EXPECT_STREQ("42", buf);
-  end = fmt::format_to(buf, FMT_COMPILE("{:x}"), 42);
+  end = rsl::format_to(buf, FMT_COMPILE("{:x}"), 42);
   *end = '\0';
   EXPECT_STREQ("2a", buf);
 }
 
-TEST(compile_test, format_to_n) {
+TEST_CASE("compile_test, format_to_n") {
   constexpr auto buffer_size = 8;
   char buffer[buffer_size];
-  auto res = fmt::format_to_n(buffer, buffer_size, FMT_COMPILE("{}"), 42);
+  auto res = rsl::format_to_n(buffer, buffer_size, FMT_COMPILE("{}"), 42);
   *res.out = '\0';
   EXPECT_STREQ("42", buffer);
-  res = fmt::format_to_n(buffer, buffer_size, FMT_COMPILE("{:x}"), 42);
+  res = rsl::format_to_n(buffer, buffer_size, FMT_COMPILE("{:x}"), 42);
   *res.out = '\0';
   EXPECT_STREQ("2a", buffer);
 }
 
 #ifdef __cpp_lib_bit_cast
-TEST(compile_test, constexpr_formatted_size) {
-  FMT_CONSTEXPR20 size_t s1 = fmt::formatted_size(FMT_COMPILE("{0}"), 42);
-  EXPECT_EQ(2, s1);
-  FMT_CONSTEXPR20 size_t s2 = fmt::formatted_size(FMT_COMPILE("{0:<4.2f}"), 42.0);
-  EXPECT_EQ(5, s2);
+TEST_CASE(compile_test, constexpr_formatted_size) {
+  FMT_CONSTEXPR20 size_t s1 = rsl::formatted_size(FMT_COMPILE("{0}"), 42);
+  REQUIRE(2, s1);
+  FMT_CONSTEXPR20 size_t s2 = rsl::formatted_size(FMT_COMPILE("{0:<4.2f}"), 42.0);
+  REQUIRE(5, s2);
 }
 #endif
 
-TEST(compile_test, text_and_arg) {
-  EXPECT_EQ(">>>42<<<", fmt::format(FMT_COMPILE(">>>{}<<<"), 42));
-  EXPECT_EQ("42!", fmt::format(FMT_COMPILE("{}!"), 42));
+TEST_CASE("compile_test, text_and_arg") {
+  REQUIRE(">>>42<<<", rsl::format(FMT_COMPILE(">>>{}<<<"), 42));
+  REQUIRE("42!", rsl::format(FMT_COMPILE("{}!"), 42));
 }
 
-TEST(compile_test, unknown_format_fallback) {
-  EXPECT_EQ(" 42 ",
-    fmt::format(FMT_COMPILE("{name:^4}"), fmt::arg("name", 42)));
+TEST_CASE("compile_test, unknown_format_fallback") {
+  REQUIRE(" 42 ",
+    rsl::format(FMT_COMPILE("{name:^4}"), rsl::arg("name", 42)));
 
   std::vector<char> v;
-  fmt::format_to(std::back_inserter(v), FMT_COMPILE("{name:^4}"),
-    fmt::arg("name", 42));
-  EXPECT_EQ(" 42 ", fmt::string_view(v.data(), v.size()));
+  rsl::format_to(std::back_inserter(v), FMT_COMPILE("{name:^4}"),
+    rsl::arg("name", 42));
+  REQUIRE(" 42 ", rsl::string_view(v.data(), v.size()));
 
   char buffer[4];
-  auto result = fmt::format_to_n(buffer, 4, FMT_COMPILE("{name:^5}"),
-    fmt::arg("name", 42));
-  EXPECT_EQ(5u, result.size);
-  EXPECT_EQ(buffer + 4, result.out);
-  EXPECT_EQ(" 42 ", fmt::string_view(buffer, 4));
+  auto result = rsl::format_to_n(buffer, 4, FMT_COMPILE("{name:^5}"),
+    rsl::arg("name", 42));
+  REQUIRE(5u, result.size);
+  REQUIRE(buffer + 4, result.out);
+  REQUIRE(" 42 ", rsl::string_view(buffer, 4));
 }
 
-TEST(compile_test, empty) { EXPECT_EQ("", fmt::format(FMT_COMPILE(""))); }
+TEST_CASE("compile_test, empty")
+{ 
+  REQUIRE("", rsl::format(FMT_COMPILE(""))); 
+}
 
 struct to_stringable {
-  friend fmt::string_view to_string_view(to_stringable) { return {}; }
+  friend rsl::string_view to_string_view(to_stringable) { return {}; }
 };
 
 FMT_BEGIN_NAMESPACE
@@ -274,24 +274,24 @@ template <> struct formatter<to_stringable> {
 };
 FMT_END_NAMESPACE
 
-TEST(compile_test, to_string_and_formatter) {
-  fmt::format(FMT_COMPILE("{}"), to_stringable());
+TEST_CASE("compile_test, to_string_and_formatter") {
+  rsl::format(FMT_COMPILE("{}"), to_stringable());
 }
 
-TEST(compile_test, print) {
-  EXPECT_WRITE(stdout, fmt::print(FMT_COMPILE("Don't {}!"), "panic"),
+TEST_CASE("compile_test, print") {
+  EXPECT_WRITE(stdout, rsl::print(FMT_COMPILE("Don't {}!"), "panic"),
     "Don't panic!");
-  EXPECT_WRITE(stderr, fmt::print(stderr, FMT_COMPILE("Don't {}!"), "panic"),
+  EXPECT_WRITE(stderr, rsl::print(stderr, FMT_COMPILE("Don't {}!"), "panic"),
     "Don't panic!");
 }
 #endif
 
 #if FMT_USE_NONTYPE_TEMPLATE_ARGS
-TEST(compile_test, compile_format_string_literal) {
-  using namespace fmt::literals;
-  EXPECT_EQ("", fmt::format(""_cf));
-  EXPECT_EQ("42", fmt::format("{}"_cf, 42));
-  EXPECT_EQ(L"42", fmt::format(L"{}"_cf, 42));
+TEST_CASE(compile_test, compile_format_string_literal) {
+  using namespace rsl::literals;
+  REQUIRE("", rsl::format(""_cf));
+  REQUIRE("42", rsl::format("{}"_cf, 42));
+  REQUIRE(L"42", rsl::format(L"{}"_cf, 42));
 }
 #endif
 
@@ -307,7 +307,7 @@ TEST(compile_test, compile_format_string_literal) {
     (FMT_CPLUSPLUS >= 201709L && FMT_GCC_VERSION >= 1002)
 template <size_t max_string_length, typename Char = char> struct test_string {
   template <typename T> constexpr bool operator==(const T& rhs) const noexcept {
-    return fmt::basic_string_view<Char>(rhs).compare(buffer) == 0;
+    return rsl::basic_string_view<Char>(rhs).compare(buffer) == 0;
   }
   Char buffer[max_string_length]{};
 };
@@ -315,76 +315,78 @@ template <size_t max_string_length, typename Char = char> struct test_string {
 template <size_t max_string_length, typename Char = char, typename... Args>
 consteval auto test_format(auto format, const Args&... args) {
   test_string<max_string_length, Char> string{};
-  fmt::format_to(string.buffer, format, args...);
+  rsl::format_to(string.buffer, format, args...);
   return string;
 }
 
-TEST(compile_time_formatting_test, bool) {
-  EXPECT_EQ("true", test_format<5>(FMT_COMPILE("{}"), true));
-  EXPECT_EQ("false", test_format<6>(FMT_COMPILE("{}"), false));
-  EXPECT_EQ("true ", test_format<6>(FMT_COMPILE("{:5}"), true));
-  EXPECT_EQ("1", test_format<2>(FMT_COMPILE("{:d}"), true));
+TEST_CASE(compile_time_formatting_test, bool) {
+  REQUIRE("true", test_format<5>(FMT_COMPILE("{}"), true));
+  REQUIRE("false", test_format<6>(FMT_COMPILE("{}"), false));
+  REQUIRE("true ", test_format<6>(FMT_COMPILE("{:5}"), true));
+  REQUIRE("1", test_format<2>(FMT_COMPILE("{:d}"), true));
 }
 
-TEST(compile_time_formatting_test, integer) {
-  EXPECT_EQ("42", test_format<3>(FMT_COMPILE("{}"), 42));
-  EXPECT_EQ("420", test_format<4>(FMT_COMPILE("{}"), 420));
-  EXPECT_EQ("42 42", test_format<6>(FMT_COMPILE("{} {}"), 42, 42));
-  EXPECT_EQ("42 42",
+TEST_CASE(compile_time_formatting_test, integer) {
+  REQUIRE("42", test_format<3>(FMT_COMPILE("{}"), 42));
+  REQUIRE("420", test_format<4>(FMT_COMPILE("{}"), 420));
+  REQUIRE("42 42", test_format<6>(FMT_COMPILE("{} {}"), 42, 42));
+  REQUIRE("42 42",
     test_format<6>(FMT_COMPILE("{} {}"), uint32_t{ 42 }, uint64_t{ 42 }));
 
-  EXPECT_EQ("+42", test_format<4>(FMT_COMPILE("{:+}"), 42));
-  EXPECT_EQ("42", test_format<3>(FMT_COMPILE("{:-}"), 42));
-  EXPECT_EQ(" 42", test_format<4>(FMT_COMPILE("{: }"), 42));
+  REQUIRE("+42", test_format<4>(FMT_COMPILE("{:+}"), 42));
+  REQUIRE("42", test_format<3>(FMT_COMPILE("{:-}"), 42));
+  REQUIRE(" 42", test_format<4>(FMT_COMPILE("{: }"), 42));
 
-  EXPECT_EQ("-0042", test_format<6>(FMT_COMPILE("{:05}"), -42));
+  REQUIRE("-0042", test_format<6>(FMT_COMPILE("{:05}"), -42));
 
-  EXPECT_EQ("101010", test_format<7>(FMT_COMPILE("{:b}"), 42));
-  EXPECT_EQ("0b101010", test_format<9>(FMT_COMPILE("{:#b}"), 42));
-  EXPECT_EQ("0B101010", test_format<9>(FMT_COMPILE("{:#B}"), 42));
-  EXPECT_EQ("042", test_format<4>(FMT_COMPILE("{:#o}"), 042));
-  EXPECT_EQ("0x4a", test_format<5>(FMT_COMPILE("{:#x}"), 0x4a));
-  EXPECT_EQ("0X4A", test_format<5>(FMT_COMPILE("{:#X}"), 0x4a));
+  REQUIRE("101010", test_format<7>(FMT_COMPILE("{:b}"), 42));
+  REQUIRE("0b101010", test_format<9>(FMT_COMPILE("{:#b}"), 42));
+  REQUIRE("0B101010", test_format<9>(FMT_COMPILE("{:#B}"), 42));
+  REQUIRE("042", test_format<4>(FMT_COMPILE("{:#o}"), 042));
+  REQUIRE("0x4a", test_format<5>(FMT_COMPILE("{:#x}"), 0x4a));
+  REQUIRE("0X4A", test_format<5>(FMT_COMPILE("{:#X}"), 0x4a));
 
-  EXPECT_EQ("   42", test_format<6>(FMT_COMPILE("{:5}"), 42));
-  EXPECT_EQ("   42", test_format<6>(FMT_COMPILE("{:5}"), 42ll));
-  EXPECT_EQ("   42", test_format<6>(FMT_COMPILE("{:5}"), 42ull));
+  REQUIRE("   42", test_format<6>(FMT_COMPILE("{:5}"), 42));
+  REQUIRE("   42", test_format<6>(FMT_COMPILE("{:5}"), 42ll));
+  REQUIRE("   42", test_format<6>(FMT_COMPILE("{:5}"), 42ull));
 
-  EXPECT_EQ("42  ", test_format<5>(FMT_COMPILE("{:<4}"), 42));
-  EXPECT_EQ("  42", test_format<5>(FMT_COMPILE("{:>4}"), 42));
-  EXPECT_EQ(" 42 ", test_format<5>(FMT_COMPILE("{:^4}"), 42));
-  EXPECT_EQ("**-42", test_format<6>(FMT_COMPILE("{:*>5}"), -42));
+  REQUIRE("42  ", test_format<5>(FMT_COMPILE("{:<4}"), 42));
+  REQUIRE("  42", test_format<5>(FMT_COMPILE("{:>4}"), 42));
+  REQUIRE(" 42 ", test_format<5>(FMT_COMPILE("{:^4}"), 42));
+  REQUIRE("**-42", test_format<6>(FMT_COMPILE("{:*>5}"), -42));
 }
 
-TEST(compile_time_formatting_test, char) {
-  EXPECT_EQ("c", test_format<2>(FMT_COMPILE("{}"), 'c'));
+TEST_CASE(compile_time_formatting_test, char) {
+  REQUIRE("c", test_format<2>(FMT_COMPILE("{}"), 'c'));
 
-  EXPECT_EQ("c  ", test_format<4>(FMT_COMPILE("{:3}"), 'c'));
-  EXPECT_EQ("99", test_format<3>(FMT_COMPILE("{:d}"), 'c'));
+  REQUIRE("c  ", test_format<4>(FMT_COMPILE("{:3}"), 'c'));
+  REQUIRE("99", test_format<3>(FMT_COMPILE("{:d}"), 'c'));
 }
 
-TEST(compile_time_formatting_test, string) {
-  EXPECT_EQ("42", test_format<3>(FMT_COMPILE("{}"), "42"));
-  EXPECT_EQ("The answer is 42",
+TEST_CASE(compile_time_formatting_test, string) {
+  REQUIRE("42", test_format<3>(FMT_COMPILE("{}"), "42"));
+  REQUIRE("The answer is 42",
     test_format<17>(FMT_COMPILE("{} is {}"), "The answer", "42"));
 
-  EXPECT_EQ("abc**", test_format<6>(FMT_COMPILE("{:*<5}"), "abc"));
-  EXPECT_EQ("**🤡**", test_format<9>(FMT_COMPILE("{:*^6}"), "🤡"));
+  REQUIRE("abc**", test_format<6>(FMT_COMPILE("{:*<5}"), "abc"));
+  REQUIRE("**🤡**", test_format<9>(FMT_COMPILE("{:*^6}"), "🤡"));
 }
 
-TEST(compile_time_formatting_test, combination) {
-  EXPECT_EQ("420, true, answer",
+TEST_CASE(compile_time_formatting_test, combination) {
+  REQUIRE("420, true, answer",
     test_format<18>(FMT_COMPILE("{}, {}, {}"), 420, true, "answer"));
 
-  EXPECT_EQ(" -42", test_format<5>(FMT_COMPILE("{:{}}"), -42, 4));
+  REQUIRE(" -42", test_format<5>(FMT_COMPILE("{:{}}"), -42, 4));
 }
 
-TEST(compile_time_formatting_test, custom_type) {
-  EXPECT_EQ("foo", test_format<4>(FMT_COMPILE("{}"), test_formattable()));
-  EXPECT_EQ("bar", test_format<4>(FMT_COMPILE("{:b}"), test_formattable()));
+TEST_CASE(compile_time_formatting_test, custom_type) {
+  REQUIRE("foo", test_format<4>(FMT_COMPILE("{}"), test_formattable()));
+  REQUIRE("bar", test_format<4>(FMT_COMPILE("{:b}"), test_formattable()));
 }
 
-TEST(compile_time_formatting_test, multibyte_fill) {
-  EXPECT_EQ("жж42", test_format<8>(FMT_COMPILE("{:ж>4}"), 42));
+TEST_CASE(compile_time_formatting_test, multibyte_fill) {
+  REQUIRE("жж42", test_format<8>(FMT_COMPILE("{:ж>4}"), 42));
 }
+#endif
+
 #endif

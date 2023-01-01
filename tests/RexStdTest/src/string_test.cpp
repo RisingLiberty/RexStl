@@ -178,6 +178,8 @@ TEST_CASE("string assignment")
     REQUIRE(str == "ccccc");
     REQUIRE(str.size() == 5);
 
+    str.assign(str.sso_buff_size(), 'c');
+    REQUIRE(str.size() == str.sso_buff_size());
 
     str.assign(20, 'c');
     REQUIRE(str == "cccccccccccccccccccc");

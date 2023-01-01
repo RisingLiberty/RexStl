@@ -10,6 +10,8 @@
 //
 // ============================================
 
+#ifdef REX_ENABLE_FMT_TESTING
+
 using fmt::buffered_file;
 using testing::HasSubstr;
 using wstring_view = fmt::basic_string_view<wchar_t>;
@@ -531,3 +533,5 @@ TEST(file_test, fdopen) {
   EXPECT_EQ(read_fd, FMT_POSIX(fileno(read_end.fdopen("r").get())));
 }
 #endif  // FMT_USE_FCNTL
+
+#endif

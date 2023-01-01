@@ -8,7 +8,12 @@
 #ifndef FMT_COMPILE_H_
 #define FMT_COMPILE_H_
 
+#pragma once
+
 #include "rex_std/format.h"
+#include "rex_std/internal/iterator/iterator_traits.h"
+#include "rex_std/internal/type_traits/integral_constant.h"
+#include "rex_std/internal/type_traits/is_void.h"
 
 FMT_BEGIN_NAMESPACE
 namespace detail

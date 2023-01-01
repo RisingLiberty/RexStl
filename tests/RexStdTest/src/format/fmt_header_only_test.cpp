@@ -10,4 +10,8 @@
 //
 // ============================================
 
+#ifdef REX_ENABLE_FMT_TESTING
+
 TEST(header_only_test, format) { EXPECT_EQ(fmt::format("foo"), "foo"); }
+
+#endif

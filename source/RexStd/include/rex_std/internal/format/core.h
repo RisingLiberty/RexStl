@@ -434,7 +434,7 @@ struct is_compile_string : rsl::is_base_of<compile_string, S>
 template <typename Char, FMT_ENABLE_IF(is_char<Char>::value)>
 FMT_INLINE auto to_string_view(const Char* s) -> basic_string_view<Char>
 {
-  return s;
+  return basic_string_view<Char>(s);
 }
 template <typename Char, typename Traits, typename Alloc>
 inline auto to_string_view(const rsl::basic_string<Char, Traits, Alloc>& s) -> basic_string_view<Char>
@@ -3702,8 +3702,6 @@ inline auto runtime(string_view s) -> basic_runtime<char>
 }
 #endif
 
-FMT_API auto vformat(basic_string_literal<char> fmt, format_args args)->rsl::string;
-
 FMT_API auto vformat(string_view fmt, format_args args) -> rsl::string;
 
 /**
@@ -3719,11 +3717,6 @@ FMT_API auto vformat(string_view fmt, format_args args) -> rsl::string;
 */
 template <typename... T>
 FMT_NODISCARD FMT_INLINE auto format(format_string<T...> fmt, T&&... args) -> rsl::string
-{
-  return vformat(fmt, rsl::make_format_args(args...));
-}
-template <typename ... T>
-FMT_NODISCARD FMT_INLINE auto format(basic_string_literal<char> fmt, T&&... args) -> rsl::string
 {
   return vformat(fmt, rsl::make_format_args(args...));
 }
@@ -3745,7 +3738,7 @@ auto vformat_to(OutputIt out, string_view fmt, format_args args) -> OutputIt
  range. `format_to` does not append a terminating null character.
 
  **Example**::
-
+  
    auto out = rsl::vector<char>();
    rsl::format_to(rsl::back_inserter(out), "{}", 42);
  \endrst
@@ -3754,12 +3747,6 @@ template <typename OutputIt, typename... T, FMT_ENABLE_IF(detail::is_output_iter
 FMT_INLINE auto format_to(OutputIt out, format_string<T...> fmt, T&&... args) -> OutputIt
 {
   return vformat_to(out, fmt, rsl::make_format_args(args...));
-}
-
-template <typename OutputIt, typename... T, FMT_ENABLE_IF(detail::is_output_iterator<OutputIt, char>::value)>
-FMT_INLINE auto format_to(OutputIt out, basic_string_literal<char> fmt, T&&... args) -> OutputIt
-{
-  return format_to(out, format_string<T...>(fmt), rsl::forward<T>(args)...);
 }
 
 template <typename OutputIt>

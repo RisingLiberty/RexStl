@@ -10,6 +10,8 @@
 //
 // ============================================
 
+#ifdef REX_ENABLE_FMT_TESTING
+
 using fmt::detail::max_value;
 using testing::Contains;
 
@@ -564,3 +566,5 @@ TEST(locale_test, sign) {
 }
 
 #endif  // FMT_STATIC_THOUSANDS_SEPARATOR
+
+#endif

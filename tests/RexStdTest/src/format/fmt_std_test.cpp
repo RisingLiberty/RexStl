@@ -10,6 +10,8 @@
 //
 // ============================================
 
+#ifdef REX_ENABLE_FMT_TESTING
+
 using testing::StartsWith;
 
 TEST(std_test, path) {
@@ -147,3 +149,5 @@ TEST(std_test, exception) {
   }
 #endif
 }
+
+#endif

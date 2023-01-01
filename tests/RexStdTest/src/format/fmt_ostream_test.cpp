@@ -10,6 +10,8 @@
 //
 // ============================================
 
+#ifdef REX_ENABLE_FMT_TESTING
+
 using fmt::runtime;
 
 struct test {};
@@ -321,3 +323,5 @@ TEST(ostream_test, closed_ofstream) {
   std::ofstream ofs;
   fmt::print(ofs, "discard");
 }
+
+#endif

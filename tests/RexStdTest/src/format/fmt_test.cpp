@@ -10,6 +10,8 @@
 //
 // ============================================
 
+#ifdef REX_ENABLE_FMT_TESTING
+
 using fmt::basic_memory_buffer;
 using fmt::format_error;
 using fmt::memory_buffer;
@@ -2272,3 +2274,5 @@ TEST(format_test, format_named_arg_with_locale) {
 }
 
 #endif  // FMT_STATIC_THOUSANDS_SEPARATOR
+
+#endif
