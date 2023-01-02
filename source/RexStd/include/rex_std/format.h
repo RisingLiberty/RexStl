@@ -57,7 +57,6 @@
   #include "rex_std/internal/type_traits/is_integral.h"
   #include "rex_std/internal/type_traits/is_same.h"
   #include "rex_std/internal/utility/declval.h"
-  #include "rex_std/iostream.h"
   #include "rex_std/limits.h"
   #include "rex_std/string.h"
 
@@ -347,13 +346,8 @@ namespace detail
       return std::bit_cast<To>(from);
   #endif
     auto to = To();
-
-    // rsl::cout << "bit cast from: " << from << "\n";
-    // rsl::cout << "bit cast to pre: " << to << "\n";
-
     // The cast suppresses a bogus -Wclass-memaccess on GCC.
     rsl::memcpy(static_cast<void*>(&to), &from, sizeof(to));
-    // rsl::cout << "bit cast to post: " << to << "\n";
     return to;
   }
 
@@ -3717,10 +3711,7 @@ FMT_CONSTEXPR20 auto write(OutputIt out, T value) -> OutputIt
   if((bit_cast<uint>(value) & mask) == mask)
     return write_nonfinite(out, std::isnan(value), specs, fspecs);
 
-  rsl::cout << "value in write: " << value << "\n";
-  rsl::cout << "value floaty in write: " << static_cast<floaty>(value) << "\n";
   auto dec = dragonbox::to_decimal(static_cast<floaty>(value));
-  rsl::cout << "dec.significand in write: " << dec.significand << "\n";
   return write_float(out, dec, specs, fspecs, {});
 }
 

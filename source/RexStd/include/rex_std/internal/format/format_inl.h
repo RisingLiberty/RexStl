@@ -10,7 +10,6 @@
 // NOLINTBEGIN(hicpp-signed-bitwise, fuchsia-trailing-return)
 
 #include "rex_std/bonus/defines.h"
-#include "rex_std/iostream.h"
 
 #include <algorithm>
 #include <cctype>
@@ -1328,9 +1327,6 @@ namespace detail
       using cache_entry_type = typename cache_accessor<T>::cache_entry_type;
       auto br                = bit_cast<carrier_uint>(x);
 
-      rsl::cout << "value in to_decimal: " << x << "\n";
-      rsl::cout << "bitcast in to_decimal: " << br << "\n";
-
       // Extract significand bits and exponent bits.
       const carrier_uint significand_mask = (static_cast<carrier_uint>(1) << num_significand_bits<T>()) - 1;
       carrier_uint significand            = (br & significand_mask);
@@ -1504,8 +1500,6 @@ FMT_FUNC rsl::string vformat(string_view fmt, format_args args) // NOLINT(misc-d
 {
   // Don't optimize the "{}" case to keep the binary size small and because it
   // can be better optimized in rsl::format anyway.
-  rsl::cout << "fmt: " << fmt << "\n";
-
   auto buffer = memory_buffer();
   detail::vformat_to(buffer, fmt, args);
   return to_string(buffer);
