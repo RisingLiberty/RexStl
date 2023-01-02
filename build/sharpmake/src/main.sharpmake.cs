@@ -103,10 +103,10 @@ public class BaseProject : Project
     conf.use_compiler_options();
     conf.use_linker_options();
 
-    if (target.DevEnv == DevEnv.vs2019)
-    {
-      conf.add_dependency<SharpmakeProject>(target);
-    }
+    //if (target.DevEnv == DevEnv.vs2019)
+    //{
+    //  conf.add_dependency<SharpmakeProject>(target);
+    //}
 
     switch (target.Optimization)
     {
@@ -411,8 +411,12 @@ public class MainSolution : Solution
     // Puts the generated solution in the root folder.
     conf.SolutionPath = Globals.Root;
 
+    if (target.DevEnv == DevEnv.vs2019)
+    {
+      conf.AddProject<SharpmakeProject>(target);
+    }
+
     conf.AddProject<RexStd>(target);
-    conf.AddProject<RexStdExe>(target);
 
     if (GenerateSettings.UnitTestsEnabled)
     {
@@ -422,6 +426,10 @@ public class MainSolution : Solution
     if (GenerateSettings.FuzzyTestingEnabled)
     {
       conf.AddProject<RexStdFuzzy>(target);
+    }
+    else
+    {
+      conf.AddProject<RexStdExe>(target);
     }
   }
 
