@@ -115,9 +115,8 @@ public class BaseProject : Project
         conf.disable_optimization();
         break;
       case Optimization.FullOptWithPdb:
-        conf.Options.Add(Options.Vc.General.DebugInformation.ProgramDatabase);
         conf.enable_optimization();
-        conf.Options.Add(Options.Vc.Linker.LinkTimeCodeGeneration.Default);      // To fix linker warning
+        conf.Options.Add(Options.Vc.General.DebugInformation.ProgramDatabase);
         conf.Options.Add(Options.Vc.Compiler.OmitFramePointers.Disable);         // Disable so we can have a stack trace
         break;
       case Optimization.FullOpt:
