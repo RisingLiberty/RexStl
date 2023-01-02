@@ -19,6 +19,8 @@
 TEST_CASE("test object")
 {
   {
+    rsl::test::test_object::reset();
+
     rsl::test::test_object obj{};
 
     REQUIRE(rsl::test::test_object::num_alive() == 1);
