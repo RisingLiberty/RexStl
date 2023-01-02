@@ -24,7 +24,7 @@ namespace rsl
     constexpr void* memcpy(void* dst, const void* src, count_t len)
     {
       const rsl::byte* src_byte = static_cast<const rsl::byte*>(src);
-      rsl::byte* dst_byte = static_cast<rsl::byte*>(dst);
+      rsl::byte* dst_byte       = static_cast<rsl::byte*>(dst);
 
       // Copy contents of src[] to dest[]
       for(count_t i = 0; i < len; ++i)
@@ -33,7 +33,7 @@ namespace rsl
 
         // using the following code instead of the above breaks clang when optimizations are enabled
         // as it can possibly skip a call to memcpy, resulting in bugs that are incredibly hard to track down
-        
+
         //   *dst_byte = *src_byte;
         //   ++dst_byte;
         //   ++src_byte;
