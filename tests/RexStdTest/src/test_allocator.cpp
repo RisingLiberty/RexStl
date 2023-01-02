@@ -48,11 +48,12 @@ namespace rsl::test
       s_all_num_bytes_allocated += static_cast<card32>(count);
       return (operator new(count));
     }
-    void test_allocator::deallocate(void* const ptr) // NOLINT(readability-convert-member-functions-to-static)
+    void test_allocator::deallocate(void* const ptr, size_type size) // NOLINT(readability-convert-member-functions-to-static)
     {
       m_num_frees++;
       s_all_num_frees++;
-      operator delete(ptr);
+      s_all_num_bytes_allocated -= static_cast<card32>(size);
+      operator delete(ptr, size);
     }
 
     test_allocator::size_type test_allocator::max_size() const // NOLINT(readability-convert-member-functions-to-static)

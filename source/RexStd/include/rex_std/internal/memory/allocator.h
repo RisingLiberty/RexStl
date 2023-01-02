@@ -71,9 +71,9 @@ namespace rsl
       // deallocates the storage reference by the pointer p.
       // the pointer must be obtained by an earlier call to allocate
       // performed by this allocator or an allocator that's equal to this.
-      void deallocate(void* const ptr) // NOLINT(readability-convert-member-functions-to-static)
+      void deallocate(void* const ptr, size_type count) // NOLINT(readability-convert-member-functions-to-static)
       {
-        operator delete(ptr);
+        operator delete(ptr, count);
       }
 
       // returns the maximum theoretically possible value of n for,

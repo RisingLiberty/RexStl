@@ -1,6 +1,6 @@
-#include "rex_std/chrono.h"
+#include "rex_std/iostream.h"
 
-int main() 
+int main()
 {
-  return static_cast<int>(rsl::chrono::internal::get_ticks());
+  rsl::cout << "this is a test" << "string to check if we provide an implicit space";
 }

@@ -500,7 +500,7 @@ namespace rsl
           node_type* tmp_node = node;
           node                = static_cast<node_type*>(node->next);
           get_allocator().destroy(tmp_node);
-          get_allocator().deallocate(tmp_node);
+          get_allocator().deallocate(tmp_node, sizeof(node_type));
         }
 
 #ifdef REX_ENABLE_SIZE_IN_LISTS
@@ -802,7 +802,7 @@ namespace rsl
             ++num_removed;
             it.m_node->remove();
             get_allocator().destroy(it.m_node);
-            get_allocator().deallocate(it.m_node);
+            get_allocator().deallocate(it.m_node, sizeof(node_type));
           }
         }
 
@@ -835,7 +835,7 @@ namespace rsl
               ++num_removed;
               it.m_node->remove();
               get_allocator().destroy(it.m_node);
-              get_allocator().deallocate(it.m_node);
+              get_allocator().deallocate(it.m_node, sizeof(node_type));
             }
             else
             {

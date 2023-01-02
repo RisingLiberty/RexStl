@@ -95,20 +95,20 @@ namespace rsl
       explicit vector(rsl::Capacity capacity, const allocator_type& alloc = allocator_type())
           : vector(alloc)
       {
-        reserve(capacity.get());
+        uninitialized_allocation(capacity.get());
       }
       // Constructs the container with the contents of the range [first, last).
       template <typename It>
       vector(It first, It last)
           : vector()
       {
-        copy_range(first, last);
+        fill(first, last);
       }
       // Copy constructor. Constructs the container with the copy of the contents of other.
       vector(const vector& other)
           : vector()
       {
-        copy_range(other.cbegin(), other.cend());
+        fill(other.cbegin(), other.cend());
       }
       // Constructs the container with the copy of the contents of other, using alloc as the allocator.
       vector(const vector& other, const allocator_type& alloc)
@@ -116,7 +116,7 @@ namespace rsl
           , m_end(nullptr)
           , m_cp_last_and_allocator(nullptr, alloc)
       {
-        copy_range(other.cbegin(), other.cend());
+        fill(other.cbegin(), other.cend());
       }
       // Move constructor. Constructs the container with the contents of other using move semantics.
       // allocator is obtained by move-construction from the allocator belonging to other.
@@ -417,7 +417,7 @@ namespace rsl
           // TODO: should this be in reverse order to be synced with C?
           for(pointer element = m_begin; element < m_end; ++element)
           {
-            get_allocator().destroy(element);
+            get_mutable_allocator().destroy(element);
           }
         }
 
@@ -510,7 +510,7 @@ namespace rsl
           auto it = begin() + dst_idx + count;
           for(auto it_end = end(); it != it_end; ++it)
           {
-            get_allocator().destroy(rsl::iterator_to_pointer(it));
+            get_mutable_allocator().destroy(rsl::iterator_to_pointer(it));
           }
         }
 
@@ -567,7 +567,7 @@ namespace rsl
       // Also sets m_begin, m_end and m_cp_last_and_allocator.first() to point to the new buffer
       void reallocate(size_type newCapacity)
       {
-        pointer new_buffer = static_cast<pointer>(get_allocator().allocate(calc_bytes_needed(newCapacity)));
+        pointer new_buffer = static_cast<pointer>(get_mutable_allocator().allocate(calc_bytes_needed(newCapacity)));
 
         pointer dest = new_buffer;
         move(dest, m_begin, size());
@@ -585,7 +585,7 @@ namespace rsl
       // Deallocates the buffer
       void deallocate()
       {
-        get_allocator().deallocate(data());
+        get_mutable_allocator().deallocate(data(), calc_bytes_needed(capacity()));
       }
 
       // calls reallocate if new required size is bigger than capacity
@@ -624,7 +624,7 @@ namespace rsl
 
           const size_type old_size            = size();
           const size_type size_for_new_buffer = new_buffer_capacity(count);
-          pointer new_buffer                  = static_cast<pointer>(get_allocator().allocate(calc_bytes_needed(size_for_new_buffer)));
+          pointer new_buffer                  = static_cast<pointer>(get_mutable_allocator().allocate(calc_bytes_needed(size_for_new_buffer)));
 
           // move the first set of elements up to pos into the new buffer
           pointer dest  = new_buffer;
@@ -656,42 +656,63 @@ namespace rsl
       // resizes if necessary
       // copies the range to the internal element starting at m_begin
       template <typename It>
-      void copy_range(It begin, It last)
+      void copy_range(It first, It last)
       {
-        const difference_type count = static_cast<difference_type>(rsl::distance(begin, last));
+        const difference_type count = static_cast<difference_type>(rsl::distance(first, last));
         resize_internal(count);
 
         for(difference_type i = 0; i < count; ++i)
         {
           T* dest = rsl::addressof(operator[](i));
-          new(dest) T(*(begin + i));
+          new(dest) T(*(first + i));
         }
       }
 
       // resizes if necessary
       // moves the range to the internal element starting at m_begin
       template <typename It>
-      void move_range(It begin, It last)
+      void move_range(It first, It last)
       {
-        difference_type count = static_cast<difference_type>(rsl::distance(begin, last));
+        difference_type count = static_cast<difference_type>(rsl::distance(first, last));
         resize_internal(count);
 
         for(difference_type i = 0; i < count; ++i)
         {
           T* dest = rsl::addressof(operator[](i));
-          new(dest) T(rsl::move(*(begin + i)));
+          new(dest) T(rsl::move(*(first + i)));
+        }
+      }
+
+      // fills the vector with elements going from first - last
+      template <typename It>
+      void fill(It first, It last)
+      {
+        REX_ASSERT_X(m_begin == nullptr, "overwriting data ptr that has memory allocated for it, please use vector::copy_range");
+
+        difference_type count           = static_cast<difference_type>(rsl::distance(first, last));
+        const size_type new_capacity    = new_buffer_capacity(count);
+        m_begin                         = static_cast<pointer>(get_mutable_allocator().allocate(calc_bytes_needed(new_capacity)));
+        m_end                           = m_begin + count;
+        m_cp_last_and_allocator.first() = m_end;
+
+        for(difference_type i = 0; i < count; ++i)
+        {
+          T* dest = rsl::addressof(operator[](i));
+          new(dest) T(*(first + i));
         }
       }
 
       // fills the vector with n elements
       void fill_n(size_type count)
       {
-        const size_type new_capacity = new_buffer_capacity(count);
-        m_begin = static_cast<pointer>(get_allocator().allocate(calc_bytes_needed(new_capacity)));
-        m_end = m_begin + count;
+        REX_ASSERT_X(m_begin == nullptr, "overwriting data ptr that has memory allocated for it, please use vector::resize");
+
+        const size_type new_capacity    = new_buffer_capacity(count);
+        m_begin                         = static_cast<pointer>(get_mutable_allocator().allocate(calc_bytes_needed(new_capacity)));
+        m_end                           = m_begin + count;
         m_cp_last_and_allocator.first() = m_end;
 
-        for (pointer dest = m_begin; dest != m_end; ++dest)
+        for(pointer dest = m_begin; dest != m_end; ++dest)
         {
           new(dest) T();
         }
@@ -699,15 +720,29 @@ namespace rsl
       // fills the vector with n elements of value val
       void fill_n(size_type count, const value_type& val)
       {
-        const size_type new_capacity = new_buffer_capacity(count);
-        m_begin = static_cast<pointer>(get_allocator().allocate(calc_bytes_needed(new_capacity)));
-        m_end = m_begin + count;
+        REX_ASSERT_X(m_begin == nullptr, "overwriting data ptr that has memory allocated for it, please use vector::resize");
+
+        const size_type new_capacity    = new_buffer_capacity(count);
+        m_begin                         = static_cast<pointer>(get_mutable_allocator().allocate(calc_bytes_needed(new_capacity)));
+        m_end                           = m_begin + count;
         m_cp_last_and_allocator.first() = m_end;
 
-        for (pointer dest = m_begin; dest != m_end; ++dest)
+        for(pointer dest = m_begin; dest != m_end; ++dest)
         {
           new(dest) T(val);
         }
+      }
+
+      // uninitialized allocation
+      // this function is similar to reallocate but should only be called when there's no existing allocation
+      // typically only called from constructor taking capacity
+      void uninitialized_allocation(size_type count)
+      {
+        REX_ASSERT_X(m_begin == nullptr, "overwriting data ptr that has memory allocated for it, please use vector::reallocate");
+
+        m_begin                         = static_cast<pointer>(get_mutable_allocator().allocate(calc_bytes_needed(count)));
+        m_end                           = m_begin;
+        m_cp_last_and_allocator.first() = m_begin + count;
       }
 
       // reallocates if 'new_size' is bigger than the current capacity
@@ -721,9 +756,9 @@ namespace rsl
         return newSize > old_size;
       }
 
-      size_type calc_bytes_needed(card32 newElementCount)
+      size_type calc_bytes_needed(card32 elementCount)
       {
-        return sizeof(T) * newElementCount;
+        return sizeof(T) * elementCount;
       }
 
       template <typename InputIt>
@@ -774,7 +809,7 @@ namespace rsl
         }
       }
 
-      allocator_type& get_allocator()
+      allocator_type& get_mutable_allocator()
       {
         return m_cp_last_and_allocator.second();
       }

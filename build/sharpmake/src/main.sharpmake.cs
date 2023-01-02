@@ -324,6 +324,27 @@ public class RexStd : BasicCPPProject
 }
 
 [Generate]
+public class RexStdExe : BasicCPPProject
+{
+  public RexStdExe() : base()
+  {
+    Name = GenerateName("RexStdExe");
+    GenerateTargets();
+
+    SourceRootPath = Path.Combine(Globals.SourceRoot, "RexStdExe");
+  }
+
+  public override void Configure(RexConfiguration conf, RexTarget target)
+  {
+    base.Configure(conf, target);
+
+    conf.Output = Configuration.OutputType.Exe;
+
+    conf.add_dependency<RexStd>(target);
+  }
+}
+
+[Generate]
 public class RexStdTest : TestProject
 {
   public RexStdTest() : base()
@@ -391,6 +412,7 @@ public class MainSolution : Solution
     conf.SolutionPath = Globals.Root;
 
     conf.AddProject<RexStd>(target);
+    conf.AddProject<RexStdExe>(target);
 
     if (GenerateSettings.UnitTestsEnabled)
     {

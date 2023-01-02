@@ -14,7 +14,6 @@
 
 #include "rex_std/bonus/compiler.h"
 #include "rex_std/bonus/defines.h"
-#include "rex_std/bonus/string/string_literal.h"
 #include "rex_std/bonus/string/string_utils.h"
 #include "rex_std/bonus/types.h"
 #include "rex_std/bonus/utility/element_literal.h"
@@ -546,7 +545,6 @@ namespace rsl
       return rsl::basic_string_view<CharType, Traits>(lhs) != rhs;
     }
 
-
     // lexicographically compares 2 string views
     template <typename CharType, typename Traits>
     constexpr bool operator<(basic_string_view<CharType, Traits> lhs, basic_string_view<CharType, Traits> rhs)
@@ -617,12 +615,15 @@ namespace rsl
     // template <typename CharType, typename Traits>
     // class basic_ostream;
 
-    // template <typename CharType, typename Traits>
-    // basic_ostream<CharType, Traits>& operator<<(basic_ostream<CharType, Traits>& os, const basic_string_view<CharType, Traits>& str)
-    //{
-    //    os.stream_buff().putn(str.data(), str.length());
-    //    return os;
-    // }
+    template <typename CharType, typename Traits>
+    class basic_ostream;
+
+    template <typename CharType, typename Traits>
+    basic_ostream<CharType, Traits>& operator<<(basic_ostream<CharType, Traits>& os, const basic_string_view<CharType, Traits>& str)
+    {
+      os.rdbuf()->sputn(str.data(), str.length());
+      return os;
+    }
 
     using string_view   = basic_string_view<char8>;
     using WStringView   = basic_string_view<tchar>;

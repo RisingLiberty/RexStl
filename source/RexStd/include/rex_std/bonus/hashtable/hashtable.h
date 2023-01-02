@@ -648,7 +648,7 @@ namespace rsl
 
       void free_buckets(node_type** bucketArray)
       {
-        m_allocator.deallocate(bucketArray);
+        m_allocator.deallocate(bucketArray, bucket_count() * sizeof(node_type**));
       }
 
       void free_nodes(node_type** nodeArray, size_type bucketCount)
@@ -669,7 +669,7 @@ namespace rsl
       void free_node(node_type* node)
       {
         node->~node_type();
-        m_allocator.deallocate(node);
+        m_allocator.deallocate(node, sizeof(node_type));
       }
 
       template <typename... Args>

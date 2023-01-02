@@ -14,7 +14,6 @@
 
 #include "rex_std/bonus/string/character_lookup.h"
 #include "rex_std/bonus/string/stack_string.h"
-#include "rex_std/bonus/string/string_literal.h"
 #include "rex_std/bonus/string/string_utils.h"
 #include "rex_std/bonus/utility/compressed_pair.h"
 #include "rex_std/bonus/utility/element_literal.h"
@@ -1608,7 +1607,7 @@ namespace rsl
       {
         if(is_using_big_string())
         {
-          get_allocator().deallocate(data());
+          get_allocator().deallocate(data(), calc_bytes_needed(capacity()));
         }
       }
       // moves every element starting at str[idx] 'count' space(s) to the right
@@ -1960,7 +1959,7 @@ namespace rsl
     template <typename Char, typename Traits, typename Alloc>
     bool operator==(const rsl::basic_string<Char, Traits, Alloc>& lhs, const rsl::basic_string_view<Char, Traits>& rhs)
     {
-      if (lhs.length() != rhs.length())
+      if(lhs.length() != rhs.length())
       {
         return false;
       }
@@ -1971,7 +1970,7 @@ namespace rsl
     template <typename Char, typename Traits, typename Alloc>
     bool operator==(const rsl::basic_string_view<Char, Traits>& lhs, const rsl::basic_string<Char, Traits, Alloc>& rhs)
     {
-      if (lhs.length() != rhs.length())
+      if(lhs.length() != rhs.length())
       {
         return false;
       }

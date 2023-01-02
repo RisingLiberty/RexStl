@@ -10,7 +10,7 @@
 //
 // ============================================
 
-#include "catch2/catch.hpp"
+#include "rex_std_test/catch2/catch.hpp"
 
 #include "rex_std/format.h"
 #include "rex_std/internal/format/args.h"
@@ -19,13 +19,25 @@
 
 #include "rex_std/string.h"
 
+#include "rex_std/iostream.h"
+#include <Windows.h>
+
 TEST_CASE("arg test, basic")
 {
+  rsl::cout << "Please attach debugger\n";
+  volatile bool should_continue = true;
+  while (should_continue)
+  {
+    Sleep(1000);
+  }
+
   rsl::dynamic_format_arg_store<rsl::format_context> store;
   store.push_back(42);
   store.push_back("abc1");
   store.push_back(1.5f);
-  rsl::string_view str = "Hello";
+
+  rsl::string res = rsl::vformat("{} and {} and {}", store);
+
   REQUIRE(rsl::string("42 and abc1 and 1.5") == rsl::vformat("{} and {} and {}", store));
 }
 

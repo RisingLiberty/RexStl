@@ -35,9 +35,9 @@
     </Expand>
   </Type>
   <Type Name="rsl::v1::unique_ptr&lt;*&gt;">
-    <DisplayString Condition="m_ptr == 0xcccccccc">Uninitialized</DisplayString>
-    <DisplayString Condition="m_ptr == 0">Null</DisplayString>
-    <DisplayString>{m_ptr}</DisplayString>
+    <DisplayString Condition="m_cp_ptr_and_deleter.m_first == 0xcccccccc">Uninitialized</DisplayString>
+    <DisplayString Condition="m_cp_ptr_and_deleter.m_first == 0">Null</DisplayString>
+    <DisplayString>{m_cp_ptr_and_deleter.m_first}</DisplayString>
   </Type>
   <Type Name="rsl::v1::unique_array&lt;*&gt;">
     <DisplayString Condition="m_ptr == 0xcccccccc">Uninitialized</DisplayString>

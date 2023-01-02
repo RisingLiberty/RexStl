@@ -1254,7 +1254,7 @@ namespace rsl
       void free_node(node_type* node)
       {
         get_allocator().destroy(node);
-        get_allocator().deallocate(node);
+        get_allocator().deallocate(node, sizeof(node_type));
       }
 
       node_type* create_node_from_key(const key_type& key)

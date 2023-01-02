@@ -19,6 +19,7 @@
 #include "rex_std/internal/type_traits/remove_cvref.h"
 #include "rex_std/internal/type_traits/remove_pointer.h"
 #include "rex_std/internal/type_traits/underlying_type.h"
+#include "rex_std/iostream.h"
 #include "rex_std/string_view.h"
 
 #include <cstddef> // rsl::byte
@@ -1907,7 +1908,7 @@ FMT_CONSTEXPR FMT_INLINE auto visit_format_arg(Visitor&& vis, const basic_format
     case detail::type::uint128_type: return vis(detail::convert_for_visit(arg.m_value.uint128_value));
     case detail::type::bool_type: return vis(arg.m_value.bool_value);
     case detail::type::char_type: return vis(arg.m_value.char_value);
-    case detail::type::float_type: return vis(arg.m_value.float_value);
+    case detail::type::float_type: rsl::cout << arg.m_value.float_value; return vis(arg.m_value.float_value);
     case detail::type::double_type: return vis(arg.m_value.double_value);
     case detail::type::long_double_type: return vis(arg.m_value.long_double_value);
     case detail::type::cstring_type: return vis(arg.m_value.string.data);
@@ -2042,7 +2043,7 @@ template <typename Context, typename T>
 FMT_CONSTEXPR auto make_arg(T&& value) -> basic_format_arg<Context>
 {
   basic_format_arg<Context> arg;
-  arg.m_type = mapped_type_constant<T, Context>::value;
+  arg.m_type  = mapped_type_constant<T, Context>::value;
   arg.m_value = make_value<Context>(value);
   return arg;
 }
@@ -3738,7 +3739,7 @@ auto vformat_to(OutputIt out, string_view fmt, format_args args) -> OutputIt
  range. `format_to` does not append a terminating null character.
 
  **Example**::
-  
+
    auto out = rsl::vector<char>();
    rsl::format_to(rsl::back_inserter(out), "{}", 42);
  \endrst
