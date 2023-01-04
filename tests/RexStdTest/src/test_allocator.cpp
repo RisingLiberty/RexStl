@@ -21,6 +21,12 @@ namespace rsl::test
     card32 test_allocator::s_all_num_frees = 0;
     card32 test_allocator::s_all_num_bytes_allocated = 0;
 
+    test_allocator::test_allocator(const test_allocator&)
+      : m_num_allocs(0)
+      , m_num_frees(0)
+      , m_num_bytes_allocated(0)
+    {}
+
     test_allocator::test_allocator(test_allocator&& other)
       : m_num_allocs(other.m_num_allocs)
       , m_num_frees(other.m_num_frees)

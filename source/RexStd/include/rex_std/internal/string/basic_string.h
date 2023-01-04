@@ -28,7 +28,7 @@
 #include "rex_std/internal/iterator/iterator_tags.h"
 #include "rex_std/internal/iterator/iterator_traits.h"
 #include "rex_std/internal/math/abs.h"
-#include "rex_std/internal/memory/allocator_type.h"
+#include "rex_std/internal/memory/allocator.h"
 #include "rex_std/internal/memory/allocator_traits.h"
 #include "rex_std/internal/memory/byte.h"
 #include "rex_std/internal/memory/memcpy.h"
@@ -298,7 +298,7 @@ namespace rsl
       /// RSL Comment: Different from ISO C++ Standard at time of writing (01/Jul/2022)
       // in RSL, you can't assign to a container if the allocators differ.
       // replaces the contents with the content of str. equivalent to the move assignment operator
-      basic_string& assign(basic_string&& other)
+      basic_string& assign(basic_string<CharType, Traits, Alloc>&& other)
       {
         REX_ASSERT_X(this, &other, "Can't assign to yourself");
         REX_ASSERT_X(get_allocator() == other.get_allocator(), "Different allocators in assignment, this is not allowed");
@@ -337,37 +337,21 @@ namespace rsl
       template <typename InputIt>
       basic_string& assign(InputIt first, InputIt last)
       {
-        // you don't know the size and iterator could be forward iterator
-        // so this is very slow as it has to check for a possible resize after every insertion.
-        while(first != last)
-        {
-          insert(cend(), *first);
-          ++first;
-        }
-
-        return *this;
-      }
-      // replaces the contents with those of the initializer list
-      basic_string& assign(rsl::initializer_list<value_type> ilist)
-      {
-        // pretty similar to the assign using iterators
-        // but we know the size here, so we can allocate everything up front
-        // and then copy into the string
-
         // don't use reserve here as it'd copy the current values over.
         // we'll overwrite them anyway so there's no point in doing that
-        const size_type new_size = static_cast<size_type>(ilist.size()) + 1; // +1 for the null termination char
+        difference_type count = static_cast<difference_type>(rsl::distance(first, last));
 
-        if(new_size > capacity())
+        if (count > capacity())
         {
           deallocate();
-          pointer new_buffer = static_cast<pointer>(get_mutable_allocator().allocate(new_size));
-          reset(new_buffer, new_size, new_size);
+          pointer new_buffer = static_cast<pointer>(get_mutable_allocator().allocate(count + 1));
+          reset(new_buffer, count, count + 1);
         }
 
         pointer dst = m_begin;
-        for(const value_type c: ilist)
+        for (auto it = first; it != last; ++it)
         {
+          CharType c = *it;
           traits_type::assign(*dst, c);
           ++dst;
         }
@@ -376,6 +360,12 @@ namespace rsl
 
         return *this;
       }
+      // replaces the contents with those of the initializer list
+      basic_string& assign(rsl::initializer_list<value_type> ilist)
+      {
+        return assign(ilist.begin(), ilist.end());
+      }
+
       /// RSL Comment: Different from ISO C++ Standard at time of writing (30/Jun/2022)
       // This is a template function in the standard due to ambiguous overload
       // as both basic_string and basic_string_view<value_type, traits_type> can be implicitly created with a const char*.
@@ -1569,7 +1559,7 @@ namespace rsl
       }
       // assigns a rvalue str to this.
       // copies when using small string, swaps when using big string
-      void move_assign(rsl::basic_string<CharType>&& str)
+      void move_assign(rsl::basic_string<CharType, Traits, Alloc>&& str)
       {
         if(str.is_using_big_string())
         {
@@ -2152,7 +2142,7 @@ namespace rsl
 
     // extracts characters from input and appends them to str until the delim is found or the stream's eof.
     template <typename Char, typename Traits, typename Allocator>
-    basic_istream<Char, Traits>& getline(basic_istream<Char, Traits>& input, basic_string<Char, Traits, allocator_type>& str, Char delim)
+    basic_istream<Char, Traits>& getline(basic_istream<Char, Traits>& input, basic_string<Char, Traits, Allocator>& str, Char delim)
     {
       str.erase();
       input.getline(str, delim);
@@ -2161,7 +2151,7 @@ namespace rsl
 
     // extracts characters from input and appends them to str until the '\n' is found or the stream's eof.
     template <typename Char, typename Traits, typename Allocator>
-    basic_istream<Char, Traits>& getline(basic_istream<Char, Traits>& input, basic_string<Char, Traits, allocator_type>& str)
+    basic_istream<Char, Traits>& getline(basic_istream<Char, Traits>& input, basic_string<Char, Traits, Allocator>& str)
     {
       return getline(input, str, '\n');
     }
@@ -2278,20 +2268,20 @@ namespace rsl
     template <typename CharType, typename Traits, typename Allocator>
     struct hash<basic_string<CharType, Traits, Allocator>>
     {
-      hash_result operator()(const basic_string<CharType, Traits, allocator_type>& str) const
+      hash_result operator()(const basic_string<CharType, Traits, Allocator>& str) const
       {
         return rsl::internal::hash(str.data());
       }
     };
 
-    template <typename InputIt, typename Alloc = rsl::allocator_type>
+    template <typename InputIt, typename Alloc = rsl::allocator>
     basic_string(InputIt, InputIt, Alloc = Alloc()) -> basic_string<typename rsl::iterator_traits<InputIt>::value_type, rsl::char_traits<typename rsl::iterator_traits<InputIt>::value_type>, Alloc>;
 
-    template <typename Char, typename Traits, typename Alloc = rsl::allocator_type>
-    explicit basic_string(rsl::basic_string_view<Char, Traits>, const Alloc& = Alloc()) -> basic_string<Char, Traits, Alloc>;
+    template <typename Char, typename Traits, typename Alloc = rsl::allocator>
+    explicit basic_string(rsl::basic_string_view<Char, Traits>, const Alloc&) -> basic_string<Char, Traits, Alloc>;
 
-    template <typename Char, typename Traits, typename Alloc = rsl::allocator_type>
-    explicit basic_string(rsl::basic_string_view<Char, Traits>, typename rsl::basic_string_view<Char, Traits>::size_type, typename rsl::basic_string_view<Char, Traits>::size_type, const Alloc& = Alloc()) -> basic_string<Char, Traits, Alloc>;
+    template <typename Char, typename Traits, typename Alloc = rsl::allocator>
+    explicit basic_string(rsl::basic_string_view<Char, Traits>, typename rsl::basic_string_view<Char, Traits>::size_type, typename rsl::basic_string_view<Char, Traits>::size_type, const Alloc&) -> basic_string<Char, Traits, Alloc>;
 
     template <typename Char, typename Traits>
     class basic_ostream;

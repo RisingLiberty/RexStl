@@ -27,7 +27,7 @@ namespace rsl::test
       using difference_type = ptrdiff;
 
       test_allocator() = default;
-      test_allocator(const test_allocator&) = default;
+      test_allocator(const test_allocator&);
       test_allocator(test_allocator&&);
 
       ~test_allocator() = default;
