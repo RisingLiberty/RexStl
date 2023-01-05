@@ -14,7 +14,7 @@
 #include "rex_std/format.h"
 #include "rex_std/internal/format/color.h"
 
-#define REQUIRE_STR(x, y) REQUIRE(rsl::string_view(x) == rsl::string_view(y))
+#define REQUIRE_STR(x, y) REQUIRE(rsl::string(x) == rsl::string(y))
 
 TEST_CASE("color_test, format") 
 {
@@ -45,5 +45,6 @@ TEST_CASE("color_test, format")
 TEST_CASE("color_test, format_to") {
   auto out = rsl::string();
   rsl::format_to(rsl::back_inserter(out), fg(rsl::rgb(255, 20, 30)), "rgb(255,20,30){}{}{}", 1, 2, 3);
+
   REQUIRE_STR(rsl::to_string(out), "\x1b[38;2;255;020;030mrgb(255,20,30)123\x1b[0m");
 }

@@ -57,9 +57,9 @@ namespace rsl::test
       card32 num_frees() const;
       card32 num_bytes_allocated() const;
 
-      card32 all_num_allocs();
-      card32 all_num_frees();
-      card32 all_num_bytes_allocated();
+      static card32 all_num_allocs();
+      static card32 all_num_frees();
+      static card32 all_num_bytes_allocated();
 
       void reset();
 

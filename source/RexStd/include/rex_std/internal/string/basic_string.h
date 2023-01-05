@@ -152,7 +152,7 @@ namespace rsl
       }
       // move constructor, swaps contents of other with the current string
       basic_string(basic_string&& other)
-          : basic_string(rsl::move(other.get_allocator()))
+          : basic_string()
       {
         swap(other);
       }
@@ -1245,29 +1245,52 @@ namespace rsl
           rsl::swap(m_sso_buffer, other.m_sso_buffer);
           this->reset(m_sso_buffer.data(), m_sso_buffer.length(), m_sso_buffer.max_size());
           other.reset(other.m_sso_buffer.data(), other.m_sso_buffer.length(), other.m_sso_buffer.max_size());
-          return;
         }
         // one is using heap memory, one is using the sso buffer
-        // allocate heap memory for the one using the sso buffer
-        // then swap the pointer
         else if(is_using_big_string() != other.is_using_big_string())
         {
-          const size_type difference_in_size = rsl::abs(length() - other.length());
-          if(is_using_sso_string())
+          if(is_using_sso_string()) // we're using sso, other is using a heap buffer
           {
-            reallocate(new_buffer_size(difference_in_size), data(), size());
+            // because we're using sso, we can just get the pointers of other
+            // assign them to our object and copy over our sso data to other.
+            pointer other_begin = other.m_begin;
+            pointer other_end = other.m_end;
+            pointer other_last = other.last();
+
+            other.reset(); // make sure the pointers point to the sso buffer again
+            other.assign(data(), length());
+
+            m_begin = other_begin;
+            m_end = other_end;
+            last() = other_last;
           }
-          else
+          else // we're using heap, other is using a sso buffer
           {
-            other.reallocate(other.new_buffer_size(difference_in_size), other.data(), other.size());
+            // this the opposite of the above, we're using heap, but other does not
+            // so we assign our pointers over to other and copy the sso data into this object
+            pointer this_begin = m_begin;
+            pointer this_end = m_end;
+            pointer this_last = last();
+
+            reset(); // make sure the pointers point to the sso buffer again
+            assign(other.data(), other.length());
+
+            other.m_begin = this_begin;
+            other.m_end = this_end;
+            other.last() = this_last;
           }
         }
+        // both are using heap memory, so just swap the pointers
+        else
+        {
+          // this branch also gets executed if both strings use heap memory
+          // which is exactly what we want
+          rsl::swap(m_begin, other.m_begin);
+          rsl::swap(m_end, other.m_end);
+          rsl::swap(last(), other.last());
+        }
 
-        // this branch also gets executed if both strings use heap memory
-        // which is exactly what we want
-        rsl::swap(m_begin, other.m_begin);
-        rsl::swap(m_end, other.m_end);
-        rsl::swap(last(), other.last());
+        rsl::swap(get_mutable_allocator(), other.get_mutable_allocator());
       }
 
       //
@@ -1563,6 +1586,13 @@ namespace rsl
           // this is pointless as we want to overwrite the data anyway.
           reallocate(length + 1, str, length);
         }
+        else
+        {
+          traits_type::copy(m_begin, str, length);
+
+          m_end = m_begin + length;
+          traits_type::assign(*m_end, value_type());
+        }
       }
       // assigns a rvalue str to this.
       // copies when using small string, swaps when using big string
@@ -1576,8 +1606,6 @@ namespace rsl
             rsl::swap(m_begin, str.m_begin);
             rsl::swap(m_end, str.m_end);
             rsl::swap(last(), str.last());
-          
-            get_mutable_allocator() = rsl::move(str.get_mutable_allocator());
           }
           // if the other string is using heap memory,
           // we can just copy over the pointers and reset the source string.
@@ -1589,6 +1617,8 @@ namespace rsl
 
             str.reset();
           }
+
+          get_mutable_allocator() = rsl::move(str.get_mutable_allocator());
         }
         else
         {

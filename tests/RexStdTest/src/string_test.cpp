@@ -543,9 +543,8 @@ TEST_CASE("string creation")
       CHECK(str == "");
       CHECK(str.empty() == true);
       CHECK(str.size() == 0);
-      CHECK(str.capacity() == 26);
-      CHECK(str.get_allocator().num_allocs() == 1);
-      CHECK(str.get_allocator().num_bytes_allocated() == 26);
+      CHECK(str.get_allocator().num_allocs() == 0);
+      CHECK(str.get_allocator().num_bytes_allocated() == 0);
       CHECK(str.get_allocator().num_frees() == 0);
 
       CHECK(str2 == "this is a very big string");
@@ -603,9 +602,8 @@ TEST_CASE("string creation")
       CHECK(str == "");
       CHECK(str.empty() == true);
       CHECK(str.size() == 0);
-      CHECK(str.capacity() == 26);
-      CHECK(str.get_allocator().num_allocs() == 1);
-      CHECK(str.get_allocator().num_bytes_allocated() == 26);
+      CHECK(str.get_allocator().num_allocs() == 0);
+      CHECK(str.get_allocator().num_bytes_allocated() == 0);
       CHECK(str.get_allocator().num_frees() == 0);
 
       CHECK(str2 == "this is a very big string");
@@ -788,7 +786,7 @@ TEST_CASE("string assignment")
       CHECK(str.get_allocator().num_bytes_allocated() == str.capacity() * sizeof(decltype(str)::value_type));
       CHECK(str.get_allocator().num_frees() == 0);
       CHECK(str2 == "this is a very big string");
-      CHECK(str2.size() == 15);
+      CHECK(str2.size() == 25);
       CHECK(str2.capacity() == str2.size() + 1);
       CHECK(str2.get_allocator().num_allocs() == 1);
       CHECK(str2.get_allocator().num_bytes_allocated() == str2.capacity() * sizeof(decltype(str2)::value_type));
@@ -829,9 +827,9 @@ TEST_CASE("string assignment")
       CHECK(str.get_allocator().num_frees() == 0);
       CHECK(str2 == "this is a heap string");
       CHECK(str2.size() == 21);
-      CHECK(str.capacity() == 22);
-      CHECK(str2.get_allocator().num_allocs() == 0);
-      CHECK(str2.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str2.capacity() == 22);
+      CHECK(str2.get_allocator().num_allocs() == 1);
+      CHECK(str2.get_allocator().num_bytes_allocated() == 22 * sizeof(decltype(str)::value_type));
       CHECK(str2.get_allocator().num_frees() == 0);
     }
     // string will keep the heap allocation with size > old_size
@@ -850,8 +848,8 @@ TEST_CASE("string assignment")
       CHECK(str2 == "this is an even bigger string");
       CHECK(str2.size() == 29);
       CHECK(str2.capacity() == 30);
-      CHECK(str2.get_allocator().num_allocs() == 0);
-      CHECK(str2.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str2.get_allocator().num_allocs() == 1);
+      CHECK(str2.get_allocator().num_bytes_allocated() == 30 * sizeof(decltype(str)::value_type));
       CHECK(str2.get_allocator().num_frees() == 0);
     }
   }
@@ -933,21 +931,18 @@ TEST_CASE("string assignment")
       rsl::test::test_string str2("this is a heap string");
 
       card32 old_allocs = str2.get_allocator().num_allocs();
-      card32 old_bytes_allocated = str2.get_allocator().num_bytes_allocated();
-      card32 old_frees = str2.get_allocator().num_allocs();
+      card32 old_frees = str2.get_allocator().num_frees();
 
       str = rsl::move(str2);
 
-      CHECK(str == str2);
       CHECK(str == "this is a heap string");
       CHECK(str.size() == 21);
-      CHECK(str.capacity() == 26);
+      CHECK(str.capacity() == 22);
       CHECK(str.get_allocator().num_allocs() == 1);
-      CHECK(str.get_allocator().num_bytes_allocated() == 26 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_bytes_allocated() == 22 * sizeof(decltype(str)::value_type));
       CHECK(str.get_allocator().num_frees() == 0);
 
       CHECK(str2.get_allocator().num_allocs() <= old_allocs);
-      CHECK(str2.get_allocator().num_bytes_allocated() <= old_bytes_allocated);
       CHECK(str2.get_allocator().num_frees() >= old_frees);
     }
     // string will keep the heap allocation with size > old_size
@@ -956,8 +951,7 @@ TEST_CASE("string assignment")
       rsl::test::test_string str2("this is an even bigger string");
 
       card32 old_allocs = str2.get_allocator().num_allocs();
-      card32 old_bytes_allocated = str2.get_allocator().num_bytes_allocated();
-      card32 old_frees = str2.get_allocator().num_allocs();
+      card32 old_frees = str2.get_allocator().num_frees();
 
       str = rsl::move(str2);
 
@@ -969,7 +963,6 @@ TEST_CASE("string assignment")
       CHECK(str.get_allocator().num_frees() == 0);
 
       CHECK(str2.get_allocator().num_allocs() <= old_allocs);
-      CHECK(str2.get_allocator().num_bytes_allocated() <= old_bytes_allocated);
       CHECK(str2.get_allocator().num_frees() >= old_frees);
     }
   }
@@ -1035,13 +1028,13 @@ TEST_CASE("string assignment")
     }
     // string that'll heap allocate
     {
-      rsl::test::test_string str("this is a very big string");
+      rsl::test::test_string str;
       str.assign(20, 'c');
       CHECK(str == "cccccccccccccccccccc");
       CHECK(str.size() == 20);
-      CHECK(str.capacity() == 26);
-      CHECK(str.get_allocator().num_allocs() == 0);
-      CHECK(str.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str.capacity() == 21);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == 21 * sizeof(decltype(str)::value_type));
       CHECK(str.get_allocator().num_frees() == 0);
     }
     // string will keep the heap allocation with size < sso
@@ -1061,7 +1054,7 @@ TEST_CASE("string assignment")
       str.assign(20, 'c');
       CHECK(str == "cccccccccccccccccccc");
       CHECK(str.size() == 20);
-      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(str.capacity() == 26);
       CHECK(str.get_allocator().num_allocs() == 1);
       CHECK(str.get_allocator().num_bytes_allocated() == 26 * sizeof(decltype(str)::value_type));
       CHECK(str.get_allocator().num_frees() == 0);
@@ -1072,9 +1065,9 @@ TEST_CASE("string assignment")
       str.assign(30, 'c');
       CHECK(str == "cccccccccccccccccccccccccccccc");
       CHECK(str.size() == 30);
-      CHECK(str.capacity() == 30);
+      CHECK(str.capacity() == 31);
       CHECK(str.get_allocator().num_allocs() == 2);
-      CHECK(str.get_allocator().num_bytes_allocated() == 30 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_bytes_allocated() == 31 * sizeof(decltype(str)::value_type));
       CHECK(str.get_allocator().num_frees() == 1);
     }
   }
@@ -1134,7 +1127,7 @@ TEST_CASE("string assignment")
       CHECK(str.get_allocator().num_bytes_allocated() == str.capacity() * sizeof(decltype(str)::value_type));
       CHECK(str.get_allocator().num_frees() == 0);
       CHECK(str2 == "this is a very big string");
-      CHECK(str2.size() == 15);
+      CHECK(str2.size() == 25);
       CHECK(str2.capacity() == str2.size() + 1);
       CHECK(str2.get_allocator().num_allocs() == 1);
       CHECK(str2.get_allocator().num_bytes_allocated() == str2.capacity() * sizeof(decltype(str2)::value_type));
@@ -1176,8 +1169,8 @@ TEST_CASE("string assignment")
       CHECK(str2 == "this is a heap string");
       CHECK(str2.size() == 21);
       CHECK(str2.capacity() == 22);
-      CHECK(str2.get_allocator().num_allocs() == 0);
-      CHECK(str2.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str2.get_allocator().num_allocs() == 1);
+      CHECK(str2.get_allocator().num_bytes_allocated() == 22 * sizeof(decltype(str)::value_type));
       CHECK(str2.get_allocator().num_frees() == 0);
     }
     // string will keep the heap allocation with size > old_size
@@ -1196,8 +1189,8 @@ TEST_CASE("string assignment")
       CHECK(str2 == "this is an even bigger string");
       CHECK(str2.size() == 29);
       CHECK(str2.capacity() == 30);
-      CHECK(str2.get_allocator().num_allocs() == 0);
-      CHECK(str2.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str2.get_allocator().num_allocs() == 1);
+      CHECK(str2.get_allocator().num_bytes_allocated() == 30 * sizeof(decltype(str)::value_type));
       CHECK(str2.get_allocator().num_frees() == 0);
     }
   }
@@ -1210,7 +1203,7 @@ TEST_CASE("string assignment")
 
       str.assign(str2, 0, 5);
       CHECK(str == "small");
-      CHECK(str.size() == 12);
+      CHECK(str.size() == 5);
       CHECK(str.capacity() == str.sso_buff_size());
       CHECK(str.get_allocator().num_allocs() == 0);
       CHECK(str.get_allocator().num_bytes_allocated() == 0);
@@ -1295,8 +1288,8 @@ TEST_CASE("string assignment")
       CHECK(str2 == "this is a heap string");
       CHECK(str2.size() == 21);
       CHECK(str2.capacity() == 22);
-      CHECK(str2.get_allocator().num_allocs() == 0);
-      CHECK(str2.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str2.get_allocator().num_allocs() == 1);
+      CHECK(str2.get_allocator().num_bytes_allocated() == 22 * sizeof(decltype(str2)::value_type));
       CHECK(str2.get_allocator().num_frees() == 0);
     }
     // string will keep the heap allocation with size > old_size
@@ -1309,13 +1302,13 @@ TEST_CASE("string assignment")
       CHECK(str.size() == 27);
       CHECK(str.capacity() == 28);
       CHECK(str.get_allocator().num_allocs() == 2);
-      CHECK(str.get_allocator().num_bytes_allocated() == 30 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_bytes_allocated() == 28 * sizeof(decltype(str)::value_type));
       CHECK(str.get_allocator().num_frees() == 1);
       CHECK(str2 == "this is an even bigger string");
       CHECK(str2.size() == 29);
       CHECK(str2.capacity() == 30);
-      CHECK(str2.get_allocator().num_allocs() == 0);
-      CHECK(str2.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str2.get_allocator().num_allocs() == 1);
+      CHECK(str2.get_allocator().num_bytes_allocated() == 30 * sizeof(decltype(str2)::value_type));
       CHECK(str2.get_allocator().num_frees() == 0);
     }
   }
@@ -1397,21 +1390,18 @@ TEST_CASE("string assignment")
       rsl::test::test_string str2("this is a heap string");
 
       card32 old_allocs = str2.get_allocator().num_allocs();
-      card32 old_bytes_allocated = str2.get_allocator().num_bytes_allocated();
-      card32 old_frees = str2.get_allocator().num_allocs();
+      card32 old_frees = str2.get_allocator().num_frees();
 
       str.assign(rsl::move(str2));
 
-      CHECK(str == str2);
       CHECK(str == "this is a heap string");
       CHECK(str.size() == 21);
-      CHECK(str.capacity() == 26);
+      CHECK(str.capacity() == 22);
       CHECK(str.get_allocator().num_allocs() == 1);
-      CHECK(str.get_allocator().num_bytes_allocated() == 26 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_bytes_allocated() == 22 * sizeof(decltype(str)::value_type));
       CHECK(str.get_allocator().num_frees() == 0);
 
       CHECK(str2.get_allocator().num_allocs() <= old_allocs);
-      CHECK(str2.get_allocator().num_bytes_allocated() <= old_bytes_allocated);
       CHECK(str2.get_allocator().num_frees() >= old_frees);
     }
     // string will keep the heap allocation with size > old_size
@@ -1420,8 +1410,7 @@ TEST_CASE("string assignment")
       rsl::test::test_string str2("this is an even bigger string");
 
       card32 old_allocs = str2.get_allocator().num_allocs();
-      card32 old_bytes_allocated = str2.get_allocator().num_bytes_allocated();
-      card32 old_frees = str2.get_allocator().num_allocs();
+      card32 old_frees = str2.get_allocator().num_frees();
 
       str.assign(rsl::move(str2));
 
@@ -1433,7 +1422,6 @@ TEST_CASE("string assignment")
       CHECK(str.get_allocator().num_frees() == 0);
 
       CHECK(str2.get_allocator().num_allocs() <= old_allocs);
-      CHECK(str2.get_allocator().num_bytes_allocated() <= old_bytes_allocated);
       CHECK(str2.get_allocator().num_frees() >= old_frees);
     }
 
@@ -1445,7 +1433,7 @@ TEST_CASE("string assignment")
       rsl::test::test_string str;
 
       str.assign("small string", 12);
-      CHECK(str == "small");
+      CHECK(str == "small string");
       CHECK(str.size() == 12);
       CHECK(str.capacity() == str.sso_buff_size());
       CHECK(str.get_allocator().num_allocs() == 0);
@@ -1520,7 +1508,7 @@ TEST_CASE("string assignment")
       rsl::test::test_string str;
 
       str.assign("small string");
-      CHECK(str == "small");
+      CHECK(str == "small string");
       CHECK(str.size() == 12);
       CHECK(str.capacity() == str.sso_buff_size());
       CHECK(str.get_allocator().num_allocs() == 0);
@@ -1581,8 +1569,8 @@ TEST_CASE("string assignment")
 
       str.assign("this is an even bigger string");
       CHECK(str == "this is an even bigger string");
-      CHECK(str.size() == 27);
-      CHECK(str.capacity() == 28);
+      CHECK(str.size() == 29);
+      CHECK(str.capacity() == 30);
       CHECK(str.get_allocator().num_allocs() == 2);
       CHECK(str.get_allocator().num_bytes_allocated() == 30 * sizeof(decltype(str)::value_type));
       CHECK(str.get_allocator().num_frees() == 1);
@@ -1644,7 +1632,7 @@ TEST_CASE("string assignment")
       CHECK(str.get_allocator().num_bytes_allocated() == str.capacity() * sizeof(decltype(str)::value_type));
       CHECK(str.get_allocator().num_frees() == 0);
       CHECK(str2 == "this is a very big string");
-      CHECK(str2.size() == 15);
+      CHECK(str2.size() == 25);
       CHECK(str2.capacity() == str2.size() + 1);
       CHECK(str2.get_allocator().num_allocs() == 1);
       CHECK(str2.get_allocator().num_bytes_allocated() == str2.capacity() * sizeof(decltype(str2)::value_type));
@@ -1685,9 +1673,9 @@ TEST_CASE("string assignment")
       CHECK(str.get_allocator().num_frees() == 0);
       CHECK(str2 == "this is a heap string");
       CHECK(str2.size() == 21);
-      CHECK(str.capacity() == 22);
-      CHECK(str2.get_allocator().num_allocs() == 0);
-      CHECK(str2.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str2.capacity() == 22);
+      CHECK(str2.get_allocator().num_allocs() == 1);
+      CHECK(str2.get_allocator().num_bytes_allocated() == 22 * sizeof(decltype(str)::value_type));
       CHECK(str2.get_allocator().num_frees() == 0);
     }
     // string will keep the heap allocation with size > old_size
@@ -1706,8 +1694,8 @@ TEST_CASE("string assignment")
       CHECK(str2 == "this is an even bigger string");
       CHECK(str2.size() == 29);
       CHECK(str2.capacity() == 30);
-      CHECK(str2.get_allocator().num_allocs() == 0);
-      CHECK(str2.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str2.get_allocator().num_allocs() == 1);
+      CHECK(str2.get_allocator().num_bytes_allocated() == 30 * sizeof(decltype(str)::value_type));
       CHECK(str2.get_allocator().num_frees() == 0);
     }
   }
@@ -1718,7 +1706,7 @@ TEST_CASE("string assignment")
       rsl::test::test_string str;
 
       str.assign({'s','m','a','l','l',' ','s','t','r','i','n','g'});
-      CHECK(str == "small");
+      CHECK(str == "small string");
       CHECK(str.size() == 12);
       CHECK(str.capacity() == str.sso_buff_size());
       CHECK(str.get_allocator().num_allocs() == 0);
@@ -1729,7 +1717,7 @@ TEST_CASE("string assignment")
     {
       rsl::test::test_string str;
 
-      str.assign({'t','h','e',' ','s','s','o',' ','s','t','r','i','n','g'});
+      str.assign({'t','h','e',' ','s','s','o',' ','s','t','r','i','n','g','!'});
       CHECK(str == "the sso string!");
       CHECK(str.size() == 15);
       CHECK(str.capacity() == str.sso_buff_size());
@@ -1779,8 +1767,8 @@ TEST_CASE("string assignment")
 
       str.assign({'t','h','i','s',' ','i','s',' ','a','n',' ','e','v','e','n',' ','b','i','g','g','e','r',' ','s','t','r','i','n','g'});
       CHECK(str == "this is an even bigger string");
-      CHECK(str.size() == 27);
-      CHECK(str.capacity() == 28);
+      CHECK(str.size() == 29);
+      CHECK(str.capacity() == 30);
       CHECK(str.get_allocator().num_allocs() == 2);
       CHECK(str.get_allocator().num_bytes_allocated() == 30 * sizeof(decltype(str)::value_type));
       CHECK(str.get_allocator().num_frees() == 1);
@@ -1882,7 +1870,7 @@ TEST_CASE("string assignment")
 
       str.assign(str2, 0, 5);
       CHECK(str == "small");
-      CHECK(str.size() == 12);
+      CHECK(str.size() == 5);
       CHECK(str.capacity() == str.sso_buff_size());
       CHECK(str.get_allocator().num_allocs() == 0);
       CHECK(str.get_allocator().num_bytes_allocated() == 0);
@@ -1950,7 +1938,7 @@ TEST_CASE("string assignment")
       CHECK(str.size() == 27);
       CHECK(str.capacity() == 28);
       CHECK(str.get_allocator().num_allocs() == 2);
-      CHECK(str.get_allocator().num_bytes_allocated() == 30 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_bytes_allocated() == 28 * sizeof(decltype(str)::value_type));
       CHECK(str.get_allocator().num_frees() == 1);
     }
   }
@@ -1965,37 +1953,81 @@ TEST_CASE("string swap")
   {
     rsl::test::test_string str(heap_string);
     rsl::test::test_string str2(stack_string);
+
+    card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+    card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+    card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+
     str.swap(str2);
 
+    CHECK(str == stack_string);
+    CHECK(str2 == heap_string);
     CHECK(str.size() == stack_string.size());
     CHECK(str2.size() == heap_string.size());
+
+    CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
+    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
+    CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
   }
 
   {
     rsl::test::test_string str3(stack_string);
     rsl::test::test_string str4(heap_string);
+
+    card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+    card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+    card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+
     str3.swap(str4);
 
+    CHECK(str4 == stack_string);
+    CHECK(str3 == heap_string);
     CHECK(str3.size() == heap_string.size());
     CHECK(str4.size() == stack_string.size());
+
+    CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
+    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
+    CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
   }
 
   {
     rsl::test::test_string str5(stack_string);
     rsl::test::test_string str6(stack_string);
+
+    card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+    card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+    card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+
     str5.swap(str6);
 
+    CHECK(str5 == stack_string);
+    CHECK(str6 == stack_string);
     CHECK(str5.size() == stack_string.size());
     CHECK(str6.size() == stack_string.size());
+
+    CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
+    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
+    CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
   }
 
   {
     rsl::test::test_string str7(heap_string);
     rsl::test::test_string str8(heap_string);
+
+    card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+    card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+    card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+
     str7.swap(str8);
 
+    CHECK(str7 == heap_string);
+    CHECK(str8 == heap_string);
     CHECK(str7.size() == heap_string.size());
     CHECK(str8.size() == heap_string.size());
+
+    CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
+    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
+    CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
   }
 }
 TEST_CASE("string element access")
