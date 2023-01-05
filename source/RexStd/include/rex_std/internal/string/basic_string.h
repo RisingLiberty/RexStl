@@ -258,6 +258,13 @@ namespace rsl
       // replaces the contents with count copies of character
       basic_string& assign(size_type count, value_type ch)
       {
+        // if the new string would fit into the sso but we already heap allocated
+        // we don't deallocate this data because there is little point in doing so
+        // if we'd grow again in the future, we'd have to heap allocate again
+        // it's better to leave the heap allocation for what it's for
+        // if the user is concerned about memory usage, then the user can
+        // create a new string and assign to that
+
         const size_type new_size = count + 1;
 
         if(new_size > capacity())
@@ -1563,18 +1570,30 @@ namespace rsl
       {
         if(str.is_using_big_string())
         {
+          // if we're both using heap memory, we just swap the pointers and allocators
+          if (is_using_big_string())
+          {
+            rsl::swap(m_begin, str.m_begin);
+            rsl::swap(m_end, str.m_end);
+            rsl::swap(last(), str.last());
+          
+            get_mutable_allocator() = rsl::move(str.get_mutable_allocator());
+          }
           // if the other string is using heap memory,
           // we can just copy over the pointers and reset the source string.
-          m_begin = str.m_begin;
-          m_end   = str.m_end;
-          last()  = str.last();
+          else
+          {
+            m_begin = str.m_begin;
+            m_end   = str.m_end;
+            last()  = str.last();
 
-          str.reset();
+            str.reset();
+          }
         }
         else
         {
           resize(str.length());
-          rsl::memcpy(data(), str.data(), str.length());
+          traits_type::copy(data(), str.data(), str.length());
         }
       }
       // allocates a new buffer and copies over the data

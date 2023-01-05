@@ -23,6 +23,7 @@ namespace rsl::test
   inline namespace v1
   {
     using test_string = rsl::basic_string<char, rsl::char_traits<char>, rsl::test::test_allocator>;
+    using test_string_view = rsl::basic_string_view<char, rsl::char_traits<char>>;
   }
 }
 
@@ -381,7 +382,7 @@ TEST_CASE("string creation")
       CHECK(str.get_allocator().num_frees() == 0);
 
       CHECK(str == str2);
-      
+
       CHECK(str2.size() == 12);
       CHECK(str2.capacity() == str2.sso_buff_size());
       CHECK(str2 == "small string");
@@ -508,7 +509,7 @@ TEST_CASE("string creation")
       CHECK(str.get_allocator().num_allocs() == 0);
       CHECK(str.get_allocator().num_bytes_allocated() == 0);
       CHECK(str.get_allocator().num_frees() == 0);
-      
+
       CHECK(str2 == "small string");
       CHECK(str2.size() == 12);
       CHECK(str2.capacity() == str2.sso_buff_size());
@@ -527,7 +528,7 @@ TEST_CASE("string creation")
       CHECK(str.get_allocator().num_allocs() == 0);
       CHECK(str.get_allocator().num_bytes_allocated() == 0);
       CHECK(str.get_allocator().num_frees() == 0);
-      
+
       CHECK(str2 == "the sso string!");
       CHECK(str2.size() == 15);
       CHECK(str2.capacity() == str2.sso_buff_size());
@@ -629,7 +630,7 @@ TEST_CASE("string creation")
     }
     // string size that's on the boundary of sso, all characters in the sso will be filled with this
     {
-      rsl::test::test_string str({ 't', 'h', 'e', ' ', 's', 's', 'o', ' ', 's', 't', 'r', 'i', 'n', 'g', '!'});
+      rsl::test::test_string str({ 't', 'h', 'e', ' ', 's', 's', 'o', ' ', 's', 't', 'r', 'i', 'n', 'g', '!' });
       CHECK(str == "the sso string!");
       CHECK(str.size() == 15);
       CHECK(str.capacity() == str.sso_buff_size());
@@ -723,148 +724,1235 @@ TEST_CASE("string assignment")
 {
   using namespace rsl::test;
 
-  // string has 16 assignment functions
+  // Rex Standard Library has "defined" behavior for string post move.
+  // was there's only 1 RSL, it's possible for us to test for this.
+  // However, if we would have checks for content post move assignment
+  // this makes it easier to use string after move which is not allowed
+  // therefore we don't implement checks for strings after they've been
+  // move assigned from. using such a string is undefined, they should be cleared first.
+  // we only check no additional allocations are performed on it
 
   // 1) basic_string& operator=(const basic_string& other)
   {
-    rsl::test::test_string str;
-    rsl::test::test_string str2("small string");
+    // string size that'd trigger sso
+    {
+      rsl::test::test_string str;
+      rsl::test::test_string str2("small string");
 
-    str = str2;
-    CHECK(str == str2);
-    CHECK(str == "small string");
-    CHECK(str2 == "small string");
-    CHECK(str.size() == 12);
-    CHECK(str2.size() == 12);
+      str = str2;
+      CHECK(str == str2);
+      CHECK(str == "small string");
+      CHECK(str.size() == 12);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(str.get_allocator().num_allocs() == 0);
+      CHECK(str.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str.get_allocator().num_frees() == 0);
+      CHECK(str2 == "small string");
+      CHECK(str2.size() == 12);
+      CHECK(str2.capacity() == str2.sso_buff_size());
+      CHECK(str2.get_allocator().num_allocs() == 0);
+      CHECK(str2.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str2.get_allocator().num_frees() == 0);
+    }
+    // string size that's on the boundary of sso, all characters in the sso will be filled with this
+    {
+      rsl::test::test_string str;
+      rsl::test::test_string str2("the sso string!");
+
+      str = str2;
+      CHECK(str == str2);
+      CHECK(str == "the sso string!");
+      CHECK(str.size() == 15);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(str.get_allocator().num_allocs() == 0);
+      CHECK(str.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str.get_allocator().num_frees() == 0);
+      CHECK(str2 == "the sso string!");
+      CHECK(str2.size() == 15);
+      CHECK(str2.capacity() == str2.sso_buff_size());
+      CHECK(str2.get_allocator().num_allocs() == 0);
+      CHECK(str2.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str2.get_allocator().num_frees() == 0);
+    }
+    // string that'll heap allocate
+    {
+      rsl::test::test_string str;
+      rsl::test::test_string str2("this is a very big string");
+
+      str = str2;
+      CHECK(str == str2);
+      CHECK(str == "this is a very big string");
+      CHECK(str.size() == 25);
+      CHECK(str.capacity() == str.size() + 1);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+      CHECK(str2 == "this is a very big string");
+      CHECK(str2.size() == 15);
+      CHECK(str2.capacity() == str2.size() + 1);
+      CHECK(str2.get_allocator().num_allocs() == 1);
+      CHECK(str2.get_allocator().num_bytes_allocated() == str2.capacity() * sizeof(decltype(str2)::value_type));
+      CHECK(str2.get_allocator().num_frees() == 0);
+    }
+    // string will keep the heap allocation with size < sso
+    {
+      rsl::test::test_string str("this is a very big string");
+      rsl::test::test_string str2("small string");
+
+      str = str2;
+      CHECK(str == str2);
+      CHECK(str == "small string");
+      CHECK(str.size() == 12);
+      CHECK(str.capacity() == 26);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == 26 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+      CHECK(str2 == "small string");
+      CHECK(str2.size() == 12);
+      CHECK(str2.capacity() == str2.sso_buff_size());
+      CHECK(str2.get_allocator().num_allocs() == 0);
+      CHECK(str2.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str2.get_allocator().num_frees() == 0);
+    }
+    // string will keep the heap allocation with sso < size < old_size
+    {
+      rsl::test::test_string str("this is a very big string");
+      rsl::test::test_string str2("this is a heap string");
+
+      str = str2;
+      CHECK(str == str2);
+      CHECK(str == "this is a heap string");
+      CHECK(str.size() == 21);
+      CHECK(str.capacity() == 26);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == 26 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+      CHECK(str2 == "this is a heap string");
+      CHECK(str2.size() == 21);
+      CHECK(str.capacity() == 22);
+      CHECK(str2.get_allocator().num_allocs() == 0);
+      CHECK(str2.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str2.get_allocator().num_frees() == 0);
+    }
+    // string will keep the heap allocation with size > old_size
+    {
+      rsl::test::test_string str("this is a very big string");
+      rsl::test::test_string str2("this is an even bigger string");
+
+      str = str2;
+      CHECK(str == str2);
+      CHECK(str == "this is an even bigger string");
+      CHECK(str.size() == 29);
+      CHECK(str.capacity() == 30);
+      CHECK(str.get_allocator().num_allocs() == 2);
+      CHECK(str.get_allocator().num_bytes_allocated() == 30 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 1);
+      CHECK(str2 == "this is an even bigger string");
+      CHECK(str2.size() == 29);
+      CHECK(str2.capacity() == 30);
+      CHECK(str2.get_allocator().num_allocs() == 0);
+      CHECK(str2.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str2.get_allocator().num_frees() == 0);
+    }
   }
   // 2) basic_string& operator=(basic_string&& other)
   {
-    rsl::test::test_string str;
-    rsl::test::test_string str2("small string");
+    // string size that'd trigger sso
+    {
+      rsl::test::test_string str;
+      rsl::test::test_string str2("small string");
 
-    str = rsl::move(str2);
-    CHECK(str == "small string");
-    CHECK(str.size() == 12);
+      str = rsl::move(str2);
+
+      CHECK(str == "small string");
+      CHECK(str.size() == 12);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(str.get_allocator().num_allocs() == 0);
+      CHECK(str.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str.get_allocator().num_frees() == 0);
+
+      CHECK(str2.get_allocator().num_allocs() == 0);
+      CHECK(str2.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str2.get_allocator().num_frees() == 0);
+    }
+    // string size that's on the boundary of sso, all characters in the sso will be filled with this
+    {
+      rsl::test::test_string str;
+      rsl::test::test_string str2("the sso string!");
+
+      str = rsl::move(str2);
+
+      CHECK(str == "the sso string!");
+      CHECK(str.size() == 15);
+      CHECK(str.get_allocator().num_allocs() == 0);
+      CHECK(str.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str.get_allocator().num_frees() == 0);
+
+      CHECK(str2.get_allocator().num_allocs() == 0);
+      CHECK(str2.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str2.get_allocator().num_frees() == 0);
+    }
+    // string that'll heap allocate
+    {
+      rsl::test::test_string str;
+      rsl::test::test_string str2("this is a very big string");
+
+      str = rsl::move(str2);
+
+      CHECK(str == "this is a very big string");
+      CHECK(str.size() == 25);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+
+      CHECK(str2.get_allocator().num_allocs() == 0);
+      CHECK(str2.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str2.get_allocator().num_frees() == 0);
+    }
+    // string will keep the heap allocation with size < sso
+    {
+      rsl::test::test_string str("this is a very big string");
+      rsl::test::test_string str2("small string");
+
+      str = rsl::move(str2);
+
+      CHECK(str == str2);
+      CHECK(str == "small string");
+      CHECK(str.size() == 12);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == 26 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+
+      CHECK(str2.get_allocator().num_allocs() == 0);
+      CHECK(str2.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str2.get_allocator().num_frees() == 0);
+    }
+    // string will keep the heap allocation with sso < size < old_size
+    {
+      rsl::test::test_string str("this is a very big string");
+      rsl::test::test_string str2("this is a heap string");
+
+      card32 old_allocs = str2.get_allocator().num_allocs();
+      card32 old_bytes_allocated = str2.get_allocator().num_bytes_allocated();
+      card32 old_frees = str2.get_allocator().num_allocs();
+
+      str = rsl::move(str2);
+
+      CHECK(str == str2);
+      CHECK(str == "this is a heap string");
+      CHECK(str.size() == 21);
+      CHECK(str.capacity() == 26);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == 26 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+
+      CHECK(str2.get_allocator().num_allocs() <= old_allocs);
+      CHECK(str2.get_allocator().num_bytes_allocated() <= old_bytes_allocated);
+      CHECK(str2.get_allocator().num_frees() >= old_frees);
+    }
+    // string will keep the heap allocation with size > old_size
+    {
+      rsl::test::test_string str("this is a very big string");
+      rsl::test::test_string str2("this is an even bigger string");
+
+      card32 old_allocs = str2.get_allocator().num_allocs();
+      card32 old_bytes_allocated = str2.get_allocator().num_bytes_allocated();
+      card32 old_frees = str2.get_allocator().num_allocs();
+
+      str = rsl::move(str2);
+
+      CHECK(str == "this is an even bigger string");
+      CHECK(str.size() == 29);
+      CHECK(str.capacity() == 30);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == 30 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+
+      CHECK(str2.get_allocator().num_allocs() <= old_allocs);
+      CHECK(str2.get_allocator().num_bytes_allocated() <= old_bytes_allocated);
+      CHECK(str2.get_allocator().num_frees() >= old_frees);
+    }
   }
+
   // 3) basic_string& operator=(value_type ch)
   {
-    rsl::test::test_string str("small string");
-    str = 'c';
+    // string size that'd trigger sso
+    {
+      rsl::test::test_string str("small string");
+      str = 'c';
 
-    CHECK(str == "c");
-    CHECK(str.size() == 1);
+      CHECK(str == "c");
+      CHECK(str.size() == 1);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(str.get_allocator().num_allocs() == 0);
+      CHECK(str.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str.get_allocator().num_frees() == 0);
+    }
+    // string will keep the heap allocation
+    {
+      rsl::test::test_string str("this is a very big string");
+      str = 'c';
+
+      CHECK(str == "c");
+      CHECK(str.size() == 1);
+      CHECK(str.capacity() == 26);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == 26 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+    }
   }
   // 4) basic_string& operator=(rsl::nullptr_t) = delete
   {
-      // this should not compile;
-      // rsl::test::test_string str;
-      // str = nullptr;
-  } // 5) basic_string& assign(size_type count, value_type ch)
+    // this should not compile;
+    // rsl::test::test_string str;
+    // str = nullptr;
+  }
+
+  // 5) basic_string& assign(size_type count, value_type ch)
   {
-    rsl::test::test_string str;
-    str.assign(5, 'c');
-    CHECK(str == "ccccc");
-    CHECK(str.size() == 5);
+    // string size that'd trigger sso
+    {
+      rsl::test::test_string str;
+      str.assign(5, 'c');
+      CHECK(str == "ccccc");
+      CHECK(str.size() == 5);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(str.get_allocator().num_allocs() == 0);
+      CHECK(str.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str.get_allocator().num_frees() == 0);
 
-    str.assign(str.sso_buff_size(), 'c');
-    CHECK(str.size() == str.sso_buff_size());
-
-    str.assign(20, 'c');
-    CHECK(str == "cccccccccccccccccccc");
-    CHECK(str.size() == 20);
+    }
+    // string size that's on the boundary of sso, all characters in the sso will be filled with this
+    {
+      rsl::test::test_string str;
+      str.assign(15, 'c');
+      CHECK(str == "ccccccccccccccc");
+      CHECK(str.size() == 15);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(str.get_allocator().num_allocs() == 0);
+      CHECK(str.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str.get_allocator().num_frees() == 0);
+    }
+    // string that'll heap allocate
+    {
+      rsl::test::test_string str("this is a very big string");
+      str.assign(20, 'c');
+      CHECK(str == "cccccccccccccccccccc");
+      CHECK(str.size() == 20);
+      CHECK(str.capacity() == 26);
+      CHECK(str.get_allocator().num_allocs() == 0);
+      CHECK(str.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str.get_allocator().num_frees() == 0);
+    }
+    // string will keep the heap allocation with size < sso
+    {
+      rsl::test::test_string str("this is a very big string");
+      str.assign(10, 'c');
+      CHECK(str == "cccccccccc");
+      CHECK(str.size() == 10);
+      CHECK(str.capacity() == 26);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == 26 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+    }
+    // string will keep the heap allocation with sso < size < old_size
+    {
+      rsl::test::test_string str("this is a very big string");
+      str.assign(20, 'c');
+      CHECK(str == "cccccccccccccccccccc");
+      CHECK(str.size() == 20);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == 26 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+    }
+    // string will keep the heap allocation with size > old_size
+    {
+      rsl::test::test_string str("this is a very big string");
+      str.assign(30, 'c');
+      CHECK(str == "cccccccccccccccccccccccccccccc");
+      CHECK(str.size() == 30);
+      CHECK(str.capacity() == 30);
+      CHECK(str.get_allocator().num_allocs() == 2);
+      CHECK(str.get_allocator().num_bytes_allocated() == 30 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 1);
+    }
   }
   // 6) basic_string& assign(const basic_string& other)
   {
-    rsl::test::test_string str;
-    rsl::test::test_string str2("small string");
+    // string size that'd trigger sso
+    {
+      rsl::test::test_string str;
+      rsl::test::test_string str2("small string");
 
-    str.assign(str2);
+      str.assign(str2);
+      CHECK(str == str2);
+      CHECK(str == "small string");
+      CHECK(str.size() == 12);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(str.get_allocator().num_allocs() == 0);
+      CHECK(str.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str.get_allocator().num_frees() == 0);
+      CHECK(str2 == "small string");
+      CHECK(str2.size() == 12);
+      CHECK(str2.capacity() == str2.sso_buff_size());
+      CHECK(str2.get_allocator().num_allocs() == 0);
+      CHECK(str2.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str2.get_allocator().num_frees() == 0);
+    }
+    // string size that's on the boundary of sso, all characters in the sso will be filled with this
+    {
+      rsl::test::test_string str;
+      rsl::test::test_string str2("the sso string!");
+
+      str.assign(str2);
+      CHECK(str == str2);
+      CHECK(str == "the sso string!");
+      CHECK(str.size() == 15);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(str.get_allocator().num_allocs() == 0);
+      CHECK(str.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str.get_allocator().num_frees() == 0);
+      CHECK(str2 == "the sso string!");
+      CHECK(str2.size() == 15);
+      CHECK(str2.capacity() == str2.sso_buff_size());
+      CHECK(str2.get_allocator().num_allocs() == 0);
+      CHECK(str2.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str2.get_allocator().num_frees() == 0);
+    }
+    // string that'll heap allocate
+    {
+      rsl::test::test_string str;
+      rsl::test::test_string str2("this is a very big string");
+
+      str.assign(str2);
+      CHECK(str == str2);
+      CHECK(str == "this is a very big string");
+      CHECK(str.size() == 25);
+      CHECK(str.capacity() == str.size() + 1);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+      CHECK(str2 == "this is a very big string");
+      CHECK(str2.size() == 15);
+      CHECK(str2.capacity() == str2.size() + 1);
+      CHECK(str2.get_allocator().num_allocs() == 1);
+      CHECK(str2.get_allocator().num_bytes_allocated() == str2.capacity() * sizeof(decltype(str2)::value_type));
+      CHECK(str2.get_allocator().num_frees() == 0);
+    }
+    // string will keep the heap allocation with size < sso
+    {
+      rsl::test::test_string str("this is a very big string");
+      rsl::test::test_string str2("small string");
+
+      str.assign(str2);
+      CHECK(str == str2);
+      CHECK(str == "small string");
+      CHECK(str.size() == 12);
+      CHECK(str.capacity() == 26);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == 26 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+      CHECK(str2 == "small string");
+      CHECK(str2.size() == 12);
+      CHECK(str2.capacity() == str2.sso_buff_size());
+      CHECK(str2.get_allocator().num_allocs() == 0);
+      CHECK(str2.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str2.get_allocator().num_frees() == 0);
+    }
+    // string will keep the heap allocation with sso < size < old_size
+    {
+      rsl::test::test_string str("this is a very big string");
+      rsl::test::test_string str2("this is a heap string");
+
+      str.assign(str2);
+      CHECK(str == str2);
+      CHECK(str == "this is a heap string");
+      CHECK(str.size() == 21);
+      CHECK(str.capacity() == 26);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == 26 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+      CHECK(str2 == "this is a heap string");
+      CHECK(str2.size() == 21);
+      CHECK(str2.capacity() == 22);
+      CHECK(str2.get_allocator().num_allocs() == 0);
+      CHECK(str2.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str2.get_allocator().num_frees() == 0);
+    }
+    // string will keep the heap allocation with size > old_size
+    {
+      rsl::test::test_string str("this is a very big string");
+      rsl::test::test_string str2("this is an even bigger string");
+
+      str.assign(str2);
+      CHECK(str == str2);
+      CHECK(str == "this is an even bigger string");
+      CHECK(str.size() == 29);
+      CHECK(str.capacity() == 30);
+      CHECK(str.get_allocator().num_allocs() == 2);
+      CHECK(str.get_allocator().num_bytes_allocated() == 30 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 1);
+      CHECK(str2 == "this is an even bigger string");
+      CHECK(str2.size() == 29);
+      CHECK(str2.capacity() == 30);
+      CHECK(str2.get_allocator().num_allocs() == 0);
+      CHECK(str2.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str2.get_allocator().num_frees() == 0);
+    }
   }
   // 7) basic_string& assign(const basic_string& other, size_type pos, size_type count = s_npos)
   {
-    rsl::test::test_string str;
-    rsl::test::test_string str2("small string");
+    // string size that'd trigger sso
+    {
+      rsl::test::test_string str;
+      rsl::test::test_string str2("small string");
 
-    str.assign(str2, 6, 3);
-    CHECK(str.size() == 3);
-    CHECK(str == "str");
+      str.assign(str2, 0, 5);
+      CHECK(str == "small");
+      CHECK(str.size() == 12);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(str.get_allocator().num_allocs() == 0);
+      CHECK(str.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str.get_allocator().num_frees() == 0);
+      CHECK(str2 == "small string");
+      CHECK(str2.size() == 12);
+      CHECK(str2.capacity() == str2.sso_buff_size());
+      CHECK(str2.get_allocator().num_allocs() == 0);
+      CHECK(str2.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str2.get_allocator().num_frees() == 0);
+    }
+    // string size that's on the boundary of sso, all characters in the sso will be filled with this
+    {
+      rsl::test::test_string str;
+      rsl::test::test_string str2("the sso string!");
+
+      str.assign(str2, 0, 15);
+      CHECK(str == "the sso string!");
+      CHECK(str.size() == 15);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(str.get_allocator().num_allocs() == 0);
+      CHECK(str.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str.get_allocator().num_frees() == 0);
+      CHECK(str2 == "the sso string!");
+      CHECK(str2.size() == 15);
+      CHECK(str2.capacity() == str2.sso_buff_size());
+      CHECK(str2.get_allocator().num_allocs() == 0);
+      CHECK(str2.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str2.get_allocator().num_frees() == 0);
+    }
+    // string that'll heap allocate
+    {
+      rsl::test::test_string str;
+      rsl::test::test_string str2("this is a very big string");
+
+      str.assign(str2, 0, 20);
+      CHECK(str == "this is a very big s");
+      CHECK(str.size() == 20);
+      CHECK(str.capacity() == str.size() + 1);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+
+      CHECK(str2 == "this is a very big string");
+      CHECK(str2.size() == 25);
+      CHECK(str2.capacity() == str2.size() + 1);
+      CHECK(str2.get_allocator().num_allocs() == 1);
+      CHECK(str2.get_allocator().num_bytes_allocated() == str2.capacity() * sizeof(decltype(str2)::value_type));
+      CHECK(str2.get_allocator().num_frees() == 0);
+    }
+    // string will keep the heap allocation with size < sso
+    {
+      rsl::test::test_string str("this is a very big string");
+      rsl::test::test_string str2("small string");
+
+      str.assign(str2, 0, 5);
+      CHECK(str == "small");
+      CHECK(str.size() == 5);
+      CHECK(str.capacity() == 26);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == 26 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+      CHECK(str2 == "small string");
+      CHECK(str2.size() == 12);
+      CHECK(str2.capacity() == str2.sso_buff_size());
+      CHECK(str2.get_allocator().num_allocs() == 0);
+      CHECK(str2.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str2.get_allocator().num_frees() == 0);
+    }
+    // string will keep the heap allocation with sso < size < old_size
+    {
+      rsl::test::test_string str("this is a very big string");
+      rsl::test::test_string str2("this is a heap string");
+
+      str.assign(str2, 0, 20);
+      CHECK(str == "this is a heap strin");
+      CHECK(str.size() == 20);
+      CHECK(str.capacity() == 26);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == 26 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+      CHECK(str2 == "this is a heap string");
+      CHECK(str2.size() == 21);
+      CHECK(str2.capacity() == 22);
+      CHECK(str2.get_allocator().num_allocs() == 0);
+      CHECK(str2.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str2.get_allocator().num_frees() == 0);
+    }
+    // string will keep the heap allocation with size > old_size
+    {
+      rsl::test::test_string str("this is a very big string");
+      rsl::test::test_string str2("this is an even bigger string");
+
+      str.assign(str2, 0, 27);
+      CHECK(str == "this is an even bigger stri");
+      CHECK(str.size() == 27);
+      CHECK(str.capacity() == 28);
+      CHECK(str.get_allocator().num_allocs() == 2);
+      CHECK(str.get_allocator().num_bytes_allocated() == 30 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 1);
+      CHECK(str2 == "this is an even bigger string");
+      CHECK(str2.size() == 29);
+      CHECK(str2.capacity() == 30);
+      CHECK(str2.get_allocator().num_allocs() == 0);
+      CHECK(str2.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str2.get_allocator().num_frees() == 0);
+    }
   }
   // 8) basic_string& assign(basic_string&& other)
   {
-    rsl::test::test_string str;
-    rsl::test::test_string str2("small string");
+    // string size that'd trigger sso
+    {
+      rsl::test::test_string str;
+      rsl::test::test_string str2("small string");
 
-    str.assign(rsl::move(str2));
-    CHECK(str == "small string");
-    CHECK(str.size() == 12);
+      str.assign(rsl::move(str2));
 
-    str2.assign("a very big string to make sure we get heap allocation");
-    str.assign(rsl::move(str2));
+      CHECK(str == "small string");
+      CHECK(str.size() == 12);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(str.get_allocator().num_allocs() == 0);
+      CHECK(str.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str.get_allocator().num_frees() == 0);
+
+      CHECK(str2.get_allocator().num_allocs() == 0);
+      CHECK(str2.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str2.get_allocator().num_frees() == 0);
+    }
+    // string size that's on the boundary of sso, all characters in the sso will be filled with this
+    {
+      rsl::test::test_string str;
+      rsl::test::test_string str2("the sso string!");
+
+      str.assign(rsl::move(str2));
+
+      CHECK(str == "the sso string!");
+      CHECK(str.size() == 15);
+      CHECK(str.get_allocator().num_allocs() == 0);
+      CHECK(str.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str.get_allocator().num_frees() == 0);
+
+      CHECK(str2.get_allocator().num_allocs() == 0);
+      CHECK(str2.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str2.get_allocator().num_frees() == 0);
+    }
+    // string that'll heap allocate
+    {
+      rsl::test::test_string str;
+      rsl::test::test_string str2("this is a very big string");
+
+      str.assign(rsl::move(str2));
+
+      CHECK(str == "this is a very big string");
+      CHECK(str.size() == 25);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+
+      CHECK(str2.get_allocator().num_allocs() == 0);
+      CHECK(str2.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str2.get_allocator().num_frees() == 0);
+    }
+    // string will keep the heap allocation with size < sso
+    {
+      rsl::test::test_string str("this is a very big string");
+      rsl::test::test_string str2("small string");
+
+      str.assign(rsl::move(str2));
+
+      CHECK(str == str2);
+      CHECK(str == "small string");
+      CHECK(str.size() == 12);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == 26 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+
+      CHECK(str2.get_allocator().num_allocs() == 0);
+      CHECK(str2.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str2.get_allocator().num_frees() == 0);
+    }
+    // string will keep the heap allocation with sso < size < old_size
+    {
+      rsl::test::test_string str("this is a very big string");
+      rsl::test::test_string str2("this is a heap string");
+
+      card32 old_allocs = str2.get_allocator().num_allocs();
+      card32 old_bytes_allocated = str2.get_allocator().num_bytes_allocated();
+      card32 old_frees = str2.get_allocator().num_allocs();
+
+      str.assign(rsl::move(str2));
+
+      CHECK(str == str2);
+      CHECK(str == "this is a heap string");
+      CHECK(str.size() == 21);
+      CHECK(str.capacity() == 26);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == 26 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+
+      CHECK(str2.get_allocator().num_allocs() <= old_allocs);
+      CHECK(str2.get_allocator().num_bytes_allocated() <= old_bytes_allocated);
+      CHECK(str2.get_allocator().num_frees() >= old_frees);
+    }
+    // string will keep the heap allocation with size > old_size
+    {
+      rsl::test::test_string str("this is a very big string");
+      rsl::test::test_string str2("this is an even bigger string");
+
+      card32 old_allocs = str2.get_allocator().num_allocs();
+      card32 old_bytes_allocated = str2.get_allocator().num_bytes_allocated();
+      card32 old_frees = str2.get_allocator().num_allocs();
+
+      str.assign(rsl::move(str2));
+
+      CHECK(str == "this is an even bigger string");
+      CHECK(str.size() == 29);
+      CHECK(str.capacity() == 30);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == 30 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+
+      CHECK(str2.get_allocator().num_allocs() <= old_allocs);
+      CHECK(str2.get_allocator().num_bytes_allocated() <= old_bytes_allocated);
+      CHECK(str2.get_allocator().num_frees() >= old_frees);
+    }
+
   }
   // 9) basic_string& assign(const_pointer str, size_type count)
   {
-    rsl::test::test_string str;
-    str.assign("small string", 4);
+    // string size that'd trigger sso
+    {
+      rsl::test::test_string str;
 
-    CHECK(str == "smal");
-    CHECK(str.size() == 4);
+      str.assign("small string", 12);
+      CHECK(str == "small");
+      CHECK(str.size() == 12);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(str.get_allocator().num_allocs() == 0);
+      CHECK(str.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str.get_allocator().num_frees() == 0);
+    }
+    // string size that's on the boundary of sso, all characters in the sso will be filled with this
+    {
+      rsl::test::test_string str;
 
-    str.assign("small string", 12);
-    CHECK(str == "small string");
-    CHECK(str.size() == 12);
+      str.assign("the sso string!", 15);
+      CHECK(str == "the sso string!");
+      CHECK(str.size() == 15);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(str.get_allocator().num_allocs() == 0);
+      CHECK(str.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str.get_allocator().num_frees() == 0);
+    }
+    // string that'll heap allocate
+    {
+      rsl::test::test_string str;
+
+      str.assign("this is a very big string", 25);
+      CHECK(str == "this is a very big string");
+      CHECK(str.size() == 25);
+      CHECK(str.capacity() == str.size() + 1);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+    }
+    // string will keep the heap allocation with size < sso
+    {
+      rsl::test::test_string str("this is a very big string");
+
+      str.assign("small string", 12);
+      CHECK(str == "small string");
+      CHECK(str.size() == 12);
+      CHECK(str.capacity() == 26);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == 26 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+    }
+    // string will keep the heap allocation with sso < size < old_size
+    {
+      rsl::test::test_string str("this is a very big string");
+
+      str.assign("this is a heap string", 21);
+      CHECK(str == "this is a heap string");
+      CHECK(str.size() == 21);
+      CHECK(str.capacity() == 26);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == 26 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+    }
+    // string will keep the heap allocation with size > old_size
+    {
+      rsl::test::test_string str("this is a very big string");
+
+      str.assign("this is an even bigger string", 29);
+      CHECK(str == "this is an even bigger string");
+      CHECK(str.size() == 29);
+      CHECK(str.capacity() == 30);
+      CHECK(str.get_allocator().num_allocs() == 2);
+      CHECK(str.get_allocator().num_bytes_allocated() == 30 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 1);
+    }
   }
   // 10) basic_string& assign(const_pointer& s)
   {
-    rsl::test::test_string str;
+    // string size that'd trigger sso
+    {
+      rsl::test::test_string str;
 
-    str.assign("small string");
+      str.assign("small string");
+      CHECK(str == "small");
+      CHECK(str.size() == 12);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(str.get_allocator().num_allocs() == 0);
+      CHECK(str.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str.get_allocator().num_frees() == 0);
+    }
+    // string size that's on the boundary of sso, all characters in the sso will be filled with this
+    {
+      rsl::test::test_string str;
 
-    CHECK(str.size() == 12);
-    CHECK(str == "small string");
+      str.assign("the sso string!");
+      CHECK(str == "the sso string!");
+      CHECK(str.size() == 15);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(str.get_allocator().num_allocs() == 0);
+      CHECK(str.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str.get_allocator().num_frees() == 0);
+    }
+    // string that'll heap allocate
+    {
+      rsl::test::test_string str;
+
+      str.assign("this is a very big string");
+      CHECK(str == "this is a very big string");
+      CHECK(str.size() == 25);
+      CHECK(str.capacity() == str.size() + 1);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+    }
+    // string will keep the heap allocation with size < sso
+    {
+      rsl::test::test_string str("this is a very big string");
+
+      str.assign("small string");
+      CHECK(str == "small string");
+      CHECK(str.size() == 12);
+      CHECK(str.capacity() == 26);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == 26 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+    }
+    // string will keep the heap allocation with sso < size < old_size
+    {
+      rsl::test::test_string str("this is a very big string");
+
+      str.assign("this is a heap string");
+      CHECK(str == "this is a heap string");
+      CHECK(str.size() == 21);
+      CHECK(str.capacity() == 26);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == 26 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+    }
+    // string will keep the heap allocation with size > old_size
+    {
+      rsl::test::test_string str("this is a very big string");
+
+      str.assign("this is an even bigger string");
+      CHECK(str == "this is an even bigger string");
+      CHECK(str.size() == 27);
+      CHECK(str.capacity() == 28);
+      CHECK(str.get_allocator().num_allocs() == 2);
+      CHECK(str.get_allocator().num_bytes_allocated() == 30 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 1);
+    }
   }
   // 11) template <typename InputIt> basic_string& assign(InputIt first, InputIt last)
   {
-    rsl::test::test_string str("small string");
-    rsl::test::test_string str2;
+    // string size that'd trigger sso
+    {
+      rsl::test::test_string str;
+      rsl::test::test_string str2("small string");
 
-    str2.assign(str.cbegin(), str.cend());
+      str.assign(str2.cbegin(), str2.cend());
+      CHECK(str == str2);
+      CHECK(str == "small string");
+      CHECK(str.size() == 12);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(str.get_allocator().num_allocs() == 0);
+      CHECK(str.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str.get_allocator().num_frees() == 0);
+      CHECK(str2 == "small string");
+      CHECK(str2.size() == 12);
+      CHECK(str2.capacity() == str2.sso_buff_size());
+      CHECK(str2.get_allocator().num_allocs() == 0);
+      CHECK(str2.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str2.get_allocator().num_frees() == 0);
+    }
+    // string size that's on the boundary of sso, all characters in the sso will be filled with this
+    {
+      rsl::test::test_string str;
+      rsl::test::test_string str2("the sso string!");
 
-    CHECK(str.size() == 12);
-    CHECK(str == "small string");
+      str.assign(str2.cbegin(), str2.cend());
+      CHECK(str == str2);
+      CHECK(str == "the sso string!");
+      CHECK(str.size() == 15);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(str.get_allocator().num_allocs() == 0);
+      CHECK(str.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str.get_allocator().num_frees() == 0);
+      CHECK(str2 == "the sso string!");
+      CHECK(str2.size() == 15);
+      CHECK(str2.capacity() == str2.sso_buff_size());
+      CHECK(str2.get_allocator().num_allocs() == 0);
+      CHECK(str2.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str2.get_allocator().num_frees() == 0);
+    }
+    // string that'll heap allocate
+    {
+      rsl::test::test_string str;
+      rsl::test::test_string str2("this is a very big string");
+
+      str.assign(str2.cbegin(), str2.cend());
+      CHECK(str == str2);
+      CHECK(str == "this is a very big string");
+      CHECK(str.size() == 25);
+      CHECK(str.capacity() == str.size() + 1);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+      CHECK(str2 == "this is a very big string");
+      CHECK(str2.size() == 15);
+      CHECK(str2.capacity() == str2.size() + 1);
+      CHECK(str2.get_allocator().num_allocs() == 1);
+      CHECK(str2.get_allocator().num_bytes_allocated() == str2.capacity() * sizeof(decltype(str2)::value_type));
+      CHECK(str2.get_allocator().num_frees() == 0);
+    }
+    // string will keep the heap allocation with size < sso
+    {
+      rsl::test::test_string str("this is a very big string");
+      rsl::test::test_string str2("small string");
+
+      str.assign(str2.cbegin(), str2.cend());
+      CHECK(str == str2);
+      CHECK(str == "small string");
+      CHECK(str.size() == 12);
+      CHECK(str.capacity() == 26);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == 26 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+      CHECK(str2 == "small string");
+      CHECK(str2.size() == 12);
+      CHECK(str2.capacity() == str2.sso_buff_size());
+      CHECK(str2.get_allocator().num_allocs() == 0);
+      CHECK(str2.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str2.get_allocator().num_frees() == 0);
+    }
+    // string will keep the heap allocation with sso < size < old_size
+    {
+      rsl::test::test_string str("this is a very big string");
+      rsl::test::test_string str2("this is a heap string");
+
+      str.assign(str2.cbegin(), str2.cend());
+      CHECK(str == str2);
+      CHECK(str == "this is a heap string");
+      CHECK(str.size() == 21);
+      CHECK(str.capacity() == 26);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == 26 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+      CHECK(str2 == "this is a heap string");
+      CHECK(str2.size() == 21);
+      CHECK(str.capacity() == 22);
+      CHECK(str2.get_allocator().num_allocs() == 0);
+      CHECK(str2.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str2.get_allocator().num_frees() == 0);
+    }
+    // string will keep the heap allocation with size > old_size
+    {
+      rsl::test::test_string str("this is a very big string");
+      rsl::test::test_string str2("this is an even bigger string");
+
+      str.assign(str2.cbegin(), str2.cend());
+      CHECK(str == str2);
+      CHECK(str == "this is an even bigger string");
+      CHECK(str.size() == 29);
+      CHECK(str.capacity() == 30);
+      CHECK(str.get_allocator().num_allocs() == 2);
+      CHECK(str.get_allocator().num_bytes_allocated() == 30 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 1);
+      CHECK(str2 == "this is an even bigger string");
+      CHECK(str2.size() == 29);
+      CHECK(str2.capacity() == 30);
+      CHECK(str2.get_allocator().num_allocs() == 0);
+      CHECK(str2.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str2.get_allocator().num_frees() == 0);
+    }
   }
   // 12) basic_string& assign(rsl::initializer_list<value_type> ilist)
   {
-    rsl::test::test_string str;
-    str.assign({'s', 'm', 'a', 'l', 'l', ' ', 's', 't', 'r', 'i', 'n', 'g'});
+    // string size that'd trigger sso
+    {
+      rsl::test::test_string str;
 
-    CHECK(str.size() == 12);
-    CHECK(str == "small string");
+      str.assign({'s','m','a','l','l',' ','s','t','r','i','n','g'});
+      CHECK(str == "small");
+      CHECK(str.size() == 12);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(str.get_allocator().num_allocs() == 0);
+      CHECK(str.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str.get_allocator().num_frees() == 0);
+    }
+    // string size that's on the boundary of sso, all characters in the sso will be filled with this
+    {
+      rsl::test::test_string str;
 
-    str.assign({ 's', 'o', 'm', 'e', 't', 'h', 'i', 'n', 'g', ' ', 'e', 'l', 's', 'e', ' ', 'a','n','d',' ','t','h','e','n',' ','s','o','m','e','t','h','i','n','g'});
-    CHECK(str.size() == 33);
-    CHECK(str == "something else and then something");
+      str.assign({'t','h','e',' ','s','s','o',' ','s','t','r','i','n','g'});
+      CHECK(str == "the sso string!");
+      CHECK(str.size() == 15);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(str.get_allocator().num_allocs() == 0);
+      CHECK(str.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str.get_allocator().num_frees() == 0);
+    }
+    // string that'll heap allocate
+    {
+      rsl::test::test_string str;
+
+      str.assign({'t','h','i','s',' ', 'i','s',' ','a',' ','v','e','r','y',' ','b','i','g',' ','s','t','r','i','n','g'});
+      CHECK(str == "this is a very big string");
+      CHECK(str.size() == 25);
+      CHECK(str.capacity() == str.size() + 1);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+    }
+    // string will keep the heap allocation with size < sso
+    {
+      rsl::test::test_string str("this is a very big string");
+
+      str.assign({ 's','m','a','l','l',' ','s','t','r','i','n','g' });
+      CHECK(str == "small string");
+      CHECK(str.size() == 12);
+      CHECK(str.capacity() == 26);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == 26 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+    }
+    // string will keep the heap allocation with sso < size < old_size
+    {
+      rsl::test::test_string str("this is a very big string");
+
+      str.assign({'t','h','i','s',' ','i','s',' ','a',' ','h','e','a','p',' ','s','t','r','i','n','g'});
+      CHECK(str == "this is a heap string");
+      CHECK(str.size() == 21);
+      CHECK(str.capacity() == 26);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == 26 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+    }
+    // string will keep the heap allocation with size > old_size
+    {
+      rsl::test::test_string str("this is a very big string");
+
+      str.assign({'t','h','i','s',' ','i','s',' ','a','n',' ','e','v','e','n',' ','b','i','g','g','e','r',' ','s','t','r','i','n','g'});
+      CHECK(str == "this is an even bigger string");
+      CHECK(str.size() == 27);
+      CHECK(str.capacity() == 28);
+      CHECK(str.get_allocator().num_allocs() == 2);
+      CHECK(str.get_allocator().num_bytes_allocated() == 30 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 1);
+    }
   }
   // 13) basic_string& assign(basic_string_view<value_type, traits_type> sv)
   {
-    rsl::test::test_string str;
-    rsl::string_view view = "small string";
-    str.assign(view);
+    // string size that'd trigger sso
+    {
+      rsl::test::test_string str;
+      rsl::test::test_string_view str2("small string");
 
-    CHECK(str == "small string");
-    CHECK(str.size() == 12);
+      str.assign(str2);
+      CHECK(str == str2);
+      CHECK(str == "small string");
+      CHECK(str.size() == 12);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(str.get_allocator().num_allocs() == 0);
+      CHECK(str.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str.get_allocator().num_frees() == 0);
+    }
+    // string size that's on the boundary of sso, all characters in the sso will be filled with this
+    {
+      rsl::test::test_string str;
+      rsl::test::test_string_view str2("the sso string!");
+
+      str.assign(str2);
+      CHECK(str == str2);
+      CHECK(str == "the sso string!");
+      CHECK(str.size() == 15);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(str.get_allocator().num_allocs() == 0);
+      CHECK(str.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str.get_allocator().num_frees() == 0);
+    }
+    // string that'll heap allocate
+    {
+      rsl::test::test_string str;
+      rsl::test::test_string_view str2("this is a very big string");
+
+      str.assign(str2);
+      CHECK(str == str2);
+      CHECK(str == "this is a very big string");
+      CHECK(str.size() == 25);
+      CHECK(str.capacity() == str.size() + 1);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+    }
+    // string will keep the heap allocation with size < sso
+    {
+      rsl::test::test_string str("this is a very big string");
+      rsl::test::test_string_view str2("small string");
+
+      str.assign(str2);
+      CHECK(str == str2);
+      CHECK(str == "small string");
+      CHECK(str.size() == 12);
+      CHECK(str.capacity() == 26);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == 26 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+    }
+    // string will keep the heap allocation with sso < size < old_size
+    {
+      rsl::test::test_string str("this is a very big string");
+      rsl::test::test_string_view str2("this is a heap string");
+
+      str.assign(str2);
+      CHECK(str == str2);
+      CHECK(str == "this is a heap string");
+      CHECK(str.size() == 21);
+      CHECK(str.capacity() == 26);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == 26 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+    }
+    // string will keep the heap allocation with size > old_size
+    {
+      rsl::test::test_string str("this is a very big string");
+      rsl::test::test_string_view str2("this is an even bigger string");
+
+      str.assign(str2);
+      CHECK(str == str2);
+      CHECK(str == "this is an even bigger string");
+      CHECK(str.size() == 29);
+      CHECK(str.capacity() == 30);
+      CHECK(str.get_allocator().num_allocs() == 2);
+      CHECK(str.get_allocator().num_bytes_allocated() == 30 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 1);
+    }
   }
   // 14) basic_string& assign(basic_string_view<value_type, traits_type> sv, size_type pos, size_type count = s_npos)
   {
-    rsl::test::test_string str;
-    rsl::string_view view = "small string";
+    // string size that'd trigger sso
+    {
+      rsl::test::test_string str;
+      rsl::test::test_string_view str2("small string");
 
-    str.assign(view, 6);
-    CHECK(str == "string");
-    CHECK(str.size() == 6);
+      str.assign(str2, 0, 5);
+      CHECK(str == "small");
+      CHECK(str.size() == 12);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(str.get_allocator().num_allocs() == 0);
+      CHECK(str.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str.get_allocator().num_frees() == 0);
+    }
+    // string size that's on the boundary of sso, all characters in the sso will be filled with this
+    {
+      rsl::test::test_string str;
+      rsl::test::test_string_view str2("the sso string!");
 
-    str.assign(view, 0, 5);
-    CHECK(str == "small");
-    CHECK(str.size() == 5);
+      str.assign(str2, 0, 15);
+      CHECK(str == "the sso string!");
+      CHECK(str.size() == 15);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(str.get_allocator().num_allocs() == 0);
+      CHECK(str.get_allocator().num_bytes_allocated() == 0);
+      CHECK(str.get_allocator().num_frees() == 0);
+    }
+    // string that'll heap allocate
+    {
+      rsl::test::test_string str;
+      rsl::test::test_string_view str2("this is a very big string");
+
+      str.assign(str2, 0, 20);
+      CHECK(str == "this is a very big s");
+      CHECK(str.size() == 20);
+      CHECK(str.capacity() == str.size() + 1);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+    }
+    // string will keep the heap allocation with size < sso
+    {
+      rsl::test::test_string str("this is a very big string");
+      rsl::test::test_string_view str2("small string");
+
+      str.assign(str2, 0, 5);
+      CHECK(str == "small");
+      CHECK(str.size() == 5);
+      CHECK(str.capacity() == 26);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == 26 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+    }
+    // string will keep the heap allocation with sso < size < old_size
+    {
+      rsl::test::test_string str("this is a very big string");
+      rsl::test::test_string_view str2("this is a heap string");
+
+      str.assign(str2, 0, 20);
+      CHECK(str == "this is a heap strin");
+      CHECK(str.size() == 20);
+      CHECK(str.capacity() == 26);
+      CHECK(str.get_allocator().num_allocs() == 1);
+      CHECK(str.get_allocator().num_bytes_allocated() == 26 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 0);
+    }
+    // string will keep the heap allocation with size > old_size
+    {
+      rsl::test::test_string str("this is a very big string");
+      rsl::test::test_string_view str2("this is an even bigger string");
+
+      str.assign(str2, 0, 27);
+      CHECK(str == "this is an even bigger stri");
+      CHECK(str.size() == 27);
+      CHECK(str.capacity() == 28);
+      CHECK(str.get_allocator().num_allocs() == 2);
+      CHECK(str.get_allocator().num_bytes_allocated() == 30 * sizeof(decltype(str)::value_type));
+      CHECK(str.get_allocator().num_frees() == 1);
+    }
   }
 }
 TEST_CASE("string swap")
@@ -1017,7 +2105,7 @@ TEST_CASE("string insertion and erasion")
   // 9) iterator insert(const_iterator pos, rsl::initializer_list<value_type> ilist)
   {
     rsl::test::test_string str("Hello world");
-    str.insert(str.cbegin() + 6, {'n', 'e', 'w', ' '});
+    str.insert(str.cbegin() + 6, { 'n', 'e', 'w', ' ' });
     CHECK(str == "Hello new world");
   }
   // 10) basic_string& insert(size_type pos, const basic_string_view<value_type, traits_type>& sv)
@@ -1117,7 +2205,7 @@ TEST_CASE("string insertion and erasion")
   // 24) basic_string& append(rsl::initializer_list<value_type> ilist)
   {
     rsl::test::test_string str("Hello world");
-    str.append({'a', 'g', 'a', 'i', 'n'});
+    str.append({ 'a', 'g', 'a', 'i', 'n' });
     CHECK(str == "Hello worldagain");
   }
   // 25) basic_string& append(const basic_string_view<value_type, traits_type> sv)
@@ -1351,7 +2439,7 @@ TEST_CASE("string replace")
   // 9) replace(const_iterator first, const_iterator last, rsl::initializer_list<value_type> ilist)
   {
     rsl::test::test_string str("Hello World");
-    str.replace(str.cbegin(), str.cbegin() + 5, {'S', 'o', 'm', 'e'});
+    str.replace(str.cbegin(), str.cbegin() + 5, { 'S', 'o', 'm', 'e' });
     CHECK(str == "Some World");
   }
   // 10) replace(size_type pos, size_type count, const basic_string_view<value_type, traits_type>& sv)

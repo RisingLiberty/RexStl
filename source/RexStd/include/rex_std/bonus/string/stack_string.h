@@ -117,12 +117,14 @@ namespace rsl
         const card32 copy_size = clamp_max(length, StrMaxSize);
         rsl::memcpy(data(), first, copy_size);
         m_null_terminator_offset = copy_size;
+        m_data[m_null_terminator_offset] = value_type();
       }
       void assign(const value_type* newData, card32 length)
       {
         const card32 copy_size = clamp_max(length, StrMaxSize);
         rsl::memcpy(data(), newData, copy_size);
         m_null_terminator_offset = copy_size;
+        m_data[m_null_terminator_offset] = value_type();
       }
 
       card32 length() const
