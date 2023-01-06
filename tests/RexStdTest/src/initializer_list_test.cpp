@@ -20,13 +20,13 @@ TEST_CASE("initializer list creation")
 {
   rsl::initializer_list<int> ilist = {1, 2, 3};
 
-  REQUIRE(ilist.size() == 3);
-  REQUIRE(*ilist.begin() + 0 == 1);
-  REQUIRE(*ilist.begin() + 1 == 2);
-  REQUIRE(*ilist.begin() + 2 == 3);
+  CHECK(ilist.size() == 3);
+  CHECK(*ilist.begin() + 0 == 1);
+  CHECK(*ilist.begin() + 1 == 2);
+  CHECK(*ilist.begin() + 2 == 3);
 
   rsl::initializer_list<int> ilist2 = {};
-  REQUIRE(ilist2.size() == 0);
+  CHECK(ilist2.size() == 0);
 }
 
 // NOLINTEND

@@ -26,93 +26,93 @@ TEST_CASE("array construction")
     test_object::reset();
 
     const rsl::array<test_object, 10> arr;
-    REQUIRE(arr.size() == 10);
-    REQUIRE(test_object::num_alive() == 10);
-    REQUIRE(test_object::num_ctor_calls() == 10);
-    REQUIRE(test_object::num_copy_ctor_calls() == 0);
-    REQUIRE(test_object::num_move_ctor_calls() == 0);
-    REQUIRE(test_object::num_dtor_calls() == 0);
-    REQUIRE(test_object::num_copy_assignment_calls() == 0);
-    REQUIRE(test_object::num_move_assignment_calls() == 0);
+    CHECK(arr.size() == 10);
+    CHECK(test_object::num_alive() == 10);
+    CHECK(test_object::num_ctor_calls() == 10);
+    CHECK(test_object::num_copy_ctor_calls() == 0);
+    CHECK(test_object::num_move_ctor_calls() == 0);
+    CHECK(test_object::num_dtor_calls() == 0);
+    CHECK(test_object::num_copy_assignment_calls() == 0);
+    CHECK(test_object::num_move_assignment_calls() == 0);
   }
 
-  REQUIRE(test_object::num_alive() == 0);
-  REQUIRE(test_object::num_ctor_calls() == 10);
-  REQUIRE(test_object::num_copy_ctor_calls() == 0);
-  REQUIRE(test_object::num_move_ctor_calls() == 0);
-  REQUIRE(test_object::num_dtor_calls() == 10);
-  REQUIRE(test_object::num_copy_assignment_calls() == 0);
-  REQUIRE(test_object::num_move_assignment_calls() == 0);
+  CHECK(test_object::num_alive() == 0);
+  CHECK(test_object::num_ctor_calls() == 10);
+  CHECK(test_object::num_copy_ctor_calls() == 0);
+  CHECK(test_object::num_move_ctor_calls() == 0);
+  CHECK(test_object::num_dtor_calls() == 10);
+  CHECK(test_object::num_copy_assignment_calls() == 0);
+  CHECK(test_object::num_move_assignment_calls() == 0);
 
   {
     test_object::reset();
 
     const rsl::array<test_object, 10> arr = { 1, 2, 3 };
-    REQUIRE(arr.size() == 10);
-    REQUIRE(test_object::num_alive() == 10);
-    REQUIRE(test_object::num_ctor_calls() == 10);
-    REQUIRE(test_object::num_copy_ctor_calls() == 0);
-    REQUIRE(test_object::num_move_ctor_calls() == 0);
-    REQUIRE(test_object::num_dtor_calls() == 0);
-    REQUIRE(test_object::num_copy_assignment_calls() == 0);
-    REQUIRE(test_object::num_move_assignment_calls() == 0);
+    CHECK(arr.size() == 10);
+    CHECK(test_object::num_alive() == 10);
+    CHECK(test_object::num_ctor_calls() == 10);
+    CHECK(test_object::num_copy_ctor_calls() == 0);
+    CHECK(test_object::num_move_ctor_calls() == 0);
+    CHECK(test_object::num_dtor_calls() == 0);
+    CHECK(test_object::num_copy_assignment_calls() == 0);
+    CHECK(test_object::num_move_assignment_calls() == 0);
   }
 
-  REQUIRE(test_object::num_alive() == 0);
-  REQUIRE(test_object::num_ctor_calls() == 10);
-  REQUIRE(test_object::num_copy_ctor_calls() == 0);
-  REQUIRE(test_object::num_move_ctor_calls() == 0);
-  REQUIRE(test_object::num_dtor_calls() == 10);
-  REQUIRE(test_object::num_copy_assignment_calls() == 0);
-  REQUIRE(test_object::num_move_assignment_calls() == 0);
+  CHECK(test_object::num_alive() == 0);
+  CHECK(test_object::num_ctor_calls() == 10);
+  CHECK(test_object::num_copy_ctor_calls() == 0);
+  CHECK(test_object::num_move_ctor_calls() == 0);
+  CHECK(test_object::num_dtor_calls() == 10);
+  CHECK(test_object::num_copy_assignment_calls() == 0);
+  CHECK(test_object::num_move_assignment_calls() == 0);
 
   {
     test_object::reset();
 
     const rsl::array<test_object, 10> arr = { 1, 2, 3 };
     const rsl::array<test_object, 10> arr2 = arr;
-    REQUIRE(arr.size() == 10);
-    REQUIRE(arr2.size() == 10);
-    REQUIRE(test_object::num_alive() == 20);
-    REQUIRE(test_object::num_ctor_calls() == 10);
-    REQUIRE(test_object::num_copy_ctor_calls() == 10);
-    REQUIRE(test_object::num_move_ctor_calls() == 0);
-    REQUIRE(test_object::num_dtor_calls() == 0);
-    REQUIRE(test_object::num_copy_assignment_calls() == 0);
-    REQUIRE(test_object::num_move_assignment_calls() == 0);
+    CHECK(arr.size() == 10);
+    CHECK(arr2.size() == 10);
+    CHECK(test_object::num_alive() == 20);
+    CHECK(test_object::num_ctor_calls() == 10);
+    CHECK(test_object::num_copy_ctor_calls() == 10);
+    CHECK(test_object::num_move_ctor_calls() == 0);
+    CHECK(test_object::num_dtor_calls() == 0);
+    CHECK(test_object::num_copy_assignment_calls() == 0);
+    CHECK(test_object::num_move_assignment_calls() == 0);
   }
 
-  REQUIRE(test_object::num_alive() == 0);
-  REQUIRE(test_object::num_ctor_calls() == 10);
-  REQUIRE(test_object::num_copy_ctor_calls() == 10);
-  REQUIRE(test_object::num_move_ctor_calls() == 0);
-  REQUIRE(test_object::num_dtor_calls() == 20);
-  REQUIRE(test_object::num_copy_assignment_calls() == 0);
-  REQUIRE(test_object::num_move_assignment_calls() == 0);
+  CHECK(test_object::num_alive() == 0);
+  CHECK(test_object::num_ctor_calls() == 10);
+  CHECK(test_object::num_copy_ctor_calls() == 10);
+  CHECK(test_object::num_move_ctor_calls() == 0);
+  CHECK(test_object::num_dtor_calls() == 20);
+  CHECK(test_object::num_copy_assignment_calls() == 0);
+  CHECK(test_object::num_move_assignment_calls() == 0);
 
   {
     test_object::reset();
 
     const rsl::array<test_object, 10> arr = { 1, 2, 3 };
     const rsl::array<test_object, 10> arr2 = rsl::move(arr);
-    REQUIRE(arr.size() == 10);
-    REQUIRE(arr2.size() == 10);
-    REQUIRE(test_object::num_alive() == 20);
-    REQUIRE(test_object::num_ctor_calls() == 10);
-    REQUIRE(test_object::num_copy_ctor_calls() == 10); // std::move on a rsl::array copies each element, as there's no move ctor provided for a rsl::array
-    REQUIRE(test_object::num_move_ctor_calls() == 0);
-    REQUIRE(test_object::num_dtor_calls() == 0);
-    REQUIRE(test_object::num_copy_assignment_calls() == 0);
-    REQUIRE(test_object::num_move_assignment_calls() == 0);
+    CHECK(arr.size() == 10);
+    CHECK(arr2.size() == 10);
+    CHECK(test_object::num_alive() == 20);
+    CHECK(test_object::num_ctor_calls() == 10);
+    CHECK(test_object::num_copy_ctor_calls() == 10); // std::move on a rsl::array copies each element, as there's no move ctor provided for a rsl::array
+    CHECK(test_object::num_move_ctor_calls() == 0);
+    CHECK(test_object::num_dtor_calls() == 0);
+    CHECK(test_object::num_copy_assignment_calls() == 0);
+    CHECK(test_object::num_move_assignment_calls() == 0);
   }
 
-  REQUIRE(test_object::num_alive() == 0);
-  REQUIRE(test_object::num_ctor_calls() == 10);
-  REQUIRE(test_object::num_copy_ctor_calls() == 10);
-  REQUIRE(test_object::num_move_ctor_calls() == 0);
-  REQUIRE(test_object::num_dtor_calls() == 20);
-  REQUIRE(test_object::num_copy_assignment_calls() == 0);
-  REQUIRE(test_object::num_move_assignment_calls() == 0);
+  CHECK(test_object::num_alive() == 0);
+  CHECK(test_object::num_ctor_calls() == 10);
+  CHECK(test_object::num_copy_ctor_calls() == 10);
+  CHECK(test_object::num_move_ctor_calls() == 0);
+  CHECK(test_object::num_dtor_calls() == 20);
+  CHECK(test_object::num_copy_assignment_calls() == 0);
+  CHECK(test_object::num_move_assignment_calls() == 0);
 }
 
 TEST_CASE("array assignment")
@@ -124,27 +124,27 @@ TEST_CASE("array assignment")
   rsl::array<test_object, 10> arr;
   const rsl::array<test_object, 10> arr2;
 
-  REQUIRE(arr.size() == 10);
-  REQUIRE(arr2.size() == 10);
-  REQUIRE(test_object::num_alive() == 20);
-  REQUIRE(test_object::num_ctor_calls() == 20);
-  REQUIRE(test_object::num_copy_ctor_calls() == 0);
-  REQUIRE(test_object::num_move_ctor_calls() == 0);
-  REQUIRE(test_object::num_dtor_calls() == 0);
-  REQUIRE(test_object::num_copy_assignment_calls() == 0);
-  REQUIRE(test_object::num_move_assignment_calls() == 0);
+  CHECK(arr.size() == 10);
+  CHECK(arr2.size() == 10);
+  CHECK(test_object::num_alive() == 20);
+  CHECK(test_object::num_ctor_calls() == 20);
+  CHECK(test_object::num_copy_ctor_calls() == 0);
+  CHECK(test_object::num_move_ctor_calls() == 0);
+  CHECK(test_object::num_dtor_calls() == 0);
+  CHECK(test_object::num_copy_assignment_calls() == 0);
+  CHECK(test_object::num_move_assignment_calls() == 0);
 
   arr = arr2;
 
-  REQUIRE(arr.size() == 10);
-  REQUIRE(arr2.size() == 10);
-  REQUIRE(test_object::num_alive() == 20);
-  REQUIRE(test_object::num_ctor_calls() == 20);
-  REQUIRE(test_object::num_copy_ctor_calls() == 0);
-  REQUIRE(test_object::num_move_ctor_calls() == 0);
-  REQUIRE(test_object::num_dtor_calls() == 0);
-  REQUIRE(test_object::num_copy_assignment_calls() == 10);
-  REQUIRE(test_object::num_move_assignment_calls() == 0);
+  CHECK(arr.size() == 10);
+  CHECK(arr2.size() == 10);
+  CHECK(test_object::num_alive() == 20);
+  CHECK(test_object::num_ctor_calls() == 20);
+  CHECK(test_object::num_copy_ctor_calls() == 0);
+  CHECK(test_object::num_move_ctor_calls() == 0);
+  CHECK(test_object::num_dtor_calls() == 0);
+  CHECK(test_object::num_copy_assignment_calls() == 10);
+  CHECK(test_object::num_move_assignment_calls() == 0);
 }
 
 TEST_CASE("array element access")
@@ -159,33 +159,33 @@ TEST_CASE("array element access")
     arr[1] = 2;
     arr[2] = 3;
 
-    REQUIRE(arr[0] == 1);
-    REQUIRE(arr.at(0) == 1);
-    REQUIRE(arr[1] == 2);
-    REQUIRE(arr.at(1) == 2);
-    REQUIRE(arr[2] == 3);
-    REQUIRE(arr.at(2) == 3);
-    REQUIRE(arr[3] == 0);
-    REQUIRE(arr.at(3) == 0);
+    CHECK(arr[0] == 1);
+    CHECK(arr.at(0) == 1);
+    CHECK(arr[1] == 2);
+    CHECK(arr.at(1) == 2);
+    CHECK(arr[2] == 3);
+    CHECK(arr.at(2) == 3);
+    CHECK(arr[3] == 0);
+    CHECK(arr.at(3) == 0);
 
-    REQUIRE(arr.front() == 1);
-    REQUIRE(*arr.begin() == 1);
-    REQUIRE(*arr.cbegin() == 1);
-    REQUIRE(*arr.rbegin() == 0);
-    REQUIRE(*arr.crbegin() == 0);
-    REQUIRE(arr.back() == 0);
-    REQUIRE(*--arr.end() == 0);
-    REQUIRE(*--arr.cend() == 0);
-    REQUIRE(*--arr.rend() == 1);
-    REQUIRE(*--arr.crend() == 1);
+    CHECK(arr.front() == 1);
+    CHECK(*arr.begin() == 1);
+    CHECK(*arr.cbegin() == 1);
+    CHECK(*arr.rbegin() == 0);
+    CHECK(*arr.crbegin() == 0);
+    CHECK(arr.back() == 0);
+    CHECK(*--arr.end() == 0);
+    CHECK(*--arr.cend() == 0);
+    CHECK(*--arr.rend() == 1);
+    CHECK(*--arr.crend() == 1);
 
-    REQUIRE(test_object::num_alive() == 10);
-    REQUIRE(test_object::num_ctor_calls() == 13);
-    REQUIRE(test_object::num_copy_ctor_calls() == 0);
-    REQUIRE(test_object::num_move_ctor_calls() == 0);
-    REQUIRE(test_object::num_dtor_calls() == 3);
-    REQUIRE(test_object::num_copy_assignment_calls() == 0);
-    REQUIRE(test_object::num_move_assignment_calls() == 3);
+    CHECK(test_object::num_alive() == 10);
+    CHECK(test_object::num_ctor_calls() == 13);
+    CHECK(test_object::num_copy_ctor_calls() == 0);
+    CHECK(test_object::num_move_ctor_calls() == 0);
+    CHECK(test_object::num_dtor_calls() == 3);
+    CHECK(test_object::num_copy_assignment_calls() == 0);
+    CHECK(test_object::num_move_assignment_calls() == 3);
   }
 
   {
@@ -193,22 +193,22 @@ TEST_CASE("array element access")
 
     const rsl::array<test_object, 10> arr = { 1, 2, 3 };
 
-    REQUIRE(arr[0] == 1);
-    REQUIRE(arr.at(0) == 1);
-    REQUIRE(arr[1] == 2);
-    REQUIRE(arr.at(1) == 2);
-    REQUIRE(arr[2] == 3);
-    REQUIRE(arr.at(2) == 3);
-    REQUIRE(arr[3] == 0);
-    REQUIRE(arr.at(3) == 0);
+    CHECK(arr[0] == 1);
+    CHECK(arr.at(0) == 1);
+    CHECK(arr[1] == 2);
+    CHECK(arr.at(1) == 2);
+    CHECK(arr[2] == 3);
+    CHECK(arr.at(2) == 3);
+    CHECK(arr[3] == 0);
+    CHECK(arr.at(3) == 0);
 
-    REQUIRE(test_object::num_alive() == 10);
-    REQUIRE(test_object::num_ctor_calls() == 10);
-    REQUIRE(test_object::num_copy_ctor_calls() == 0);
-    REQUIRE(test_object::num_move_ctor_calls() == 0);
-    REQUIRE(test_object::num_dtor_calls() == 0);
-    REQUIRE(test_object::num_copy_assignment_calls() == 0);
-    REQUIRE(test_object::num_move_assignment_calls() == 0);
+    CHECK(test_object::num_alive() == 10);
+    CHECK(test_object::num_ctor_calls() == 10);
+    CHECK(test_object::num_copy_ctor_calls() == 0);
+    CHECK(test_object::num_move_ctor_calls() == 0);
+    CHECK(test_object::num_dtor_calls() == 0);
+    CHECK(test_object::num_copy_assignment_calls() == 0);
+    CHECK(test_object::num_move_assignment_calls() == 0);
   }
 }
 
@@ -223,20 +223,20 @@ TEST_CASE("array swap")
 
   arr.swap(arr2);
 
-  REQUIRE(arr[0] == 4);
-  REQUIRE(arr[1] == 5);
-  REQUIRE(arr[2] == 6);
-  REQUIRE(arr2[0] == 1);
-  REQUIRE(arr2[1] == 2);
-  REQUIRE(arr2[2] == 3);
+  CHECK(arr[0] == 4);
+  CHECK(arr[1] == 5);
+  CHECK(arr[2] == 6);
+  CHECK(arr2[0] == 1);
+  CHECK(arr2[1] == 2);
+  CHECK(arr2[2] == 3);
 
-  REQUIRE(test_object::num_alive() == 6);
-  REQUIRE(test_object::num_ctor_calls() == 6);
-  REQUIRE(test_object::num_copy_ctor_calls() == 0);
-  REQUIRE(test_object::num_move_ctor_calls() == 3);
-  REQUIRE(test_object::num_dtor_calls() == 3);
-  REQUIRE(test_object::num_copy_assignment_calls() == 0);
-  REQUIRE(test_object::num_move_assignment_calls() == 6);
+  CHECK(test_object::num_alive() == 6);
+  CHECK(test_object::num_ctor_calls() == 6);
+  CHECK(test_object::num_copy_ctor_calls() == 0);
+  CHECK(test_object::num_move_ctor_calls() == 3);
+  CHECK(test_object::num_dtor_calls() == 3);
+  CHECK(test_object::num_copy_assignment_calls() == 0);
+  CHECK(test_object::num_move_assignment_calls() == 6);
 }
 
 TEST_CASE("array fill")
@@ -249,16 +249,16 @@ TEST_CASE("array fill")
 
   arr.fill(5);
 
-  REQUIRE(arr[0] == 5);
-  REQUIRE(arr[1] == 5);
-  REQUIRE(arr[2] == 5);
-  REQUIRE(test_object::num_alive() == 3);
-  REQUIRE(test_object::num_ctor_calls() == 4);
-  REQUIRE(test_object::num_copy_ctor_calls() == 0);
-  REQUIRE(test_object::num_move_ctor_calls() == 0);
-  REQUIRE(test_object::num_dtor_calls() == 1);
-  REQUIRE(test_object::num_copy_assignment_calls() == 3);
-  REQUIRE(test_object::num_move_assignment_calls() == 0);
+  CHECK(arr[0] == 5);
+  CHECK(arr[1] == 5);
+  CHECK(arr[2] == 5);
+  CHECK(test_object::num_alive() == 3);
+  CHECK(test_object::num_ctor_calls() == 4);
+  CHECK(test_object::num_copy_ctor_calls() == 0);
+  CHECK(test_object::num_move_ctor_calls() == 0);
+  CHECK(test_object::num_dtor_calls() == 1);
+  CHECK(test_object::num_copy_assignment_calls() == 3);
+  CHECK(test_object::num_move_assignment_calls() == 0);
 }
 
 TEST_CASE("array empty")
@@ -269,11 +269,11 @@ TEST_CASE("array empty")
 
   {
     rsl::array<test_object, 1> arr;
-    REQUIRE(arr.empty() == false);
+    CHECK(arr.empty() == false);
   }
 
   {
     rsl::array<test_object, 0> arr;
-    REQUIRE(arr.empty() == true);
+    CHECK(arr.empty() == true);
   }
 }

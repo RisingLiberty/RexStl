@@ -34,10 +34,10 @@ TEST_CASE("source location")
   card32 column = 31;
   #endif
   
-  REQUIRE(loc.line() + 1 == loc2.line());
-  REQUIRE(loc.column() == column);
-  REQUIRE(loc_file == file);
-  REQUIRE(loc_func == func);
+  CHECK(loc.line() + 1 == loc2.line());
+  CHECK(loc.column() == column);
+  CHECK(loc_file == file);
+  CHECK(loc_func == func);
 
 }
 

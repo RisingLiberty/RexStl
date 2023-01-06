@@ -21,13 +21,13 @@ TEST_CASE("unordered_map construction")
   using hash_table = rsl::unordered_map<int, int>;
   const hash_table map;
 
-  REQUIRE(map.empty());
-  REQUIRE(map.size() == 0); // NOLINT
-  REQUIRE(map.load_factor() == 0.0f);
-  REQUIRE(map.bucket_count() == 0);
+  CHECK(map.empty());
+  CHECK(map.size() == 0); // NOLINT
+  CHECK(map.load_factor() == 0.0f);
+  CHECK(map.bucket_count() == 0);
 
   const hash_table map2 = {{0, 0}, {1, 1}};
-  REQUIRE(map2.size() == 2);
+  CHECK(map2.size() == 2);
 }
 
 TEST_CASE("unordered_map element access")
@@ -35,9 +35,9 @@ TEST_CASE("unordered_map element access")
   using hash_table = rsl::unordered_map<int, int>;
   hash_table map   = {{0, 10}, {1, 11}};
 
-  REQUIRE(map[0] == 10);
-  REQUIRE(map[1] == 11);
-  REQUIRE(map[2] == 0);
+  CHECK(map[0] == 10);
+  CHECK(map[1] == 11);
+  CHECK(map[2] == 0);
 }
 
 // NOLINTEND

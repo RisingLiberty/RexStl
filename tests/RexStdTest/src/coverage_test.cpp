@@ -32,6 +32,6 @@ TEST_CASE("tuple coverage")
 TEST_CASE("string view coverage")
 {
   rsl::basic_string_view<rsl::detail::char8_type> view;
-  REQUIRE(view.data() == nullptr);
-  REQUIRE(view.size() == 0);
+  CHECK(view.data() == nullptr);
+  CHECK(view.size() == 0);
 }
