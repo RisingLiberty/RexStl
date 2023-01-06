@@ -227,26 +227,26 @@ namespace rsl
 
       // Returns a reference to the element at specified location pos, with bounds checking.
       // if pos is not within range of the container, an assertion is raised
-      constexpr reference at(size_type pos)
+      constexpr reference at(size_type /*pos*/)
       {
         REX_ASSERT("access elements of null array is not allowed");
         return m_data[0];
       }
       // Returns a reference to the element at specified location pos, with bounds checking.
       // if pos is not within range of the container, an assertion is raised
-      constexpr const_reference at(size_type pos) const
+      constexpr const_reference at(size_type /*pos*/) const
       {
         REX_ASSERT("access elements of null array is not allowed");
         return m_data[0];
       }
       // Returns a reference to the element at specified location pos. No bounds checking is performed.
-      constexpr reference operator[](size_type pos)
+      constexpr reference operator[](size_type /*pos*/)
       {
         REX_ASSERT("access elements of null array is not allowed");
         return m_data[0];
       }
       // Returns a reference to the element at specified location pos. No bounds checking is performed.
-      constexpr const_reference operator[](size_type pos) const
+      constexpr const_reference operator[](size_type /*pos*/) const
       {
         REX_ASSERT("access elements of null array is not allowed");
         return m_data[0];
@@ -371,16 +371,16 @@ namespace rsl
       }
 
       // Assigns the given value value to all elements in the container.
-      constexpr void fill(const T&)
+      constexpr void fill(const T& /*val*/)
       {
       }
       // Exchanges the contents of the container with those of other.
-      constexpr void swap(array&)
+      constexpr void swap(array& /*other*/)
       {
       }
 
     public:
-      T m_data[1] = {}; // internally 1 in size to avoid compiler errors
+      T m_data[1] = {}; // internally 1 in size to avoid compiler errors //NOLINT(modernize-avoid-c-arrays)
     };
 
     // Checks if the contents of lhs and rhs are equal

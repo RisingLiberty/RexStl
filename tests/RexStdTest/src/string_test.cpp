@@ -2085,14 +2085,13 @@ TEST_CASE("string insertion and erasion")
       card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
       card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
 
-      str.insert(6, 5, 'c');
+      str.insert(6, 2, 'c');
 
-      CHECK(str == "hello cccccworld");
-      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
+      CHECK(str == "hello ccworld");
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
       CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
       CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
     }
-
     {
       rsl::test::test_string str("hello world");
 
@@ -2100,11 +2099,11 @@ TEST_CASE("string insertion and erasion")
       card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
       card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
 
-      str.insert(6, 2, 'c');
+      str.insert(6, 5, 'c');
 
-      CHECK(str == "hello ccworld");
+      CHECK(str == "hello cccccworld");
       CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
-      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
       CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
     }
   }
@@ -2123,18 +2122,18 @@ TEST_CASE("string insertion and erasion")
     CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
     CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
 
-    str.insert(9, " ");
+    str.insert(9, " !");
 
-    CHECK(str == "Hello new world");
+    CHECK(str == "Hello new !world");
     CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
-    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == str.capacity() * sizeof(decltype(str)::value_type));
+    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
     CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
   }
   // 3) basic_string& insert(size_type index, const_pointer s, size_type count)
   {
     rsl::test::test_string str("Hello world");
     const char8* ptr = "new ";
-    const char8* ptr2 = " ";
+    const char8* ptr2 = " !";
 
     card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
     card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
@@ -2146,18 +2145,18 @@ TEST_CASE("string insertion and erasion")
     CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
     CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
 
-    str.insert(9, ptr2, 1);
+    str.insert(9, ptr2, 2);
 
-    CHECK(str == "Hello new world");
+    CHECK(str == "Hello new !world");
     CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
-    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == str.capacity() * sizeof(decltype(str)::value_type));
+    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
     CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
   }
   // 4) basic_string& insert(size_type index, const basic_string& str)
   {
     rsl::test::test_string str("Hello world");
-    rsl::test::test_string str2("new ");
-    rsl::test::test_string str3(" ");
+    rsl::test::test_string str2("new");
+    rsl::test::test_string str3(" !");
 
     card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
     card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
@@ -2171,15 +2170,15 @@ TEST_CASE("string insertion and erasion")
 
     str.insert(9, str3);
 
-    CHECK(str == "Hello new world");
+    CHECK(str == "Hello new !world");
     CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
-    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == str.capacity() * sizeof(decltype(str)::value_type));
+    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
     CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
   }
   // 5) basic_string& insert(size_type index, const basic_string& str, size_type indexStr, size_type count = s_npos)
   {
     rsl::test::test_string str("Hello world");
-    rsl::test::test_string str2("new ");
+    rsl::test::test_string str2("new !");
 
     card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
     card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
@@ -2191,11 +2190,11 @@ TEST_CASE("string insertion and erasion")
     CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
     CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
 
-    str.insert(9, str2, 3, 1);
+    str.insert(9, str2, 3, 2);
 
-    CHECK(str == "Hello new world");
+    CHECK(str == "Hello new !world");
     CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
-    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == str.capacity() * sizeof(decltype(str)::value_type));
+    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
     CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
   }
   // 6) iterator insert(const_iterator pos, value_type ch)
@@ -2215,9 +2214,10 @@ TEST_CASE("string insertion and erasion")
     str.insert(str.cbegin() + 7, 'e');
     str.insert(str.cbegin() + 8, 'w');
     str.insert(str.cbegin() + 9, ' ');
-    CHECK(str == "Hello new world");
-    CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
-    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == str.capacity() * sizeof(decltype(str)::value_type));
+    str.insert(str.cbegin() + 10, '!');
+    CHECK(str == "Hello new !world");
+    CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
+    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
     CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
   }
   // 7) iterator insert(const_iterator pos, size_type count, value_type ch)
@@ -2237,28 +2237,28 @@ TEST_CASE("string insertion and erasion")
     str.insert(str.cbegin() + 6, 2, 'c');
     CHECK(str == "Hello cccccworld");
     CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
-    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == str.capacity() * sizeof(decltype(str)::value_type));
+    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
     CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
   }
   // 8) template <typename InputIt> iterator insert(const_iterator pos, InputIt first, InputIt last)
   {
     rsl::test::test_string str("Hello world");
-    rsl::test::test_string str2("new ");
+    rsl::test::test_string str2("new !");
 
     card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
     card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
     card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
 
-    str.insert(str.cbegin() + 6, str2.cbegin(), str2.cend() - 1);
+    str.insert(str.cbegin() + 6, str2.cbegin(), str2.cend() - 2);
     CHECK(str == "Hello newworld");
     CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
     CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
     CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
 
-    str.insert(str.cbegin() + 9, str2.cend() - 1, str2.cend());
-    CHECK(str == "Hello new world");
+    str.insert(str.cbegin() + 9, str2.cend() - 2, str2.cend());
+    CHECK(str == "Hello new !world");
     CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
-    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == str.capacity() * sizeof(decltype(str)::value_type));
+    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
     CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
 
   }
@@ -2276,10 +2276,10 @@ TEST_CASE("string insertion and erasion")
     CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
     CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
 
-    str.insert(str.cbegin() + 9, { ' ' });
-    CHECK(str == "Hello new world");
-    CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
-    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == str.capacity() * sizeof(decltype(str)::value_type));
+    str.insert(str.cbegin() + 9, { ' ','!'});
+    CHECK(str == "Hello new !world");
+    CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
+    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
     CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
   }
   // 10) basic_string& insert(size_type pos, const basic_string_view<value_type, traits_type>& sv)
@@ -2296,10 +2296,10 @@ TEST_CASE("string insertion and erasion")
     CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
     CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
 
-    str.insert(9, rsl::string_view(" "));
-    CHECK(str == "Hello new world");
+    str.insert(9, rsl::string_view(" !"));
+    CHECK(str == "Hello new !world");
     CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
-    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == str.capacity() * sizeof(decltype(str)::value_type));
+    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
     CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
   }
   // 11) basic_string& insert(size_type pos, const basic_string_view<value_type, traits_type>& sv, size_type indexStr, size_type count = s_npos)
@@ -2310,16 +2310,16 @@ TEST_CASE("string insertion and erasion")
     card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
     card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
 
-    str.insert(6, rsl::string_view("new "), 0, 3);
+    str.insert(6, rsl::string_view("new "), 0, 4);
     CHECK(str == "Hello new world");
     CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
     CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
     CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
 
-    str.insert(9, rsl::string_view("new "), 3, 1);
-    CHECK(str == "Hello new world");
+    str.insert(10, rsl::string_view("new! "), 3, 2);
+    CHECK(str == "Hello new ! world");
     CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
-    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == str.capacity() * sizeof(decltype(str)::value_type));
+    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
     CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
   }
 
@@ -2419,7 +2419,7 @@ TEST_CASE("string insertion and erasion")
       card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
       card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
 
-      str.erase(str.cbegin(), str.cend());
+      str.erase(str.cbegin(), str.cend());;
       CHECK(str == "");
       CHECK(str.empty());
       CHECK(str.size() == 0);
@@ -2460,11 +2460,11 @@ TEST_CASE("string insertion and erasion")
       card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
 
       str.push_back('c');
-      CHECK(str == "Hello my worldc");
-      CHECK(str.size() == old_size + 1);
-      CHECK(str.capacity() == 16);
+      str.push_back('c');
+      CHECK(str == "Hello my worldcc");
+      CHECK(str.size() == old_size + 2);
       CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
-      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
       CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
     }
 
@@ -2538,9 +2538,8 @@ TEST_CASE("string insertion and erasion")
       str.append(5, 'c');
       CHECK(str == "Hello my worldccccc");
       CHECK(str.size() == old_size + 5);
-      CHECK(str.capacity() == 20);
       CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
-      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
       CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
     }
   }
@@ -2574,9 +2573,8 @@ TEST_CASE("string insertion and erasion")
       str.append(rsl::test::test_string(" again"));
       CHECK(str == "Hello my world again");
       CHECK(str.size() == old_size + 6);
-      CHECK(str.capacity() == 21);
       CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
-      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
       CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
     }
 
@@ -2593,7 +2591,7 @@ TEST_CASE("string insertion and erasion")
 
       str.append(rsl::test::test_string(" my "), 1);
       CHECK(str == "Hello worldmy ");
-      CHECK(str.size() == old_size +36);
+      CHECK(str.size() == old_size + 3);
       CHECK(str.capacity() == str.sso_buff_size());
       CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
       CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
@@ -2610,9 +2608,8 @@ TEST_CASE("string insertion and erasion")
       str.append(rsl::test::test_string(" again"), 1);
       CHECK(str == "Hello worldagain");
       CHECK(str.size() == old_size + 5);
-      CHECK(str.capacity() == 17);
-      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
-      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
       CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
     }
 
@@ -2623,173 +2620,391 @@ TEST_CASE("string insertion and erasion")
       rsl::test::test_string str("Hello world");
       const char8* ptr = "new";
 
+      const auto old_size = str.size();
       card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
       card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
       card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
 
       str.append(ptr, 3);
       CHECK(str == "Hello worldnew");
+      CHECK(str.size() == old_size + 3);
+      CHECK(str.capacity() == str.sso_buff_size());
       CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
       CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
       CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
     }
     {
       rsl::test::test_string str("Hello world");
-      const char8* ptr = "new ";
+      const char8* ptr = "new !";
 
+      const auto old_size = str.size();
       card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
       card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
       card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
 
-      str.append(ptr, 4);
-      CHECK(str == "Hello worldnew ");
-      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
-      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
+      str.append(ptr, 5);
+      CHECK(str == "Hello worldnew !");
+      CHECK(str.size() == old_size + 5);
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
       CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
     }
   }
   // 22) basic_string& append(const_pointer& s) // NOLINT(modernize-avoid-c-arrays)
   {
-    rsl::test::test_string str("Hello world");
-    const char8* ptr = "new ";
+    {
+      rsl::test::test_string str("Hello world");
+      const char8* ptr = "my ";
 
-    card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
-    card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
-    card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+      const auto old_size = str.size();
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
 
-    str.append(ptr);
-    CHECK(str == "Hello worldnew ");
-    CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
-    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
-    CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+      str.append(ptr);
+      CHECK(str == "Hello worldmy ");
+      CHECK(str.size() == old_size + 3);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+
+    }
+
+    {
+      rsl::test::test_string str("Hello world");
+      const char8* ptr = "new !";
+
+      const auto old_size = str.size();
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+
+      str.append(ptr);
+      CHECK(str == "Hello worldnew !");
+      CHECK(str.size() == old_size + 5);
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+
+    }
   }
   // 23) template <typename InputIt> basic_string& append(InputIt first, InputIt last)
   {
-    rsl::test::test_string str("Hello world");
-    rsl::test::test_string str2("again");
+    {
+      rsl::test::test_string str("Hello world");
+      rsl::test::test_string str2("my ");
 
-    card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
-    card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
-    card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+      const auto old_size = str.size();
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
 
-    str.append(str2.cbegin(), str2.cend());
-    CHECK(str == "Hello worldagain");
-    CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
-    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
-    CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+      str.append(str2.cbegin(), str2.cend());
+      CHECK(str == "Hello worldmy ");
+      CHECK(str.size() == old_size + 3);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
+
+    {
+      rsl::test::test_string str("Hello world");
+      rsl::test::test_string str2("new !");
+
+      const auto old_size = str.size();
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+
+      str.append(str2.cbegin(), str2.cend());
+      CHECK(str == "Hello worldnew !");
+      CHECK(str.size() == old_size + 5);
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
   }
   // 24) basic_string& append(rsl::initializer_list<value_type> ilist)
   {
-    rsl::test::test_string str("Hello world");
+    {
+      rsl::test::test_string str("Hello world");
 
-    card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
-    card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
-    card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+      const auto old_size = str.size();
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
 
-    str.append({ 'a', 'g', 'a', 'i', 'n' });
-    CHECK(str == "Hello worldagain");
-    CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
-    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
-    CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+      str.append({ ' ', 'm', 'y' });
+      CHECK(str == "Hello world my");
+      CHECK(str.size() == old_size + 3);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
+    {
+      rsl::test::test_string str("Hello world");
+
+      const auto old_size = str.size();
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+
+      str.append({ 'n', 'e', 'w', ' ', '!'});
+      CHECK(str == "Hello worldnew !");
+      CHECK(str.size() == old_size + 5);
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
   }
   // 25) basic_string& append(const basic_string_view<value_type, traits_type> sv)
   {
-    rsl::test::test_string str("Hello world");
+    {
+      rsl::test::test_string str("Hello world");
 
-    card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
-    card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
-    card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+      const auto old_size = str.size();
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
 
-    str.append(rsl::string_view("again"));
-    CHECK(str == "Hello worldagain");
-    CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
-    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
-    CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+      str.append(rsl::string_view("my "));
+      CHECK(str == "Hello worldmy ");
+      CHECK(str.size() == old_size + 3);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
+    {
+      rsl::test::test_string str("Hello world");
+
+      const auto old_size = str.size();
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+
+      str.append(rsl::string_view("new !"));
+      CHECK(str == "Hello worldnew !");
+      CHECK(str.size() == old_size + 5);
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
   }
   // 26) basic_string& append(const basic_string_view<value_type, traits_type>& sv, size_type pos, size_type count = s_npos)
   {
-    rsl::test::test_string str("Hello world");
+    {
+      rsl::test::test_string str("Hello world");
 
-    card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
-    card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
-    card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+      const auto old_size = str.size();
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
 
-    str.append(rsl::string_view("again"), 0, 1);
-    CHECK(str == "Hello worlda");
-    CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
-    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
-    CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+      str.append(rsl::string_view("new "), 0, 3);
+      CHECK(str == "Hello worldnew");
+      CHECK(str.size() == old_size + 3);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
+    {
+      rsl::test::test_string str("Hello world");
+
+      const auto old_size = str.size();
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+
+      str.append(rsl::string_view("new !"), 0, 5);
+      CHECK(str == "Hello worldnew !");
+      CHECK(str.size() == old_size + 5);
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
   }
 
   // 27) basic_string& operator+=(const basic_string& str)
   {
-    rsl::test::test_string str("Hello world");
+    {
+      rsl::test::test_string str("Hello world");
 
-    card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
-    card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
-    card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+      const auto old_size = str.size();
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
 
-    str += rsl::test::test_string("again");
-    CHECK(str == "Hello worldagain");
-    CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
-    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
-    CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+      str += rsl::test::test_string("new ");
+      CHECK(str == "Hello worldnew ");
+      CHECK(str.size() == old_size + 4);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
+    {
+      rsl::test::test_string str("Hello world");
+
+      const auto old_size = str.size();
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+
+      str += rsl::test::test_string("again");
+      CHECK(str == "Hello worldagain");
+      CHECK(str.size() == old_size + 5);
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+
+    }
   }
   // 28) basic_string& operator+=(value_type ch)
   {
-    rsl::test::test_string str("Hello world");
+    {
+      rsl::test::test_string str("Hello world");
 
-    card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
-    card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
-    card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+      const auto old_size = str.size();
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
 
-    str += 'c';
-    CHECK(str == "Hello worldc");
-    CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
-    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
-    CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+      str += 'c';
+      CHECK(str == "Hello worldc");
+      CHECK(str.size() == old_size + 1);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
+
+    {
+      rsl::test::test_string str("Hello world");
+
+      const auto old_size = str.size();
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+
+      str += 'c';
+      str += 'c';
+      str += 'c';
+      str += 'c';
+      str += 'c';
+      CHECK(str == "Hello worldccccc");
+      CHECK(str.size() == old_size + 5);
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
   }
   // 29) basic_string& operator+=(const value_type (&s)[Size]) // NOLINT(modernize-avoid-c-arrays)
   {
-    rsl::test::test_string str("Hello world");
+    {
+      rsl::test::test_string str("Hello world");
 
-    card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
-    card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
-    card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+      const auto old_size = str.size();
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
 
-    str += "again";
-    CHECK(str == "Hello worldagain");
-    CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
-    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
-    CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+      str += "new ";
+      CHECK(str == "Hello worldnew ");
+      CHECK(str.size() == old_size + 4);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
+    {
+      rsl::test::test_string str("Hello world");
+
+      const auto old_size = str.size();
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+
+      str += "again";
+      CHECK(str == "Hello worldagain");
+      CHECK(str.size() == old_size + 5);
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
   }
   // 30) basic_string& operator+=(rsl::initializer_list<value_type> ilist)
   {
-    rsl::test::test_string str("Hello world");
+    {
+      rsl::test::test_string str("Hello world");
 
-    card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
-    card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
-    card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+      const auto old_size = str.size();
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
 
-    str += {'a', 'g', 'a', 'i', 'n'};
-    CHECK(str == "Hello worldagain");
-    CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
-    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
-    CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+      str += {'n', 'e', 'w', ' '};
+      CHECK(str == "Hello worldnew ");
+      CHECK(str.size() == old_size + 4);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
+    {
+      rsl::test::test_string str("Hello world");
+
+      const auto old_size = str.size();
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+
+      str += {'a', 'g', 'a', 'i', 'n'};
+      CHECK(str == "Hello worldagain");
+      CHECK(str.size() == old_size + 5);
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
   }
   // 31) basic_string& operator+=(const basic_string_view<value_type, traits_type>& sv)
   {
-    rsl::test::test_string str("Hello world");
+    {
+      rsl::test::test_string str("Hello world");
 
-    card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
-    card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
-    card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+      const auto old_size = str.size();
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
 
-    str += rsl::string_view("again");
-    CHECK(str == "Hello worldagain");
-    CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
-    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
-    CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+      str += rsl::string_view("new ");
+      CHECK(str == "Hello worldnew ");
+      CHECK(str.size() == old_size + 4);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
+
+    {
+      rsl::test::test_string str("Hello world");
+
+      const auto old_size = str.size();
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+
+      str += rsl::string_view("again");
+      CHECK(str == "Hello worldagain");
+      CHECK(str.size() == old_size + 5);
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
   }
 }
 TEST_CASE("string compare")
@@ -2925,179 +3140,390 @@ TEST_CASE("string replace")
 
   // 1) replace(size_type pos, size_type count, const basic_string& str)
   {
-    rsl::test::test_string str("Hello World");
+    {
+      rsl::test::test_string str("Hello World");
 
-    card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
-    card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
-    card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
 
-    str.replace(0, 5, rsl::test::test_string("Something"));
-    CHECK(str == "Something World");
-    CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
-    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
-    CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+      str.replace(0, 5, rsl::test::test_string("Something"));
+      CHECK(str == "Something World");
+      CHECK(str.size() == 15);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
+    {
+      rsl::test::test_string str("Hello World");
+
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+
+      str.replace(0, 5, rsl::test::test_string("Something nice"));
+      CHECK(str == "Something nice World");
+      CHECK(str.size() == 20);
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
   }
   // 2) replace(const_iterator first, const_iterator last, const basic_string& str)
   {
-    rsl::test::test_string str("Hello World");
+    {
+      rsl::test::test_string str("Hello World");
 
-    card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
-    card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
-    card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
 
-    str.replace(str.cbegin(), str.cbegin() + 5, rsl::test::test_string("Something"));
-    CHECK(str == "Something World");
-    CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
-    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
-    CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+      str.replace(str.cbegin(), str.cbegin() + 5, rsl::test::test_string("Something"));
+      CHECK(str.size() == 15);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(str == "Something World");
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
+    {
+      rsl::test::test_string str("Hello World");
+
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+
+      str.replace(str.cbegin(), str.cbegin() + 5, rsl::test::test_string("Something nice"));
+      CHECK(str == "Something nice World");
+      CHECK(str.size() == 20);
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
   }
   // 3) replace(size_type pos1, size_type count1, const basic_string& str, size_type pos2, size_type count2)
   {
-    rsl::test::test_string str("Hello World");
+    {
+      rsl::test::test_string str("Hello World");
 
-    card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
-    card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
-    card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
 
-    str.replace(0, 5, rsl::test::test_string("Something"), 0, 4);
-    CHECK(str == "Some World");
-    CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
-    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
-    CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+      str.replace(0, 5, rsl::test::test_string("Something"), 0, 4);
+      CHECK(str.size() == 10);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(str == "Some World");
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
+    {
+      rsl::test::test_string str("Hello World");
+
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+
+      str.replace(0, 5, rsl::test::test_string("Something very!"), 0, 14);
+      CHECK(str.size() == 20);
+      CHECK(str == "Something very World");
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
   }
   // 4) replace(const_iterator first, const_iterator last, InputIt first2, InputIt last2)
   {
-    rsl::test::test_string str("Hello World");
-    rsl::test::test_string str2("Something");
+    {
+      rsl::test::test_string str("Hello World");
+      rsl::test::test_string str2("Something");
 
-    card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
-    card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
-    card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
 
-    str.replace(str.cbegin(), str.cbegin() + 5, str2.cbegin(), str2.cend());
-    CHECK(str == "Something World");
-    CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
-    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
-    CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+      str.replace(str.cbegin(), str.cbegin() + 5, str2.cbegin(), str2.cend());
+      CHECK(str == "Something World");
+      CHECK(str.size() == 15);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
+    {
+      rsl::test::test_string str("Hello World");
+      rsl::test::test_string str2("Something nice");
+
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+
+      str.replace(str.cbegin(), str.cbegin() + 5, str2.cbegin(), str2.cend());
+      CHECK(str == "Something nice World");
+      CHECK(str.size() == 20);
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
   }
   // 5) replace(size_type pos, size_type count, const value_type (&s)[Size])
   {
-    rsl::test::test_string str("Hello World");
+    {
+      rsl::test::test_string str("Hello World");
 
-    card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
-    card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
-    card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
 
-    str.replace(0, 5, "Something");
-    CHECK(str == "Something World");
-    CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
-    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
-    CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+      str.replace(0, 5, "Something");
+      CHECK(str == "Something World");
+      CHECK(str.size() == 15);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
+    {
+      rsl::test::test_string str("Hello World");
+
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+
+      str.replace(0, 5, "Something nice");
+      CHECK(str == "Something nice World");
+      CHECK(str.size() == 20);
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
   }
   // 6) replace(const_iterator first, const_iterator last, const value_type (&s)[Size])
   {
-    rsl::test::test_string str("Hello World");
+    {
+      rsl::test::test_string str("Hello World");
 
-    card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
-    card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
-    card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
 
-    str.replace(str.cbegin(), str.cbegin() + 5, "Something");
-    CHECK(str == "Something World");
-    CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
-    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
-    CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+      str.replace(str.cbegin(), str.cbegin() + 5, "Something");
+      CHECK(str == "Something World");
+      CHECK(str.size() == 15);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
+    {
+      rsl::test::test_string str("Hello World");
+
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+
+      str.replace(str.cbegin(), str.cbegin() + 5, "Something nice");
+      CHECK(str == "Something nice World");
+      CHECK(str.size() == 20);
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
   }
   // 7) replace(size_type pos, size_type count, size_type count2, value_type ch)
   {
-    rsl::test::test_string str("Hello World");
+    {
+      rsl::test::test_string str("Hello World");
 
-    card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
-    card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
-    card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
 
-    str.replace(0, 5, 5, 'c');
-    CHECK(str == "ccccc World");
-    CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
-    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
-    CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+      str.replace(0, 5, 5, 'c');
+      CHECK(str == "ccccc World");
+      CHECK(str.size() == 11);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
+    {
+      rsl::test::test_string str("Hello World");
 
-    str.assign("Hello World");
-    str.replace(0, 5, 10, 'c');
-    CHECK(str == "cccccccccc World");
-    CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
-    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
-    CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+
+      str.replace(0, 5, 10, 'c');
+
+      CHECK(str == "cccccccccc World");
+      CHECK(str.size() == 16);
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
   }
   // 8) replace(const_iterator first, const_iterator last, size_type count2, value_type ch)
   {
-    rsl::test::test_string str("Hello World");
+    {
+      rsl::test::test_string str("Hello World");
 
-    card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
-    card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
-    card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
 
-    str.replace(str.cbegin(), str.cbegin() + 5, 5, 'c');
-    CHECK(str == "ccccc World");
-    CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
-    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
-    CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+      str.replace(str.cbegin(), str.cbegin() + 5, 5, 'c');
+      CHECK(str == "ccccc World");
+      CHECK(str.size() == 11);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
+    {
+      rsl::test::test_string str("Hello World");
+
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+
+      str.replace(str.cbegin(), str.cbegin() + 5, 10, 'c');
+      CHECK(str == "cccccccccc World");
+      CHECK(str.size() == 16);
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
   }
   // 9) replace(const_iterator first, const_iterator last, rsl::initializer_list<value_type> ilist)
   {
-    rsl::test::test_string str("Hello World");
+    {
+      rsl::test::test_string str("Hello World");
 
-    card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
-    card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
-    card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
 
-    str.replace(str.cbegin(), str.cbegin() + 5, { 'S', 'o', 'm', 'e' });
-    CHECK(str == "Some World");
-    CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
-    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
-    CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+      str.replace(str.cbegin(), str.cbegin() + 5, { 'S', 'o', 'm', 'e' });
+      CHECK(str == "Some World");
+      CHECK(str.size() == 10);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
+    {
+      rsl::test::test_string str("Hello World");
+
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+
+      str.replace(str.cbegin(), str.cbegin() + 5, { 'S', 'o', 'm', 'e', ' ', 'v', 'e', 'r', 'y', ' ', 'b', 'i', 'g'});
+      CHECK(str == "Some very big World");
+      CHECK(str.size() == 19);
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
   }
   // 10) replace(size_type pos, size_type count, const basic_string_view<value_type, traits_type>& sv)
   {
-    rsl::test::test_string str("Hello World");
+    {
+      rsl::test::test_string str("Hello World");
 
-    card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
-    card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
-    card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
 
-    str.replace(0, 5, rsl::string_view("Something"));
-    CHECK(str == "Something World");
-    CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
-    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
-    CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+      str.replace(0, 5, rsl::string_view("Something"));
+      CHECK(str == "Something World");
+      CHECK(str.size() == 15);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
+    {
+      rsl::test::test_string str("Hello World");
+
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+
+      str.replace(0, 5, rsl::string_view("Something nice"));
+      CHECK(str == "Something nice World");
+      CHECK(str.size() == 20);
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
   }
   // 11) replace(const_iterator first, const_iterator last, const basic_string_view<value_type, traits_type>& sv)
   {
-    rsl::test::test_string str("Hello World");
+    {
+      rsl::test::test_string str("Hello World");
 
-    card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
-    card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
-    card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
 
-    str.replace(str.cbegin(), str.cbegin() + 5, rsl::string_view("Something"));
-    CHECK(str == "Something World");
-    CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
-    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
-    CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+      str.replace(str.cbegin(), str.cbegin() + 5, rsl::string_view("Something"));
+      CHECK(str == "Something World");
+      CHECK(str.size() == 15);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
+    {
+      rsl::test::test_string str("Hello World");
+
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+
+      str.replace(str.cbegin(), str.cbegin() + 5, rsl::string_view("Something nice"));
+      CHECK(str == "Something nice World");
+      CHECK(str.size() == 20);
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
   }
   // 12) replace(size_type pos, size_type count, const basic_string_view<value_type, traits_type>& sv, size_type pos2, size_type count2 = s_npos)
   {
-    rsl::test::test_string str("Hello World");
+    {
+      rsl::test::test_string str("Hello World");
 
-    card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
-    card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
-    card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
 
-    str.replace(0, 5, rsl::string_view("Something"), 0, 4);
-    CHECK(str == "Some World");
-    CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
-    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
-    CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+      str.replace(0, 5, rsl::string_view("Something"), 0, 4);
+      CHECK(str == "Some World");
+      CHECK(str.size() == 10);
+      CHECK(str.capacity() == str.sso_buff_size());
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
+    {
+      rsl::test::test_string str("Hello World");
+
+      card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
+      card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
+      card32 pre_num_frees = rsl::test::test_allocator::all_num_frees();
+
+      str.replace(0, 5, rsl::string_view("Something very nice"), 0, 14);
+      CHECK(str == "Something very World");
+      CHECK(str.size() == 20);
+      CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
+      CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
+      CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+    }
   }
 }
 TEST_CASE("string subtr")
@@ -3148,6 +3574,18 @@ TEST_CASE("string resize")
   CHECK(str == "Hello\0\0\0\0\0");
   CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
   CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated);
+  CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+
+  str.resize(20);
+  CHECK(str == "Hello\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0");
+  CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
+  CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
+  CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
+
+  str.resize(10);
+  CHECK(str == "Hello\0\0\0\0\0");
+  CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
+  CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
   CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
 }
 TEST_CASE("string find")

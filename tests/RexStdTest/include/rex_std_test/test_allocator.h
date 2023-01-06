@@ -71,13 +71,6 @@ namespace rsl::test
       static card32 s_all_num_allocs;
       static card32 s_all_num_frees;
       static card32 s_all_num_bytes_allocated;
-
-      //struct ptr_size
-      //{
-      //  const void* ptr;
-      //  size_type size;
-      //};
-      //ptr_size ptr_map[100]{};
     };
 
     constexpr bool operator==(const test_allocator& /*unused*/, const test_allocator& /*unused*/)

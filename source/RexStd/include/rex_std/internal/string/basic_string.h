@@ -627,7 +627,7 @@ namespace rsl
       basic_string& insert(size_type index, const basic_string& str, size_type indexStr, size_type count = s_npos)
       {
         const size_type num_to_copy = obj_length_or_count(str, count, indexStr);
-        return insert(index, str.data(), num_to_copy);
+        return insert(index, str.data() + indexStr, num_to_copy);
       }
       // inserts character ch before the character pointed by pos
       iterator insert(const_iterator pos, value_type ch)
@@ -732,8 +732,8 @@ namespace rsl
         const size_type first_idx = rsl::distance(cbegin(), first);
         const size_type last_idx  = rsl::distance(cbegin(), last);
         const size_type count     = last_idx - first_idx;
-
-        traits_type::move(&m_begin[first_idx], &m_begin[last_idx], count);
+        const size_type num_to_move = rsl::min(count, rsl::distance(last, cend()));
+        traits_type::move(&m_begin[first_idx], &m_begin[last_idx], num_to_move);
 
         m_end -= count;
         traits_type::assign(*m_end, value_type());
@@ -1710,7 +1710,7 @@ namespace rsl
       // reallocates if new size is bigger than the sso and bigger than the current capacity
       bool increase_capacity_if_needed(size_type numElementsToAdd)
       {
-        if(size() + numElementsToAdd > capacity())
+        if(size() + numElementsToAdd >= capacity())
         {
           reallocate(new_buffer_size(numElementsToAdd), data(), size());
           return true;
