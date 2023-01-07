@@ -570,7 +570,7 @@ namespace rsl
         pointer new_buffer = static_cast<pointer>(get_mutable_allocator().allocate(calc_bytes_needed(newCapacity)));
 
         pointer dest = new_buffer;
-        move(dest, m_begin, size()));
+        move(dest, m_begin, size());
 
         const size_type old_size = size();
 
@@ -669,7 +669,7 @@ namespace rsl
           // can't call reallocate here as it'll move the current elements into the new buffer
           // we'll overwrite them anyway, so it's best to copy them directly into the new buffer
           clear(); // make sure we call the dtors
-          deallocate(m_begin);
+          deallocate(); // free all data
 
           const size_type new_buffer_cap = new_buffer_capacity(count - size());
           m_begin = static_cast<pointer>(get_mutable_allocator().allocate(calc_bytes_needed(new_buffer_cap)));
@@ -691,7 +691,7 @@ namespace rsl
             get_mutable_allocator().destroy(elem);
           }
         }
-        m_end = m_begin + count
+        m_end = m_begin + count;
       }
 
       // resizes if necessary
