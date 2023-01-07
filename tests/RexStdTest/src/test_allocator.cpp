@@ -56,6 +56,11 @@ namespace rsl::test
     }
     void test_allocator::deallocate(void* const ptr, size_type size) // NOLINT(readability-convert-member-functions-to-static)
     {
+      if (ptr == nullptr)
+      {
+        return;
+      }
+
       m_num_frees++;
       m_num_bytes_allocated -= static_cast<card32>(size);
       s_all_num_frees++;
