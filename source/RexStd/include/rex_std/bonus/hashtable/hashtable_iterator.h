@@ -23,7 +23,6 @@ namespace rsl
 {
   inline namespace v1
   {
-
     template <typename Value, bool IsConst>
     class hashtable_iterator : public hashtable_iterator_base<Value>
     {
@@ -46,7 +45,7 @@ namespace rsl
           : base_type(*bucket, bucket)
       {
       }
-      explicit hashtable_iterator(const this_type_non_const& other)
+      hashtable_iterator(const this_type_non_const& other)
           : base_type(other.m_node, other.m_bucket)
       {
       }
@@ -70,11 +69,11 @@ namespace rsl
         base_type::increment();
         return temp;
       }
-      node_type* node()
+      pointer node()
       {
         return base_type::node();
       }
-      node_type** bucket()
+      pointer* bucket()
       {
         return base_type::bucket();
       }

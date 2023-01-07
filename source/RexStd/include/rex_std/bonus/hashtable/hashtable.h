@@ -48,7 +48,7 @@ namespace rsl
       using const_reference          = const value_type&;
       using local_iterator           = node_iterator<value_type, !UsesMutableIterators>;
       using const_local_iterator     = node_iterator<value_type, true>;
-      using iterator                 = hashtable_iterator<value_type, !UsesMutableIterators>;
+      using iterator                 = hashtable_iterator<value_type, false>;
       using const_iterator           = hashtable_iterator<value_type, true>;
       using node_type                = hash_node<value_type>;
       using insert_return_type       = typename type_select<UsesUniqueKeys, insert_result<iterator>, iterator>::type;
@@ -68,9 +68,9 @@ namespace rsl
           , m_allocator()
       {
       }
-      hashtable(size_type bucketCount, const KeyHash& keyHash, const BucketIndexFinder& bucketIndexFinder, const Equal& equal, const ExtractKey& extractKey, const allocator_type& allocator)
+      hashtable(Size bucketCount, const KeyHash& keyHash, const BucketIndexFinder& bucketIndexFinder, const Equal& equal, const ExtractKey& extractKey, const allocator_type& allocator)
           : m_cp_key_equal_and_bucket_array(equal)
-          , m_cp_key_hash_and_bucket_count(keyHash, bucketCount)
+          , m_cp_key_hash_and_bucket_count(keyHash, bucketCount.get())
           , m_cp_bucket_idx_finder_and_element_count(bucketIndexFinder)
           , m_cp_extract_key_and_rehash_policy(extractKey)
           , m_allocator(allocator)
@@ -82,10 +82,10 @@ namespace rsl
       }
 
       template <typename ForwardIterator>
-      hashtable(ForwardIterator first, ForwardIterator last, size_type bucketCount, const KeyHash& keyHash, const BucketIndexFinder& bucketIndexFinder, const Equal& equal, const ExtractKey& extractKey, const allocator_type& allocator)
+      hashtable(ForwardIterator first, ForwardIterator last, Size bucketCount, const KeyHash& keyHash, const BucketIndexFinder& bucketIndexFinder, const Equal& equal, const ExtractKey& extractKey, const allocator_type& allocator)
           : hashtable(bucketCount, keyHash, bucketIndexFinder, equal, extractKey, allocator)
       {
-        if(bucketCount < 2)
+        if(bucketCount.get() < 2)
         {
           const size_type element_count           = static_cast<size_type>(internal::ht_distance(first, last));
           m_cp_key_hash_and_bucket_count.second() = static_cast<size_type>(m_cp_extract_key_and_rehash_policy.second().get_bucket_count(element_count));
@@ -93,7 +93,7 @@ namespace rsl
         else
         {
           REX_ASSERT_X(bucketCount < 10'000'000, "Bucket count too big for hashtable. bucketcount: {}", bucketCount);
-          m_cp_key_hash_and_bucket_count.second() = bucketCount;
+          m_cp_key_hash_and_bucket_count.second() = bucketCount.get();
         }
 
         m_cp_key_equal_and_bucket_array.second() = allocate_buckets(bucket_count());
@@ -507,6 +507,41 @@ namespace rsl
         node_type* node = find_node(bucket_array()[n], x);
         return node ? const_iterator(node, bucket_array() + n) : cend();
       }
+      template <typename K>
+      size_type count(const K& x)
+      {
+        const size_type n = static_cast<size_type>(bucket_index(x, bucket_count()));
+
+        node_type* node = find_node(bucket_array()[n], x);
+
+        if constexpr (has_unique_keys_type::value)
+        {
+          return node ? 1 : 0;
+        }
+        else
+        {
+          size_type result = 0;
+
+          // To do: Make a specialization for bU (unique keys) == true and take 
+          // advantage of the fact that the count will always be zero or one in that case. 
+          for (; node; node = node->next)
+          {
+            if (!compare(x, node))
+            {
+              ++result;
+            }
+          }
+          return result;
+        }
+      }
+      template <typename K>
+      size_type count(const K& x) const
+      {
+        const size_type n = static_cast<size_type>(bucket_index(x, bucket_count()));
+
+        node_type* node = find_node(bucket_array()[n], x);
+        return node ? const_iterator(node, bucket_array() + n) : cend();
+      }
 
       bool contains(const Key& key) const
       {
@@ -622,7 +657,7 @@ namespace rsl
       }
 
     private:
-      node_type**& bucket_array()
+      node_type**& bucket_array() const
       {
         return m_cp_key_equal_and_bucket_array.second();
       }

@@ -18,6 +18,8 @@ namespace rsl
 {
   inline namespace v1
   {
+    template <typename, bool>
+    class hashtable_iterator;
 
     template <typename Value>
     class hashtable_iterator_base
@@ -31,6 +33,12 @@ namespace rsl
           , m_bucket(bucket)
       {
       }
+
+      template <typename, bool>
+      friend class hashtable_iterator;
+
+      friend bool operator==(hashtable_iterator_base<Value> lhs, hashtable_iterator_base<Value> rhs);
+      friend bool operator!=(hashtable_iterator_base<Value> lhs, hashtable_iterator_base<Value> rhs);
 
       void increment_bucket()
       {
@@ -47,7 +55,7 @@ namespace rsl
       {
         return m_node;
       }
-      node_type** bucket()
+      node_type** bucket() const
       {
         return m_bucket;
       }
@@ -56,6 +64,17 @@ namespace rsl
       node_type* m_node;
       node_type** m_bucket;
     };
+
+    template <typename Value>
+    bool operator==(hashtable_iterator_base<Value> lhs, hashtable_iterator_base<Value> rhs)
+    {
+      lhs.m_node == rhs.m_node;
+    }
+    template <typename Value>
+    bool operator!=(hashtable_iterator_base<Value> lhs, hashtable_iterator_base<Value> rhs)
+    {
+      return !(lhs == rhs);
+    }
 
   } // namespace v1
 } // namespace rsl
