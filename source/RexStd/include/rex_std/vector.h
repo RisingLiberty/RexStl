@@ -486,7 +486,7 @@ namespace rsl
           operator[](i) = rsl::move(operator[](i + 1));
         }
         --m_end;
-        m_end->~value_type();
+        get_mutable_allocator().destroy(m_end);
         return begin() + idx;
       }
       // Removes the elements in the range [first, last).
@@ -549,7 +549,7 @@ namespace rsl
       // Removes the last element of the container.
       void pop_back()
       {
-        back().~T();
+        get_mutable_allocator().destroy(m_end - 1);
         --m_end;
       }
 
@@ -570,7 +570,7 @@ namespace rsl
         pointer new_buffer = static_cast<pointer>(get_mutable_allocator().allocate(calc_bytes_needed(newCapacity)));
 
         pointer dest = new_buffer;
-        move(dest, m_begin, size());
+        move(dest, m_begin, size()));
 
         const size_type old_size = size();
 
@@ -659,13 +659,39 @@ namespace rsl
       void copy_range(It first, It last)
       {
         const difference_type count = static_cast<difference_type>(rsl::distance(first, last));
-        resize_internal(count);
 
-        for(difference_type i = 0; i < count; ++i)
+        // we need to aqcuire a bigger buffer, so let's do the following
+        // 1. deallocate our current one.
+        // 2. allocate a new buffer to fit the required number of elements
+        // 3. copy over the elements into the new buffer
+        if (count > capacity())
         {
-          T* dest = rsl::addressof(operator[](i));
-          new(dest) T(*(first + i));
+          // can't call reallocate here as it'll move the current elements into the new buffer
+          // we'll overwrite them anyway, so it's best to copy them directly into the new buffer
+          clear(); // make sure we call the dtors
+          deallocate(m_begin);
+
+          const size_type new_buffer_cap = new_buffer_capacity(count - size());
+          m_begin = static_cast<pointer>(get_mutable_allocator().allocate(calc_bytes_needed(new_buffer_cap)));
+          m_cp_last_and_allocator.first() = m_begin + count;
+
+          const_pointer src = rsl::iterator_to_pointer(first);
+          copy(m_begin, src, count);
         }
+        else
+        {
+          for (difference_type i = 0; i < count; ++i)
+          {
+            T* dest = rsl::addressof(operator[](i));
+            new(dest) T(*(first + i));
+          }
+          for (size_type i = 0; i < size(); ++i) // size hasn't updated here yet
+          {
+            T* elem = rsl::addressof(operator[](i));
+            get_mutable_allocator().destroy(elem);
+          }
+        }
+        m_end = m_begin + count
       }
 
       // resizes if necessary
@@ -673,14 +699,40 @@ namespace rsl
       template <typename It>
       void move_range(It first, It last)
       {
-        difference_type count = static_cast<difference_type>(rsl::distance(first, last));
-        resize_internal(count);
+        const difference_type count = static_cast<difference_type>(rsl::distance(first, last));
 
-        for(difference_type i = 0; i < count; ++i)
+        // we need to aqcuire a bigger buffer, so let's do the following
+        // 1. deallocate our current one.
+        // 2. allocate a new buffer to fit the required number of elements
+        // 3. move over the elements into the new buffer
+        if (count > capacity())
         {
-          T* dest = rsl::addressof(operator[](i));
-          new(dest) T(rsl::move(*(first + i)));
+          // can't call reallocate here as it'll move the current elements into the new buffer
+          // we'll overwrite them anyway, so it's best to copy them directly into the new buffer
+          clear(); // make sure we call the dtors
+          deallocate(m_begin);
+
+          const size_type new_buffer_cap = new_buffer_capacity(count - size());
+          m_begin = static_cast<pointer>(get_mutable_allocator().allocate(calc_bytes_needed(new_buffer_cap)));
+          m_cp_last_and_allocator.first() = m_begin + count;
+
+          const_pointer src = rsl::iterator_to_pointer(first);
+          move(m_begin, src, count);
         }
+        else
+        {
+          for (difference_type i = 0; i < count; ++i)
+          {
+            T* dest = rsl::addressof(operator[](i));
+            new(dest) T(rsl::move(*(first + i)));
+          }
+          for (size_type i = 0; i < size(); ++i) // size hasn't updated here yet
+          {
+            T* elem = rsl::addressof(operator[](i));
+            get_mutable_allocator().destroy(elem);
+          }
+        }
+        m_end = m_begin + count
       }
 
       // fills the vector with elements going from first - last
