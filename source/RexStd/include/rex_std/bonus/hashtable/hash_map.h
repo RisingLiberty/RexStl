@@ -13,9 +13,9 @@
 #pragma once
 
 #include "rex_std/bonus/defines.h"
-#include "rex_std/bonus/types.h"
 #include "rex_std/bonus/hashtable/hashtable.h"
 #include "rex_std/bonus/hashtable/mod_range_hashing.h"
+#include "rex_std/bonus/types.h"
 #include "rex_std/bonus/utility/key_value.h"
 #include "rex_std/bonus/utility/use_first.h"
 #include "rex_std/internal/functional/equal_to.h"

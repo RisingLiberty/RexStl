@@ -17,6 +17,10 @@
 #include "rex_std_test/test_allocator.h"
 #include "rex_std_test/test_object.h"
 
+#include "rex_std/type_traits.h"
+
+#include <type_traits>
+
 TEST_CASE("unordered_map construction")
 {
   using namespace rsl::test;
@@ -79,22 +83,73 @@ TEST_CASE("unordered_map construction")
 
 TEST_CASE("unordered_map element access")
 {
-  using hash_table = rsl::unordered_map<int, int>;
+  using namespace rsl::test;
+  using hash_table = rsl::unordered_map<int, test_object, rsl::hash<int>, rsl::equal_to<int>, test_allocator>;
+
   hash_table map   = {{0, 10}, {1, 11}};
 
   CHECK(map[0] == 10);
   CHECK(map[1] == 11);
   CHECK(map[2] == 0);
 
+  card32 num_allocs = map.get_allocator().num_allocs();
+  card32 num_bytes_allocated = map.get_allocator().num_bytes_allocated();
+  card32 num_frees = map.get_allocator().num_frees();
+
   CHECK(map.at(0) == 10);
   CHECK(map.at(1) == 11);
 
-  CHECK(map.count(0) == 10);
-  CHECK(map.count(1) == 11);
-  CHECK(map.count(2) == 0);
+  CHECK(map.count(0) == 1);
+  CHECK(map.count(1) == 1);
+  CHECK(map.count(2) == 1);
+  CHECK(map.count(3) == 0);
 
   CHECK(map.find(0) != map.cend());
   CHECK(map.find(1) != map.cend());
-  CHECK(map.find(2) == map.cend());
+  CHECK(map.find(2) != map.cend());
+  CHECK(map.find(3) == map.cend());
+
+  CHECK(map.get_allocator().num_allocs() == num_allocs);
+  CHECK(map.get_allocator().num_bytes_allocated() == num_bytes_allocated);
+  CHECK(map.get_allocator().num_frees() == num_frees);
 }
 
+TEST_CASE("unordered_map load factor")
+{
+  using namespace rsl::test;
+  using hash_table = rsl::unordered_map<int, test_object, rsl::hash<int>, rsl::equal_to<int>, test_allocator>;
+
+  hash_table map;
+  map.set_max_load_factor(0.5f);
+
+  map.insert({ 0, 0 });
+  CHECK(map.load_factor() <= map.get_max_load_factor());
+  map.insert({ 1, 0 });
+  CHECK(map.load_factor() <= map.get_max_load_factor());
+  map.insert({ 2, 0 });
+  CHECK(map.load_factor() <= map.get_max_load_factor());
+  map.insert({ 3, 0 });
+  CHECK(map.load_factor() <= map.get_max_load_factor());
+  map.insert({ 4, 0 });
+  CHECK(map.load_factor() <= map.get_max_load_factor());
+  map.insert({ 5, 0 });
+  CHECK(map.load_factor() <= map.get_max_load_factor());
+  map.insert({ 6, 0 });
+  CHECK(map.load_factor() <= map.get_max_load_factor());
+  map.insert({ 7, 0 });
+  CHECK(map.load_factor() <= map.get_max_load_factor());
+  map.insert({ 8, 0 });
+  CHECK(map.load_factor() <= map.get_max_load_factor());
+  map.insert({ 9, 0 });
+  CHECK(map.load_factor() <= map.get_max_load_factor());
+  map.insert({ 10, 0 });
+  CHECK(map.load_factor() <= map.get_max_load_factor());
+  map.insert({ 11, 0 });
+  CHECK(map.load_factor() <= map.get_max_load_factor());
+  map.insert({ 12, 0 });
+  CHECK(map.load_factor() <= map.get_max_load_factor());
+  map.insert({ 13, 0 });
+  CHECK(map.load_factor() <= map.get_max_load_factor());
+  map.insert({ 14, 0 });
+  CHECK(map.load_factor() <= map.get_max_load_factor());
+}

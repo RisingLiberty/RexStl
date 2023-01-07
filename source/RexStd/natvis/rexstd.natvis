@@ -17,6 +17,29 @@
 			</ArrayItems>
 		</Expand>
 	</Type>
+  <Type Name="rsl::v1::internal::compressed_pair_impl&lt;*&gt;">
+    <DisplayString Condition="($T3) == 0" Optional="true">first = {m_first} | second = {m_second}</DisplayString>
+    <DisplayString Condition="($T3) == 1" Optional="true">first = empty | second = {m_second}</DisplayString>
+    <DisplayString Condition="($T3) == 2" Optional="true">first = {m_first} | second = empty</DisplayString>
+    <DisplayString Condition="($T3) == 3" Optional="true">empty</DisplayString>
+    <DisplayString Condition="($T3) == 4" Optional="true">first = {m_first} | second = {m_second}</DisplayString>
+    <DisplayString Condition="($T3) == 5" Optional="true">empty</DisplayString>
+    <Expand>
+      <Item Name="[first]" Condition="$T3 == 0" Optional="true">m_first</Item>
+      <Item Name="[first]" Condition="$T3 == 1" Optional="true">($T1)*this</Item>
+      <Item Name="[first]" Condition="$T3 == 2" Optional="true">m_first</Item>
+      <Item Name="[first]" Condition="$T3 == 3" Optional="true">($T1)*this</Item>
+      <Item Name="[first]" Condition="$T3 == 4" Optional="true">m_first</Item>
+      <Item Name="[first]" Condition="$T3 == 5" Optional="true">($T1)*this</Item>
+      
+      <Item Name="[second]" Condition="$T3 == 0" Optional="true">m_second</Item>
+      <Item Name="[second]" Condition="$T3 == 1" Optional="true">m_second</Item>
+      <Item Name="[second]" Condition="$T3 == 2" Optional="true">($T2)*this</Item>
+      <Item Name="[second]" Condition="$T3 == 3" Optional="true">m_second</Item>
+      <Item Name="[second]" Condition="$T3 == 4" Optional="true">m_second</Item>
+      <Item Name="[second]" Condition="$T3 == 5" Optional="true">($T2)*this</Item>
+    </Expand>
+  </Type>
   <Type Name="rsl::v1::basic_string&lt;*&gt;">
     <Intrinsic Name="length" Expression="m_end - m_begin" />
     <Intrinsic Name="capacity" Expression="m_cp_last_and_allocator.m_first-m_begin" />
