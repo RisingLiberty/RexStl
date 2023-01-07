@@ -55,7 +55,7 @@ namespace rsl
       }
       pointer operator->() const
       {
-        return &m_node->value;
+        return m_node ? &m_node->value : nullptr;
       }
       hashtable_iterator& operator++()
       {
@@ -70,7 +70,7 @@ namespace rsl
       }
       pointer node()
       {
-        return &m_node->value;
+        return m_node ? &m_node->value : nullptr;
       }
       node_type* hash_node()
       {
@@ -152,7 +152,7 @@ namespace rsl
       }
       pointer operator->() const
       {
-        return &m_node->value;
+        return m_node ? &m_node->value : nullptr;
       }
       const_hashtable_iterator& operator++()
       {
@@ -167,7 +167,7 @@ namespace rsl
       }
       pointer node()
       {
-        return &m_node->value;
+        return m_node ? &m_node->value : nullptr;
       }
       node_type* hash_node()
       {
