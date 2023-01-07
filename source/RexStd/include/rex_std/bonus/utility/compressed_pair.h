@@ -99,7 +99,7 @@ namespace rsl
         using second_reference       = typename call_traits<second_type>::reference;
         using first_const_reference  = typename call_traits<first_type>::const_reference;
         using second_const_reference = typename call_traits<second_type>::const_reference;
-        using has_first_member_type = true_type;
+        using has_first_member_type  = true_type;
         using has_second_member_type = true_type;
 
         compressed_pair_impl() = default;
@@ -155,7 +155,7 @@ namespace rsl
         using second_reference       = typename call_traits<second_type>::reference;
         using first_const_reference  = typename call_traits<first_type>::const_reference;
         using second_const_reference = typename call_traits<second_type>::const_reference;
-        using has_first_member_type = false_type;
+        using has_first_member_type  = false_type;
         using has_second_member_type = true_type;
 
         compressed_pair_impl() = default;
@@ -210,7 +210,7 @@ namespace rsl
         using second_reference       = typename call_traits<second_type>::reference;
         using first_const_reference  = typename call_traits<first_type>::const_reference;
         using second_const_reference = typename call_traits<second_type>::const_reference;
-        using has_first_member_type = true_type;
+        using has_first_member_type  = true_type;
         using has_second_member_type = false_type;
 
         compressed_pair_impl() = default;
@@ -265,7 +265,7 @@ namespace rsl
         using second_reference       = typename call_traits<second_type>::reference;
         using first_const_reference  = typename call_traits<first_type>::const_reference;
         using second_const_reference = typename call_traits<second_type>::const_reference;
-        using has_first_member_type = false_type;
+        using has_first_member_type  = false_type;
         using has_second_member_type = false_type;
 
         compressed_pair_impl() = default;
@@ -317,7 +317,7 @@ namespace rsl
         using second_reference       = typename call_traits<second_type>::reference;
         using first_const_reference  = typename call_traits<first_type>::const_reference;
         using second_const_reference = typename call_traits<second_type>::const_reference;
-        using has_first_member_type = true_type;
+        using has_first_member_type  = true_type;
         using has_second_member_type = true_type;
 
         compressed_pair_impl() = default;
@@ -375,7 +375,7 @@ namespace rsl
         using second_reference       = typename call_traits<second_type>::reference;
         using first_const_reference  = typename call_traits<first_type>::const_reference;
         using second_const_reference = typename call_traits<second_type>::const_reference;
-        using has_first_member_type = false_type;
+        using has_first_member_type  = false_type;
         using has_second_member_type = false_type;
 
         compressed_pair_impl() = default;

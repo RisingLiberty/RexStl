@@ -211,18 +211,18 @@ namespace rsl
     class array<T, 0>
     {
     public:
-      using value_type = T;
-      using size_type = count_t; /// RSL Comment: Different from ISO C++ Standard at time of writing (26/Jun/2022)
+      using value_type      = T;
+      using size_type       = count_t; /// RSL Comment: Different from ISO C++ Standard at time of writing (26/Jun/2022)
       using difference_type = int32;   /// RSL Comment: Different from ISO C++ Standard at time of writing (26/Jun/2022)
-      using pointer = value_type*;
-      using const_pointer = const value_type*;
-      using reference = value_type&;
+      using pointer         = value_type*;
+      using const_pointer   = const value_type*;
+      using reference       = value_type&;
       using const_reference = const value_type&;
 
-      using iterator = random_access_iterator<T>;
+      using iterator       = random_access_iterator<T>;
       using const_iterator = const_random_access_iterator<T>;
 
-      using reverse_iterator = rsl::reverse_iterator<iterator>;
+      using reverse_iterator       = rsl::reverse_iterator<iterator>;
       using const_reverse_iterator = rsl::reverse_iterator<const_iterator>;
 
       // Returns a reference to the element at specified location pos, with bounds checking.
@@ -371,13 +371,9 @@ namespace rsl
       }
 
       // Assigns the given value value to all elements in the container.
-      constexpr void fill(const T& /*val*/)
-      {
-      }
+      constexpr void fill(const T& /*val*/) {}
       // Exchanges the contents of the container with those of other.
-      constexpr void swap(array& /*other*/)
-      {
-      }
+      constexpr void swap(array& /*other*/) {}
 
     public:
       T m_data[1] = {}; // internally 1 in size to avoid compiler errors //NOLINT(modernize-avoid-c-arrays)

@@ -348,7 +348,7 @@ namespace rsl
         // we'll overwrite them anyway so there's no point in doing that
         difference_type count = static_cast<difference_type>(rsl::distance(first, last));
 
-        if (count > capacity())
+        if(count > capacity())
         {
           deallocate();
           pointer new_buffer = static_cast<pointer>(get_mutable_allocator().allocate(count + 1));
@@ -356,7 +356,7 @@ namespace rsl
         }
 
         pointer dst = m_begin;
-        for (auto it = first; it != last; ++it)
+        for(auto it = first; it != last; ++it)
         {
           CharType c = *it;
           traits_type::assign(*dst, c);
@@ -729,9 +729,9 @@ namespace rsl
       // removes the characters in the range [frist, last)
       iterator erase(const_iterator first, const_iterator last)
       {
-        const size_type first_idx = rsl::distance(cbegin(), first);
-        const size_type last_idx  = rsl::distance(cbegin(), last);
-        const size_type count     = last_idx - first_idx;
+        const size_type first_idx   = rsl::distance(cbegin(), first);
+        const size_type last_idx    = rsl::distance(cbegin(), last);
+        const size_type count       = last_idx - first_idx;
         const size_type num_to_move = rsl::min(count, rsl::distance(last, cend()));
         traits_type::move(&m_begin[first_idx], &m_begin[last_idx], num_to_move);
 
@@ -1254,30 +1254,30 @@ namespace rsl
             // because we're using sso, we can just get the pointers of other
             // assign them to our object and copy over our sso data to other.
             pointer other_begin = other.m_begin;
-            pointer other_end = other.m_end;
-            pointer other_last = other.last();
+            pointer other_end   = other.m_end;
+            pointer other_last  = other.last();
 
             other.reset(); // make sure the pointers point to the sso buffer again
             other.assign(data(), length());
 
             m_begin = other_begin;
-            m_end = other_end;
-            last() = other_last;
+            m_end   = other_end;
+            last()  = other_last;
           }
           else // we're using heap, other is using a sso buffer
           {
             // this the opposite of the above, we're using heap, but other does not
             // so we assign our pointers over to other and copy the sso data into this object
             pointer this_begin = m_begin;
-            pointer this_end = m_end;
-            pointer this_last = last();
+            pointer this_end   = m_end;
+            pointer this_last  = last();
 
             reset(); // make sure the pointers point to the sso buffer again
             assign(other.data(), other.length());
 
             other.m_begin = this_begin;
-            other.m_end = this_end;
-            other.last() = this_last;
+            other.m_end   = this_end;
+            other.last()  = this_last;
           }
         }
         // both are using heap memory, so just swap the pointers
@@ -1601,7 +1601,7 @@ namespace rsl
         if(str.is_using_big_string())
         {
           // if we're both using heap memory, we just swap the pointers and allocators
-          if (is_using_big_string())
+          if(is_using_big_string())
           {
             rsl::swap(m_begin, str.m_begin);
             rsl::swap(m_end, str.m_end);
