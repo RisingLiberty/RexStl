@@ -685,7 +685,7 @@ namespace rsl
             T* dest = rsl::addressof(operator[](i));
             new(dest) T(*(first + i));
           }
-          for (size_type i = 0; i < size(); ++i) // size hasn't updated here yet
+          for (size_type i = count; i < size(); ++i) // size hasn't updated here yet
           {
             T* elem = rsl::addressof(operator[](i));
             get_mutable_allocator().destroy(elem);
@@ -726,7 +726,7 @@ namespace rsl
             T* dest = rsl::addressof(operator[](i));
             new(dest) T(rsl::move(*(first + i)));
           }
-          for (size_type i = 0; i < size(); ++i) // size hasn't updated here yet
+          for (size_type i = count; i < size(); ++i) // size hasn't updated here yet
           {
             T* elem = rsl::addressof(operator[](i));
             get_mutable_allocator().destroy(elem);
