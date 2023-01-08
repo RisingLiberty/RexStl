@@ -316,7 +316,7 @@ namespace rsl
       // Replaces the contents with the content of str till str + count.
       basic_string& assign(const_pointer str, size_type count)
       {
-        if(is_using_sso_string() && count <= s_sso_buff_size)
+        if(is_using_sso_string() && count < s_sso_buff_size)
         {
           sso_assign(str, count);
         }
@@ -1652,12 +1652,12 @@ namespace rsl
       // moves every element starting at str[idx] 'count' space(s) to the right
       void prepare_for_new_insert(size_type idx, size_type count = 1)
       {
-        if(size() + count >= capacity())
+        if(size() + count >= capacity()) // we need to use >= because we always have 1 additional element for the null char
         {
           // if we have to reallocate, we want to copy over elements in the range [0, idx)
           // and then copy the remaining elements in [idx, end())
           // then release the old buffer.
-          const size_type size_for_new_buffer = new_buffer_size(count);
+          const size_type size_for_new_buffer = new_buffer_capacity(count);
           pointer new_buffer                  = static_cast<pointer>(get_mutable_allocator().allocate(calc_bytes_needed(size_for_new_buffer)));
 
           // we now have 2 buffers, 1 buffer holding our data, and 1 that is prepared to receive a copy of this data
@@ -1712,7 +1712,7 @@ namespace rsl
       {
         if(size() + numElementsToAdd >= capacity())
         {
-          reallocate(new_buffer_size(numElementsToAdd), data(), size());
+          reallocate(new_buffer_capacity(numElementsToAdd), data(), size());
           return true;
         }
 
@@ -1754,7 +1754,7 @@ namespace rsl
         return (count == s_npos || count > s.length()) ? s.length() - startPos : count;
       }
       // returns the size of a new buffer on reallocation
-      size_type new_buffer_size(size_type numElementsToAdd) const
+      size_type new_buffer_capacity(size_type numElementsToAdd) const
       {
         return size() * 2 + numElementsToAdd + 1;
       }
