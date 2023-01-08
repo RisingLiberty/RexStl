@@ -23,7 +23,7 @@ TEST_CASE("test object")
 
     rsl::test::test_object obj{};
 
-    CHECK(rsl::test::test_object::num_alive() == 1);
+    CHECK(rsl::test::test_object::num_created() == 1);
     CHECK(rsl::test::test_object::num_ctor_calls() == 1);
     CHECK(rsl::test::test_object::num_dtor_calls() == 0);
     CHECK(rsl::test::test_object::num_copy_ctor_calls() == 0);
@@ -32,7 +32,7 @@ TEST_CASE("test object")
     CHECK(rsl::test::test_object::num_move_assignment_calls() == 0);
   }
 
-  CHECK(rsl::test::test_object::num_alive() == 0);
+  CHECK(rsl::test::test_object::num_created() == 1);
   CHECK(rsl::test::test_object::num_ctor_calls() == 1);
   CHECK(rsl::test::test_object::num_dtor_calls() == 1);
   CHECK(rsl::test::test_object::num_copy_ctor_calls() == 0);
@@ -46,7 +46,7 @@ TEST_CASE("test object")
     rsl::test::test_object obj{};
     rsl::test::test_object obj2{ obj };
 
-    CHECK(rsl::test::test_object::num_alive() == 2);
+    CHECK(rsl::test::test_object::num_created() == 2);
     CHECK(rsl::test::test_object::num_ctor_calls() == 1);
     CHECK(rsl::test::test_object::num_dtor_calls() == 0);
     CHECK(rsl::test::test_object::num_copy_ctor_calls() == 1);
@@ -55,7 +55,7 @@ TEST_CASE("test object")
     CHECK(rsl::test::test_object::num_move_assignment_calls() == 0);
   }
 
-  CHECK(rsl::test::test_object::num_alive() == 0);
+  CHECK(rsl::test::test_object::num_created() == 2);
   CHECK(rsl::test::test_object::num_ctor_calls() == 1);
   CHECK(rsl::test::test_object::num_dtor_calls() == 2);
   CHECK(rsl::test::test_object::num_copy_ctor_calls() == 1);
@@ -69,7 +69,7 @@ TEST_CASE("test object")
     rsl::test::test_object obj{};
     rsl::test::test_object obj2{ rsl::move(obj) };
 
-    CHECK(rsl::test::test_object::num_alive() == 2);
+    CHECK(rsl::test::test_object::num_created() == 2);
     CHECK(rsl::test::test_object::num_ctor_calls() == 1);
     CHECK(rsl::test::test_object::num_dtor_calls() == 0);
     CHECK(rsl::test::test_object::num_copy_ctor_calls() == 0);
@@ -78,7 +78,7 @@ TEST_CASE("test object")
     CHECK(rsl::test::test_object::num_move_assignment_calls() == 0);
   }
 
-  CHECK(rsl::test::test_object::num_alive() == 0);
+  CHECK(rsl::test::test_object::num_created() == 2);
   CHECK(rsl::test::test_object::num_ctor_calls() == 1);
   CHECK(rsl::test::test_object::num_dtor_calls() == 2);
   CHECK(rsl::test::test_object::num_copy_ctor_calls() == 0);
@@ -93,7 +93,7 @@ TEST_CASE("test object")
     rsl::test::test_object obj2{};
     obj2 = obj;
 
-    CHECK(rsl::test::test_object::num_alive() == 2);
+    CHECK(rsl::test::test_object::num_created() == 2);
     CHECK(rsl::test::test_object::num_ctor_calls() == 2);
     CHECK(rsl::test::test_object::num_dtor_calls() == 0);
     CHECK(rsl::test::test_object::num_copy_ctor_calls() == 0);
@@ -102,7 +102,7 @@ TEST_CASE("test object")
     CHECK(rsl::test::test_object::num_move_assignment_calls() == 0);
   }
 
-  CHECK(rsl::test::test_object::num_alive() == 0);
+  CHECK(rsl::test::test_object::num_created() == 2);
   CHECK(rsl::test::test_object::num_ctor_calls() == 2);
   CHECK(rsl::test::test_object::num_dtor_calls() == 2);
   CHECK(rsl::test::test_object::num_copy_ctor_calls() == 0);
@@ -117,7 +117,7 @@ TEST_CASE("test object")
     rsl::test::test_object obj2{};
     obj2 = rsl::move(obj);
 
-    CHECK(rsl::test::test_object::num_alive() == 2);
+    CHECK(rsl::test::test_object::num_created() == 2);
     CHECK(rsl::test::test_object::num_ctor_calls() == 2);
     CHECK(rsl::test::test_object::num_dtor_calls() == 0);
     CHECK(rsl::test::test_object::num_copy_ctor_calls() == 0);
@@ -126,7 +126,7 @@ TEST_CASE("test object")
     CHECK(rsl::test::test_object::num_move_assignment_calls() == 1);
   }
 
-  CHECK(rsl::test::test_object::num_alive() == 0);
+  CHECK(rsl::test::test_object::num_created() == 2);
   CHECK(rsl::test::test_object::num_ctor_calls() == 2);
   CHECK(rsl::test::test_object::num_dtor_calls() == 2);
   CHECK(rsl::test::test_object::num_copy_ctor_calls() == 0);

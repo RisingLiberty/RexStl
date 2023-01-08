@@ -60,6 +60,7 @@ namespace rsl::test
       static card32 all_num_allocs();
       static card32 all_num_frees();
       static card32 all_num_bytes_allocated();
+      static void all_reset();
 
       void reset();
 

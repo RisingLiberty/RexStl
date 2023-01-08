@@ -16,7 +16,7 @@ namespace rsl::test
 {
   inline namespace v1
   {
-    card32 test_object::s_num_alive = 0; // number of current alive test objects
+    card32 test_object::s_num_created = 0; // number of current alive test objects
     card32 test_object::s_num_ctor_calls = 0; // number of constructor calls
     card32 test_object::s_num_dtor_calls = 0; // number of constructor calls
     card32 test_object::s_num_copy_ctor_calls = 0; // number of copy constructor calls
@@ -27,24 +27,23 @@ namespace rsl::test
     test_object::test_object(card32 x)
       : m_x(x)
     {
-      s_num_alive++;
+      s_num_created++;
       s_num_ctor_calls++;
     }
     test_object::test_object(const test_object& obj)
       : m_x(obj.m_x)
     {
-      s_num_alive++;
+      s_num_created++;
       s_num_copy_ctor_calls++;
     }
     test_object::test_object(test_object&& obj)
       : m_x(obj.m_x)
     {
-      s_num_alive++;
+      s_num_created++;
       s_num_move_ctor_calls++;
     }
     test_object::~test_object()
     {
-      s_num_alive--;
       s_num_dtor_calls++;
     }
 
@@ -75,7 +74,8 @@ namespace rsl::test
     
     void test_object::reset()
     {
-      s_num_alive = 0;
+      s_num_created = 0;
+
       s_num_ctor_calls = 0;
       s_num_dtor_calls = 0;
       s_num_copy_ctor_calls = 0;
@@ -84,9 +84,9 @@ namespace rsl::test
       s_num_move_assignment_calls = 0;
     }
 
-    card32 test_object::num_alive()
+    card32 test_object::num_created()
     {
-      return s_num_alive;
+      return s_num_created;
     }
     card32 test_object::num_ctor_calls()
     {

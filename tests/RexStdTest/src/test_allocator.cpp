@@ -101,6 +101,13 @@ namespace rsl::test
       return s_all_num_bytes_allocated;
     }
 
+    void test_allocator::all_reset()
+    {
+      s_all_num_allocs = 0;
+      s_all_num_frees = 0;
+      s_all_num_bytes_allocated = 0;
+    }
+
     void test_allocator::reset()
     {
       s_all_num_allocs -= m_num_allocs;

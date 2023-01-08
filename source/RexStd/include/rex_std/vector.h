@@ -79,10 +79,10 @@ namespace rsl
       {
       }
       // Constructs the container with count copies of elements with value value.
-      explicit vector(rsl::Size count, const_reference rhs, const allocator_type& alloc = allocator_type())
+      explicit vector(rsl::Size count, const_reference val, const allocator_type& alloc = allocator_type())
           : vector(alloc)
       {
-        fill_n(count.get(), rhs);
+        fill_n(count.get(), val);
       }
       // Constructs the container with count default-inserted instances of T. No copies are made.
       explicit vector(rsl::Size count, const allocator_type& alloc = allocator_type())
@@ -186,14 +186,41 @@ namespace rsl
       // Replaces the contents with count copies of value
       void assign(size_type count, const_reference value)
       {
-        increase_capacity_if_needed(count);
-
-        for(size_type i = 0; i < count; ++i)
+        // we need to aqcuire a bigger buffer, so let's do the following
+        // 1. deallocate our current one.
+        // 2. allocate a new buffer to fit the required number of elements
+        // 3. copy over the elements into the new buffer
+        if (count > capacity())
         {
-          operator[](i) = value;
-        }
+          // can't call reallocate here as it'll move the current elements into the new buffer
+          // we'll overwrite them anyway, so it's best to copy them directly into the new buffer
+          clear(); // make sure we call the dtors
+          deallocate(); // free all data
 
-        m_end = rsl::max(size(), count);
+          const size_type new_buffer_cap = count;
+          m_begin = static_cast<pointer>(get_mutable_allocator().allocate(calc_bytes_needed(new_buffer_cap)));
+          m_cp_last_and_allocator.first() = m_begin + count;
+
+          for (size_type i = 0; i < count; ++i)
+          {
+            T* dest = rsl::addressof(operator[](i));
+            new(dest) T(value);
+          }
+        }
+        else
+        {
+          for (difference_type i = 0; i < count; ++i)
+          {
+            T* dest = rsl::addressof(operator[](i));
+            *dest = value;
+          }
+          for (size_type i = count; i < size(); ++i) // size hasn't updated here yet
+          {
+            T* elem = rsl::addressof(operator[](i));
+            get_mutable_allocator().destroy(elem);
+          }
+        }
+        m_end = m_begin + count;
       }
       // Replaces the contents with copies of those in the range
       void assign(const_iterator begin, const_iterator last)
@@ -671,7 +698,7 @@ namespace rsl
           clear(); // make sure we call the dtors
           deallocate(); // free all data
 
-          const size_type new_buffer_cap = new_buffer_capacity(count - size());
+          const size_type new_buffer_cap = count;
           m_begin = static_cast<pointer>(get_mutable_allocator().allocate(calc_bytes_needed(new_buffer_cap)));
           m_cp_last_and_allocator.first() = m_begin + count;
 
@@ -683,7 +710,7 @@ namespace rsl
           for (difference_type i = 0; i < count; ++i)
           {
             T* dest = rsl::addressof(operator[](i));
-            new(dest) T(*(first + i));
+            *dest = *(first + i);
           }
           for (size_type i = count; i < size(); ++i) // size hasn't updated here yet
           {
@@ -712,7 +739,7 @@ namespace rsl
           clear(); // make sure we call the dtors
           deallocate(m_begin);
 
-          const size_type new_buffer_cap = new_buffer_capacity(count - size());
+          const size_type new_buffer_cap = count;
           m_begin = static_cast<pointer>(get_mutable_allocator().allocate(calc_bytes_needed(new_buffer_cap)));
           m_cp_last_and_allocator.first() = m_begin + count;
 
@@ -724,7 +751,7 @@ namespace rsl
           for (difference_type i = 0; i < count; ++i)
           {
             T* dest = rsl::addressof(operator[](i));
-            new(dest) T(rsl::move(*(first + i)));
+            *dest = rsl::move(*(first + i));
           }
           for (size_type i = count; i < size(); ++i) // size hasn't updated here yet
           {

@@ -27,7 +27,7 @@ TEST_CASE("array construction")
 
     const rsl::array<test_object, 10> arr;
     CHECK(arr.size() == 10);
-    CHECK(test_object::num_alive() == 10);
+    CHECK(test_object::num_created() == 10);
     CHECK(test_object::num_ctor_calls() == 10);
     CHECK(test_object::num_copy_ctor_calls() == 0);
     CHECK(test_object::num_move_ctor_calls() == 0);
@@ -36,7 +36,7 @@ TEST_CASE("array construction")
     CHECK(test_object::num_move_assignment_calls() == 0);
   }
 
-  CHECK(test_object::num_alive() == 0);
+  CHECK(test_object::num_created() == 10);
   CHECK(test_object::num_ctor_calls() == 10);
   CHECK(test_object::num_copy_ctor_calls() == 0);
   CHECK(test_object::num_move_ctor_calls() == 0);
@@ -49,7 +49,7 @@ TEST_CASE("array construction")
 
     const rsl::array<test_object, 10> arr = { 1, 2, 3 };
     CHECK(arr.size() == 10);
-    CHECK(test_object::num_alive() == 10);
+    CHECK(test_object::num_created() == 10);
     CHECK(test_object::num_ctor_calls() == 10);
     CHECK(test_object::num_copy_ctor_calls() == 0);
     CHECK(test_object::num_move_ctor_calls() == 0);
@@ -58,7 +58,7 @@ TEST_CASE("array construction")
     CHECK(test_object::num_move_assignment_calls() == 0);
   }
 
-  CHECK(test_object::num_alive() == 0);
+  CHECK(test_object::num_created() == 10);
   CHECK(test_object::num_ctor_calls() == 10);
   CHECK(test_object::num_copy_ctor_calls() == 0);
   CHECK(test_object::num_move_ctor_calls() == 0);
@@ -73,7 +73,7 @@ TEST_CASE("array construction")
     const rsl::array<test_object, 10> arr2 = arr;
     CHECK(arr.size() == 10);
     CHECK(arr2.size() == 10);
-    CHECK(test_object::num_alive() == 20);
+    CHECK(test_object::num_created() == 20);
     CHECK(test_object::num_ctor_calls() == 10);
     CHECK(test_object::num_copy_ctor_calls() == 10);
     CHECK(test_object::num_move_ctor_calls() == 0);
@@ -82,7 +82,7 @@ TEST_CASE("array construction")
     CHECK(test_object::num_move_assignment_calls() == 0);
   }
 
-  CHECK(test_object::num_alive() == 0);
+  CHECK(test_object::num_created() == 20);
   CHECK(test_object::num_ctor_calls() == 10);
   CHECK(test_object::num_copy_ctor_calls() == 10);
   CHECK(test_object::num_move_ctor_calls() == 0);
@@ -97,7 +97,7 @@ TEST_CASE("array construction")
     const rsl::array<test_object, 10> arr2 = rsl::move(arr);
     CHECK(arr.size() == 10);
     CHECK(arr2.size() == 10);
-    CHECK(test_object::num_alive() == 20);
+    CHECK(test_object::num_created() == 20);
     CHECK(test_object::num_ctor_calls() == 10);
     CHECK(test_object::num_copy_ctor_calls() == 10); // std::move on a rsl::array copies each element, as there's no move ctor provided for a rsl::array
     CHECK(test_object::num_move_ctor_calls() == 0);
@@ -106,7 +106,7 @@ TEST_CASE("array construction")
     CHECK(test_object::num_move_assignment_calls() == 0);
   }
 
-  CHECK(test_object::num_alive() == 0);
+  CHECK(test_object::num_created() == 20);
   CHECK(test_object::num_ctor_calls() == 10);
   CHECK(test_object::num_copy_ctor_calls() == 10);
   CHECK(test_object::num_move_ctor_calls() == 0);
@@ -126,7 +126,7 @@ TEST_CASE("array assignment")
 
   CHECK(arr.size() == 10);
   CHECK(arr2.size() == 10);
-  CHECK(test_object::num_alive() == 20);
+  CHECK(test_object::num_created() == 20);
   CHECK(test_object::num_ctor_calls() == 20);
   CHECK(test_object::num_copy_ctor_calls() == 0);
   CHECK(test_object::num_move_ctor_calls() == 0);
@@ -138,7 +138,7 @@ TEST_CASE("array assignment")
 
   CHECK(arr.size() == 10);
   CHECK(arr2.size() == 10);
-  CHECK(test_object::num_alive() == 20);
+  CHECK(test_object::num_created() == 20);
   CHECK(test_object::num_ctor_calls() == 20);
   CHECK(test_object::num_copy_ctor_calls() == 0);
   CHECK(test_object::num_move_ctor_calls() == 0);
@@ -179,7 +179,7 @@ TEST_CASE("array element access")
     CHECK(*--arr.rend() == 1);
     CHECK(*--arr.crend() == 1);
 
-    CHECK(test_object::num_alive() == 10);
+    CHECK(test_object::num_created() == 13);
     CHECK(test_object::num_ctor_calls() == 13);
     CHECK(test_object::num_copy_ctor_calls() == 0);
     CHECK(test_object::num_move_ctor_calls() == 0);
@@ -202,7 +202,7 @@ TEST_CASE("array element access")
     CHECK(arr[3] == 0);
     CHECK(arr.at(3) == 0);
 
-    CHECK(test_object::num_alive() == 10);
+    CHECK(test_object::num_created() == 10);
     CHECK(test_object::num_ctor_calls() == 10);
     CHECK(test_object::num_copy_ctor_calls() == 0);
     CHECK(test_object::num_move_ctor_calls() == 0);
@@ -230,7 +230,7 @@ TEST_CASE("array swap")
   CHECK(arr2[1] == 2);
   CHECK(arr2[2] == 3);
 
-  CHECK(test_object::num_alive() == 6);
+  CHECK(test_object::num_created() == 9);
   CHECK(test_object::num_ctor_calls() == 6);
   CHECK(test_object::num_copy_ctor_calls() == 0);
   CHECK(test_object::num_move_ctor_calls() == 3);
@@ -252,7 +252,7 @@ TEST_CASE("array fill")
   CHECK(arr[0] == 5);
   CHECK(arr[1] == 5);
   CHECK(arr[2] == 5);
-  CHECK(test_object::num_alive() == 3);
+  CHECK(test_object::num_created() == 4);
   CHECK(test_object::num_ctor_calls() == 4);
   CHECK(test_object::num_copy_ctor_calls() == 0);
   CHECK(test_object::num_move_ctor_calls() == 0);

@@ -27,7 +27,7 @@ TEST_CASE("unique ptr construction")
     CHECK(ptr.get() == nullptr);
     CHECK(ptr.operator->() == nullptr);
     CHECK(ptr.operator bool() == false);
-    CHECK(test_object::num_alive() == 0);
+    CHECK(test_object::num_created() == 0);
     CHECK(test_object::num_ctor_calls() == 0);
     CHECK(test_object::num_copy_ctor_calls() == 0);
     CHECK(test_object::num_move_ctor_calls() == 0);
@@ -36,7 +36,7 @@ TEST_CASE("unique ptr construction")
     CHECK(test_object::num_move_assignment_calls() == 0);
   }
 
-  CHECK(test_object::num_alive() == 0);
+  CHECK(test_object::num_created() == 0);
   CHECK(test_object::num_ctor_calls() == 0);
   CHECK(test_object::num_copy_ctor_calls() == 0);
   CHECK(test_object::num_move_ctor_calls() == 0);
@@ -53,7 +53,7 @@ TEST_CASE("unique ptr construction")
     CHECK(ptr.get() == nullptr);
     CHECK(ptr.operator->() == nullptr);
     CHECK(ptr.operator bool() == false);
-    CHECK(test_object::num_alive() == 0);
+    CHECK(test_object::num_created() == 0);
     CHECK(test_object::num_ctor_calls() == 0);
     CHECK(test_object::num_copy_ctor_calls() == 0);
     CHECK(test_object::num_move_ctor_calls() == 0);
@@ -62,7 +62,7 @@ TEST_CASE("unique ptr construction")
     CHECK(test_object::num_move_assignment_calls() == 0);
   }
 
-  CHECK(test_object::num_alive() == 0);
+  CHECK(test_object::num_created() == 0);
   CHECK(test_object::num_ctor_calls() == 0);
   CHECK(test_object::num_copy_ctor_calls() == 0);
   CHECK(test_object::num_move_ctor_calls() == 0);
@@ -81,7 +81,7 @@ TEST_CASE("unique ptr construction")
     CHECK(ptr.operator bool() == true);
     CHECK(*ptr == 1);
     CHECK(*ptr.get() == 1);
-    CHECK(test_object::num_alive() == 1);
+    CHECK(test_object::num_created() == 1);
     CHECK(test_object::num_ctor_calls() == 1);
     CHECK(test_object::num_copy_ctor_calls() == 0);
     CHECK(test_object::num_move_ctor_calls() == 0);
@@ -90,7 +90,7 @@ TEST_CASE("unique ptr construction")
     CHECK(test_object::num_move_assignment_calls() == 0);
   }
 
-  CHECK(test_object::num_alive() == 0);
+  CHECK(test_object::num_created() == 1);
   CHECK(test_object::num_ctor_calls() == 1);
   CHECK(test_object::num_copy_ctor_calls() == 0);
   CHECK(test_object::num_move_ctor_calls() == 0);
@@ -111,7 +111,7 @@ TEST_CASE("unique ptr construction")
     CHECK(ptr.operator bool() == true);
     CHECK(*ptr == 1);
     CHECK(*ptr.get() == 1);
-    CHECK(test_object::num_alive() == 1);
+    CHECK(test_object::num_created() == 1);
     CHECK(test_object::num_ctor_calls() == 1);
     CHECK(test_object::num_copy_ctor_calls() == 0);
     CHECK(test_object::num_move_ctor_calls() == 0);
@@ -120,7 +120,7 @@ TEST_CASE("unique ptr construction")
     CHECK(test_object::num_move_assignment_calls() == 0);
   }
 
-  CHECK(test_object::num_alive() == 0);
+  CHECK(test_object::num_created() == 1);
   CHECK(test_object::num_ctor_calls() == 1);
   CHECK(test_object::num_copy_ctor_calls() == 0);
   CHECK(test_object::num_move_ctor_calls() == 0);
@@ -141,7 +141,7 @@ TEST_CASE("unique ptr construction")
     CHECK(ptr.operator bool() == true);
     CHECK(*ptr == 1);
     CHECK(*ptr.get() == 1);
-    CHECK(test_object::num_alive() == 1);
+    CHECK(test_object::num_created() == 1);
     CHECK(test_object::num_ctor_calls() == 1);
     CHECK(test_object::num_copy_ctor_calls() == 0);
     CHECK(test_object::num_move_ctor_calls() == 0);
@@ -150,7 +150,7 @@ TEST_CASE("unique ptr construction")
     CHECK(test_object::num_move_assignment_calls() == 0);
   }
 
-  CHECK(test_object::num_alive() == 0);
+  CHECK(test_object::num_created() == 1);
   CHECK(test_object::num_ctor_calls() == 1);
   CHECK(test_object::num_copy_ctor_calls() == 0);
   CHECK(test_object::num_move_ctor_calls() == 0);
@@ -173,7 +173,7 @@ TEST_CASE("unique ptr construction")
     CHECK(ptr2.operator bool() == true);
     CHECK(*ptr2 == 1);
     CHECK(*ptr2.get() == 1);
-    CHECK(test_object::num_alive() == 1);
+    CHECK(test_object::num_created() == 1);
     CHECK(test_object::num_ctor_calls() == 1);
     CHECK(test_object::num_copy_ctor_calls() == 0);
     CHECK(test_object::num_move_ctor_calls() == 0);
@@ -182,7 +182,7 @@ TEST_CASE("unique ptr construction")
     CHECK(test_object::num_move_assignment_calls() == 0);
   }
 
-  CHECK(test_object::num_alive() == 0);
+  CHECK(test_object::num_created() == 1);
   CHECK(test_object::num_ctor_calls() == 1);
   CHECK(test_object::num_copy_ctor_calls() == 0);
   CHECK(test_object::num_move_ctor_calls() == 0);
@@ -212,7 +212,7 @@ TEST_CASE("unique ptr assignment")
       CHECK(*ptr2 == 1);
       CHECK(*ptr2.get() == 1);
 
-      CHECK(test_object::num_alive() == 1);
+      CHECK(test_object::num_created() == 1);
       CHECK(test_object::num_ctor_calls() == 1);
       CHECK(test_object::num_copy_ctor_calls() == 0);
       CHECK(test_object::num_move_ctor_calls() == 0);
@@ -234,7 +234,7 @@ TEST_CASE("unique ptr assignment")
       CHECK(ptr2.operator->() == nullptr);
       CHECK(ptr2.operator bool() == false);
 
-      CHECK(test_object::num_alive() == 0);
+      CHECK(test_object::num_created() == 1);
       CHECK(test_object::num_ctor_calls() == 1);
       CHECK(test_object::num_copy_ctor_calls() == 0);
       CHECK(test_object::num_move_ctor_calls() == 0);
@@ -258,7 +258,7 @@ TEST_CASE("unique ptr assignment")
       CHECK(*ptr2 == 1);
       CHECK(*ptr2.get() == 1);
 
-      CHECK(test_object::num_alive() == 1);
+      CHECK(test_object::num_created() == 2);
       CHECK(test_object::num_ctor_calls() == 2);
       CHECK(test_object::num_copy_ctor_calls() == 0);
       CHECK(test_object::num_move_ctor_calls() == 0);
@@ -268,7 +268,7 @@ TEST_CASE("unique ptr assignment")
     }
   }
 
-  CHECK(test_object::num_alive() == 0);
+  CHECK(test_object::num_created() == 2);
   CHECK(test_object::num_ctor_calls() == 2);
   CHECK(test_object::num_copy_ctor_calls() == 0);
   CHECK(test_object::num_move_ctor_calls() == 0);
@@ -292,7 +292,7 @@ TEST_CASE("unique ptr release")
 
   CHECK(*raw_ptr == 1);
 
-  CHECK(test_object::num_alive() == 1);
+  CHECK(test_object::num_created() == 1);
   CHECK(test_object::num_ctor_calls() == 1);
   CHECK(test_object::num_copy_ctor_calls() == 0);
   CHECK(test_object::num_move_ctor_calls() == 0);
@@ -316,7 +316,7 @@ TEST_CASE("unique ptr reset")
   CHECK(ptr.operator->() == nullptr);
   CHECK(ptr.operator bool() == false);
 
-  CHECK(test_object::num_alive() == 0);
+  CHECK(test_object::num_created() == 1);
   CHECK(test_object::num_ctor_calls() == 1);
   CHECK(test_object::num_copy_ctor_calls() == 0);
   CHECK(test_object::num_move_ctor_calls() == 0);
@@ -344,7 +344,7 @@ TEST_CASE("unique ptr swap")
     CHECK(*ptr2 == 1);
     CHECK(*ptr2.get() == 1);
 
-    CHECK(test_object::num_alive() == 1);
+    CHECK(test_object::num_created() == 1);
     CHECK(test_object::num_ctor_calls() == 1);
     CHECK(test_object::num_copy_ctor_calls() == 0);
     CHECK(test_object::num_move_ctor_calls() == 0);
@@ -366,7 +366,7 @@ TEST_CASE("unique ptr swap")
     CHECK(ptr2.operator->() == nullptr);
     CHECK(ptr2.operator bool() == false);
 
-    CHECK(test_object::num_alive() == 1);
+    CHECK(test_object::num_created() == 1);
     CHECK(test_object::num_ctor_calls() == 1);
     CHECK(test_object::num_copy_ctor_calls() == 0);
     CHECK(test_object::num_move_ctor_calls() == 0);
@@ -390,7 +390,7 @@ TEST_CASE("unique ptr swap")
     CHECK(*ptr2 == 1);
     CHECK(*ptr2.get() == 1);
 
-    CHECK(test_object::num_alive() == 2);
+    CHECK(test_object::num_created() == 2);
     CHECK(test_object::num_ctor_calls() == 2);
     CHECK(test_object::num_copy_ctor_calls() == 0);
     CHECK(test_object::num_move_ctor_calls() == 0);

@@ -33,7 +33,7 @@ namespace rsl::test
       operator card32() const; // this is to easily compare with integers
 
       static void reset();
-      static card32 num_alive();
+      static card32 num_created();
       static card32 num_ctor_calls();
       static card32 num_dtor_calls();
       static card32 num_copy_ctor_calls();
@@ -43,7 +43,7 @@ namespace rsl::test
 
     private:
       card32 m_x; // value for this instance
-      static card32 s_num_alive; // number of current alive test objects
+      static card32 s_num_created; // number of created objects
       static card32 s_num_ctor_calls; // number of constructor calls
       static card32 s_num_dtor_calls; // number of constructor calls
       static card32 s_num_copy_ctor_calls; // number of copy constructor calls
