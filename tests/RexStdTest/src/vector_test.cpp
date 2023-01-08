@@ -19,6 +19,7 @@
 
 #include "rex_std_test/test_allocator.h"
 #include "rex_std_test/test_object.h"
+#include "rex_std/string.h"
 
 TEST_CASE("vector construction")
 {
@@ -923,26 +924,55 @@ TEST_CASE("vector size and capacity")
   CHECK(vec.size() == 0);
   CHECK(vec.empty());
 
+  test_object::reset();
+
+  // simple push back
   vec.push_back(1);
+
   CHECK(vec.size() == 1);
   CHECK(vec.capacity() >= 1);
   CHECK(vec.get_allocator().num_allocs() == 1);
   CHECK(vec.get_allocator().num_frees() == 0);
+  CHECK(test_object::num_created() == 2);
+  CHECK(test_object::num_ctor_calls() == 1);
+  CHECK(test_object::num_dtor_calls() == 1);
+  CHECK(test_object::num_copy_ctor_calls() == 0);
+  CHECK(test_object::num_move_ctor_calls() == 1);
+  CHECK(test_object::num_copy_assignment_calls() == 0);
+  CHECK(test_object::num_move_assignment_calls() == 0);
 
   card32 old_num_allocs = vec.get_allocator().num_allocs();
   card32 old_num_frees = vec.get_allocator().num_frees();
 
+  test_object::reset();
+
+  // another push back
   vec.push_back(1);
 
   CHECK(vec.size() == 2);
   CHECK(vec.capacity() >= 2);
   CHECK(vec.get_allocator().num_allocs() >= old_num_allocs);
   CHECK(vec.get_allocator().num_frees() >= old_num_frees);
+  CHECK(test_object::num_created() >= 2); // in case of reallocation, this could be higher than 2
+  CHECK(test_object::num_created() <= 3); // in case of no reallocation, this could be lower than 3
+  CHECK(test_object::num_ctor_calls() == 1);
+  CHECK(test_object::num_dtor_calls() >= 1); // in case of reallocation, this could be higher than 1
+  CHECK(test_object::num_dtor_calls() <= 2); // in case of no reallocation, this could be lower than 2
+  CHECK(test_object::num_copy_ctor_calls() == 0);
+  CHECK(test_object::num_move_ctor_calls() >= 1); // in case of reallocation, this could be higher than 1
+  CHECK(test_object::num_move_ctor_calls() <= 2); // in case of no reallocation, this could be lower than 2
+  CHECK(test_object::num_copy_assignment_calls() == 0);
+  CHECK(test_object::num_move_assignment_calls() == 0);
 
   old_num_allocs = vec.get_allocator().num_allocs();
   old_num_frees = vec.get_allocator().num_frees();
   card32 old_cap = vec.capacity();
 
+  test_object::reset();
+
+  card32 old_size = vec.size();
+
+  // clearing
   vec.clear();
 
   CHECK(vec.empty());
@@ -950,56 +980,162 @@ TEST_CASE("vector size and capacity")
   CHECK(vec.capacity() == old_cap);
   CHECK(vec.get_allocator().num_allocs() == old_num_allocs);
   CHECK(vec.get_allocator().num_frees() == old_num_frees);
+  CHECK(test_object::num_created() == 0);
+  CHECK(test_object::num_ctor_calls() == 0);
+  CHECK(test_object::num_dtor_calls() == old_size);
+  CHECK(test_object::num_copy_ctor_calls() == 0);
+  CHECK(test_object::num_move_ctor_calls() == 0);
+  CHECK(test_object::num_copy_assignment_calls() == 0);
+  CHECK(test_object::num_move_assignment_calls() == 0);
 
   old_num_allocs = vec.get_allocator().num_allocs();
   old_num_frees = vec.get_allocator().num_frees();
 
+  test_object::reset();
+
+  // resizing
   vec.resize(10);
   CHECK(vec.size() == 10);
   CHECK(vec.capacity() >= 10);
   CHECK(vec.get_allocator().num_allocs() == old_num_allocs + 1);
   CHECK(vec.get_allocator().num_frees() == old_num_frees + 1);
+  CHECK(test_object::num_created() == 10);
+  CHECK(test_object::num_ctor_calls() == 10);
+  CHECK(test_object::num_dtor_calls() == 0);
+  CHECK(test_object::num_copy_ctor_calls() == 0);
+  CHECK(test_object::num_move_ctor_calls() == 0);
+  CHECK(test_object::num_copy_assignment_calls() == 0);
+  CHECK(test_object::num_move_assignment_calls() == 0);
 
   old_num_allocs = vec.get_allocator().num_allocs();
   old_num_frees = vec.get_allocator().num_frees();
   old_cap = vec.capacity();
 
-  vec.resize(5, 2);
+  test_object::reset();
+
+  // resizing with value
+  // size was 10 before this, so we're just adding 1 element
+  vec.resize(11, 2);
   
-  CHECK(vec.size() == 5);
-  CHECK(vec.capacity() == old_cap);
+  CHECK(vec[0] == 0);
+  CHECK(vec[1] == 0);
+  CHECK(vec[2] == 0);
+  CHECK(vec[10] == 2);
+  CHECK(vec.size() == 11);
+  CHECK(vec.capacity() >= old_cap);
   CHECK(vec.get_allocator().num_allocs() == old_num_allocs);
   CHECK(vec.get_allocator().num_frees() == old_num_frees);
+  CHECK(test_object::num_created() == 2);
+  CHECK(test_object::num_ctor_calls() == 1);
+  CHECK(test_object::num_dtor_calls() == 1);
+  CHECK(test_object::num_copy_ctor_calls() == 1);
+  CHECK(test_object::num_move_ctor_calls() == 0);
+  CHECK(test_object::num_copy_assignment_calls() == 0);
+  CHECK(test_object::num_move_assignment_calls() == 0);
 
   old_num_allocs = vec.get_allocator().num_allocs();
   old_num_frees = vec.get_allocator().num_frees();
 
+  test_object::reset();
+
+  // reserving
   vec.reserve(20);
-  
-  CHECK(vec.size() == 5);
+
+  CHECK(vec.size() == 11);
   CHECK(vec.capacity() == 20);
   CHECK(vec.get_allocator().num_allocs() == old_num_allocs + 1);
   CHECK(vec.get_allocator().num_frees() == old_num_frees + 1);
+  CHECK(test_object::num_created() == 11);
+  CHECK(test_object::num_ctor_calls() == 0);
+  CHECK(test_object::num_dtor_calls() == 11);
+  CHECK(test_object::num_copy_ctor_calls() == 0);
+  CHECK(test_object::num_move_ctor_calls() == 11);
+  CHECK(test_object::num_copy_assignment_calls() == 0);
+  CHECK(test_object::num_move_assignment_calls() == 0);
 
   old_num_allocs = vec.get_allocator().num_allocs();
   old_num_frees = vec.get_allocator().num_frees();
+  old_cap = vec.capacity();
 
+  test_object::reset();
+
+  // resizing with value
+  vec.resize(25, 2);
+
+  CHECK(vec.size() == 25);
+  CHECK(vec.capacity() >= old_cap);
+  CHECK(vec.get_allocator().num_allocs() == old_num_allocs + 1);
+  CHECK(vec.get_allocator().num_frees() == old_num_frees + 1);
+  CHECK(test_object::num_created() == 26);
+  CHECK(test_object::num_ctor_calls() == 1);
+  CHECK(test_object::num_dtor_calls() == 12);
+  CHECK(test_object::num_copy_ctor_calls() == 14);
+  CHECK(test_object::num_move_ctor_calls() == 11);
+  CHECK(test_object::num_copy_assignment_calls() == 0);
+  CHECK(test_object::num_move_assignment_calls() == 0);
+
+  old_num_allocs = vec.get_allocator().num_allocs();
+  old_num_frees = vec.get_allocator().num_frees();
+  old_cap = vec.capacity();
+
+  test_object::reset();
+
+  // reserving to a smaller capacity than size
+  vec.reserve(20);
+  
+  CHECK(vec.size() == 25);
+  CHECK(vec.capacity() == old_cap);
+  CHECK(vec.get_allocator().num_allocs() == old_num_allocs);
+  CHECK(vec.get_allocator().num_frees() == old_num_frees);
+  CHECK(test_object::num_created() == 0);
+  CHECK(test_object::num_ctor_calls() == 0);
+  CHECK(test_object::num_dtor_calls() == 0);
+  CHECK(test_object::num_copy_ctor_calls() == 0);
+  CHECK(test_object::num_move_ctor_calls() == 0);
+  CHECK(test_object::num_copy_assignment_calls() == 0);
+  CHECK(test_object::num_move_assignment_calls() == 0);
+
+  old_num_allocs = vec.get_allocator().num_allocs();
+  old_num_frees = vec.get_allocator().num_frees();
+  old_cap = vec.capacity();
+
+  test_object::reset();
+
+  // popping
   vec.pop_back();
   
-  CHECK(vec.size() == 4);
-  CHECK(vec.capacity() == 20);
+  CHECK(vec.size() == 24);
+  CHECK(vec.capacity() == old_cap);
   CHECK(vec.get_allocator().num_allocs() == old_num_allocs);
   CHECK(vec.get_allocator().num_frees() == old_num_frees);
+  CHECK(test_object::num_created() == 0);
+  CHECK(test_object::num_ctor_calls() == 0);
+  CHECK(test_object::num_dtor_calls() == 1);
+  CHECK(test_object::num_copy_ctor_calls() == 0);
+  CHECK(test_object::num_move_ctor_calls() == 0);
+  CHECK(test_object::num_copy_assignment_calls() == 0);
+  CHECK(test_object::num_move_assignment_calls() == 0);
 
   old_num_allocs = vec.get_allocator().num_allocs();
   old_num_frees = vec.get_allocator().num_frees();
+  old_cap = vec.capacity();
 
+  test_object::reset();
+
+  // more popping
   vec.pop_back();
 
-  CHECK(vec.size() == 3);
-  CHECK(vec.capacity() == 20);
+  CHECK(vec.size() == 23);
+  CHECK(vec.capacity() == old_cap);
   CHECK(vec.get_allocator().num_allocs() == old_num_allocs);
   CHECK(vec.get_allocator().num_frees() == old_num_frees);
+  CHECK(test_object::num_created() == 0);
+  CHECK(test_object::num_ctor_calls() == 0);
+  CHECK(test_object::num_dtor_calls() == 1);
+  CHECK(test_object::num_copy_ctor_calls() == 0);
+  CHECK(test_object::num_move_ctor_calls() == 0);
+  CHECK(test_object::num_copy_assignment_calls() == 0);
+  CHECK(test_object::num_move_assignment_calls() == 0);
 }
 
 TEST_CASE("vector element access")
@@ -1080,26 +1216,99 @@ TEST_CASE("vector element access")
 
 TEST_CASE("vector insertion")
 {
-  rsl::vector<int> vec;
+  using namespace rsl::test;
 
-  vec.insert(vec.cend(), 1);
-  CHECK(vec[0] == 1);
-  CHECK(vec.size() == 1);
-  CHECK(vec.capacity() >= 1);
+  {
+    test_allocator::all_reset();
 
-  vec.insert(vec.cbegin(), 2);
-  CHECK(vec[0] == 2);
-  CHECK(vec[1] == 1);
-  CHECK(vec.size() == 2);
-  CHECK(vec.capacity() >= 2);
+    rsl::vector<test_object, test_allocator> vec;
 
-  vec.reserve(100);
-  vec.insert(vec.cbegin(), 2);
-  CHECK(vec[0] == 2);
-  CHECK(vec[1] == 2);
-  CHECK(vec[2] == 1);
-  CHECK(vec.size() == 3);
-  CHECK(vec.capacity() == 100);
+    test_object x = 1;
+
+    test_object::reset();
+
+    vec.insert(vec.cend(), x); // insert by const value
+
+    CHECK(vec[0] == 1);
+    CHECK(vec.size() == 1);
+    CHECK(vec.capacity() >= 1);
+    CHECK(vec.get_allocator().num_allocs() == 1);
+    CHECK(vec.get_allocator().num_bytes_allocated() == vec.capacity() * sizeof(decltype(vec)::value_type));
+    CHECK(vec.get_allocator().num_frees() == 0);
+    CHECK(test_object::num_created() == 1);
+    CHECK(test_object::num_ctor_calls() == 0);
+    CHECK(test_object::num_dtor_calls() == 0);
+    CHECK(test_object::num_copy_ctor_calls() == 1);
+    CHECK(test_object::num_move_ctor_calls() == 0);
+    CHECK(test_object::num_copy_assignment_calls() == 0);
+    CHECK(test_object::num_move_assignment_calls() == 0);
+
+    test_object::reset();
+
+    vec.insert(vec.cbegin(), test_object(2)); // insert by rvalue
+
+    CHECK(vec[0] == 2);
+    CHECK(vec[1] == 1);
+    CHECK(vec.size() == 2);
+    CHECK(vec.capacity() >= 2);
+    CHECK(vec.get_allocator().num_allocs() >= 1); // in case of reallocation, this could be higher than 1
+    CHECK(vec.get_allocator().num_allocs() <= 2); // in case of no reallocation, this could be lower than 2
+    CHECK(vec.get_allocator().num_bytes_allocated() == vec.capacity() * sizeof(decltype(vec)::value_type));
+    CHECK(vec.get_allocator().num_frees() >= 1); // in case of reallocation, this could be higher than 1
+    CHECK(vec.get_allocator().num_frees() <= 2); // in case of no reallocation, this could be lower than 2
+    CHECK(test_object::num_created() >= 2); // in case of reallocation, this could be higher than 2
+    CHECK(test_object::num_created() <= 3); // in case of no reallocation, this could be lower than 3
+    CHECK(test_object::num_ctor_calls() == 1);
+    CHECK(test_object::num_dtor_calls() == 1);
+    CHECK(test_object::num_copy_ctor_calls() == 0);
+    CHECK(test_object::num_move_ctor_calls() >= 1); // in case of reallocation, this could be higher than 1
+    CHECK(test_object::num_move_ctor_calls() <= 2); // in case of reallocation, this could be lower than 2
+    CHECK(test_object::num_copy_assignment_calls() == 0);
+    CHECK(test_object::num_move_assignment_calls() == 0);
+
+    card32 old_num_allocs = vec.get_allocator().num_allocs();
+    card32 old_num_frees = vec.get_allocator().num_frees();
+
+    vec.reserve(100);
+    test_object::reset();
+
+    vec.insert(vec.cbegin(), 2);
+
+    CHECK(vec[0] == 2);
+    CHECK(vec[1] == 2);
+    CHECK(vec[2] == 1);
+    CHECK(vec.size() == 3);
+    CHECK(vec.capacity() == 100);
+    CHECK(vec.get_allocator().num_allocs() == old_num_allocs + 1);
+    CHECK(vec.get_allocator().num_bytes_allocated() == vec.capacity() * sizeof(decltype(vec)::value_type));
+    CHECK(vec.get_allocator().num_frees() == old_num_frees + 1);
+    CHECK(test_object::num_created() == 3);
+    CHECK(test_object::num_ctor_calls() == 1);
+    CHECK(test_object::num_dtor_calls() == 1);
+    CHECK(test_object::num_copy_ctor_calls() == 0);
+    CHECK(test_object::num_move_ctor_calls() == 2);
+    CHECK(test_object::num_copy_assignment_calls() == 0);
+    CHECK(test_object::num_move_assignment_calls() == 1);
+  }
+
+  {
+    using test_string = rsl::basic_string<char, rsl::char_traits<char>, rsl::test::test_allocator>;
+
+    test_allocator::all_reset();
+
+    {
+      rsl::vector<test_string, test_allocator> vec;
+
+      test_string x("this is a very big string");
+
+      vec.insert(vec.cend(), x); // insert by const value
+      vec.insert(vec.cbegin(), test_string("this is another very big string")); // insert by rvalue
+      vec.insert(vec.cbegin(), rsl::move(x));
+    }
+
+    CHECK(test_allocator::all_num_allocs() == test_allocator::all_num_frees());
+    CHECK(test_allocator::all_num_bytes_allocated() == 0);
+  }
 }
 
 

@@ -112,5 +112,30 @@ namespace rsl::test
     {
       return s_num_move_assignment_calls;
     }
+
+    bool operator==(const test_object& lhs, const test_object& rhs)
+    {
+      return lhs.x() == rhs.x();
+    }
+    bool operator==(const test_object& lhs, card32 rhs)
+    {
+      return lhs.x() == rhs;
+    }
+    bool operator==(card32 lhs, const test_object& rhs)
+    {
+      return lhs == rhs.x();
+    }
+    bool operator!=(const test_object& lhs, const test_object& rhs)
+    {
+      return !(lhs == rhs);
+    }
+    bool operator!=(const test_object& lhs, card32 rhs)
+    {
+      return !(lhs == rhs);
+    }
+    bool operator!=(card32 lhs, const test_object& rhs)
+    {
+      return !(lhs == rhs);
+    }
   }
 }

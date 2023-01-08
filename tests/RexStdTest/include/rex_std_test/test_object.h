@@ -51,5 +51,12 @@ namespace rsl::test
       static card32 s_num_copy_assignment_calls; // number of copy assignment calls
       static card32 s_num_move_assignment_calls; // number of move assignment calls
     };
+
+    bool operator==(const test_object& lhs, const test_object& rhs);
+    bool operator==(const test_object& lhs, card32 rhs);
+    bool operator==(card32 lhs, const test_object& rhs);
+    bool operator!=(const test_object& lhs, const test_object& rhs);
+    bool operator!=(const test_object& lhs, card32 rhs);
+    bool operator!=(card32 lhs, const test_object& rhs);
   }
 }

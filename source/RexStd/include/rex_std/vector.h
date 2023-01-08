@@ -455,8 +455,9 @@ namespace rsl
       {
         // prepare_for_new_insert can reallocate, which would invalidate the input it
         difference_type idx = rsl::distance(cbegin(), pos);
-        prepare_for_new_insert(pos);
-        operator[](idx) = value;
+        const bool did_reallocate = prepare_for_new_insert(pos);
+        insert_at(!did_reallocate, idx, value);
+
         return (begin() + idx);
       }
       // inserts value before pos
@@ -464,8 +465,8 @@ namespace rsl
       {
         // prepare_for_new_insert can reallocate, which would invalidate the input it
         const difference_type idx = rsl::distance(cbegin(), pos);
-        prepare_for_new_insert(pos);
-        operator[](idx) = rsl::move(value);
+        const bool did_reallocate = prepare_for_new_insert(pos);
+        insert_at(!did_reallocate, idx, rsl::move(value));
         return (begin() + idx);
       }
       // inserts count copies of the value before pos
@@ -474,12 +475,8 @@ namespace rsl
         // prepare_for_new_insert can reallocate, which would invalidate the input it
         difference_type idx     = rsl::distance(cbegin(), pos);
         difference_type end_idx = idx + count;
-        prepare_for_new_insert(pos, count);
-
-        for(difference_type i = idx; i < end_idx; ++i)
-        {
-          operator[](i) = value;
-        }
+        const bool did_reallocate = prepare_for_new_insert(pos, count);
+        insert_at(!did_reallocate, idx, value, count);
         return iterator(begin() + idx);
       }
       // inserts elements from range [first, last) before pos.
@@ -500,8 +497,8 @@ namespace rsl
       {
         // prepare_for_new_insert can reallocate, which would invalidate the input it
         difference_type idx = rsl::distance(cbegin(), pos);
-        prepare_for_new_insert(pos);
-        operator[](idx) = T(rsl::forward<Args>(args)...);
+        const bool did_reallocate = prepare_for_new_insert(pos);
+        insert_at(!did_reallocate, idx, rsl::forward<Args>(args)...);
         return iterator(begin() + idx);
       }
       // Removes the element at pos.
@@ -639,7 +636,7 @@ namespace rsl
       }
 
       // moves every element starting at 'pos' one space to the right
-      void prepare_for_new_insert(const_iterator pos, size_type count = 1)
+      bool prepare_for_new_insert(const_iterator pos, size_type count = 1)
       {
         const size_type idx = rsl::distance(cbegin(), pos);
 
@@ -648,6 +645,8 @@ namespace rsl
           // This is similar to what basic_string does.
           // Please look at basic_string::prepare_for_new_insert if you want to have more
           // documentation about what goes on here
+
+          // when this branch is executed, the memory where the new elements should be is not yet initialized
 
           const size_type old_size            = size();
           const size_type size_for_new_buffer = new_buffer_capacity(count);
@@ -670,13 +669,77 @@ namespace rsl
           m_begin                         = new_buffer;
           m_end                           = m_begin + old_size + count;
           m_cp_last_and_allocator.first() = m_begin + size_for_new_buffer;
+          return true;
         }
         else
         {
           // using memmove here as the dst and src could overlap
           pointer dst_in_buffer = data() + idx + count;
           move_bwd(dst_in_buffer, data() + idx, size() - idx);
-          ++m_end;
+          m_end += count;
+          return false;
+        }
+      }
+
+      void insert_at(bool shouldAssign, size_type idx, const value_type& val, size_type count = 1)
+      {
+        for (size_type i = 0; i < count; ++i)
+        {
+          if (shouldAssign)
+          {
+            operator[](idx) = val;
+          }
+          else
+          {
+            pointer dst = rsl::addressof(operator[](idx));
+            new (dst) value_type(val);
+          }
+          ++idx;
+        }
+      }
+      void insert_at(bool shouldAssign, size_type idx, value_type&& val)
+      {
+        if (shouldAssign)
+        {
+          operator[](idx) = rsl::move(val);
+        }
+        else
+        {
+          pointer dst = rsl::addressof(operator[](idx));
+          new (dst) value_type(rsl::move(val));
+        }
+      }
+      template <typename ... Args>
+      void insert_at(bool shouldAssign, size_type idx, Args&& ... args)
+      {
+        if (shouldAssign)
+        {
+          operator[](idx) = value_type(rsl::forward<Args>(args)...);
+        }
+        else
+        {
+          pointer dst = rsl::addressof(operator[](idx));
+          new (dst) value_type(rsl::forward<Args>(args)...);
+        }
+      }
+      template <typename It>
+      void insert_at(bool shouldAssign, size_type idx, It first, It last, size_type count)
+      {
+        auto it = first;
+        for (size_type i = 0; i < count; ++i)
+        {
+          if (shouldAssign)
+          {
+            operator[](idx) = *it;
+          }
+          else
+          {
+            pointer dst = rsl::addressof(operator[](idx));
+            new (dst) value_type(*it);
+          }
+
+          ++it;
+          ++idx;
         }
       }
 
@@ -846,13 +909,9 @@ namespace rsl
         // prepare_for_new_insert can reallocate, which would invalidate the input it
         difference_type idx     = static_cast<difference_type>(rsl::distance(cbegin(), pos));
         difference_type end_idx = idx + count;
-        prepare_for_new_insert(pos, count);
+        const bool did_reallocate = prepare_for_new_insert(pos, count);
         auto it = first;
-        for(difference_type i = idx; i < end_idx; ++i)
-        {
-          operator[](i) = *it;
-          ++it;
-        }
+        insert_at(!did_reallocate, idx, first, last, count);
       }
 
       void copy(pointer dst, const_pointer src, size_type count)
