@@ -123,35 +123,41 @@ namespace rsl
         return *(this + index);
       }
 
-      constexpr bool operator==(const reverse_iterator other) const
-      {
-        return m_base_iterator == other.m_base_iterator;
-      }
-      constexpr bool operator!=(const reverse_iterator other) const
-      {
-        return m_base_iterator != other.m_base_iterator;
-      }
-
-      constexpr bool operator<(const reverse_iterator other) const
-      {
-        return m_base_iterator < other.m_base_iterator;
-      }
-      constexpr bool operator<=(const reverse_iterator other) const
-      {
-        return m_base_iterator <= other.m_base_iterator;
-      }
-      constexpr bool operator>(const reverse_iterator other) const
-      {
-        return m_base_iterator > other.m_base_iterator;
-      }
-      constexpr bool operator>=(const reverse_iterator other) const
-      {
-        return m_base_iterator >= other.m_base_iterator;
-      }
-
     private:
       Iter m_base_iterator;
     };
+
+    template <typename It1, typename It2>
+    constexpr bool operator==(const reverse_iterator<It1> lhs, const reverse_iterator<It2> rhs)
+    {
+      return lhs.base() == rhs.base();
+    }
+    template <typename It1, typename It2>
+    constexpr bool operator!=(const reverse_iterator<It1> lhs, const reverse_iterator<It2> rhs)
+    {
+      return lhs.base() != rhs.base();
+    }
+
+    template <typename It1, typename It2>
+    constexpr bool operator<(const reverse_iterator<It1> lhs, const reverse_iterator<It2> rhs)
+    {
+      return lhs.base() < rhs.base();
+    }
+    template <typename It1, typename It2>
+    constexpr bool operator<=(const reverse_iterator<It1> lhs, const reverse_iterator<It2> rhs)
+    {
+      return lhs.base() <= rhs.base();
+    }
+    template <typename It1, typename It2>
+    constexpr bool operator>(const reverse_iterator<It1> lhs, const reverse_iterator<It2> rhs)
+    {
+      return lhs.base() > rhs.base();
+    }
+    template <typename It1, typename It2>
+    constexpr bool operator>=(const reverse_iterator<It1> lhs, const reverse_iterator<It2> rhs)
+    {
+      return lhs.base() >= rhs.base();
+    }
 
   } // namespace v1
 } // namespace rsl

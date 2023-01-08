@@ -341,7 +341,7 @@ namespace rsl
       // It corresponds to the last element of the non-reversed vector.
       const_reverse_iterator rbegin() const
       {
-        return reverse_iterator(end());
+        return const_reverse_iterator(end());
       }
       // Returns a reverse iterator to the first element of the reversed vector.
       // It corresponds to the last element of the non-reversed vector.
@@ -361,7 +361,7 @@ namespace rsl
       // This element acts as a placeholder, attempting to access it results in undefined behavior.
       const_reverse_iterator rend() const
       {
-        return reverse_iterator(begin());
+        return const_reverse_iterator(begin());
       }
       // Returns a reverse iterator to the element following the last element of the reversed vector.
       // It corresponds to the element preceding the first element of the non-reversed vector.
@@ -737,13 +737,13 @@ namespace rsl
           // can't call reallocate here as it'll move the current elements into the new buffer
           // we'll overwrite them anyway, so it's best to copy them directly into the new buffer
           clear(); // make sure we call the dtors
-          deallocate(m_begin);
+          deallocate(); // free all data
 
           const size_type new_buffer_cap = count;
           m_begin = static_cast<pointer>(get_mutable_allocator().allocate(calc_bytes_needed(new_buffer_cap)));
           m_cp_last_and_allocator.first() = m_begin + count;
 
-          const_pointer src = rsl::iterator_to_pointer(first);
+          pointer src = rsl::iterator_to_pointer(first);
           move(m_begin, src, count);
         }
         else
@@ -759,7 +759,7 @@ namespace rsl
             get_mutable_allocator().destroy(elem);
           }
         }
-        m_end = m_begin + count
+        m_end = m_begin + count;
       }
 
       // fills the vector with elements going from first - last
@@ -769,7 +769,7 @@ namespace rsl
         REX_ASSERT_X(m_begin == nullptr, "overwriting data ptr that has memory allocated for it, please use vector::copy_range");
 
         difference_type count           = static_cast<difference_type>(rsl::distance(first, last));
-        const size_type new_capacity    = new_buffer_capacity(count);
+        const size_type new_capacity    = count;
         m_begin                         = static_cast<pointer>(get_mutable_allocator().allocate(calc_bytes_needed(new_capacity)));
         m_end                           = m_begin + count;
         m_cp_last_and_allocator.first() = m_end;
@@ -786,7 +786,7 @@ namespace rsl
       {
         REX_ASSERT_X(m_begin == nullptr, "overwriting data ptr that has memory allocated for it, please use vector::resize");
 
-        const size_type new_capacity    = new_buffer_capacity(count);
+        const size_type new_capacity    = count;
         m_begin                         = static_cast<pointer>(get_mutable_allocator().allocate(calc_bytes_needed(new_capacity)));
         m_end                           = m_begin + count;
         m_cp_last_and_allocator.first() = m_end;
@@ -801,7 +801,7 @@ namespace rsl
       {
         REX_ASSERT_X(m_begin == nullptr, "overwriting data ptr that has memory allocated for it, please use vector::resize");
 
-        const size_type new_capacity    = new_buffer_capacity(count);
+        const size_type new_capacity = count;
         m_begin                         = static_cast<pointer>(get_mutable_allocator().allocate(calc_bytes_needed(new_capacity)));
         m_end                           = m_begin + count;
         m_cp_last_and_allocator.first() = m_end;

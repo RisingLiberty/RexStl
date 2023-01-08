@@ -12,7 +12,7 @@
 
 #include "rex_std_test/catch2/catch.hpp"
 
-// NOLINTBEGIN
+
 
 #include "rex_std/vector.h"
 #include "rex_std/bonus/utility/scopeguard.h"
@@ -31,7 +31,7 @@ TEST_CASE("vector construction")
 
     const rsl::vector<test_object, test_allocator> vec;
     CHECK(vec.empty());
-    CHECK(vec.size() == 0); // NOLINT
+    CHECK(vec.size() == 0); 
     CHECK(vec.capacity() == 0);
     CHECK(vec.get_allocator().num_allocs() == 0);
     CHECK(vec.get_allocator().num_frees() == 0);
@@ -62,6 +62,31 @@ TEST_CASE("vector construction")
     CHECK(test_object::num_ctor_calls() == 10);
     CHECK(test_object::num_dtor_calls() == 0);
     CHECK(test_object::num_copy_ctor_calls() == 0);
+    CHECK(test_object::num_move_ctor_calls() == 0);
+    CHECK(test_object::num_copy_assignment_calls() == 0);
+    CHECK(test_object::num_move_assignment_calls() == 0);
+  }
+
+  CHECK(test_allocator::all_num_allocs() == test_allocator::all_num_frees());
+  CHECK(test_allocator::all_num_bytes_allocated() == 0);
+  test_allocator::all_reset();
+
+  {
+    test_object::reset();
+
+    const rsl::vector<test_object, test_allocator> vec(3_size, 2);
+    CHECK(vec.size() == 3);
+    CHECK(vec.capacity() == 3);
+    CHECK(vec[0] == 2);
+    CHECK(vec[1] == 2);
+    CHECK(vec[2] == 2);
+    CHECK(vec.get_allocator().num_allocs() == 1);
+    CHECK(vec.get_allocator().num_bytes_allocated() == vec.capacity() * sizeof(decltype(vec)::value_type));
+    CHECK(vec.get_allocator().num_frees() == 0);
+    CHECK(test_object::num_created() == 4);
+    CHECK(test_object::num_ctor_calls() == 1);
+    CHECK(test_object::num_dtor_calls() == 1);
+    CHECK(test_object::num_copy_ctor_calls() == 3);
     CHECK(test_object::num_move_ctor_calls() == 0);
     CHECK(test_object::num_copy_assignment_calls() == 0);
     CHECK(test_object::num_move_assignment_calls() == 0);
@@ -155,6 +180,40 @@ TEST_CASE("vector construction")
   {
     test_object::reset();
 
+    rsl::vector<test_object, test_allocator> to_copy = { 1, 2, 3 };
+    rsl::vector<test_object, test_allocator> vec(to_copy, test_allocator());
+    CHECK(to_copy.size() == 3);
+    CHECK(to_copy.capacity() == 3);
+    CHECK(to_copy[0] == 1);
+    CHECK(to_copy[1] == 2);
+    CHECK(to_copy[2] == 3);
+    CHECK(to_copy.get_allocator().num_allocs() == 1);
+    CHECK(to_copy.get_allocator().num_bytes_allocated() == to_copy.capacity() * sizeof(decltype(to_copy)::value_type));
+    CHECK(to_copy.get_allocator().num_frees() == 0);
+    CHECK(vec.size() == 3);
+    CHECK(vec.capacity() == 3);
+    CHECK(vec[0] == 1);
+    CHECK(vec[1] == 2);
+    CHECK(vec[2] == 3);
+    CHECK(vec.get_allocator().num_allocs() == 1);
+    CHECK(vec.get_allocator().num_bytes_allocated() == vec.capacity() * sizeof(decltype(to_copy)::value_type));
+    CHECK(vec.get_allocator().num_frees() == 0);
+    CHECK(test_object::num_created() == 9);
+    CHECK(test_object::num_ctor_calls() == 3);
+    CHECK(test_object::num_dtor_calls() == 3);
+    CHECK(test_object::num_copy_ctor_calls() == 6);
+    CHECK(test_object::num_move_ctor_calls() == 0);
+    CHECK(test_object::num_copy_assignment_calls() == 0);
+    CHECK(test_object::num_move_assignment_calls() == 0);
+  }
+
+  CHECK(test_allocator::all_num_allocs() == test_allocator::all_num_frees());
+  CHECK(test_allocator::all_num_bytes_allocated() == 0);
+  test_allocator::all_reset();
+
+  {
+    test_object::reset();
+
     rsl::vector<test_object, test_allocator> vec = { 1, 2, 3 };
 
     vec.clear();
@@ -182,6 +241,36 @@ TEST_CASE("vector construction")
 
     rsl::vector<test_object, test_allocator> to_move = { 1, 2, 3 };
     const rsl::vector<test_object, test_allocator> vec = rsl::move(to_move);
+    CHECK(to_move.empty());
+    CHECK(to_move.size() == 0);
+    CHECK(to_move.get_allocator().num_allocs() == 0);
+    CHECK(to_move.get_allocator().num_bytes_allocated() == 0);
+    CHECK(to_move.get_allocator().num_frees() == 0);
+    CHECK(vec.size() == 3);
+    CHECK(vec.capacity() == 3);
+    CHECK(vec[0] == 1);
+    CHECK(vec[1] == 2);
+    CHECK(vec[2] == 3);
+    CHECK(vec.get_allocator().num_allocs() == 1);
+    CHECK(vec.get_allocator().num_bytes_allocated() == vec.capacity() * sizeof(decltype(vec)::value_type));
+    CHECK(vec.get_allocator().num_frees() == 0);
+    CHECK(test_object::num_created() == 6);
+    CHECK(test_object::num_ctor_calls() == 3);
+    CHECK(test_object::num_dtor_calls() == 3);
+    CHECK(test_object::num_copy_ctor_calls() == 3);
+    CHECK(test_object::num_move_ctor_calls() == 0);
+    CHECK(test_object::num_copy_assignment_calls() == 0);
+    CHECK(test_object::num_move_assignment_calls() == 0);
+  }
+
+  CHECK(test_allocator::all_num_allocs() == test_allocator::all_num_frees());
+  CHECK(test_allocator::all_num_bytes_allocated() == 0);
+
+  {
+    test_object::reset();
+
+    rsl::vector<test_object, test_allocator> to_move = { 1, 2, 3 };
+    const rsl::vector<test_object, test_allocator> vec(rsl::move(to_move), test_allocator());
     CHECK(to_move.empty());
     CHECK(to_move.size() == 0);
     CHECK(to_move.get_allocator().num_allocs() == 0);
@@ -824,68 +913,169 @@ TEST_CASE("vector misc assignment")
   CHECK(test_allocator::all_num_bytes_allocated() == 0);
 }
 
-TEST_CASE("vector size")
+TEST_CASE("vector size and capacity")
 {
-  rsl::vector<int> vec;
-  CHECK(vec.size() == 0); // NOLINT
+  using namespace rsl::test;
+
+  test_allocator::all_reset();
+
+  rsl::vector<test_object, test_allocator> vec;
+  CHECK(vec.size() == 0);
   CHECK(vec.empty());
 
   vec.push_back(1);
   CHECK(vec.size() == 1);
+  CHECK(vec.capacity() >= 1);
+  CHECK(vec.get_allocator().num_allocs() == 1);
+  CHECK(vec.get_allocator().num_frees() == 0);
+
+  card32 old_num_allocs = vec.get_allocator().num_allocs();
+  card32 old_num_frees = vec.get_allocator().num_frees();
 
   vec.push_back(1);
+
   CHECK(vec.size() == 2);
+  CHECK(vec.capacity() >= 2);
+  CHECK(vec.get_allocator().num_allocs() >= old_num_allocs);
+  CHECK(vec.get_allocator().num_frees() >= old_num_frees);
+
+  old_num_allocs = vec.get_allocator().num_allocs();
+  old_num_frees = vec.get_allocator().num_frees();
+  card32 old_cap = vec.capacity();
 
   vec.clear();
+
   CHECK(vec.empty());
-  CHECK(vec.size() == 0); // NOLINT
+  CHECK(vec.size() == 0); 
+  CHECK(vec.capacity() == old_cap);
+  CHECK(vec.get_allocator().num_allocs() == old_num_allocs);
+  CHECK(vec.get_allocator().num_frees() == old_num_frees);
+
+  old_num_allocs = vec.get_allocator().num_allocs();
+  old_num_frees = vec.get_allocator().num_frees();
 
   vec.resize(10);
   CHECK(vec.size() == 10);
+  CHECK(vec.capacity() >= 10);
+  CHECK(vec.get_allocator().num_allocs() == old_num_allocs + 1);
+  CHECK(vec.get_allocator().num_frees() == old_num_frees + 1);
 
-  vec.resize(5);
+  old_num_allocs = vec.get_allocator().num_allocs();
+  old_num_frees = vec.get_allocator().num_frees();
+  old_cap = vec.capacity();
+
+  vec.resize(5, 2);
+  
   CHECK(vec.size() == 5);
+  CHECK(vec.capacity() == old_cap);
+  CHECK(vec.get_allocator().num_allocs() == old_num_allocs);
+  CHECK(vec.get_allocator().num_frees() == old_num_frees);
+
+  old_num_allocs = vec.get_allocator().num_allocs();
+  old_num_frees = vec.get_allocator().num_frees();
 
   vec.reserve(20);
+  
   CHECK(vec.size() == 5);
   CHECK(vec.capacity() == 20);
+  CHECK(vec.get_allocator().num_allocs() == old_num_allocs + 1);
+  CHECK(vec.get_allocator().num_frees() == old_num_frees + 1);
+
+  old_num_allocs = vec.get_allocator().num_allocs();
+  old_num_frees = vec.get_allocator().num_frees();
 
   vec.pop_back();
+  
   CHECK(vec.size() == 4);
   CHECK(vec.capacity() == 20);
+  CHECK(vec.get_allocator().num_allocs() == old_num_allocs);
+  CHECK(vec.get_allocator().num_frees() == old_num_frees);
+
+  old_num_allocs = vec.get_allocator().num_allocs();
+  old_num_frees = vec.get_allocator().num_frees();
 
   vec.pop_back();
+
   CHECK(vec.size() == 3);
   CHECK(vec.capacity() == 20);
+  CHECK(vec.get_allocator().num_allocs() == old_num_allocs);
+  CHECK(vec.get_allocator().num_frees() == old_num_frees);
 }
 
 TEST_CASE("vector element access")
 {
-  rsl::vector<int> vec;
+  {
+    rsl::vector<int> vec;
 
-  vec.push_back(1);
-  CHECK(vec[0] == 1);
-  CHECK(vec.front() == 1);
-  CHECK(*vec.begin() == 1);
-  CHECK(vec.back() == 1);
-  CHECK(*--vec.end() == 1);
+    vec.push_back(1);
+    CHECK(vec[0] == 1);
+    CHECK(vec.at(0) == 1);
+    CHECK(vec.front() == 1);
+    CHECK(*vec.begin() == 1);
+    CHECK(*vec.cbegin() == 1);
+    CHECK(*vec.rbegin() == 1);
+    CHECK(*vec.crbegin() == 1);
+    CHECK(vec.back() == 1);
+    CHECK(*--vec.end() == 1);
+    CHECK(*--vec.cend() == 1);
+    CHECK(*--vec.rend() == 1);
+    CHECK(*--vec.crend() == 1);
 
-  vec.push_back(2);
-  CHECK(vec[0] == 1);
-  CHECK(vec.front() == 1);
-  CHECK(*vec.begin() == 1);
-  CHECK(vec[1] == 2);
-  CHECK(vec.back() == 2);
-  CHECK(*--vec.end() == 2);
+    vec.push_back(2);
+    CHECK(vec[0] == 1);
+    CHECK(vec.at(0) == 1);
+    CHECK(vec.front() == 1);
+    CHECK(*vec.begin() == 1);
+    CHECK(*vec.cbegin() == 1);
+    CHECK(*vec.rbegin() == 2);
+    CHECK(*vec.crbegin() == 2);
+    CHECK(vec[1] == 2);
+    CHECK(vec.at(1) == 2);
+    CHECK(vec.back() == 2);
+    CHECK(*--vec.end() == 2);
+    CHECK(*--vec.cend() == 2);
+    CHECK(*--vec.rend() == 1);
+    CHECK(*--vec.crend() == 1);
 
-  vec.push_back(3);
-  CHECK(vec[0] == 1);
-  CHECK(vec.front() == 1);
-  CHECK(*vec.begin() == 1);
-  CHECK(vec[1] == 2);
-  CHECK(vec[2] == 3);
-  CHECK(vec.back() == 3);
-  CHECK(*--vec.end() == 3);
+    vec.push_back(3);
+    CHECK(vec[0] == 1);
+    CHECK(vec.at(0) == 1);
+    CHECK(vec.front() == 1);
+    CHECK(*vec.begin() == 1);
+    CHECK(*vec.cbegin() == 1);
+    CHECK(*vec.rbegin() == 3);
+    CHECK(*vec.crbegin() == 3);
+    CHECK(vec[1] == 2);
+    CHECK(vec.at(1) == 2);
+    CHECK(vec[2] == 3);
+    CHECK(vec.at(2) == 3);
+    CHECK(vec.back() == 3);
+    CHECK(*--vec.end() == 3);
+    CHECK(*--vec.cend() == 3);
+    CHECK(*--vec.rend() == 1);
+    CHECK(*--vec.crend() == 1);
+  }
+
+  {
+    const rsl::vector<int> vec = { 1, 2, 3 };
+
+    CHECK(vec[0] == 1);
+    CHECK(vec.at(0) == 1);
+    CHECK(vec.front() == 1);
+    CHECK(*vec.begin() == 1);
+    CHECK(*vec.cbegin() == 1);
+    CHECK(*vec.rbegin() == 3);
+    CHECK(*vec.crbegin() == 3);
+    CHECK(vec[1] == 2);
+    CHECK(vec.at(1) == 2);
+    CHECK(vec[2] == 3);
+    CHECK(vec.at(2) == 3);
+    CHECK(vec.back() == 3);
+    CHECK(*--vec.end() == 3);
+    CHECK(*--vec.cend() == 3);
+    CHECK(*--vec.rend() == 1);
+    CHECK(*--vec.crend() == 1);
+  }
 }
 
 TEST_CASE("vector insertion")
@@ -912,4 +1102,4 @@ TEST_CASE("vector insertion")
   CHECK(vec.capacity() == 100);
 }
 
-// NOLINTEND
+
