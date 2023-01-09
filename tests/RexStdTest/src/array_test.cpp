@@ -12,6 +12,7 @@
 
 #include "rex_std_test/catch2/catch.hpp"
 
+// somehow this is resulting in an asan issue with a misaligned global with an empty name (likely in one of the headers)
 #include "rex_std/array.h"
 
 #include "rex_std/bonus/utility/scopeguard.h"
