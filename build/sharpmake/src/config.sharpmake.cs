@@ -76,6 +76,8 @@ public class RexConfiguration : Sharpmake.Project.Configuration
 
   public void enable_optimization()
   {
+    Options.Add(Sharpmake.Options.Vc.General.WholeProgramOptimization.LinkTime);
+
     Options.Add(Sharpmake.Options.Vc.Compiler.Optimization.MaximizeSpeed);
     Options.Add(Sharpmake.Options.Vc.Compiler.Intrinsic.Enable);
     Options.Add(Sharpmake.Options.Vc.Compiler.RuntimeLibrary.MultiThreaded);

@@ -29,7 +29,6 @@ namespace rsl
 {
   inline namespace v1
   {
-
     template <typename T, count_t Size>
     class array
     {
@@ -126,7 +125,7 @@ namespace rsl
       // Returns an iterator to the element following the last element of the array.
       constexpr const_iterator end() const
       {
-        return const_iterator(m_data);
+        return const_iterator(m_data + size());
       }
       // Returns an iterator to the element following the last element of the array.
       constexpr const_iterator cend() const
@@ -205,6 +204,179 @@ namespace rsl
       // eg. array<int, 5> arr = { 1, 2, 3, 4, 5 };
       /// RSL Comment: Different from ISO C++ Standard at time of writing (10/Oct/2022)
       T m_data[Size] = {}; // NOLINT // adding " = {}" value initializes the array
+    };
+
+    // specialization for null array
+    template <typename T>
+    class array<T, 0>
+    {
+    public:
+      using value_type      = T;
+      using size_type       = count_t; /// RSL Comment: Different from ISO C++ Standard at time of writing (26/Jun/2022)
+      using difference_type = int32;   /// RSL Comment: Different from ISO C++ Standard at time of writing (26/Jun/2022)
+      using pointer         = value_type*;
+      using const_pointer   = const value_type*;
+      using reference       = value_type&;
+      using const_reference = const value_type&;
+
+      using iterator       = random_access_iterator<T>;
+      using const_iterator = const_random_access_iterator<T>;
+
+      using reverse_iterator       = rsl::reverse_iterator<iterator>;
+      using const_reverse_iterator = rsl::reverse_iterator<const_iterator>;
+
+      // Returns a reference to the element at specified location pos, with bounds checking.
+      // if pos is not within range of the container, an assertion is raised
+      constexpr reference at(size_type /*pos*/)
+      {
+        REX_ASSERT("access elements of null array is not allowed");
+        return m_data[0];
+      }
+      // Returns a reference to the element at specified location pos, with bounds checking.
+      // if pos is not within range of the container, an assertion is raised
+      constexpr const_reference at(size_type /*pos*/) const
+      {
+        REX_ASSERT("access elements of null array is not allowed");
+        return m_data[0];
+      }
+      // Returns a reference to the element at specified location pos. No bounds checking is performed.
+      constexpr reference operator[](size_type /*pos*/)
+      {
+        REX_ASSERT("access elements of null array is not allowed");
+        return m_data[0];
+      }
+      // Returns a reference to the element at specified location pos. No bounds checking is performed.
+      constexpr const_reference operator[](size_type /*pos*/) const
+      {
+        REX_ASSERT("access elements of null array is not allowed");
+        return m_data[0];
+      }
+
+      // Returns a reference to the first element in the container.
+      constexpr reference front()
+      {
+        REX_ASSERT("access elements of null array is not allowed");
+        return m_data[0];
+      }
+      // Returns a reference to the first element in the container.
+      constexpr const_reference front() const
+      {
+        REX_ASSERT("access elements of null array is not allowed");
+        return m_data[0];
+      }
+      // Returns a reference to the last element in the container.
+      constexpr reference back()
+      {
+        REX_ASSERT("access elements of null array is not allowed");
+        return m_data[0];
+      }
+      // Returns a reference to the last element in the container.
+      constexpr const_reference back() const
+      {
+        REX_ASSERT("access elements of null array is not allowed");
+        return m_data[0];
+      }
+      // Returns pointer to the underlying array serving as element storage
+      constexpr T* data()
+      {
+        REX_ASSERT("access data of null array is not allowed");
+        return m_data;
+      }
+      // Returns pointer to the underlying array serving as element storage
+      constexpr const T* data() const
+      {
+        REX_ASSERT("access data of null array is not allowed");
+        return m_data;
+      }
+      // Returns an iterator to the first element of the array.
+      constexpr iterator begin()
+      {
+        return end();
+      }
+      // Returns an iterator to the first element of the array.
+      constexpr const_iterator begin() const
+      {
+        return cend();
+      }
+      // Returns an iterator to the first element of the array.
+      constexpr const_iterator cbegin() const
+      {
+        return cend();
+      }
+      // Returns an iterator to the element following the last element of the array.
+      constexpr iterator end()
+      {
+        return iterator(m_data + 1);
+      }
+      // Returns an iterator to the element following the last element of the array.
+      constexpr const_iterator end() const
+      {
+        return const_iterator(m_data + 1);
+      }
+      // Returns an iterator to the element following the last element of the array.
+      constexpr const_iterator cend() const
+      {
+        return const_iterator(m_data + 1);
+      }
+      // Returns a reverse iterator to the first element of the reversed array.
+      // It corresponds to the last element of the non-reversed array.
+      constexpr reverse_iterator rbegin()
+      {
+        return reverse_iterator(end());
+      }
+      // Returns a reverse iterator to the first element of the reversed array.
+      // It corresponds to the last element of the non-reversed array.
+      constexpr const_reverse_iterator rbegin() const
+      {
+        return const_reverse_iterator(end());
+      }
+      // Returns a reverse iterator to the first element of the reversed array.
+      // It corresponds to the last element of the non-reversed array.
+      constexpr const_reverse_iterator crbegin() const
+      {
+        return rbegin();
+      }
+      // Returns a reverse iterator to the element following the last element of the reversed array.
+      // It corresponds to the element preceding the first element of the non-reversed array.
+      constexpr reverse_iterator rend()
+      {
+        return reverse_iterator(begin());
+      }
+      // Returns a reverse iterator to the element following the last element of the reversed array.
+      // It corresponds to the element preceding the first element of the non-reversed array.
+      constexpr const_reverse_iterator rend() const
+      {
+        return const_reverse_iterator(begin());
+      }
+      // Returns a reverse iterator to the element following the last element of the reversed array.
+      // It corresponds to the element preceding the first element of the non-reversed array.
+      constexpr const_reverse_iterator crend() const
+      {
+        return rend();
+      }
+      // Checks if the container has no elements, i.e. whether begin() == end().
+      constexpr bool empty() const
+      {
+        return true;
+      }
+      // Returns the number of elements in the container, i.e. rsl::distance(begin(), end()).
+      constexpr size_type size() const
+      {
+        return 0;
+      }
+      // Returns the maximum number of elements the container is able to hold.
+      constexpr size_type max_size() const
+      {
+        return 0;
+      }
+
+      // Assigns the given value value to all elements in the container.
+      constexpr void fill(const T& /*val*/) {}
+      // Exchanges the contents of the container with those of other.
+      constexpr void swap(array& /*other*/) {}
+
+    public:
+      T m_data[1] = {}; // internally 1 in size to avoid compiler errors //NOLINT(modernize-avoid-c-arrays)
     };
 
     // Checks if the contents of lhs and rhs are equal
@@ -322,7 +494,7 @@ namespace rsl
 
     // Provides access to the number of elements in an rsl::array as a compile-time constant expression.
     template <typename T>
-    class tuple_size;
+    struct tuple_size;
 
     template <typename T, count_t Size>
     struct tuple_size<rsl::array<T, Size>> : rsl::integral_constant<card32, Size>

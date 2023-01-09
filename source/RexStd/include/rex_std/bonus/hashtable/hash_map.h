@@ -15,6 +15,7 @@
 #include "rex_std/bonus/defines.h"
 #include "rex_std/bonus/hashtable/hashtable.h"
 #include "rex_std/bonus/hashtable/mod_range_hashing.h"
+#include "rex_std/bonus/types.h"
 #include "rex_std/bonus/utility/key_value.h"
 #include "rex_std/bonus/utility/use_first.h"
 #include "rex_std/internal/functional/equal_to.h"
@@ -45,11 +46,11 @@ namespace rsl
       using base_type::insert;
 
       explicit hash_map(const allocator_type& allocator = allocator_type())
-          : base_type(0, Hash(), mod_range_hashing(), Equal(), use_first<value_type>(), allocator)
+          : base_type(0_size, Hash(), mod_range_hashing(), Equal(), use_first<value_type>(), allocator)
       {
       }
 
-      explicit hash_map(size_type bucketCount, const Hash& hashFunction = Hash(), const Equal& keyEqual = Equal(), const allocator_type& allocator = allocator_type())
+      explicit hash_map(Size bucketCount, const Hash& hashFunction = Hash(), const Equal& keyEqual = Equal(), const allocator_type& allocator = allocator_type())
           : base_type(bucketCount, hashFunction, mod_range_hashing(), keyEqual, use_first<value_type>(), allocator)
       {
       }
@@ -66,7 +67,7 @@ namespace rsl
 
       ~hash_map() = default;
 
-      hash_map(initializer_list<value_type> ilist, size_type bucketCount = 0, const Hash& hashFunction = Hash(), const Equal& keyEqual = Equal(), const allocator_type& allocator = allocator_type())
+      hash_map(initializer_list<value_type> ilist, Size bucketCount = 0_size, const Hash& hashFunction = Hash(), const Equal& keyEqual = Equal(), const allocator_type& allocator = allocator_type())
           : base_type(ilist.begin(), ilist.end(), bucketCount, hashFunction, mod_range_hashing(), keyEqual, use_first<value_type>(), allocator)
       {
       }

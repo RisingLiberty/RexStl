@@ -434,7 +434,7 @@ struct is_compile_string : rsl::is_base_of<compile_string, S>
 template <typename Char, FMT_ENABLE_IF(is_char<Char>::value)>
 FMT_INLINE auto to_string_view(const Char* s) -> basic_string_view<Char>
 {
-  return s;
+  return basic_string_view<Char>(s);
 }
 template <typename Char, typename Traits, typename Alloc>
 inline auto to_string_view(const rsl::basic_string<Char, Traits, Alloc>& s) -> basic_string_view<Char>
@@ -2042,8 +2042,8 @@ template <typename Context, typename T>
 FMT_CONSTEXPR auto make_arg(T&& value) -> basic_format_arg<Context>
 {
   basic_format_arg<Context> arg;
-  arg.m_type = mapped_type_constant<T, Context>::value;
-  arg.value_ = make_value<Context>(value);
+  arg.m_type  = mapped_type_constant<T, Context>::value;
+  arg.m_value = make_value<Context>(value);
   return arg;
 }
 

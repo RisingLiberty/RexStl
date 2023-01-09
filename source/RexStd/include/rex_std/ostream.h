@@ -23,10 +23,10 @@ namespace rsl
     using wostream = basic_ostream<tchar>;
 
     // template <typename ... Args>
-    // void print(ostream& os, fmt::format_string<Args...> fmt, Args&& ... args);
+    // void print(ostream& os, rsl::format_string<Args...> fmt, Args&& ... args);
 
     // template <typename ... Args>
-    // void println(ostream& os, fmt::format_string<Args...> fmt, Args&& ... args);
+    // void println(ostream& os, rsl::format_string<Args...> fmt, Args&& ... args);
 
     // template <typename CharT, typename Traits>
     // basic_ostream<CharT, Traits>& endl(basic_ostream<CharT, Traits>& os);

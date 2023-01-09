@@ -18,14 +18,14 @@ namespace rsl
 {
   inline namespace v1
   {
-
     template <typename T>
     struct default_delete
     {
     public:
       constexpr default_delete() = default;
+
       template <typename T2, enable_if_t<is_convertible_v<T2*, T*>, bool> = true>
-      constexpr explicit default_delete(const default_delete<T2>& /*unused*/)
+      constexpr default_delete(const default_delete<T2>& /*unused*/) // NOLINT(google-explicit-constructor)
       {
       }
 

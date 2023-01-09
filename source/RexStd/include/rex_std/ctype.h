@@ -126,7 +126,7 @@ namespace rsl
     // checks if a character is a control character
     REX_NO_DISCARD constexpr bool is_cntrl(char8 ch)
     {
-      return ch >= 0 && ch <= 31 || ch == 127; // NOLINT(readability-magic-numbers)
+      return (ch >= 0 && ch <= 31) || ch == 127; // NOLINT(readability-magic-numbers)
     }
     // checks if a character is a graphical character
     REX_NO_DISCARD constexpr bool is_graph(char8 ch)

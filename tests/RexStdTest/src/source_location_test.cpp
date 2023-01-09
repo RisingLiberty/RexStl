@@ -10,17 +10,35 @@
 //
 // ============================================
 
-#include "catch2/catch.hpp"
+#include "rex_std_test/catch2/catch.hpp"
 
 // NOLINTBEGIN
 
 #include "rex_std/source_location.h"
+#include "rex_std/string_view.h"
+#include "rex_std/bonus/compiler.h"
+#include "rex_std/iostream.h"
 
 TEST_CASE("source location")
 {
   rsl::source_location loc  = rsl::source_location::current();
   rsl::source_location loc2 = rsl::source_location::current();
-  REQUIRE(loc.line() + 1 == loc2.line());
+  rsl::string_view file = __FILE__;
+  rsl::string_view func = __func__;
+  rsl::string_view loc_file(loc.file_name());
+  rsl::string_view loc_func(loc.function_name());
+  
+  #if defined(REX_COMPILER_MSVC)
+  card32 column = 53;
+  #elif defined(REX_COMPILER_CLANG)
+  card32 column = 31;
+  #endif
+  
+  CHECK(loc.line() + 1 == loc2.line());
+  CHECK(loc.column() == column);
+  CHECK(loc_file == file);
+  CHECK(loc_func == func);
+
 }
 
 // NOLINTEND

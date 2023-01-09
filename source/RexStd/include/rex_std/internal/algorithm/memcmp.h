@@ -30,6 +30,7 @@ namespace rsl
           return *first_1byte - *first2_byte;
         }
         ++first_1byte, ++first2_byte;
+        --count;
       }
 
       return 0;

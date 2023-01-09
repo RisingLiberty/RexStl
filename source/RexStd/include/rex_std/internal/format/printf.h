@@ -645,8 +645,8 @@ using wprintf_args = basic_format_args<wprintf_context>;
 
 /**
   \rst
-  Constructs an `~fmt::format_arg_store` object that contains references to
-  arguments and can be implicitly converted to `~fmt::printf_args`.
+  Constructs an `~rsl::format_arg_store` object that contains references to
+  arguments and can be implicitly converted to `~rsl::printf_args`.
   \endrst
  */
 template <typename... T>
@@ -657,8 +657,8 @@ inline auto make_printf_args(const T&... args) -> format_arg_store<printf_contex
 
 /**
   \rst
-  Constructs an `~fmt::format_arg_store` object that contains references to
-  arguments and can be implicitly converted to `~fmt::wprintf_args`.
+  Constructs an `~rsl::format_arg_store` object that contains references to
+  arguments and can be implicitly converted to `~rsl::wprintf_args`.
   \endrst
  */
 template <typename... T>
@@ -681,7 +681,7 @@ inline auto vsprintf(const S& fmt, basic_format_args<basic_printf_context_t<type
 
   **Example**::
 
-    rsl::string message = fmt::sprintf("The answer is %d", 42);
+    rsl::string message = rsl::sprintf("The answer is %d", 42);
   \endrst
 */
 template <typename S, typename... T, typename Char = enable_if_t<detail::is_string<S>::value, char_t<S>>>
@@ -706,7 +706,7 @@ inline auto vfprintf(rsl::FILE* f, const S& fmt, basic_format_args<basic_printf_
 
   **Example**::
 
-    fmt::fprintf(stderr, "Don't %s!", "panic");
+    rsl::fprintf(stderr, "Don't %s!", "panic");
   \endrst
  */
 template <typename S, typename... T, typename Char = char_t<S>>
@@ -728,7 +728,7 @@ inline auto vprintf(const S& fmt, basic_format_args<basic_printf_context_t<type_
 
   **Example**::
 
-    fmt::printf("Elapsed time: %.2f seconds", 1.23);
+    rsl::printf("Elapsed time: %.2f seconds", 1.23);
   \endrst
  */
 template <typename S, typename... T, FMT_ENABLE_IF(detail::is_string<S>::value)>

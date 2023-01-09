@@ -669,7 +669,6 @@ namespace rsl
         T after_radix_value           = 0.0f;
         card32 num_digits_after_radix = 0;
         bool assigning_before_radix   = true;
-        const optional<T> result      = nullopt;
 
         while(*c != '\0')
         {

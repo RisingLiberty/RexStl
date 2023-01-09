@@ -30,6 +30,7 @@ namespace rsl
       explicit prime_rehash_policy(float32 maxLoadFactor = 1.0f);
 
       float32 get_max_load_factor() const;
+      void set_max_load_factor(float32 maxLoadFactor);
 
       static uint32 get_prev_bucket_count_only(uint32 bucketCountHint);
       uint32 get_prev_bucket_count(uint32 bucketCountHint) const;

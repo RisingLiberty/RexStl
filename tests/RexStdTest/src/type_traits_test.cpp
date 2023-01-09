@@ -10,7 +10,7 @@
 //
 // ============================================
 
-#include "catch2/catch.hpp"
+#include "rex_std_test/catch2/catch.hpp"
 #include "rex_std/type_traits.h"
 
 // NOLINTBEGIN
@@ -1307,9 +1307,9 @@ TEST_CASE("aligned storage")
 {
   rsl::aligned_storage<int> storage;
 
-  REQUIRE(*storage.get() == 0);
+  CHECK(*storage.get() == 0);
   storage.set(1);
-  REQUIRE(*storage.get() == 1);
+  CHECK(*storage.get() == 1);
 }
 TEST_CASE("decay")
 {

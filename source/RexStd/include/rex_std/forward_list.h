@@ -382,7 +382,7 @@ namespace rsl
         {
           node_type* tmp_node = node;
           node                = node->next;
-          get_allocator().deallocate(tmp_node);
+          get_allocator().deallocate(tmp_node, sizeof(node_type));
         }
 
 #ifdef REX_ENABLE_SIZE_IN_LISTS
@@ -428,7 +428,7 @@ namespace rsl
         pos.m_node->erase_after();
 
         get_allocator().destroy(next_node);
-        get_allocator().deallocate(next_node);
+        get_allocator().deallocate(next_node, sizeof(node_type));
 
 #ifdef REX_ENABLE_SIZE_IN_LIST
         --m_size;

@@ -12,7 +12,7 @@ htlm_report_folder = "lcov"
 def index_rawdata(rawdataPath):
   folder = Path(rawdataPath).parent
   output_path = os.path.join(folder, f"{Path(rawdataPath).stem}.profdata")
-  llvm_profdata_path = required_tools.tool_paths["llvm_profdata_path"]
+  llvm_profdata_path = required_tools.tool_paths_dict["llvm_profdata_path"]
   os.system(f"{llvm_profdata_path} merge -sparse {rawdataPath} -o {output_path}")
 
   return output_path
@@ -30,7 +30,7 @@ def lcov_unmangled_filename(profDataPath):
   return os.path.join(Path(profDataPath).parent, f"{Path(profDataPath).stem}_lcov_unmangled.info")
 
 def create_line_oriented_report(programPath, profDataPath):
-  llvm_cov_path = required_tools.tool_paths["llvm_cov_path"]
+  llvm_cov_path = required_tools.tool_paths_dict["llvm_cov_path"]
   log_file_path = line_oriented_report_filename(profDataPath)
   if os.path.exists(log_file_path):
     os.remove(log_file_path)
@@ -44,7 +44,7 @@ def create_line_oriented_report(programPath, profDataPath):
   return log_file_path
   
 def create_file_level_summary(programPath, profDataPath):
-  llvm_cov_path = required_tools.tool_paths["llvm_cov_path"]
+  llvm_cov_path = required_tools.tool_paths_dict["llvm_cov_path"]
   log_file_path = file_level_summary_filename(profDataPath)
   if os.path.exists(log_file_path):
     os.remove(log_file_path)
@@ -58,7 +58,7 @@ def create_file_level_summary(programPath, profDataPath):
   return log_file_path
 
 def __create_mangled_lcov_info(programPath, profDataPath):
-  llvm_cov_path = required_tools.tool_paths["llvm_cov_path"]
+  llvm_cov_path = required_tools.tool_paths_dict["llvm_cov_path"]
   log_file_path = lcov_filename(profDataPath)
   cmd = f"{llvm_cov_path} export -format=lcov {programPath} -instr-profile={profDataPath} >> {log_file_path}"
   os.system(cmd)
@@ -88,7 +88,7 @@ def __unmangle_function_names(logFilePath, profDataPath):
   #  0x20000 Disable expansion of __ptr64 keyword
 
   # creating the unmangled .info file
-  undname_path = required_tools.tool_paths["undname_path"]
+  undname_path = required_tools.tool_paths_dict["undname_path"]
   flags : int = 0x0001 | 0x0002 | 0x0080 | 0x8000
   unmangled_log_file_path = lcov_unmangled_filename(profDataPath)
   cmd = f"\"{undname_path}\" {flags} {logFilePath} > {unmangled_log_file_path}"
@@ -121,7 +121,7 @@ def __unmangle_function_names(logFilePath, profDataPath):
   return unmangled_log_file_path
 
 def __generate_html_reports(unmangledLogFilePath):
-  lcov_path = required_tools.tool_paths["lcov_path"]
+  lcov_path = required_tools.tool_paths_dict["lcov_path"]
   cmd = f"perl {lcov_path} {unmangledLogFilePath} -q -o {os.path.join(Path(unmangledLogFilePath).parent, htlm_report_folder)}"
   os.system(cmd)
 
@@ -233,7 +233,14 @@ def parse_file_summary(filepath):
     if column_names_processed == False:
       continue
 
-    if line.split()[0] == "TOTAL":  # filename == TOTAL
+    line_words = line.split()
+    if len(line_words) == 0:
+      continue
+
+    if "Files which contain no functions" in line:
+      continue
+
+    if line_words[0] == "TOTAL":  # filename == TOTAL
       total_summary = FileSummary(line)
     else:
       file_summaries.append(FileSummary(line))

@@ -19,6 +19,9 @@
 #include "rex_std/internal/memory/nullptr.h"
 #include "rex_std/internal/type_traits/common_type.h"
 #include "rex_std/internal/type_traits/conjunction.h"
+#include "rex_std/internal/type_traits/is_array.h"
+#include "rex_std/internal/type_traits/is_assignable.h"
+#include "rex_std/internal/type_traits/is_convertible.h"
 #include "rex_std/internal/type_traits/is_default_constructible.h"
 #include "rex_std/internal/type_traits/is_move_constructible.h"
 #include "rex_std/internal/type_traits/is_pointer.h"
@@ -26,6 +29,7 @@
 #include "rex_std/internal/type_traits/negation.h"
 #include "rex_std/internal/type_traits/remove_reference.h"
 #include "rex_std/internal/utility/exchange.h"
+#include "rex_std/internal/utility/swap.h"
 #include "rex_std/ostream.h"
 
 namespace rsl
@@ -82,19 +86,19 @@ namespace rsl
       {
       }
       // construct a unique_ptr that owns ptr and copy constructs the deleter
-      template <typename Deleter2 = Deleter, enable_if_t<is_constructible_v<Deleter2, const Deleter2&>, bool> = true>
-      unique_ptr(pointer ptr, const Deleter& deleter)
+      template <typename Deleter2 = Deleter, enable_if_t<is_constructible_v<Deleter, const Deleter2&>, bool> = true>
+      unique_ptr(pointer ptr, const Deleter2& deleter)
           : m_cp_ptr_and_deleter(ptr, deleter)
       {
       }
       // construct a unique_ptr that owns ptr and copy constructs the deleter
       template <typename Deleter2, enable_if_t<conjunction_v<negation<is_reference<Deleter2>>, is_constructible<Deleter2, Deleter2>>, bool> = true>
-      unique_ptr(pointer ptr, Deleter&& deleter)
+      unique_ptr(pointer ptr, Deleter2&& deleter)
           : m_cp_ptr_and_deleter(ptr, rsl::move(deleter))
       {
       }
       template <typename Deleter2, enable_if_t<conjunction_v<is_reference<Deleter2>, is_constructible<Deleter2, remove_reference_t<Deleter2>>>, bool> = true>
-      unique_ptr(pointer, remove_reference_t<Deleter>&&) = delete;
+      unique_ptr(pointer, remove_reference_t<Deleter2>&&) = delete;
       // dleters the copy constructor
       unique_ptr(const unique_ptr&) = delete;
       // construct a unique_ptr that takes ownership of the  ptr in the other unique_ptr.
@@ -115,14 +119,25 @@ namespace rsl
       // the owner object is destroyed via the deleter
       ~unique_ptr()
       {
-        delete_ptr();
+        if(get())
+        {
+          delete_ptr();
+        }
       }
 
       // transfers ownership from other to this
-      unique_ptr& operator=(unique_ptr&& other) noexcept
+      unique_ptr& operator=(unique_ptr&& other)
       {
         reset(other.release());
         m_cp_ptr_and_deleter.second() = rsl::forward<Deleter>(other.get_deleter());
+        return *this;
+      }
+      // transfers ownership from other to this
+      template <typename T2, typename Deleter2, rsl::enable_if_t<is_move_assignable_v<Deleter2>, int> = 0>
+      unique_ptr& operator=(unique_ptr<T2, Deleter2>&& other) noexcept
+      {
+        reset(other.release());
+        m_cp_ptr_and_deleter.second() = rsl::forward<Deleter2>(other.get_deleter());
         return *this;
       }
       // converting assignment operator
@@ -164,8 +179,8 @@ namespace rsl
       // swaps the managed objects and their deleter
       void swap(unique_ptr& other)
       {
-        swap(m_cp_ptr_and_deleter.first(), other.m_cp_ptr_and_deleter.first());
-        swap(m_cp_ptr_and_deleter.second(), other.m_cp_ptr_and_deleter.second());
+        rsl::swap(m_cp_ptr_and_deleter.first(), other.m_cp_ptr_and_deleter.first());
+        rsl::swap(m_cp_ptr_and_deleter.second(), other.m_cp_ptr_and_deleter.second());
       }
 
       /// RSL Comment: Different from ISO C++ Standard at time of writing (03/Aug/2022)

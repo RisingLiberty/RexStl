@@ -69,7 +69,7 @@ namespace detail
     }
     error_code_size += detail::to_unsigned(detail::count_digits(abs_value));
     auto it = buffer_appender<char>(out);
-    if(message.size() <= inline_buffer_size - error_code_size)
+    if(message.size() <= static_cast<decltype(message.size())>(inline_buffer_size - error_code_size))
       format_to(it, FMT_STRING("{}{}"), message, s_sep);
     format_to(it, FMT_STRING("{}{}"), s_error_str, errorCode);
     FMT_ASSERT(out.size() <= inline_buffer_size, "");
@@ -1499,7 +1499,7 @@ FMT_FUNC void report_system_error(int errorCode, const char* message) noexcept /
 FMT_FUNC rsl::string vformat(string_view fmt, format_args args) // NOLINT(misc-definitions-in-headers)
 {
   // Don't optimize the "{}" case to keep the binary size small and because it
-  // can be better optimized in fmt::format anyway.
+  // can be better optimized in rsl::format anyway.
   auto buffer = memory_buffer();
   detail::vformat_to(buffer, fmt, args);
   return to_string(buffer);

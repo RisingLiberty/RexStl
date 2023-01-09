@@ -4,13 +4,14 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-//
-// File: list_test.cpp
+// 
+// File: fmt_header_only_test.cpp
 // Copyright (c) Nick De Breuck 2022
 //
 // ============================================
 
-#include "catch2/catch.hpp"
+#ifdef REX_ENABLE_FMT_TESTING
 
-// NOLINTBEGIN
-// NOLINTEND
+TEST(header_only_test, format) { EXPECT_EQ(fmt::format("foo"), "foo"); }
+
+#endif

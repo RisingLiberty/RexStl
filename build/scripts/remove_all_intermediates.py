@@ -7,7 +7,7 @@ import argparse
 import shutil
 import diagnostics
 
-tool_paths = required_tools.tool_paths
+tool_paths_dict = required_tools.tool_paths_dict
 root_path = util.find_root()
 settings = rex_json.load_file(os.path.join(root_path, "build", "config", "settings.json"))
 

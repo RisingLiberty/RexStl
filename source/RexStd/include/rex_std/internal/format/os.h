@@ -192,7 +192,7 @@
 //   LPOFSTRUCT of = LPOFSTRUCT();
 //   HFILE file = OpenFile(filename, &of, OF_READ);
 //   if (file == HFILE_ERROR) {
-//     throw fmt::windows_error(GetLastError(),
+//     throw rsl::windows_error(GetLastError(),
 //                              "cannot open file '{}'", filename);
 //   }
 // \endrst
@@ -200,7 +200,7 @@
 // template <typename... Args>
 // rsl::system_error windows_error(int error_code, string_view message,
 //                                const Args&... args) {
-//  return vwindows_error(error_code, message, fmt::make_format_args(args...));
+//  return vwindows_error(error_code, message, rsl::make_format_args(args...));
 //}
 //
 //// Reports a Windows error without throwing an exception.
@@ -263,19 +263,19 @@
 //   FMT_API int descriptor() const;
 //
 //   void vprint(string_view format_str, format_args args) {
-//     fmt::vprint(file_, format_str, args);
+//     rsl::vprint(file_, format_str, args);
 //   }
 //
 //   template <typename... Args>
 //   inline void print(string_view format_str, const Args&... args) {
-//     vprint(format_str, fmt::make_format_args(args...));
+//     vprint(format_str, rsl::make_format_args(args...));
 //   }
 // };
 //
 // #if FMT_USE_FCNTL
 //// A file. Closed file is represented by a file object with descriptor -1.
 //// Methods that are not declared with noexcept may throw
-//// fmt::system_error in case of failure. Note that some errors such as
+//// rsl::system_error in case of failure. Note that some errors such as
 //// closing the file multiple times will cause a crash on Windows rather
 //// than an exception. You can get standard behavior by overriding the
 //// invalid parameter handler with _set_invalid_parameter_handler.
@@ -447,7 +447,7 @@
 //    */
 //   template <typename... T> void print(format_string<T...> fmt, T&&... args) {
 //     vformat_to(detail::buffer_appender<char>(*this), fmt,
-//                fmt::make_format_args(args...));
+//                rsl::make_format_args(args...));
 //   }
 // };
 //
@@ -462,7 +462,7 @@
 //
 //  **Example**::
 //
-//    auto out = fmt::output_file("guide.txt");
+//    auto out = rsl::output_file("guide.txt");
 //    out.print("Don't {}", "Panic");
 //  \endrst
 // */

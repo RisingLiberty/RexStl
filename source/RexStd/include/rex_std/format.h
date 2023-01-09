@@ -285,7 +285,7 @@ namespace detail
   }
 
   template <typename CharT, CharT... C>
-  struct string_literal
+  struct basic_string_literal
   {
     static constexpr CharT value[sizeof...(C)] = {C...}; // NOLINT(modernize-avoid-c-arrays)
     constexpr operator basic_string_view<CharT>() const  // NOLINT(google-explicit-constructor)
@@ -4254,7 +4254,7 @@ struct formatter<Char[N], Char> : formatter<basic_string_view<Char>, Char> // NO
   template <typename FormatContext>
   FMT_CONSTEXPR auto format(const Char* val, FormatContext& ctx) const -> decltype(ctx.out())
   {
-    return formatter<basic_string_view<Char>, Char>::format(val, ctx);
+    return formatter<basic_string_view<Char>, Char>::format(rsl::string_view(val), ctx);
   }
 };
 
@@ -4641,6 +4641,7 @@ void vformat_to(buffer<Char>& buf, basic_string_view<Char> fmt, basic_format_arg
     void on_text(const Char* begin, const Char* end)
     {
       auto text = basic_string_view<Char>(begin, to_unsigned(static_cast<count_t>(end - begin)));
+
       context.advance_to(write<Char>(context.out(), text));
     }
 

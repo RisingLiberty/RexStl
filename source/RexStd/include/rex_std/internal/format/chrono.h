@@ -2338,7 +2338,7 @@ inline rsl::tm localtime(rsl::time_t time)
                 {
                   FMT_CONSTEXPR formatter()
                   {
-                    basic_string_view<Char> default_specs = detail::string_literal<Char, '%', 'F', ' ', '%', 'T'> {};
+                    basic_string_view<Char> default_specs = detail::basic_string_literal<Char, '%', 'F', ' ', '%', 'T'> {};
                     this->do_parse(default_specs.begin(), default_specs.end());
                   }
 

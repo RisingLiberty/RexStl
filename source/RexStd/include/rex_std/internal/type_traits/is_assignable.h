@@ -19,13 +19,13 @@ namespace rsl
   inline namespace v1
   {
 
-    template <typename T, typename U>
-    struct is_assignable : bool_constant<__is_assignable(T, U)>
+    template <typename To, typename From>
+    struct is_assignable : bool_constant<__is_assignable(To, From)>
     {
     };
 
-    template <typename T, typename U>
-    inline constexpr bool is_assignable_v = is_assignable<T, U>::value;
+    template <typename To, typename From>
+    inline constexpr bool is_assignable_v = is_assignable<To, From>::value;
 
   } // namespace v1
 } // namespace rsl

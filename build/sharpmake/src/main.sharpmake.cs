@@ -103,10 +103,10 @@ public class BaseProject : Project
     conf.use_compiler_options();
     conf.use_linker_options();
 
-    if (target.DevEnv == DevEnv.vs2019)
-    {
-      conf.add_dependency<SharpmakeProject>(target);
-    }
+    //if (target.DevEnv == DevEnv.vs2019)
+    //{
+    //  conf.add_dependency<SharpmakeProject>(target);
+    //}
 
     switch (target.Optimization)
     {
@@ -115,9 +115,8 @@ public class BaseProject : Project
         conf.disable_optimization();
         break;
       case Optimization.FullOptWithPdb:
-        conf.Options.Add(Options.Vc.General.DebugInformation.ProgramDatabase);
         conf.enable_optimization();
-        conf.Options.Add(Options.Vc.Linker.LinkTimeCodeGeneration.Default);      // To fix linker warning
+        conf.Options.Add(Options.Vc.General.DebugInformation.ProgramDatabase);
         conf.Options.Add(Options.Vc.Compiler.OmitFramePointers.Disable);         // Disable so we can have a stack trace
         break;
       case Optimization.FullOpt:
@@ -218,10 +217,12 @@ public class TestProject : BaseProject
     else if (GenerateSettings.AddressSanitizerEnabled)
     {
       conf.ProjectPath = Path.Combine(Globals.Root, ".rex", "tests", "asan", "build", target.DevEnv.ToString(), Name);
+      conf.add_public_define("CATCH_CONFIG_DISABLE"); // we don't need to check catch, it massively increase link time (47min at time of writing -> 5min)
     }
     else if (GenerateSettings.UndefinedBehaviorSanitizerEnabled)
     {
       conf.ProjectPath = Path.Combine(Globals.Root, ".rex", "tests", "ubsan", "build", target.DevEnv.ToString(), Name);
+      conf.add_public_define("CATCH_CONFIG_DISABLE"); // we don't need to check catch, it massively increase link time (47min at time of writing -> 5min)
     }
     else if (GenerateSettings.FuzzyTestingEnabled)
     {
@@ -324,6 +325,27 @@ public class RexStd : BasicCPPProject
 }
 
 [Generate]
+public class RexStdExe : BasicCPPProject
+{
+  public RexStdExe() : base()
+  {
+    Name = GenerateName("RexStdExe");
+    GenerateTargets();
+
+    SourceRootPath = Path.Combine(Globals.SourceRoot, "RexStdExe");
+  }
+
+  public override void Configure(RexConfiguration conf, RexTarget target)
+  {
+    base.Configure(conf, target);
+
+    conf.Output = Configuration.OutputType.Exe;
+
+    conf.add_dependency<RexStd>(target);
+  }
+}
+
+[Generate]
 public class RexStdTest : TestProject
 {
   public RexStdTest() : base()
@@ -390,6 +412,11 @@ public class MainSolution : Solution
     // Puts the generated solution in the root folder.
     conf.SolutionPath = Globals.Root;
 
+    if (target.DevEnv == DevEnv.vs2019)
+    {
+      conf.AddProject<SharpmakeProject>(target);
+    }
+
     conf.AddProject<RexStd>(target);
 
     if (GenerateSettings.UnitTestsEnabled)
@@ -400,6 +427,10 @@ public class MainSolution : Solution
     if (GenerateSettings.FuzzyTestingEnabled)
     {
       conf.AddProject<RexStdFuzzy>(target);
+    }
+    else
+    {
+      conf.AddProject<RexStdExe>(target);
     }
   }
 

@@ -21,11 +21,37 @@ import shutil
 import time
 
 from pathlib import Path
+from datetime import datetime
 
 root_path = util.find_root()
-tool_paths = required_tools.tool_paths
+tool_paths_dict = required_tools.tool_paths_dict
 settings = rex_json.load_file(os.path.join(root_path, "build", "config", "settings.json"))
 __pass_results = {}
+
+def __is_in_line(line : str, keywords : list[str]):
+  for keyword in keywords:
+    if keyword.lower() in line.lower():
+      return True
+
+  return False
+
+def __default_output_callback(output):
+  error_keywords = ["failed", "error"]
+  warn_keywords = ["warning"]
+
+  for line in iter(output.readline, b''):
+    new_line : str = line.decode('UTF-8')
+    if new_line.endswith('\n'):
+      new_line = new_line.removesuffix('\n')
+
+    if __is_in_line(new_line, error_keywords):
+      diagnostics.log_err(new_line)
+      continue
+    elif __is_in_line(new_line, warn_keywords):
+      diagnostics.log_warn(new_line)
+      continue
+    
+    diagnostics.log_no_color(new_line)
 
 def __run_include_what_you_use(fixIncludes = False):
   task_print = task_raii_printing.TaskRaiiPrint("running include-what-you-use")
@@ -34,7 +60,7 @@ def __run_include_what_you_use(fixIncludes = False):
   result = util.find_all_files_in_folder(intermediate_directory, "compile_commands.json")
     
   for compiler_db in result:
-    iwyu_path = tool_paths["include_what_you_use_path"]
+    iwyu_path = tool_paths_dict["include_what_you_use_path"]
     iwyu_tool_path = os.path.join(Path(iwyu_path).parent, "iwyu_tool.py")
     fix_includes_path = os.path.join(Path(iwyu_path).parent, "fix_includes.py")
     compiler_db_folder = Path(compiler_db).parent
@@ -42,6 +68,8 @@ def __run_include_what_you_use(fixIncludes = False):
     os.system(f"py {iwyu_tool_path} -v -p={compiler_db_folder} > {output_path}") # needs to use os.system or iwyu will parse the command incorrectly
     if fixIncludes:
       os.system(f"py {fix_includes_path} --update_comments --safe_headers < {output_path}")
+    
+    diagnostics.log_info(f"include what you use info saved to {output_path}")
 
   return 0
 
@@ -54,11 +82,20 @@ def __run_clang_tidy():
   rc = 0
   for compiler_db in result:
     script_path = os.path.dirname(__file__)
-    clang_tidy_path = tool_paths["clang_tidy_path"]
-    clang_apply_replacements_path = tool_paths["clang_apply_replacements_path"]
+    clang_tidy_path = tool_paths_dict["clang_tidy_path"]
+    clang_apply_replacements_path = tool_paths_dict["clang_apply_replacements_path"]
     compiler_db_folder = Path(compiler_db).parent
     config_file_path = f"{root_path}/source/.clang-tidy_second_pass"
-    proc = util.run_subprocess(f"py {script_path}/run_clang_tidy.py -clang-tidy-binary={clang_tidy_path} -clang-apply-replacements-binary={clang_apply_replacements_path} -config-file={config_file_path} -p={compiler_db_folder} -header-filter=.* -quiet") # force clang compiler, as clang-tools expect it
+
+    cmd = f"py {script_path}/run_clang_tidy.py"
+    cmd += f" -clang-tidy-binary={clang_tidy_path}"
+    cmd += f" -clang-apply-replacements-binary={clang_apply_replacements_path}"
+    cmd += f" -config-file={config_file_path}"
+    cmd += f" -p={compiler_db_folder}"
+    cmd += f" -header-filter=.*"
+    cmd += f" -quiet"
+
+    proc = util.run_subprocess_with_callback(cmd, __default_output_callback)
     new_rc = util.wait_for_process(proc)
     if new_rc != 0:
       diagnostics.log_err(f"clang-tidy failed for {compiler_db}")
@@ -292,7 +329,7 @@ def __ninja_output_callback(output):
     if new_line.endswith('\n'):
       new_line = new_line.removesuffix('\n')
 
-    if "FAILED:" in new_line:
+    if "FAILED:".lower() in new_line.lower():
       global ninja_rc
       ninja_rc = 1
       diagnostics.log_err(new_line)
@@ -300,7 +337,7 @@ def __ninja_output_callback(output):
       diagnostics.log_no_color(new_line)
 
 def __run_ninja_process(command):
-  ninja_path = tool_paths["ninja_path"]
+  ninja_path = tool_paths_dict["ninja_path"]
   global ninja_rc
   ninja_rc = 0
   proc = util.run_subprocess_with_callback(f"{ninja_path} {command}", __ninja_output_callback)
@@ -485,7 +522,7 @@ def run():
     if args.clean:
       __clean()
 
-    if args.all or args.iwyu: # include-what-you-use is not automatically run
+    if args.all or args.iwyu:
       __include_what_you_use_pass()
     if args.all or args.clang_tidy:
       __clang_tidy_pass()
@@ -518,6 +555,7 @@ def run():
   end = time.perf_counter()
   diagnostics.log_no_color("")
   diagnostics.log_no_color("--------------------------------------")
+  diagnostics.log_info(f"Finished at: {datetime.now().strftime('%d %B %Y - %H:%M:%S %p')}")
   diagnostics.log_info(f"Tests took {end - start:0.4f} seconds")
 
   return

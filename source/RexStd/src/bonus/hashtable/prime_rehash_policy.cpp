@@ -68,6 +68,11 @@ namespace rsl
       return m_max_load_factor;
     }
 
+    void prime_rehash_policy::set_max_load_factor(float32 maxLoadFactor)
+    {
+      m_max_load_factor = maxLoadFactor;
+    }
+
     uint32 prime_rehash_policy::get_prev_bucket_count_only(uint32 bucketCountHint)
     {
       const uint32 prime = *(rsl::upper_bound(g_prime_number_array, g_prime_number_array + g_prime_count, bucketCountHint) - 1);
@@ -92,8 +97,7 @@ namespace rsl
 
     uint32 prime_rehash_policy::get_bucket_count(uint32 elementCount) const
     {
-      const uint32 min_bucket_count = static_cast<uint32>(elementCount / m_max_load_factor); // NOLINT
-      const uint32 prime            = *rsl::lower_bound(g_prime_number_array, g_prime_number_array + g_prime_count, elementCount);
+      const uint32 prime = *rsl::lower_bound(g_prime_number_array, g_prime_number_array + g_prime_count, elementCount);
 
       m_next_resize = static_cast<uint32>(ceil(prime * m_max_load_factor)); // NOLINT
       return prime;
@@ -101,7 +105,7 @@ namespace rsl
 
     hash_required_result prime_rehash_policy::is_rehash_required(uint32 bucketCount, uint32 elementCount, uint32 elementAdd) const
     {
-      if((elementCount + elementAdd) > m_next_resize)
+      if((elementCount + elementAdd) >= m_next_resize)
       {
         if(bucketCount == 1)
         {

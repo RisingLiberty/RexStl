@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "rex_std/bonus/hashtable/hashtable_iterator_base.h"
+#include "rex_std/bonus/hashtable/hash_node.h"
 #include "rex_std/bonus/type_traits/type_select.h"
 #include "rex_std/bonus/types.h"
 #include "rex_std/internal/iterator/distance.h"
@@ -23,66 +23,220 @@ namespace rsl
 {
   inline namespace v1
   {
+    template <typename KeyValPair>
+    class const_hashtable_iterator;
 
-    template <typename Value, bool IsConst>
-    class hashtable_iterator : public hashtable_iterator_base<Value>
+    template <typename KeyValPair>
+    class hashtable_iterator
     {
     public:
-      using base_type           = hashtable_iterator_base<Value>;
-      using this_type           = hashtable_iterator<Value, IsConst>;
-      using this_type_non_const = hashtable_iterator<Value, false>;
-      using node_type           = typename base_type::node_type;
-      using value_type          = Value;
-      using pointer             = typename type_select<IsConst, const Value*, Value*>::type;
-      using reference           = typename type_select<IsConst, const Value&, Value&>::type;
-      using difference_type     = ptrdiff;
-      using iterator_category   = forward_iterator_tag;
+      using this_type         = hashtable_iterator<KeyValPair>;
+      using node_type         = hash_node<KeyValPair>;
+      using value_type        = KeyValPair;
+      using pointer           = KeyValPair*;
+      using reference         = KeyValPair&;
+      using difference_type   = ptrdiff;
+      using iterator_category = forward_iterator_tag;
 
       explicit hashtable_iterator(node_type* node = nullptr, node_type** bucket = nullptr)
-          : base_type(node, bucket)
+          : m_node(node)
+          , m_bucket(bucket)
       {
       }
       explicit hashtable_iterator(node_type** bucket)
-          : base_type(*bucket, bucket)
-      {
-      }
-      explicit hashtable_iterator(const this_type_non_const& other)
-          : base_type(other.m_node, other.m_bucket)
+          : m_node(*bucket)
+          , m_bucket(bucket)
       {
       }
 
       reference operator*() const
       {
-        return base_type::node()->value;
+        return m_node->value;
       }
       pointer operator->() const
       {
-        return &(base_type::node()->value);
+        return m_node ? &m_node->value : nullptr;
       }
       hashtable_iterator& operator++()
       {
-        base_type::increment();
+        increment();
         return *this;
       }
       hashtable_iterator operator++(int)
       {
         hashtable_iterator temp(*this);
-        base_type::increment();
+        increment();
         return temp;
       }
-      node_type* node()
+      pointer node()
       {
-        return base_type::node();
+        return m_node ? &m_node->value : nullptr;
+      }
+      node_type* hash_node()
+      {
+        return m_node;
       }
       node_type** bucket()
       {
-        return base_type::bucket();
+        return m_bucket;
       }
+
+    private:
+      void increment()
+      {
+        m_node = m_node->next;
+
+        while(m_node == nullptr)
+        {
+          m_node = *++m_bucket;
+        }
+      }
+
+      void increment_bucket()
+      {
+        ++m_bucket;
+        while(*m_bucket == nullptr)
+        {
+          ++m_bucket;
+        }
+        m_node = *m_bucket;
+      }
+
+    private:
+      node_type* m_node;
+      node_type** m_bucket;
     };
+
+    template <typename T>
+    bool operator==(hashtable_iterator<T> lhs, hashtable_iterator<T> rhs)
+    {
+      return lhs.node() == rhs.node();
+    }
+    template <typename T>
+    bool operator!=(hashtable_iterator<T> lhs, hashtable_iterator<T> rhs)
+    {
+      return !(lhs == rhs);
+    }
+
+    template <typename KeyValPair>
+    class const_hashtable_iterator
+    {
+    public:
+      using this_type         = const_hashtable_iterator<KeyValPair>;
+      using node_type         = hash_node<KeyValPair>;
+      using value_type        = KeyValPair;
+      using pointer           = const KeyValPair*;
+      using reference         = const KeyValPair&;
+      using difference_type   = ptrdiff;
+      using iterator_category = forward_iterator_tag;
+
+      explicit const_hashtable_iterator(const node_type* node = nullptr, node_type** bucket = nullptr)
+          : m_node(node)
+          , m_bucket(bucket)
+      {
+      }
+      explicit const_hashtable_iterator(node_type** bucket)
+          : m_node(*bucket)
+          , m_bucket(bucket)
+      {
+      }
+      const_hashtable_iterator(hashtable_iterator<KeyValPair> it)
+          : m_node(it.hash_node())
+          , m_bucket(it.bucket())
+      {
+      }
+
+      reference operator*() const
+      {
+        return m_node->value;
+      }
+      pointer operator->() const
+      {
+        return m_node ? &m_node->value : nullptr;
+      }
+      const_hashtable_iterator& operator++()
+      {
+        increment();
+        return *this;
+      }
+      const_hashtable_iterator operator++(int)
+      {
+        hashtable_iterator temp(*this);
+        increment();
+        return temp;
+      }
+      pointer node()
+      {
+        return m_node ? &m_node->value : nullptr;
+      }
+      node_type* hash_node()
+      {
+        return m_node;
+      }
+      const node_type** bucket()
+      {
+        return m_bucket;
+      }
+
+    private:
+      void increment()
+      {
+        m_node = m_node->next;
+
+        while(m_node == nullptr)
+        {
+          m_node = *++m_bucket;
+        }
+      }
+
+      void increment_bucket()
+      {
+        ++m_bucket;
+        while(*m_bucket == nullptr)
+        {
+          ++m_bucket;
+        }
+        m_node = *m_bucket;
+      }
+
+    private:
+      const node_type* m_node;
+      node_type** m_bucket;
+    };
+
+    template <typename T>
+    bool operator==(const_hashtable_iterator<T> lhs, const_hashtable_iterator<T> rhs)
+    {
+      return lhs.node() == rhs.node();
+    }
+    template <typename T>
+    bool operator!=(const_hashtable_iterator<T> lhs, const_hashtable_iterator<T> rhs)
+    {
+      return !(lhs == rhs);
+    }
+    template <typename T>
+    bool operator==(hashtable_iterator<T> lhs, const_hashtable_iterator<T> rhs)
+    {
+      return lhs.node() == rhs.node();
+    }
+    template <typename T>
+    bool operator==(const_hashtable_iterator<T> lhs, hashtable_iterator<T> rhs)
+    {
+      return lhs.node() == rhs.node();
+    }
+    template <typename T>
+    bool operator!=(hashtable_iterator<T> lhs, const_hashtable_iterator<T> rhs)
+    {
+      return !(lhs == rhs);
+    }
+    template <typename T>
+    bool operator!=(const_hashtable_iterator<T> lhs, hashtable_iterator<T> rhs)
+    {
+      return !(lhs == rhs);
+    }
 
     namespace internal
     {
-
       template <typename Iterator>
       typename iterator_traits<Iterator>::difference_type distance_fw_impl(Iterator first, Iterator last, input_iterator_tag /*unused*/)
       {

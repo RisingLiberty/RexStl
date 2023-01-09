@@ -21,7 +21,7 @@ namespace rsl
   {
 
     template <typename T>
-    inline constexpr bool is_character_v = rsl::is_same_v<T, char8> || rsl::is_same_v<T, tchar>;
+    inline constexpr bool is_character_v = rsl::is_same_v<T, char8> || rsl::is_same_v<T, tchar> || rsl::is_same_v<T, char16> || rsl::is_same_v<T, char32>;
 
   } // namespace v1
 } // namespace rsl
