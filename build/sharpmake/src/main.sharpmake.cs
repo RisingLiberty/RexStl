@@ -217,10 +217,12 @@ public class TestProject : BaseProject
     else if (GenerateSettings.AddressSanitizerEnabled)
     {
       conf.ProjectPath = Path.Combine(Globals.Root, ".rex", "tests", "asan", "build", target.DevEnv.ToString(), Name);
+      conf.add_public_define("CATCH_CONFIG_DISABLE"); // we don't need to check catch, it massively increase link time (47min at time of writing -> 5min)
     }
     else if (GenerateSettings.UndefinedBehaviorSanitizerEnabled)
     {
       conf.ProjectPath = Path.Combine(Globals.Root, ".rex", "tests", "ubsan", "build", target.DevEnv.ToString(), Name);
+      conf.add_public_define("CATCH_CONFIG_DISABLE"); // we don't need to check catch, it massively increase link time (47min at time of writing -> 5min)
     }
     else if (GenerateSettings.FuzzyTestingEnabled)
     {
