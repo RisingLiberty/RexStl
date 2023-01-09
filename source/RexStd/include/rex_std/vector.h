@@ -190,18 +190,18 @@ namespace rsl
         // 1. deallocate our current one.
         // 2. allocate a new buffer to fit the required number of elements
         // 3. copy over the elements into the new buffer
-        if (count > capacity())
+        if(count > capacity())
         {
           // can't call reallocate here as it'll move the current elements into the new buffer
           // we'll overwrite them anyway, so it's best to copy them directly into the new buffer
-          clear(); // make sure we call the dtors
+          clear();      // make sure we call the dtors
           deallocate(); // free all data
 
-          const size_type new_buffer_cap = count;
-          m_begin = static_cast<pointer>(get_mutable_allocator().allocate(calc_bytes_needed(new_buffer_cap)));
+          const size_type new_buffer_cap  = count;
+          m_begin                         = static_cast<pointer>(get_mutable_allocator().allocate(calc_bytes_needed(new_buffer_cap)));
           m_cp_last_and_allocator.first() = m_begin + count;
 
-          for (size_type i = 0; i < count; ++i)
+          for(size_type i = 0; i < count; ++i)
           {
             T* dest = rsl::addressof(operator[](i));
             new(dest) T(value);
@@ -209,12 +209,12 @@ namespace rsl
         }
         else
         {
-          for (difference_type i = 0; i < count; ++i)
+          for(difference_type i = 0; i < count; ++i)
           {
             T* dest = rsl::addressof(operator[](i));
-            *dest = value;
+            *dest   = value;
           }
-          for (size_type i = count; i < size(); ++i) // size hasn't updated here yet
+          for(size_type i = count; i < size(); ++i) // size hasn't updated here yet
           {
             T* elem = rsl::addressof(operator[](i));
             get_mutable_allocator().destroy(elem);
@@ -454,7 +454,7 @@ namespace rsl
       iterator insert(const_iterator pos, const_reference value)
       {
         // prepare_for_new_insert can reallocate, which would invalidate the input it
-        difference_type idx = rsl::distance(cbegin(), pos);
+        difference_type idx       = rsl::distance(cbegin(), pos);
         const bool did_reallocate = prepare_for_new_insert(pos);
         return insert_at(!did_reallocate, idx, value);
       }
@@ -470,7 +470,7 @@ namespace rsl
       iterator insert(const_iterator pos, size_type count, const_reference value)
       {
         // prepare_for_new_insert can reallocate, which would invalidate the input it
-        difference_type idx     = rsl::distance(cbegin(), pos);
+        difference_type idx       = rsl::distance(cbegin(), pos);
         const bool did_reallocate = prepare_for_new_insert(pos, count);
         return insert_at(!did_reallocate, idx, value, count);
       }
@@ -491,7 +491,7 @@ namespace rsl
       iterator emplace(const_iterator pos, Args&&... args)
       {
         // prepare_for_new_insert can reallocate, which would invalidate the input it
-        difference_type idx = rsl::distance(cbegin(), pos);
+        difference_type idx       = rsl::distance(cbegin(), pos);
         const bool did_reallocate = prepare_for_new_insert(pos);
         return insert_at(!did_reallocate, idx, rsl::forward<Args>(args)...);
       }
@@ -510,14 +510,14 @@ namespace rsl
       // Removes the elements in the range [first, last).
       iterator erase(const_iterator first, const_iterator last)
       {
-        difference_type count = rsl::distance(first, last);
+        difference_type count    = rsl::distance(first, last);
         auto distance_from_begin = rsl::distance(cbegin(), first);
-        auto dst_idx = distance_from_begin;
-        auto src_idx          = dst_idx + count;
+        auto dst_idx             = distance_from_begin;
+        auto src_idx             = dst_idx + count;
         // make sure the range belongs to the container
         REX_ASSERT_X(rsl::in_range(dst_idx, 0, size()), "Trying to remove a range of elements not belonging to the container.");
 
-        for (size_type i = src_idx; i < size(); ++i)
+        for(size_type i = src_idx; i < size(); ++i)
         {
           operator[](dst_idx) = rsl::move(operator[](src_idx));
           ++dst_idx;
@@ -679,16 +679,16 @@ namespace rsl
       iterator insert_at(bool shouldAssign, size_type idx, const value_type& val, size_type count = 1)
       {
         const size_type idx_copy = idx;
-        for (size_type i = 0; i < count; ++i)
+        for(size_type i = 0; i < count; ++i)
         {
-          if (shouldAssign)
+          if(shouldAssign)
           {
             operator[](idx) = val;
           }
           else
           {
             pointer dst = rsl::addressof(operator[](idx));
-            new (dst) value_type(val);
+            new(dst) value_type(val);
           }
           ++idx;
         }
@@ -696,29 +696,29 @@ namespace rsl
       }
       iterator insert_at(bool shouldAssign, size_type idx, value_type&& val)
       {
-        if (shouldAssign)
+        if(shouldAssign)
         {
           operator[](idx) = rsl::move(val);
         }
         else
         {
           pointer dst = rsl::addressof(operator[](idx));
-          new (dst) value_type(rsl::move(val));
+          new(dst) value_type(rsl::move(val));
         }
 
         return iterator(rsl::addressof(operator[](idx)));
       }
-      template <typename ... Args>
-      iterator insert_at(bool shouldAssign, size_type idx, Args&& ... args)
+      template <typename... Args>
+      iterator insert_at(bool shouldAssign, size_type idx, Args&&... args)
       {
-        if (shouldAssign)
+        if(shouldAssign)
         {
           operator[](idx) = value_type(rsl::forward<Args>(args)...);
         }
         else
         {
           pointer dst = rsl::addressof(operator[](idx));
-          new (dst) value_type(rsl::forward<Args>(args)...);
+          new(dst) value_type(rsl::forward<Args>(args)...);
         }
         return iterator(rsl::addressof(operator[](idx)));
       }
@@ -726,17 +726,17 @@ namespace rsl
       iterator insert_at(bool shouldAssign, size_type idx, It first, size_type count)
       {
         const size_type idx_copy = idx;
-        auto it = first;
-        for (size_type i = 0; i < count; ++i)
+        auto it                  = first;
+        for(size_type i = 0; i < count; ++i)
         {
-          if (shouldAssign)
+          if(shouldAssign)
           {
             operator[](idx) = *it;
           }
           else
           {
             pointer dst = rsl::addressof(operator[](idx));
-            new (dst) value_type(*it);
+            new(dst) value_type(*it);
           }
 
           ++it;
@@ -756,15 +756,15 @@ namespace rsl
         // 1. deallocate our current one.
         // 2. allocate a new buffer to fit the required number of elements
         // 3. copy over the elements into the new buffer
-        if (count > capacity())
+        if(count > capacity())
         {
           // can't call reallocate here as it'll move the current elements into the new buffer
           // we'll overwrite them anyway, so it's best to copy them directly into the new buffer
-          clear(); // make sure we call the dtors
+          clear();      // make sure we call the dtors
           deallocate(); // free all data
 
-          const size_type new_buffer_cap = count;
-          m_begin = static_cast<pointer>(get_mutable_allocator().allocate(calc_bytes_needed(new_buffer_cap)));
+          const size_type new_buffer_cap  = count;
+          m_begin                         = static_cast<pointer>(get_mutable_allocator().allocate(calc_bytes_needed(new_buffer_cap)));
           m_cp_last_and_allocator.first() = m_begin + count;
 
           const_pointer src = rsl::iterator_to_pointer(first);
@@ -772,12 +772,12 @@ namespace rsl
         }
         else
         {
-          for (difference_type i = 0; i < count; ++i)
+          for(difference_type i = 0; i < count; ++i)
           {
             T* dest = rsl::addressof(operator[](i));
-            *dest = *(first + i);
+            *dest   = *(first + i);
           }
-          for (size_type i = count; i < size(); ++i) // size hasn't updated here yet
+          for(size_type i = count; i < size(); ++i) // size hasn't updated here yet
           {
             T* elem = rsl::addressof(operator[](i));
             get_mutable_allocator().destroy(elem);
@@ -797,15 +797,15 @@ namespace rsl
         // 1. deallocate our current one.
         // 2. allocate a new buffer to fit the required number of elements
         // 3. move over the elements into the new buffer
-        if (count > capacity())
+        if(count > capacity())
         {
           // can't call reallocate here as it'll move the current elements into the new buffer
           // we'll overwrite them anyway, so it's best to copy them directly into the new buffer
-          clear(); // make sure we call the dtors
+          clear();      // make sure we call the dtors
           deallocate(); // free all data
 
-          const size_type new_buffer_cap = count;
-          m_begin = static_cast<pointer>(get_mutable_allocator().allocate(calc_bytes_needed(new_buffer_cap)));
+          const size_type new_buffer_cap  = count;
+          m_begin                         = static_cast<pointer>(get_mutable_allocator().allocate(calc_bytes_needed(new_buffer_cap)));
           m_cp_last_and_allocator.first() = m_begin + count;
 
           pointer src = rsl::iterator_to_pointer(first);
@@ -813,12 +813,12 @@ namespace rsl
         }
         else
         {
-          for (difference_type i = 0; i < count; ++i)
+          for(difference_type i = 0; i < count; ++i)
           {
             T* dest = rsl::addressof(operator[](i));
-            *dest = rsl::move(*(first + i));
+            *dest   = rsl::move(*(first + i));
           }
-          for (size_type i = count; i < size(); ++i) // size hasn't updated here yet
+          for(size_type i = count; i < size(); ++i) // size hasn't updated here yet
           {
             T* elem = rsl::addressof(operator[](i));
             get_mutable_allocator().destroy(elem);
@@ -866,7 +866,7 @@ namespace rsl
       {
         REX_ASSERT_X(m_begin == nullptr, "overwriting data ptr that has memory allocated for it, please use vector::resize");
 
-        const size_type new_capacity = count;
+        const size_type new_capacity    = count;
         m_begin                         = static_cast<pointer>(get_mutable_allocator().allocate(calc_bytes_needed(new_capacity)));
         m_end                           = m_begin + count;
         m_cp_last_and_allocator.first() = m_end;
@@ -909,7 +909,7 @@ namespace rsl
       iterator insert_range(const_iterator pos, InputIt first, size_type count)
       {
         // prepare_for_new_insert can reallocate, which would invalidate the input it
-        difference_type idx     = static_cast<difference_type>(rsl::distance(cbegin(), pos));
+        difference_type idx       = static_cast<difference_type>(rsl::distance(cbegin(), pos));
         const bool did_reallocate = prepare_for_new_insert(pos, count);
         return insert_at(!did_reallocate, idx, first, count);
       }
