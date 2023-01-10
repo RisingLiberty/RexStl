@@ -24,9 +24,9 @@ This library was written from scratch, using [C++ standard library](https://gith
 
 Because the standard library comes with C++, it's very hard to fix mistakes made in the past and break backwards compatibility, it's even worse so as C++ is meant to be backward compatible with C. This limits the capabilities of the C++ standard library.
 
-Rex Standard Library with the intend to break that curse, writing a lot of code from scratch, even some code that comes from the C standard (abs, div, sin, cos, ...).
+Rex Standard Library got created with the intend to break that curse, writing a lot of code from scratch, even some code that comes from the C standard (abs, div, sin, cos, ...).
 
-Some code is implementation defined and closely tied to the operating system (C standard functions like malloc, signal, raise), these functions are not defined in this library.
+Some code is implementation defined and closely tied to the operating system (C standard functions like malloc, signal, raise), these functions are not (yet) defined in this library.
 
 Supported platforms:
 - Windows
