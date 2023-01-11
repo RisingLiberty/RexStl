@@ -20,7 +20,9 @@ If the user would like to change some code for any reason whatsoever, he/she/the
 A pull request can always be made if you think it's useful for other people to know about your request.
 
 ## Features
-This library was written from scratch, using [C++ standard library](https://github.com/microsoft/STL) (MSVC's implementation) as a reference, as well as a few others (mainly [EASTL](https://github.com/electronicarts/EASTL)). like any software that reaches a certain age, the C++ standard has a lot of legacy code. 
+This library was written from scratch, using [C++ standard library](https://github.com/microsoft/STL) (MSVC's implementation) as a reference, as well as a few others (mainly [EASTL](https://github.com/electronicarts/EASTL)). 
+
+like any software that reaches a certain age, the C++ standard has a lot of legacy code. 
 
 Because the standard library comes with C++, it's very hard to fix mistakes made in the past and break backwards compatibility, it's even worse so as C++ is meant to be backward compatible with C. This limits the capabilities of the C++ standard library.
 
@@ -40,20 +42,20 @@ These checks are enabled in .clang-tidy and .clang-format files which sit in the
 Unit tests are a great way to make sure your code does exactly what it needs to do. They can catch bugs early on and are a great way to make sure every templated function
 is instantiated to make sure all templated code compiles on every compiler and platform.
 Currently, the library has unit tests for the following:
-    - array
-    - chrono
-    - ctype
-    - functional
-    - initializer_list
-    - list
-    - optional
-    - source_location
-    - string
-    - string_view
-    - type_traits
-    - unordered_map
-    - utility
-    - vector
+- array
+- chrono
+- ctype
+- functional
+- initializer_list
+- list
+- optional
+- source_location
+- string
+- string_view
+- type_traits
+- unordered_map
+- utility
+- vector
 
 Other than unit tests, other tests are also performed on the code to better tests and catch edge cases, memory issues and undefined behavior.
 
