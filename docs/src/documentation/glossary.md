@@ -20,11 +20,6 @@ therefore be careful which word you use and where you use it.
 | word | short |
 | dword | int |
 
-## common used words and their meaning
 
-__Acquire__ <br/>
-type: prefix <br/>
-Getting access to something you otherwise don't have access to. Useful to get access to members that are otherwise private. <br/>
-eg. acquire_node(Iterator) - declared a friend of the class so it can acquire the private member "m_node".
 
 

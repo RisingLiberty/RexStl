@@ -4,6 +4,7 @@
   "tests_folder": "tests",
   "tools_folder": "tools",
   "libs_folder": "tools",
+  "source_folder": "source",
   "coverage_folder": "tests/coverage",
   "asan_folder": "tests/coverage",
   "ubsan_folder": "tests/ubsan"

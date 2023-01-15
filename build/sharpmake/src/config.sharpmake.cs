@@ -115,7 +115,7 @@ public class RexConfiguration : Sharpmake.Project.Configuration
     Options.Add(Sharpmake.Options.Vc.Linker.EnableCOMDATFolding.DoNotRemoveRedundantCOMDATs);
     Options.Add(Sharpmake.Options.Vc.Linker.CreateHotPatchableImage.Enable);
     Options.Add(Sharpmake.Options.Vc.Linker.Incremental.Enable);
-    //Options.Add(Sharpmake.Options.Vc.Linker.GenerateDebugInformation.Enable);
+    Options.Add(Sharpmake.Options.Vc.Linker.GenerateDebugInformation.Enable);
   }
 
   public void add_dependency<TPROJECT>(ITarget target)
