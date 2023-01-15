@@ -81,7 +81,7 @@ def find_in_parent(path, toFind):
   return curr_path
 
 def find_root():
-  res = find_in_parent(os.getcwd(), "build")
+  res = find_in_parent(os.getcwd(), "source")
   if (res == ''):
     diagnostics.log_err(f"root not found")
 

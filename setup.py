@@ -1,22 +1,62 @@
+# ============================================ 
+#
+# Author: Nick De Breuck
+# Twitter: @nick_debreuck
+# 
+# File: setup.py
+# Copyright (c) Nick De Breuck 2022
+#
+# ============================================
+
+# this is the only file that can't use rexpy.
+# as this will install rexpy if it's not yet installed.
+
 import os
 import argparse
+import pkg_resources
 
-def run(lightMode, clean):
-  args = ""
-  if lightMode:
-    args += " -light"
+def is_rexpy_installed():
+  installed = {pkg.key for pkg in pkg_resources.working_set}
+  if "rexpy" in installed:
+    return True
 
-  if clean:
-    args += " -clean"
+  return False
 
-  os.system(f"py build/scripts/setup.py {args}")
+def install_rexpy():
+  # first set our working directory to rexpy.
+  # this way the package will be installed in {root}/build/scripts
+  # this keeps the root clean.
+
+  # first let's make sure we're in the root directory
+  # we don't have access to rexpy yet, we'll have to manually
+  # check if we're in the root.
+
+  # let's assume if "build", "source" and "tests" are found, we're in the root
+  build_exists = os.path.exists("./build")
+  source_exists = os.path.exists("./source")
+  tests_exists = os.path.exists("./tests")
+
+  if not build_exists or not source_exists or not tests_exists:
+    print("Error: You're not running setup.py from the root directory. Please run this from the root directory and try again")
+
+  if is_rexpy_installed():
+    print(f"rexpy is already installed - skipping install")
+    return
+
+  # rexpy is located in build/scripts
+  cwd = os.getcwd()
+  new_wd = os.path.join(cwd, "build", "scripts")
+  os.chdir(new_wd)
+
+  # now run the install script.
+  os.system(f"py {os.path.join(new_wd, 'install.py')} install")
 
 if __name__ == "__main__":
+  install_rexpy()
+
+  # now that rexpy is install, we can safely call the rest of the code
+
   parser = argparse.ArgumentParser()
+  args = parser.parse_known_args()
 
-  parser.add_argument("-light", help="run in light mode", action="store_true")
-  parser.add_argument("-clean", help="clean setup, as if run for the first time", action="store_true")
-
-  args, unknown = parser.parse_known_args()
-
-  run(args.light, args.clean)
+  os.system(f"py build/scripts/rexpy/setup.py {args}")
