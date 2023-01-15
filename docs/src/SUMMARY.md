@@ -1,8 +1,14 @@
 # Summary
-- [Introduction](./introduction.md)
+- [Introduction](./documentation/introduction.md)
 ---
+- [Documentation]()
+  - [Building RSL](./documentation/building_rsl.md)
+  - [Comment Tags](./documentation/comment_tags.md)
+  - [Glossary](./documentation/glossary.md)
+  - [Memory](./documentation/memory.md)
+  - [Rsl vs Stl](./documentation/rsl_vs_std_notes.md)
+  - [Coding Practices](./documentation/coding_practices.md)
 
-# Coding Style and Guidelines
 - [Coding Guidelines](./guidelines/introduction.md)
   - [Files](./guidelines/files.md)
   - [Scoping](./guidelines/scoping.md)
@@ -18,11 +24,3 @@
   - [Other CPP Features](./guidelines/other_cpp_features.md)
   - [Naming](./guidelines/naming.md)
   - [Debug VS. Retail](./guidelines/debug_vs_retail.md)
-
-- [Documentation]()
-  - [Building RSL](./documentation/building_rsl.md)
-  - [Comment Tags](./documentation/comment_tags.md)
-  - [Glossary](./documentation/glossary.md)
-  - [Memory](./documentation/memory.md)
-  - [Rsl vs Stl](./documentation/rsl_vs_std_notes.md)
-  - [Coding Practices](./documentation/coding_practices.md)
