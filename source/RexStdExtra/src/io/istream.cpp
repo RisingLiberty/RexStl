@@ -6,7 +6,7 @@
 // Twitter: @nick_debreuck
 //
 // File: istream.cpp
-// Copyright (c) Nick De Breuck 2022
+// Copyright (c) Nick De Breuck 2023
 //
 // ============================================
 

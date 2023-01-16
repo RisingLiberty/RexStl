@@ -6,7 +6,7 @@
 // Twitter: @nick_debreuck
 //
 // File: win_timepoint.h
-// Copyright (c) Nick De Breuck 2022
+// Copyright (c) Nick De Breuck 2023
 //
 // ============================================
 #pragma once

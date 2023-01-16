@@ -6,7 +6,7 @@
 // Twitter: @nick_debreuck
 //
 // File: not_equal_to.h
-// Copyright (c) Nick De Breuck 2022
+// Copyright (c) Nick De Breuck 2023
 //
 // ============================================
 

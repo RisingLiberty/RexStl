@@ -6,7 +6,7 @@
 // Twitter: @nick_debreuck
 //
 // File: lexicographical_compare_three_way.h
-// Copyright (c) Nick De Breuck 2022
+// Copyright (c) Nick De Breuck 2023
 //
 // ============================================
 

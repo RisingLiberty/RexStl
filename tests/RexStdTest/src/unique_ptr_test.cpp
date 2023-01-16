@@ -4,7 +4,7 @@
 // Twitter: @nick_debreuck
 // 
 // File: unique_ptr_test.cpp
-// Copyright (c) Nick De Breuck 2022
+// Copyright (c) Nick De Breuck 2023
 //
 // ============================================
 

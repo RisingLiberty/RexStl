@@ -16,7 +16,7 @@ settings = rexpy.rex_json.load_file(os.path.join(root, "build", "config", "setti
 build_dir = os.path.join(root, settings["build_folder"])
 temp_dir = os.path.join(root, settings["intermediate_folder"])
 tools_install_dir = os.path.join(temp_dir, settings["tools_folder"])
-tool_paths_filepath = os.path.join(tools_install_dir, "paths.json")
+tool_paths_filepath = os.path.join(tools_install_dir, "tool_paths.json")
 zip_downloads_path = os.path.join(tools_install_dir, "zips")
 
 tool_paths_dict = {}

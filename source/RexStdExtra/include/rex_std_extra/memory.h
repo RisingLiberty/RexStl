@@ -6,7 +6,7 @@
 // Twitter: @nick_debreuck
 //
 // File: memory.h
-// Copyright � Nick De Breuck 2022
+// Copyright � Nick De Breuck 2023
 //
 // ============================================
 

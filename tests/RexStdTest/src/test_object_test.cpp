@@ -6,7 +6,7 @@
 // Twitter: @nick_debreuck
 // 
 // File: test_object_test.cpp
-// Copyright (c) Nick De Breuck 2022
+// Copyright (c) Nick De Breuck 2023
 //
 // ============================================
 

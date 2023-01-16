@@ -6,7 +6,7 @@
 // Twitter: @nick_debreuck
 //
 // File: win_stack_tracing.cpp
-// Copyright (c) Nick De Breuck 2022
+// Copyright (c) Nick De Breuck 2023
 //
 // ============================================
 

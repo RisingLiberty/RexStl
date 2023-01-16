@@ -6,7 +6,7 @@
 // Twitter: @nick_debreuck
 //
 // File: time_of_day.h
-// Copyright (c) Nick De Breuck 2022
+// Copyright (c) Nick De Breuck 2023
 //
 // ============================================
 

@@ -6,7 +6,7 @@
 // Twitter: @nick_debreuck
 //
 // File: is_null_pointer.h
-// Copyright (c) Nick De Breuck 2022
+// Copyright (c) Nick De Breuck 2023
 //
 // ============================================
 

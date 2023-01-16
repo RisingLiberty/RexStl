@@ -6,7 +6,7 @@
 // Twitter: @nick_debreuck
 //
 // File: red_black_tree_base.h
-// Copyright (c) Nick De Breuck 2022
+// Copyright (c) Nick De Breuck 2023
 //
 // ============================================
 

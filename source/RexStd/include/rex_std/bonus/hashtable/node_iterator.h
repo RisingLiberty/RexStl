@@ -6,7 +6,7 @@
 // Twitter: @nick_debreuck
 //
 // File: node_iterator.h
-// Copyright (c) Nick De Breuck 2022
+// Copyright (c) Nick De Breuck 2023
 //
 // ============================================
 

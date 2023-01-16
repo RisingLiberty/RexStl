@@ -4,7 +4,7 @@
 # Twitter: @nick_debreuck
 # 
 # File: setup.py
-# Copyright (c) Nick De Breuck 2022
+# Copyright (c) Nick De Breuck 2023
 #
 # ============================================
 

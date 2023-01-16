@@ -6,7 +6,7 @@
 // Twitter: @nick_debreuck
 //
 // File: mod_range_hashing.h
-// Copyright (c) Nick De Breuck 2022
+// Copyright (c) Nick De Breuck 2023
 //
 // ============================================
 

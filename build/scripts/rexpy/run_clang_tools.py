@@ -4,7 +4,7 @@
 # Twitter: @nick_debreuck
 # 
 # File: run_clang_tools.py
-# Copyright (c) Nick De Breuck 2022
+# Copyright (c) Nick De Breuck 2023
 #
 # ============================================
 

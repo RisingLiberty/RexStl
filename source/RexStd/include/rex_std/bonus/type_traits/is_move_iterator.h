@@ -5,7 +5,7 @@
 // Twitter: @nick_debreuck
 //
 // File: is_move_iterator.h
-// Copyright (c) Nick De Breuck 2022
+// Copyright (c) Nick De Breuck 2023
 //
 // ============================================
 
