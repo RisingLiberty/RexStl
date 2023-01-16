@@ -23,7 +23,7 @@ def is_rexpy_installed():
 
   return False
 
-def install_rexpy():
+def install_rexpy(forceInstall):
   # first set our working directory to rexpy.
   # this way the package will be installed in {root}/build/scripts
   # this keeps the root clean.
@@ -40,7 +40,7 @@ def install_rexpy():
   if not build_exists or not source_exists or not tests_exists:
     print("Error: You're not running setup.py from the root directory. Please run this from the root directory and try again")
 
-  if is_rexpy_installed():
+  if forceInstall == False and is_rexpy_installed():
     print(f"rexpy is already installed - skipping install")
     return
 
@@ -62,12 +62,14 @@ def install_rexpy():
   os.chdir(cwd)
 
 if __name__ == "__main__":
-  install_rexpy()
-
-  # now that rexpy is install, we can safely call the rest of the code
-
   parser = argparse.ArgumentParser()
+  parser.add_argument("-update_rexpy", help="update rexpy, this is basically a reinstall", action="store_true")
+
   args, unknown = parser.parse_known_args()
+
+  install_rexpy(args.update_rexpy)
+
+  # now that rexpy is installed, we can safely call the rest of the code
 
   arguments_to_pass_on = ""
   for arg in unknown:

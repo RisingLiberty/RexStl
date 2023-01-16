@@ -48,3 +48,4 @@ build/sharpmake/.ninja/
 build/tools/
 *.ninja
 *.sln
+build/scripts/rexpy/__pycache__/

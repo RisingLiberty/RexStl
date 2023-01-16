@@ -1,5 +1,9 @@
 ﻿using System.Linq;
 using System.IO;
+using System.Collections.Generic;
+using System.Text.Json;
+
+[module: Sharpmake.Reference("System.Text.Json.dll")]
 
 public class Globals
 {
@@ -8,6 +12,7 @@ public class Globals
   static private string source_root;
   static private string sharpmake_root;
   static private string tools_root;
+  static private string libs_root;
 
   static public string Root
   {
@@ -37,6 +42,13 @@ public class Globals
       return tools_root;
     }
   }
+    static public string LibsRoot
+  {
+    get
+    {
+      return libs_root;
+    }
+  }
 
   static public void Init()
   {
@@ -51,10 +63,18 @@ public class Globals
       current_directory = Directory.GetParent(current_directory).FullName;
     }
 
+
     root = current_directory;
-    source_root = Path.Combine(root, "source");
+
+    string settings_json_path = Path.Combine(root, "build", "config", "settings.json");
+    string json_blob = File.ReadAllText(settings_json_path);
+    Dictionary<string, string> settings = JsonSerializer.Deserialize<Dictionary<string, string>>(json_blob);
+
+
+    source_root = Path.Combine(root, settings["source_folder"]);
     sharpmake_root = Path.Combine(root, "build", "sharpmake");
-    tools_root = Path.Combine(root, ".rex", "tools");
+    tools_root = Path.Combine(root, settings["intermediate_folder"], settings["tools_folder"]);
+    libs_root = Path.Combine(root, settings["intermediate_folder"], settings["libs_folder"]);
     System.Console.WriteLine($"Root path:{root}");
   }
 }

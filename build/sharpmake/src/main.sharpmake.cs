@@ -47,7 +47,7 @@ public class BaseProject : Project
 
     if (conf.Compiler == DevEnv.ninja && target.Compiler == Compiler.MSVC)
     {
-      string tools_json_path = Path.Combine(Globals.ToolsRoot, "lib_paths.json");
+      string tools_json_path = Path.Combine(Globals.LibsRoot, "lib_paths.json");
       string json_blob = File.ReadAllText(tools_json_path);
       Dictionary<string, string[]> paths = JsonSerializer.Deserialize<Dictionary<string, string[]>>(json_blob);
 
@@ -508,7 +508,7 @@ public static class Main
 
   private static void InitializeNinja()
   {
-    string tools_json_path = Path.Combine(Globals.ToolsRoot, "paths.json");
+    string tools_json_path = Path.Combine(Globals.ToolsRoot, "tool_paths.json");
     string json_blob = File.ReadAllText(tools_json_path);
     Dictionary<string, string> paths = JsonSerializer.Deserialize<Dictionary<string, string>>(json_blob);
 
@@ -519,7 +519,7 @@ public static class Main
 
   private static void InitializeSettings()
   {
-    GenerateSettings.UnitTestsEnabled = CommandLine.GetParameters().ToList().FindIndex(x => x.ToString() == "/generateTests") != -1;
+    GenerateSettings.UnitTestsEnabled = CommandLine.GetParameters().ToList().FindIndex(x => x.ToString() == "/generateUnitTests") != -1;
     GenerateSettings.CoverageEnabled = CommandLine.GetParameters().ToList().FindIndex(x => x.ToString() == "/enableCoverage") != -1;
     GenerateSettings.AddressSanitizerEnabled = CommandLine.GetParameters().ToList().FindIndex(x => x.ToString() == "/enableAddressSanitizer") != -1;
     GenerateSettings.UndefinedBehaviorSanitizerEnabled = CommandLine.GetParameters().ToList().FindIndex(x => x.ToString() == "/enableUBSanitizer") != -1;

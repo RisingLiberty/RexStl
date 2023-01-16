@@ -1,23 +1,60 @@
 import os
 import argparse
+import rexpy.generation
+import rexpy.rex_json
+import rexpy.util
+import glob
+from pathlib import Path
 
-def run(generateUnitTests, lightMode):
-
-  sharpmakeArgs = ""
-  if generateUnitTests != None:
-    sharpmakeArgs += " /generateTests"
-
-  if lightMode:
-    sharpmakeArgs += " /vsOnly"
-
-  os.system(f"py build/scripts/generate.py -sharpmake_main=build/sharpmake/src/main.sharpmake.cs -sharpmake_args=\"{sharpmakeArgs}\"")
+def __find_sharpmake_files(directory):
+  sharpmakes_files = []
+  for root, dirs, files in os.walk(directory):
+    for file in files:
+      extensions = Path(file).suffixes
+      if len(extensions) == 2:
+        if extensions[0] == ".sharpmake" and extensions[1] == ".cs":
+          files = glob.glob(os.path.join(directory, "**", file))
+          sharpmakes_files.append(files[0])
+  
+  return sharpmakes_files
 
 if __name__ == "__main__":
   parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
-
-  parser.add_argument("-generate_unittests", help="generate unit tests", action="store_true")
-  parser.add_argument("-light", help="run in light mode", action="store_true")
+  parser.add_argument("-unittests", help="generate unit tests", action="store_true")
+  parser.add_argument("-coverage", help="generate coverage", action="store_true")
+  parser.add_argument("-asan", help="generate address sanitizer", action="store_true")
+  parser.add_argument("-ubsan", help="generate undefined behavior sanitizer", action="store_true")
+  parser.add_argument("-fuzzy", help="generate fuzzy testing", action="store_true")
 
   args, unknown = parser.parse_known_args()
 
-  run(args.generate_unittests, args.light)
+  root = rexpy.util.find_root()
+  settings = rexpy.rex_json.load_file(os.path.join(root, "build", "config", "settings.json"))
+  sharpmake_root = os.path.join(root, settings["build_folder"], "sharpmake")
+  source_root = os.path.join(root, settings["source_folder"])
+  tests_root = os.path.join(root, settings["tests_folder"])
+  sharpmakes_files = []
+  sharpmakes_files.extend(__find_sharpmake_files(sharpmake_root))
+  sharpmakes_files.extend(__find_sharpmake_files(source_root))
+
+  run_any_tests = args.unittests or args.coverage or args.asan or args.ubsan or args.fuzzy
+
+  if run_any_tests:
+    sharpmakes_files.extend(__find_sharpmake_files(tests_root))
+  else:
+    rexpy.generation.new_generation(sharpmakes_files, "")
+
+  if args.unittests:
+    rexpy.generation.new_generation(sharpmakes_files, "/generateUnitTests")
+  
+  if args.coverage:
+    rexpy.generation.new_generation(sharpmakes_files, "/enableCoverage")
+
+  if args.asan:
+    rexpy.generation.new_generation(sharpmakes_files, "/enableAddressSanitizer")
+
+  if args.ubsan:
+    rexpy.generation.new_generation(sharpmakes_files, "/enableUBSanitizer")
+
+  if args.fuzzy:
+    rexpy.generation.new_generation(sharpmakes_files, "/enableFuzzyTesting")
