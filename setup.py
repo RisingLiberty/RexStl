@@ -14,6 +14,7 @@
 import os
 import argparse
 import pkg_resources
+import shutil
 
 def is_rexpy_installed():
   installed = {pkg.key for pkg in pkg_resources.working_set}
@@ -51,12 +52,25 @@ def install_rexpy():
   # now run the install script.
   os.system(f"py {os.path.join(new_wd, 'install.py')} install")
 
+  # this will result in a few new folders generated, which we can safely remove
+  # these folders are "build", "dist" and "rexpy.egg-info"
+  shutil.rmtree("build")
+  shutil.rmtree("dist")
+  shutil.rmtree("rexpy.egg-info")
+
+  # reset the working directory
+  os.chdir(cwd)
+
 if __name__ == "__main__":
   install_rexpy()
 
   # now that rexpy is install, we can safely call the rest of the code
 
   parser = argparse.ArgumentParser()
-  args = parser.parse_known_args()
+  args, unknown = parser.parse_known_args()
 
-  os.system(f"py build/scripts/rexpy/setup.py {args}")
+  arguments_to_pass_on = ""
+  for arg in unknown:
+    arguments_to_pass_on += f" {arg}"
+
+  os.system(f"py build/scripts/rexpy/setup.py{arguments_to_pass_on}")

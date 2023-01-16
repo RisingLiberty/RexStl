@@ -1,54 +1,52 @@
 import os
 import copy
-import rex_json
-import util
-import task_raii_printing
+import rexpy.rex_json
+import rexpy.util
+import rexpy.task_raii_printing
+import rexpy.diagnostics
 import requests
 import zipfile 
 import shutil
 import threading
-import diagnostics
-import argparse
 
 from pathlib import Path
 
-root = util.find_root()
-build_dir = os.path.join(root, "build")
-temp_dir = os.path.join(root, ".rex")
-tools_install_dir = os.path.join(temp_dir, "tools")
-config_dir = os.path.join(root, "build")
+root = rexpy.util.find_root()
+settings = rexpy.rex_json.load_file(os.path.join(root, "build", "config", "settings.json"))
+build_dir = os.path.join(root, settings["build_folder"])
+temp_dir = os.path.join(root, settings["intermediate_folder"])
+tools_install_dir = os.path.join(temp_dir, settings["tools_folder"])
 tool_paths_filepath = os.path.join(tools_install_dir, "paths.json")
+zip_downloads_path = os.path.join(tools_install_dir, "zips")
+
 tool_paths_dict = {}
 if os.path.exists(tool_paths_filepath):
-  tool_paths_dict = rex_json.load_file(tool_paths_filepath)
-zip_downloads_path = os.path.join(tools_install_dir, "zips")
+  tool_paths_dict = rexpy.rex_json.load_file(tool_paths_filepath)
 required_tools = []
 not_found_tools = []
 
-def __load_tool_requirements():
+def __load_required_tools_dict():
   tools_required = []
-  json_blob = rex_json.load_file(os.path.join(root, "build", "config", "required_tools.json"))
+  json_blob = rexpy.rex_json.load_file(os.path.join(root, "build", "config", "required_tools.json"))
   for object in json_blob:
     tools_required.append(json_blob[object])
 
   return tools_required
 
 def __print_tool_found(tool, path : str):
-  diagnostics.log_info(f"{tool['config_name']} found at {path}")
+  rexpy.diagnostics.log_info(f"{tool['config_name']} found at {path}")
 
-def are_installed():
-  task_print = task_raii_printing.TaskRaiiPrint("Checking if tools are installed")
+def __get_tool_extension(tool):
+  extension = "" 
+  if "extension" in tool:
+    extension = tool["extension"]
+  elif rexpy.util.is_windows():
+    extension = ".exe"
 
-  global required_tools
-  required_tools = __load_tool_requirements()
-  
-  global tool_paths_dict
-  if tool_paths_dict == None:
-    tool_paths_dict = {}
-    
-  global not_found_tools
+  return extension
 
-  paths = util.env_paths()
+def __look_for_tools(required_tools):
+  paths = rexpy.util.env_paths()
   for required_tool in required_tools:
     stem = required_tool["stem"]
     config_name = required_tool["config_name"]
@@ -60,41 +58,51 @@ def are_installed():
         __print_tool_found(required_tool, tool_path)
         continue
       else:
-        diagnostics.log_err(f"Error: tool path cached, but path doesn't exist: {tool_path}")
+        rexpy.diagnostics.log_err(f"Error: tool path cached, but path doesn't exist: {tool_path}")
 
     # if not, add the path of the tool directory where it'd be downloaded to
     paths_to_use = copy.deepcopy(paths)
     paths_to_use.append(os.path.join(tools_install_dir, required_tool["path"]))
 
     # look for the tool
-    exe_extension = "" 
-    if "extension" in required_tool:
-      exe_extension = required_tool["extension"]
-    elif util.is_windows():
-      exe_extension = ".exe"
-
-    absPath = util.find_file_in_paths(f"{stem}{exe_extension}", paths_to_use)
+    exe_extension = __get_tool_extension(required_tool)
+    tool_path = rexpy.util.find_file_in_paths(f"{stem}{exe_extension}", paths_to_use)
 
     # tool is found, add it to the cached paths
-    if absPath != '':
-      __print_tool_found(required_tool, absPath)
+    if tool_path != '':
+      __print_tool_found(required_tool, tool_path)
       tool_config_name = required_tool["config_name"]
-      tool_paths_dict[tool_config_name] = absPath
+      tool_paths_dict[tool_config_name] = tool_path
 
     # tool is not found, add it to the list to be looked for later
     else:
       not_found_tools.append(required_tool)
 
+  return not_found_tools
+
+def are_installed():
+  task_print = rexpy.task_raii_printing.TaskRaiiPrint("Checking if tools are installed")
+
+  global required_tools
+  required_tools = __load_required_tools_dict()
+  
+  global tool_paths_dict
+  if tool_paths_dict == None:
+    tool_paths_dict = {}
+    
+  global not_found_tools
+  not_found_tools = __look_for_tools(required_tools)
+
   if len(not_found_tools) == 0:
-    diagnostics.log_info("All tools found")
-    rex_json.save_file(tool_paths_filepath, tool_paths_dict)
+    rexpy.diagnostics.log_info("All tools found")
+    rexpy.rex_json.save_file(tool_paths_filepath, tool_paths_dict)
     return True
   else:
-    diagnostics.log_warn(f"Tools that weren't found: ")
+    rexpy.diagnostics.log_warn(f"Tools that weren't found: ")
     for tool in not_found_tools:
-      diagnostics.log_warn(f"\t-{tool['stem']}")
+      rexpy.diagnostics.log_warn(f"\t-{tool['stem']}")
 
-    return False
+  return False
 
 def __download_file(url):
   filename = os.path.basename(url)
@@ -109,7 +117,7 @@ def __make_zip_download_path():
     os.makedirs(zip_downloads_path)
 
 def __download_tool(name, numZipFiles):
-  task_print = task_raii_printing.TaskRaiiPrint(f"Downloading tool {name}")
+  task_print = rexpy.task_raii_printing.TaskRaiiPrint(f"Downloading tool {name}")
 
   threads = []
   for i in range(numZipFiles):
@@ -119,7 +127,7 @@ def __download_tool(name, numZipFiles):
     thread.join()
 
 def __download_tools_archive():
-  task_print = task_raii_printing.TaskRaiiPrint("Downloading tools")
+  task_print = rexpy.task_raii_printing.TaskRaiiPrint("Downloading tools")
 
   # filter duplicate tools
   tools_to_download = []
@@ -159,7 +167,7 @@ def __zip_files_for_tool(stem, folder):
   return tool_zip_files
 
 def __unzip_tools():
-  task_print = task_raii_printing.TaskRaiiPrint("Unzipping files")
+  task_print = rexpy.task_raii_printing.TaskRaiiPrint("Unzipping files")
   tools_to_unzip = __enumerate_tools(zip_downloads_path)
 
   for tool in tools_to_unzip:
@@ -173,7 +181,7 @@ def __unzip_tools():
     with zipfile.ZipFile(tool_master_zip, "r") as zip_obj:
         zip_obj.extractall(tools_install_dir)
 
-  diagnostics.log_info(f"tools unzipped to {tools_install_dir}")
+  rexpy.diagnostics.log_info(f"tools unzipped to {tools_install_dir}")
 
 def __delete_tmp_folders():
   shutil.rmtree(zip_downloads_path)
@@ -184,32 +192,27 @@ def __launch_download_thread(url):
     return thread  
 
 def download():
-  task_print = task_raii_printing.TaskRaiiPrint("Downloading tools")
+  task_print = rexpy.task_raii_printing.TaskRaiiPrint("Downloading tools")
   __make_zip_download_path()
   __download_tools_archive()
   __unzip_tools()
   __delete_tmp_folders()
 
 def install():
-  task_print = task_raii_printing.TaskRaiiPrint("installing tools")
+  task_print = rexpy.task_raii_printing.TaskRaiiPrint("installing tools")
 
   global tool_paths_dict
   global not_found_tools
   for tool in not_found_tools:
 
     # look for tool in the folder where it'd be downloaded to
-    exe_extension = "" 
-    if "extension" in tool:
-      exe_extension = tool["extension"]
-    elif util.is_windows():
-      exe_extension = ".exe"
-
-    path = util.find_file_in_folder(f"{tool['stem']}{exe_extension}", os.path.join(tools_install_dir, tool["path"]))
+    exe_extension = __get_tool_extension(tool)
+    path = rexpy.util.find_file_in_folder(f"{tool['stem']}{exe_extension}", os.path.join(tools_install_dir, tool["path"]))
 
     # if not found, something is wrong and we have to investigate manually
-    if path == '':
+    if path == "":
       tool_name = tool["stem"]
-      diagnostics.log_err(f"failed to find {tool_name}")
+      rexpy.diagnostics.log_err(f"failed to find {tool_name}")
     else:
       # if found, add it to the cached paths
       __print_tool_found(tool, path)
@@ -217,18 +220,13 @@ def install():
       tool_paths_dict[tool_config_name] = path
   
   # save cached paths to disk
-  rex_json.save_file(tool_paths_filepath, tool_paths_dict)
+  rexpy.rex_json.save_file(tool_paths_filepath, tool_paths_dict)
+
+def run():
+  if not are_installed():
+    download()
+    install()
 
 if __name__ == "__main__":
-  parser = argparse.ArgumentParser()
-
-  parser.add_argument("-light", help="run in light mode", action="store_true")
-  args, unknown = parser.parse_known_args()
-
-  if not are_installed():
-    if not args.light:
-      download()
-      install()
-    else:
-      diagnostics.log_info("Some tools weren't found, but setup is in light mode, no tools will get downloaded")
+  run()
 

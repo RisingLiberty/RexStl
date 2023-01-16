@@ -1,40 +1,51 @@
+# ============================================ 
+#
+# Author: Nick De Breuck
+# Twitter: @nick_debreuck
+# 
+# File: required_libs.py
+# Copyright (c) Nick De Breuck 2022
+#
+# ============================================
+
+# This script is specifically designed to all required libraries for Rex.
+
 import os
-import task_raii_printing
-import util
-import rex_json
-import diagnostics
-import copy
-import argparse
+import rexpy.task_raii_printing
+import rexpy.util
+import rexpy.rex_json
+import rexpy.diagnostics
 import threading
 import requests
 import zipfile 
 import shutil
 from pathlib import Path
 
-root = util.find_root()
-settings = rex_json.load_file(os.path.join(root, "build", "config", "settings.json"))
+root = rexpy.util.find_root()
+settings = rexpy.rex_json.load_file(os.path.join(root, "build", "config", "settings.json"))
 build_dir = os.path.join(root, settings["build_folder"])
-temp_dir = os.path.join(root, settings["intermediate_directory"])
+temp_dir = os.path.join(root, settings["intermediate_folder"])
 tools_install_dir = os.path.join(temp_dir, settings["tools_folder"])
 libs_install_dir = os.path.join(temp_dir, settings["libs_folder"])
 lib_paths_filepath = os.path.join(libs_install_dir, "lib_paths.json")
+zip_downloads_path = os.path.join(libs_install_dir, "zips")
+
 lib_paths_dict = {}
 if os.path.exists(lib_paths_filepath):
-  lib_paths_dict = rex_json.load_file(lib_paths_filepath)
-zip_downloads_path = os.path.join(libs_install_dir, "zips")
+  lib_paths_dict = rexpy.rex_json.load_file(lib_paths_filepath)
 required_libs = []
 not_found_libs = []
 
-def __load_lib_requirements():
+def __load_required_libs_dict():
   libs_required = []
-  json_blob = rex_json.load_file(os.path.join(root, "build", "config", "required_libs.json"))
+  json_blob = rexpy.rex_json.load_file(os.path.join(root, "build", "config", "required_libs.json"))
   for object in json_blob:
     libs_required.append(json_blob[object])
 
   return libs_required
 
 def __print_lib_found(lib_path, path : str):
-  diagnostics.log_info(f"{lib_path} found at {path}")
+  rexpy.diagnostics.log_info(f"{lib_path} found at {path}")
 
 # finds any of the paths in the required lib and checks if they're cached already
 # if they're not it adds them to a local list and returns that list
@@ -49,7 +60,7 @@ def __find_uncached_paths(lib):
   for lib_path in required_lib_paths:
     # first let's check if the path is already in the cached paths
     # if it's not in there, then we have to look for it later
-    abs_path = util.find_directory_in_paths(lib_path, cached_lib_paths)
+    abs_path = rexpy.util.find_directory_in_paths(lib_path, cached_lib_paths)
 
     if abs_path == None:
       lib_paths_to_search.append(lib_path)
@@ -57,7 +68,7 @@ def __find_uncached_paths(lib):
 
     # if it is there, check if exists, if not, we'll have to look for it later as well
     if not os.path.exists(abs_path):
-      diagnostics.log_warn(f"lib path cached but doesn't exist: {lib_path}")
+      rexpy.diagnostics.log_warn(f"lib path cached but doesn't exist: {lib_path}")
       lib_paths_to_search.append(lib_path)
       continue
 
@@ -69,7 +80,7 @@ def __find_uncached_paths(lib):
 def __look_for_paths(lib, pathsToSearch : list[str], whereToSearch : list[str]):
   not_found_paths = []
   for path in pathsToSearch:
-    abs_path = util.find_directory_in_paths(path, whereToSearch)
+    abs_path = rexpy.util.find_directory_in_paths(path, whereToSearch)
     if abs_path == None:
       not_found_paths.append(path)
       continue
@@ -84,11 +95,11 @@ def __look_for_paths(lib, pathsToSearch : list[str], whereToSearch : list[str]):
 
 def __download_file(url):
   filename = os.path.basename(url)
-  filePath = os.path.join(zip_downloads_path, filename)
+  filepath = os.path.join(zip_downloads_path, filename)
   
-  if not os.path.exists(filePath):
+  if not os.path.exists(filepath):
     response = requests.get(url)
-    open(filePath, "wb").write(response.content)
+    open(filepath, "wb").write(response.content)
 
 def __launch_download_thread(url):
     thread = threading.Thread(target=__download_file, args=(url,))
@@ -96,7 +107,7 @@ def __launch_download_thread(url):
     return thread  
 
 def __download_lib(name, numZipFiles):
-  task_print = task_raii_printing.TaskRaiiPrint(f"Downloading lib {name}")
+  task_print = rexpy.task_raii_printing.TaskRaiiPrint(f"Downloading lib {name}")
 
   threads = []
   for i in range(numZipFiles):
@@ -115,7 +126,7 @@ def __enumerate_libs(zipsFolder):
 
   return libs
 
-def __zip_files_for_lib(stem, folder):
+def __enumerate_zip_files_for_lib(stem, folder):
   zips = os.listdir(folder)
   lib_zip_files = []
   for zip in zips:
@@ -125,11 +136,11 @@ def __zip_files_for_lib(stem, folder):
   return lib_zip_files
 
 def __unzip_lib(name):
-  task_print = task_raii_printing.TaskRaiiPrint("Unzipping files")
+  task_print = rexpy.task_raii_printing.TaskRaiiPrint("Unzipping files")
   libs_to_unzip = __enumerate_libs(zip_downloads_path)
 
   for lib in libs_to_unzip:
-    lib_zip_files = __zip_files_for_lib(lib, zip_downloads_path)
+    lib_zip_files = __enumerate_zip_files_for_lib(lib, zip_downloads_path)
     lib_master_zip = os.path.join(zip_downloads_path, f"{lib}.zip")
     with open(lib_master_zip, "ab") as f:
       for lib_zip in lib_zip_files:
@@ -139,41 +150,43 @@ def __unzip_lib(name):
     with zipfile.ZipFile(lib_master_zip, "r") as zip_obj:
         zip_obj.extractall(libs_install_dir)
 
-  diagnostics.log_info(f"libs unzipped to {libs_install_dir}")
+  rexpy.diagnostics.log_info(f"libs unzipped to {libs_install_dir}")
+
+def __look_for_required_libs(required_libs):
+  not_found_libs = []
+  install_paths = rexpy.util.env_paths()
+  install_paths.append(tools_install_dir)
+  install_paths.append(libs_install_dir)
+  for required_lib in required_libs:
+    uncached_paths = __find_uncached_paths(required_lib)
+    paths_not_found = __look_for_paths(required_lib, uncached_paths, install_paths)
+    
+    if len(paths_not_found) > 0:
+      rexpy.diagnostics.log_warn("Couldn't find some paths")
+      
+      for path in paths_not_found:
+        rexpy.diagnostics.log_warn(path)
+      
+      not_found_libs.append(required_lib)
+            
+  return not_found_libs
 
 # checks all paths of the required libs, making sure all of them are installed
 # if they're not installed, it'll flag a required_lib as not fully installed
 def are_installed():
-  task_print = task_raii_printing.TaskRaiiPrint("Checking if libs are installed")
+  task_print = rexpy.task_raii_printing.TaskRaiiPrint("Checking if libs are installed")
 
   global required_libs
-  required_libs = __load_lib_requirements()
+  required_libs = __load_required_libs_dict()
   
   global lib_paths_dict
   if lib_paths_dict == None:
     lib_paths_dict = {}
     
   global not_found_libs
+  not_found_libs = __look_for_required_libs(required_libs)
   
-  install_paths = util.env_paths()
-  install_paths.append(tools_install_dir)
-  all_libs_found = True
-  for required_lib in required_libs:
-    diagnostics.log_info(f"Checking {required_lib['config_name']}")
-    
-    uncached_paths = __find_uncached_paths(required_lib)
-    paths_not_found = __look_for_paths(required_lib, uncached_paths, install_paths)
-    
-    if len(paths_not_found) > 0:
-      diagnostics.log_warn("Couldn't find some paths")
-      
-      for path in paths_not_found:
-        diagnostics.log_warn(path)
-      
-      not_found_libs.append(required_lib)
-      all_libs_found = False      
-            
-  return all_libs_found
+  return len(not_found_libs) == 0
 
 def download():
   # create the temporary path for zips
@@ -208,19 +221,14 @@ def install():
     paths_not_found = __look_for_paths(lib, lib["paths"], [libs_install_dir])
   
     if len(paths_not_found) > 0:
-      diagnostics.log_err(f"failed to install {config_name}")
+      rexpy.diagnostics.log_err(f"failed to install {config_name}")
+  
+def run():
+  if not are_installed():
+    download()
+    install()
+
+  rexpy.rex_json.save_file(lib_paths_filepath, lib_paths_dict)
   
 if __name__ == "__main__":
-  parser = argparse.ArgumentParser()
-
-  parser.add_argument("-light", help="run in light mode", action="store_true")
-  args, unknown = parser.parse_known_args()
-
-  if not are_installed():
-    if not args.light:
-      download()
-      install()
-    else:
-      diagnostics.log_info("Some libraries weren't found, but setup is in light mode, no libs will get downloaded")
-
-  rex_json.save_file(lib_paths_filepath, lib_paths_dict)
+  run()
