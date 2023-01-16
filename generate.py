@@ -46,12 +46,11 @@ if __name__ == "__main__":
   sharpmakes_files = []
   sharpmakes_files.extend(__find_sharpmake_files(sharpmake_root))
   sharpmakes_files.extend(__find_sharpmake_files(source_root))
+  sharpmakes_files.extend(__find_sharpmake_files(tests_root))
 
   run_any_tests = args.unittests or args.coverage or args.asan or args.ubsan or args.fuzzy
 
-  if run_any_tests:
-    sharpmakes_files.extend(__find_sharpmake_files(tests_root))
-  else:
+  if run_any_tests == False:
     rexpy.generation.new_generation(sharpmakes_files, "")
 
   if args.unittests:

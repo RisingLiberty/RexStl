@@ -17,11 +17,6 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 
-[module: Sharpmake.Include("globals.sharpmake.cs")]
-[module: Sharpmake.Include("target.sharpmake.cs")]
-[module: Sharpmake.Include("config.sharpmake.cs")]
-[module: Sharpmake.Include("generate_settings.cs")]
-
 [module: Sharpmake.Reference("System.Text.Json.dll")]
 [module: Sharpmake.Reference("System.Memory.dll")]
 
@@ -248,7 +243,10 @@ public class SharpmakeProject : CSharpProject
 {
   public SharpmakeProject() : base(typeof(RexTarget), typeof(RexConfiguration))
   {
-    SourceRootPath = "[project.SharpmakeCsPath]";
+    SourceFilesExtensions.Clear();
+    SourceFilesExtensions.Add(".sharpmake.cs");
+    SourceRootPath = Globals.Root;
+    //SourceRootPath = "[project.SharpmakeCsPath]";
 
     RexTarget vsTarget = new RexTarget(Platform.win64, DevEnv.vs2019, Config.debug | Config.debug_opt | Config.release, Compiler.MSVC);
 
@@ -285,109 +283,6 @@ public class SharpmakeProject : CSharpProject
     conf.CsprojUserFile.StartArguments = $@"/sources(@{quote}{sharpmake_main}{quote}) /diagnostics";
     conf.CsprojUserFile.StartProgram = sharpmakeAppPath;
     conf.CsprojUserFile.WorkingDirectory = Directory.GetCurrentDirectory();
-  }
-}
-
-[Generate]
-public class RexStd : BasicCPPProject
-{
-  public RexStd() : base()
-  {
-    // The name of the project in Visual Studio. The default is the name of
-    // the class, but you usually want to override that.
-    Name = GenerateName("RexStd");
-    GenerateTargets();
-
-    // The directory that contains the source code we want to build is the
-    // same as this one. This string essentially means "the directory of
-    // the script you're reading right now."
-    SourceRootPath = Path.Combine(Globals.SourceRoot, "RexStd");
-  }
-
-  public override void Configure(RexConfiguration conf, RexTarget target)
-  {
-    base.Configure(conf, target);
-
-    conf.Output = Configuration.OutputType.Lib;
-
-    switch (conf.Platform)
-    {
-      case Platform.win32:
-        conf.add_public_define("REX_PLATFORM_X86");
-        break;
-      case Platform.win64:
-        conf.add_public_define("REX_PLATFORM_X64");
-        break;
-      default:
-        break;
-    }
-  }
-}
-
-[Generate]
-public class RexStdExe : BasicCPPProject
-{
-  public RexStdExe() : base()
-  {
-    Name = GenerateName("RexStdExe");
-    GenerateTargets();
-
-    SourceRootPath = Path.Combine(Globals.SourceRoot, "RexStdExe");
-  }
-
-  public override void Configure(RexConfiguration conf, RexTarget target)
-  {
-    base.Configure(conf, target);
-
-    conf.Output = Configuration.OutputType.Exe;
-
-    conf.add_dependency<RexStd>(target);
-  }
-}
-
-[Generate]
-public class RexStdTest : TestProject
-{
-  public RexStdTest() : base()
-  {
-    Name = GenerateName("RexStdTest");
-    GenerateTargets();
-
-    SourceRootPath = Path.Combine(Globals.Root, "tests", "RexStdTest");
-  }
-
-  public override void Configure(RexConfiguration conf, RexTarget target)
-  {
-    base.Configure(conf, target);
-
-    conf.Output = Configuration.OutputType.Exe;
-
-    conf.Options.Remove(Options.Vc.Compiler.JumboBuild.Enable);
-
-    conf.add_dependency<RexStd>(target);
-  }
-}
-
-[Generate]
-public class RexStdFuzzy : TestProject
-{
-  public RexStdFuzzy() : base()
-  {
-    Name = GenerateName("RexStdFuzzy");
-    GenerateTargets();
-
-    SourceRootPath = Path.Combine(Globals.Root, "tests", "RexStdFuzzy");
-  }
-
-  public override void Configure(RexConfiguration conf, RexTarget target)
-  {
-    base.Configure(conf, target);
-
-    conf.Output = Configuration.OutputType.Exe;
-
-    conf.Options.Remove(Options.Vc.Compiler.JumboBuild.Enable);
-
-    conf.add_dependency<RexStd>(target);
   }
 }
 
