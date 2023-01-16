@@ -1,41 +1,66 @@
+# ============================================ 
+#
+# Author: Nick De Breuck
+# Twitter: @nick_debreuck
+# 
+# File: build.py
+# Copyright (c) Nick De Breuck 2022
+#
+# ============================================
+
 import os
 import argparse
+import rexpy.build
+import rexpy.util
 
 from pathlib import Path
 
-def should_skip(file):
-  if "_asan.ninja" in file:
+def __all_ninja_files(dir):
+  ninja_files = rexpy.util.find_files_with_extension(dir, ".ninja")
+
+  return ninja_files
+
+def __is_special_test_file(file):
+  if "_coverage" in file:
     return True
 
-  if "_coverage.ninja" in file:
+  if "_asan" in file:
     return True
 
-  if "_fuzzy.ninja" in file:
+  if "_ubsan" in file:
     return True
 
-  if "_ubsan.ninja" in file:
+  if "_fuzzy" in file:
     return True
 
   return False
-
-def run(clean):
-  args = ""
-
-  if clean:
-    args += " -clean"
-
-  files = os.listdir(os.getcwd())
-  for file in files:
-    if should_skip(file):
-      continue
-
-    if Path(file).suffix == ".ninja":
-      os.system(f"py build/scripts/build.py -ninja_file={file} {args}")
 
 if __name__ == "__main__":
   parser = argparse.ArgumentParser()
   
   parser.add_argument("-clean", help="clean all intermediate files first", action="store_true")
+  parser.add_argument("-unittests", help="generate unit tests", action="store_true")
+  parser.add_argument("-coverage", help="generate coverage", action="store_true")
+  parser.add_argument("-asan", help="generate address sanitizer", action="store_true")
+  parser.add_argument("-ubsan", help="generate undefined behavior sanitizer", action="store_true")
+  parser.add_argument("-fuzzy", help="generate fuzzy testing", action="store_true")
+
   args, unknown = parser.parse_known_args()
 
-  run(args.clean)
+  ninja_files = __all_ninja_files(rexpy.util.find_root())
+
+  build_any_special_tests = args.coverage or args.asan or args.ubsan or args.fuzzy
+
+  if not args.coverage:
+    ninja_files = [file for file in ninja_files if "_coverage" not in file]
+  if not args.asan:
+    ninja_files = [file for file in ninja_files if "_asan" not in file]
+  if not args.ubsan:
+    ninja_files = [file for file in ninja_files if "_ubsan" not in file]
+  if not args.fuzzy:
+    ninja_files = [file for file in ninja_files if "_fuzzy" not in file]
+  if build_any_special_tests == True and not args.unittests:
+    ninja_files = [file for file in ninja_files if __is_special_test_file(file)]
+
+  for ninja_file in ninja_files:
+    rexpy.build.new_build(ninja_file, args.clean)
