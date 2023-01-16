@@ -9,24 +9,27 @@
 # ============================================
 
 import argparse
-import required_tools
-import util
 import os
-import task_raii_printing
-import rex_json
-import coverage_tests
 import traceback
-import diagnostics
 import shutil
 import time
+import rexpy.required_tools
+import rexpy.util
+import rexpy.task_raii_printing
+import rexpy.rex_json
+import rexpy.code_coverage
+import rexpy.diagnostics
 
 from pathlib import Path
 from datetime import datetime
 
-root_path = util.find_root()
-tool_paths_dict = required_tools.tool_paths_dict
-settings = rex_json.load_file(os.path.join(root_path, "build", "config", "settings.json"))
+root_path = rexpy.util.find_root()
+tool_paths_dict = rexpy.required_tools.tool_paths_dict
+settings = rexpy.rex_json.load_file(os.path.join(root_path, "build", "config", "settings.json"))
 __pass_results = {}
+
+def get_pass_results():
+  return __pass_results
 
 def __is_in_line(line : str, keywords : list[str]):
   for keyword in keywords:
@@ -45,19 +48,19 @@ def __default_output_callback(output):
       new_line = new_line.removesuffix('\n')
 
     if __is_in_line(new_line, error_keywords):
-      diagnostics.log_err(new_line)
+      rexpy.diagnostics.log_err(new_line)
       continue
     elif __is_in_line(new_line, warn_keywords):
-      diagnostics.log_warn(new_line)
+      rexpy.diagnostics.log_warn(new_line)
       continue
     
-    diagnostics.log_no_color(new_line)
+    rexpy.diagnostics.log_no_color(new_line)
 
 def __run_include_what_you_use(fixIncludes = False):
-  task_print = task_raii_printing.TaskRaiiPrint("running include-what-you-use")
+  task_print = rexpy.task_raii_printing.TaskRaiiPrint("running include-what-you-use")
 
-  intermediate_directory = os.path.join(root_path, settings["intermediate_directory"], settings["build_folder"])
-  result = util.find_all_files_in_folder(intermediate_directory, "compile_commands.json")
+  intermediate_folder = os.path.join(root_path, settings["intermediate_folder"], settings["build_folder"])
+  result = rexpy.util.find_all_files_in_folder(intermediate_folder, "compile_commands.json")
     
   for compiler_db in result:
     iwyu_path = tool_paths_dict["include_what_you_use_path"]
@@ -69,15 +72,15 @@ def __run_include_what_you_use(fixIncludes = False):
     if fixIncludes:
       os.system(f"py {fix_includes_path} --update_comments --safe_headers < {output_path}")
     
-    diagnostics.log_info(f"include what you use info saved to {output_path}")
+    rexpy.diagnostics.log_info(f"include what you use info saved to {output_path}")
 
   return 0
 
 def __run_clang_tidy():
-  task_print = task_raii_printing.TaskRaiiPrint("running clang-tidy")
+  task_print = rexpy.task_raii_printing.TaskRaiiPrint("running clang-tidy")
 
-  intermediate_directory = os.path.join(root_path, settings["intermediate_directory"], settings["build_folder"])
-  result = util.find_all_files_in_folder(intermediate_directory, "compile_commands.json")
+  intermediate_folder = os.path.join(root_path, settings["intermediate_folder"], settings["build_folder"])
+  result = rexpy.util.find_all_files_in_folder(intermediate_folder, "compile_commands.json")
 
   rc = 0
   for compiler_db in result:
@@ -95,64 +98,87 @@ def __run_clang_tidy():
     cmd += f" -header-filter=.*"
     cmd += f" -quiet"
 
-    proc = util.run_subprocess_with_callback(cmd, __default_output_callback)
-    new_rc = util.wait_for_process(proc)
+    proc = rexpy.util.run_subprocess_with_callback(cmd, __default_output_callback)
+    new_rc = rexpy.util.wait_for_process(proc)
     if new_rc != 0:
-      diagnostics.log_err(f"clang-tidy failed for {compiler_db}")
-      diagnostics.log_err(f"config file: {config_file_path}")
+      rexpy.diagnostics.log_err(f"clang-tidy failed for {compiler_db}")
+      rexpy.diagnostics.log_err(f"config file: {config_file_path}")
     rc |= new_rc
 
   return rc
 
+def __generate_test_files(generateArgs):
+  generate_script = os.path.join(root_path, "generate.py")
+  proc = rexpy.util.run_subprocess(f"py {generate_script} {generateArgs}")
+  return rexpy.util.wait_for_process(proc)
+
+def __build_test_files(buildArgs):
+  build_script = os.path.join(root_path, "build.py")
+  proc = rexpy.util.run_subprocess(f"py {build_script} {buildArgs}")
+  return rexpy.util.wait_for_process(proc)
+
+def __find_test_programs(folder):
+  intermediate_folder = os.path.join(folder)
+  rexpy.diagnostics.log_info(f"looking for executables in {os.path.join(root_path, intermediate_folder)}")
+  result = rexpy.util.find_all_files_in_folder(os.path.join(root_path, intermediate_folder), "*")
+  coverage_programs = []
+  for res in result:
+    if rexpy.util.is_executable(res):
+      coverage_programs.append(res.absolute())
+
+  return coverage_programs
+
+# unit tests
 def __generate_tests():
-  task_print = task_raii_printing.TaskRaiiPrint("generating unit test projects")
-  return __generate_test_files("/generateTests")
+  task_print = rexpy.task_raii_printing.TaskRaiiPrint("generating unit test projects")
+  return __generate_test_files("-unittests")
 
 def __build_tests():
-  task_print = task_raii_printing.TaskRaiiPrint("building tests")
-  return __build_test_files(os.path.join(root_path, settings["intermediate_directory"], settings["tests_folder"], settings["build_folder"]), "*.ninja")
+  task_print = rexpy.task_raii_printing.TaskRaiiPrint("building tests")
+  return __build_test_files(os.path.join(root_path, settings["intermediate_folder"], settings["tests_folder"], settings["build_folder"]), "*.ninja")
 
 def __run_unit_tests():
-  task_print = task_raii_printing.TaskRaiiPrint("running unit tests")
-  unit_test_programs = __find_test_programs(os.path.join(settings["intermediate_directory"], settings["tests_folder"], settings["build_folder"]))
+  task_print = rexpy.task_raii_printing.TaskRaiiPrint("running unit tests")
+  unit_test_programs = __find_test_programs(os.path.join(settings["intermediate_folder"], settings["tests_folder"], settings["build_folder"]))
   
   rc = 0
   for program in unit_test_programs:
-    diagnostics.log_info(f"running: {Path(program).name}")
-    proc = util.run_subprocess(program)
-    new_rc = util.wait_for_process(proc)
+    rexpy.diagnostics.log_info(f"running: {Path(program).name}")
+    proc = rexpy.util.run_subprocess(program)
+    new_rc = rexpy.util.wait_for_process(proc)
     if new_rc != 0:
-      diagnostics.log_err(f"unit test failed for {program}") # use full path to avoid ambiguity
+      rexpy.diagnostics.log_err(f"unit test failed for {program}") # use full path to avoid ambiguity
     rc |= new_rc
 
   return rc
 
+# coverage
 def __generate_coverage():
-  task_print = task_raii_printing.TaskRaiiPrint("generating coverage code")
-  return __generate_test_files("/generateTests /enableCoverage")
+  task_print = rexpy.task_raii_printing.TaskRaiiPrint("generating coverage code")
+  return __generate_test_files("-asan")
 
 def __build_coverage():
-  task_print = task_raii_printing.TaskRaiiPrint("building coverage code")
+  task_print = rexpy.task_raii_printing.TaskRaiiPrint("building coverage code")
   return __build_test_files(root_path, "*_coverage.ninja")
 
 def __run_coverage():
-  task_print = task_raii_printing.TaskRaiiPrint("running coverage")
-  unit_test_programs = __find_test_programs(os.path.join(settings["intermediate_directory"], settings["coverage_folder"]))
+  task_print = rexpy.task_raii_printing.TaskRaiiPrint("running coverage")
+  unit_test_programs = __find_test_programs(os.path.join(settings["intermediate_folder"], settings["coverage_folder"]))
 
   rc = 0
   for program in unit_test_programs:
-    diagnostics.log_info(f"running: {Path(program).name}")
+    rexpy.diagnostics.log_info(f"running: {Path(program).name}")
     os.environ["LLVM_PROFILE_FILE"] = __get_coverage_rawdata_filename(program) # this is what llvm uses to set the raw data filename for the coverage data
-    proc = util.run_subprocess(program)
-    new_rc = util.wait_for_process(proc)
+    proc = rexpy.util.run_subprocess(program)
+    new_rc = rexpy.util.wait_for_process(proc)
     if new_rc != 0:
-      diagnostics.log_err(f"unit test failed for {program}") # use full path to avoid ambiguity
+      rexpy.diagnostics.log_err(f"unit test failed for {program}") # use full path to avoid ambiguity
     rc |= new_rc
 
   return unit_test_programs
 
 def __relocate_coverage_data(programsRun : list[str]):
-  task_print = task_raii_printing.TaskRaiiPrint("relocating coverage files")
+  task_print = rexpy.task_raii_printing.TaskRaiiPrint("relocating coverage files")
   data_files = []
 
   for program in programsRun:
@@ -166,16 +192,16 @@ def __relocate_coverage_data(programsRun : list[str]):
   return data_files
 
 def __index_rawdata_files(rawdataFiles : list[str]):
-  task_print = task_raii_printing.TaskRaiiPrint("indexing rawdata files")
+  task_print = rexpy.task_raii_printing.TaskRaiiPrint("indexing rawdata files")
   output_files = []
 
   for file in rawdataFiles:
-    output_files.append(coverage_tests.index_rawdata(file))
+    output_files.append(rexpy.code_coverage.create_index_rawdata(file))
 
   return output_files
 
 def __create_coverage_reports(programsRun, indexdataFiles):
-  task_print = task_raii_printing.TaskRaiiPrint("creating coverage reports")
+  task_print = rexpy.task_raii_printing.TaskRaiiPrint("creating coverage reports")
 
   rc = 0
   for index in range(len(programsRun)):
@@ -184,42 +210,43 @@ def __create_coverage_reports(programsRun, indexdataFiles):
 
     if Path(program).stem != Path(indexdata_file).stem:
       rc = 1
-      diagnostics.log_err(f"program stem doesn't match coverage file stem: {Path(program).stem} != {Path(indexdata_file).stem}")
+      rexpy.diagnostics.log_err(f"program stem doesn't match coverage file stem: {Path(program).stem} != {Path(indexdata_file).stem}")
 
-    coverage_tests.create_line_oriented_report(program, indexdata_file)
-    coverage_tests.create_file_level_summary(program, indexdata_file)
-    coverage_tests.create_lcov_report(program, indexdata_file)
+    rexpy.code_coverage.create_line_oriented_report(program, indexdata_file)
+    rexpy.code_coverage.create_file_level_summary(program, indexdata_file)
+    rexpy.code_coverage.create_lcov_report(program, indexdata_file)
 
   return rc
 
 def __parse_coverage_reports(indexdataFiles):
-  task_print = task_raii_printing.TaskRaiiPrint("parsing coverage reports")
+  task_print = rexpy.task_raii_printing.TaskRaiiPrint("parsing coverage reports")
 
   rc = 0
   for indexdata_file in indexdataFiles:
-    report_filename = coverage_tests.file_level_summary_filename(indexdata_file)
-    rc |= coverage_tests.parse_file_summary(report_filename)
+    report_filename = rexpy.code_coverage.get_file_level_summary_filename(indexdata_file)
+    rc |= rexpy.code_coverage.parse_file_summary(report_filename)
 
   return rc
 
 def __get_coverage_rawdata_filename(program : str):
   return f"{Path(program).stem}.profraw"
 
+# asan
 def __generate_address_sanitizer():
-  task_print = task_raii_printing.TaskRaiiPrint("generating address sanitizer code")
-  return __generate_test_files("/generateTests /enableAddressSanitizer")
+  task_print = rexpy.task_raii_printing.TaskRaiiPrint("generating address sanitizer code")
+  return __generate_test_files("-asan")
 
 def __build_address_sanitizer():
-  task_print = task_raii_printing.TaskRaiiPrint("building address sanitizer code")
-  return __build_test_files(root_path, "*_asan.ninja")
+  task_print = rexpy.task_raii_printing.TaskRaiiPrint("building address sanitizer code")
+  return __build_test_files(root_path, "-asan")
 
 def __run_address_sanitizer():
-  task_print = task_raii_printing.TaskRaiiPrint("running address sanitizer tests")
-  unit_test_programs = __find_test_programs(os.path.join(settings["intermediate_directory"], settings["tests_folder"], "asan"))
+  task_print = rexpy.task_raii_printing.TaskRaiiPrint("running address sanitizer tests")
+  unit_test_programs = __find_test_programs(os.path.join(settings["intermediate_folder"], settings["tests_folder"], "asan"))
   
   rc = 0
   for program in unit_test_programs:
-    diagnostics.log_info(f"running: {Path(program).name}")
+    rexpy.diagnostics.log_info(f"running: {Path(program).name}")
     log_folder_path = Path(program).parent
     log_folder = log_folder_path.as_posix()
     
@@ -230,32 +257,33 @@ def __run_address_sanitizer():
     asan_options = f"print_stacktrace=1:log_path=asan.log"
     os.environ["ASAN_OPTIONS"] = asan_options # print callstacks and save to log file
     
-    proc = util.run_subprocess_with_working_dir(program, log_folder)
-    new_rc = util.wait_for_process(proc)
+    proc = rexpy.util.run_subprocess_with_working_dir(program, log_folder)
+    new_rc = rexpy.util.wait_for_process(proc)
     log_file_path = os.path.join(log_folder, f"asan.log.{proc.pid}")
     if new_rc != 0 or os.path.exists(log_file_path):
-      diagnostics.log_err(f"address sanitizer failed for {program}") # use full path to avoid ambiguity
-      diagnostics.log_err(f"for more info, please check: {log_file_path}")
+      rexpy.diagnostics.log_err(f"address sanitizer failed for {program}") # use full path to avoid ambiguity
+      rexpy.diagnostics.log_err(f"for more info, please check: {log_file_path}")
       new_rc = 1
     rc |= new_rc
 
   return rc
 
+# ubsan
 def __generate_undefined_behavior_sanitizer():
-  task_print = task_raii_printing.TaskRaiiPrint("generating undefined behavior sanitizer code")
-  return __generate_test_files("/generateTests /enableUBSanitizer")
+  task_print = rexpy.task_raii_printing.TaskRaiiPrint("generating undefined behavior sanitizer code")
+  return __generate_test_files("-ubsan")
 
 def __build_undefined_behavior_sanitizer():
-  task_print = task_raii_printing.TaskRaiiPrint("building undefined behavior sanitizer code")
-  return __build_test_files(root_path, "*_ubsan.ninja")
+  task_print = rexpy.task_raii_printing.TaskRaiiPrint("building undefined behavior sanitizer code")
+  return __build_test_files(root_path, "-ubsan")
 
 def __run_undefined_behavior_sanitizer():
-  task_print = task_raii_printing.TaskRaiiPrint("running undefined behavior sanitizer tests")
-  unit_test_programs = __find_test_programs(os.path.join(settings["intermediate_directory"], settings["tests_folder"], "ubsan"))
+  task_print = rexpy.task_raii_printing.TaskRaiiPrint("running undefined behavior sanitizer tests")
+  unit_test_programs = __find_test_programs(os.path.join(settings["intermediate_folder"], settings["tests_folder"], "ubsan"))
   
   rc = 0
   for program in unit_test_programs:
-    diagnostics.log_info(f"running: {Path(program).name}")
+    rexpy.diagnostics.log_info(f"running: {Path(program).name}")
     log_folder_path = Path(program).parent
     log_folder = log_folder_path.as_posix()
     
@@ -264,32 +292,33 @@ def __run_undefined_behavior_sanitizer():
     # UBSAN_OPTIONS common flags: https://github.com/google/sanitizers/wiki/SanitizerCommonFlags
     ubsan_options = f"print_stacktrace=1:log_path=ubsan.log"
     os.environ["UBSAN_OPTIONS"] = ubsan_options # print callstacks and save to log file
-    proc = util.run_subprocess_with_working_dir(program, log_folder)
-    new_rc = util.wait_for_process(proc)
+    proc = rexpy.util.run_subprocess_with_working_dir(program, log_folder)
+    new_rc = rexpy.util.wait_for_process(proc)
     log_file_path = os.path.join(log_folder, f"ubsan.log.{proc.pid}")
     if new_rc != 0 or os.path.exists(log_file_path): # if there's a ubsan.log.pid created, the tool found issues
-      diagnostics.log_err(f"undefined behavior sanitizer failed for {program}") # use full path to avoid ambiguity
-      diagnostics.log_err(f"for more info, please check: {log_file_path}")
+      rexpy.diagnostics.log_err(f"undefined behavior sanitizer failed for {program}") # use full path to avoid ambiguity
+      rexpy.diagnostics.log_err(f"for more info, please check: {log_file_path}")
       new_rc = 1
     rc |= new_rc
 
   return rc
 
+# fuzzy
 def __generate_fuzzy_testing():
-  task_print = task_raii_printing.TaskRaiiPrint("generating fuzzy testing code")
-  return __generate_test_files("/enableFuzzyTesting")
+  task_print = rexpy.task_raii_printing.TaskRaiiPrint("generating fuzzy testing code")
+  return __generate_test_files("-fuzzy")
 
 def __build_fuzzy_testing():
-  task_print = task_raii_printing.TaskRaiiPrint("building fuzzy testing code")
-  return __build_test_files(root_path, "*_fuzzy.ninja")
+  task_print = rexpy.task_raii_printing.TaskRaiiPrint("building fuzzy testing code")
+  return __build_test_files(root_path, "-fuzzy")
 
 def __run_fuzzy_testing():
-  task_print = task_raii_printing.TaskRaiiPrint("running fuzzy tests")
-  fuzzy_programs = __find_test_programs(os.path.join(settings["intermediate_directory"], settings["tests_folder"], "fuzzy"))
+  task_print = rexpy.task_raii_printing.TaskRaiiPrint("running fuzzy tests")
+  fuzzy_programs = __find_test_programs(os.path.join(settings["intermediate_folder"], settings["tests_folder"], "fuzzy"))
   
   rc = 0
   for program in fuzzy_programs:
-    diagnostics.log_info(f"running: {Path(program).name}")
+    rexpy.diagnostics.log_info(f"running: {Path(program).name}")
     log_folder_path = Path(program).parent
     log_folder = log_folder_path.as_posix()
     
@@ -303,262 +332,150 @@ def __run_fuzzy_testing():
     os.environ["ASAN_OPTIONS"] = asan_options # print callstacks and save to log file
     os.environ["UBSAN_OPTIONS"] = ubsan_options # print callstacks and save to log file
     num_runs = 10000 # we'll run 10'000 fuzzy tests, should be more than enough
-    proc = util.run_subprocess_with_working_dir(f"{program} -runs={num_runs}", log_folder)
-    new_rc = util.wait_for_process(proc)
+    proc = rexpy.util.run_subprocess_with_working_dir(f"{program} -runs={num_runs}", log_folder)
+    new_rc = rexpy.util.wait_for_process(proc)
     log_file_path = os.path.join(log_folder, f"fuzzy.log.{proc.pid}")
     if new_rc != 0 or os.path.exists(log_file_path): # if there's a ubsan.log.pid created, the tool found issues
-      diagnostics.log_err(f"fuzzy testing failed for {program}") # use full path to avoid ambiguity
+      rexpy.diagnostics.log_err(f"fuzzy testing failed for {program}") # use full path to avoid ambiguity
       if os.path.exists(log_file_path):
-        diagnostics.log_err(f"issues found while fuzzing!")
-        diagnostics.log_err(f"for more info, please check: {log_file_path}")
+        rexpy.diagnostics.log_err(f"issues found while fuzzing!")
+        rexpy.diagnostics.log_err(f"for more info, please check: {log_file_path}")
       new_rc = 1
     rc |= new_rc
 
   return rc
 
-def __generate_test_files(sharpmakeArgs):
-  generate_script = os.path.join(root_path, "build", "scripts", "generate.py")
-  sharpmake_main_path = os.path.join(root_path, 'build', 'sharpmake', 'src', 'main.sharpmake.cs')
-  proc = util.run_subprocess(f"py {generate_script} -sharpmake_main={sharpmake_main_path} -sharpmake_args=\"{sharpmakeArgs}\"")
-  return util.wait_for_process(proc)
-
-ninja_rc = True
-def __ninja_output_callback(output):
-  for line in iter(output.readline, b''):
-    new_line : str = line.decode('UTF-8')
-    if new_line.endswith('\n'):
-      new_line = new_line.removesuffix('\n')
-
-    if "FAILED:".lower() in new_line.lower():
-      global ninja_rc
-      ninja_rc = 1
-      diagnostics.log_err(new_line)
-    else:
-      diagnostics.log_no_color(new_line)
-
-def __run_ninja_process(command):
-  ninja_path = tool_paths_dict["ninja_path"]
-  global ninja_rc
-  ninja_rc = 0
-  proc = util.run_subprocess_with_callback(f"{ninja_path} {command}", __ninja_output_callback)
-  util.wait_for_process(proc)
-  return ninja_rc
-
-def __build_test_files(folder, ninjaFileRegex):
-  ninja_files = util.find_all_files_in_folder(folder, ninjaFileRegex)
-  rc = 0
-  for ninja_file in ninja_files:
-    new_rc = __run_ninja_process(f"-f {ninja_file}")
-    if new_rc != 0:
-      diagnostics.log_err(f"Failed to build {ninja_file}")
-    rc |= new_rc
-
-  return rc
-
-def __find_test_programs(folder):
-  intermediate_directory = os.path.join(folder)
-  diagnostics.log_info(f"looking for executables in {os.path.join(root_path, intermediate_directory)}")
-  result = util.find_all_files_in_folder(os.path.join(root_path, intermediate_directory), "*")
-  coverage_programs = []
-  for res in result:
-    if util.is_executable(res):
-      coverage_programs.append(res.absolute())
-
-  return coverage_programs
-
-def __include_what_you_use_pass():
-  diagnostics.log_no_color("-----------------------------------------------------------------------------")
+def test_include_what_you_use():
+  rexpy.diagnostics.log_no_color("-----------------------------------------------------------------------------")
   rc = __run_include_what_you_use()
 
   if rc != 0:
-    diagnostics.log_err(f"include-what-you-use pass failed")
+    rexpy.diagnostics.log_err(f"include-what-you-use pass failed")
 
   __pass_results["include-what-you-use"] = rc
 
-def __clang_tidy_pass():
-  diagnostics.log_no_color("-----------------------------------------------------------------------------")
+def test_clang_tidy():
+  rexpy.diagnostics.log_no_color("-----------------------------------------------------------------------------")
   rc = __run_clang_tidy() # works
   if rc != 0:
-    diagnostics.log_err(f"clang-tidy pass failed")
+    rexpy.diagnostics.log_err(f"clang-tidy pass failed")
 
   __pass_results["clang-tidy"] = rc
 
-def __unit_tests_pass():
-  diagnostics.log_no_color("-----------------------------------------------------------------------------")
+def test_unit_tests():
+  rexpy.diagnostics.log_no_color("-----------------------------------------------------------------------------")
   rc = __generate_tests() # works
   if rc != 0:
-    diagnostics.log_err(f"failed to generate tests")
+    rexpy.diagnostics.log_err(f"failed to generate tests")
   __pass_results["unit tests generation"] = rc
 
-  diagnostics.log_no_color("-----------------------------------------------------------------------------")
+  rexpy.diagnostics.log_no_color("-----------------------------------------------------------------------------")
   rc |= __build_tests() # works
   if rc != 0:
-    diagnostics.log_err(f"failed to build tests")
+    rexpy.diagnostics.log_err(f"failed to build tests")
   __pass_results["unit tests building"] = rc
 
-  diagnostics.log_no_color("-----------------------------------------------------------------------------")
+  rexpy.diagnostics.log_no_color("-----------------------------------------------------------------------------")
   rc |= __run_unit_tests() # works
   if rc != 0:
-    diagnostics.log_err(f"unit tests failed")
+    rexpy.diagnostics.log_err(f"unit tests failed")
   __pass_results["unit tests result"] = rc
 
-def __coverage_tests_pass():
-  diagnostics.log_no_color("-----------------------------------------------------------------------------")
+def test_code_coverage():
+  rexpy.diagnostics.log_no_color("-----------------------------------------------------------------------------")
   rc = __generate_coverage() # works
   if rc != 0:
-    diagnostics.log_err(f"failed to generate coverage")
+    rexpy.diagnostics.log_err(f"failed to generate coverage")
   __pass_results["coverage generation"] = rc
 
-  diagnostics.log_no_color("-----------------------------------------------------------------------------")
+  rexpy.diagnostics.log_no_color("-----------------------------------------------------------------------------")
   rc = __build_coverage() # works
   if rc != 0:
-    diagnostics.log_err(f"failed to build coverage")
+    rexpy.diagnostics.log_err(f"failed to build coverage")
   __pass_results["coverage building"] = rc
 
-  diagnostics.log_no_color("-----------------------------------------------------------------------------")
+  rexpy.diagnostics.log_no_color("-----------------------------------------------------------------------------")
   programs_run = __run_coverage() # works
   
-  diagnostics.log_no_color("-----------------------------------------------------------------------------")
+  rexpy.diagnostics.log_no_color("-----------------------------------------------------------------------------")
   rawdata_files = __relocate_coverage_data(programs_run) # works
   
-  diagnostics.log_no_color("-----------------------------------------------------------------------------")
+  rexpy.diagnostics.log_no_color("-----------------------------------------------------------------------------")
   indexdata_files = __index_rawdata_files(rawdata_files) # works
   
-  diagnostics.log_no_color("-----------------------------------------------------------------------------")
+  rexpy.diagnostics.log_no_color("-----------------------------------------------------------------------------")
   rc |= __create_coverage_reports(programs_run, indexdata_files) # works
   if rc != 0:
-    diagnostics.log_err(f"failed to create coverage reports")
+    rexpy.diagnostics.log_err(f"failed to create coverage reports")
   __pass_results["coverage report creation"] = rc
 
-  diagnostics.log_no_color("-----------------------------------------------------------------------------")
+  rexpy.diagnostics.log_no_color("-----------------------------------------------------------------------------")
   rc |= __parse_coverage_reports(indexdata_files) # works
   if rc != 0:
-    diagnostics.log_err(f"Not all the code was covered")
+    rexpy.diagnostics.log_err(f"Not all the code was covered")
   __pass_results["coverage report result"] = rc
 
-def __asan_pass():
-  diagnostics.log_no_color("-----------------------------------------------------------------------------")
+def test_asan():
+  rexpy.diagnostics.log_no_color("-----------------------------------------------------------------------------")
   rc = __generate_address_sanitizer() # works
   if rc != 0:
-    diagnostics.log_err(f"failed to generate asan code")
+    rexpy.diagnostics.log_err(f"failed to generate asan code")
   __pass_results["address sanitizer generation"] = rc
 
-  diagnostics.log_no_color("-----------------------------------------------------------------------------")
+  rexpy.diagnostics.log_no_color("-----------------------------------------------------------------------------")
   rc |= __build_address_sanitizer() # works
   if rc != 0:
-    diagnostics.log_err(f"failed to build asan code")
+    rexpy.diagnostics.log_err(f"failed to build asan code")
   __pass_results["address sanitizer building"] = rc
   
-  diagnostics.log_no_color("-----------------------------------------------------------------------------")
+  rexpy.diagnostics.log_no_color("-----------------------------------------------------------------------------")
   rc |= __run_address_sanitizer() # works
   if rc != 0:
-    diagnostics.log_err(f"invalid code found with asan")
+    rexpy.diagnostics.log_err(f"invalid code found with asan")
   __pass_results["address sanitizer result"] = rc
 
-def __ubsan_pass():
-  diagnostics.log_no_color("-----------------------------------------------------------------------------")
+def test_ubsan():
+  rexpy.diagnostics.log_no_color("-----------------------------------------------------------------------------")
   rc = __generate_undefined_behavior_sanitizer() # works
   if rc != 0:
-    diagnostics.log_err(f"failed to generate ubsan code")
+    rexpy.diagnostics.log_err(f"failed to generate ubsan code")
   __pass_results["undefined behavior sanitizer generation"] = rc
   
-  diagnostics.log_no_color("-----------------------------------------------------------------------------")
+  rexpy.diagnostics.log_no_color("-----------------------------------------------------------------------------")
   rc |= __build_undefined_behavior_sanitizer() # works
   if rc != 0:
-    diagnostics.log_err(f"failed to build ubsan code")
+    rexpy.diagnostics.log_err(f"failed to build ubsan code")
   __pass_results["undefined behavior sanitizer building"] = rc
   
-  diagnostics.log_no_color("-----------------------------------------------------------------------------")
+  rexpy.diagnostics.log_no_color("-----------------------------------------------------------------------------")
   rc |= __run_undefined_behavior_sanitizer() # works
   if rc != 0:
-    diagnostics.log_err(f"invalid code found with ubsan")
+    rexpy.diagnostics.log_err(f"invalid code found with ubsan")
   __pass_results["undefined behavior sanitizer result"] = rc
 
-def __fuzzy_testing_pass():
-  diagnostics.log_no_color("-----------------------------------------------------------------------------")
+def test_fuzzy_testing():
+  rexpy.diagnostics.log_no_color("-----------------------------------------------------------------------------")
   rc = __generate_fuzzy_testing() # works
   if rc != 0:
-    diagnostics.log_err(f"failed to generate fuzzy code")
+    rexpy.diagnostics.log_err(f"failed to generate fuzzy code")
   __pass_results["fuzzy testing generation"] = rc
   
-  diagnostics.log_no_color("-----------------------------------------------------------------------------")
+  rexpy.diagnostics.log_no_color("-----------------------------------------------------------------------------")
   rc |= __build_fuzzy_testing() # works
   if rc != 0:
-    diagnostics.log_err(f"failed to build fuzzy code")
+    rexpy.diagnostics.log_err(f"failed to build fuzzy code")
   __pass_results["fuzzy testing building"] = rc
   
-  diagnostics.log_no_color("-----------------------------------------------------------------------------")
+  rexpy.diagnostics.log_no_color("-----------------------------------------------------------------------------")
   rc |= __run_fuzzy_testing() # works
   if rc != 0:
-    diagnostics.log_err(f"invalid code found with fuzzy")
+    rexpy.diagnostics.log_err(f"invalid code found with fuzzy")
   __pass_results["fuzzy testing result"] = rc
 
 def __shutil_error(func, path, exec_info):
-  diagnostics.log_err(f"shutil error: {func}, {path}, {exec_info}")
+  rexpy.diagnostics.log_err(f"shutil error: {func}, {path}, {exec_info}")
 
-def __clean():
-  intermediate_tests_path = os.path.join(root_path, settings["intermediate_directory"], settings["tests_folder"])
+def clean():
+  intermediate_tests_path = os.path.join(root_path, settings["intermediate_folder"], settings["tests_folder"])
   if os.path.exists(intermediate_tests_path):
     shutil.rmtree(intermediate_tests_path, onerror=__shutil_error)
-
-def run():
-  try:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-clean", help="clean run, as if run for the first time", action="store_true")
-
-    parser.add_argument("-all", help="run all tests", action="store_true")
-    parser.add_argument("-iwyu", help="run include-what-you-use", action="store_true")
-    parser.add_argument("-clang_tidy", help="run clang-tidy", action="store_true")
-    parser.add_argument("-unit_tests", help="run unit tests", action="store_true")
-    parser.add_argument("-coverage", help="run coverage tests", action="store_true")
-    parser.add_argument("-asan", help="run address sanitizer", action="store_true")
-    parser.add_argument("-ubsan", help="run undefined behavior sanitizer", action="store_true")
-    parser.add_argument("-fuzzy", help="run fuzzy testing", action="store_true")
-    
-    args,unknown = parser.parse_known_args()
-        
-    start = time.perf_counter()
-
-    if args.clean:
-      __clean()
-
-    if args.all or args.iwyu:
-      __include_what_you_use_pass()
-    if args.all or args.clang_tidy:
-      __clang_tidy_pass()
-    if args.all or args.unit_tests:
-      __unit_tests_pass()
-    if args.all or args.coverage:
-      __coverage_tests_pass()
-    if args.all or args.asan:
-      __asan_pass()
-    if args.all or args.ubsan:
-      __ubsan_pass()
-    if args.all or args.fuzzy:
-      __fuzzy_testing_pass()
-
-  except Exception as Ex:
-    traceback.print_exc()
-    diagnostics.log_err(f"exception: {Ex}")
-
-  diagnostics.log_no_color("")
-  diagnostics.log_info("Summary Report")
-  diagnostics.log_no_color("--------------------------------------")
-  for key in __pass_results:
-    result = __pass_results[key]
-
-    if result == 0:
-      diagnostics.log_info(f"{key} - success")
-    else:
-      diagnostics.log_err(f"{key} - failed")
-
-  end = time.perf_counter()
-  diagnostics.log_no_color("")
-  diagnostics.log_no_color("--------------------------------------")
-  diagnostics.log_info(f"Finished at: {datetime.now().strftime('%d %B %Y - %H:%M:%S %p')}")
-  diagnostics.log_info(f"Tests took {end - start:0.4f} seconds")
-
-  return
-
-if __name__ == "__main__":
-  run()

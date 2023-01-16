@@ -9,7 +9,7 @@ import shutil
 
 htlm_report_folder = "lcov"
 
-def index_rawdata(rawdataPath):
+def create_index_rawdata(rawdataPath):
   folder = Path(rawdataPath).parent
   output_path = os.path.join(folder, f"{Path(rawdataPath).stem}.profdata")
   llvm_profdata_path = required_tools.tool_paths_dict["llvm_profdata_path"]
@@ -17,16 +17,16 @@ def index_rawdata(rawdataPath):
 
   return output_path
 
-def line_oriented_report_filename(profDataPath):
+def get_line_oriented_report_filename(profDataPath):
   return os.path.join(Path(profDataPath).parent, f"{Path(profDataPath).stem}_line.html")
 
-def file_level_summary_filename(profDataPath):
+def get_file_level_summary_filename(profDataPath):
   return os.path.join(Path(profDataPath).parent, f"{Path(profDataPath).stem}_file.report")
 
-def lcov_filename(profDataPath):
+def get_lcov_filename(profDataPath):
   return os.path.join(Path(profDataPath).parent, f"{Path(profDataPath).stem}_lcov.info")
 
-def lcov_unmangled_filename(profDataPath):
+def get_lcov_unmangled_filename(profDataPath):
   return os.path.join(Path(profDataPath).parent, f"{Path(profDataPath).stem}_lcov_unmangled.info")
 
 def create_line_oriented_report(programPath, profDataPath):
