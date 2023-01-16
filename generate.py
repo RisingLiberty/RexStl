@@ -1,3 +1,13 @@
+# ============================================ 
+#
+# Author: Nick De Breuck
+# Twitter: @nick_debreuck
+# 
+# File: generate.py
+# Copyright (c) Nick De Breuck 2022
+#
+# ============================================
+
 import os
 import argparse
 import rexpy.generation
