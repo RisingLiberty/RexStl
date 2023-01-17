@@ -31,7 +31,7 @@ def get_lcov_unmangled_filename(profDataPath):
 
 def create_line_oriented_report(programPath, profDataPath):
   llvm_cov_path = required_tools.tool_paths_dict["llvm_cov_path"]
-  log_file_path = line_oriented_report_filename(profDataPath)
+  log_file_path = get_line_oriented_report_filename(profDataPath)
   if os.path.exists(log_file_path):
     os.remove(log_file_path)
 
@@ -45,7 +45,7 @@ def create_line_oriented_report(programPath, profDataPath):
   
 def create_file_level_summary(programPath, profDataPath):
   llvm_cov_path = required_tools.tool_paths_dict["llvm_cov_path"]
-  log_file_path = file_level_summary_filename(profDataPath)
+  log_file_path = get_file_level_summary_filename(profDataPath)
   if os.path.exists(log_file_path):
     os.remove(log_file_path)
 
@@ -59,7 +59,7 @@ def create_file_level_summary(programPath, profDataPath):
 
 def __create_mangled_lcov_info(programPath, profDataPath):
   llvm_cov_path = required_tools.tool_paths_dict["llvm_cov_path"]
-  log_file_path = lcov_filename(profDataPath)
+  log_file_path = get_lcov_filename(profDataPath)
   cmd = f"{llvm_cov_path} export -format=lcov {programPath} -instr-profile={profDataPath} >> {log_file_path}"
   os.system(cmd)
   return log_file_path
@@ -90,7 +90,7 @@ def __unmangle_function_names(logFilePath, profDataPath):
   # creating the unmangled .info file
   undname_path = required_tools.tool_paths_dict["undname_path"]
   flags : int = 0x0001 | 0x0002 | 0x0080 | 0x8000
-  unmangled_log_file_path = lcov_unmangled_filename(profDataPath)
+  unmangled_log_file_path = get_lcov_unmangled_filename(profDataPath)
   cmd = f"\"{undname_path}\" {flags} {logFilePath} > {unmangled_log_file_path}"
   os.system(cmd)
 

@@ -57,13 +57,13 @@ if __name__ == "__main__":
     rexpy.generation.new_generation(sharpmakes_files, "/generateUnitTests")
   
   if args.coverage:
-    rexpy.generation.new_generation(sharpmakes_files, "/enableCoverage")
+    rexpy.generation.new_generation(sharpmakes_files, "/generateUnitTests /enableCoverage")
 
   if args.asan:
-    rexpy.generation.new_generation(sharpmakes_files, "/enableAddressSanitizer")
+    rexpy.generation.new_generation(sharpmakes_files, "/generateUnitTests /enableAddressSanitizer")
 
   if args.ubsan:
-    rexpy.generation.new_generation(sharpmakes_files, "/enableUBSanitizer")
+    rexpy.generation.new_generation(sharpmakes_files, "/generateUnitTests /enableUBSanitizer")
 
   if args.fuzzy:
     rexpy.generation.new_generation(sharpmakes_files, "/enableFuzzyTesting")

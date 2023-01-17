@@ -135,7 +135,7 @@ def __generate_tests():
 
 def __build_tests():
   task_print = rexpy.task_raii_printing.TaskRaiiPrint("building tests")
-  return __build_test_files(os.path.join(root_path, settings["intermediate_folder"], settings["tests_folder"], settings["build_folder"]), "*.ninja")
+  return __build_test_files("-unittests")
 
 def __run_unit_tests():
   task_print = rexpy.task_raii_printing.TaskRaiiPrint("running unit tests")
@@ -155,11 +155,11 @@ def __run_unit_tests():
 # coverage
 def __generate_coverage():
   task_print = rexpy.task_raii_printing.TaskRaiiPrint("generating coverage code")
-  return __generate_test_files("-asan")
+  return __generate_test_files("-coverage")
 
 def __build_coverage():
   task_print = rexpy.task_raii_printing.TaskRaiiPrint("building coverage code")
-  return __build_test_files(root_path, "*_coverage.ninja")
+  return __build_test_files("-coverage")
 
 def __run_coverage():
   task_print = rexpy.task_raii_printing.TaskRaiiPrint("running coverage")
@@ -238,7 +238,7 @@ def __generate_address_sanitizer():
 
 def __build_address_sanitizer():
   task_print = rexpy.task_raii_printing.TaskRaiiPrint("building address sanitizer code")
-  return __build_test_files(root_path, "-asan")
+  return __build_test_files("-asan")
 
 def __run_address_sanitizer():
   task_print = rexpy.task_raii_printing.TaskRaiiPrint("running address sanitizer tests")
@@ -275,7 +275,7 @@ def __generate_undefined_behavior_sanitizer():
 
 def __build_undefined_behavior_sanitizer():
   task_print = rexpy.task_raii_printing.TaskRaiiPrint("building undefined behavior sanitizer code")
-  return __build_test_files(root_path, "-ubsan")
+  return __build_test_files("-ubsan")
 
 def __run_undefined_behavior_sanitizer():
   task_print = rexpy.task_raii_printing.TaskRaiiPrint("running undefined behavior sanitizer tests")
@@ -310,7 +310,7 @@ def __generate_fuzzy_testing():
 
 def __build_fuzzy_testing():
   task_print = rexpy.task_raii_printing.TaskRaiiPrint("building fuzzy testing code")
-  return __build_test_files(root_path, "-fuzzy")
+  return __build_test_files("-fuzzy")
 
 def __run_fuzzy_testing():
   task_print = rexpy.task_raii_printing.TaskRaiiPrint("running fuzzy tests")
