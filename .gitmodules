@@ -1,0 +1,3 @@
+[submodule "build/scripts/rexpy"]
+	path = build/scripts/rexpy
+	url = https://github.com/RisingLiberty/RexPy
