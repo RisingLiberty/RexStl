@@ -9,7 +9,8 @@ public class RexStdTest : TestProject
     Name = GenerateName("RexStdTest");
     GenerateTargets();
 
-    SourceRootPath = Path.Combine(Globals.Root, "tests", "rex_std_test");
+    string ThisFileFolder = Path.GetDirectoryName(Utils.CurrentFile());
+    SourceRootPath = ThisFileFolder;
   }
 
   public override void Configure(RexConfiguration conf, RexTarget target)

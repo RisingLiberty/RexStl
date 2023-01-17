@@ -14,7 +14,8 @@ public class RexStd : BasicCPPProject
     // The directory that contains the source code we want to build is the
     // same as this one. This string essentially means "the directory of
     // the script you're reading right now."
-    SourceRootPath = Path.Combine(Globals.SourceRoot, "rex_std");
+    string ThisFileFolder = Path.GetDirectoryName(Utils.CurrentFile());
+    SourceRootPath = ThisFileFolder;
   }
 
   public override void Configure(RexConfiguration conf, RexTarget target)

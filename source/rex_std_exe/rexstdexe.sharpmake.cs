@@ -9,7 +9,8 @@ public class RexStdExe : BasicCPPProject
     Name = GenerateName("RexStdExe");
     GenerateTargets();
 
-    SourceRootPath = Path.Combine(Globals.SourceRoot, "rex_std_exe");
+    string ThisFileFolder = Path.GetDirectoryName(Utils.CurrentFile());
+    SourceRootPath = ThisFileFolder;
   }
 
   public override void Configure(RexConfiguration conf, RexTarget target)

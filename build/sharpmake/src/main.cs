@@ -250,11 +250,6 @@ public class SharpmakeProject : CSharpProject
 
     // Specify the targets for which we want to generate a configuration for.
     AddTargets(vsTarget);
-
-    foreach (var File in SourceFiles)
-    {
-      Console.WriteLine(File);
-    }
   }
 
   [Configure()]
