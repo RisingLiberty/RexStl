@@ -238,12 +238,23 @@ public class SharpmakeProject : CSharpProject
     SourceFilesExtensions.Clear();
     SourceFilesExtensions.Add(".sharpmake.cs");
     SourceRootPath = Globals.Root;
-    //SourceRootPath = "[project.SharpmakeCsPath]";
+
+    // manually add the sharpmake root files
+    var RootSharpmakeFiles = Directory.GetFiles(Path.Combine(Globals.SharpmakeRoot, "src"));
+    foreach (var File in RootSharpmakeFiles)
+    {
+      SourceFiles.Add(File);
+    }
 
     RexTarget vsTarget = new RexTarget(Platform.win64, DevEnv.vs2019, Config.debug | Config.debug_opt | Config.release, Compiler.MSVC);
 
     // Specify the targets for which we want to generate a configuration for.
     AddTargets(vsTarget);
+
+    foreach (var File in SourceFiles)
+    {
+      Console.WriteLine(File);
+    }
   }
 
   [Configure()]
@@ -286,7 +297,7 @@ public class MainSolution : Solution
   public MainSolution() : base(typeof(RexTarget))
   {
     // The name of the solution.
-    Name = GenerateName("rex-standard-library");
+    Name = GenerateName("rex");
     GenerateTargets();
   }
 

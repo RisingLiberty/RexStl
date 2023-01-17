@@ -10,6 +10,7 @@ public class Globals
   static readonly private string folder_in_root = "source";
   static private string root;
   static private string source_root;
+  static private string thirdparty_root;
   static private string sharpmake_root;
   static private string tools_root;
   static private string libs_root;
@@ -28,6 +29,13 @@ public class Globals
       return source_root;
     }
   }
+  static public string ThirdpartyRoot
+  {
+    get
+    {
+      return thirdparty_root;
+    }
+  }
   static public string SharpmakeRoot
   {
     get
@@ -42,7 +50,7 @@ public class Globals
       return tools_root;
     }
   }
-    static public string LibsRoot
+  static public string LibsRoot
   {
     get
     {
@@ -72,6 +80,7 @@ public class Globals
 
 
     source_root = Path.Combine(root, settings["source_folder"]);
+    thirdparty_root = Path.Combine(source_root, "0_thirdparty");
     sharpmake_root = Path.Combine(root, "build", "sharpmake");
     tools_root = Path.Combine(root, settings["intermediate_folder"], settings["tools_folder"]);
     libs_root = Path.Combine(root, settings["intermediate_folder"], settings["libs_folder"]);

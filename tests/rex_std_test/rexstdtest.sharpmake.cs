@@ -2,14 +2,14 @@ using Sharpmake;
 using System.IO;
 
 [Generate]
-public class RexStdExe : BasicCPPProject
+public class RexStdTest : TestProject
 {
-  public RexStdExe() : base()
+  public RexStdTest() : base()
   {
-    Name = GenerateName("RexStdExe");
+    Name = GenerateName("RexStdTest");
     GenerateTargets();
 
-    SourceRootPath = Path.Combine(Globals.SourceRoot, "RexStdExe");
+    SourceRootPath = Path.Combine(Globals.Root, "tests", "rex_std_test");
   }
 
   public override void Configure(RexConfiguration conf, RexTarget target)
@@ -17,6 +17,8 @@ public class RexStdExe : BasicCPPProject
     base.Configure(conf, target);
 
     conf.Output = Configuration.OutputType.Exe;
+
+    conf.Options.Remove(Options.Vc.Compiler.JumboBuild.Enable);
 
     conf.add_dependency<RexStd>(target);
   }

@@ -23,10 +23,25 @@ def __find_sharpmake_files(directory):
       extensions = Path(file).suffixes
       if len(extensions) == 2:
         if extensions[0] == ".sharpmake" and extensions[1] == ".cs":
-          files = glob.glob(os.path.join(directory, "**", file))
+          files = glob.glob(os.path.join(directory, "**", file), recursive=True)
+          
           sharpmakes_files.append(files[0])
   
   return sharpmakes_files
+
+def __find_sharpmake_root_files(directory):
+  sharpmakes_files = []
+  for root, dirs, files in os.walk(directory):
+    for file in files:
+      extensions = Path(file).suffixes
+      if len(extensions) == 1:
+        if extensions[0] == ".cs":
+          files = glob.glob(os.path.join(directory, "**", file), recursive=True)
+          
+          sharpmakes_files.append(files[0])
+
+  return sharpmakes_files
+
 
 if __name__ == "__main__":
   parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
@@ -44,7 +59,7 @@ if __name__ == "__main__":
   source_root = os.path.join(root, settings["source_folder"])
   tests_root = os.path.join(root, settings["tests_folder"])
   sharpmakes_files = []
-  sharpmakes_files.extend(__find_sharpmake_files(sharpmake_root))
+  sharpmakes_files.extend(__find_sharpmake_root_files(sharpmake_root))
   sharpmakes_files.extend(__find_sharpmake_files(source_root))
   sharpmakes_files.extend(__find_sharpmake_files(tests_root))
 

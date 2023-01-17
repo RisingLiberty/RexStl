@@ -9,7 +9,7 @@ public class RexStdFuzzy : TestProject
     Name = GenerateName("RexStdFuzzy");
     GenerateTargets();
 
-    SourceRootPath = Path.Combine(Globals.Root, "tests", "RexStdFuzzy");
+    SourceRootPath = Path.Combine(Globals.Root, "tests", "rex_std_fuzzy");
   }
 
   public override void Configure(RexConfiguration conf, RexTarget target)
