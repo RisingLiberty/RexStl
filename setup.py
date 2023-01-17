@@ -25,7 +25,7 @@ def is_rexpy_installed():
 
 def install_rexpy(forceInstall):
   # first set our working directory to rexpy.
-  # this way the package will be installed in {root}/build/scripts
+  # this way the package will be installed in {root}/build/scripts/rexpy
   # this keeps the root clean.
 
   # first let's make sure we're in the root directory
@@ -44,9 +44,9 @@ def install_rexpy(forceInstall):
     print(f"rexpy is already installed - skipping install")
     return
 
-  # rexpy is located in build/scripts
+  # rexpy is located in build/scripts/rexpy
   cwd = os.getcwd()
-  new_wd = os.path.join(cwd, "build", "scripts")
+  new_wd = os.path.join(cwd, "build", "scripts", "rexpy")
   os.chdir(new_wd)
 
   # now run the install script.
@@ -75,4 +75,4 @@ if __name__ == "__main__":
   for arg in unknown:
     arguments_to_pass_on += f" {arg}"
 
-  os.system(f"py build/scripts/rexpy/setup.py{arguments_to_pass_on}")
+  os.system(f"py build/scripts/rexpy/rexpy/setup.py{arguments_to_pass_on}")

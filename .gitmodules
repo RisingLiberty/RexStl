@@ -1,3 +1,0 @@
-[submodule "build/scripts"]
-	path = build/scripts
-	url = https://github.com/RisingLiberty/RexPy
