@@ -2,9 +2,9 @@ using Sharpmake;
 using System.IO;
 
 [Generate]
-public class RexStandardExtra : BasicCPPProject
+public class RexStdExtra : BasicCPPProject
 {
-  public RexStandardExtra() : base()
+  public RexStdExtra() : base()
   {
     // The name of the project in Visual Studio. The default is the name of
     // the class, but you usually want to override that.
