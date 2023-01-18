@@ -40,7 +40,7 @@ public class RexStd : BasicCPPProject
     {
       conf.NinjaGenerateCompilerDB = true;
       string compdbPath = Path.Combine(conf.ProjectPath, "clang_tools", target.Compiler.ToString(), conf.Name);
-      string postbuildCommandScript = Path.Combine(Globals.SourceRoot, $"post_build.py -p={Name} -comp={target.Compiler} -conf={conf.Name} -compdb={compdbPath}");
+      string postbuildCommandScript = Path.Combine(Globals.SourceRoot, $"post_build.py -p={Name} -comp={target.Compiler} -conf={conf.Name} -compdb={compdbPath} -srcroot={SourceRootPath}");
       conf.EventPostBuild.Add(postbuildCommandScript);
     }
 
