@@ -67,6 +67,7 @@ namespace rsl
           , m_cp_extract_key_and_rehash_policy()
           , m_allocator()
       {
+        allocate_buckets(1); // always have at least 1 bucket allocated
       }
       hashtable(Size bucketCount, const KeyHash& keyHash, const BucketIndexFinder& bucketIndexFinder, const Equal& equal, const ExtractKey& extractKey, const allocator_type& allocator)
           : m_cp_key_equal_and_bucket_array(equal)
@@ -78,6 +79,11 @@ namespace rsl
         if(bucket_count() > 0)
         {
           m_cp_key_equal_and_bucket_array.second() = allocate_buckets(bucket_count());
+        }
+        else
+        {
+          m_cp_key_hash_and_bucket_count.second() = 1;
+          m_cp_key_equal_and_bucket_array.second() = allocate_buckets(1); // always have at least 1 bucket allocated
         }
       }
 
@@ -96,7 +102,8 @@ namespace rsl
           m_cp_key_hash_and_bucket_count.second() = bucketCount.get();
         }
 
-        m_cp_key_equal_and_bucket_array.second() = allocate_buckets(bucket_count());
+        m_cp_key_hash_and_bucket_count.second() = (rsl::max)(1, bucket_count());
+        m_cp_key_equal_and_bucket_array.second() = allocate_buckets(m_cp_key_hash_and_bucket_count.second()); // always have at least 1 bucket allocated
 
         for(; first != last; ++first)
         {
@@ -129,6 +136,11 @@ namespace rsl
               node_source = node_source->next;
             }
           }
+        }
+        else
+        {
+          m_cp_key_hash_and_bucket_count.second() = 1;
+          m_cp_key_equal_and_bucket_array.second() = allocate_buckets(1); // always have at least 1 bucket allocated
         }
       }
 
