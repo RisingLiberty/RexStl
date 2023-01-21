@@ -642,7 +642,7 @@ namespace rsl
 
           if(result.is_hash_required)
           {
-            n = static_cast<size_type>(bucket_index(k, result.new_bucket_count));
+            n = static_cast<size_type>(bucket_index(hr, result.new_bucket_count));
             rehash(result.new_bucket_count);
           }
 
