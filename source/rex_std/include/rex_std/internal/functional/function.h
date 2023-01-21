@@ -433,7 +433,7 @@ namespace rsl
         {
           if(other.has_manager())
           {
-            (*other.m_func_ptr_mgr)(static_cast<void*>(&base::storage()), static_cast<void*>(other.m_storage), base::manager_operations::move_functor);
+            (*other.m_func_ptr_mgr)(static_cast<void*>(&base::storage()), static_cast<void*>(&other.storage()), base::manager_operations::move_functor);
           }
 
           m_func_ptr_mgr           = other.m_func_ptr_mgr;

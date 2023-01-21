@@ -19,7 +19,7 @@ namespace rsl
   inline namespace v1
   {
 
-    void* memset(void* dest, char val, count_t len)
+    void* memset(void* dest, char val, card64 len)
     {
       rsl::byte* dest_b = static_cast<byte*>(dest);
       while(len-- > 0)

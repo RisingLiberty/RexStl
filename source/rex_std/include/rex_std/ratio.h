@@ -27,7 +27,7 @@ namespace rsl
     namespace internal
     {
       template <intmax Val>
-      struct abs : integral_constant<intmax, (Val < 0 ? -Val : Val)>
+      struct abs_t : integral_constant<intmax, (Val < 0 ? -Val : Val)>
       {
       };
 
@@ -42,7 +42,7 @@ namespace rsl
       };
 
       template <intmax X, intmax Y>
-      struct gcd : gcd_x<abs<X>::value, abs<Y>::value>::type
+      struct gcd : gcd_x<abs_t<X>::value, abs_t<Y>::value>::type
       {
       };
 
@@ -77,14 +77,14 @@ namespace rsl
       struct addition_over_flow
       {
         static const bool s_different_signs    = (X <= 0 && 0 <= Y) || (Y < 0 && 0 < X);
-        static const bool s_inrange_of_int_max = abs<Y>::value <= INTMAX_MAX - abs<X>::value;
+        static const bool s_inrange_of_int_max = abs_t<Y>::value <= INTMAX_MAX - abs_t<X>::value;
         static const bool s_value              = s_different_signs || s_inrange_of_int_max;
       };
 
       template <intmax X, intmax Y>
       struct multiply_over_flow
       {
-        static const bool s_value = (abs<X>::value <= (INTMAX_MAX / abs<Y>::value));
+        static const bool s_value = (abs_t<X>::value <= (INTMAX_MAX / abs_t<Y>::value));
       };
 
       template <intmax X, intmax Y>
@@ -127,8 +127,8 @@ namespace rsl
       static_assert(Num > -INTMAX_MAX, "numerator too negative");
       static_assert(Den > -INTMAX_MAX, "denominator too negative");
 
-      static constexpr intmax num = sign_of_v<Num> * sign_of_v<Den> * internal::abs<Num>::value / internal::gcd<Num, Den>::value;
-      static constexpr intmax den = internal::abs<Den>::value / internal::gcd<Num, Den>::value;
+      static constexpr intmax num = sign_of_v<Num> * sign_of_v<Den> * internal::abs_t<Num>::value / internal::gcd<Num, Den>::value;
+      static constexpr intmax den = internal::abs_t<Den>::value / internal::gcd<Num, Den>::value;
 
       using type = ratio<num, den>;
     };

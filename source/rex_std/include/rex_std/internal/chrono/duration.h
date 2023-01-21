@@ -132,13 +132,13 @@ namespace rsl
         ~duration()               = default;
 
         template <typename Rep2>
-        constexpr explicit duration(const Rep2& rep2, enable_if_t<is_convertible_v<Rep2, Rep> && (treat_as_floating_point<Rep>::value || !treat_as_floating_point<Rep2>::value)>** /*unused*/ = nullptr)
+        constexpr duration(const Rep2& rep2, enable_if_t<is_convertible_v<Rep2, Rep> && (treat_as_floating_point<Rep>::value || !treat_as_floating_point<Rep2>::value)>** /*unused*/ = nullptr)
             : m_rep(static_cast<Rep>(rep2))
         {
         }
 
         template <typename Rep2, typename Period2>
-        constexpr explicit duration(const duration<Rep2, Period2>& d2, enable_if_t<treat_as_floating_point<Rep>::value || (RatioDivide<Period2, Period>::den == 1 && !treat_as_floating_point<Rep2>::value), void>** /*unused*/ = nullptr)
+        constexpr duration(const duration<Rep2, Period2>& d2, enable_if_t<treat_as_floating_point<Rep>::value || (RatioDivide<Period2, Period>::den == 1 && !treat_as_floating_point<Rep2>::value), void>** /*unused*/ = nullptr)
             : m_rep(duration_cast<duration>(d2).count())
         {
         }
