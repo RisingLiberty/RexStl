@@ -46,7 +46,7 @@ namespace rsl
       template <typename FormatContext>
       auto format(const time_digits& digits, FormatContext& ctx) -> decltype(ctx.out())
       {
-        format_to(ctx.out(), "{}{}", digits.high, digits.low);
+        return format_to(ctx.out(), "{}{}", digits.high, digits.low);
       }
     };
   }
