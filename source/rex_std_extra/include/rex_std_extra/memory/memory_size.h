@@ -12,6 +12,8 @@
 
 #pragma once
 
+#include "rex_std/bonus/types.h"
+
 namespace rsl { inline namespace v1 {
 
 constexpr card64 KiloByteMultiple = 1000;

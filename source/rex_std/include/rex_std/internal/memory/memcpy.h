@@ -21,13 +21,13 @@ namespace rsl
   {
     // TODO: are there more performant ways of copying bytes over that is defined behavior?
     // Maybe cast the memory to int32 or int64, so we can copy over more bytes in 1 go
-    constexpr void* memcpy(void* dst, const void* src, count_t len)
+    constexpr void* memcpy(void* dst, const void* src, card64 len)
     {
       const rsl::byte* src_byte = static_cast<const rsl::byte*>(src);
       rsl::byte* dst_byte       = static_cast<rsl::byte*>(dst);
 
       // Copy contents of src[] to dest[]
-      for(count_t i = 0; i < len; ++i)
+      for(card64 i = 0; i < len; ++i)
       {
         dst_byte[i] = src_byte[i];
 

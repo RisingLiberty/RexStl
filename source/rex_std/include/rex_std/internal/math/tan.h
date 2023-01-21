@@ -16,6 +16,8 @@
 #include "rex_std/bonus/types.h"
 #include "rex_std/limits.h"
 #include "rex_std/numbers.h"
+#include "rex_std/internal/math/floor.h"
+#include "rex_std/internal/math/pow.h"
 
 namespace rsl
 {
@@ -27,7 +29,7 @@ namespace rsl
       template <typename T>
       constexpr T tan_series_exp_long(const T z)
       { // this is based on a fourth-order expansion of tan(z) using Bernoulli numbers
-        return (-1 / z + (z / 3 + (pow_integral(z, 3) / 45 + (2 * pow_integral(z, 5) / 945 + pow_integral(z, 7) / 4725))));
+        return (-1 / z + (z / 3 + (pow(z, 3) / 45 + (2 * pow(z, 5) / 945 + pow(z, 7) / 4725))));
       }
 
       template <typename T>
@@ -68,8 +70,8 @@ namespace rsl
       constexpr T tan_begin(const T x, const int count = 0)
       {                                                          // tan(x) = tan(x + pi)
         return (x > T(rsl::pi_v<float64>) ?                      // if
-                    count > 1 ? numeric_limits<T>::quiet_NaN() : // protect against undefined behavior
-                        tan_begin(x - T(rsl::pi_v<float64>) * internal::floor_check(x / T(rsl::pi_v<float64>)), count + 1)
+                    count > 1 ? numeric_limits<T>::quiet_nan() : // protect against undefined behavior
+                        tan_begin(x - T(rsl::pi_v<float64>) * floor(x / T(rsl::pi_v<float64>)), count + 1)
                                           :
                                           // else
                     tan_cf_main(x));
@@ -79,7 +81,7 @@ namespace rsl
       constexpr T tan_check(const T x)
       {
         return ( // NaN check
-            is_nan(x) ? numeric_limits<T>::quiet_NaN() :
+            is_nan(x) ? numeric_limits<T>::quiet_nan() :
                       // indistinguishable from zero
                 numeric_limits<T>::min() > abs(x) ? T(0)
                                                   :

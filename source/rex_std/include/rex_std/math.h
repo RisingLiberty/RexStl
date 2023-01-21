@@ -221,53 +221,53 @@ namespace rsl
       return internal::sqrt(arg);
     }
 
-    float32 sin(float32 arg);
-    float32 sinf(float32 arg);
-    float64 sin(float64 arg);
-    lfloat64 sin(lfloat64 arg);
-    lfloat64 sinl(lfloat64 arg);
-    template <typename IntegralType>
-    float64 sin(IntegralType arg);
+    //float32 sin(float32 arg);
+    //float32 sinf(float32 arg);
+    //float64 sin(float64 arg);
+    //lfloat64 sin(lfloat64 arg);
+    //lfloat64 sinl(lfloat64 arg);
+    //template <typename IntegralType>
+    //float64 sin(IntegralType arg);
 
-    float32 cos(float32 arg);
-    float32 cosf(float32 arg);
-    float64 cos(float64 arg);
-    lfloat64 cos(lfloat64 arg);
-    lfloat64 cosl(lfloat64 arg);
-    template <typename IntegralType>
-    float64 cos(IntegralType arg);
+    //float32 cos(float32 arg);
+    //float32 cosf(float32 arg);
+    //float64 cos(float64 arg);
+    //lfloat64 cos(lfloat64 arg);
+    //lfloat64 cosl(lfloat64 arg);
+    //template <typename IntegralType>
+    //float64 cos(IntegralType arg);
 
-    float32 tan(float32 arg);
-    float32 tanf(float32 arg);
-    float64 tan(float64 arg);
-    lfloat64 tan(lfloat64 arg);
-    lfloat64 tanl(lfloat64 arg);
-    template <typename IntegralType>
-    float64 tan(IntegralType arg);
+    //float32 tan(float32 arg);
+    //float32 tanf(float32 arg);
+    //float64 tan(float64 arg);
+    //lfloat64 tan(lfloat64 arg);
+    //lfloat64 tanl(lfloat64 arg);
+    //template <typename IntegralType>
+    //float64 tan(IntegralType arg);
 
-    float32 asin(float32 arg);
-    float32 asinf(float32 arg);
-    float64 asin(float64 arg);
-    lfloat64 asin(lfloat64 arg);
-    lfloat64 asinl(lfloat64 arg);
-    template <typename IntegralType>
-    float64 asin(IntegralType arg);
+    //float32 asin(float32 arg);
+    //float32 asinf(float32 arg);
+    //float64 asin(float64 arg);
+    //lfloat64 asin(lfloat64 arg);
+    //lfloat64 asinl(lfloat64 arg);
+    //template <typename IntegralType>
+    //float64 asin(IntegralType arg);
 
-    float32 acos(float32 arg);
-    float32 acosf(float32 arg);
-    float64 acos(float64 arg);
-    lfloat64 acos(lfloat64 arg);
-    lfloat64 acosl(lfloat64 arg);
-    template <typename IntegralType>
-    float64 acos(IntegralType arg);
+    //float32 acos(float32 arg);
+    //float32 acosf(float32 arg);
+    //float64 acos(float64 arg);
+    //lfloat64 acos(lfloat64 arg);
+    //lfloat64 acosl(lfloat64 arg);
+    //template <typename IntegralType>
+    //float64 acos(IntegralType arg);
 
-    float32 atan(float32 arg);
-    float32 atanf(float32 arg);
-    float64 atan(float64 arg);
-    lfloat64 atan(lfloat64 arg);
-    lfloat64 atanl(lfloat64 arg);
-    template <typename IntegralType>
-    float64 atan(IntegralType arg);
+    //float32 atan(float32 arg);
+    //float32 atanf(float32 arg);
+    //float64 atan(float64 arg);
+    //lfloat64 atan(lfloat64 arg);
+    //lfloat64 atanl(lfloat64 arg);
+    //template <typename IntegralType>
+    //float64 atan(IntegralType arg);
 
   } // namespace v1
 } // namespace rsl
