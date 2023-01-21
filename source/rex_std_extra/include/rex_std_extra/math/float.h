@@ -14,12 +14,12 @@
 
 #include "rex_std/internal/math/abs.h"
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
 constexpr bool equals(float32 lhs, float32 rhs, float32 comparison_threshold = 0.0001f)
 {
   float32 val = lhs - rhs;
-  return abs(val) < comparison_threshold;
+  return rsl::internal::abs(val) < comparison_threshold;
 }
 
-REX_RSL_END_NAMESPACE
+}}

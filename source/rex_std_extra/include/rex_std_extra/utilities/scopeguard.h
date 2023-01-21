@@ -12,9 +12,9 @@
 
 #pragma once
 
-#include <functional>
+#include "rex_std/functional.h"
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
 class ScopeGuard
 {
@@ -29,4 +29,4 @@ private:
   bool m_is_released;
 };
 
-REX_RSL_END_NAMESPACE
+}}

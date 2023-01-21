@@ -62,9 +62,9 @@ rsl::Date rsl::win::date(const SYSTEMTIME& date)
 {
   return Date(date.wDayOfWeek, date.wDay, date.wMonth, date.wYear);
 }
-rsl::Time rsl::win::time(const SYSTEMTIME& time)
+rsl::time rsl::win::time(const SYSTEMTIME& time)
 {
-  return Time(time.wHour, time.wMinute, time.wSecond);
+  return rsl::time(time.wHour, time.wMinute, time.wSecond);
 }
 rsl::TimePoint rsl::win::timepoint(const SYSTEMTIME& timepoint)
 {

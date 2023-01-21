@@ -12,8 +12,8 @@
 
 #include "rex_std_extra/time/date.h"
 
-#include "rex_std_extra/diagnostics/log_message.h"
-#include "rex_std_extra/rex_stl_extra_pch.h"
+#include "rex_std/format.h"
+#include "rex_std_extra/time/time_digits.h"
 
 rsl::Date::Date()
     : m_week_day(0)
@@ -30,7 +30,7 @@ rsl::Date::Date(card32 week_day, card32 month_day, card32 month, card32 year)
 {
 }
 
-rsl::TinyStackString rsl::Date::week_day() const
+rsl::tiny_stack_string rsl::Date::week_day() const
 {
   switch(m_week_day)
   {
@@ -56,7 +56,7 @@ card32 rsl::Date::month() const
   return m_month;
 }
 
-rsl::TinyStackString rsl::Date::month_name() const
+rsl::tiny_stack_string rsl::Date::month_name() const
 {
   switch(m_month)
   {
@@ -82,13 +82,13 @@ card32 rsl::Date::year() const
   return m_year;
 }
 
-rsl::SmallStackString rsl::Date::to_string() const
+rsl::small_stack_string rsl::Date::to_string() const
 {
-  return stack_string_from_message<SmallStackString>(week_day(), ' ', to_string_without_weekday());
+  return rsl::small_stack_string(rsl::format("{} {}", week_day(), to_string_without_weekday()));
 }
-rsl::SmallStackString rsl::Date::to_string_without_weekday() const
+rsl::small_stack_string rsl::Date::to_string_without_weekday() const
 {
-  return stack_string_from_message<SmallStackString>(TimeDigits(month_day()), '/', TimeDigits(month()), '/', year());
+  return rsl::small_stack_string(rsl::format("{}/{}/{}", time_digits(month_day()), time_digits(month()), year()));
 }
 
 bool rsl::Date::operator>(const Date& date) const
@@ -141,7 +141,7 @@ bool rsl::Date::operator!=(const rsl::Date& date) const
   return !(*this == date);
 }
 
-rsl::OStream& rsl::operator<<(OStream& os, const Date& date)
+rsl::ostream& rsl::operator<<(ostream& os, const Date& date)
 {
   os << date.to_string();
   return os;

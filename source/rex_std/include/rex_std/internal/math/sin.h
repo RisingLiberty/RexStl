@@ -33,7 +33,7 @@ namespace rsl
       constexpr T sin_check(const T x)
       {
         return ( // NaN check
-            is_nan(x) ? numeric_limits<T>::quiet_NaN() :
+            is_nan(x) ? numeric_limits<T>::quiet_nan() :
                       // indistinguishable from zero
                 numeric_limits<T>::min() > abs(x) ? T(0)
                                                   :

@@ -14,7 +14,7 @@
 
 #include <numeric>
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
 template <typename Iterator>
 REX_NO_DISCARD constexpr typename Iterator::value_type average(const Iterator first, const Iterator last)
@@ -26,4 +26,4 @@ REX_NO_DISCARD constexpr typename Iterator::value_type average(const Iterator fi
   return value /= clamp_min(diff, 1);
 }
 
-REX_RSL_END_NAMESPACE
+}}

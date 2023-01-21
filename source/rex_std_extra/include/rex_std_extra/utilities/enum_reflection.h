@@ -107,7 +107,7 @@
     #define enum_refl_RANGE_MAX 256
   #endif
 
-REX_RSL_BEGIN_NAMESPACE::enum_refl
+namespace rsl { inline namespace v1 {::enum_refl
 { // I change the namespace from enum_refl to enum_relf
 
   // If need another optional type, define the macro enum_refl_USING_ALIAS_OPTIONAL.
@@ -117,11 +117,11 @@ REX_RSL_BEGIN_NAMESPACE::enum_refl
   using rsl::optional;
   #endif
 
-  // If need another StringView type, define the macro enum_refl_USING_ALIAS_STRING_VIEW.
+  // If need another string_view type, define the macro enum_refl_USING_ALIAS_STRING_VIEW.
   #if defined(enum_refl_USING_ALIAS_STRING_VIEW)
       enum_refl_USING_ALIAS_STRING_VIEW
   #else
-  using rsl::StringView;
+  using rsl::string_view;
   #endif
 
   // If need another String type, define the macro enum_refl_USING_ALIAS_STRING.
@@ -146,16 +146,16 @@ REX_RSL_BEGIN_NAMESPACE::enum_refl
     };
 
     static_assert(enum_refl_RANGE_MIN <= 0, "enum_refl_RANGE_MIN must be less or equals than 0.");
-    static_assert(enum_refl_RANGE_MIN > (rsl::NumericLimits<rsl::int16_t>::min)(), "enum_refl_RANGE_MIN must be greater than INT16_MIN.");
+    static_assert(enum_refl_RANGE_MIN > (rsl::numeric_limits<rsl::int16_t>::min)(), "enum_refl_RANGE_MIN must be greater than INT16_MIN.");
 
     static_assert(enum_refl_RANGE_MAX > 0, "enum_refl_RANGE_MAX must be greater than 0.");
-    static_assert(enum_refl_RANGE_MAX < (rsl::NumericLimits<rsl::int16_t>::max)(), "enum_refl_RANGE_MAX must be less than INT16_MAX.");
+    static_assert(enum_refl_RANGE_MAX < (rsl::numeric_limits<rsl::int16_t>::max)(), "enum_refl_RANGE_MAX must be less than INT16_MAX.");
 
     static_assert(enum_refl_RANGE_MAX > enum_refl_RANGE_MIN, "enum_refl_RANGE_MAX must be greater than enum_refl_RANGE_MIN.");
 
     // If need custom names for enum, add specialization enum_name for necessary enum type.
     template <typename E>
-    constexpr StringView enum_name(E) noexcept
+    constexpr string_view enum_name(E) noexcept
     {
       static_assert(rsl::is_enum_v<E>, "enum_refl::customize::enum_name requires enum type.");
 
@@ -191,7 +191,7 @@ REX_RSL_BEGIN_NAMESPACE::enum_refl
     class static_String
     {
     public:
-      constexpr explicit static_String(StringView str) noexcept
+      constexpr explicit static_String(string_view str) noexcept
           : static_String {str, rsl::make_index_sequence<N> {}}
       {
         assert(str.size() == N);
@@ -207,14 +207,14 @@ REX_RSL_BEGIN_NAMESPACE::enum_refl
         return N;
       }
 
-      constexpr operator StringView() const noexcept
+      constexpr operator string_view() const noexcept
       {
         return {data(), size()};
       }
 
     private:
       template <card32... I>
-      constexpr static_String(StringView str, rsl::index_sequence<I...>) noexcept
+      constexpr static_String(string_view str, rsl::index_sequence<I...>) noexcept
           : chars_ {str[I]..., '\0'}
       {
       }
@@ -226,7 +226,7 @@ REX_RSL_BEGIN_NAMESPACE::enum_refl
     class static_String<0>
     {
     public:
-      constexpr explicit static_String(StringView) noexcept {}
+      constexpr explicit static_String(string_view) noexcept {}
 
       constexpr const char* data() const noexcept
       {
@@ -238,13 +238,13 @@ REX_RSL_BEGIN_NAMESPACE::enum_refl
         return 0;
       }
 
-      constexpr operator StringView() const noexcept
+      constexpr operator string_view() const noexcept
       {
         return {};
       }
     };
 
-    constexpr StringView pretty_name(StringView name) noexcept
+    constexpr string_view pretty_name(string_view name) noexcept
     {
       for(card32 i = name.size(); i > 0; --i)
       {
@@ -271,7 +271,7 @@ REX_RSL_BEGIN_NAMESPACE::enum_refl
       return {}; // Invalid name.
     }
 
-    constexpr card32 find(StringView str, char c) noexcept
+    constexpr card32 find(string_view str, char c) noexcept
     {
   #if defined(__clang__) && __clang_major__ < 9 && defined(__GLIBCXX__) || defined(_MSC_VER) && _MSC_VER < 1920 && !defined(__clang__)
       // https://stackoverflow.com/questions/56484834/constexpr-stdString-viewfind-last-of-doesnt-work-on-clang-8-with-libstdc
@@ -291,7 +291,7 @@ REX_RSL_BEGIN_NAMESPACE::enum_refl
           }
         }
 
-        return StringView::npos();
+        return string_view::npos();
       }
       else
       {
@@ -306,7 +306,7 @@ REX_RSL_BEGIN_NAMESPACE::enum_refl
     }
 
     template <typename BinaryPredicate>
-    constexpr bool cmp_equal(StringView lhs, StringView rhs, BinaryPredicate&& p) noexcept(rsl::is_nothrow_invocable_r_v<bool, BinaryPredicate, char, char>)
+    constexpr bool cmp_equal(string_view lhs, string_view rhs, BinaryPredicate&& p) noexcept(rsl::is_nothrow_invocable_r_v<bool, BinaryPredicate, char, char>)
     {
   #if defined(_MSC_VER) && _MSC_VER < 1920 && !defined(__clang__)
       // https://developercommunity.visualstudio.com/content/problem/360432/vs20178-regression-c-failed-in-test.html
@@ -403,15 +403,15 @@ REX_RSL_BEGIN_NAMESPACE::enum_refl
       static_assert(is_enum_v<E>, "enum_refl::detail::n requires enum type.");
   #if defined(enum_refl_SUPPORTED) && enum_refl_SUPPORTED
     #if defined(__clang__)
-      constexpr StringView name {__PRETTY_FUNCTION__ + 34, sizeof(__PRETTY_FUNCTION__) - 36};
+      constexpr string_view name {__PRETTY_FUNCTION__ + 34, sizeof(__PRETTY_FUNCTION__) - 36};
     #elif defined(__GNUC__)
-      constexpr StringView name {__PRETTY_FUNCTION__ + 49, sizeof(__PRETTY_FUNCTION__) - 51};
+      constexpr string_view name {__PRETTY_FUNCTION__ + 49, sizeof(__PRETTY_FUNCTION__) - 51};
     #elif defined(_MSC_VER)
-      constexpr StringView name {__FUNCSIG__ + 40, sizeof(__FUNCSIG__) - 57};
+      constexpr string_view name {__FUNCSIG__ + 40, sizeof(__FUNCSIG__) - 57};
     #endif
       return static_String<name.size()> {name};
   #else
-      return StringView {};   // Unsupported compiler.
+      return string_view {};   // Unsupported compiler.
   #endif
     }
 
@@ -435,7 +435,7 @@ REX_RSL_BEGIN_NAMESPACE::enum_refl
     #endif
         return static_String<name.size()> {name};
   #else
-        return StringView {}; // Unsupported compiler.
+        return string_view {}; // Unsupported compiler.
   #endif
       }
       else
@@ -482,8 +482,8 @@ REX_RSL_BEGIN_NAMESPACE::enum_refl
       else
       {
         constexpr auto lhs = customize::enum_range<E>::min;
-        static_assert(lhs > (rsl::NumericLimits<rsl::int16_t>::min)(), "enum_refl::enum_range requires min must be greater than INT16_MIN.");
-        constexpr auto rhs = (rsl::NumericLimits<U>::min)();
+        static_assert(lhs > (rsl::numeric_limits<rsl::int16_t>::min)(), "enum_refl::enum_range requires min must be greater than INT16_MIN.");
+        constexpr auto rhs = (rsl::numeric_limits<U>::min)();
 
         if constexpr(cmp_less(rhs, lhs))
         {
@@ -504,13 +504,13 @@ REX_RSL_BEGIN_NAMESPACE::enum_refl
 
       if constexpr(IsFlags)
       {
-        return rsl::NumericLimits<U>::digits - 1;
+        return rsl::numeric_limits<U>::digits - 1;
       }
       else
       {
         constexpr auto lhs = customize::enum_range<E>::max;
-        static_assert(lhs < (rsl::NumericLimits<rsl::int16_t>::max)(), "enum_refl::enum_range requires max must be less than INT16_MAX.");
-        constexpr auto rhs = (rsl::NumericLimits<U>::max)();
+        static_assert(lhs < (rsl::numeric_limits<rsl::int16_t>::max)(), "enum_refl::enum_range requires max must be less than INT16_MAX.");
+        constexpr auto rhs = (rsl::numeric_limits<U>::max)();
 
         if constexpr(cmp_less(lhs, rhs))
         {
@@ -579,7 +579,7 @@ REX_RSL_BEGIN_NAMESPACE::enum_refl
       constexpr auto max        = reflected_max_v<E, IsFlags>;
       constexpr auto range_size = max - min + 1;
       static_assert(range_size > 0, "enum_refl::enum_range requires valid size.");
-      static_assert(range_size < (rsl::NumericLimits<rsl::uint16_t>::max)(), "enum_refl::enum_range requires valid size.");
+      static_assert(range_size < (rsl::numeric_limits<rsl::uint16_t>::max)(), "enum_refl::enum_range requires valid size.");
 
       return values<E, IsFlags, reflected_min_v<E, IsFlags>>(rsl::make_index_sequence<range_size> {});
     }
@@ -607,7 +607,7 @@ REX_RSL_BEGIN_NAMESPACE::enum_refl
       constexpr auto min        = IsFlags ? log2(min_v<E, IsFlags>) : min_v<E, IsFlags>;
       constexpr auto range_size = max - min + U {1};
       static_assert(range_size > 0, "enum_refl::enum_range requires valid size.");
-      static_assert(range_size < (rsl::NumericLimits<rsl::uint16_t>::max)(), "enum_refl::enum_range requires valid size.");
+      static_assert(range_size < (rsl::numeric_limits<rsl::uint16_t>::max)(), "enum_refl::enum_range requires valid size.");
 
       return static_cast<card32>(range_size);
     }
@@ -616,10 +616,10 @@ REX_RSL_BEGIN_NAMESPACE::enum_refl
     inline constexpr auto range_size_v = range_size<E, IsFlags>();
 
     template <typename E, bool IsFlags = false>
-    using index_t = rsl::conditional_t < range_size_v<E, IsFlags><(rsl::NumericLimits<rsl::uint8_t>::max)(), rsl::uint8_t, rsl::uint16_t>;
+    using index_t = rsl::conditional_t < range_size_v<E, IsFlags><(rsl::numeric_limits<rsl::uint8_t>::max)(), rsl::uint8_t, rsl::uint16_t>;
 
     template <typename E, bool IsFlags = false>
-    inline constexpr auto invalid_index_v = (rsl::NumericLimits<index_t<E, IsFlags>>::max)();
+    inline constexpr auto invalid_index_v = (rsl::numeric_limits<index_t<E, IsFlags>>::max)();
 
     template <typename E, bool IsFlags, card32... I>
     constexpr auto indexes(rsl::index_sequence<I...>) noexcept
@@ -639,7 +639,7 @@ REX_RSL_BEGIN_NAMESPACE::enum_refl
     {
       static_assert(is_enum_v<E>, "enum_refl::detail::names requires enum type.");
 
-      return rsl::Array<StringView, sizeof...(I)> {{enum_name_v<E, values_v<E, IsFlags>[I]>...}};
+      return rsl::Array<string_view, sizeof...(I)> {{enum_name_v<E, values_v<E, IsFlags>[I]>...}};
     }
 
     template <typename E, bool IsFlags = false>
@@ -653,7 +653,7 @@ REX_RSL_BEGIN_NAMESPACE::enum_refl
     {
       static_assert(is_enum_v<E>, "enum_refl::detail::entries requires enum type.");
 
-      return rsl::Array<rsl::pair<E, StringView>, sizeof...(I)> {{{values_v<E, IsFlags>[I], enum_name_v<E, values_v<E, IsFlags>[I]>}...}};
+      return rsl::Array<rsl::pair<E, string_view>, sizeof...(I)> {{{values_v<E, IsFlags>[I], enum_name_v<E, values_v<E, IsFlags>[I]>}...}};
     }
 
     template <typename E, bool IsFlags = false>
@@ -807,10 +807,10 @@ REX_RSL_BEGIN_NAMESPACE::enum_refl
 
   // Returns type name of enum.
   template <typename E>
-  REX_NO_DISCARD constexpr auto enum_type_name() noexcept -> detail::enable_if_enum_t<E, StringView>
+  REX_NO_DISCARD constexpr auto enum_type_name() noexcept -> detail::enable_if_enum_t<E, string_view>
   {
     using D                   = rsl::decay_t<E>;
-    constexpr StringView name = detail::type_name_v<D>;
+    constexpr string_view name = detail::type_name_v<D>;
     static_assert(name.size() > 0, "Enum type does not have a name.");
 
     return name;
@@ -856,10 +856,10 @@ REX_RSL_BEGIN_NAMESPACE::enum_refl
   // Returns name from static storage enum variable.
   // This version is much lighter on the compile times and is not restricted to the enum_range limitation.
   template <auto V>
-  REX_NO_DISCARD constexpr auto enum_name() noexcept -> detail::enable_if_enum_t<decltype(V), StringView>
+  REX_NO_DISCARD constexpr auto enum_name() noexcept -> detail::enable_if_enum_t<decltype(V), string_view>
   {
     using D                   = rsl::decay_t<decltype(V)>;
-    constexpr StringView name = detail::enum_name_v<D, V>;
+    constexpr string_view name = detail::enum_name_v<D, V>;
     static_assert(name.size() > 0, "Enum value does not have a name.");
 
     return name;
@@ -868,7 +868,7 @@ REX_RSL_BEGIN_NAMESPACE::enum_refl
   // Returns name from enum value.
   // If enum value does not have name or value out of range, returns empty String.
   template <typename E>
-  REX_NO_DISCARD constexpr auto enum_name(E value) noexcept -> detail::enable_if_enum_t<E, StringView>
+  REX_NO_DISCARD constexpr auto enum_name(E value) noexcept -> detail::enable_if_enum_t<E, string_view>
   {
     using D = rsl::decay_t<E>;
 
@@ -918,7 +918,7 @@ REX_RSL_BEGIN_NAMESPACE::enum_refl
   // Obtains enum value from name.
   // Returns optional with enum value.
   template <typename E, typename BinaryPredicate>
-  REX_NO_DISCARD constexpr auto enum_cast(StringView value, BinaryPredicate p) noexcept(rsl::is_nothrow_invocable_r_v<bool, BinaryPredicate, char, char>)->detail::enable_if_enum_t<E, optional<rsl::decay_t<E>>>
+  REX_NO_DISCARD constexpr auto enum_cast(string_view value, BinaryPredicate p) noexcept(rsl::is_nothrow_invocable_r_v<bool, BinaryPredicate, char, char>)->detail::enable_if_enum_t<E, optional<rsl::decay_t<E>>>
   {
     static_assert(rsl::is_invocable_r_v<bool, BinaryPredicate, char, char>, "enum_refl::enum_cast requires bool(char, char) invocable predicate.");
     using D = rsl::decay_t<E>;
@@ -937,7 +937,7 @@ REX_RSL_BEGIN_NAMESPACE::enum_refl
   // Obtains enum value from name.
   // Returns optional with enum value.
   template <typename E>
-  REX_NO_DISCARD constexpr auto enum_cast(StringView value) noexcept -> detail::enable_if_enum_t<E, optional<rsl::decay_t<E>>>
+  REX_NO_DISCARD constexpr auto enum_cast(string_view value) noexcept -> detail::enable_if_enum_t<E, optional<rsl::decay_t<E>>>
   {
     using D = rsl::decay_t<E>;
 
@@ -986,7 +986,7 @@ REX_RSL_BEGIN_NAMESPACE::enum_refl
 
   // Checks whether enum contains enumerator with such name.
   template <typename E, typename BinaryPredicate>
-  REX_NO_DISCARD constexpr auto enum_contains(StringView value, BinaryPredicate p) noexcept(rsl::is_nothrow_invocable_r_v<bool, BinaryPredicate, char, char>)->detail::enable_if_enum_t<E, bool>
+  REX_NO_DISCARD constexpr auto enum_contains(string_view value, BinaryPredicate p) noexcept(rsl::is_nothrow_invocable_r_v<bool, BinaryPredicate, char, char>)->detail::enable_if_enum_t<E, bool>
   {
     static_assert(rsl::is_invocable_r_v<bool, BinaryPredicate, char, char>, "enum_refl::enum_contains requires bool(char, char) invocable predicate.");
     using D = rsl::decay_t<E>;
@@ -996,7 +996,7 @@ REX_RSL_BEGIN_NAMESPACE::enum_refl
 
   // Checks whether enum contains enumerator with such name.
   template <typename E>
-  REX_NO_DISCARD constexpr auto enum_contains(StringView value) noexcept -> detail::enable_if_enum_t<E, bool>
+  REX_NO_DISCARD constexpr auto enum_contains(string_view value) noexcept -> detail::enable_if_enum_t<E, bool>
   {
     using D = rsl::decay_t<E>;
 
@@ -1217,7 +1217,7 @@ REX_RSL_BEGIN_NAMESPACE::enum_refl
     // Obtains enum-flags value from name.
     // Returns optional with enum-flags value.
     template <typename E, typename BinaryPredicate>
-    REX_NO_DISCARD constexpr auto enum_cast(StringView value, BinaryPredicate p) noexcept(rsl::is_nothrow_invocable_r_v<bool, BinaryPredicate, char, char>) -> detail::enable_if_enum_t<E, optional<rsl::decay_t<E>>>
+    REX_NO_DISCARD constexpr auto enum_cast(string_view value, BinaryPredicate p) noexcept(rsl::is_nothrow_invocable_r_v<bool, BinaryPredicate, char, char>) -> detail::enable_if_enum_t<E, optional<rsl::decay_t<E>>>
     {
       static_assert(rsl::is_invocable_r_v<bool, BinaryPredicate, char, char>, "enum_refl::flags::enum_cast requires bool(char, char) invocable predicate.");
       using D = rsl::decay_t<E>;
@@ -1227,7 +1227,7 @@ REX_RSL_BEGIN_NAMESPACE::enum_refl
       while(!value.empty())
       {
         const auto d = detail::find(value, '|');
-        const auto s = (d == StringView::npos()) ? value : value.substr(0, d);
+        const auto s = (d == string_view::npos()) ? value : value.substr(0, d);
         auto f       = U {0};
         for(card32 i = 0; i < detail::count_v<D, true>; ++i)
         {
@@ -1242,7 +1242,7 @@ REX_RSL_BEGIN_NAMESPACE::enum_refl
         {
           return {}; // Invalid value or out of range.
         }
-        value.remove_prefix((d == StringView::npos()) ? value.size() : d + 1);
+        value.remove_prefix((d == string_view::npos()) ? value.size() : d + 1);
       }
 
       if(result == U {0})
@@ -1258,7 +1258,7 @@ REX_RSL_BEGIN_NAMESPACE::enum_refl
     // Obtains enum-flags value from name.
     // Returns optional with enum-flags value.
     template <typename E>
-    REX_NO_DISCARD constexpr auto enum_cast(StringView value) noexcept -> detail::enable_if_enum_t<E, optional<rsl::decay_t<E>>>
+    REX_NO_DISCARD constexpr auto enum_cast(string_view value) noexcept -> detail::enable_if_enum_t<E, optional<rsl::decay_t<E>>>
     {
       using D = rsl::decay_t<E>;
 
@@ -1311,7 +1311,7 @@ REX_RSL_BEGIN_NAMESPACE::enum_refl
 
     // Checks whether enum-flags contains enumerator with such name.
     template <typename E, typename BinaryPredicate>
-    REX_NO_DISCARD constexpr auto enum_contains(StringView value, BinaryPredicate p) noexcept(rsl::is_nothrow_invocable_r_v<bool, BinaryPredicate, char, char>) -> detail::enable_if_enum_t<E, bool>
+    REX_NO_DISCARD constexpr auto enum_contains(string_view value, BinaryPredicate p) noexcept(rsl::is_nothrow_invocable_r_v<bool, BinaryPredicate, char, char>) -> detail::enable_if_enum_t<E, bool>
     {
       static_assert(rsl::is_invocable_r_v<bool, BinaryPredicate, char, char>, "enum_refl::flags::enum_contains requires bool(char, char) invocable predicate.");
       using D = rsl::decay_t<E>;
@@ -1321,7 +1321,7 @@ REX_RSL_BEGIN_NAMESPACE::enum_refl
 
     // Checks whether enum-flags contains enumerator with such name.
     template <typename E>
-    REX_NO_DISCARD constexpr auto enum_contains(StringView value) noexcept -> detail::enable_if_enum_t<E, bool>
+    REX_NO_DISCARD constexpr auto enum_contains(string_view value) noexcept -> detail::enable_if_enum_t<E, bool>
     {
       using D = rsl::decay_t<E>;
 
@@ -1362,7 +1362,7 @@ REX_RSL_BEGIN_NAMESPACE::enum_refl
   namespace flags::bitwise_operators
   {
 
-    using REX_RSL_BEGIN_NAMESPACE::enum_refl::bitwise_operators;
+    using namespace rsl { inline namespace v1 {::enum_refl::bitwise_operators;
 
   } // namespace flags::bitwise_operators
 

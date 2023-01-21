@@ -12,7 +12,7 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
 class Rand
 {
@@ -64,4 +64,4 @@ private:
   static constexpr card32 s_RandMax = 0x7fff;
 };
 
-REX_RSL_END_NAMESPACE
+}}

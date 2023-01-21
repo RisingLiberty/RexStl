@@ -12,7 +12,7 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
 class YesNoEnum
 {
@@ -31,7 +31,7 @@ private:
   EYesNoEnum m_value;
 };
 
-REX_RSL_END_NAMESPACE
+}}
 
 #define DEFINE_YES_NO_ENUM(ClassName)                                                                                                                                                                                                                    \
   class ClassName : public rsl::YesNoEnum                                                                                                                                                                                                                \

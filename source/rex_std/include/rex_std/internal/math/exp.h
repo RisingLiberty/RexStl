@@ -12,7 +12,8 @@
 
 #pragma once
 
-#include "rex_std_extra/math/pow.h"
+#include "rex_std/internal/math/pow.h"
+#include "rex_std/numbers.h"
 
 namespace rsl
 {
@@ -21,7 +22,7 @@ namespace rsl
 
     constexpr float32 exp(const card32 exp)
     {
-      return pow(Euler, exp);
+      return pow(E, exp);
     }
 
   } // namespace v1

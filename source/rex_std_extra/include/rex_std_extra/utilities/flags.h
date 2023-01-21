@@ -12,7 +12,7 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
 template <typename T = card32>
 T no_flags()
@@ -20,4 +20,4 @@ T no_flags()
   return 0;
 }
 
-REX_RSL_END_NAMESPACE
+}}

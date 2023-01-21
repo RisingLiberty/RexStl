@@ -14,7 +14,7 @@
 
 #include "rex_std_extra/math/constants.h"
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
 class DegAngle
 {
@@ -103,4 +103,4 @@ private:
   float32 m_angle;
 };
 
-REX_RSL_END_NAMESPACE
+}}

@@ -14,14 +14,15 @@
 
 #include "rex_std/bonus/types.h"
 #include "rex_std/string_view.h"
+#include "rex_std/iostream.h"
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
 class Version
 {
 public:
   Version(card8 major, card8 minor, card32 patch);
-  Version(const StringView version);
+  Version(const string_view version);
 
   card8 major() const;
   card8 minor() const;
@@ -36,7 +37,6 @@ private:
   card32 m_patch;
 };
 
-class OStream;
-OStream& operator<<(OStream& os, const Version& version);
+ostream& operator<<(ostream& os, const Version& version);
 
-REX_RSL_END_NAMESPACE
+}}

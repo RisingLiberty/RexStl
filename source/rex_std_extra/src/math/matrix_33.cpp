@@ -12,9 +12,9 @@
 
 #include "rex_std_extra/math/matrix_33.h"
 
-#include "rex_std_extra/rex_stl_extra_pch.h"
+#include "rex_std/math.h"
 
-rsl::Matrix33::Matrix33()
+rsl::matrix33::matrix33()
     : m_elements()
 {
   m_elements[0].x = 1.0f;
@@ -22,7 +22,7 @@ rsl::Matrix33::Matrix33()
   m_elements[2].z = 1.0f;
 }
 
-rsl::Matrix33::Matrix33(float32 e00, float32 e10, float32 e20, float32 e01, float32 e11, float32 e21, float32 e02, float32 e12, float32 e22)
+rsl::matrix33::matrix33(float32 e00, float32 e10, float32 e20, float32 e01, float32 e11, float32 e21, float32 e02, float32 e12, float32 e22)
     : m_elements()
 {
   m_elements[0] = {e00, e01, e02};
@@ -30,18 +30,18 @@ rsl::Matrix33::Matrix33(float32 e00, float32 e10, float32 e20, float32 e01, floa
   m_elements[2] = {e20, e21, e22};
 }
 
-float32& rsl::Matrix33::elem(card32 row, card32 column)
+float32& rsl::matrix33::elem(card32 row, card32 column)
 {
   return m_elements[column][row];
 }
-float32 rsl::Matrix33::elem(card32 row, card32 column) const
+float32 rsl::matrix33::elem(card32 row, card32 column) const
 {
   return m_elements[column][row];
 }
 
-rsl::Matrix33 rsl::Matrix33::operator*(const Matrix33& other) const
+rsl::matrix33 rsl::matrix33::operator*(const matrix33& other) const
 {
-  Matrix33 res;
+  matrix33 res;
 
   res.elem(0, 0) = other.elem(0, 0) * elem(0, 0) + other.elem(1, 0) * elem(0, 1) + other.elem(2, 0) * elem(0, 2);
   res.elem(0, 1) = other.elem(0, 1) * elem(0, 0) + other.elem(1, 1) * elem(0, 1) + other.elem(2, 1) * elem(0, 2);
@@ -57,22 +57,22 @@ rsl::Matrix33 rsl::Matrix33::operator*(const Matrix33& other) const
 
   return res;
 }
-rsl::Matrix33& rsl::Matrix33::operator*=(const Matrix33& other)
+rsl::matrix33& rsl::matrix33::operator*=(const matrix33& other)
 {
   *this = *this * other;
   return *this;
 }
 
-rsl::Matrix33& rsl::Matrix33::transpose()
+rsl::matrix33& rsl::matrix33::transpose()
 {
   swap_elements(1, 0);
   swap_elements(2, 0);
   swap_elements(1, 2);
   return *this;
 }
-rsl::Matrix33& rsl::Matrix33::inverse()
+rsl::matrix33& rsl::matrix33::inverse()
 {
-  Matrix33 m((*this));
+  matrix33 m((*this));
   float32 one_over_det =
       (m.elem(0, 0) * (m.elem(1, 1) * m.elem(2, 2) - m.elem(2, 1) * m.elem(1, 2)) - m.elem(1, 0) * (m.elem(0, 1) * m.elem(2, 2) - m.elem(2, 1) * m.elem(0, 2)) + m.elem(2, 0) * (m.elem(0, 1) * m.elem(1, 2) - m.elem(1, 1) * m.elem(0, 2)));
 
@@ -96,54 +96,54 @@ rsl::Matrix33& rsl::Matrix33::inverse()
   return *this;
 }
 
-rsl::Matrix33 rsl::Matrix33::transposed() const
+rsl::matrix33 rsl::matrix33::transposed() const
 {
-  Matrix33 tmp = *this;
+  matrix33 tmp = *this;
   return tmp.transpose();
 }
-rsl::Matrix33 rsl::Matrix33::inversed() const
+rsl::matrix33 rsl::matrix33::inversed() const
 {
-  Matrix33 tmp = *this;
+  matrix33 tmp = *this;
   return tmp.inverse();
 }
 
-rsl::Vec3 rsl::Matrix33::operator*(const Vec3& v) const
+rsl::vec3 rsl::matrix33::operator*(const vec3& v) const
 {
-  return Vec3(elem(0, 0) * v.x + elem(0, 1) * v.y + elem(0, 2) * v.z, elem(1, 0) * v.x + elem(1, 1) * v.y + elem(1, 2) * v.z, elem(2, 0) * v.x + elem(2, 1) * v.y + elem(2, 2) * v.z);
+  return vec3(elem(0, 0) * v.x + elem(0, 1) * v.y + elem(0, 2) * v.z, elem(1, 0) * v.x + elem(1, 1) * v.y + elem(1, 2) * v.z, elem(2, 0) * v.x + elem(2, 1) * v.y + elem(2, 2) * v.z);
 }
-rsl::Vec3 rsl::Matrix33::right() const
+rsl::vec3 rsl::matrix33::right() const
 {
-  return Vec3(elem(0, 0), elem(1, 0), elem(2, 0));
+  return vec3(elem(0, 0), elem(1, 0), elem(2, 0));
 }
-rsl::Vec3 rsl::Matrix33::up() const
+rsl::vec3 rsl::matrix33::up() const
 {
-  return Vec3(elem(0, 1), elem(1, 1), elem(2, 1));
+  return vec3(elem(0, 1), elem(1, 1), elem(2, 1));
 }
-rsl::Vec3 rsl::Matrix33::at() const
+rsl::vec3 rsl::matrix33::at() const
 {
-  return Vec3(elem(0, 2), elem(1, 2), elem(2, 2));
+  return vec3(elem(0, 2), elem(1, 2), elem(2, 2));
 }
 
-void rsl::Matrix33::set_right(const Vec3& right)
+void rsl::matrix33::set_right(const vec3& right)
 {
   elem(0, 0) = right.x;
   elem(1, 0) = right.y;
   elem(2, 0) = right.z;
 }
-void rsl::Matrix33::set_up(const Vec3& up)
+void rsl::matrix33::set_up(const vec3& up)
 {
   elem(0, 1) = up.x;
   elem(1, 1) = up.y;
   elem(2, 1) = up.z;
 }
-void rsl::Matrix33::set_at(const Vec3& at)
+void rsl::matrix33::set_at(const vec3& at)
 {
   elem(0, 2) = at.x;
   elem(1, 2) = at.y;
   elem(2, 2) = at.z;
 }
 
-rsl::Matrix33& rsl::Matrix33::set_scale(const Vec3& scale)
+rsl::matrix33& rsl::matrix33::set_scale(const vec3& scale)
 {
   elem(0, 0) = scale.x;
   elem(1, 1) = scale.y;
@@ -155,7 +155,7 @@ rsl::Matrix33& rsl::Matrix33::set_scale(const Vec3& scale)
 
   return *this;
 }
-void rsl::Matrix33::scale(const Vec3& scale)
+void rsl::matrix33::scale(const vec3& scale)
 {
   for(card32 i = 0; i < 2; ++i)
   {
@@ -164,7 +164,7 @@ void rsl::Matrix33::scale(const Vec3& scale)
     elem(i, 2) *= scale.z;
   }
 }
-void rsl::Matrix33::scale(const float32 scale)
+void rsl::matrix33::scale(const float32 scale)
 {
   for(card32 i = 0; i < 2; ++i)
   {
@@ -174,19 +174,19 @@ void rsl::Matrix33::scale(const float32 scale)
   }
 }
 
-rsl::Matrix33 rsl::Matrix33::identity()
+rsl::matrix33 rsl::matrix33::identity()
 {
-  return Matrix33(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+  return matrix33(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 }
-rsl::Matrix33 rsl::Matrix33::zero()
+rsl::matrix33 rsl::matrix33::zero()
 {
-  return Matrix33(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+  return matrix33(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
 }
 
-void rsl::Matrix33::rotate_x(const RadAngle rot_x)
+void rsl::matrix33::rotate_x(const RadAngle rot_x)
 {
-  const float32 sa = sin(rot_x.get());
-  const float32 ca = cos(rot_x.get());
+  const float32 sa = rsl::sin(rot_x.get());
+  const float32 ca = rsl::cos(rot_x.get());
 
   float32 temp_1i = 0.0f;
 
@@ -197,10 +197,10 @@ void rsl::Matrix33::rotate_x(const RadAngle rot_x)
     elem(2, i) = temp_1i * sa + elem(2, i) * ca;
   }
 }
-void rsl::Matrix33::rotate_y(const RadAngle rot_y)
+void rsl::matrix33::rotate_y(const RadAngle rot_y)
 {
-  const float32 sa = sin(rot_y.get());
-  const float32 ca = cos(rot_y.get());
+  const float32 sa = rsl::sin(rot_y.get());
+  const float32 ca = rsl::cos(rot_y.get());
 
   float32 temp_0i = 0.0f;
 
@@ -211,10 +211,10 @@ void rsl::Matrix33::rotate_y(const RadAngle rot_y)
     elem(2, i) = elem(2, i) * ca - temp_0i * sa;
   }
 }
-void rsl::Matrix33::rotate_z(const RadAngle rot_z)
+void rsl::matrix33::rotate_z(const RadAngle rot_z)
 {
-  const float32 sa = sin(rot_z.get());
-  const float32 ca = cos(rot_z.get());
+  const float32 sa = rsl::sin(rot_z.get());
+  const float32 ca = rsl::cos(rot_z.get());
 
   float32 temp_0i = 0.0f;
 
@@ -226,10 +226,10 @@ void rsl::Matrix33::rotate_z(const RadAngle rot_z)
   }
 }
 
-rsl::Matrix33& rsl::Matrix33::set_rotate_x(const RadAngle rot_x)
+rsl::matrix33& rsl::matrix33::set_rotate_x(const RadAngle rot_x)
 {
-  const float32 cosine = cos(rot_x.get());
-  const float32 sine   = sin(rot_x.get());
+  const float32 cosine = rsl::cos(rot_x.get());
+  const float32 sine   = rsl::sin(rot_x.get());
 
   elem(1, 1) = cosine;
   elem(1, 2) = -sine;
@@ -238,10 +238,10 @@ rsl::Matrix33& rsl::Matrix33::set_rotate_x(const RadAngle rot_x)
 
   return *this;
 }
-rsl::Matrix33& rsl::Matrix33::set_rotate_y(const RadAngle rot_y)
+rsl::matrix33& rsl::matrix33::set_rotate_y(const RadAngle rot_y)
 {
-  const float32 cosine = cos(rot_y.get());
-  const float32 sine   = sin(rot_y.get());
+  const float32 cosine = rsl::cos(rot_y.get());
+  const float32 sine   = rsl::sin(rot_y.get());
 
   elem(0, 0) = cosine;
   elem(0, 2) = sine;
@@ -250,10 +250,10 @@ rsl::Matrix33& rsl::Matrix33::set_rotate_y(const RadAngle rot_y)
 
   return *this;
 }
-rsl::Matrix33& rsl::Matrix33::set_rotate_z(const RadAngle rot_z)
+rsl::matrix33& rsl::matrix33::set_rotate_z(const RadAngle rot_z)
 {
-  const float32 cosine = cos(rot_z.get());
-  const float32 sine   = sin(rot_z.get());
+  const float32 cosine = rsl::cos(rot_z.get());
+  const float32 sine   = rsl::sin(rot_z.get());
 
   elem(0, 0) = cosine;
   elem(0, 1) = -sine;
@@ -263,7 +263,7 @@ rsl::Matrix33& rsl::Matrix33::set_rotate_z(const RadAngle rot_z)
   return *this;
 }
 
-void rsl::Matrix33::swap_elements(card32 row_idx, card32 column_idx)
+void rsl::matrix33::swap_elements(card32 row_idx, card32 column_idx)
 {
   float32 t                 = elem(row_idx, column_idx);
   elem(row_idx, column_idx) = elem(column_idx, row_idx);

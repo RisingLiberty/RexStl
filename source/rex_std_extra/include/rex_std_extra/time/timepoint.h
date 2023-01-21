@@ -15,19 +15,19 @@
 #include "rex_std_extra/time/date.h"
 #include "rex_std_extra/time/time.h"
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
 class Date;
-class Time;
+class time;
 
 class TimePoint
 {
 public:
   TimePoint();
-  TimePoint(const Date& date, const Time& time);
+  TimePoint(const Date& date, const rsl::time& time);
 
   const Date& date() const;
-  const Time& time() const;
+  const rsl::time& time() const;
 
   bool operator>(const TimePoint& timepoint) const;
   bool operator>=(const TimePoint& timepoint) const;
@@ -40,14 +40,13 @@ public:
   float32 operator-(const TimePoint& other) const;
 
 private:
-  Time m_time;
-  Date m_date;
+  rsl::time m_time;
+  rsl::Date m_date;
 };
 
-class OStream;
-OStream& operator<<(OStream& os, const TimePoint& timepoint);
+ostream& operator<<(ostream& os, const TimePoint& timepoint);
 
-REX_RSL_END_NAMESPACE
+}}
 
 #ifdef REX_PLATFORM_WINDOWS
   #include "rex_std_extra/time/win/win_timepoint.h"

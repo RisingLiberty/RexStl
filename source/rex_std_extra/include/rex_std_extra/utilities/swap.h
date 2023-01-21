@@ -12,7 +12,7 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
 template <typename T>
 constexpr void swap_adl(T& lhs, T& rhs)
@@ -28,4 +28,4 @@ constexpr void iter_swap(It& lhs, It& rhs)
   swap_adl(*lhs, *rhs);
 }
 
-REX_RSL_END_NAMESPACE
+}}

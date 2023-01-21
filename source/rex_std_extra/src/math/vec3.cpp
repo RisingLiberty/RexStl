@@ -13,40 +13,40 @@
 #include "rex_std_extra/math/vec3.h"
 
 #include "rex_std_extra/math/float.h"
-#include "rex_std_extra/rex_stl_extra_pch.h"
+#include "rex_std/format.h"
 
-rsl::Vec3::Vec3()
+rsl::vec3::vec3()
     : x(0.0f)
     , y(0.0f)
     , z(0.0f)
 {
 }
 
-rsl::Vec3::Vec3(float32 _x, float32 _y, float32 _z)
+rsl::vec3::vec3(float32 _x, float32 _y, float32 _z)
     : x(_x)
     , y(_y)
     , z(_z)
 {
 }
 
-rsl::Vec3 rsl::Vec3::operator+(const Vec3& rhs) const
+rsl::vec3 rsl::vec3::operator+(const vec3& rhs) const
 {
-  return Vec3(x + rhs.x, y + rhs.y, z + rhs.z);
+  return vec3(x + rhs.x, y + rhs.y, z + rhs.z);
 }
-rsl::Vec3 rsl::Vec3::operator-(const Vec3& rhs) const
+rsl::vec3 rsl::vec3::operator-(const vec3& rhs) const
 {
-  return Vec3(x - rhs.x, y - rhs.y, z - rhs.z);
+  return vec3(x - rhs.x, y - rhs.y, z - rhs.z);
 }
-rsl::Vec3 rsl::Vec3::operator*(const float32 scalar) const
+rsl::vec3 rsl::vec3::operator*(const float32 scalar) const
 {
-  return Vec3(x * scalar, y * scalar, z * scalar);
+  return vec3(x * scalar, y * scalar, z * scalar);
 }
-rsl::Vec3 rsl::Vec3::operator/(const float32 scalar) const
+rsl::vec3 rsl::vec3::operator/(const float32 scalar) const
 {
-  return Vec3(x / scalar, y / scalar, z / scalar);
+  return vec3(x / scalar, y / scalar, z / scalar);
 }
 
-rsl::Vec3& rsl::Vec3::operator+=(const Vec3& rhs)
+rsl::vec3& rsl::vec3::operator+=(const vec3& rhs)
 {
   x += rhs.x;
   y += rhs.y;
@@ -54,7 +54,7 @@ rsl::Vec3& rsl::Vec3::operator+=(const Vec3& rhs)
 
   return *this;
 }
-rsl::Vec3& rsl::Vec3::operator-=(const Vec3& rhs)
+rsl::vec3& rsl::vec3::operator-=(const vec3& rhs)
 {
   x -= rhs.x;
   y -= rhs.y;
@@ -62,7 +62,7 @@ rsl::Vec3& rsl::Vec3::operator-=(const Vec3& rhs)
 
   return *this;
 }
-rsl::Vec3& rsl::Vec3::operator*=(const float32 scalar)
+rsl::vec3& rsl::vec3::operator*=(const float32 scalar)
 {
   x *= scalar;
   y *= scalar;
@@ -70,7 +70,7 @@ rsl::Vec3& rsl::Vec3::operator*=(const float32 scalar)
 
   return *this;
 }
-rsl::Vec3& rsl::Vec3::operator/=(const float32 scalar)
+rsl::vec3& rsl::vec3::operator/=(const float32 scalar)
 {
   x /= scalar;
   y /= scalar;
@@ -79,80 +79,80 @@ rsl::Vec3& rsl::Vec3::operator/=(const float32 scalar)
   return *this;
 }
 
-rsl::Vec3 rsl::Vec3::operator-() const
+rsl::vec3 rsl::vec3::operator-() const
 {
-  return Vec3(-x, -y, -z);
+  return vec3(-x, -y, -z);
 }
 
-float32& rsl::Vec3::operator[](card32 idx)
+float32& rsl::vec3::operator[](card32 idx)
 {
   float32* data = reinterpret_cast<float32*>(this);
   return *(data + idx);
 }
-float32 rsl::Vec3::operator[](card32 idx) const
+float32 rsl::vec3::operator[](card32 idx) const
 {
   const float32* data = reinterpret_cast<const float32*>(this);
   return *(data + idx);
 }
 
-bool rsl::Vec3::equals(const Vec3& other, const float32 comparison_threshold) const
+bool rsl::vec3::equals(const vec3& other, const float32 comparison_threshold) const
 {
   return rsl::equals(x, other.x, comparison_threshold) && rsl::equals(y, other.y, comparison_threshold) && rsl::equals(z, other.z, comparison_threshold);
 }
 
-bool rsl::Vec3::operator==(const Vec3& other) const
+bool rsl::vec3::operator==(const vec3& other) const
 {
   return equals(other);
 }
-bool rsl::Vec3::operator!=(const Vec3& other) const
+bool rsl::vec3::operator!=(const vec3& other) const
 {
   return !equals(other);
 }
 
-float32 rsl::Vec3::dot(const Vec3& other) const
+float32 rsl::vec3::dot(const vec3& other) const
 {
   return x * other.x + y * other.y + z * other.z;
 }
-rsl::Vec3 rsl::Vec3::cross(const Vec3& other) const
+rsl::vec3 rsl::vec3::cross(const vec3& other) const
 {
-  return Vec3(y * other.z - z * other.y, z * other.x - x * other.z, x * other.y - y * other.x);
+  return vec3(y * other.z - z * other.y, z * other.x - x * other.z, x * other.y - y * other.x);
 }
 
-rsl::Vec3 rsl::Vec3::up()
+rsl::vec3 rsl::vec3::up()
 {
-  return Vec3(0.0f, 1.0f, 0.0f);
+  return vec3(0.0f, 1.0f, 0.0f);
 }
-rsl::Vec3 rsl::Vec3::forward()
+rsl::vec3 rsl::vec3::forward()
 {
-  return Vec3(0.0f, 0.0f, 1.0f);
+  return vec3(0.0f, 0.0f, 1.0f);
 }
-rsl::Vec3 rsl::Vec3::right()
+rsl::vec3 rsl::vec3::right()
 {
-  return Vec3(1.0f, 0.0f, 0.0f);
+  return vec3(1.0f, 0.0f, 0.0f);
 }
-rsl::Vec3 rsl::Vec3::down()
+rsl::vec3 rsl::vec3::down()
 {
   return -up();
 }
-rsl::Vec3 rsl::Vec3::backward()
+rsl::vec3 rsl::vec3::backward()
 {
   return -forward();
 }
-rsl::Vec3 rsl::Vec3::left()
+rsl::vec3 rsl::vec3::left()
 {
   return -right();
 }
 
-float32 rsl::Vec3::length() const
+float32 rsl::vec3::length() const
 {
   return sqrt(length_squared());
 }
-float32 rsl::Vec3::length_squared() const
+float32 rsl::vec3::length_squared() const
 {
   return dot(*this);
 }
 
-rsl::Vec3& rsl::Vec3::normalise()
+rsl::vec3& rsl::vec3::normalise()
 {
   const float32 vec_inv_length = 1.0f / length();
   x *= vec_inv_length;
@@ -160,58 +160,58 @@ rsl::Vec3& rsl::Vec3::normalise()
   z *= vec_inv_length;
   return *this;
 }
-rsl::Vec3 rsl::Vec3::normalised() const
+rsl::vec3 rsl::vec3::normalised() const
 {
   const float32 vec_inv_length = 1.0f / length();
-  return Vec3(x * vec_inv_length, y * vec_inv_length, z * vec_inv_length);
+  return vec3(x * vec_inv_length, y * vec_inv_length, z * vec_inv_length);
 }
 
-rsl::Vec3& rsl::Vec3::scale(const Vec3& scale)
+rsl::vec3& rsl::vec3::scale(const vec3& scale)
 {
   x *= scale.x;
   y *= scale.y;
   z *= scale.z;
   return *this;
 }
-rsl::Vec3 rsl::Vec3::scaled(const Vec3& scale) const
+rsl::vec3 rsl::vec3::scaled(const vec3& scale) const
 {
-  return Vec3(*this).scale(scale);
+  return vec3(*this).scale(scale);
 }
-rsl::Vec3& rsl::Vec3::floor(const Vec3& floor)
+rsl::vec3& rsl::vec3::floor(const vec3& floor)
 {
   x = min(x, floor.x);
   y = min(y, floor.y);
   z = min(z, floor.z);
   return *this;
 }
-rsl::Vec3 rsl::Vec3::floored(const Vec3& floor) const
+rsl::vec3 rsl::vec3::floored(const vec3& floor) const
 {
   float32 new_x = min(x, floor.x);
   float32 new_y = min(y, floor.y);
   float32 new_z = min(z, floor.z);
-  return Vec3(new_x, new_y, new_z);
+  return vec3(new_x, new_y, new_z);
 }
-rsl::Vec3& rsl::Vec3::ceil(const Vec3& ceil)
+rsl::vec3& rsl::vec3::ceil(const vec3& ceil)
 {
   x = max(x, ceil.x);
   y = max(y, ceil.y);
   z = max(z, ceil.z);
   return *this;
 }
-rsl::Vec3 rsl::Vec3::ceiled(const Vec3& ceil) const
+rsl::vec3 rsl::vec3::ceiled(const vec3& ceil) const
 {
   float32 new_x = max(x, ceil.x);
   float32 new_y = max(y, ceil.y);
   float32 new_z = max(z, ceil.z);
-  return Vec3(new_x, new_y, new_z);
+  return vec3(new_x, new_y, new_z);
 }
 
-bool rsl::Vec3::is_zero() const
+bool rsl::vec3::is_zero() const
 {
-  return equals(Vec3(0.0f, 0.0f, 0.0f));
+  return equals(vec3(0.0f, 0.0f, 0.0f));
 }
 
-rsl::Vec3& rsl::Vec3::rotate_x(const RadAngle angle)
+rsl::vec3& rsl::vec3::rotate_x(const RadAngle angle)
 {
   const float32 copy_y = y;
 
@@ -223,7 +223,7 @@ rsl::Vec3& rsl::Vec3::rotate_x(const RadAngle angle)
 
   return *this;
 }
-rsl::Vec3& rsl::Vec3::rotate_y(const RadAngle angle)
+rsl::vec3& rsl::vec3::rotate_y(const RadAngle angle)
 {
   const float32 copy_x = x;
 
@@ -234,7 +234,7 @@ rsl::Vec3& rsl::Vec3::rotate_y(const RadAngle angle)
   z = copy_x * -siny + z * cosy;
   return *this;
 }
-rsl::Vec3& rsl::Vec3::rotate_z(const RadAngle angle)
+rsl::vec3& rsl::vec3::rotate_z(const RadAngle angle)
 {
   const float32 copy_x = x;
 
@@ -247,7 +247,7 @@ rsl::Vec3& rsl::Vec3::rotate_z(const RadAngle angle)
   return *this;
 }
 
-rsl::SmallStackString rsl::Vec3::to_string() const
+rsl::small_stack_string rsl::vec3::to_string() const
 {
-  return stack_string_from_message<SmallStackString>("(x: ", x, ", y: ", y, ", z: ", z, ")");
+  return rsl::small_stack_string(rsl::format("(x: {}, y: {}, z: {})", x, y, z));
 }

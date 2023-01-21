@@ -14,8 +14,9 @@
 
 #include "rex_std/bonus/string/stack_string.h"
 #include "rex_std/bonus/types.h"
+#include "rex_std/iostream.h"
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
 class Date
 {
@@ -23,14 +24,14 @@ public:
   Date();
   Date(card32 week_day, card32 month_data, card32 month, card32 year);
 
-  TinyStackString week_day() const;
+  tiny_stack_string week_day() const;
   card32 month_day() const;
   card32 month() const;
-  TinyStackString month_name() const;
+  tiny_stack_string month_name() const;
   card32 year() const;
 
-  SmallStackString to_string() const;
-  SmallStackString to_string_without_weekday() const;
+  small_stack_string to_string() const;
+  small_stack_string to_string_without_weekday() const;
 
   bool operator>(const Date& date) const;
   bool operator>=(const Date& date) const;
@@ -47,10 +48,9 @@ private:
   card32 m_year;
 };
 
-class OStream;
-OStream& operator<<(OStream& os, const Date& date);
+ostream& operator<<(ostream& os, const Date& date);
 
-REX_RSL_END_NAMESPACE
+}}
 
 #ifdef REX_PLATFORM_WINDOWS
   #include "rex_std_extra/time/win/win_date.h"

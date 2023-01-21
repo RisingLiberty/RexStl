@@ -4,22 +4,22 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-//
-// File: is_nan.h
-// Copyright (c) Nick De Breuck 2023
+// 
+// File: time_digits.cpp
+// Copyright (c) Nick De Breuck 2022
 //
 // ============================================
 
-#pragma once
+#include "rex_std_extra/time/time_digits.h"
 
 namespace rsl
 {
   inline namespace v1
   {
-    template <typename T>
-    constexpr bool is_nan(const T x)
+    rsl::ostream& operator<<(rsl::ostream& os, time_digits digits)
     {
-      return x != x; // NOLINT(misc-redundant-expression)
+      os << digits.high << digits.low;
+      return os;
     }
   }
 }

@@ -12,7 +12,7 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
 template <typename T>
 constexpr T lerp(const T& from, const T& to, float32 amount)
@@ -20,4 +20,4 @@ constexpr T lerp(const T& from, const T& to, float32 amount)
   return from + ((to - from) * amount);
 }
 
-REX_RSL_END_NAMESPACE
+}}

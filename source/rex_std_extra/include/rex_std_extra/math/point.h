@@ -14,44 +14,44 @@
 
 #include "rex_std/ostream.h"
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
-struct Point
+struct point
 {
 public:
-  Point();
-  Point(int16 x, int16 y);
+  point();
+  point(int16 x, int16 y);
 
-  Point operator+(const Point& rhs) const;
-  Point operator-(const Point& rhs) const;
-  Point operator*(const Point& rhs) const;
-  Point operator/(const Point& rhs) const;
+  point operator+(const point& rhs) const;
+  point operator-(const point& rhs) const;
+  point operator*(const point& rhs) const;
+  point operator/(const point& rhs) const;
 
-  Point& operator+=(const Point& rhs);
-  Point& operator-=(const Point& rhs);
-  Point& operator*=(const Point& rhs);
-  Point& operator/=(const Point& rhs);
+  point& operator+=(const point& rhs);
+  point& operator-=(const point& rhs);
+  point& operator*=(const point& rhs);
+  point& operator/=(const point& rhs);
 
-  Point operator+(const int16 rhs) const;
-  Point operator-(const int16 rhs) const;
-  Point operator*(const int16 rhs) const;
-  Point operator/(const int16 rhs) const;
+  point operator+(const int16 rhs) const;
+  point operator-(const int16 rhs) const;
+  point operator*(const int16 rhs) const;
+  point operator/(const int16 rhs) const;
 
-  Point& operator+=(const int16 rhs);
-  Point& operator-=(const int16 rhs);
-  Point& operator*=(const int16 rhs);
-  Point& operator/=(const int16 rhs);
+  point& operator+=(const int16 rhs);
+  point& operator-=(const int16 rhs);
+  point& operator*=(const int16 rhs);
+  point& operator/=(const int16 rhs);
 
-  bool operator==(const Point& point) const;
-  bool operator!=(const Point& point) const;
+  bool operator==(const point& point) const;
+  bool operator!=(const point& point) const;
 
-  Point operator-() const;
+  point operator-() const;
 
 public:
   int16 x;
   int16 y;
 };
 
-OStream& operator<<(OStream& os, const Point& point);
+ostream& operator<<(ostream& os, const point& point);
 
-REX_RSL_END_NAMESPACE
+}}

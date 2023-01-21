@@ -14,7 +14,7 @@
 
 #include "rex_std/bonus/types.h"
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
 class WrappedIndex
 {
@@ -33,4 +33,4 @@ private:
   card32 m_min;
 };
 
-REX_RSL_END_NAMESPACE
+}}

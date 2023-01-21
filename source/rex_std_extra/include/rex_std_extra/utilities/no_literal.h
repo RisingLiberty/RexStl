@@ -12,7 +12,7 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
 template <typename T>
 class NoLiteral
@@ -38,4 +38,4 @@ private:
   T m_value;
 };
 
-REX_RSL_END_NAMESPACE
+}}

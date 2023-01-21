@@ -12,9 +12,10 @@
 
 #pragma once
 
-#include "rex_std_extra/math/constants.h"
+#include "rex_std/bonus/types.h"
+#include "rex_std/numbers.h"
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
 class RadAngle
 {
@@ -103,4 +104,4 @@ private:
   float32 m_angle;
 };
 
-REX_RSL_END_NAMESPACE
+}}

@@ -13,20 +13,20 @@
 #pragma once
 
 #include "rex_std/bonus/attributes.h"
-#include "rex_std/bonus/memory/unique_array.h"
+#include "rex_std/memory.h"
 #include "rex_std/bonus/types.h"
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
 using StackMarker = card32;
 
-class StackAllocator
+class stack_allocator
 {
 public:
   using size_type = count_t;
   using pointer   = void*;
 
-  explicit StackAllocator(size_type size);
+  explicit stack_allocator(size_type size);
 
   REX_NO_DISCARD pointer allocate(const size_type size);
   void deallocate(pointer ptr, const size_type size);
@@ -37,8 +37,8 @@ public:
   void set_market(StackMarker marker);
 
 private:
-  rsl::UniqueArray<rsl::byte> m_base_ptr;
+  rsl::unique_array<rsl::byte> m_base_ptr;
   card32 m_current_marker;
 };
 
-REX_RSL_END_NAMESPACE
+}}

@@ -14,119 +14,119 @@
 
 #include "rex_std_extra/rex_stl_extra_pch.h"
 
-rsl::Point::Point()
+rsl::point::point()
     : x(0)
     , y(0)
 {
 }
-rsl::Point::Point(int16 _x, int16 _y)
+rsl::point::point(int16 _x, int16 _y)
     : x(_x)
     , y(_y)
 {
 }
 
-rsl::Point rsl::Point::operator+(const Point& rhs) const
+rsl::point rsl::point::operator+(const point& rhs) const
 {
   return {x + rhs.x, y + rhs.y};
 }
-rsl::Point rsl::Point::operator-(const Point& rhs) const
+rsl::point rsl::point::operator-(const point& rhs) const
 {
   return {x - rhs.x, y - rhs.y};
 }
-rsl::Point rsl::Point::operator*(const Point& rhs) const
+rsl::point rsl::point::operator*(const point& rhs) const
 {
   return {x * rhs.x, y * rhs.y};
 }
-rsl::Point rsl::Point::operator/(const Point& rhs) const
+rsl::point rsl::point::operator/(const point& rhs) const
 {
   return {x / rhs.x, y / rhs.y};
 }
 
-rsl::Point& rsl::Point::operator+=(const Point& rhs)
+rsl::point& rsl::point::operator+=(const point& rhs)
 {
   x += rhs.x;
   y += rhs.y;
   return *this;
 }
-rsl::Point& rsl::Point::operator-=(const Point& rhs)
+rsl::point& rsl::point::operator-=(const point& rhs)
 {
   x -= rhs.x;
   y -= rhs.y;
   return *this;
 }
-rsl::Point& rsl::Point::operator*=(const Point& rhs)
+rsl::point& rsl::point::operator*=(const point& rhs)
 {
   x *= rhs.x;
   y *= rhs.y;
   return *this;
 }
-rsl::Point& rsl::Point::operator/=(const Point& rhs)
+rsl::point& rsl::point::operator/=(const point& rhs)
 {
   x /= rhs.x;
   y /= rhs.y;
   return *this;
 }
 
-rsl::Point rsl::Point::operator+(const int16 rhs) const
+rsl::point rsl::point::operator+(const int16 rhs) const
 {
   return {x + rhs, y + rhs};
 }
 
-rsl::Point rsl::Point::operator-(const int16 rhs) const
+rsl::point rsl::point::operator-(const int16 rhs) const
 {
   return {x - rhs, y - rhs};
 }
 
-rsl::Point rsl::Point::operator*(const int16 rhs) const
+rsl::point rsl::point::operator*(const int16 rhs) const
 {
   return {x * rhs, y * rhs};
 }
 
-rsl::Point rsl::Point::operator/(const int16 rhs) const
+rsl::point rsl::point::operator/(const int16 rhs) const
 {
   return {x / rhs, y / rhs};
 }
 
-rsl::Point& rsl::Point::operator+=(const int16 rhs)
+rsl::point& rsl::point::operator+=(const int16 rhs)
 {
   x += rhs;
   y += rhs;
   return *this;
 }
-rsl::Point& rsl::Point::operator-=(const int16 rhs)
+rsl::point& rsl::point::operator-=(const int16 rhs)
 {
   x -= rhs;
   y -= rhs;
   return *this;
 }
-rsl::Point& rsl::Point::operator*=(const int16 rhs)
+rsl::point& rsl::point::operator*=(const int16 rhs)
 {
   x *= rhs;
   y *= rhs;
   return *this;
 }
-rsl::Point& rsl::Point::operator/=(const int16 rhs)
+rsl::point& rsl::point::operator/=(const int16 rhs)
 {
   x /= rhs;
   y /= rhs;
   return *this;
 }
 
-bool rsl::Point::operator==(const Point& point) const
+bool rsl::point::operator==(const point& point) const
 {
   return x == point.x && y == point.y;
 }
-bool rsl::Point::operator!=(const Point& point) const
+bool rsl::point::operator!=(const point& point) const
 {
   return !(*this == point);
 }
 
-rsl::Point rsl::Point::operator-() const
+rsl::point rsl::point::operator-() const
 {
   return {-x, -y};
 }
 
-rsl::OStream& rsl::operator<<(OStream& os, const Point& point)
+rsl::ostream& rsl::operator<<(ostream& os, const point& point)
 {
   return os << "(x: " << point.x << ", y: " << point.y << ")";
 }

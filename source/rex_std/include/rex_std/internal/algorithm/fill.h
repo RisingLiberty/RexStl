@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "rex_std/bonus/type_traits/is_scalar.h"
+#include "rex_std/internal/type_traits/is_scalar.h"
 
 namespace rsl
 {

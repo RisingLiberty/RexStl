@@ -12,9 +12,9 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
-class Time;
-Time current_time();
+class time;
+time current_time();
 
-REX_RSL_END_NAMESPACE
+}}

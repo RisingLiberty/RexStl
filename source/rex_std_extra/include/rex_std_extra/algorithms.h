@@ -12,13 +12,14 @@
 
 #pragma once
 
+#include "rex_std/bonus/types.h"
 #include "rex_std_extra/concepts.h"
 #include "utilities/swap.h"
 
 #include <algorithm>
 #include <iterator>
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
 namespace internal
 {
@@ -44,7 +45,7 @@ namespace internal
     if constexpr(rsl::is_same_v<It1, It2>)
     {
       const auto count = last2 - first2;
-      return memcmp(first1, first2, count) == 0;
+      return rsl::memcmp(first1, first2, count) == 0;
     }
     else
     {
@@ -252,4 +253,4 @@ constexpr Iterator1 search(Iterator1 first1, Iterator1 last1, Iterator2 first2, 
   return search(first1, last1, first2, last2, rsl::equal_to<>());
 }
 
-REX_RSL_END_NAMESPACE
+}}

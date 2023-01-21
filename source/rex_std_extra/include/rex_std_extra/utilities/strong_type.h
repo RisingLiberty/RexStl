@@ -46,7 +46,7 @@
     underlying_type m_value;                                                                                                                                                                                                                             \
   };
 
-REX_RSL_BEGIN_NAMESPACE::internal
+namespace rsl { inline namespace v1 {::internal
 {
   template <typename T>
   struct underlying_type

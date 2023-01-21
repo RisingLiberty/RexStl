@@ -15,8 +15,8 @@
 #include "rex_std/bonus/types.h"
 #include "rex_std/limits.h"
 
-REX_RSL_BEGIN_NAMESPACE
-REX_RSL_END_NAMESPACE
+namespace rsl { inline namespace v1 {
+
 constexpr card64 hash_combine(card64 seed, card64 hash)
 {
   hash += 0X9E3779B9 + (seed << 6) + (seed >> 2);
@@ -68,7 +68,7 @@ public:
 
   static constexpr Hash invalid()
   {
-    return Hash(rsl::NumericLimits<card64>::max());
+    return Hash(rsl::numeric_limits<card64>::max());
   }
 
   static Hash new_hash();
@@ -77,4 +77,4 @@ private:
   type m_value;
 };
 
-REX_RSL_END_NAMESPACE
+}}

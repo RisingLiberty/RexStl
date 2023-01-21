@@ -16,12 +16,12 @@
 #include "rex_std/bonus/types.h"
 #include "rex_std/ostream.h"
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
 template <typename T>
 struct Color3
 {
-  static_assert(rsl::IsArithmetic<T>, "T must be of arithemetic type");
+  static_assert(rsl::is_arithmetic_v<T>, "T must be of arithemetic type");
 
   constexpr Color3()
       : red(T())
@@ -131,7 +131,7 @@ Color3<T> to_rex_color3(const T2& custom_color)
 }
 
 template <typename T>
-OStream& operator<<(OStream& os, const Color3<T>& color)
+ostream& operator<<(ostream& os, const Color3<T>& color)
 {
   os << "(r: " << color.red << ", g: " << color.green << ", b: " << color.blue << ")";
   return os;
@@ -250,7 +250,7 @@ Color4<T> to_rex_color4(const T2& custom_color)
 }
 
 template <typename T>
-OStream& operator<<(OStream& os, const Color3<T>& color)
+ostream& operator<<(ostream& os, const Color3<T>& color)
 {
   os << "(r: " << color.red << ", g: " << color.green << ", b: " << color.blue << ", a: " << color.alpha << ")";
   return os;
@@ -563,4 +563,4 @@ namespace rgba_colors
   constexpr Rgba YellowGreen          = color4f_to_rgba(colors::YellowGreen);
 } // namespace rgba_colors
 
-REX_RSL_END_NAMESPACE
+}}

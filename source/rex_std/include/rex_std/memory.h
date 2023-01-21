@@ -45,6 +45,8 @@
 #include "rex_std/internal/memory/uninitialized_value_construct.h"
 #include "rex_std/internal/memory/uninitialized_value_construct_n.h"
 
+#include "rex_std/bonus/memory/unique_array.h"
+
 namespace rsl
 {
   inline namespace v1

@@ -12,7 +12,7 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
 constexpr float32 unorm_to_snorm(float32 val)
 {
@@ -23,4 +23,4 @@ constexpr float32 snorm_to_unorm(float32 val)
   return (val + 1) * 0.5f;
 }
 
-REX_RSL_END_NAMESPACE
+}}

@@ -12,7 +12,7 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
 template <typename Alloc>
 class SharedAlloc
@@ -48,4 +48,4 @@ private:
   Alloc& m_alloc;
 };
 
-REX_RSL_END_NAMESPACE
+}}

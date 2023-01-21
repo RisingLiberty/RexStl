@@ -12,11 +12,11 @@
 
 #pragma once
 
-#include "containers/vector.h"
+#include "rex_std/vector.h"
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
-template <typename T, typename Alloc = rsl::Allocator>
+template <typename T, typename Alloc = rsl::allocator>
 class ConstVectorView
 {
 public:
@@ -104,7 +104,7 @@ private:
   const rsl::vector<T, Alloc>& m_vector;
 };
 
-template <typename T, typename Alloc, rsl::Allocator>
+template <typename T, typename Alloc, rsl::allocator>
 class VectorView
 {
 public:
@@ -235,4 +235,4 @@ private:
   rsl::vector<T, Alloc>& m_vector;
 };
 
-REX_RSL_END_NAMESPACE
+}}

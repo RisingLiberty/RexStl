@@ -11,9 +11,9 @@
 // ============================================
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
 class TimePoint;
 TimePoint current_timepoint();
 
-REX_RSL_END_NAMESPACE
+}}

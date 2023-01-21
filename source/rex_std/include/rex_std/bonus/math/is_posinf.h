@@ -4,22 +4,24 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-//
-// File: is_nan.h
-// Copyright (c) Nick De Breuck 2023
+// 
+// File: is_posinf.h
+// Copyright (c) Nick De Breuck 2022
 //
 // ============================================
 
 #pragma once
+
+#include "rex_std/limits.h"
 
 namespace rsl
 {
   inline namespace v1
   {
     template <typename T>
-    constexpr bool is_nan(const T x)
+    constexpr bool is_posinf(T val)
     {
-      return x != x; // NOLINT(misc-redundant-expression)
+      return val == numeric_limits<T>::infinity();
     }
   }
 }

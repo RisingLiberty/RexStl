@@ -15,9 +15,9 @@
 #include "rex_std/bonus/attributes.h"
 #include "rex_std/bonus/types.h"
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
-class DebugAllocator
+class debug_allocator
 {
 public:
   using size_type = count_t;
@@ -26,8 +26,8 @@ public:
   REX_NO_DISCARD pointer allocate(const size_type size);
   void deallocate(pointer ptr, const size_type size);
 
-  bool operator==(const DebugAllocator& rhs) const;
-  bool operator!=(const DebugAllocator& rhs) const;
+  bool operator==(const debug_allocator& rhs) const;
+  bool operator!=(const debug_allocator& rhs) const;
 };
 
-REX_RSL_END_NAMESPACE
+}}

@@ -12,10 +12,11 @@
 
 #include "rex_std_extra/math/vec4.h"
 
+#include "rex_std/format.h"
 #include "rex_std_extra/math/float.h"
 #include "rex_std_extra/rex_stl_extra_pch.h"
 
-rsl::Vec4::Vec4()
+rsl::vec4::vec4()
     : x(0.0f)
     , y(0.0f)
     , z(0.0f)
@@ -23,7 +24,7 @@ rsl::Vec4::Vec4()
 {
 }
 
-rsl::Vec4::Vec4(const float32 _x, const float32 _y, const float32 _z, const float32 _w)
+rsl::vec4::vec4(const float32 _x, const float32 _y, const float32 _z, const float32 _w)
     : x(_x)
     , y(_y)
     , z(_z)
@@ -31,35 +32,35 @@ rsl::Vec4::Vec4(const float32 _x, const float32 _y, const float32 _z, const floa
 {
 }
 
-float32& rsl::Vec4::operator[](card32 idx)
+float32& rsl::vec4::operator[](card32 idx)
 {
   float32* data = reinterpret_cast<float32*>(this);
   return *(data + idx);
 }
-float rsl::Vec4::operator[](card32 idx) const
+float rsl::vec4::operator[](card32 idx) const
 {
   const float32* data = reinterpret_cast<const float32*>(this);
   return *(data + idx);
 }
 
-rsl::Vec4 rsl::Vec4::operator+(const Vec4& rhs) const
+rsl::vec4 rsl::vec4::operator+(const vec4& rhs) const
 {
-  return Vec4(x + rhs.x, y + rhs.y, z + rhs.z, w + rhs.w);
+  return vec4(x + rhs.x, y + rhs.y, z + rhs.z, w + rhs.w);
 }
-rsl::Vec4 rsl::Vec4::operator-(const Vec4& rhs) const
+rsl::vec4 rsl::vec4::operator-(const vec4& rhs) const
 {
-  return Vec4(x - rhs.x, y - rhs.y, z - rhs.z, w - rhs.w);
+  return vec4(x - rhs.x, y - rhs.y, z - rhs.z, w - rhs.w);
 }
-rsl::Vec4 rsl::Vec4::operator*(const float32 scalar) const
+rsl::vec4 rsl::vec4::operator*(const float32 scalar) const
 {
-  return Vec4(x * scalar, y * scalar, z * scalar, w * scalar);
+  return vec4(x * scalar, y * scalar, z * scalar, w * scalar);
 }
-rsl::Vec4 rsl::Vec4::operator/(const float32 scalar) const
+rsl::vec4 rsl::vec4::operator/(const float32 scalar) const
 {
-  return Vec4(x / scalar, y / scalar, z / scalar, w / scalar);
+  return vec4(x / scalar, y / scalar, z / scalar, w / scalar);
 }
 
-rsl::Vec4& rsl::Vec4::operator+=(const Vec4& rhs)
+rsl::vec4& rsl::vec4::operator+=(const vec4& rhs)
 {
   x += rhs.x;
   y += rhs.y;
@@ -67,7 +68,7 @@ rsl::Vec4& rsl::Vec4::operator+=(const Vec4& rhs)
   w += rhs.w;
   return *this;
 }
-rsl::Vec4& rsl::Vec4::operator-=(const Vec4& rhs)
+rsl::vec4& rsl::vec4::operator-=(const vec4& rhs)
 {
   x -= rhs.x;
   y -= rhs.y;
@@ -75,7 +76,7 @@ rsl::Vec4& rsl::Vec4::operator-=(const Vec4& rhs)
   w -= rhs.w;
   return *this;
 }
-rsl::Vec4& rsl::Vec4::operator*=(const float32 scalar)
+rsl::vec4& rsl::vec4::operator*=(const float32 scalar)
 {
   x *= scalar;
   y *= scalar;
@@ -83,7 +84,7 @@ rsl::Vec4& rsl::Vec4::operator*=(const float32 scalar)
   w *= scalar;
   return *this;
 }
-rsl::Vec4& rsl::Vec4::operator/=(const float32 scalar)
+rsl::vec4& rsl::vec4::operator/=(const float32 scalar)
 {
   x /= scalar;
   y /= scalar;
@@ -92,40 +93,40 @@ rsl::Vec4& rsl::Vec4::operator/=(const float32 scalar)
   return *this;
 }
 
-rsl::Vec4 rsl::Vec4::operator-() const
+rsl::vec4 rsl::vec4::operator-() const
 {
-  return Vec4(-x, -y, -z, -w);
+  return vec4(-x, -y, -z, -w);
 }
 
-bool rsl::Vec4::operator==(const Vec4& other) const
+bool rsl::vec4::operator==(const vec4& other) const
 {
   return equals(other);
 }
-bool rsl::Vec4::operator!=(const Vec4& other) const
+bool rsl::vec4::operator!=(const vec4& other) const
 {
   return !equals(other);
 }
 
-bool rsl::Vec4::equals(const Vec4& other, const float32 comparison_threshold) const
+bool rsl::vec4::equals(const vec4& other, const float32 comparison_threshold) const
 {
   return rsl::equals(x, other.x, comparison_threshold) && rsl::equals(y, other.y, comparison_threshold) && rsl::equals(z, other.z, comparison_threshold) && rsl::equals(w, other.w, comparison_threshold);
 }
 
-float32 rsl::Vec4::dot(const Vec4& other) const
+float32 rsl::vec4::dot(const vec4& other) const
 {
   return x * other.x + y * other.y + z * other.z + w * other.w;
 }
 
-float32 rsl::Vec4::length() const
+float32 rsl::vec4::length() const
 {
   return sqrt(length_squared());
 }
-float32 rsl::Vec4::length_squared() const
+float32 rsl::vec4::length_squared() const
 {
   return dot(*this);
 }
 
-rsl::SmallStackString rsl::Vec4::to_string() const
+rsl::small_stack_string rsl::vec4::to_string() const
 {
-  return stack_string_from_message<SmallStackString>("(x: ", x, ", y: ", y, "z: ", z, ", w: ", w, ")");
+  return rsl::small_stack_string(rsl::format("(x: {}, y: {}, z: {}, w: {})", x, y, z, w));
 }

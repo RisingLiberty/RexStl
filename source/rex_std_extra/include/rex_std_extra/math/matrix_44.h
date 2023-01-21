@@ -12,68 +12,68 @@
 
 #pragma once
 
-#include "rex_std_extra/containers/array.h"
+#include "rex_std/array.h"
 #include "rex_std_extra/math/rad_angle.h"
 #include "rex_std_extra/math/vec3.h"
 #include "rex_std_extra/math/vec4.h"
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
 // Column major matrix
-class Matrix44
+class matrix44
 {
 public:
-  Matrix44();
-  Matrix44(float32 e00, float32 e10, float32 e20, float32 e30, float32 e01, float32 e11, float32 e21, float32 e31, float32 e02, float32 e12, float32 e22, float32 e32, float32 e03, float32 e13, float32 e23, float32 e33);
+  matrix44();
+  matrix44(float32 e00, float32 e10, float32 e20, float32 e30, float32 e01, float32 e11, float32 e21, float32 e31, float32 e02, float32 e12, float32 e22, float32 e32, float32 e03, float32 e13, float32 e23, float32 e33);
 
   float32& elem(const card32 row, const card32 column);
   float32 elem(const card32 row, const card32 column) const;
 
-  Matrix44 operator*(const Matrix44& mat2) const;
-  Matrix44& operator*=(const Matrix44& mat2);
+  matrix44 operator*(const matrix44& mat2) const;
+  matrix44& operator*=(const matrix44& mat2);
 
-  Matrix44& transpose();
-  Matrix44& inverse();
+  matrix44& transpose();
+  matrix44& inverse();
 
-  Matrix44 transposed() const;
-  Matrix44 inversed() const;
+  matrix44 transposed() const;
+  matrix44 inversed() const;
 
-  Vec3 operator*(const Vec3& v) const;
-  Vec3 translation() const;
-  Vec3 right() const;
-  Vec3 up() const;
-  Vec3 at() const;
+  vec3 operator*(const vec3& v) const;
+  vec3 translation() const;
+  vec3 right() const;
+  vec3 up() const;
+  vec3 at() const;
 
-  void set_right(const Vec3& right);
-  void set_up(const Vec3& up);
-  void set_at(const Vec3& at);
+  void set_right(const vec3& right);
+  void set_up(const vec3& up);
+  void set_at(const vec3& at);
 
-  void scale(const Vec3& scale);
+  void scale(const vec3& scale);
   void scale(const float32 scale);
 
-  static Matrix44 identity();
-  static Matrix44 zero();
+  static matrix44 identity();
+  static matrix44 zero();
 
   void rotate_x(const RadAngle rot_x);
   void rotate_y(const RadAngle rot_y);
   void rotate_z(const RadAngle rot_z);
 
-  Matrix44& set_rotate_x(const RadAngle angle);
-  Matrix44& set_rotate_y(const RadAngle angle);
-  Matrix44& set_rotate_z(const RadAngle angle);
+  matrix44& set_rotate_x(const RadAngle angle);
+  matrix44& set_rotate_y(const RadAngle angle);
+  matrix44& set_rotate_z(const RadAngle angle);
 
-  Matrix44& set_translation(const Vec3& translation);
-  Matrix44& set_scale(const Vec3& scale);
+  matrix44& set_translation(const vec3& translation);
+  matrix44& set_scale(const vec3& scale);
 
 private:
   void swap_elements(card32 row_idx, card32 column_idx);
-  float32 mul_element(card32 row, card32 col, const Matrix44& m2);
-  Matrix44 simd_mul(const Matrix44& m2);
+  float32 mul_element(card32 row, card32 col, const matrix44& m2);
+  matrix44 simd_mul(const matrix44& m2);
 
 private:
-  using Column = Vec4;
-  using Row    = Vec4;
-  Array<Column, 4> m_elements;
+  using Column = vec4;
+  using Row    = vec4;
+  rsl::array<Column, 4> m_elements;
 };
 
-REX_RSL_END_NAMESPACE
+}}

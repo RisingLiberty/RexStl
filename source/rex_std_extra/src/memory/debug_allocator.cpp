@@ -14,7 +14,7 @@
 
 #include "rex_std_extra/rex_stl_extra_pch.h"
 
-rsl::DebugAllocator::pointer rsl::DebugAllocator::allocate([[maybe_unused]] const size_type size)
+rsl::debug_allocator::pointer rsl::debug_allocator::allocate([[maybe_unused]] const size_type size)
 {
 #ifndef RETAIL
   return static_cast<pointer>(operator new(size));
@@ -23,16 +23,16 @@ rsl::DebugAllocator::pointer rsl::DebugAllocator::allocate([[maybe_unused]] cons
 #endif
 }
 
-void rsl::DebugAllocator::deallocate(pointer ptr, const size_type size)
+void rsl::debug_allocator::deallocate(pointer ptr, const size_type size)
 {
   operator delete(ptr, size);
 }
 
-bool rsl::DebugAllocator::operator==(const DebugAllocator&) const
+bool rsl::debug_allocator::operator==(const debug_allocator&) const
 {
   return true;
 }
-bool rsl::DebugAllocator::operator!=(const DebugAllocator&) const
+bool rsl::debug_allocator::operator!=(const debug_allocator&) const
 {
   return false;
 }

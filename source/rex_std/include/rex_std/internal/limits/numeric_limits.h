@@ -172,7 +172,7 @@ namespace rsl
         return T();
       }
 
-      REX_NO_DISCARD static constexpr T quiet_na_n() noexcept
+      REX_NO_DISCARD static constexpr T quiet_nan() noexcept
       {
         return T();
       }
@@ -238,7 +238,7 @@ namespace rsl
         return false;
       }
 
-      REX_NO_DISCARD static constexpr bool quiet_na_n() noexcept
+      REX_NO_DISCARD static constexpr bool quiet_nan() noexcept
       {
         return false;
       }
@@ -291,7 +291,7 @@ namespace rsl
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr char quiet_na_n() noexcept
+      REX_NO_DISCARD static constexpr char quiet_nan() noexcept
       {
         return 0;
       }
@@ -347,7 +347,7 @@ namespace rsl
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr signed char quiet_na_n() noexcept
+      REX_NO_DISCARD static constexpr signed char quiet_nan() noexcept
       {
         return 0;
       }
@@ -402,7 +402,7 @@ namespace rsl
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr unsigned char quiet_na_n() noexcept
+      REX_NO_DISCARD static constexpr unsigned char quiet_nan() noexcept
       {
         return 0;
       }
@@ -458,7 +458,7 @@ namespace rsl
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr char8_t quiet_na_n() noexcept
+      REX_NO_DISCARD static constexpr char8_t quiet_nan() noexcept
       {
         return 0;
       }
@@ -514,7 +514,7 @@ namespace rsl
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr char16_t quiet_na_n() noexcept
+      REX_NO_DISCARD static constexpr char16_t quiet_nan() noexcept
       {
         return 0;
       }
@@ -569,7 +569,7 @@ namespace rsl
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr char32_t quiet_na_n() noexcept
+      REX_NO_DISCARD static constexpr char32_t quiet_nan() noexcept
       {
         return 0;
       }
@@ -631,7 +631,7 @@ namespace rsl
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr wchar_t quiet_na_n() noexcept
+      REX_NO_DISCARD static constexpr wchar_t quiet_nan() noexcept
       {
         return 0;
       }
@@ -686,7 +686,7 @@ namespace rsl
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr short quiet_na_n() noexcept
+      REX_NO_DISCARD static constexpr short quiet_nan() noexcept
       {
         return 0;
       }
@@ -741,7 +741,7 @@ namespace rsl
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr int32 quiet_na_n() noexcept
+      REX_NO_DISCARD static constexpr int32 quiet_nan() noexcept
       {
         return 0;
       }
@@ -796,7 +796,7 @@ namespace rsl
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr long quiet_na_n() noexcept
+      REX_NO_DISCARD static constexpr long quiet_nan() noexcept
       {
         return 0;
       }
@@ -852,7 +852,7 @@ namespace rsl
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr long long quiet_na_n() noexcept
+      REX_NO_DISCARD static constexpr long long quiet_nan() noexcept
       {
         return 0;
       }
@@ -908,7 +908,7 @@ namespace rsl
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr unsigned short quiet_na_n() noexcept
+      REX_NO_DISCARD static constexpr unsigned short quiet_nan() noexcept
       {
         return 0;
       }
@@ -964,7 +964,7 @@ namespace rsl
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr uint32 quiet_na_n() noexcept
+      REX_NO_DISCARD static constexpr uint32 quiet_nan() noexcept
       {
         return 0;
       }
@@ -1019,7 +1019,7 @@ namespace rsl
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr unsigned long quiet_na_n() noexcept
+      REX_NO_DISCARD static constexpr unsigned long quiet_nan() noexcept
       {
         return 0;
       }
@@ -1075,7 +1075,7 @@ namespace rsl
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr unsigned long long quiet_na_n() noexcept
+      REX_NO_DISCARD static constexpr unsigned long long quiet_nan() noexcept
       {
         return 0;
       }
@@ -1130,7 +1130,7 @@ namespace rsl
         return __builtin_huge_valf();
       }
 
-      REX_NO_DISCARD static constexpr float quiet_na_n() noexcept
+      REX_NO_DISCARD static constexpr float quiet_nan() noexcept
       {
         return __builtin_nanf("0");
       }
@@ -1189,7 +1189,7 @@ namespace rsl
         return __builtin_huge_val();
       }
 
-      REX_NO_DISCARD static constexpr double quiet_na_n() noexcept
+      REX_NO_DISCARD static constexpr double quiet_nan() noexcept
       {
         return __builtin_nan("0");
       }
@@ -1248,7 +1248,7 @@ namespace rsl
         return __builtin_huge_val(); // NOLINT(cppcoreguidelines-narrowing-conversions)
       }
 
-      REX_NO_DISCARD static constexpr long double quiet_na_n() noexcept
+      REX_NO_DISCARD static constexpr long double quiet_nan() noexcept
       {
         return __builtin_nan("0");
       }

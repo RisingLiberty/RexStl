@@ -12,13 +12,15 @@
 
 #pragma once
 
+#include "rex_std/bonus/types.h"
+
 #define NOMINMAX
 #include <Windows.h>
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
 class Date;
-class Time;
+class time;
 class TimePoint;
 
 namespace win
@@ -32,8 +34,8 @@ namespace win
   card64 to_integer(const FILETIME& time);
 
   Date date(const SYSTEMTIME& date);
-  Time time(const SYSTEMTIME& time);
+  rsl::time time(const SYSTEMTIME& time);
   TimePoint timepoint(const SYSTEMTIME& time);
 } // namespace win
 
-REX_RSL_END_NAMESPACE
+}}

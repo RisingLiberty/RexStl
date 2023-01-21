@@ -14,7 +14,7 @@
 
 #include "rex_std_extra/time/timepoint.h"
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
 class Stopwatch
 {
@@ -36,4 +36,4 @@ private:
   float32 m_paused_time_in_ms;
 };
 
-REX_RSL_END_NAMESPACE
+}}

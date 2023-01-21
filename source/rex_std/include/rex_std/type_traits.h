@@ -79,7 +79,6 @@
 #include "rex_std/internal/type_traits/is_nothrow_move_constructible.h"
 #include "rex_std/internal/type_traits/is_nothrow_swappable.h"
 #include "rex_std/internal/type_traits/is_nothrow_swappable_with.h"
-#include "rex_std/internal/type_traits/is_null_pointer.h"
 #include "rex_std/internal/type_traits/is_object.h"
 #include "rex_std/internal/type_traits/is_pod.h"
 #include "rex_std/internal/type_traits/is_pointer.h"

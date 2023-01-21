@@ -17,7 +17,7 @@
 #include "rex_std_extra/time/time.h"
 
 rsl::TimePoint::TimePoint() = default;
-rsl::TimePoint::TimePoint(const Date& date, const Time& time)
+rsl::TimePoint::TimePoint(const Date& date, const rsl::time& time)
     : m_date(date)
     , m_time(time)
 {
@@ -27,7 +27,7 @@ const rsl::Date& rsl::TimePoint::date() const
 {
   return m_date;
 }
-const rsl::Time& rsl::TimePoint::time() const
+const rsl::time& rsl::TimePoint::time() const
 {
   return m_time;
 }
@@ -63,7 +63,7 @@ float32 rsl::TimePoint::operator-(const TimePoint& /*other*/) const
   return 0.0f;
 }
 
-rsl::OStream& rsl::operator<<(OStream& os, const TimePoint& timepoint)
+rsl::ostream& rsl::operator<<(ostream& os, const TimePoint& timepoint)
 {
   os << timepoint.date() << ' ' << timepoint.time();
   return os;

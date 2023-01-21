@@ -12,7 +12,7 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
 template <typename T, typename T2>
 constexpr T trunc(T2 value)
@@ -20,4 +20,4 @@ constexpr T trunc(T2 value)
   return static_cast<T>(value);
 }
 
-REX_RSL_END_NAMESPACE
+}}

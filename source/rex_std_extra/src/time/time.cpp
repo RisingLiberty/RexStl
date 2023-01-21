@@ -12,36 +12,35 @@
 
 #include "rex_std_extra/time/time.h"
 
-#include "rex_std_extra/diagnostics/log_message.h"
-#include "rex_std_extra/rex_stl_extra_pch.h"
+#include "rex_std_extra/time/time_digits.h"
 
-rsl::Time::Time()
+rsl::time::time()
     : m_hours(0)
     , m_minutes(0)
     , m_seconds(0)
 {
 }
-rsl::Time::Time(card32 hours, card32 minutes, card32 seconds)
+rsl::time::time(card32 hours, card32 minutes, card32 seconds)
     : m_hours(hours)
     , m_minutes(minutes)
     , m_seconds(seconds)
 {
 }
 
-card32 rsl::Time::hours() const
+card32 rsl::time::hours() const
 {
   return m_hours;
 }
-card32 rsl::Time::minutes() const
+card32 rsl::time::minutes() const
 {
   return m_minutes;
 }
-card32 rsl::Time::seconds() const
+card32 rsl::time::seconds() const
 {
   return m_seconds;
 }
 
-bool rsl::Time::operator>(const Time& time) const
+bool rsl::time::operator>(const time& time) const
 {
   if(m_hours > time.hours())
     return true;
@@ -54,14 +53,14 @@ bool rsl::Time::operator>(const Time& time) const
 
   return false;
 }
-bool rsl::Time::operator>=(const Time& time) const
+bool rsl::time::operator>=(const time& time) const
 {
   if(operator>(time))
     return true;
 
   return *this == time;
 }
-bool rsl::Time::operator<(const Time& time) const
+bool rsl::time::operator<(const time& time) const
 {
   if(m_hours < time.hours())
     return true;
@@ -74,7 +73,7 @@ bool rsl::Time::operator<(const Time& time) const
 
   return false;
 }
-bool rsl::Time::operator<=(const Time& time) const
+bool rsl::time::operator<=(const time& time) const
 {
   if(operator<(time))
     return true;
@@ -82,17 +81,17 @@ bool rsl::Time::operator<=(const Time& time) const
   return *this == time;
 }
 
-bool rsl::Time::operator==(const Time& time) const
+bool rsl::time::operator==(const time& time) const
 {
   return m_hours == time.hours() && m_minutes == time.minutes() && m_seconds == time.seconds();
 }
-bool rsl::Time::operator!=(const Time& time) const
+bool rsl::time::operator!=(const time& time) const
 {
   return !(*this == time);
 }
 
-rsl::OStream& rsl::operator<<(OStream& os, const Time& time)
+rsl::ostream& rsl::operator<<(ostream& os, const time& time)
 {
-  os << TimeDigits(time.hours()) << ':' << TimeDigits(time.minutes()) << ':' << TimeDigits(time.seconds());
+  os << rsl::time_digits(time.hours()) << ':' << rsl::time_digits(time.minutes()) << ':' << rsl::time_digits(time.seconds());
   return os;
 }

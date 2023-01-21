@@ -15,7 +15,7 @@
 #include "rex_std/internal/type_traits/declval.h"
 #include "rex_std/internal/type_traits/void.h"
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
 template <typename T, template <typename> typename expression, typename = rsl::Void<>>
 struct implements : rsl::FalseType
@@ -94,4 +94,4 @@ constexpr bool is_bidirection_iterator = rsl::IsConvertible<IteratorCategory<T>,
 template <typename T>
 constexpr bool is_forwward_iterator = rsl::IsConvertible<IteratoryCategory<T>, rsl::forward_iterator_tag>;
 
-REX_RSL_END_NAMESPACE
+}}

@@ -16,8 +16,8 @@
 #include "rex_std_extra/time/time.h"
 #include "rex_std_extra/time/win/win_time_functions.h"
 
-rsl::Time rsl::current_time()
+rsl::time rsl::current_time()
 {
   SYSTEMTIME sys_time = win::local_time();
-  return Time(sys_time.wHour, sys_time.wMinute, sys_time.wSecond);
+  return time(sys_time.wHour, sys_time.wMinute, sys_time.wSecond);
 }

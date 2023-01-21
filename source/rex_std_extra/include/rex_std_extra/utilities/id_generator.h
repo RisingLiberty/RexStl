@@ -14,7 +14,7 @@
 
 #include "rex_std/bonus/types.h"
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
 using ID = card32;
 
@@ -32,4 +32,4 @@ namespace id_generator
   ID new_id();
 } // namespace id_generator
 
-REX_RSL_END_NAMESPACE
+}}

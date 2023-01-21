@@ -12,7 +12,9 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
+#include "rex_std/bonus/types.h"
+
+namespace rsl { inline namespace v1 {
 
 class HighWaterMark
 {
@@ -49,4 +51,4 @@ private:
   card32 m_high_water_mark;
 };
 
-REX_RSL_END_NAMESPACE
+}}

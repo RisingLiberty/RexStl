@@ -12,7 +12,7 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
 template <typename T>
 constexpr T sign(T num)
@@ -33,4 +33,4 @@ constexpr bool is_positive(T val)
   return val > 0;
 }
 
-REX_RSL_END_NAMESPACE
+}}

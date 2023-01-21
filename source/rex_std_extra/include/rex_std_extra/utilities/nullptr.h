@@ -12,9 +12,9 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
 template <typename T>
 constexpr T* Nullptr = nullptr;
 
-REX_RSL_END_NAMESPACE
+}}

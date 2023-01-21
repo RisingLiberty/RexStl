@@ -4764,6 +4764,29 @@ FMT_END_NAMESPACE
     #define FMT_FUNC
   #endif
 
+#include "rex_std/bonus/string/stack_string.h"
+
+namespace rsl
+{
+  inline namespace v1
+  {
+    template <typename CharType, size_t MaxSize>
+    struct formatter<stack_string<CharType, MaxSize>>
+    {
+      auto parse(format_parse_context& ctx) const -> decltype(ctx.begin())
+      {
+        return ctx.begin();
+      }
+
+      template <typename FormatContext>
+      auto format(const stack_string<CharType, MaxSize>& str, FormatContext& ctx) -> decltype(ctx.out())
+      {
+        return format_to(ctx.out(), "{}", str.to_view());
+      }
+    };
+  }
+}
+
 #endif // FMT_FORMAT_H_
 
 // NOLINTEND(fuchsia-trailing-return, hicpp-signed-bitwise)

@@ -30,6 +30,7 @@
 #include "rex_std/internal/memory/nullptr.h"
 #include "rex_std/internal/type_traits/is_base_of.h"
 #include "rex_std/internal/utility/swap.h"
+#include "rex_std/optional.h"
 
 namespace rsl
 {
@@ -681,6 +682,11 @@ namespace rsl
 
     template <typename It>
     basic_string_view(It, It) -> basic_string_view<typename rsl::iterator_traits<It>::value_type, rsl::char_traits<typename rsl::iterator_traits<It>::value_type>>;
+
+    constexpr rsl::optional<int32> stoi(string_view view)
+    {
+      return rsl::stoi(view.data(), view.length());
+    }
 
   } // namespace v1
 } // namespace rsl

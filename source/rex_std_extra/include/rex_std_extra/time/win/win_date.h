@@ -12,9 +12,9 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
 class Date;
 Date current_date();
 
-REX_RSL_END_NAMESPACE
+}}

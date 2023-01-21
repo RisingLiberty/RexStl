@@ -14,6 +14,8 @@
 
 #include "rex_std/bonus/math/return_type.h"
 #include "rex_std/limits.h"
+#include "rex_std/internal/math/is_nan.h"
+#include "rex_std/bonus//math/is_posinf.h"
 
 namespace rsl
 {
@@ -22,12 +24,14 @@ namespace rsl
 
     namespace internal
     {
+      constexpr card32 SqrtMaxIter = 100;
+
       template <typename T>
       constexpr T sqrt_recur(const T x, const T xn, const int count)
       {
         return (abs(xn - x / xn) / (T(1) + xn) < numeric_limits<T>::min() ? // if
                     xn
-                                                                          : count < GCEM_SQRT_MAX_ITER ? // else
+                                                                          : count < SqrtMaxIter ? // else
                                                                                 sqrt_recur(x, T(0.5) * (xn + x / xn), count + 1)
                                                                                                        : xn);
       }
@@ -35,9 +39,9 @@ namespace rsl
       template <typename T>
       constexpr T sqrt_check(const T x, const T m_val)
       {
-        return (is_nan(x) ? numeric_limits<T>::quiet_NaN() :
+        return (is_nan(x) ? numeric_limits<T>::quiet_nan() :
                           //
-                    x < T(0) ? numeric_limits<T>::quiet_NaN()
+                    x < T(0) ? numeric_limits<T>::quiet_nan()
                              :
                              //
                     is_posinf(x) ? x

@@ -311,6 +311,7 @@ public class MainSolution : Solution
     }
 
     conf.AddProject<RexStd>(target);
+    conf.AddProject<RexStdExtra>(target);
 
     if (GenerateSettings.UnitTestsEnabled)
     {

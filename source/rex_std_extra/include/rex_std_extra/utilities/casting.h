@@ -12,24 +12,22 @@
 
 #pragma once
 
-#include "rex_std_extra/diagnostics/assert.h"
-#include "rex_std_extra/diagnostics/logging.h"
+#include "rex_std/assert.h"
+#include "rex_std/type_traits.h"
 
-#include <type_traits>
-
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
 template <typename ToType, typename FromType>
 constexpr ToType numeric_cast(const FromType value)
 {
-  static_assert(rsl::IsArithmetic<FromType>, "FromType must be or arithmetic type");
+  static_assert(rsl::is_arithmetic_v<FromType>, "FromType must be or arithmetic type");
   return static_cast<ToType>(value);
 }
 
 template <typename ToType, typename FromType>
 constexpr ToType safe_numeric_cast(const FromType value)
 {
-  static_assert(rsl::IsArithmetic<FromType>, "FromType must be arithmetic type");
+  static_assert(rsl::is_arithmetic_v<FromType>, "FromType must be arithmetic type");
 #if REX_ENABLE_SAFE_CASTING
   ToType to_val = static_cast<ToType>(value);
   if(to_val != value) // narrow check
@@ -37,7 +35,7 @@ constexpr ToType safe_numeric_cast(const FromType value)
     REX_ERROR("numeric cast loses value");
   }
 
-  constexpr auto max_signed_val = rsl::NumericLimits<rsl::make_signed_t<FromType>>::max();
+  constexpr auto max_signed_val = rsl::numeric_limits<rsl::make_signed_t<FromType>>::max();
 
   // it's okay to disable the warning here as we'd get a compiler error anyway,
   // should this function be called at compile time
@@ -58,4 +56,4 @@ constexpr ToType safe_numeric_cast(const FromType value)
 #endif
 }
 
-REX_RSL_END_NAMESPACE
+}}

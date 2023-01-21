@@ -34,7 +34,7 @@ namespace rsl
       constexpr T cos_check(const T x)
       {
         return ( // NaN check
-            is_nan(x) ? numeric_limits<T>::quiet_NaN() :
+            is_nan(x) ? numeric_limits<T>::quiet_nan() :
                       // indistinguishable from 0
                 numeric_limits<T>::min() > abs(x) ? T(1)
                                                   :

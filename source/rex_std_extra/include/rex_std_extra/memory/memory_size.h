@@ -12,7 +12,7 @@
 
 #pragma once
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
 constexpr card64 KiloByteMultiple = 1000;
 constexpr card64 MegaByteMultiple = KiloByteMultiple * 1000;
@@ -88,7 +88,7 @@ private:
   card64 m_size_in_bytes;
 };
 
-REX_RSL_END_NAMESPACE
+}}
 
 constexpr rsl::MemorySize operator"" _bytes(unsigned long long bytes)
 {

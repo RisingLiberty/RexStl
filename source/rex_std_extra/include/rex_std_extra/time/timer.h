@@ -14,7 +14,7 @@
 
 #include "rex_std_extra/time/timepoint.h"
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
 class Timer
 {
@@ -35,4 +35,4 @@ private:
   TimePoint m_prev_time_point;
 };
 
-REX_RSL_END_NAMESPACE
+}}

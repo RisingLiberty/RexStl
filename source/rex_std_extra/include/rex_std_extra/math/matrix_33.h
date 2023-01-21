@@ -17,58 +17,58 @@
 #include "rex_std_extra/math/rad_angle.h"
 #include "rex_std_extra/math/vec3.h"
 
-REX_RSL_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 {
 
 // Column major matrix
-class Matrix33
+class matrix33
 {
 public:
-  Matrix33();
-  Matrix33(float32 e00, float32 e10, float32 e20, float32 e01, float32 e11, float32 e21, float32 e02, float32 e12, float32 e22);
+  matrix33();
+  matrix33(float32 e00, float32 e10, float32 e20, float32 e01, float32 e11, float32 e21, float32 e02, float32 e12, float32 e22);
 
   float32& elem(const card32 row, const card32 column);
   float32 elem(const card32 row, const card32 column) const;
 
-  Matrix33 operator*(const Matrix33& mat2) const;
-  Matrix33& operator*=(const Matrix33& mat2);
+  matrix33 operator*(const matrix33& mat2) const;
+  matrix33& operator*=(const matrix33& mat2);
 
-  Matrix33& transpose();
-  Matrix33& inverse();
+  matrix33& transpose();
+  matrix33& inverse();
 
-  Matrix33 transposed() const;
-  Matrix33 inversed() const;
+  matrix33 transposed() const;
+  matrix33 inversed() const;
 
-  Vec3 operator*(const Vec3& v) const;
-  Vec3 right() const;
-  Vec3 up() const;
-  Vec3 at() const;
+  vec3 operator*(const vec3& v) const;
+  vec3 right() const;
+  vec3 up() const;
+  vec3 at() const;
 
-  void set_right(const Vec3& right);
-  void set_up(const Vec3& up);
-  void set_at(const Vec3& at);
+  void set_right(const vec3& right);
+  void set_up(const vec3& up);
+  void set_at(const vec3& at);
 
-  Matrix33& set_scale(const Vec3& scale);
-  void scale(const Vec3& scale);
+  matrix33& set_scale(const vec3& scale);
+  void scale(const vec3& scale);
   void scale(const float32 scale);
 
-  static Matrix33 identity();
-  static Matrix33 zero();
+  static matrix33 identity();
+  static matrix33 zero();
 
   void rotate_x(const RadAngle rot_x);
   void rotate_y(const RadAngle rot_y);
   void rotate_z(const RadAngle rot_z);
 
-  Matrix33& set_rotate_x(const RadAngle angle);
-  Matrix33& set_rotate_y(const RadAngle angle);
-  Matrix33& set_rotate_z(const RadAngle angle);
+  matrix33& set_rotate_x(const RadAngle angle);
+  matrix33& set_rotate_y(const RadAngle angle);
+  matrix33& set_rotate_z(const RadAngle angle);
 
 private:
   void swap_elements(card32 row_idx, card32 column_idx);
 
 private:
-  using Column = Vec3;
-  using Row    = Vec3;
-  Array<Column, 3> m_elements;
+  using Column = vec3;
+  using Row    = vec3;
+  rsl::array<Column, 3> m_elements;
 };
 
-REX_RSL_END_NAMESPACE
+}}

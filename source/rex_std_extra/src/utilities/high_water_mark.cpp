@@ -12,7 +12,7 @@
 
 #include "rex_std_extra/utilities/high_water_mark.h"
 
-#include "rex_std_extra/rex_stl_extra_pch.h"
+#include "rex_std/algorithm.h"
 
 rsl::HighWaterMark::HighWaterMark(card32 init_value)
     : m_value(init_value)
@@ -23,14 +23,14 @@ rsl::HighWaterMark::HighWaterMark(card32 init_value)
 rsl::HighWaterMark& rsl::HighWaterMark::operator++()
 {
   ++m_value;
-  m_high_water_mark = max(m_high_water_mark, m_value);
+  m_high_water_mark = rsl::max(m_high_water_mark, m_value);
   return *this;
 }
 rsl::HighWaterMark rsl::HighWaterMark::operator++(int)
 {
   card32 tmp = m_value;
   ++m_value;
-  m_high_water_mark = max(m_high_water_mark, m_value);
+  m_high_water_mark = rsl::max(m_high_water_mark, m_value);
   return tmp;
 }
 

@@ -15,6 +15,23 @@
 #include "rex_std/bonus/types.h"
 #include "rex_std/internal/math/abs.h"
 
+#include "rex_std/internal/math/acos.h"
+#include "rex_std/internal/math/asin.h"
+#include "rex_std/internal/math/atan.h"
+#include "rex_std/internal/math/ceil.h"
+#include "rex_std/internal/math/clamp.h"
+#include "rex_std/internal/math/cos.h"
+#include "rex_std/internal/math/exp.h"
+#include "rex_std/internal/math/factorial.h"
+#include "rex_std/internal/math/floor.h"
+#include "rex_std/internal/math/is_nan.h"
+#include "rex_std/internal/math/pow.h"
+#include "rex_std/internal/math/round.h"
+#include "rex_std/internal/math/signbit.h"
+#include "rex_std/internal/math/sin.h"
+#include "rex_std/internal/math/sqrt.h"
+#include "rex_std/internal/math/tan.h"
+
 namespace rsl
 {
   inline namespace v1
