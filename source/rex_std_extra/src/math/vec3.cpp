@@ -13,6 +13,7 @@
 #include "rex_std_extra/math/vec3.h"
 
 #include "rex_std_extra/math/float.h"
+#include "rex_std/math.h"
 #include "rex_std/format.h"
 
 rsl::vec3::vec3()
@@ -215,8 +216,8 @@ rsl::vec3& rsl::vec3::rotate_x(const RadAngle angle)
 {
   const float32 copy_y = y;
 
-  const float32 cosx = cos(angle.get());
-  const float32 sinx = sin(angle.get());
+  const float32 cosx = rsl::cos(angle.get());
+  const float32 sinx = rsl::sin(angle.get());
 
   y = y * cosx - z * sinx;
   z = copy_y * sinx + z * cosx;
@@ -227,8 +228,8 @@ rsl::vec3& rsl::vec3::rotate_y(const RadAngle angle)
 {
   const float32 copy_x = x;
 
-  const float32 cosy = cos(angle.get());
-  const float32 siny = sin(angle.get());
+  const float32 cosy = rsl::cos(angle.get());
+  const float32 siny = rsl::sin(angle.get());
 
   x = x * cosy + z * siny;
   z = copy_x * -siny + z * cosy;
@@ -238,8 +239,8 @@ rsl::vec3& rsl::vec3::rotate_z(const RadAngle angle)
 {
   const float32 copy_x = x;
 
-  const float32 cosz = cos(angle.get());
-  const float32 sinz = sin(angle.get());
+  const float32 cosz = rsl::cos(angle.get());
+  const float32 sinz = rsl::sin(angle.get());
 
   x = x * cosz - y * sinz;
   y = copy_x * sinz + y * cosz;

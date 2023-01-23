@@ -92,7 +92,7 @@ namespace rsl
     namespace internal
     {
       template <typename T>
-      T fmod(T x, T div)
+      constexpr T fmod(T x, T div)
       {
         // if div or x is nan, return x directly
         if(div != div || x != x)
@@ -109,7 +109,7 @@ namespace rsl
       }
 
       template <typename T>
-      T sqrt(T arg)
+      constexpr T sqrt(T arg)
       {
         REX_ASSERT_X(arg >= (T)0, "sqrt called on negative value");
 
@@ -139,13 +139,13 @@ namespace rsl
       }
     
       template <typename T>
-      T round_downward(T arg)
+      constexpr T round_downward(T arg)
       {
         int64 target = static_cast<int64>(arg);
         return static_cast<T>(target);
       }
       template <typename T>
-      T round_to_nearest(T arg)
+      constexpr T round_to_nearest(T arg)
       {
         int64 target = static_cast<int64>(arg);
         if (arg - target > 0.5f)
@@ -159,7 +159,7 @@ namespace rsl
 
       }
       template <typename T>
-      T round_toward_zero(T arg)
+      constexpr T round_toward_zero(T arg)
       {
         if (arg < 0)
         {
@@ -171,20 +171,20 @@ namespace rsl
         }
       }
       template <typename T>
-      T round_upward(T arg)
+      constexpr T round_upward(T arg)
       {
         int64 target = static_cast<int64>(arg);
         return static_cast<T>(target + 1);
       }
 
       template <typename T>
-      T rint(T arg, rounding_mode rmode)
+      constexpr T rint(T arg, rounding_mode rmode)
       {
         switch (rmode)
         {
         case rounding_mode::downward:
           return round_downward(arg);
-        case rounding_mode::to_nearest
+        case rounding_mode::to_nearest:
           return round_to_nearest(arg);
         case rounding_mode::toward_zero:
           return round_toward_zero(arg);
@@ -197,94 +197,94 @@ namespace rsl
       }
     } // namespace internal
 
-    float32 abs(float32 arg)
+    constexpr float32 abs(float32 arg)
     {
       return internal::abs(arg);
     }
-    float64 abs(float64 arg)
+    constexpr float64 abs(float64 arg)
     {
       return internal::abs(arg);
     }
-    lfloat64 abs(lfloat64 arg)
+    constexpr lfloat64 abs(lfloat64 arg)
     {
       return internal::abs(arg);
     }
 
-    float32 fabs(float32 arg)
+    constexpr float32 fabs(float32 arg)
     {
       return internal::abs(arg);
     }
-    float32 fabsf(float32 arg)
+    constexpr float32 fabsf(float32 arg)
     {
       return internal::abs(arg);
     }
-    float64 fabs(float64 arg)
+    constexpr float64 fabs(float64 arg)
     {
       return internal::abs(arg);
     }
-    lfloat64 fabs(lfloat64 arg)
+    constexpr lfloat64 fabs(lfloat64 arg)
     {
       return internal::abs(arg);
     }
-    lfloat64 fabsl(lfloat64 arg)
+    constexpr lfloat64 fabsl(lfloat64 arg)
     {
       return internal::abs(arg);
     }
 
     template <typename IntegralType>
-    float64 fabs(IntegralType arg)
+    constexpr float64 fabs(IntegralType arg)
     {
       return abs(static_cast<float64>(arg));
     }
 
-    float32 fmod(float32 x, float32 div)
+    constexpr float32 fmod(float32 x, float32 div)
     {
       return internal::fmod(x, div);
     }
-    float32 fmodf(float32 x, float32 div)
+    constexpr float32 fmodf(float32 x, float32 div)
     {
       return internal::fmod(x, div);
     }
-    float64 fmod(float64 x, float64 div)
+    constexpr float64 fmod(float64 x, float64 div)
     {
       return internal::fmod(x, div);
     }
-    lfloat64 fmod(lfloat64 x, lfloat64 div)
+    constexpr lfloat64 fmod(lfloat64 x, lfloat64 div)
     {
       return internal::fmod(x, div);
     }
-    lfloat64 fmodl(lfloat64 x, lfloat64 div)
+    constexpr lfloat64 fmodl(lfloat64 x, lfloat64 div)
     {
       return internal::fmod(x, div);
     }
     template <typename Arithmetic>
-    auto fmod(Arithmetic x, Arithmetic div)
+    constexpr auto fmod(Arithmetic x, Arithmetic div)
     {
       return internal::fmod(static_cast<float64>(x), static_cast<float64>(div));
     }
 
-    float32 sqrt(float32 arg)
+    constexpr float32 sqrt(float32 arg)
     {
       return internal::sqrt(arg);
     }
-    float32 sqrtf(float32 arg)
+    constexpr float32 sqrtf(float32 arg)
     {
       return internal::sqrt(arg);
     }
-    float64 sqrt(float64 arg)
+    constexpr float64 sqrt(float64 arg)
     {
       return internal::sqrt(arg);
     }
-    lfloat64 sqrt(lfloat64 arg)
+    constexpr lfloat64 sqrt(lfloat64 arg)
     {
       return internal::sqrt(arg);
     }
-    lfloat64 sqrtl(lfloat64 arg)
+    constexpr lfloat64 sqrtl(lfloat64 arg)
     {
       return internal::sqrt(arg);
     }
     template <typename IntegralType>
-    float64 sqrt(IntegralType arg)
+    constexpr float64 sqrt(IntegralType arg)
     {
       return internal::sqrt(arg);
     }
@@ -294,90 +294,90 @@ namespace rsl
     // this rounding option would be queried from a global state which is not recommended.
     // therefore, in rsl, the rounding option has to be specified.
     // It is however defaulted to round to near, which is the default in MSVC, Clang and GCC.
-    float32 rint(float32 arg, rounding_mode rmode = rounding_mode::to_nearest)
+    constexpr float32 rint(float32 arg, rounding_mode rmode = rounding_mode::to_nearest)
     {
-      internal::rint(arg, rmode);
+      return internal::rint(arg, rmode);
     }
-    float32 rintf(float32 arg, rounding_mode rmode = rounding_mode::to_nearest)
+    constexpr float32 rintf(float32 arg, rounding_mode rmode = rounding_mode::to_nearest)
     {
-      internal::rint(arg, rmode);
+      return internal::rint(arg, rmode);
     }
-    float64 rint(float64 arg, rounding_mode rmode = rounding_mode::to_nearest)
+    constexpr float64 rint(float64 arg, rounding_mode rmode = rounding_mode::to_nearest)
     {
-      internal::rint(arg, rmode);
+      return internal::rint(arg, rmode);
     }
-    lfloat64 rint(lfloat64 arg, rounding_mode rmode = rounding_mode::to_nearest)
+    constexpr lfloat64 rint(lfloat64 arg, rounding_mode rmode = rounding_mode::to_nearest)
     {
-      internal::rint(arg, rmode);
+      return internal::rint(arg, rmode);
     }
-    lfloat64 rintl(lfloat64 arg, rounding_mode rmode = rounding_mode::to_nearest)
+    constexpr lfloat64 rintl(lfloat64 arg, rounding_mode rmode = rounding_mode::to_nearest)
     {
-      internal::rint(arg, rmode);
+      return internal::rint(arg, rmode);
     }
     /// RSL Comment: Different from ISO C++ Standard at time of writing (22/Jan/2023)
     // the standard cast this value to a double and then performs rounding.
     // for optimization purposes, we just return the input as there's no point rounding an int
     template <typename IntegralType>
-    float64 rint(IntegralType arg, rounding_mode rmode = rounding_mode::to_nearest)
+    constexpr float64 rint(IntegralType arg, rounding_mode rmode = rounding_mode::to_nearest)
     {
       static_assert(rsl::is_integral_v<IntegralType>, "arg must be an integral type");
       return arg;
     }
-    long lrint(float32 arg, rounding_mode rmode = rounding_mode::to_nearest)
+    constexpr long lrint(float32 arg, rounding_mode rmode = rounding_mode::to_nearest)
     {
-      internal::rint(arg, rmode);
+      return static_cast<long>(internal::rint(arg, rmode));
     }
-    long lrintf(float32 arg, rounding_mode rmode = rounding_mode::to_nearest)
+    constexpr long lrintf(float32 arg, rounding_mode rmode = rounding_mode::to_nearest)
     {
-      internal::rint(arg, rmode);
+      return static_cast<long>(internal::rint(arg, rmode));
     }
-    long lrint(float64 arg, rounding_mode rmode = rounding_mode::to_nearest)
+    constexpr long lrint(float64 arg, rounding_mode rmode = rounding_mode::to_nearest)
     {
-      internal::rint(arg, rmode);
+      return static_cast<long>(internal::rint(arg, rmode));
     }
-    long lrint(lfloat64 arg, rounding_mode rmode = rounding_mode::to_nearest)
+    constexpr long lrint(lfloat64 arg, rounding_mode rmode = rounding_mode::to_nearest)
     {
-      internal::rint(arg, rmode);
+      return static_cast<long>(internal::rint(arg, rmode));
     }
-    long lrintl(lfloat64 arg, rounding_mode rmode = rounding_mode::to_nearest)
+    constexpr long lrintl(lfloat64 arg, rounding_mode rmode = rounding_mode::to_nearest)
     {
-      internal::rint(arg, rmode);
+      return static_cast<long>(internal::rint(arg, rmode));
     }
     /// RSL Comment: Different from ISO C++ Standard at time of writing (22/Jan/2023)
     // the standard cast this value to a double and then performs rounding.
     // for optimization purposes, we just return the input as there's no point rounding an int
     template <typename IntegralType>
-    long lrint(IntegralType arg, rounding_mode rmode = rounding_mode::to_nearest)
+    constexpr long lrint(IntegralType arg, rounding_mode rmode = rounding_mode::to_nearest)
     {
       static_assert(rsl::is_integral_v<IntegralType>, "arg must be an integral type");
       return arg;
     }
     
-    int64 llrint(float32 arg, rounding_mode rmode = rounding_mode::to_nearest)
+    constexpr int64 llrint(float32 arg, rounding_mode rmode = rounding_mode::to_nearest)
     {
-      internal::rint(arg, rmode);
+      return static_cast<int64>(internal::rint(arg, rmode));
     }
-    int64 llrintf(float32 arg, rounding_mode rmode = rounding_mode::to_nearest)
+    constexpr int64 llrintf(float32 arg, rounding_mode rmode = rounding_mode::to_nearest)
     {
-      internal::rint(arg, rmode);
+      return static_cast<int64>(internal::rint(arg, rmode));
     }
-    int64 llrint(float64 arg, rounding_mode rmode = rounding_mode::to_nearest)
+    constexpr int64 llrint(float64 arg, rounding_mode rmode = rounding_mode::to_nearest)
     {
-      internal::rint(arg, rmode);
+      return static_cast<int64>(internal::rint(arg, rmode));
     }
-    int64 llrint(lfloat64 arg, rounding_mode rmode = rounding_mode::to_nearest)
+    constexpr int64 llrint(lfloat64 arg, rounding_mode rmode = rounding_mode::to_nearest)
     {
-      internal::rint(arg, rmode);
+      return static_cast<int64>(internal::rint(arg, rmode));
     }
-    int64 llrintl(lfloat64 arg, rounding_mode rmode = rounding_mode::to_nearest)
+    constexpr int64 llrintl(lfloat64 arg, rounding_mode rmode = rounding_mode::to_nearest)
     {
-      internal::rint(arg, rmode);
+      return static_cast<int64>(internal::rint(arg, rmode));
     }
     /// RSL Comment: Different from ISO C++ Standard at time of writing (22/Jan/2023)
     // the standard cast this value to a double and then performs rounding.
     // for optimization purposes, we just return the input as there's no point rounding an int
     template <typename IntegralType>
-    int64 llrint(IntegralType arg, rounding_mode rmode = rounding_mode::to_nearest)
+    constexpr int64 llrint(IntegralType arg, rounding_mode rmode = rounding_mode::to_nearest)
     {
       static_assert(rsl::is_integral_v<IntegralType>, "arg must be an integral type");
       return arg;
