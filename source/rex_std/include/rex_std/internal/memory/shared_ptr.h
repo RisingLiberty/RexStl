@@ -544,7 +544,7 @@ namespace rsl
       element_type* m_ptr; // the only reason why we have to store this ptr is because of the ctor taking in a shared ptr and a ptr.
       internal::ref_count_base* m_ref_count;
 
-      template <class Deleter, class U>
+      template <class Deleter, typename U>
       friend Deleter* get_deleter(const shared_ptr<U>& ptr);
     };
 
@@ -647,6 +647,114 @@ namespace rsl
       {
         return static_cast<Deleter*>(p.m_ref_count->get_deleter());
       }
+    }
+
+    template<typename T, typename U>
+    bool operator==(const shared_ptr<T>& lhs, const shared_ptr<U>& rhs) 
+    {
+      return lhs.get() == rhs.get();
+    }
+
+    template<typename T, typename U>
+    bool operator!=(const shared_ptr<T>& lhs, const shared_ptr<U>& rhs) 
+    {
+      return !(lhs == rhs);
+    }
+
+    template<typename T, typename U>
+    bool operator<(const shared_ptr<T>& lhs, const shared_ptr<U>& rhs) 
+    {
+      return less<>()(lhs.get(), rhs.get());
+    }
+
+    template<typename T, typename U>
+    bool operator>(const shared_ptr<T>& lhs, const shared_ptr<U>& rhs) 
+    {
+      return rhs < lhs;
+    }
+
+    template<typename T, typename U>
+    bool operator<=(const shared_ptr<T>& lhs, const shared_ptr<U>& rhs) 
+    {
+      return !(rhs < lhs);
+    }
+
+    template<typename T, typename U>
+    bool operator>=(const shared_ptr<T>& lhs, const shared_ptr<U>& rhs) 
+    {
+      return !(lhs < rhs);
+    }
+
+    template<typename T>
+    bool operator==(const shared_ptr<T>& lhs, nullptr_t) 
+    {
+      return !lhs;
+    }
+
+    template<typename T>
+    bool operator==(nullptr_t, const shared_ptr<T>& lhs) 
+    {
+      return !lhs;
+    }
+
+    template<typename T>
+    bool operator!=(const shared_ptr<T>& lhs, nullptr_t) 
+    {
+      return static_cast<bool>(lhs);
+    }
+
+    template<typename T>
+    bool operator!=(nullptr_t, const shared_ptr<T>& lhs) 
+    {
+      return static_cast<bool>(lhs);
+    }
+
+    template<typename T>
+    bool operator<(const shared_ptr<T>& lhs, nullptr_t) 
+    {
+      return less<T*>()(lhs.get(), nullptr);
+    }
+
+    template<typename T>
+    bool operator<(nullptr_t, const shared_ptr<T>& lhs) 
+    {
+      return less<T*>()(nullptr, lhs.get());
+    }
+
+    template<typename T>
+    bool operator>(const shared_ptr<T>& lhs, nullptr_t) 
+    {
+      return nullptr < lhs;
+    }
+
+    template<typename T>
+    bool operator>(nullptr_t, const shared_ptr<T>& lhs) 
+    {
+      return lhs < nullptr;
+    }
+
+    template<typename T>
+    bool operator<=(const shared_ptr<T>& lhs, nullptr_t) 
+    {
+      return !(nullptr < lhs);
+    }
+
+    template<typename T>
+    bool operator<=(nullptr_t, const shared_ptr<T>& lhs) 
+    {
+      return !(lhs < nullptr);
+    }
+
+    template<typename T>
+    bool operator>=(const shared_ptr<T>& lhs, nullptr_t) 
+    {
+      return !(lhs < nullptr);
+    }
+
+    template<typename T>
+    bool operator>=(nullptr_t, const shared_ptr<T>& lhs) 
+    {
+      return !(nullptr < lhs);
     }
 
   } // namespace v1
