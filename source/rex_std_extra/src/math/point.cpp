@@ -12,8 +12,6 @@
 
 #include "rex_std_extra/math/point.h"
 
-#include "rex_std_extra/rex_stl_extra_pch.h"
-
 rsl::point::point()
     : x(0)
     , y(0)
@@ -27,19 +25,19 @@ rsl::point::point(int16 _x, int16 _y)
 
 rsl::point rsl::point::operator+(const point& rhs) const
 {
-  return {x + rhs.x, y + rhs.y};
+  return rsl::point(x + rhs.x, y + rhs.y);
 }
 rsl::point rsl::point::operator-(const point& rhs) const
 {
-  return {x - rhs.x, y - rhs.y};
+  return rsl::point(x - rhs.x, y - rhs.y);
 }
 rsl::point rsl::point::operator*(const point& rhs) const
 {
-  return {x * rhs.x, y * rhs.y};
+  return rsl::point(x * rhs.x, y * rhs.y);
 }
 rsl::point rsl::point::operator/(const point& rhs) const
 {
-  return {x / rhs.x, y / rhs.y};
+  return rsl::point(x / rhs.x, y / rhs.y);
 }
 
 rsl::point& rsl::point::operator+=(const point& rhs)
@@ -69,22 +67,22 @@ rsl::point& rsl::point::operator/=(const point& rhs)
 
 rsl::point rsl::point::operator+(const int16 rhs) const
 {
-  return {x + rhs, y + rhs};
+  return rsl::point(x + rhs, y + rhs);
 }
 
 rsl::point rsl::point::operator-(const int16 rhs) const
 {
-  return {x - rhs, y - rhs};
+  return rsl::point(x - rhs, y - rhs);
 }
 
 rsl::point rsl::point::operator*(const int16 rhs) const
 {
-  return {x * rhs, y * rhs};
+  return rsl::point(x * rhs, y * rhs);
 }
 
 rsl::point rsl::point::operator/(const int16 rhs) const
 {
-  return {x / rhs, y / rhs};
+  return rsl::point(x / rhs, y / rhs);
 }
 
 rsl::point& rsl::point::operator+=(const int16 rhs)
@@ -123,7 +121,7 @@ bool rsl::point::operator!=(const point& point) const
 
 rsl::point rsl::point::operator-() const
 {
-  return {-x, -y};
+  return rsl::point(-x, -y);
 }
 
 rsl::ostream& rsl::operator<<(ostream& os, const point& point)

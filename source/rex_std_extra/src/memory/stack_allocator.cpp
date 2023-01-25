@@ -12,8 +12,6 @@
 
 #include "rex_std_extra/memory/stack_allocator.h"
 
-#include "rex_std_extra/rex_stl_extra_pch.h"
-
 rsl::stack_allocator::stack_allocator(size_type size)
     : m_base_ptr(rsl::make_unique<rsl::byte[]>(size))
     , m_current_marker(0)

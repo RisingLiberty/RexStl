@@ -14,23 +14,27 @@
 
 #include "rex_std/bonus/types.h"
 
-namespace rsl { inline namespace v1 {
-
-class WrappedIndex
+namespace rsl
 {
-public:
-  WrappedIndex(card32 min, card32 max);
-  WrappedIndex(card32 value, card32 min, card32 max);
+  inline namespace v1
+  {
 
-  operator card32() const;
+    class WrappedIndex
+    {
+    public:
+      WrappedIndex(card32 min, card32 max);
+      WrappedIndex(card32 value, card32 min, card32 max);
 
-  void increment(card32 inc_size = 1);
-  void decrement(card32 dec_size = 1);
+      operator card32() const;
 
-private:
-  card32 m_value;
-  card32 m_max;
-  card32 m_min;
-};
+      void increment(card32 inc_size = 1);
+      void decrement(card32 dec_size = 1);
 
-}}
+    private:
+      card32 m_value;
+      card32 m_max;
+      card32 m_min;
+    };
+
+  } // namespace v1
+} // namespace rsl

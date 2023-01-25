@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: time_digits.cpp
 // Copyright (c) Nick De Breuck 2022
 //
@@ -21,5 +21,5 @@ namespace rsl
       os << digits.high << digits.low;
       return os;
     }
-  }
-}
+  } // namespace v1
+} // namespace rsl

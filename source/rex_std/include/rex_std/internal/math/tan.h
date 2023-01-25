@@ -14,10 +14,10 @@
 
 #include "rex_std/bonus/math/return_type.h"
 #include "rex_std/bonus/types.h"
-#include "rex_std/limits.h"
-#include "rex_std/numbers.h"
 #include "rex_std/internal/math/floor.h"
 #include "rex_std/internal/math/pow.h"
+#include "rex_std/limits.h"
+#include "rex_std/numbers.h"
 
 namespace rsl
 {

@@ -12,12 +12,16 @@
 
 #pragma once
 
-namespace rsl { inline namespace v1 {
-
-template <typename T>
-constexpr T lerp(const T& from, const T& to, float32 amount)
+namespace rsl
 {
-  return from + ((to - from) * amount);
-}
+  inline namespace v1
+  {
 
-}}
+    template <typename T>
+    constexpr T lerp(const T& from, const T& to, float32 amount)
+    {
+      return from + ((to - from) * amount);
+    }
+
+  } // namespace v1
+} // namespace rsl

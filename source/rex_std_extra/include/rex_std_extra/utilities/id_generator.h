@@ -14,22 +14,26 @@
 
 #include "rex_std/bonus/types.h"
 
-namespace rsl { inline namespace v1 {
-
-using ID = card32;
-
-namespace id_generator
+namespace rsl
 {
-  // unique ID based on type
-  template <typename T>
-  ID new_id()
+  inline namespace v1
   {
-    static ID id = 0;
-    return id++;
-  }
 
-  // Global unique id
-  ID new_id();
-} // namespace id_generator
+    using ID = card32;
 
-}}
+    namespace id_generator
+    {
+      // unique ID based on type
+      template <typename T>
+      ID new_id()
+      {
+        static ID id = 0;
+        return id++;
+      }
+
+      // Global unique id
+      ID new_id();
+    } // namespace id_generator
+
+  } // namespace v1
+} // namespace rsl

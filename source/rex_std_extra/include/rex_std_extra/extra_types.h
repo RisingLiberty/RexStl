@@ -15,15 +15,19 @@
 #include "rex_std/bonus/types.h"
 #include "utilities/strong_type.h"
 
-namespace rsl { inline namespace v1 {
-
-inline namespace extra
+namespace rsl
 {
-  REX_CREATE_STRONG_TYPE(Capacity, card32);
-  REX_CREATE_STRONG_TYPE(Size, card32);
-} // namespace extra
+  inline namespace v1
+  {
 
-}}
+    inline namespace extra
+    {
+      REX_CREATE_STRONG_TYPE(Capacity, card32);
+      REX_CREATE_STRONG_TYPE(Size, card32);
+    } // namespace extra
+
+  } // namespace v1
+} // namespace rsl
 
 CREATE_LITERAL_FOR_STRONG_TYPE(rsl::Capacity, _cap);
 CREATE_LITERAL_FOR_STRONG_TYPE(rsl::Size, _size);

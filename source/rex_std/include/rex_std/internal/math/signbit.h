@@ -10,6 +10,8 @@
 //
 // ============================================
 
+#pragma once
+
 #include "rex_std/bonus/types.h"
 #include "rex_std/internal/type_traits/is_integral.h"
 #include "rex_std/internal/type_traits/is_unsigned.h"
@@ -18,7 +20,6 @@ namespace rsl
 {
   inline namespace v1
   {
-
     constexpr bool signbit(int8 arg)
     {
       return arg & 0x80;

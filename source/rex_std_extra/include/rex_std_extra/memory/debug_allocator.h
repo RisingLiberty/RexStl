@@ -15,19 +15,23 @@
 #include "rex_std/bonus/attributes.h"
 #include "rex_std/bonus/types.h"
 
-namespace rsl { inline namespace v1 {
-
-class debug_allocator
+namespace rsl
 {
-public:
-  using size_type = count_t;
-  using pointer   = void*;
+  inline namespace v1
+  {
 
-  REX_NO_DISCARD pointer allocate(const size_type size);
-  void deallocate(pointer ptr, const size_type size);
+    class debug_allocator
+    {
+    public:
+      using size_type = count_t;
+      using pointer   = void*;
 
-  bool operator==(const debug_allocator& rhs) const;
-  bool operator!=(const debug_allocator& rhs) const;
-};
+      REX_NO_DISCARD pointer allocate(const size_type size);
+      void deallocate(pointer ptr, const size_type size);
 
-}}
+      bool operator==(const debug_allocator& rhs) const;
+      bool operator!=(const debug_allocator& rhs) const;
+    };
+
+  } // namespace v1
+} // namespace rsl

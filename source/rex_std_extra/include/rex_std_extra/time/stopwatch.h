@@ -14,26 +14,30 @@
 
 #include "rex_std_extra/time/timepoint.h"
 
-namespace rsl { inline namespace v1 {
-
-class Stopwatch
+namespace rsl
 {
-public:
-  Stopwatch();
+  inline namespace v1
+  {
 
-  void stop();
-  void pause();
-  void resume();
+    class Stopwatch
+    {
+    public:
+      Stopwatch();
 
-  float32 time_in_seconds() const;
-  float32 time_in_ms() const;
+      void stop();
+      void pause();
+      void resume();
 
-private:
-  TimePoint m_start;
-  TimePoint m_end;
+      float32 time_in_seconds() const;
+      float32 time_in_ms() const;
 
-  TimePoint m_pause_start;
-  float32 m_paused_time_in_ms;
-};
+    private:
+      TimePoint m_start;
+      TimePoint m_end;
 
-}}
+      TimePoint m_pause_start;
+      float32 m_paused_time_in_ms;
+    };
+
+  } // namespace v1
+} // namespace rsl

@@ -12,26 +12,30 @@
 
 #pragma once
 
-namespace rsl { inline namespace v1 {
-
-class YesNoEnum
+namespace rsl
 {
-public:
-  enum EYesNoEnum
+  inline namespace v1
   {
-    No  = 0,
-    Yes = 1
-  };
 
-  YesNoEnum(EYesNoEnum value);
+    class YesNoEnum
+    {
+    public:
+      enum EYesNoEnum
+      {
+        No  = 0,
+        Yes = 1
+      };
 
-  operator bool() const;
+      YesNoEnum(EYesNoEnum value);
 
-private:
-  EYesNoEnum m_value;
-};
+      operator bool() const;
 
-}}
+    private:
+      EYesNoEnum m_value;
+    };
+
+  } // namespace v1
+} // namespace rsl
 
 #define DEFINE_YES_NO_ENUM(ClassName)                                                                                                                                                                                                                    \
   class ClassName : public rsl::YesNoEnum                                                                                                                                                                                                                \

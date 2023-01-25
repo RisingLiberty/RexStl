@@ -15,38 +15,42 @@
 #include "rex_std_extra/time/date.h"
 #include "rex_std_extra/time/time.h"
 
-namespace rsl { inline namespace v1 {
-
-class Date;
-class time;
-
-class TimePoint
+namespace rsl
 {
-public:
-  TimePoint();
-  TimePoint(const Date& date, const rsl::time& time);
+  inline namespace v1
+  {
 
-  const Date& date() const;
-  const rsl::time& time() const;
+    class Date;
+    class time;
 
-  bool operator>(const TimePoint& timepoint) const;
-  bool operator>=(const TimePoint& timepoint) const;
-  bool operator<(const TimePoint& timepoint) const;
-  bool operator<=(const TimePoint& timepoint) const;
+    class TimePoint
+    {
+    public:
+      TimePoint();
+      TimePoint(const Date& date, const rsl::time& time);
 
-  bool operator==(const TimePoint& timepoint) const;
-  bool operator!=(const TimePoint& timepoint) const;
+      const Date& date() const;
+      const rsl::time& time() const;
 
-  float32 operator-(const TimePoint& other) const;
+      bool operator>(const TimePoint& timepoint) const;
+      bool operator>=(const TimePoint& timepoint) const;
+      bool operator<(const TimePoint& timepoint) const;
+      bool operator<=(const TimePoint& timepoint) const;
 
-private:
-  rsl::time m_time;
-  rsl::Date m_date;
-};
+      bool operator==(const TimePoint& timepoint) const;
+      bool operator!=(const TimePoint& timepoint) const;
 
-ostream& operator<<(ostream& os, const TimePoint& timepoint);
+      float32 operator-(const TimePoint& other) const;
 
-}}
+    private:
+      rsl::time m_time;
+      rsl::Date m_date;
+    };
+
+    ostream& operator<<(ostream& os, const TimePoint& timepoint);
+
+  } // namespace v1
+} // namespace rsl
 
 #ifdef REX_PLATFORM_WINDOWS
   #include "rex_std_extra/time/win/win_timepoint.h"

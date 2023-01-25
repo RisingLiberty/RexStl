@@ -12,8 +12,6 @@
 
 #include "rex_std_extra/time/timer.h"
 
-#include "rex_std_extra/rex_stl_extra_pch.h"
-
 rsl::Timer::Timer(float32 max_time_in_seconds)
     : m_max_time(max_time_in_seconds * 0.0001f) // convert to milli seconds
     , m_current_time(0.0f)

@@ -12,25 +12,29 @@
 
 #pragma once
 
-namespace rsl { inline namespace v1 {
-
-template <typename T>
-constexpr T sign(T num)
+namespace rsl
 {
-  return num > 0 ? T(+1) : num < 0 ? T(-1) : T();
-}
+  inline namespace v1
+  {
 
-template <typename T>
-constexpr bool is_negative(T val)
-{
-  static_assert(rsl::is_signed_v<T>, "T must be signed");
-  return val < 0;
-}
-template <typename T>
-constexpr bool is_positive(T val)
-{
-  static_assert(rsl::is_signed_v<T>, "T must be signed");
-  return val > 0;
-}
+    template <typename T>
+    constexpr T sign(T num)
+    {
+      return num > 0 ? T(+1) : num < 0 ? T(-1) : T();
+    }
 
-}}
+    template <typename T>
+    constexpr bool is_negative(T val)
+    {
+      static_assert(rsl::is_signed_v<T>, "T must be signed");
+      return val < 0;
+    }
+    template <typename T>
+    constexpr bool is_positive(T val)
+    {
+      static_assert(rsl::is_signed_v<T>, "T must be signed");
+      return val > 0;
+    }
+
+  } // namespace v1
+} // namespace rsl

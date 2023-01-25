@@ -19,14 +19,12 @@ namespace rsl
 {
   inline namespace v1
   {
+    template <typename T>
+    inline constexpr bool is_null_pointer_v = is_same_v<remove_cv_t<T>, decltype(nullptr)>;
 
     template <typename T>
-    struct is_null_pointer : public is_same<typename remove_cv_t<T>::type, decltype(nullptr)>
+    struct is_null_pointer : bool_constant<is_null_pointer_v<T>>
     {
     };
-
-    template <typename T>
-    inline constexpr bool is_null_pointer_v = is_null_pointer_v<T>::value;
-
   } // namespace v1
 } // namespace rsl

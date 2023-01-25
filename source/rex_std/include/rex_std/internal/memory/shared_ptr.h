@@ -649,110 +649,110 @@ namespace rsl
       }
     }
 
-    template<typename T, typename U>
-    bool operator==(const shared_ptr<T>& lhs, const shared_ptr<U>& rhs) 
+    template <typename T, typename U>
+    bool operator==(const shared_ptr<T>& lhs, const shared_ptr<U>& rhs)
     {
       return lhs.get() == rhs.get();
     }
 
-    template<typename T, typename U>
-    bool operator!=(const shared_ptr<T>& lhs, const shared_ptr<U>& rhs) 
+    template <typename T, typename U>
+    bool operator!=(const shared_ptr<T>& lhs, const shared_ptr<U>& rhs)
     {
       return !(lhs == rhs);
     }
 
-    template<typename T, typename U>
-    bool operator<(const shared_ptr<T>& lhs, const shared_ptr<U>& rhs) 
+    template <typename T, typename U>
+    bool operator<(const shared_ptr<T>& lhs, const shared_ptr<U>& rhs)
     {
       return less<>()(lhs.get(), rhs.get());
     }
 
-    template<typename T, typename U>
-    bool operator>(const shared_ptr<T>& lhs, const shared_ptr<U>& rhs) 
+    template <typename T, typename U>
+    bool operator>(const shared_ptr<T>& lhs, const shared_ptr<U>& rhs)
     {
       return rhs < lhs;
     }
 
-    template<typename T, typename U>
-    bool operator<=(const shared_ptr<T>& lhs, const shared_ptr<U>& rhs) 
+    template <typename T, typename U>
+    bool operator<=(const shared_ptr<T>& lhs, const shared_ptr<U>& rhs)
     {
       return !(rhs < lhs);
     }
 
-    template<typename T, typename U>
-    bool operator>=(const shared_ptr<T>& lhs, const shared_ptr<U>& rhs) 
+    template <typename T, typename U>
+    bool operator>=(const shared_ptr<T>& lhs, const shared_ptr<U>& rhs)
     {
       return !(lhs < rhs);
     }
 
-    template<typename T>
-    bool operator==(const shared_ptr<T>& lhs, nullptr_t) 
+    template <typename T>
+    bool operator==(const shared_ptr<T>& lhs, nullptr_t)
     {
       return !lhs;
     }
 
-    template<typename T>
-    bool operator==(nullptr_t, const shared_ptr<T>& lhs) 
+    template <typename T>
+    bool operator==(nullptr_t, const shared_ptr<T>& lhs)
     {
       return !lhs;
     }
 
-    template<typename T>
-    bool operator!=(const shared_ptr<T>& lhs, nullptr_t) 
+    template <typename T>
+    bool operator!=(const shared_ptr<T>& lhs, nullptr_t)
     {
       return static_cast<bool>(lhs);
     }
 
-    template<typename T>
-    bool operator!=(nullptr_t, const shared_ptr<T>& lhs) 
+    template <typename T>
+    bool operator!=(nullptr_t, const shared_ptr<T>& lhs)
     {
       return static_cast<bool>(lhs);
     }
 
-    template<typename T>
-    bool operator<(const shared_ptr<T>& lhs, nullptr_t) 
+    template <typename T>
+    bool operator<(const shared_ptr<T>& lhs, nullptr_t)
     {
       return less<T*>()(lhs.get(), nullptr);
     }
 
-    template<typename T>
-    bool operator<(nullptr_t, const shared_ptr<T>& lhs) 
+    template <typename T>
+    bool operator<(nullptr_t, const shared_ptr<T>& lhs)
     {
       return less<T*>()(nullptr, lhs.get());
     }
 
-    template<typename T>
-    bool operator>(const shared_ptr<T>& lhs, nullptr_t) 
+    template <typename T>
+    bool operator>(const shared_ptr<T>& lhs, nullptr_t)
     {
       return nullptr < lhs;
     }
 
-    template<typename T>
-    bool operator>(nullptr_t, const shared_ptr<T>& lhs) 
+    template <typename T>
+    bool operator>(nullptr_t, const shared_ptr<T>& lhs)
     {
       return lhs < nullptr;
     }
 
-    template<typename T>
-    bool operator<=(const shared_ptr<T>& lhs, nullptr_t) 
+    template <typename T>
+    bool operator<=(const shared_ptr<T>& lhs, nullptr_t)
     {
       return !(nullptr < lhs);
     }
 
-    template<typename T>
-    bool operator<=(nullptr_t, const shared_ptr<T>& lhs) 
+    template <typename T>
+    bool operator<=(nullptr_t, const shared_ptr<T>& lhs)
     {
       return !(lhs < nullptr);
     }
 
-    template<typename T>
-    bool operator>=(const shared_ptr<T>& lhs, nullptr_t) 
+    template <typename T>
+    bool operator>=(const shared_ptr<T>& lhs, nullptr_t)
     {
       return !(lhs < nullptr);
     }
 
-    template<typename T>
-    bool operator>=(nullptr_t, const shared_ptr<T>& lhs) 
+    template <typename T>
+    bool operator>=(nullptr_t, const shared_ptr<T>& lhs)
     {
       return !(nullptr < lhs);
     }

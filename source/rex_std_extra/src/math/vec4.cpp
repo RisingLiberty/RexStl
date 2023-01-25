@@ -14,7 +14,6 @@
 
 #include "rex_std/format.h"
 #include "rex_std_extra/math/float.h"
-#include "rex_std_extra/rex_stl_extra_pch.h"
 
 rsl::vec4::vec4()
     : x(0.0f)

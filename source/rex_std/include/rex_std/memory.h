@@ -21,6 +21,8 @@
 #include "rex_std/internal/memory/allocator.h"
 #include "rex_std/internal/memory/allocator_arg_t.h"
 #include "rex_std/internal/memory/allocator_traits.h"
+#include "rex_std/internal/memory/delete.h"
+#include "rex_std/internal/memory/new.h"
 #include "rex_std/internal/memory/pointer_traits.h"
 #include "rex_std/internal/memory/shared_ptr.h"
 #include "rex_std/internal/memory/unique_ptr.h"
@@ -29,15 +31,16 @@
 // #include "rex_std/internal/memory/owner_less.h"
 // #include "rex_std/internal/memory/enable_shared_from_this.h"
 // #include "rex_std/internal/memory/bad_weak_ptr.h"
-#include "rex_std/internal/memory/memcpy.h"
-#include "rex_std/internal/memory/memcpy_backward.h"
-#include "rex_std/internal/memory/memmove.h"
-#include "rex_std/internal/memory/memset.h"
+#include "rex_std/bonus/memory/unique_array.h"
 #include "rex_std/internal/memory/construct_at.h"
 #include "rex_std/internal/memory/default_delete.h"
 #include "rex_std/internal/memory/destroy.h"
 #include "rex_std/internal/memory/destroy_at.h"
 #include "rex_std/internal/memory/destroy_n.h"
+#include "rex_std/internal/memory/memcpy.h"
+#include "rex_std/internal/memory/memcpy_backward.h"
+#include "rex_std/internal/memory/memmove.h"
+#include "rex_std/internal/memory/memset.h"
 #include "rex_std/internal/memory/uninitialized_copy.h"
 #include "rex_std/internal/memory/uninitialized_copy_n.h"
 #include "rex_std/internal/memory/uninitialized_default_construct.h"
@@ -48,8 +51,6 @@
 #include "rex_std/internal/memory/uninitialized_move_n.h"
 #include "rex_std/internal/memory/uninitialized_value_construct.h"
 #include "rex_std/internal/memory/uninitialized_value_construct_n.h"
-
-#include "rex_std/bonus/memory/unique_array.h"
 
 namespace rsl
 {

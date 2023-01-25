@@ -12,7 +12,6 @@
 
 #include "rex_std_extra/utilities/version.h"
 
-#include "rex_std_extra/rex_stl_extra_pch.h"
 #include "rex_std_extra/utilities/casting.h"
 
 rsl::Version::Version(card8 major, card8 minor, card32 patch)

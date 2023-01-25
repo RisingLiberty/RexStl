@@ -12,7 +12,6 @@
 
 #include "rex_std_extra/time/win/win_time.h"
 
-#include "rex_std_extra/rex_stl_extra_pch.h"
 #include "rex_std_extra/time/time.h"
 #include "rex_std_extra/time/win/win_time_functions.h"
 

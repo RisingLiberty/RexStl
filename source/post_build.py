@@ -2,8 +2,8 @@ import rexpy.run_clang_tools
 import rexpy.diagnostics
 import argparse
 
-def run(projectName, compdb):
-  rexpy.run_clang_tools.run(projectName, compdb)
+def run(projectName, compdb, srcRoot):
+  rexpy.run_clang_tools.run(projectName, compdb, srcRoot)
   return
 
 if __name__ == "__main__":
@@ -13,6 +13,7 @@ if __name__ == "__main__":
   parser.add_argument("-comp", "--compiler", help="compiler")
   parser.add_argument("-conf", "--config", help="configuration")
   parser.add_argument("-compdb", help="compiler db folder")
+  parser.add_argument("-srcroot", help="root folder of source files")
 
   parser.add_argument("-l", "--level", default="info", help="logging level")
   args, unknown = parser.parse_known_args()
@@ -21,6 +22,7 @@ if __name__ == "__main__":
   compiler = args.compiler
   config = args.config
   compdb = args.compdb
+  src_root = args.srcroot
 
  # initialize the logger
   log_level_str = args.level
@@ -31,7 +33,7 @@ if __name__ == "__main__":
   logger.info(f"Executing {__file__}")
 
  # execute the script
-  run(project_name, compdb)
+  run(project_name, compdb, src_root)
 
  # print. We're done.
   logger.info("Done.")

@@ -24,7 +24,7 @@ namespace rsl
 
     REX_STD_FUNC_ALIAS(stable_sort);
 
-  }
+  } // namespace v1
 } // namespace rsl
 
 #include "rex_std/enable_std_checking.h"

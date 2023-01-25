@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: time_digits.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -13,8 +13,8 @@
 #pragma once
 
 #include "rex_std/bonus/types.h"
-#include "rex_std/iostream.h"
 #include "rex_std/format.h"
+#include "rex_std/iostream.h"
 
 namespace rsl
 {
@@ -25,7 +25,7 @@ namespace rsl
       time_digits(card32 value)
       {
         high = static_cast<char>(value * 0.1f);
-        low = static_cast<char>(value - high * 10);
+        low  = static_cast<char>(value - high * 10);
 
         high += '0';
         low += '0';
@@ -49,7 +49,7 @@ namespace rsl
         return format_to(ctx.out(), "{}{}", digits.high, digits.low);
       }
     };
-  }
+  } // namespace v1
 
   rsl::ostream& operator<<(rsl::ostream& os, time_digits digits);
-}
+} // namespace rsl

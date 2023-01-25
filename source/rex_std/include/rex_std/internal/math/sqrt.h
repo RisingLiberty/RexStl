@@ -12,10 +12,10 @@
 
 #pragma once
 
-#include "rex_std/bonus/math/return_type.h"
-#include "rex_std/limits.h"
-#include "rex_std/internal/math/is_nan.h"
 #include "rex_std/bonus//math/is_posinf.h"
+#include "rex_std/bonus/math/return_type.h"
+#include "rex_std/internal/math/is_nan.h"
+#include "rex_std/limits.h"
 
 namespace rsl
 {
@@ -33,7 +33,7 @@ namespace rsl
                     xn
                                                                           : count < SqrtMaxIter ? // else
                                                                                 sqrt_recur(x, T(0.5) * (xn + x / xn), count + 1)
-                                                                                                       : xn);
+                                                                                                : xn);
       }
 
       template <typename T>

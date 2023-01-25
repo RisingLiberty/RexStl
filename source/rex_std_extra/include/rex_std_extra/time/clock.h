@@ -14,27 +14,31 @@
 
 #include "rex_std_extra/time/timepoint.h"
 
-namespace rsl { inline namespace v1 {
-
-class Clock
+namespace rsl
 {
-public:
-  Clock();
+  inline namespace v1
+  {
 
-  void update();
-  void pause();
-  void resume();
+    class Clock
+    {
+    public:
+      Clock();
 
-  float32 delta_time() const;
+      void update();
+      void pause();
+      void resume();
 
-private:
-  TimePoint m_start_time;
-  TimePoint m_current_time;
+      float32 delta_time() const;
 
-  bool m_is_paused;
+    private:
+      TimePoint m_start_time;
+      TimePoint m_current_time;
 
-  // delta time is expressed in seconds
-  float32 m_delta_time;
-};
+      bool m_is_paused;
 
-}}
+      // delta time is expressed in seconds
+      float32 m_delta_time;
+    };
+
+  } // namespace v1
+} // namespace rsl

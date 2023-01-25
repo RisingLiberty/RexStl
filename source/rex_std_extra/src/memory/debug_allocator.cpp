@@ -12,7 +12,7 @@
 
 #include "rex_std_extra/memory/debug_allocator.h"
 
-#include "rex_std_extra/rex_stl_extra_pch.h"
+#include "rex_std/memory.h"
 
 rsl::debug_allocator::pointer rsl::debug_allocator::allocate([[maybe_unused]] const size_type size)
 {

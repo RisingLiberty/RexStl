@@ -14,83 +14,87 @@
 
 #include "rex_std/bonus/types.h"
 
-namespace rsl { inline namespace v1 {
-
-constexpr card64 KiloByteMultiple = 1000;
-constexpr card64 MegaByteMultiple = KiloByteMultiple * 1000;
-constexpr card64 GigaByteMultiple = MegaByteMultiple * 1000;
-
-constexpr card64 KibiByteMultiple = 1024;
-constexpr card64 MibiByteMultiple = KibiByteMultiple * 1024;
-constexpr card64 GibiByteMultiple = MibiByteMultiple * 1024;
-
-class MemorySize
+namespace rsl
 {
-public:
-  constexpr explicit MemorySize(card64 size_in_bytes = 0)
-      : m_size_in_bytes(size_in_bytes)
+  inline namespace v1
   {
-  }
 
-  constexpr operator card64() const
-  {
-    return size_in_bytes();
-  }
-  constexpr card64 size_in_bytes() const
-  {
-    return m_size_in_bytes;
-  }
+    constexpr card64 KiloByteMultiple = 1000;
+    constexpr card64 MegaByteMultiple = KiloByteMultiple * 1000;
+    constexpr card64 GigaByteMultiple = MegaByteMultiple * 1000;
 
-  constexpr MemorySize operator+(card64 bytes) const
-  {
-    return MemorySize(m_size_in_bytes + bytes);
-  }
-  constexpr MemorySize& operator+=(card64 bytes)
-  {
-    m_size_in_bytes += bytes;
-    return *this;
-  }
+    constexpr card64 KibiByteMultiple = 1024;
+    constexpr card64 MibiByteMultiple = KibiByteMultiple * 1024;
+    constexpr card64 GibiByteMultiple = MibiByteMultiple * 1024;
 
-  constexpr MemorySize operator-(card64 bytes) const
-  {
-    return MemorySize(m_size_in_bytes - bytes);
-  }
-  constexpr MemorySize operator-=(card64 bytes)
-  {
-    m_size_in_bytes -= bytes;
-    return *this;
-  }
+    class MemorySize
+    {
+    public:
+      constexpr explicit MemorySize(card64 size_in_bytes = 0)
+          : m_size_in_bytes(size_in_bytes)
+      {
+      }
 
-  constexpr card64 size_in_kb() const
-  {
-    return size_in_bytes() / KiloByteMultiple;
-  }
-  constexpr card64 size_in_mb() const
-  {
-    return size_in_bytes() / MegaByteMultiple;
-  }
-  constexpr card64 size_in_gb() const
-  {
-    return size_in_bytes() / GigaByteMultiple;
-  }
-  constexpr card64 size_in_kib() const
-  {
-    return size_in_bytes() / KibiByteMultiple;
-  }
-  constexpr card64 size_in_mib() const
-  {
-    return size_in_bytes() / MibiByteMultiple;
-  }
-  constexpr card64 size_in_gib() const
-  {
-    return size_in_bytes() / GibiByteMultiple;
-  }
+      constexpr operator card64() const
+      {
+        return size_in_bytes();
+      }
+      constexpr card64 size_in_bytes() const
+      {
+        return m_size_in_bytes;
+      }
 
-private:
-  card64 m_size_in_bytes;
-};
+      constexpr MemorySize operator+(card64 bytes) const
+      {
+        return MemorySize(m_size_in_bytes + bytes);
+      }
+      constexpr MemorySize& operator+=(card64 bytes)
+      {
+        m_size_in_bytes += bytes;
+        return *this;
+      }
 
-}}
+      constexpr MemorySize operator-(card64 bytes) const
+      {
+        return MemorySize(m_size_in_bytes - bytes);
+      }
+      constexpr MemorySize operator-=(card64 bytes)
+      {
+        m_size_in_bytes -= bytes;
+        return *this;
+      }
+
+      constexpr card64 size_in_kb() const
+      {
+        return size_in_bytes() / KiloByteMultiple;
+      }
+      constexpr card64 size_in_mb() const
+      {
+        return size_in_bytes() / MegaByteMultiple;
+      }
+      constexpr card64 size_in_gb() const
+      {
+        return size_in_bytes() / GigaByteMultiple;
+      }
+      constexpr card64 size_in_kib() const
+      {
+        return size_in_bytes() / KibiByteMultiple;
+      }
+      constexpr card64 size_in_mib() const
+      {
+        return size_in_bytes() / MibiByteMultiple;
+      }
+      constexpr card64 size_in_gib() const
+      {
+        return size_in_bytes() / GibiByteMultiple;
+      }
+
+    private:
+      card64 m_size_in_bytes;
+    };
+
+  } // namespace v1
+} // namespace rsl
 
 constexpr rsl::MemorySize operator"" _bytes(unsigned long long bytes)
 {

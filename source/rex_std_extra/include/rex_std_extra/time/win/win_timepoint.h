@@ -11,9 +11,13 @@
 // ============================================
 #pragma once
 
-namespace rsl { inline namespace v1 {
+namespace rsl
+{
+  inline namespace v1
+  {
 
-class TimePoint;
-TimePoint current_timepoint();
+    class TimePoint;
+    TimePoint current_timepoint();
 
-}}
+  } // namespace v1
+} // namespace rsl

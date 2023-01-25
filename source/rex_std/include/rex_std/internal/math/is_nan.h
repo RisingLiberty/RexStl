@@ -21,5 +21,5 @@ namespace rsl
     {
       return x != x; // NOLINT(misc-redundant-expression)
     }
-  }
-}
+  } // namespace v1
+} // namespace rsl

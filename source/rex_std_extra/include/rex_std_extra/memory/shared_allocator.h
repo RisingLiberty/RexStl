@@ -12,40 +12,44 @@
 
 #pragma once
 
-namespace rsl { inline namespace v1 {
-
-template <typename Alloc>
-class SharedAlloc
+namespace rsl
 {
-public:
-  using size_type = typename Alloc::size_type;
-  using pointer   = typename Alloc::pointer;
-
-  SharedAlloc(Alloc& alloc)
-      : m_alloc(alloc)
+  inline namespace v1
   {
-  }
 
-  REX_NO_DISCARD pointer allocate(const size_type size)
-  {
-    return m_alloc.allocate(size);
-  }
-  void deallocate(pointer ptr, const size_type size)
-  {
-    m_alloc.deallocate(ptr, size);
-  }
+    template <typename Alloc>
+    class SharedAlloc
+    {
+    public:
+      using size_type = typename Alloc::size_type;
+      using pointer   = typename Alloc::pointer;
 
-  constexpr bool operator==(const SharedAlloc& rhs) const
-  {
-    return m_alloc == rhs.m_alloc;
-  }
-  constexpr bool operator!=(const SharedAlloc& rhs) const
-  {
-    return m_alloc != rhs.m_alloc;
-  }
+      SharedAlloc(Alloc& alloc)
+          : m_alloc(alloc)
+      {
+      }
 
-private:
-  Alloc& m_alloc;
-};
+      REX_NO_DISCARD pointer allocate(const size_type size)
+      {
+        return m_alloc.allocate(size);
+      }
+      void deallocate(pointer ptr, const size_type size)
+      {
+        m_alloc.deallocate(ptr, size);
+      }
 
-}}
+      constexpr bool operator==(const SharedAlloc& rhs) const
+      {
+        return m_alloc == rhs.m_alloc;
+      }
+      constexpr bool operator!=(const SharedAlloc& rhs) const
+      {
+        return m_alloc != rhs.m_alloc;
+      }
+
+    private:
+      Alloc& m_alloc;
+    };
+
+  } // namespace v1
+} // namespace rsl

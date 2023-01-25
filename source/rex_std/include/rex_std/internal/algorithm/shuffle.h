@@ -11,11 +11,3 @@
 // ============================================
 
 #pragma once
-
-namespace rsl
-{
-  inline namespace v1
-  {
-
-  }
-} // namespace rsl

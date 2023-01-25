@@ -16,7 +16,6 @@ namespace rsl
 {
   inline namespace v1
   {
-
     using nullptr_t = decltype(nullptr);
 
   } // namespace v1

@@ -14,19 +14,23 @@
 
 #include "rex_std/functional.h"
 
-namespace rsl { inline namespace v1 {
-
-class ScopeGuard
+namespace rsl
 {
-public:
-  ScopeGuard(rsl::function<void()> func);
-  ~ScopeGuard();
+  inline namespace v1
+  {
 
-  void release();
+    class ScopeGuard
+    {
+    public:
+      ScopeGuard(rsl::function<void()> func);
+      ~ScopeGuard();
 
-private:
-  rsl::function<void()> m_function;
-  bool m_is_released;
-};
+      void release();
 
-}}
+    private:
+      rsl::function<void()> m_function;
+      bool m_is_released;
+    };
+
+  } // namespace v1
+} // namespace rsl

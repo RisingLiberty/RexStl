@@ -12,12 +12,16 @@
 
 #pragma once
 
-namespace rsl { inline namespace v1 {
-
-template <typename T, typename T2>
-constexpr T trunc(T2 value)
+namespace rsl
 {
-  return static_cast<T>(value);
-}
+  inline namespace v1
+  {
 
-}}
+    template <typename T, typename T2>
+    constexpr T trunc(T2 value)
+    {
+      return static_cast<T>(value);
+    }
+
+  } // namespace v1
+} // namespace rsl

@@ -14,46 +14,50 @@
 
 #include <type_traits>
 
-namespace rsl { inline namespace v1 {
-
-template <typename T>
-class NotNull
+namespace rsl
 {
-public:
-  constexpr NotNull(T* ptr)
-      : m_ptr(ptr)
+  inline namespace v1
   {
-    REX_ASSERT_X(m_ptr != nullptr, "Can't assign a nullptr to a NotNull class");
-  }
 
-  constexpr NotNull(rsl::nullptr_t) = delete;
+    template <typename T>
+    class NotNull
+    {
+    public:
+      constexpr NotNull(T* ptr)
+          : m_ptr(ptr)
+      {
+        REX_ASSERT_X(m_ptr != nullptr, "Can't assign a nullptr to a NotNull class");
+      }
 
-  template <typename U, rsl::EnableIf<rsl::is_convertible_v<U, T>, bool> = true>
-  constexpr NotNull(const NotNull<U>& other)
-      : NotNull(other.get())
-  {
-  }
+      constexpr NotNull(rsl::nullptr_t) = delete;
 
-  const T* get() const
-  {
-    return m_ptr;
-  }
-  T* get()
-  {
-    return m_ptr;
-  }
+      template <typename U, rsl::EnableIf<rsl::is_convertible_v<U, T>, bool> = true>
+      constexpr NotNull(const NotNull<U>& other)
+          : NotNull(other.get())
+      {
+      }
 
-  const T& operator*() const
-  {
-    return *m_ptr;
-  }
-  T& operator*()
-  {
-    return *m_ptr;
-  }
+      const T* get() const
+      {
+        return m_ptr;
+      }
+      T* get()
+      {
+        return m_ptr;
+      }
 
-private:
-  T* m_ptr;
-};
+      const T& operator*() const
+      {
+        return *m_ptr;
+      }
+      T& operator*()
+      {
+        return *m_ptr;
+      }
 
-}}
+    private:
+      T* m_ptr;
+    };
+
+  } // namespace v1
+} // namespace rsl

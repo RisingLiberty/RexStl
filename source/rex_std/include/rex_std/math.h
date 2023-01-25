@@ -14,7 +14,6 @@
 
 #include "rex_std/bonus/types.h"
 #include "rex_std/internal/math/abs.h"
-
 #include "rex_std/internal/math/acos.h"
 #include "rex_std/internal/math/asin.h"
 #include "rex_std/internal/math/atan.h"
@@ -31,7 +30,6 @@
 #include "rex_std/internal/math/sin.h"
 #include "rex_std/internal/math/sqrt.h"
 #include "rex_std/internal/math/tan.h"
-
 #include "rex_std/internal/type_traits/is_integral.h"
 
 namespace rsl
@@ -113,7 +111,8 @@ namespace rsl
       {
         REX_ASSERT_X(arg >= (T)0, "sqrt called on negative value");
 
-        float64 s, last;
+        float64 s    = 0;
+        float64 last = 0;
 
         if(arg > 0)
         {
@@ -137,7 +136,7 @@ namespace rsl
 
         return 0;
       }
-    
+
       template <typename T>
       constexpr T round_downward(T arg)
       {
@@ -148,26 +147,13 @@ namespace rsl
       constexpr T round_to_nearest(T arg)
       {
         int64 target = static_cast<int64>(arg);
-        if (arg - target > 0.5f)
+        if(arg - target > 0.5f)
         {
           return static_cast<T>(target + 1);
         }
         else
         {
           return static_cast<T>(target);
-        }
-
-      }
-      template <typename T>
-      constexpr T round_toward_zero(T arg)
-      {
-        if (arg < 0)
-        {
-          return round_upward(arg);
-        }
-        else
-        {
-          return round_downward(arg);
         }
       }
       template <typename T>
@@ -176,20 +162,27 @@ namespace rsl
         int64 target = static_cast<int64>(arg);
         return static_cast<T>(target + 1);
       }
-
+      template <typename T>
+      constexpr T round_toward_zero(T arg)
+      {
+        if(arg < 0)
+        {
+          return round_upward(arg);
+        }
+        else
+        {
+          return round_downward(arg);
+        }
+      }
       template <typename T>
       constexpr T rint(T arg, rounding_mode rmode)
       {
-        switch (rmode)
+        switch(rmode)
         {
-        case rounding_mode::downward:
-          return round_downward(arg);
-        case rounding_mode::to_nearest:
-          return round_to_nearest(arg);
-        case rounding_mode::toward_zero:
-          return round_toward_zero(arg);
-        case rounding_mode::upward:
-          return round_upward(arg);
+          case rounding_mode::downward: return round_downward(arg);
+          case rounding_mode::to_nearest: return round_to_nearest(arg);
+          case rounding_mode::toward_zero: return round_toward_zero(arg);
+          case rounding_mode::upward: return round_upward(arg);
         }
 
         REX_ASSERT("Invalid round mode passed in");
@@ -352,7 +345,7 @@ namespace rsl
       static_assert(rsl::is_integral_v<IntegralType>, "arg must be an integral type");
       return arg;
     }
-    
+
     constexpr int64 llrint(float32 arg, rounding_mode rmode = rounding_mode::to_nearest)
     {
       return static_cast<int64>(internal::rint(arg, rmode));

@@ -15,46 +15,50 @@
 #include "rex_std/bonus/string/stack_string.h"
 #include "rex_std/bonus/types.h"
 
-namespace rsl { inline namespace v1 {
-
-class vec4
+namespace rsl
 {
-public:
-  vec4();
-  vec4(const float32 x, const float32 y, const float32 z, const float32 w);
+  inline namespace v1
+  {
 
-  float32& operator[](card32 idx);
-  float32 operator[](card32 idx) const;
+    class vec4
+    {
+    public:
+      vec4();
+      vec4(const float32 x, const float32 y, const float32 z, const float32 w);
 
-  vec4 operator+(const vec4& rhs) const;
-  vec4 operator-(const vec4& rhs) const;
-  vec4 operator*(const float32 scalar) const;
-  vec4 operator/(const float32 scalar) const;
+      float32& operator[](card32 idx);
+      float32 operator[](card32 idx) const;
 
-  vec4& operator+=(const vec4& rhs);
-  vec4& operator-=(const vec4& rhs);
-  vec4& operator*=(const float32 scalar);
-  vec4& operator/=(const float32 scalar);
+      vec4 operator+(const vec4& rhs) const;
+      vec4 operator-(const vec4& rhs) const;
+      vec4 operator*(const float32 scalar) const;
+      vec4 operator/(const float32 scalar) const;
 
-  vec4 operator-() const;
+      vec4& operator+=(const vec4& rhs);
+      vec4& operator-=(const vec4& rhs);
+      vec4& operator*=(const float32 scalar);
+      vec4& operator/=(const float32 scalar);
 
-  bool operator==(const vec4& other) const;
-  bool operator!=(const vec4& other) const;
+      vec4 operator-() const;
 
-  bool equals(const vec4& other, const float32 comparison_threshold = s_ComparisonThreshold) const;
+      bool operator==(const vec4& other) const;
+      bool operator!=(const vec4& other) const;
 
-  float32 dot(const vec4& other) const;
+      bool equals(const vec4& other, const float32 comparison_threshold = s_ComparisonThreshold) const;
 
-  float32 length() const;
-  float32 length_squared() const;
+      float32 dot(const vec4& other) const;
 
-  small_stack_string to_string() const;
+      float32 length() const;
+      float32 length_squared() const;
 
-public:
-  float32 x, y, z, w;
+      small_stack_string to_string() const;
 
-private:
-  static constexpr float32 s_ComparisonThreshold = 0.00005f;
-};
+    public:
+      float32 x, y, z, w;
 
-}}
+    private:
+      static constexpr float32 s_ComparisonThreshold = 0.00005f;
+    };
+
+  } // namespace v1
+} // namespace rsl

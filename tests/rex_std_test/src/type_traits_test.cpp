@@ -12,6 +12,7 @@
 
 #include "rex_std_test/catch2/catch.hpp"
 #include "rex_std/type_traits.h"
+#include "rex_std/internal/memory/nullptr.h"
 
 // NOLINTBEGIN
 

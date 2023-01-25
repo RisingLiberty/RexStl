@@ -12,8 +12,6 @@
 
 #include "rex_std_extra/utilities/wrapped_index.h"
 
-#include "rex_std_extra/rex_stl_extra_pch.h"
-
 rsl::WrappedIndex::WrappedIndex(card32 min, card32 max)
     : m_value(0)
     , m_min(min)

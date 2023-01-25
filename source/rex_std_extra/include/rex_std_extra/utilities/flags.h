@@ -12,12 +12,16 @@
 
 #pragma once
 
-namespace rsl { inline namespace v1 {
-
-template <typename T = card32>
-T no_flags()
+namespace rsl
 {
-  return 0;
-}
+  inline namespace v1
+  {
 
-}}
+    template <typename T = card32>
+    T no_flags()
+    {
+      return 0;
+    }
+
+  } // namespace v1
+} // namespace rsl

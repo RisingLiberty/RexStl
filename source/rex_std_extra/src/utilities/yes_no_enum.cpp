@@ -12,8 +12,6 @@
 
 #include "rex_std_extra/utilities/yes_no_enum.h"
 
-#include "rex_std_extra/rex_stl_extra_pch.h"
-
 rsl::YesNoEnum::YesNoEnum(EYesNoEnum value)
     : m_value(value)
 {

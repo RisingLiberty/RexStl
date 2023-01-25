@@ -4764,7 +4764,7 @@ FMT_END_NAMESPACE
     #define FMT_FUNC
   #endif
 
-#include "rex_std/bonus/string/stack_string.h"
+  #include "rex_std/bonus/string/stack_string.h"
 
 namespace rsl
 {
@@ -4784,8 +4784,8 @@ namespace rsl
         return format_to(ctx.out(), "{}", str.to_view());
       }
     };
-  }
-}
+  } // namespace v1
+} // namespace rsl
 
 #endif // FMT_FORMAT_H_
 

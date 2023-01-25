@@ -21,29 +21,31 @@ namespace rsl
 {
   inline namespace v1
   {
-
-    template <typename T>
-    constexpr T asin_compute(const T x)
+    namespace internal
     {
-      return ( // only defined on [-1,1]
-          x > T(1) ? numeric_limits<T>::quiet_NaN() :
-                   // indistinguishable from one or zero
-              numeric_limits<T>::min() > abs(x - T(1)) ? T(rsl::half_pi_v<float64>)
-          : numeric_limits<T>::min() > abs(x)          ? T(0)
-                                                       :
-                                              // else
-              atan(x / sqrt(T(1) - x * x)));
-    }
+      template <typename T>
+      constexpr T asin_compute(const T x)
+      {
+        return ( // only defined on [-1,1]
+            x > T(1) ? numeric_limits<T>::quiet_NaN() :
+                     // indistinguishable from one or zero
+                numeric_limits<T>::min() > abs(x - T(1)) ? T(rsl::half_pi_v<float64>)
+            : numeric_limits<T>::min() > abs(x)          ? T(0)
+                                                         :
+                                                // else
+                atan(x / sqrt(T(1) - x * x)));
+      }
 
-    template <typename T>
-    constexpr T asin_check(const T x)
-    {
-      return ( // NaN check
-          is_nan(x) ? numeric_limits<T>::quiet_NaN() :
-                    //
-              x < T(0) ? -asin_compute(-x)
-                       : asin_compute(x));
-    }
+      template <typename T>
+      constexpr T asin_check(const T x)
+      {
+        return ( // NaN check
+            is_nan(x) ? numeric_limits<T>::quiet_NaN() :
+                      //
+                x < T(0) ? -asin_compute(-x)
+                         : asin_compute(x));
+      }
+    } // namespace internal
 
     /**
      * Compile-time arcsine function

@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: is_posinf.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -23,5 +23,5 @@ namespace rsl
     {
       return val == numeric_limits<T>::infinity();
     }
-  }
-}
+  } // namespace v1
+} // namespace rsl

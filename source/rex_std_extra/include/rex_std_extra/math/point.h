@@ -14,44 +14,48 @@
 
 #include "rex_std/ostream.h"
 
-namespace rsl { inline namespace v1 {
-
-struct point
+namespace rsl
 {
-public:
-  point();
-  point(int16 x, int16 y);
+  inline namespace v1
+  {
 
-  point operator+(const point& rhs) const;
-  point operator-(const point& rhs) const;
-  point operator*(const point& rhs) const;
-  point operator/(const point& rhs) const;
+    struct point
+    {
+    public:
+      point();
+      point(int16 x, int16 y);
 
-  point& operator+=(const point& rhs);
-  point& operator-=(const point& rhs);
-  point& operator*=(const point& rhs);
-  point& operator/=(const point& rhs);
+      point operator+(const point& rhs) const;
+      point operator-(const point& rhs) const;
+      point operator*(const point& rhs) const;
+      point operator/(const point& rhs) const;
 
-  point operator+(const int16 rhs) const;
-  point operator-(const int16 rhs) const;
-  point operator*(const int16 rhs) const;
-  point operator/(const int16 rhs) const;
+      point& operator+=(const point& rhs);
+      point& operator-=(const point& rhs);
+      point& operator*=(const point& rhs);
+      point& operator/=(const point& rhs);
 
-  point& operator+=(const int16 rhs);
-  point& operator-=(const int16 rhs);
-  point& operator*=(const int16 rhs);
-  point& operator/=(const int16 rhs);
+      point operator+(const int16 rhs) const;
+      point operator-(const int16 rhs) const;
+      point operator*(const int16 rhs) const;
+      point operator/(const int16 rhs) const;
 
-  bool operator==(const point& point) const;
-  bool operator!=(const point& point) const;
+      point& operator+=(const int16 rhs);
+      point& operator-=(const int16 rhs);
+      point& operator*=(const int16 rhs);
+      point& operator/=(const int16 rhs);
 
-  point operator-() const;
+      bool operator==(const point& point) const;
+      bool operator!=(const point& point) const;
 
-public:
-  int16 x;
-  int16 y;
-};
+      point operator-() const;
 
-ostream& operator<<(ostream& os, const point& point);
+    public:
+      int16 x;
+      int16 y;
+    };
 
-}}
+    ostream& operator<<(ostream& os, const point& point);
+
+  } // namespace v1
+} // namespace rsl

@@ -14,25 +14,29 @@
 
 #include "rex_std_extra/time/timepoint.h"
 
-namespace rsl { inline namespace v1 {
-
-class Timer
+namespace rsl
 {
-public:
-  Timer(float32 max_time_in_seconds);
+  inline namespace v1
+  {
 
-  void update();
-  void reset();
+    class Timer
+    {
+    public:
+      Timer(float32 max_time_in_seconds);
 
-  void set_max_time(float32 max_time_in_seconds);
+      void update();
+      void reset();
 
-  bool is_done() const;
+      void set_max_time(float32 max_time_in_seconds);
 
-private:
-  float32 m_max_time;
-  float32 m_current_time;
+      bool is_done() const;
 
-  TimePoint m_prev_time_point;
-};
+    private:
+      float32 m_max_time;
+      float32 m_current_time;
 
-}}
+      TimePoint m_prev_time_point;
+    };
+
+  } // namespace v1
+} // namespace rsl

@@ -17,7 +17,6 @@
 #include "rex_std/internal/math/sin.h"
 #include "rex_std/internal/math/sqrt.h"
 #include "rex_std_extra/math/float.h"
-#include "rex_std_extra/rex_stl_extra_pch.h"
 
 rsl::vec2::vec2()
     : x(0.0f)

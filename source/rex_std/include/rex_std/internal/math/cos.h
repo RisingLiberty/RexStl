@@ -13,6 +13,7 @@
 #pragma once
 
 #include "rex_std/bonus/math/return_type.h"
+#include "rex_std/internal/math/is_nan.h"
 #include "rex_std/limits.h"
 #include "rex_std/numbers.h"
 

@@ -12,30 +12,34 @@
 
 #pragma once
 
-namespace rsl { inline namespace v1 {
-
-template <typename T>
-class NoLiteral
+namespace rsl
 {
-public:
-  NoLiteral(T value)
-      : m_value(value)
+  inline namespace v1
   {
-  }
 
-  NoLiteral(const T&& literal) = delete;
+    template <typename T>
+    class NoLiteral
+    {
+    public:
+      NoLiteral(T value)
+          : m_value(value)
+      {
+      }
 
-  operator T&()
-  {
-    return m_value;
-  }
-  operator const T&() const
-  {
-    return m_value;
-  }
+      NoLiteral(const T&& literal) = delete;
 
-private:
-  T m_value;
-};
+      operator T&()
+      {
+        return m_value;
+      }
+      operator const T&() const
+      {
+        return m_value;
+      }
 
-}}
+    private:
+      T m_value;
+    };
+
+  } // namespace v1
+} // namespace rsl

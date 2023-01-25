@@ -12,9 +12,9 @@
 
 #pragma once
 
+#include "rex_std/bonus/type_traits/is_null_pointer.h"
 #include "rex_std/internal/type_traits/integral_constant.h"
 #include "rex_std/internal/type_traits/is_arithmetic.h"
-#include "rex_std/bonus/type_traits/is_null_pointer.h"
 #include "rex_std/internal/type_traits/is_void.h"
 
 namespace rsl

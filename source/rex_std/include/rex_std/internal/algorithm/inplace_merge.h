@@ -21,5 +21,5 @@ namespace rsl
 
     STATIC_WARNING("Implement inplace merge");
 
-  }
+  } // namespace v1
 } // namespace rsl

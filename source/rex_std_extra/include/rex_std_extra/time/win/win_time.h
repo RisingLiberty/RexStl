@@ -12,9 +12,13 @@
 
 #pragma once
 
-namespace rsl { inline namespace v1 {
+namespace rsl
+{
+  inline namespace v1
+  {
 
-class time;
-time current_time();
+    class time;
+    time current_time();
 
-}}
+  } // namespace v1
+} // namespace rsl

@@ -23,7 +23,7 @@ namespace rsl
       {
         return (value > 0) ? value : -value;
       }
-    }
+    } // namespace internal
 
   } // namespace v1
 } // namespace rsl

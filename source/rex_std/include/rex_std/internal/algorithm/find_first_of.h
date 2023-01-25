@@ -24,7 +24,7 @@ namespace rsl
 
     REX_STD_FUNC_ALIAS(find_first_of);
 
-  }
+  } // namespace v1
 } // namespace rsl
 
 #include "rex_std/enable_std_checking.h"

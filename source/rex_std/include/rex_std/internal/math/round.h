@@ -12,6 +12,9 @@
 
 #pragma once
 
+#include "rex_std/internal/math/abs.h"
+#include "rex_std/internal/math/signbit.h"
+
 namespace rsl
 {
   inline namespace v1
@@ -20,7 +23,7 @@ namespace rsl
     template <typename T>
     constexpr T round(const T x)
     {
-      return abs(x) - 0.5f < static_cast<int32>(abs(x)) ? sign(x) * static_cast<T>(static_cast<int32>(abs(x))) : static_cast<T>(static_cast<int32>(x) + sign(x) * 1);
+      return internal::abs(x) - 0.5f < static_cast<int32>(internal::abs(x)) ? signbit(x) * static_cast<T>(static_cast<int32>(internal::abs(x))) : static_cast<T>(static_cast<int32>(x) + signbit(x) * 1);
     }
 
   } // namespace v1
