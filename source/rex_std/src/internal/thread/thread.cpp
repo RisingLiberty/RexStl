@@ -83,7 +83,7 @@ namespace rsl
 
     void thread::create(thread_start_func func, void* param)
     {
-      m_handle = CreateThread(NULL, 0, func, param, 0, &m_id);
+      m_handle = CreateThread(NULL, 0, func, param, 0, &m_id.m_id);
       REX_ASSERT_X(m_handle != INVALID_HANDLE_VALUE, "Failed to create thread with error: {}", GetLastError());
     }
 
