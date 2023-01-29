@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: thread.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -18,10 +18,10 @@
 // The class thread represents a single thread of execution.
 //-----------------------------------------------------------------------------
 
-#include "rex_std/bonus/types.h"
-#include "rex_std/internal/memory/unique_ptr.h"
-#include "rex_std/internal/functional/invoke.h"
 #include "rex_std/bonus/compiler.h"
+#include "rex_std/bonus/types.h"
+#include "rex_std/internal/functional/invoke.h"
+#include "rex_std/internal/memory/unique_ptr.h"
 
 namespace rsl
 {
@@ -34,8 +34,9 @@ namespace rsl
       {
       public:
         func_wrapper(Func func)
-          : m_func(func)
-        {}
+            : m_func(func)
+        {
+        }
 
         Func function()
         {
@@ -45,7 +46,7 @@ namespace rsl
       private:
         Func m_func;
       };
-    }
+    } // namespace internal
 
     class thread
     {
@@ -53,7 +54,7 @@ namespace rsl
       using thread_start_func = unsigned long(__stdcall*)(void*);
 
     public:
-      using id = ulong;
+      using id                 = ulong;
       using native_handle_type = void*;
 
       // Creates new thread object which does not represent a thread.
@@ -68,12 +69,11 @@ namespace rsl
       // Creates new std::thread object and associates it with a thread of execution. The new thread of execution starts executing f with args as function arguments
       template <typename Func>
       explicit thread(Func&& f)
-        : m_handle()
-        , m_id(0)
+          : m_handle()
+          , m_id(0)
       {
         start(f);
       }
-
 
       // destroys the thread object, if the thread has an associated thread, an assert is raised after which terminate is called
       ~thread();
@@ -129,5 +129,5 @@ namespace rsl
 
     // swap two thread objects
     void swap(thread& lhs, thread& rhs);
-  }
-}
+  } // namespace v1
+} // namespace rsl

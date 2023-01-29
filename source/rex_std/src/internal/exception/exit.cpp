@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: exit.cpp
 // Copyright (c) Nick De Breuck 2022
 //
@@ -22,5 +22,5 @@ namespace rsl
     {
       ExitProcess(exitCode);
     }
-  }
-}
+  } // namespace v1
+} // namespace rsl

@@ -12,8 +12,8 @@
 
 #pragma once
 
-#include "rex_std/internal/type_traits/is_convertible.h"
 #include "rex_std/internal/type_traits/enable_if.h"
+#include "rex_std/internal/type_traits/is_convertible.h"
 
 namespace rsl
 {

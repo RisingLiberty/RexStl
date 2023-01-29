@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: this_thread.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -18,11 +18,10 @@
 // The class thread represents a single thread of execution.
 //-----------------------------------------------------------------------------
 
+#include "rex_std/bonus/time/xtime.h"
 #include "rex_std/internal/chrono/clock.h"
 #include "rex_std/internal/chrono/duration.h"
-
 #include "rex_std/internal/thread/thread.h"
-#include "rex_std/bonus/time/xtime.h"
 
 namespace rsl
 {
@@ -35,13 +34,13 @@ namespace rsl
         template <typename Rep, typename Period>
         auto to_abs_time(const chrono::duration<Rep, Period>& rel_time)
         {
-          const auto zero = chrono::duration<Rep, Period>::zero();
-          const auto now = chrono::steady_clock::now();
+          const auto zero                   = chrono::duration<Rep, Period>::zero();
+          const auto now                    = chrono::steady_clock::now();
           decltype(now + rel_time) abs_time = now;
-          if (rel_time > zero)
+          if(rel_time > zero)
           {
             const auto forever = (chrono::steady_clock::time_point::max)();
-            if (abs_time < forever - rel_time)
+            if(abs_time < forever - rel_time)
             {
               abs_time += rel_time;
             }
@@ -55,7 +54,7 @@ namespace rsl
         }
 
         void sleep_this_thread_until(rsl::internal::xtime sleeptime);
-      }
+      } // namespace internal
 
       // returns the id of the current thread
       thread::id get_id();
@@ -66,10 +65,10 @@ namespace rsl
       template <typename Clock, typename Duration>
       void sleep_until(const chrono::time_point<Clock, Duration>& abs_time)
       {
-        for (;;)
+        for(;;)
         {
           const auto now = Clock::now();
-          if (abs_time <= now)
+          if(abs_time <= now)
           {
             return;
           }
@@ -84,6 +83,6 @@ namespace rsl
       {
         return sleep_until(internal::to_abs_time(rel_time));
       }
-    }
-  }
-}
+    } // namespace this_thread
+  }   // namespace v1
+} // namespace rsl

@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: ticks.cpp
 // Copyright (c) Nick De Breuck 2022
 //
@@ -27,6 +27,6 @@ namespace rsl
         GetSystemTimePreciseAsFileTime(&ft);
         return ((static_cast<int64>(ft.dwHighDateTime)) << 32) + static_cast<int64>(ft.dwLowDateTime) - epoch;
       }
-    }
-  }
-}
+    } // namespace internal
+  }   // namespace v1
+} // namespace rsl

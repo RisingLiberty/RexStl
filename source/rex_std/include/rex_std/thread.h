@@ -20,5 +20,3 @@
 
 #include "rex_std/internal/thread/this_thread.h"
 #include "rex_std/internal/thread/thread.h"
-
-
