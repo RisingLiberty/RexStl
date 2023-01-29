@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: has_flag.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -21,5 +21,5 @@ namespace rsl
     {
       return (val & flag) == val;
     }
-  }
-}
+  } // namespace v1
+} // namespace rsl

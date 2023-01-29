@@ -4,16 +4,17 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: basic_filebuf.cpp
 // Copyright (c) Nick De Breuck 2022
 //
 // ============================================
 
 #include "rex_std/internal/fstream/basic_filebuf.h"
-#include "rex_std/internal/memory/memcpy.h"
+
 #include "rex_std/bonus/utility/has_flag.h"
 #include "rex_std/bonus/utility/nand.h"
+#include "rex_std/internal/memory/memcpy.h"
 
 #include <Windows.h>
 
@@ -28,15 +29,15 @@ namespace rsl
         REX_ASSERT_X(rsl::nand(rsl::has_flag(mode, io::openmode::app), rsl::has_flag(mode, io::openmode::trunc)));
 
         DWORD result = 0;
-        if (rsl::has_flag(mode, io::openmode::trunc))
+        if(rsl::has_flag(mode, io::openmode::trunc))
         {
           result |= TRUNCATE_EXISTING;
         }
-        else if (rsl::has_flag(mode, io::openmode::out))
+        else if(rsl::has_flag(mode, io::openmode::out))
         {
           result |= OPEN_ALWAYS;
         }
-        else if (rsl::has_flag(mode, io::openmode::in))
+        else if(rsl::has_flag(mode, io::openmode::in))
         {
           result |= OPEN_EXISTING;
         }
@@ -45,17 +46,17 @@ namespace rsl
       }
 
       filebuf_impl::filebuf_impl(win::handle_t handle)
-        : m_get_area()
-        , m_handle(handle)
+          : m_get_area()
+          , m_handle(handle)
       {
       }
 
       filebuf_impl::filebuf_impl(filebuf_impl&& other)
-        : m_get_area(other.m_get_area)
-        , m_handle(other.m_handle)
+          : m_get_area(other.m_get_area)
+          , m_handle(other.m_handle)
       {
         other.m_get_area = internal::get_area();
-        other.m_handle = win::handle_t();
+        other.m_handle   = win::handle_t();
       }
 
       filebuf_impl::~filebuf_impl()
@@ -78,21 +79,21 @@ namespace rsl
         // is not null terminated and would therefore pass in an invalid path
         char8 buff[256] = {};
         rsl::memcpy(buff, filename.data(), filename.length());
-        
+
         return open(buff, mode);
       }
-      //bool filebuf_impl::open(const rsl::filesystem::path& filename, io::openmode mode)
+      // bool filebuf_impl::open(const rsl::filesystem::path& filename, io::openmode mode)
       //{
       //
-      //}
-      //bool filebuf_impl::open(const rsl::filesystem::path::value_type* filename, io::openmode mode)
+      // }
+      // bool filebuf_impl::open(const rsl::filesystem::path::value_type* filename, io::openmode mode)
       //{
       //
-      //}
+      // }
 
       bool filebuf_impl::close()
       {
-        if (m_handle != INVALID_HANDLE_VALUE)
+        if(m_handle != INVALID_HANDLE_VALUE)
         {
           return CloseHandle(m_handle) != 0;
         }
@@ -112,6 +113,6 @@ namespace rsl
         WriteFile(m_handle, s, static_cast<DWORD>(count * elemSize), &num_written, nullptr);
         return static_cast<streamsize>(num_written);
       }
-    }
-  }
-}
+    } // namespace internal
+  }   // namespace v1
+} // namespace rsl

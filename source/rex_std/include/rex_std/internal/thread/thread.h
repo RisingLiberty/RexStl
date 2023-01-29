@@ -26,6 +26,12 @@ namespace rsl
 {
   inline namespace v1
   {
+    template <typename Char, typename Traits>
+    class basic_ostream;
+
+    template <typename T>
+    struct hash;
+
     namespace internal
     {
       template <typename Func>
@@ -53,7 +59,49 @@ namespace rsl
       using thread_start_func = unsigned long(__stdcall*)(void*);
 
     public:
-      using id                 = ulong;
+      class id
+      {
+        template <typename Char, typename Traits>
+        friend basic_ostream<Char, Traits>& operator<<(basic_ostream<Char, Traits>& os, id id);
+        friend hash<id>;
+        friend thread;
+
+      public:
+        id(ulong id)
+            : m_id(id)
+        {
+        }
+
+        bool operator==(id other)
+        {
+          return m_id == other.m_id;
+        }
+        bool operator!=(id other)
+        {
+          return !(*this == other);
+        }
+
+        bool operator<(id other)
+        {
+          return m_id < other.m_id;
+        }
+        bool operator<=(id other)
+        {
+          return m_id <= other.m_id;
+        }
+        bool operator>(id other)
+        {
+          return m_id > other.m_id;
+        }
+        bool operator>=(id other)
+        {
+          return m_id >= other.m_id;
+        }
+
+      private:
+        ulong m_id;
+      };
+
       using native_handle_type = void*;
 
       // Creates new thread object which does not represent a thread.
@@ -124,6 +172,22 @@ namespace rsl
     private:
       id m_id;
       native_handle_type m_handle;
+    };
+
+    template <typename Char, typename Traits>
+    basic_ostream<Char, Traits>& operator<<(basic_ostream<Char, Traits>& os, thread::id id)
+    {
+      os << id.m_id;
+      return os;
+    }
+
+    template <>
+    struct hash<thread::id>
+    {
+      hash_result operator()(const thread::id id) const
+      {
+        return id.m_id;
+      }
     };
 
     // swap two thread objects

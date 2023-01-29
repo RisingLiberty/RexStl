@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: nand.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -21,5 +21,5 @@ namespace rsl
     {
       return !(lhs && rhs);
     }
-  }
-}
+  } // namespace v1
+} // namespace rsl

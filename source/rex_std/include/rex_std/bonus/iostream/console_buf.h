@@ -16,10 +16,10 @@
 
 #pragma once
 
+#include "rex_std/bonus/iostream/get_area.h"
 #include "rex_std/bonus/platform/windows/handle.h"
 #include "rex_std/internal/memory/memcpy.h"
 #include "rex_std/internal/streambuf/basic_streambuf.h"
-#include "rex_std/bonus/iostream/get_area.h"
 
 namespace rsl
 {
