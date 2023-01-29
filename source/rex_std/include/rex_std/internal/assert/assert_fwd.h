@@ -19,6 +19,8 @@
 
 #pragma once
 
+#include "rex_std/bonus/defines.h"
+
 namespace rsl
 {
   inline namespace v1
@@ -40,6 +42,6 @@ namespace rsl
 #else
   // #define assert(cond, ...) // NOLINT(readability-identifier-naming)
 
-  #define REX_ASSERT_X(cond, ...)
-  #define REX_ASSERT(...)
+  #define REX_ASSERT_X(cond, ...) REX_MAYBE_UNUSED auto ANONYMOUS_VARIABLE(_) = !(cond)
+  #define REX_ASSERT(...) true
 #endif
