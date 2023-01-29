@@ -38,7 +38,7 @@
 #endif
 
 #define MERGE2(A, B) A##B
-#define MERGE(A, B)  MERGE(A, B)
+#define MERGE(A, B)  MERGE2(A, B)
 
 #define FUNC_SIGNATURE __FUNCSIG__
 
