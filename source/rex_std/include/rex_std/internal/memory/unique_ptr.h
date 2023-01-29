@@ -365,8 +365,8 @@ namespace rsl
       return unique_ptr<T>(new T);
     }
 
-    // template <typename CharType, typename Traits>
-    // class basic_ostream;
+     template <typename CharType, typename Traits>
+     class basic_ostream;
 
     template <typename CharType, typename Traits, typename Y, typename D>
     basic_ostream<CharType, Traits>& operator<<(basic_ostream<CharType, Traits>& os, const unique_ptr<Y, D>& p)

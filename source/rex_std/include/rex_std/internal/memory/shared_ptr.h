@@ -757,5 +757,14 @@ namespace rsl
       return !(nullptr < lhs);
     }
 
+    template <typename CharType, typename Traits>
+    class basic_ostream;
+
+    template <typename CharType, typename Traits, typename Y>
+    basic_ostream<CharType, Traits>& operator<<(basic_ostream<CharType, Traits>& os, const shared_ptr<Y>& p)
+    {
+      os << p.get();
+      return os;
+    }
   } // namespace v1
 } // namespace rsl

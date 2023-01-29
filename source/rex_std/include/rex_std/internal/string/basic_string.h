@@ -555,7 +555,7 @@ namespace rsl
       // returns the maximum allowed elements in the string
       size_type max_size() const
       {
-        return rsl::numeric_limits<difference_type>::max();
+        return (rsl::numeric_limits<difference_type>::max)();
       }
       // request memory reallocation so the string can hold "new_capacity" amount of characters
       void reserve(size_type newCapacity)
