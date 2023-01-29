@@ -862,7 +862,12 @@ namespace rsl
       // the move constructor copies the value of gcount() from other,
       // sets the gcount() value of other to zero and uses basic_ios<CharT, Traits>::move(other)
       // to move all basic_ios members, except for the rdbuf(), from other into this.
-      basic_istream(basic_istream&& other);
+      basic_istream(basic_istream&& other)
+      {
+        m_gcount = other.gcount();
+        other.clear_gcount();
+        basic_ios<CharT, Traits>::move(other);
+      }
 
       // exchanges the gcount() values and all data members of the base class,
       // except for the rdbuf(), with other.
@@ -877,14 +882,15 @@ namespace rsl
       {
         REX_ASSERT_X(this != addressof(other), "Can't swap to yourself");
         base::swap(other);
+        rsl::swap(m_gcount, other.m_gcount);
       }
 
-    private:
       void clear_gcount()
       {
         m_gcount = 0;
       }
 
+    private:
       void inc_gcount()
       {
         ++m_gcount;

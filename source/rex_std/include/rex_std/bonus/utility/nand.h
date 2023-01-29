@@ -4,12 +4,22 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-//
-// File: fstream.h
-// Copyright (c) Nick De Breuck 2023
+// 
+// File: nand.h
+// Copyright (c) Nick De Breuck 2022
 //
 // ============================================
 
 #pragma once
 
-#include "rex_std/internal/fstream/basic_ifstream.h"
+namespace rsl
+{
+  inline namespace v1
+  {
+    template <typename T>
+    constexpr bool nand(T lhs, T rhs)
+    {
+      return !(lhs && rhs);
+    }
+  }
+}

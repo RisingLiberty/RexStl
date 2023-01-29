@@ -4,12 +4,22 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-//
-// File: fstream.h
-// Copyright (c) Nick De Breuck 2023
+// 
+// File: has_flag.h
+// Copyright (c) Nick De Breuck 2022
 //
 // ============================================
 
 #pragma once
 
-#include "rex_std/internal/fstream/basic_ifstream.h"
+namespace rsl
+{
+  inline namespace v1
+  {
+    template <typename T>
+    bool has_flag(T val, T flag)
+    {
+      return (val & flag) == val;
+    }
+  }
+}
