@@ -80,7 +80,7 @@ namespace rsl
       // for which all calls to allocate(n) could succeed.
       size_type max_size() const // NOLINT(readability-convert-member-functions-to-static)
       {
-        return rsl::numeric_limits<size_type>::max();
+        return (rsl::numeric_limits<size_type>::max)();
       }
 
       /// RSL Comment: Different from ISO C++ Standard at time of writing (24/Jul/2022)

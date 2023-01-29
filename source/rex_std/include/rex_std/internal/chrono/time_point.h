@@ -36,12 +36,12 @@ namespace rsl
             : m_duration(duration::zero())
         {
         }
-        explicit time_point(const duration& other)
+        time_point(const duration& other) // NOLINT(google-explicit-constructor)
             : m_duration(other)
         {
         }
         template <typename Duration2>
-        constexpr explicit time_point(const time_point<Clock, Duration2>& t, enable_if_t<is_convertible_v<Duration2, duration>>** /*unused*/ = nullptr)
+        constexpr time_point(const time_point<Clock, Duration2>& t, enable_if_t<is_convertible_v<Duration2, duration>>** /*unused*/ = nullptr) // NOLINT(google-explicit-constructor)
             : m_duration(t.time_since_epoch())
         {
         }

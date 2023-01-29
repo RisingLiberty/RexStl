@@ -69,7 +69,7 @@ namespace rsl
       // for which all calls to allocate(n) cold succeed.
       size_type max_size() const
       {
-        return (rsl::numeric_limits<size_type>::max()) / sizeof(value_type);
+        return ((rsl::numeric_limits<size_type>::max)()) / sizeof(value_type);
       }
 
       /// RSL Comment: Different from ISO C++ Standard at time of writing (24/Jul/2022)

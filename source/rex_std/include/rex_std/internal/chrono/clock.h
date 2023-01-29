@@ -17,6 +17,7 @@
 #include "rex_std/internal/chrono/duration.h"
 #include "rex_std/internal/chrono/time_point.h"
 #include "rex_std/internal/type_traits/integral_constant.h"
+#include "rex_std/bonus/time/ticks.h"
 
 namespace rsl
 {
@@ -32,8 +33,6 @@ namespace rsl
         /// [24/Jul/2022] RSL TODO: Wrap this in an ifdef for posix vs non posix
         using SystemClockPeriod = RatioMultiply<ratio<nano_secs_per_tick, 1>, nano>;
         using SteadyClockPeriod = RatioMultiply<ratio<nano_secs_per_tick, 1>, nano>;
-
-        uint64 get_ticks();
       } // namespace internal
 
       class system_clock
@@ -48,7 +47,7 @@ namespace rsl
 
         static time_point now()
         {
-          return time_point(duration(internal::get_ticks()));
+          return time_point(duration(rsl::internal::get_time_in_ticks()));
         }
       };
 
@@ -69,7 +68,7 @@ namespace rsl
 
         static time_point now()
         {
-          return time_point(duration(internal::get_ticks()));
+          return time_point(duration(rsl::internal::get_time_in_ticks()));
         }
       };
 

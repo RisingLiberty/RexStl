@@ -33,6 +33,9 @@ namespace rsl
   inline namespace v1
   {
     template <typename CharT, typename Traits>
+    class basic_ostream;
+
+    template <typename CharT, typename Traits>
     class basic_ios : public ios_base
     {
     public:

@@ -12,37 +12,13 @@
 
 #pragma once
 
-#include "rex_std/bonus/defines.h"
-#include "rex_std/disable_std_checking.h"
-#include "rex_std/std_alias_defines.h"
+//-----------------------------------------------------------------------------
+// https://en.cppreference.com/w/cpp/header/thread
+//
+// This header is part of the thread support library.
+//-----------------------------------------------------------------------------
 
-#include <thread>
+#include "rex_std/internal/thread/this_thread.h"
+#include "rex_std/internal/thread/thread.h"
 
-namespace rsl
-{
-  inline namespace v1
-  {
 
-    namespace this_thread
-    {
-      using namespace std::this_thread;
-    }
-
-    REX_STD_CLASS_ALIAS(thread);
-    REX_STD_CLASS_ALIAS(jthread);
-
-    // REX_STD_FUNC_ALIAS(swap); // Doesn't work because rsl has its own swap
-
-    REX_STD_FUNC_ALIAS(operator==);
-    REX_STD_FUNC_ALIAS(operator!=);
-    REX_STD_FUNC_ALIAS(operator<);
-    REX_STD_FUNC_ALIAS(operator<=);
-    REX_STD_FUNC_ALIAS(operator>);
-    REX_STD_FUNC_ALIAS(operator>=);
-
-    REX_STD_FUNC_ALIAS(operator<<);
-
-  } // namespace v1
-} // namespace rsl
-
-#include "rex_std/enable_std_checking.h"
