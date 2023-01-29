@@ -13,11 +13,11 @@
 #pragma once
 
 #include "rex_std/bonus/attributes.h"
+#include "rex_std/bonus/time/ticks.h"
 #include "rex_std/compare.h"
 #include "rex_std/internal/chrono/duration.h"
 #include "rex_std/internal/chrono/time_point.h"
 #include "rex_std/internal/type_traits/integral_constant.h"
-#include "rex_std/bonus/time/ticks.h"
 
 namespace rsl
 {

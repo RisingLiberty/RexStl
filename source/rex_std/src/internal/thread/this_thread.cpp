@@ -4,13 +4,14 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: this_thread.cpp
 // Copyright (c) Nick De Breuck 2022
 //
 // ============================================
 
 #include "rex_std/internal/thread/this_thread.h"
+
 #include "rex_std/ratio.h"
 
 #include <Windows.h>
@@ -30,9 +31,9 @@ namespace rsl
           {
             Sleep(xtime.diff_in_ms(now));
             now = rsl::internal::xtime::get();
-          } while (now.sec < xtime.sec || now.sec == xtime.sec && now.nsec < xtime.nsec);
+          } while(now.sec < xtime.sec || now.sec == xtime.sec && now.nsec < xtime.nsec);
         }
-      }
+      } // namespace internal
 
       thread::id get_id()
       {
@@ -43,6 +44,6 @@ namespace rsl
       {
         SwitchToThread();
       }
-    }
-  }
-}
+    } // namespace this_thread
+  }   // namespace v1
+} // namespace rsl

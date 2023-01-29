@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: thread.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -19,19 +19,13 @@
 //-----------------------------------------------------------------------------
 
 #include "rex_std/bonus/types.h"
-#include "rex_std/internal/memory/unique_ptr.h"
 #include "rex_std/internal/functional/invoke.h"
+#include "rex_std/internal/memory/unique_ptr.h"
 
 namespace rsl
 {
   inline namespace v1
   {
-    template <typename Char, typename Traits>
-    class basic_ostream;
-
-    template <typename T>
-    struct hash;
-
     namespace internal
     {
       template <typename Func>
@@ -39,8 +33,9 @@ namespace rsl
       {
       public:
         func_wrapper(Func func)
-          : m_func(func)
-        {}
+            : m_func(func)
+        {
+        }
 
         Func function()
         {
@@ -50,7 +45,7 @@ namespace rsl
       private:
         Func m_func;
       };
-    }
+    } // namespace internal
 
     class thread
     {
@@ -58,48 +53,7 @@ namespace rsl
       using thread_start_func = unsigned long(__stdcall*)(void*);
 
     public:
-      class id
-      {
-        template <typename Char, typename Traits>
-        friend basic_ostream<Char, Traits>& operator<<(basic_ostream<Char, Traits>& os, id id);
-        friend hash<id>;
-        friend thread;
-
-      public:
-        id(ulong id)
-          : m_id(id)
-        {}
-
-        bool operator==(id other)
-        {
-          return m_id == other.m_id;
-        }
-        bool operator!=(id other)
-        {
-          return !(*this == other);
-        }
-
-        bool operator<(id other)
-        {
-          return m_id < other.m_id;
-        }
-        bool operator<=(id other)
-        {
-          return m_id <= other.m_id;
-        }
-        bool operator>(id other)
-        {
-          return m_id > other.m_id;
-        }
-        bool operator>=(id other)
-        {
-          return m_id >= other.m_id;
-        }
-
-      private:
-        ulong m_id;
-      };
-
+      using id                 = ulong;
       using native_handle_type = void*;
 
       // Creates new thread object which does not represent a thread.
@@ -114,12 +68,11 @@ namespace rsl
       // Creates new std::thread object and associates it with a thread of execution. The new thread of execution starts executing f with args as function arguments
       template <typename Func>
       explicit thread(Func&& f)
-        : m_handle()
-        , m_id(0)
+          : m_handle()
+          , m_id(0)
       {
         start(f);
       }
-
 
       // destroys the thread object, if the thread has an associated thread, an assert is raised after which terminate is called
       ~thread();
@@ -173,23 +126,7 @@ namespace rsl
       native_handle_type m_handle;
     };
 
-    template <typename Char, typename Traits>
-    basic_ostream<Char, Traits>& operator<<(basic_ostream<Char, Traits>& os, thread::id id)
-    {
-      os << id.m_id;
-      return os;
-    }
-
-    template <>
-    struct hash<thread::id>
-    {
-      hash_result operator()(const thread::id id) const
-      {
-        return id.m_id;
-      }
-    };
-
     // swap two thread objects
     void swap(thread& lhs, thread& rhs);
-  }
-}
+  } // namespace v1
+} // namespace rsl

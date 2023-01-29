@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: xtime.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -13,8 +13,8 @@
 #pragma once
 
 #include "rex_std/bonus/types.h"
-#include "rex_std/internal/chrono/duration.h"
 #include "rex_std/internal/chrono/clock.h"
+#include "rex_std/internal/chrono/duration.h"
 
 namespace rsl
 {
@@ -40,9 +40,9 @@ namespace rsl
       xtime to_xtime_clamped(const chrono::duration<Rep, Period>& rel_time, const chrono::nanoseconds max = chrono::hours(24) * 10)
       {
         const chrono::duration<float32> max_duration = max;
-        chrono::nanoseconds time = chrono::system_clock::now().time_since_epoch();
-        const bool should_clamp = rel_time > max_duration;
-        if (should_clamp)
+        chrono::nanoseconds time                     = chrono::system_clock::now().time_since_epoch();
+        const bool should_clamp                      = rel_time > max_duration;
+        if(should_clamp)
         {
           time += max;
         }
@@ -52,13 +52,13 @@ namespace rsl
         }
 
         const auto whole_seconds = chrono::duration_cast<chrono::seconds>(time);
-        xtime xtime{};
+        xtime xtime {};
         xtime.sec = whole_seconds.count();
         time -= whole_seconds;
         xtime.nsec = static_cast<uint32>(time.count());
 
         return xtime;
       }
-    }
-  }
-}
+    } // namespace internal
+  }   // namespace v1
+} // namespace rsl

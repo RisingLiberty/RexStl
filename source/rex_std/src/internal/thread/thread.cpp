@@ -4,13 +4,14 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: thread.cpp
 // Copyright (c) Nick De Breuck 2022
 //
 // ============================================
 
 #include "rex_std/internal/thread/thread.h"
+
 #include "rex_std/internal/exception/teminate.h"
 #include "rex_std/internal/utility/exchange.h"
 #include "rex_std/internal/utility/swap.h"
@@ -22,21 +23,22 @@ namespace rsl
   inline namespace v1
   {
     thread::thread()
-      : m_id(0)
-      , m_handle(INVALID_HANDLE_VALUE)
-    {}
+        : m_id(0)
+        , m_handle(INVALID_HANDLE_VALUE)
+    {
+    }
 
     thread::thread(thread&& other)
-      : m_id(other.m_id)
-      , m_handle(other.m_handle)
+        : m_id(other.m_id)
+        , m_handle(other.m_handle)
     {
-      other.m_id = 0;
+      other.m_id     = 0;
       other.m_handle = INVALID_HANDLE_VALUE;
     }
 
     thread::~thread()
     {
-      if (REX_ASSERT_X(!joinable(), "joinable thread on destruction!"))
+      if(REX_ASSERT_X(!joinable(), "joinable thread on destruction!"))
       {
         rsl::terminate();
       }
@@ -44,12 +46,12 @@ namespace rsl
 
     thread& thread::operator=(thread&& other)
     {
-      if (REX_ASSERT_X(!joinable(), "joinable thread on move assignment!"))
+      if(REX_ASSERT_X(!joinable(), "joinable thread on move assignment!"))
       {
         rsl::terminate();
       }
 
-      m_id = rsl::exchange(other.m_id, 0);
+      m_id     = rsl::exchange(other.m_id, 0);
       m_handle = rsl::exchange(other.m_handle, native_handle_type());
 
       return *this;
@@ -66,7 +68,7 @@ namespace rsl
       CloseHandle(m_handle);
 
       m_handle = INVALID_HANDLE_VALUE;
-      m_id = 0;
+      m_id     = 0;
     }
 
     void thread::detach()
@@ -91,5 +93,5 @@ namespace rsl
     {
       lhs.swap(rhs);
     }
-  }
-}
+  } // namespace v1
+} // namespace rsl

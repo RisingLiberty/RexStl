@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: ticks.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -21,6 +21,6 @@ namespace rsl
     namespace internal
     {
       int64 get_time_in_ticks();
-    }
-  }
-}
+    } // namespace internal
+  }   // namespace v1
+} // namespace rsl

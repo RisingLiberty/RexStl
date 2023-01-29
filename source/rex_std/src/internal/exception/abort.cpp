@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: abort.cpp
 // Copyright (c) Nick De Breuck 2022
 //
@@ -21,5 +21,5 @@ namespace rsl
       const card32 abort_exit_code = 3;
       exit(abort_exit_code);
     }
-  }
-}
+  } // namespace v1
+} // namespace rsl
