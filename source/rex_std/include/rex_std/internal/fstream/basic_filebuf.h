@@ -19,9 +19,9 @@
 
 #pragma once
 
+#include "rex_std/bonus/iostream/get_area.h"
 #include "rex_std/bonus/platform/windows/handle.h"
 #include "rex_std/internal/streambuf/basic_streambuf.h"
-#include "rex_std/bonus/iostream/get_area.h"
 #include "rex_std/string_view.h"
 #include "rex_std/internal/ios/ios_base.h"
 
@@ -47,8 +47,8 @@ namespace rsl
 
         bool open(const char8* filename, io::openmode mode);
         bool open(const rsl::string_view filename, io::openmode mode);
-        //bool open(const rsl::filesystem::path& filename, io::openmode mode);
-        //bool open(const rsl::filesystem::path::value_type* filename, io::openmode mode);
+        // bool open(const rsl::filesystem::path& filename, io::openmode mode);
+        // bool open(const rsl::filesystem::path::value_type* filename, io::openmode mode);
 
         bool close();
 
@@ -75,12 +75,12 @@ namespace rsl
         template <typename CharT, typename Traits>
         underflow_result<CharT> underflow() // we reached the end of the get area, get from stream, store first char in stream
         {
-          if (!m_get_area.is_allocated())
+          if(!m_get_area.is_allocated())
           {
             m_get_area.allocate();
           }
 
-          if (m_get_area.num_available_to_load() == 0)
+          if(m_get_area.num_available_to_load() == 0)
           {
             m_get_area.reset();
           }
@@ -88,21 +88,21 @@ namespace rsl
           const streamsize count_read = xsgetn(m_get_area.current(), sizeof(CharT), 1) / sizeof(CharT);
           m_get_area.inc_end();
 
-          underflow_result<CharT> res{};
+          underflow_result<CharT> res {};
           res.get_area = &m_get_area;
-          res.ch = count_read == 0 ? Traits::to_char_type(Traits::eof()) : *res.get_area->current();
+          res.ch       = count_read == 0 ? Traits::to_char_type(Traits::eof()) : *res.get_area->current();
 
           return res;
         }
         template <typename CharT, typename Traits>
         underflow_result<CharT> uflow() // we reached the end of the get area, get from stream, inc pointer
         {
-          if (!m_get_area.is_allocated())
+          if(!m_get_area.is_allocated())
           {
             m_get_area.allocate();
           }
 
-          if (m_get_area.num_available_to_load() == 0)
+          if(m_get_area.num_available_to_load() == 0)
           {
             m_get_area.reset();
           }
@@ -112,10 +112,10 @@ namespace rsl
           m_get_area.inc_current();
           m_get_area.inc_end();
 
-          underflow_result<CharT> res{};
+          underflow_result<CharT> res {};
 
           res.get_area = &m_get_area;
-          res.ch = count_read == 0 ? Traits::to_char_type(Traits::eof()) : *res.get_area->current();
+          res.ch       = count_read == 0 ? Traits::to_char_type(Traits::eof()) : *res.get_area->current();
 
           return res;
         }
@@ -134,7 +134,7 @@ namespace rsl
           // This means if an invalid read happened, there's no way to put it back
 
           const streamsize num_available = m_get_area.num_available();
-          if (count > num_available)
+          if(count > num_available)
           {
             // first load the characters in the get area
             rsl::memcpy(s, m_get_area.current(), sizeof(CharT) * num_available);
@@ -143,7 +143,7 @@ namespace rsl
 
           const streamsize count_read = xsgetn(s, sizeof(CharT), count) / sizeof(CharT);
 
-          uflown_result<CharT> res{};
+          uflown_result<CharT> res {};
           res.get_area = &m_get_area;
           res.num_read = count_read;
 
@@ -162,8 +162,8 @@ namespace rsl
       };
     } // namespace internal
 
-    template <typename CharT, typename Traits> 
-    class basic_filebuf : public basic_streambuf<CharT,Traits>
+    template <typename CharT, typename Traits>
+    class basic_filebuf : public basic_streambuf<CharT, Traits>
     {
     private:
       using base = basic_streambuf<char8, char_traits<char8>>;
@@ -205,14 +205,14 @@ namespace rsl
           ? this
           : false;
       }
-      //basic_filebuf* open(const filesystem::path& filename, io::openmode mode)
+      // basic_filebuf* open(const filesystem::path& filename, io::openmode mode)
       //{
-      //  m_impl.open(filename, mode);
-      //}
-      //basic_filebuf* open(const filesystem::path::value_type* filename, io::openmode mode)
+      //   m_impl.open(filename, mode);
+      // }
+      // basic_filebuf* open(const filesystem::path::value_type* filename, io::openmode mode)
       //{
-      //  m_impl.open(filename, mode);
-      //}
+      //   m_impl.open(filename, mode);
+      // }
 
       basic_filebuf* close()
       {
@@ -241,7 +241,7 @@ namespace rsl
       }
       int_type underflow() final
       {
-        if (base::gptr() && base::gptr() < base::egptr()) // can we still get characters from the get area?
+        if(base::gptr() && base::gptr() < base::egptr()) // can we still get characters from the get area?
         {
           return traits_type::to_int_type(*base::gptr());
         }
@@ -256,7 +256,7 @@ namespace rsl
       }
       int_type uflow() final
       {
-        if (base::gptr() && base::gptr() < base::egptr()) // can we still get characters from the get area?
+        if(base::gptr() && base::gptr() < base::egptr()) // can we still get characters from the get area?
         {
           return traits_type::to_int_type(*base::gptr());
         }
@@ -271,7 +271,7 @@ namespace rsl
       }
       streamsize uflown(char_type* s, streamsize count) final
       {
-        if (base::gptr() && base::gptr() < base::egptr()) // can we still get characters from the get area?
+        if(base::gptr() && base::gptr() < base::egptr()) // can we still get characters from the get area?
         {
           return traits_type::to_int_type(*base::gptr());
         }

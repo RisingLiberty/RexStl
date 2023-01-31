@@ -4,13 +4,16 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: get_area.h
 // Copyright (c) Nick De Breuck 2022
 //
 // ============================================
 
 #pragma once
+
+#include "rex_std/bonus/types.h"
+#include "rex_std/internal/ios/io_types.h"
 
 namespace rsl
 {
@@ -22,19 +25,19 @@ namespace rsl
       {
       public:
         get_area()
-          : m_begin(nullptr)
-          , m_current(nullptr)
-          , m_end(nullptr)
-          , m_last(nullptr)
+            : m_begin(nullptr)
+            , m_current(nullptr)
+            , m_end(nullptr)
+            , m_last(nullptr)
         {
         }
 
         void allocate()
         {
-          m_begin = new char8[s_stream_size];
+          m_begin   = new char8[s_stream_size];
           m_current = m_begin;
-          m_end = m_current;
-          m_last = m_begin + s_stream_size;
+          m_end     = m_current;
+          m_last    = m_begin + s_stream_size;
         }
 
         void deallocate()
@@ -99,6 +102,6 @@ namespace rsl
 
         static constexpr streamsize s_stream_size = 256;
       };
-    }
-  }
-}
+    } // namespace internal
+  }   // namespace v1
+} // namespace rsl
