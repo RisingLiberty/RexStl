@@ -44,9 +44,34 @@ namespace rsl
         return result;
       }
 
-      filebuf_impl::filebuf_impl(win::handle_t handle)
+      void append_file(HANDLE fileHandle)
+      {
+        SetFilePointer(fileHandle, 0, NULL, FILE_END);
+      }
+      void trunc_file(HANDLE fileHandle)
+      {
+        SetFilePointer(fileHandle, 0, NULL, FILE_BEGIN);
+      }
+      HANDLE open_impl(const char8* filename, io::openmode mode)
+      {
+        // this function opens the file handle but doesn't read anything
+        HANDLE handle = CreateFile(filename, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, mode_to_creation_disposition(mode), FILE_ATTRIBUTE_NORMAL, nullptr);
+
+        if (rsl::has_flag(mode, rsl::io::openmode::app) || rsl::has_flag(mode, rsl::io::openmode::ate))
+        {
+          append_file(handle);
+        }
+        else if (rsl::has_flag(mode, rsl::io::openmode::trunc))
+        {
+          trunc_file(handle);
+        }
+
+        return handle;
+      }
+
+      filebuf_impl::filebuf_impl()
         : m_get_area()
-        , m_handle(handle)
+        , m_handle(INVALID_HANDLE_VALUE)
       {
       }
 
@@ -65,9 +90,10 @@ namespace rsl
 
       bool filebuf_impl::open(const char8* filename, io::openmode mode)
       {
-        // this function opens the file handle but doesn't read anything
-        m_handle = CreateFile(filename, GENERIC_READ | GENERIC_WRITE, FILE_GENERIC_READ | FILE_GENERIC_WRITE, NULL, mode_to_creation_disposition(mode), FILE_ATTRIBUTE_NORMAL, nullptr);
+        m_openmode = mode;
 
+        m_handle = open_impl(filename, mode);
+        
         return m_handle != INVALID_HANDLE_VALUE;
       }
       bool filebuf_impl::open(const rsl::string_view filename, io::openmode mode)
@@ -102,12 +128,22 @@ namespace rsl
 
       streamsize filebuf_impl::xsgetn(char8* s, size_t elemSize, streamsize count)
       {
+        if (rsl::has_flag(m_openmode, rsl::io::openmode::binary) == false)
+        {
+          count--; // don't get the nullchar, as there isn't any
+        }
+
         DWORD num_read = 0;
         ReadFile(m_handle, s, static_cast<DWORD>(count * elemSize), &num_read, nullptr);
         return static_cast<streamsize>(num_read);
       }
       streamsize filebuf_impl::xsputn(const char8* s, size_t elemSize, streamsize count)
       {
+        if (rsl::has_flag(m_openmode, rsl::io::openmode::binary) == false)
+        {
+          count--; // don't write the nullchar
+        }
+
         DWORD num_written = 0;
         WriteFile(m_handle, s, static_cast<DWORD>(count * elemSize), &num_written, nullptr);
         return static_cast<streamsize>(num_written);

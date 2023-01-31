@@ -439,6 +439,10 @@ namespace rsl
       }
 
     protected:
+      // should only get called from basic_iostream
+      basic_ostream()
+      {}
+
       // Uses basic_ios<CharT, Traits>::move(other) to move all basic_ios members,
       // except for the rdbuf(), from other to this
       basic_ostream(basic_ostream&& other)

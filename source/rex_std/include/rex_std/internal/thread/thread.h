@@ -26,6 +26,12 @@ namespace rsl
 {
   inline namespace v1
   {
+    template <typename Char, typename Traits>
+    class basic_ostream;
+
+    template <typename T>
+    struct hash;
+
     namespace internal
     {
       template <typename Func>
@@ -33,9 +39,8 @@ namespace rsl
       {
       public:
         func_wrapper(Func func)
-            : m_func(func)
-        {
-        }
+          : m_func(func)
+        {}
 
         Func function()
         {
@@ -45,7 +50,7 @@ namespace rsl
       private:
         Func m_func;
       };
-    } // namespace internal
+    }
 
     class thread
     {
@@ -53,7 +58,48 @@ namespace rsl
       using thread_start_func = unsigned long(__stdcall*)(void*);
 
     public:
-      using id                 = ulong;
+      class id
+      {
+        template <typename Char, typename Traits>
+        friend basic_ostream<Char, Traits>& operator<<(basic_ostream<Char, Traits>& os, id id);
+        friend hash<id>;
+        friend thread;
+
+      public:
+        id(ulong id)
+          : m_id(id)
+        {}
+
+        bool operator==(id other)
+        {
+          return m_id == other.m_id;
+        }
+        bool operator!=(id other)
+        {
+          return !(*this == other);
+        }
+
+        bool operator<(id other)
+        {
+          return m_id < other.m_id;
+        }
+        bool operator<=(id other)
+        {
+          return m_id <= other.m_id;
+        }
+        bool operator>(id other)
+        {
+          return m_id > other.m_id;
+        }
+        bool operator>=(id other)
+        {
+          return m_id >= other.m_id;
+        }
+
+      private:
+        ulong m_id;
+      };
+
       using native_handle_type = void*;
 
       // Creates new thread object which does not represent a thread.

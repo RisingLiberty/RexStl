@@ -19,7 +19,7 @@ namespace rsl
     template <typename T>
     bool has_flag(T val, T flag)
     {
-      return (val & flag) == val;
+      return (val & flag) == flag;
     }
   }
 }

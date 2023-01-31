@@ -42,12 +42,12 @@ namespace rsl
       // be part of the ios_base class, we define them in an io namespace instead.
       enum class openmode : uint32
       {
-        app,    // seek to the end of stream before each write
-        binary, // open in binary mode
-        in,     // open for reading
-        out,    // open for writing
-        trunc,  // discard the contents of the stream when opening
-        ate     // seek to the end of stream immediately after open
+        app     = (1 << 0),    // seek to the end of stream before each write
+        binary  = (1 << 1), // open in binary mode
+        in = (1 << 2),     // open for reading
+        out = (1 << 3),    // open for writing
+        trunc = (1 << 4),  // discard the contents of the stream when opening
+        ate = (1 << 5)    // seek to the end of stream immediately after open
       };
 
       enum class iostate : uint32

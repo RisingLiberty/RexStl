@@ -23,6 +23,7 @@
 #include "rex_std/internal/streambuf/basic_streambuf.h"
 #include "rex_std/bonus/iostream/get_area.h"
 #include "rex_std/string_view.h"
+#include "rex_std/internal/ios/ios_base.h"
 
 namespace rsl
 {
@@ -36,7 +37,7 @@ namespace rsl
       class filebuf_impl
       {
       public:
-        explicit filebuf_impl(win::handle_t handle);
+        explicit filebuf_impl();
         filebuf_impl(const filebuf_impl&) = delete;
         filebuf_impl(filebuf_impl&&);
         ~filebuf_impl();
@@ -157,6 +158,7 @@ namespace rsl
       private:
         get_area m_get_area;
         win::handle_t m_handle;
+        rsl::io::openmode m_openmode;
       };
     } // namespace internal
 
@@ -173,9 +175,11 @@ namespace rsl
       using pos_type    = typename base::pos_type;
       using off_type    = typename base::off_type;
 
-      basic_filebuf(internal::handle handle);
+      basic_filebuf()
+        : m_impl()
+      {}
       basic_filebuf(const basic_filebuf&) = delete;
-      basic_filebuf(basic_filebuf&& other);
+      basic_filebuf(basic_filebuf&& other) = default;
       ~basic_filebuf()
       {
         close();
@@ -189,13 +193,17 @@ namespace rsl
 
       basic_filebuf* open(const char8* filename, io::openmode mode)
       {
-        m_impl.open(filename, mode);
+        return m_impl.open(filename, mode)
+          ? this
+          : false;
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (29/Jan/2023)
       // the standard takes a string here, we take a string_view
       basic_filebuf* open(const string_view filename, io::openmode mode)
       {
-        m_impl.open(filename, mode);
+        return m_impl.open(filename, mode)
+          ? this
+          : false;
       }
       //basic_filebuf* open(const filesystem::path& filename, io::openmode mode)
       //{
@@ -208,17 +216,19 @@ namespace rsl
 
       basic_filebuf* close()
       {
-        m_impl.close();
+        return m_impl.close()
+          ? this
+          : false;
       }
 
     protected:
       streamsize xsgetn(char_type* s, streamsize count) final
       {
-        m_impl.xsgetn(s, sizeof(CharT), count);
+        return m_impl.xsgetn(s, sizeof(CharT), count);
       }
       streamsize xsputn(const char_type* s, streamsize count) final
       {
-        m_impl.xsputn(s, sizeof(CharT), count);
+        return m_impl.xsputn(s, sizeof(CharT), count);
       }
 
       int_type overflow(int_type ch) final

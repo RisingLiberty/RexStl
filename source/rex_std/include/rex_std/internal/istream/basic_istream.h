@@ -70,7 +70,7 @@ namespace rsl
             : m_istream(&inStream)
             , m_is_ok(false)
         {
-          if(inStream->good() == false)
+          if(m_istream->good() == false)
           {
             m_istream->setstate(io::iostate::failbit);
             return;
@@ -110,7 +110,7 @@ namespace rsl
       // constructs the basic_ostream object, assigning initial values to the base class
       // by calling basic_ios::init(sb)
       explicit basic_istream(basic_streambuf<CharT, Traits>* sb)
-          : base(sb)
+          : basic_ios<CharT, Traits>(sb)
           , m_gcount(0)
       {
       }
