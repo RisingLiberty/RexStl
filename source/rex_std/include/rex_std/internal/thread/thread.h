@@ -39,8 +39,9 @@ namespace rsl
       {
       public:
         func_wrapper(Func func)
-          : m_func(func)
-        {}
+            : m_func(func)
+        {
+        }
 
         Func function()
         {
@@ -50,7 +51,7 @@ namespace rsl
       private:
         Func m_func;
       };
-    }
+    } // namespace internal
 
     class thread
     {
@@ -67,8 +68,9 @@ namespace rsl
 
       public:
         id(ulong id)
-          : m_id(id)
-        {}
+            : m_id(id)
+        {
+        }
 
         bool operator==(id other)
         {
