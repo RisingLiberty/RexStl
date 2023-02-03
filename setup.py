@@ -53,6 +53,7 @@ def install_rexpy(forceInstall, installDir):
   cmd = f"py {os.path.join(new_wd, 'install.py')} install"
   if installDir != "":
     cmd += f" -install-lib={installDir}"
+  print(f"Trying to install rexpy by running: {cmd}")
   res = os.system(f"py {os.path.join(new_wd, 'install.py')} install")
 
   if res != 0:
