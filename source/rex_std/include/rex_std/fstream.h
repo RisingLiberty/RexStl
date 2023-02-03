@@ -12,9 +12,9 @@
 
 #pragma once
 
+#include "rex_std/internal/fstream/basic_fstream.h"
 #include "rex_std/internal/fstream/basic_ifstream.h"
 #include "rex_std/internal/fstream/basic_ofstream.h"
-#include "rex_std/internal/fstream/basic_fstream.h"
 
 namespace rsl
 {
@@ -22,10 +22,10 @@ namespace rsl
   {
     using ifstream = basic_ifstream<char8, char_traits<char8>>;
     using ofstream = basic_ofstream<char8, char_traits<char8>>;
-    using fstream = basic_fstream<char8, char_traits<char8>>;
+    using fstream  = basic_fstream<char8, char_traits<char8>>;
 
     using wifstream = basic_ifstream<tchar, char_traits<tchar>>;
     using wofstream = basic_ofstream<tchar, char_traits<tchar>>;
-    using wfstream = basic_fstream<tchar, char_traits<tchar>>;
-  }
-}
+    using wfstream  = basic_fstream<tchar, char_traits<tchar>>;
+  } // namespace v1
+} // namespace rsl

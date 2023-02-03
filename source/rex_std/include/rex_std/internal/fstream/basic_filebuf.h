@@ -21,9 +21,9 @@
 
 #include "rex_std/bonus/iostream/get_area.h"
 #include "rex_std/bonus/platform/windows/handle.h"
+#include "rex_std/internal/ios/ios_base.h"
 #include "rex_std/internal/streambuf/basic_streambuf.h"
 #include "rex_std/string_view.h"
-#include "rex_std/internal/ios/ios_base.h"
 
 namespace rsl
 {
@@ -176,9 +176,10 @@ namespace rsl
       using off_type    = typename base::off_type;
 
       basic_filebuf()
-        : m_impl()
-      {}
-      basic_filebuf(const basic_filebuf&) = delete;
+          : m_impl()
+      {
+      }
+      basic_filebuf(const basic_filebuf&)  = delete;
       basic_filebuf(basic_filebuf&& other) = default;
       ~basic_filebuf()
       {
@@ -193,17 +194,13 @@ namespace rsl
 
       basic_filebuf* open(const char8* filename, io::openmode mode)
       {
-        return m_impl.open(filename, mode)
-          ? this
-          : false;
+        return m_impl.open(filename, mode) ? this : false;
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (29/Jan/2023)
       // the standard takes a string here, we take a string_view
       basic_filebuf* open(const string_view filename, io::openmode mode)
       {
-        return m_impl.open(filename, mode)
-          ? this
-          : false;
+        return m_impl.open(filename, mode) ? this : false;
       }
       // basic_filebuf* open(const filesystem::path& filename, io::openmode mode)
       //{
@@ -216,9 +213,7 @@ namespace rsl
 
       basic_filebuf* close()
       {
-        return m_impl.close()
-          ? this
-          : false;
+        return m_impl.close() ? this : false;
       }
 
     protected:
