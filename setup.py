@@ -23,7 +23,7 @@ def is_rexpy_installed():
 
   return False
 
-def install_rexpy(forceInstall):
+def install_rexpy(forceInstall, installDir):
   # first set our working directory to rexpy.
   # this way the package will be installed in {root}/build/scripts/rexpy
   # this keeps the root clean.
@@ -50,6 +50,9 @@ def install_rexpy(forceInstall):
   os.chdir(new_wd)
 
   # now run the install script.
+  cmd = f"py {os.path.join(new_wd, 'install.py')} install"
+  if installDir != "":
+    cmd += f" -install-lib={installDir}"
   res = os.system(f"py {os.path.join(new_wd, 'install.py')} install")
 
   if res != 0:
@@ -67,10 +70,11 @@ def install_rexpy(forceInstall):
 if __name__ == "__main__":
   parser = argparse.ArgumentParser()
   parser.add_argument("-update_rexpy", help="update rexpy, this is basically a reinstall", action="store_true")
+  parser.add_argument("-install_dir", help="the install directory where rexpy will be installed", default="")
 
   args, unknown = parser.parse_known_args()
 
-  install_rexpy(args.update_rexpy)
+  install_rexpy(args.update_rexpy, args.install_dir)
 
   # now that rexpy is installed, we can safely call the rest of the code
 
