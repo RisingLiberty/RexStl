@@ -50,7 +50,10 @@ def install_rexpy(forceInstall):
   os.chdir(new_wd)
 
   # now run the install script.
-  os.system(f"py {os.path.join(new_wd, 'install.py')} install")
+  res = os.system(f"py {os.path.join(new_wd, 'install.py')} install")
+
+  if res != 0:
+    raise Exception("Failed to install RexPy")
 
   # this will result in a few new folders generated, which we can safely remove
   # these folders are "build", "dist" and "rexpy.egg-info"
