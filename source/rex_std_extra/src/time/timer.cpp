@@ -12,32 +12,32 @@
 
 #include "rex_std_extra/time/timer.h"
 
-rsl::Timer::Timer(float32 max_time_in_seconds)
-    : m_max_time(max_time_in_seconds * 0.0001f) // convert to milli seconds
+rsl::timer::timer(float32 maxTimeInSeconds)
+    : m_max_time(maxTimeInSeconds * 0.0001f) // convert to milli seconds
     , m_current_time(0.0f)
     , m_prev_time_point(current_timepoint())
 {
 }
 
-void rsl::Timer::update()
+void rsl::timer::update()
 {
-  TimePoint now = current_timepoint();
+  rsl::time_point now = current_timepoint();
   m_current_time += m_prev_time_point - now;
   m_prev_time_point = now;
 }
 
-void rsl::Timer::reset()
+void rsl::timer::reset()
 {
   m_current_time    = 0.0f;
   m_prev_time_point = current_timepoint();
 }
 
-void rsl::Timer::set_max_time(float32 max_time)
+void rsl::timer::set_max_time(float32 maxTime)
 {
-  m_max_time = max_time;
+  m_max_time = maxTime;
 }
 
-bool rsl::Timer::is_done() const
+bool rsl::timer::is_done() const
 {
   return m_current_time > m_max_time;
 }

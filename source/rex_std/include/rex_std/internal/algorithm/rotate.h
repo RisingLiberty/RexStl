@@ -20,14 +20,14 @@ namespace rsl
   {
 
     template <class InputIterator>
-    constexpr InputIterator rotate(InputIterator first, InputIterator n_first, InputIterator last)
+    constexpr InputIterator rotate(InputIterator first, InputIterator firstN, InputIterator last)
     {
-      if(first == n_first)
+      if(first == firstN)
         return last;
-      if(n_first == last)
+      if(firstN == last)
         return first;
 
-      InputIterator read      = n_first;
+      InputIterator read      = firstN;
       InputIterator write     = first;
       InputIterator next_read = first; // read position for when "read" hits "last"
 

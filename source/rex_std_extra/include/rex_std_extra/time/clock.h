@@ -19,10 +19,10 @@ namespace rsl
   inline namespace v1
   {
 
-    class Clock
+    class clock
     {
     public:
-      Clock();
+      clock();
 
       void update();
       void pause();
@@ -31,8 +31,8 @@ namespace rsl
       float32 delta_time() const;
 
     private:
-      TimePoint m_start_time;
-      TimePoint m_current_time;
+      rsl::time_point m_start_time;
+      rsl::time_point m_current_time;
 
       bool m_is_paused;
 

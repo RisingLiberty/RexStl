@@ -18,15 +18,15 @@ namespace rsl
   {
 
     template <typename InputIterator, typename OutputIterator, typename Func, typename Predicate>
-    void transform(InputIterator first, InputIterator last, OutputIterator dst_first, Func func, Predicate predicate)
+    void transform(InputIterator first, InputIterator last, OutputIterator dstFirst, Func func, Predicate predicate)
     {
       auto it = first;
       while(it != last)
       {
         if(*it)
         {
-          *dst_first = func(*it);
-          ++dst_first;
+          *dstFirst = func(*it);
+          ++dstFirst;
         }
         ++it;
       }

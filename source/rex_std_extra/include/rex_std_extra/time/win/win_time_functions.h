@@ -22,9 +22,9 @@ namespace rsl
   inline namespace v1
   {
 
-    class Date;
+    class date;
     class time;
-    class TimePoint;
+    class time_point;
 
     namespace win
     {
@@ -36,9 +36,9 @@ namespace rsl
       SYSTEMTIME local_time();
       card64 to_integer(const FILETIME& time);
 
-      Date date(const SYSTEMTIME& date);
+      rsl::date date(const SYSTEMTIME& date);
       rsl::time time(const SYSTEMTIME& time);
-      TimePoint timepoint(const SYSTEMTIME& time);
+      rsl::time_point timepoint(const SYSTEMTIME& time);
     } // namespace win
 
   } // namespace v1

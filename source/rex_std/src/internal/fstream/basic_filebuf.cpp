@@ -12,6 +12,7 @@
 
 #include "rex_std/internal/fstream/basic_filebuf.h"
 
+#include "rex_std/array.h"
 #include "rex_std/bonus/utility/has_flag.h"
 #include "rex_std/bonus/utility/nand.h"
 #include "rex_std/internal/memory/memcpy.h"
@@ -47,16 +48,16 @@ namespace rsl
 
       void append_file(HANDLE fileHandle)
       {
-        SetFilePointer(fileHandle, 0, NULL, FILE_END);
+        SetFilePointer(fileHandle, 0, nullptr, FILE_END);
       }
       void trunc_file(HANDLE fileHandle)
       {
-        SetFilePointer(fileHandle, 0, NULL, FILE_BEGIN);
+        SetFilePointer(fileHandle, 0, nullptr, FILE_BEGIN);
       }
       HANDLE open_impl(const char8* filename, io::openmode mode)
       {
         // this function opens the file handle but doesn't read anything
-        HANDLE handle = CreateFile(filename, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, mode_to_creation_disposition(mode), FILE_ATTRIBUTE_NORMAL, nullptr);
+        HANDLE handle = CreateFileA(filename, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, mode_to_creation_disposition(mode), FILE_ATTRIBUTE_NORMAL, nullptr);
 
         if(rsl::has_flag(mode, rsl::io::openmode::app) || rsl::has_flag(mode, rsl::io::openmode::ate))
         {
@@ -73,12 +74,14 @@ namespace rsl
       filebuf_impl::filebuf_impl()
           : m_get_area()
           , m_handle(INVALID_HANDLE_VALUE)
+          , m_openmode(rsl::io::openmode::app) // open in append mode to not accidentally delete file content
       {
       }
 
       filebuf_impl::filebuf_impl(filebuf_impl&& other)
           : m_get_area(other.m_get_area)
           , m_handle(other.m_handle)
+          , m_openmode(other.m_openmode)
       {
         other.m_get_area = internal::get_area();
         other.m_handle   = win::handle_t();
@@ -103,10 +106,10 @@ namespace rsl
 
         // need to copy this into a temporary buffer because it's possible the string view
         // is not null terminated and would therefore pass in an invalid path
-        char8 buff[256] = {};
-        rsl::memcpy(buff, filename.data(), filename.length());
+        rsl::array<char8, 256> buff = {};
+        rsl::memcpy(buff.data(), filename.data(), filename.length());
 
-        return open(buff, mode);
+        return open(buff.data(), mode);
       }
       // bool filebuf_impl::open(const rsl::filesystem::path& filename, io::openmode mode)
       //{
@@ -129,7 +132,7 @@ namespace rsl
 
       streamsize filebuf_impl::xsgetn(char8* s, size_t elemSize, streamsize count)
       {
-        if(rsl::has_flag(m_openmode, rsl::io::openmode::binary) == false)
+        if(rsl::has_flag(m_openmode, rsl::io::openmode::binary) == false) // NOLINT(readability-simplify-boolean-expr)
         {
           count--; // don't get the nullchar, as there isn't any
         }
@@ -140,7 +143,7 @@ namespace rsl
       }
       streamsize filebuf_impl::xsputn(const char8* s, size_t elemSize, streamsize count)
       {
-        if(rsl::has_flag(m_openmode, rsl::io::openmode::binary) == false)
+        if(rsl::has_flag(m_openmode, rsl::io::openmode::binary) == false) // NOLINT(readability-simplify-boolean-expr)
         {
           count--; // don't write the nullchar
         }

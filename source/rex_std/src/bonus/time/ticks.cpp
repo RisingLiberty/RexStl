@@ -25,7 +25,7 @@ namespace rsl
         constexpr int64 epoch = 0x19DB1DED53E8000LL;
         FILETIME ft;
         GetSystemTimePreciseAsFileTime(&ft);
-        return ((static_cast<int64>(ft.dwHighDateTime)) << 32) + static_cast<int64>(ft.dwLowDateTime) - epoch;
+        return ((static_cast<int64>(ft.dwHighDateTime)) << 32) + static_cast<int64>(ft.dwLowDateTime) - epoch; // NOLINT(hicpp-signed-bitwise)
       }
     } // namespace internal
   }   // namespace v1

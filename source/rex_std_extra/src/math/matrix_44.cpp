@@ -195,7 +195,7 @@ rsl::matrix44 rsl::matrix44::zero()
   return matrix44(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
 }
 
-void rsl::matrix44::rotate_x(const RadAngle angle)
+void rsl::matrix44::rotate_x(const rad_angle angle)
 {
   const float32 sa = sinf(angle.get());
   const float32 ca = cosf(angle.get());
@@ -209,7 +209,7 @@ void rsl::matrix44::rotate_x(const RadAngle angle)
     elem(2, i) = temp_1i * sa + elem(2, i) * ca;
   }
 }
-void rsl::matrix44::rotate_y(const RadAngle angle)
+void rsl::matrix44::rotate_y(const rad_angle angle)
 {
   const float32 sa = sinf(angle.get());
   const float32 ca = cosf(angle.get());
@@ -223,7 +223,7 @@ void rsl::matrix44::rotate_y(const RadAngle angle)
     elem(2, i) = elem(2, i) * ca - temp_0i * sa;
   }
 }
-void rsl::matrix44::rotate_z(const RadAngle angle)
+void rsl::matrix44::rotate_z(const rad_angle angle)
 {
   const float32 sa = sinf(angle.get());
   const float32 ca = cosf(angle.get());
@@ -238,7 +238,7 @@ void rsl::matrix44::rotate_z(const RadAngle angle)
   }
 }
 
-rsl::matrix44& rsl::matrix44::set_rotate_x(const RadAngle angle)
+rsl::matrix44& rsl::matrix44::set_rotate_x(const rad_angle angle)
 {
   const float32 sine   = sinf(angle.get());
   const float32 cosine = cosf(angle.get());
@@ -250,7 +250,7 @@ rsl::matrix44& rsl::matrix44::set_rotate_x(const RadAngle angle)
 
   return *this;
 }
-rsl::matrix44& rsl::matrix44::set_rotate_y(const RadAngle angle)
+rsl::matrix44& rsl::matrix44::set_rotate_y(const rad_angle angle)
 {
   const float32 sine   = sinf(angle.get());
   const float32 cosine = cosf(angle.get());
@@ -262,7 +262,7 @@ rsl::matrix44& rsl::matrix44::set_rotate_y(const RadAngle angle)
 
   return *this;
 }
-rsl::matrix44& rsl::matrix44::set_rotate_z(const RadAngle angle)
+rsl::matrix44& rsl::matrix44::set_rotate_z(const rad_angle angle)
 {
   const float32 sine   = sinf(angle.get());
   const float32 cosine = cosf(angle.get());
@@ -322,9 +322,9 @@ rsl::matrix44 rsl::matrix44::simd_mul(const matrix44& m2)
   return matrix44(e00, e01, e02, e03, e10, e11, e12, e13, e20, e21, e22, e23, e30, e31, e32, e33);
 }
 
-void rsl::matrix44::swap_elements(card32 row_idx, card32 column_idx)
+void rsl::matrix44::swap_elements(card32 rowIdx, card32 columnIdx)
 {
-  float32 t                 = elem(row_idx, column_idx);
-  elem(row_idx, column_idx) = elem(column_idx, row_idx);
-  elem(column_idx, row_idx) = t;
+  float32 t               = elem(rowIdx, columnIdx);
+  elem(rowIdx, columnIdx) = elem(columnIdx, rowIdx);
+  elem(columnIdx, rowIdx) = t;
 }

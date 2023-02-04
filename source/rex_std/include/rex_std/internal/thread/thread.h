@@ -38,7 +38,7 @@ namespace rsl
       class func_wrapper
       {
       public:
-        func_wrapper(Func func)
+        func_wrapper(Func func) // NOLINT(google-explicit-constructor)
             : m_func(func)
         {
         }
@@ -67,33 +67,33 @@ namespace rsl
         friend thread;
 
       public:
-        id(ulong id)
+        explicit id(ulong id)
             : m_id(id)
         {
         }
 
-        bool operator==(id other)
+        bool operator==(id other) const
         {
           return m_id == other.m_id;
         }
-        bool operator!=(id other)
+        bool operator!=(id other) const
         {
           return !(*this == other);
         }
 
-        bool operator<(id other)
+        bool operator<(id other) const
         {
           return m_id < other.m_id;
         }
-        bool operator<=(id other)
+        bool operator<=(id other) const
         {
           return m_id <= other.m_id;
         }
-        bool operator>(id other)
+        bool operator>(id other) const
         {
           return m_id > other.m_id;
         }
-        bool operator>=(id other)
+        bool operator>=(id other) const
         {
           return m_id >= other.m_id;
         }

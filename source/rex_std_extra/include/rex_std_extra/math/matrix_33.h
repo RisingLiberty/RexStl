@@ -29,8 +29,8 @@ namespace rsl
       matrix33();
       matrix33(float32 e00, float32 e10, float32 e20, float32 e01, float32 e11, float32 e21, float32 e02, float32 e12, float32 e22);
 
-      float32& elem(const card32 row, const card32 column);
-      float32 elem(const card32 row, const card32 column) const;
+      float32& elem(card32 row, card32 column);
+      float32 elem(card32 row, card32 column) const;
 
       matrix33 operator*(const matrix33& mat2) const;
       matrix33& operator*=(const matrix33& mat2);
@@ -52,21 +52,21 @@ namespace rsl
 
       matrix33& set_scale(const vec3& scale);
       void scale(const vec3& scale);
-      void scale(const float32 scale);
+      void scale(float32 scale);
 
       static matrix33 identity();
       static matrix33 zero();
 
-      void rotate_x(const RadAngle rot_x);
-      void rotate_y(const RadAngle rot_y);
-      void rotate_z(const RadAngle rot_z);
+      void rotate_x(rad_angle rotX);
+      void rotate_y(rad_angle rotY);
+      void rotate_z(rad_angle rotZ);
 
-      matrix33& set_rotate_x(const RadAngle angle);
-      matrix33& set_rotate_y(const RadAngle angle);
-      matrix33& set_rotate_z(const RadAngle angle);
+      matrix33& set_rotate_x(rad_angle angle);
+      matrix33& set_rotate_y(rad_angle angle);
+      matrix33& set_rotate_z(rad_angle angle);
 
     private:
-      void swap_elements(card32 row_idx, card32 column_idx);
+      void swap_elements(card32 rowIdx, card32 columnIdx);
 
     private:
       using Column = vec3;

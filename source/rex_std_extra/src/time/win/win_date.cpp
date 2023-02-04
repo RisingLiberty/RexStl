@@ -15,8 +15,8 @@
 #include "rex_std_extra/time/date.h"
 #include "rex_std_extra/time/win/win_time_functions.h"
 
-rsl::Date rsl::current_date()
+rsl::date rsl::current_date()
 {
   SYSTEMTIME sys_time = win::local_time();
-  return rsl::Date(sys_time.wDayOfWeek, sys_time.wDay, sys_time.wMonth, sys_time.wYear);
+  return rsl::date(sys_time.wDayOfWeek, sys_time.wDay, sys_time.wMonth, sys_time.wYear);
 }

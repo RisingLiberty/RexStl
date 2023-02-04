@@ -23,10 +23,10 @@ rsl::vec3::vec3()
 {
 }
 
-rsl::vec3::vec3(float32 _x, float32 _y, float32 _z)
-    : x(_x)
-    , y(_y)
-    , z(_z)
+rsl::vec3::vec3(float32 x, float32 y, float32 z)
+    : x(x)
+    , y(y)
+    , z(z)
 {
 }
 
@@ -96,9 +96,9 @@ float32 rsl::vec3::operator[](card32 idx) const
   return *(data + idx);
 }
 
-bool rsl::vec3::equals(const vec3& other, const float32 comparison_threshold) const
+bool rsl::vec3::equals(const vec3& other, const float32 comparisonThreshold) const
 {
-  return rsl::equals(x, other.x, comparison_threshold) && rsl::equals(y, other.y, comparison_threshold) && rsl::equals(z, other.z, comparison_threshold);
+  return rsl::equals(x, other.x, comparisonThreshold) && rsl::equals(y, other.y, comparisonThreshold) && rsl::equals(z, other.z, comparisonThreshold);
 }
 
 bool rsl::vec3::operator==(const vec3& other) const
@@ -212,7 +212,7 @@ bool rsl::vec3::is_zero() const
   return equals(vec3(0.0f, 0.0f, 0.0f));
 }
 
-rsl::vec3& rsl::vec3::rotate_x(const RadAngle angle)
+rsl::vec3& rsl::vec3::rotate_x(const rad_angle angle)
 {
   const float32 copy_y = y;
 
@@ -224,7 +224,7 @@ rsl::vec3& rsl::vec3::rotate_x(const RadAngle angle)
 
   return *this;
 }
-rsl::vec3& rsl::vec3::rotate_y(const RadAngle angle)
+rsl::vec3& rsl::vec3::rotate_y(const rad_angle angle)
 {
   const float32 copy_x = x;
 
@@ -235,7 +235,7 @@ rsl::vec3& rsl::vec3::rotate_y(const RadAngle angle)
   z = copy_x * -siny + z * cosy;
   return *this;
 }
-rsl::vec3& rsl::vec3::rotate_z(const RadAngle angle)
+rsl::vec3& rsl::vec3::rotate_z(const rad_angle angle)
 {
   const float32 copy_x = x;
 

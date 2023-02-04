@@ -5,19 +5,19 @@
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
 //
-// File: yes_no_enum.h
+// File: yes_no.h
 // Copyright (c) Nick De Breuck 2023
 //
 // ============================================
 
-#include "rex_std_extra/utilities/yes_no_enum.h"
+#include "rex_std_extra/utilities/yes_no.h"
 
-rsl::YesNoEnum::YesNoEnum(EYesNoEnum value)
+rsl::yes_no::yes_no(eyes_no value)
     : m_value(value)
 {
 }
 
-rsl::YesNoEnum::operator bool() const
+rsl::yes_no::operator bool() const
 {
-  return m_value == EYesNoEnum::Yes;
+  return m_value == eyes_no::yes;
 }

@@ -21,18 +21,18 @@ namespace rsl
   inline namespace v1
   {
 
-    class Version
+    class version
     {
     public:
-      Version(card8 major, card8 minor, card32 patch);
-      Version(const string_view version);
+      version(card8 major, card8 minor, card32 patch);
+      version(string_view version);
 
       card8 major() const;
       card8 minor() const;
       card32 patch() const;
 
-      bool operator==(const Version& rhs) const;
-      bool operator!=(const Version& rhs) const;
+      bool operator==(const version& rhs) const;
+      bool operator!=(const version& rhs) const;
 
     private:
       card8 m_major;
@@ -40,7 +40,7 @@ namespace rsl
       card32 m_patch;
     };
 
-    ostream& operator<<(ostream& os, const Version& version);
+    ostream& operator<<(ostream& os, const version& version);
 
   } // namespace v1
 } // namespace rsl

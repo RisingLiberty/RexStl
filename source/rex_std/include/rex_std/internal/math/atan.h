@@ -28,20 +28,20 @@ namespace rsl
       // Series
 
       template <typename T>
-      constexpr T atan_series_order_calc(const T x, const T x_pow, const card32 order)
+      constexpr T atan_series_order_calc(const T x, const T xPow, const card32 order)
       {
-        return (T(1) / (T((order - 1) * 4 - 1) * x_pow) - T(1) / (T((order - 1) * 4 + 1) * x_pow * x));
+        return (T(1) / (T((order - 1) * 4 - 1) * xPow) - T(1) / (T((order - 1) * 4 + 1) * xPow * x));
       }
 
       template <typename T>
-      constexpr T atan_series_order(const T x, const T x_pow, const card32 order, const card32 max_order)
+      constexpr T atan_series_order(const T x, const T xPow, const card32 order, const card32 maxOrder)
       {
-        return (order == 1 ? rsl::half_pi_v<float64> - T(1) / x + atan_series_order(x * x, pow(x, 3), order + 1, max_order) :
+        return (order == 1 ? rsl::half_pi_v<float64> - T(1) / x + atan_series_order(x * x, pow(x, 3), order + 1, maxOrder) :
                            // NOTE: x changes to x*x for order > 1
-                    order < max_order ? atan_series_order_calc(x, x_pow, order) + atan_series_order(x, x_pow * x * x, order + 1, max_order)
-                                      :
-                                      // order == max_order
-                    atan_series_order_calc(x, x_pow, order));
+                    order < maxOrder ? atan_series_order_calc(x, xPow, order) + atan_series_order(x, xPow * x * x, order + 1, maxOrder)
+                                     :
+                                     // order == max_order
+                    atan_series_order_calc(x, xPow, order));
       }
 
       template <typename T>
@@ -68,12 +68,12 @@ namespace rsl
       // CF
 
       template <typename T>
-      constexpr T atan_cf_recur(const T xx, const card32 depth, const card32 max_depth)
+      constexpr T atan_cf_recur(const T xx, const card32 depth, const card32 maxDepth)
       {
-        return (depth < max_depth ? // if
-                    T(2 * depth - 1) + depth * depth * xx / atan_cf_recur(xx, depth + 1, max_depth)
-                                  :
-                                  // else
+        return (depth < maxDepth ? // if
+                    T(2 * depth - 1) + depth * depth * xx / atan_cf_recur(xx, depth + 1, maxDepth)
+                                 :
+                                 // else
                     T(2 * depth - 1));
       }
 

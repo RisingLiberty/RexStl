@@ -61,7 +61,7 @@ namespace rsl
 
 #define MATH_ERRNO       1
 #define MATH_ERREXCEPT   2
-#define math_errhandling (MATH_ERRNO | MATH_ERREXCEPT)
+#define MATH_ERRHANDLING (MATH_ERRNO | MATH_ERREXCEPT)
 
 #ifndef FP_INFINITE
   #define FP_INFINITE 1

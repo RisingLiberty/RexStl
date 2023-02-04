@@ -14,10 +14,10 @@
 
 #include "rex_std_extra/random/rand.h"
 
-rsl::Hash rsl::Hash::new_hash()
+rsl::hash_val rsl::hash_val::new_hash()
 {
-  static Rand rand;
-  static card64 new_hash = rand.rand();
+  static rand rand;
+  static card64 new_hash = rand.new_rand();
   card64 seed            = 0;
 
   seed     = hash_combine(seed, new_hash);

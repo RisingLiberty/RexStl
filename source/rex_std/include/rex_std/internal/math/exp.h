@@ -22,7 +22,7 @@ namespace rsl
 
     constexpr float32 exp(const card32 exp)
     {
-      return pow(E, exp);
+      return pow(e, exp);
     }
 
   } // namespace v1

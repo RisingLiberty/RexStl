@@ -18,14 +18,14 @@ namespace rsl
   {
 
     template <class ForwardIterator1, class ForwardIterator2>
-    constexpr ForwardIterator1 search(ForwardIterator1 first, ForwardIterator1 last, ForwardIterator2 s_first, ForwardIterator2 s_last)
+    constexpr ForwardIterator1 search(ForwardIterator1 first, ForwardIterator1 last, ForwardIterator2 secondFirst, ForwardIterator2 secondLast)
     {
       while(true)
       {
         ForwardIterator1 it = first;
-        for(ForwardIterator2 s_it = s_first;; ++it, ++s_it)
+        for(ForwardIterator2 s_it = secondFirst;; ++it, ++s_it)
         {
-          if(s_it == s_last)
+          if(s_it == secondLast)
             return first;
           if(it == last)
             return last;
@@ -38,14 +38,14 @@ namespace rsl
     }
 
     template <class ForwardIterator1, class ForwardIterator2, class Predicate>
-    constexpr ForwardIterator1 search(ForwardIterator1 first, ForwardIterator1 last, ForwardIterator2 s_first, ForwardIterator2 s_last, Predicate p)
+    constexpr ForwardIterator1 search(ForwardIterator1 first, ForwardIterator1 last, ForwardIterator2 secondFirst, ForwardIterator2 secondLast, Predicate p)
     {
       while(true)
       {
         ForwardIterator1 it = first;
-        for(ForwardIterator2 s_it = s_first;; ++it, ++s_it)
+        for(ForwardIterator2 s_it = secondFirst;; ++it, ++s_it)
         {
-          if(s_it == s_last)
+          if(s_it == secondLast)
             return first;
           if(it == last)
             return last;

@@ -20,8 +20,8 @@ namespace rsl
     template <typename T>
     struct min_max_result
     {
-      const T& min;
-      const T& max;
+      const T& min; // NOLINT(cppcoreguidelines-avoid-const-or-ref-data-members)
+      const T& max; // NOLINT(cppcoreguidelines-avoid-const-or-ref-data-members)
     };
 
     template <typename T>

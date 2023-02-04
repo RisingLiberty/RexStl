@@ -15,9 +15,8 @@ namespace rsl
 {
   inline namespace v1
   {
-
-    class TimePoint;
-    TimePoint current_timepoint();
+    class time_point;
+    time_point current_timepoint();
 
   } // namespace v1
 } // namespace rsl

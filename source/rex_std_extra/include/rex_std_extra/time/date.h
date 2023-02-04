@@ -21,11 +21,11 @@ namespace rsl
   inline namespace v1
   {
 
-    class Date
+    class date
     {
     public:
-      Date();
-      Date(card32 week_day, card32 month_data, card32 month, card32 year);
+      date();
+      date(card32 weekDay, card32 monthData, card32 month, card32 year);
 
       tiny_stack_string week_day() const;
       card32 month_day() const;
@@ -36,13 +36,13 @@ namespace rsl
       small_stack_string to_string() const;
       small_stack_string to_string_without_weekday() const;
 
-      bool operator>(const Date& date) const;
-      bool operator>=(const Date& date) const;
-      bool operator<(const Date& date) const;
-      bool operator<=(const Date& date) const;
+      bool operator>(const date& date) const;
+      bool operator>=(const date& date) const;
+      bool operator<(const date& date) const;
+      bool operator<=(const date& date) const;
 
-      bool operator==(const Date& date) const;
-      bool operator!=(const Date& date) const;
+      bool operator==(const date& date) const;
+      bool operator!=(const date& date) const;
 
     private:
       card32 m_week_day;
@@ -51,7 +51,7 @@ namespace rsl
       card32 m_year;
     };
 
-    ostream& operator<<(ostream& os, const Date& date);
+    ostream& operator<<(ostream& os, const date& date);
 
   } // namespace v1
 } // namespace rsl

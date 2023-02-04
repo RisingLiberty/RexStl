@@ -17,8 +17,8 @@ namespace rsl
   inline namespace v1
   {
 
-    class Date;
-    Date current_date();
+    class date;
+    date current_date();
 
   } // namespace v1
 } // namespace rsl

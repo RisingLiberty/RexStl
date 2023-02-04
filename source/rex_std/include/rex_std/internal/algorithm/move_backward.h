@@ -20,15 +20,15 @@ namespace rsl
   {
 
     template <typename InputIterator, typename OutputIterator>
-    OutputIterator move_backward(InputIterator first, InputIterator last, OutputIterator dst_last)
+    OutputIterator move_backward(InputIterator first, InputIterator last, OutputIterator dstLast)
     {
       while(first != last)
       {
-        *--dst_last = rsl::move(*--last);
+        *--dstLast = rsl::move(*--last);
       }
 
-      // dst_last now points to the beginning of the destination sequence instead of the end.
-      return dst_last;
+      // dstLast now points to the beginning of the destination sequence instead of the end.
+      return dstLast;
     }
 
   } // namespace v1

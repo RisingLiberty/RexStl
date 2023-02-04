@@ -14,103 +14,109 @@
 
 #include "rex_std/algorithm.h"
 
-rsl::HighWaterMark::HighWaterMark(card32 init_value)
-    : m_value(init_value)
-    , m_high_water_mark(init_value)
+rsl::high_water_mark::high_water_mark(card32 maxValue)
+    : m_value(0)
+    , m_max_value(maxValue)
 {
 }
 
-rsl::HighWaterMark& rsl::HighWaterMark::operator++()
+rsl::high_water_mark::high_water_mark(card32 initValue, card32 maxValue)
+    : m_value(initValue)
+    , m_max_value(maxValue)
+{
+}
+
+rsl::high_water_mark& rsl::high_water_mark::operator++()
 {
   ++m_value;
-  m_high_water_mark = rsl::max(m_high_water_mark, m_value);
+  m_max_value = rsl::max(m_max_value, m_value);
   return *this;
 }
-rsl::HighWaterMark rsl::HighWaterMark::operator++(int)
+rsl::high_water_mark rsl::high_water_mark::operator++(int)
 {
-  card32 tmp = m_value;
+  const card32 tmp = m_value;
   ++m_value;
-  m_high_water_mark = rsl::max(m_high_water_mark, m_value);
-  return tmp;
+  m_max_value = rsl::max(m_max_value, m_value);
+  return rsl::high_water_mark(tmp, m_max_value);
 }
 
-rsl::HighWaterMark& rsl::HighWaterMark::operator--()
+rsl::high_water_mark& rsl::high_water_mark::operator--()
 {
   --m_value;
   return *this;
 }
-rsl::HighWaterMark rsl::HighWaterMark::operator--(int)
+rsl::high_water_mark rsl::high_water_mark::operator--(int)
 {
-  card32 tmp = m_value;
+  const card32 tmp = m_value;
   --m_value;
-  return tmp;
+  return rsl::high_water_mark(tmp, m_max_value);
 }
 
-rsl::HighWaterMark rsl::HighWaterMark::operator+(int32 val) const
+rsl::high_water_mark rsl::high_water_mark::operator+(int32 val) const
 {
-  return HighWaterMark(m_value + val);
+  return high_water_mark(m_value + val);
 }
-rsl::HighWaterMark& rsl::HighWaterMark::operator+=(int32 val)
+rsl::high_water_mark& rsl::high_water_mark::operator+=(int32 val)
 {
   m_value += val;
-  m_high_water_mark = max(m_high_water_mark, m_value);
+  m_max_value = max(m_max_value, m_value);
   return *this;
 }
 
-rsl::HighWaterMark rsl::HighWaterMark::operator-(int32 val) const
+rsl::high_water_mark rsl::high_water_mark::operator-(int32 val) const
 {
-  return HighWaterMark(m_value - val);
+  return high_water_mark(m_value - val);
 }
-rsl::HighWaterMark& rsl::HighWaterMark::operator-=(int32 val)
+rsl::high_water_mark& rsl::high_water_mark::operator-=(int32 val)
 {
   // there's no guarantee that val is positive
   // so the subtraction could actually INCREASE the value
   // which is wh we have to use max here
   m_value -= val;
-  m_high_water_mark = max(m_high_water_mark, m_value);
+  m_max_value = max(m_max_value, m_value);
   return *this;
 }
 
-rsl::HighWaterMark rsl::HighWaterMark::operator*(int32 val) const
+rsl::high_water_mark rsl::high_water_mark::operator*(int32 val) const
 {
-  return HighWaterMark(m_value * val);
+  return high_water_mark(m_value * val);
 }
-rsl::HighWaterMark& rsl::HighWaterMark::operator*=(int32 val)
+rsl::high_water_mark& rsl::high_water_mark::operator*=(int32 val)
 {
   m_value *= val;
-  m_high_water_mark = max(m_high_water_mark, m_value);
+  m_max_value = max(m_max_value, m_value);
   return *this;
 }
 
-rsl::HighWaterMark rsl::HighWaterMark::operator/(int32 val) const
+rsl::high_water_mark rsl::high_water_mark::operator/(int32 val) const
 {
-  return HighWaterMark(m_value / val);
+  return high_water_mark(m_value / val);
 }
-rsl::HighWaterMark& rsl::HighWaterMark::operator/=(int32 val)
+rsl::high_water_mark& rsl::high_water_mark::operator/=(int32 val)
 {
   m_value /= val;
   return *this;
 }
 
-rsl::HighWaterMark rsl::HighWaterMark::operator%(int32 val) const
+rsl::high_water_mark rsl::high_water_mark::operator%(int32 val) const
 {
-  return HighWaterMark(m_value % val);
+  return high_water_mark(m_value % val);
 }
-rsl::HighWaterMark& rsl::HighWaterMark::operator%=(int32 val)
+rsl::high_water_mark& rsl::high_water_mark::operator%=(int32 val)
 {
   m_value %= val;
   return *this;
 }
 
-rsl::HighWaterMark::operator card32() const
+rsl::high_water_mark::operator card32() const
 {
   return value();
 }
-card32 rsl::HighWaterMark::value() const
+card32 rsl::high_water_mark::value() const
 {
   return m_value;
 }
-card32 rsl::HighWaterMark::high_water_mark() const
+card32 rsl::high_water_mark::max_value() const
 {
-  return m_high_water_mark;
+  return m_max_value;
 }

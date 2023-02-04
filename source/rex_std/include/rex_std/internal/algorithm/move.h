@@ -20,10 +20,10 @@ namespace rsl
   {
 
     template <typename InputIterator, typename OutputIterator>
-    OutputIterator move(InputIterator first, InputIterator last, OutputIterator dst_first)
+    OutputIterator move(InputIterator first, InputIterator last, OutputIterator dstFirst)
     {
       auto src = first;
-      auto dst = dst_first;
+      auto dst = dstFirst;
       while(first != last)
       {
         *dst = rsl::move(*src);

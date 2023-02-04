@@ -20,10 +20,10 @@ namespace rsl
   {
 
     template <class InputIterator, class OuputIterator>
-    constexpr OuputIterator rotate_copy(InputIterator first, InputIterator n_first, InputIterator last, OuputIterator d_first)
+    constexpr OuputIterator rotate_copy(InputIterator first, InputIterator firstN, InputIterator last, OuputIterator dstFirst)
     {
-      d_first = rsl::copy(n_first, last, d_first);
-      return rsl::copy(first, n_first, d_first);
+      dstFirst = rsl::copy(firstN, last, dstFirst);
+      return rsl::copy(first, firstN, dstFirst);
     }
 
   } // namespace v1

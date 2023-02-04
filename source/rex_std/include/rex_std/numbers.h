@@ -23,48 +23,48 @@ namespace rsl
     namespace internal
     {
       template <typename T>
-      struct Invalid
+      struct invalid
       {
         static_assert(internal::always_false<T>, "A program that instantiates a primary template of a mathematical constant variable template is ill-formed");
       };
     } // namespace internal
 
     template <typename T>
-    inline constexpr T e_v = internal::Invalid<T> {};
+    inline constexpr T e_v = internal::invalid<T> {};
     template <typename T>
-    inline constexpr T log2e_v = internal::Invalid<T> {};
+    inline constexpr T log2e_v = internal::invalid<T> {};
     template <typename T>
-    inline constexpr T log10e_v = internal::Invalid<T> {};
+    inline constexpr T log10e_v = internal::invalid<T> {};
     template <typename T>
-    inline constexpr T pi_v = internal::Invalid<T> {};
+    inline constexpr T pi_v = internal::invalid<T> {};
     template <typename T>
-    inline constexpr T log2pi_v = internal::Invalid<T> {}; /// RSL Comment: Not in ISO C++ Standard at time of writing (18/Aug/2022)
+    inline constexpr T log2pi_v = internal::invalid<T> {}; /// RSL Comment: Not in ISO C++ Standard at time of writing (18/Aug/2022)
     template <typename T>
-    inline constexpr T log_sqrt_2pi_v = internal::Invalid<T> {}; /// RSL Comment: Not in ISO C++ Standard at time of writing (18/Aug/2022)
+    inline constexpr T log_sqrt_2pi_v = internal::invalid<T> {}; /// RSL Comment: Not in ISO C++ Standard at time of writing (18/Aug/2022)
     template <typename T>
-    inline constexpr T half_pi_v = internal::Invalid<T> {}; /// RSL Comment: Not in ISO C++ Standard at time of writing (18/Aug/2022)
+    inline constexpr T half_pi_v = internal::invalid<T> {}; /// RSL Comment: Not in ISO C++ Standard at time of writing (18/Aug/2022)
     template <typename T>
-    inline constexpr T sqrt_pi_v = internal::Invalid<T> {}; /// RSL Comment: Not in ISO C++ Standard at time of writing (18/Aug/2022)
+    inline constexpr T sqrt_pi_v = internal::invalid<T> {}; /// RSL Comment: Not in ISO C++ Standard at time of writing (18/Aug/2022)
     template <typename T>
-    inline constexpr T sqrt_half_pi_v = internal::Invalid<T> {}; /// RSL Comment: Not in ISO C++ Standard at time of writing (18/Aug/2022)
+    inline constexpr T sqrt_half_pi_v = internal::invalid<T> {}; /// RSL Comment: Not in ISO C++ Standard at time of writing (18/Aug/2022)
     template <typename T>
-    inline constexpr T inv_pi_v = internal::Invalid<T> {};
+    inline constexpr T inv_pi_v = internal::invalid<T> {};
     template <typename T>
-    inline constexpr T inv_sqrtpi_v = internal::Invalid<T> {};
+    inline constexpr T inv_sqrtpi_v = internal::invalid<T> {};
     template <typename T>
-    inline constexpr T ln2_v = internal::Invalid<T> {};
+    inline constexpr T ln2_v = internal::invalid<T> {};
     template <typename T>
-    inline constexpr T ln10_v = internal::Invalid<T> {};
+    inline constexpr T ln10_v = internal::invalid<T> {};
     template <typename T>
-    inline constexpr T sqrt2_v = internal::Invalid<T> {};
+    inline constexpr T sqrt2_v = internal::invalid<T> {};
     template <typename T>
-    inline constexpr T sqrt3_v = internal::Invalid<T> {};
+    inline constexpr T sqrt3_v = internal::invalid<T> {};
     template <typename T>
-    inline constexpr T inv_sqrt3_v = internal::Invalid<T> {};
+    inline constexpr T inv_sqrt3_v = internal::invalid<T> {};
     template <typename T>
-    inline constexpr T egamma_v = internal::Invalid<T> {};
+    inline constexpr T egamma_v = internal::invalid<T> {};
     template <typename T>
-    inline constexpr T phi_v = internal::Invalid<T> {};
+    inline constexpr T phi_v = internal::invalid<T> {};
 
     template <>
     inline constexpr float64 e_v<float64> = 2.718281828459045;
@@ -177,24 +177,24 @@ namespace rsl
     template <>
     inline constexpr lfloat64 phi_v<lfloat64> = phi_v<float64>;
 
-    inline constexpr float32 E          = e_v<float32>;
-    inline constexpr float32 Log2E      = log2e_v<float32>;
-    inline constexpr float32 Log10E     = log10e_v<float32>;
-    inline constexpr float32 Pi         = pi_v<float32>;
-    inline constexpr float32 Log2Pi     = log2pi_v<float32>;       /// RSL Comment: Not in ISO C++ Standard at time of writing (18/Aug/2022)
-    inline constexpr float32 LogSqrt2Pi = log_sqrt_2pi_v<float32>; /// RSL Comment: Not in ISO C++ Standard at time of writing (18/Aug/2022)
-    inline constexpr float32 HalfPi     = half_pi_v<float32>;      /// RSL Comment: Not in ISO C++ Standard at time of writing (18/Aug/2022)
-    inline constexpr float32 SqrtPi     = sqrt_pi_v<float32>;      /// RSL Comment: Not in ISO C++ Standard at time of writing (18/Aug/2022)
-    inline constexpr float32 SqrtHalfPi = sqrt_half_pi_v<float32>; /// RSL Comment: Not in ISO C++ Standard at time of writing (18/Aug/2022)
-    inline constexpr float32 InvPi      = inv_pi_v<float32>;
-    inline constexpr float32 InvSqrtPi  = inv_sqrtpi_v<float32>;
-    inline constexpr float32 Ln2        = ln2_v<float32>;
-    inline constexpr float32 Ln10       = ln10_v<float32>;
-    inline constexpr float32 Sqrt2      = sqrt2_v<float32>;
-    inline constexpr float32 Sqrt3      = sqrt3_v<float32>;
-    inline constexpr float32 InvSqrt3   = inv_sqrt3_v<float32>;
-    inline constexpr float32 EGamma     = egamma_v<float32>;
-    inline constexpr float32 Phi        = phi_v<float32>;
+    inline constexpr float32 e            = e_v<float32>;
+    inline constexpr float32 log2_e       = log2e_v<float32>;
+    inline constexpr float32 log10_e      = log10e_v<float32>;
+    inline constexpr float32 pi           = pi_v<float32>;
+    inline constexpr float32 log2_pi      = log2pi_v<float32>;       /// RSL Comment: Not in ISO C++ Standard at time of writing (18/Aug/2022)
+    inline constexpr float32 log_sqrt2_pi = log_sqrt_2pi_v<float32>; /// RSL Comment: Not in ISO C++ Standard at time of writing (18/Aug/2022)
+    inline constexpr float32 half_pi      = half_pi_v<float32>;      /// RSL Comment: Not in ISO C++ Standard at time of writing (18/Aug/2022)
+    inline constexpr float32 sqrt_pi      = sqrt_pi_v<float32>;      /// RSL Comment: Not in ISO C++ Standard at time of writing (18/Aug/2022)
+    inline constexpr float32 sqrt_half_pi = sqrt_half_pi_v<float32>; /// RSL Comment: Not in ISO C++ Standard at time of writing (18/Aug/2022)
+    inline constexpr float32 inv_pi       = inv_pi_v<float32>;
+    inline constexpr float32 inv_sqrt_pi  = inv_sqrtpi_v<float32>;
+    inline constexpr float32 ln2          = ln2_v<float32>;
+    inline constexpr float32 ln10         = ln10_v<float32>;
+    inline constexpr float32 sqrt2        = sqrt2_v<float32>;
+    inline constexpr float32 sqrt3        = sqrt3_v<float32>;
+    inline constexpr float32 inv_sqrt3    = inv_sqrt3_v<float32>;
+    inline constexpr float32 e_gamma      = egamma_v<float32>;
+    inline constexpr float32 phi          = phi_v<float32>;
 
   } // namespace v1
 } // namespace rsl

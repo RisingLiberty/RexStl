@@ -29,42 +29,42 @@ namespace rsl
     {
       // Implementation moving copying both trivial and non-trivial data via a lesser iterator than random-access.
       template <typename /*BidirectionalIterator1Category*/, bool /*isMove*/, bool /*canMemmove*/>
-      struct MoveAndCopyBackwardHelper
+      struct move_and_copy_backward_helper
       {
         template <typename InputIterator, typename OutputIterator>
-        static OutputIterator move_or_copy_backward(InputIterator first, InputIterator last, OutputIterator dst_last)
+        static OutputIterator move_or_copy_backward(InputIterator first, InputIterator last, OutputIterator dstLast)
         {
           while(first != last)
-            *--dst_last = *--last;
-          return dst_last; // dst_last now points to the beginning of the destination sequence instead of the end.
+            *--dstLast = *--last;
+          return dstLast; // dstLast now points to the beginning of the destination sequence instead of the end.
         }
       };
 
       // Specialization for moving non-trivial data via a lesser iterator than random-access.
       template <typename BidirectionalIterator1Category>
-      struct MoveAndCopyBackwardHelper<BidirectionalIterator1Category, true, false>
+      struct move_and_copy_backward_helper<BidirectionalIterator1Category, true, false>
       {
         template <typename InputIterator, typename OutputIterator>
-        static OutputIterator move_or_copy_backward(InputIterator first, InputIterator last, OutputIterator dst_last)
+        static OutputIterator move_or_copy_backward(InputIterator first, InputIterator last, OutputIterator dstLast)
         {
           while(first != last)
-            *--dst_last = rsl::move(*--last);
-          return dst_last; // dst_last now points to the beginning of the destination sequence instead of the end.
+            *--dstLast = rsl::move(*--last);
+          return dstLast; // dstLast now points to the beginning of the destination sequence instead of the end.
         }
       };
 
       // Specialization for moving non-trivial data via a random-access iterator. It's theoretically faster because the compiler can see the count when its a compile-time const.
       template <>
-      struct MoveAndCopyBackwardHelper<rsl::random_access_iterator_tag, true, false>
+      struct move_and_copy_backward_helper<rsl::random_access_iterator_tag, true, false>
       {
         template <typename InputIterator, typename OutputIterator>
-        static OutputIterator move_or_copy_backward(InputIterator first, InputIterator last, OutputIterator dst_last)
+        static OutputIterator move_or_copy_backward(InputIterator first, InputIterator last, OutputIterator dstLast)
         {
           using difference_type = InputIterator::difference_type;
 
           for(difference_type n = (last - first); n > 0; --n)
-            *--dst_last = rsl::move(*--last);
-          return dst_last; // dst_last now points to the beginning of the destination sequence instead of the end.
+            *--dstLast = rsl::move(*--last);
+          return dstLast; // dstLast now points to the beginning of the destination sequence instead of the end.
         }
       };
 
@@ -72,35 +72,35 @@ namespace rsl
       // This specialization converts the random access InputIterator last-first to an integral type. There's simple way for us to take advantage of a random access output iterator,
       // as the range is specified by the input instead of the output, and distance(first, last) for a non-random-access iterator is potentially slow.
       template <>
-      struct MoveAndCopyBackwardHelper<rsl::random_access_iterator_tag, false, false>
+      struct move_and_copy_backward_helper<rsl::random_access_iterator_tag, false, false>
       {
         template <typename InputIterator, typename OutputIterator>
-        static OutputIterator move_or_copy_backward(InputIterator first, InputIterator last, OutputIterator dst_last)
+        static OutputIterator move_or_copy_backward(InputIterator first, InputIterator last, OutputIterator dstLast)
         {
           using difference_type = InputIterator::difference_type;
 
           for(difference_type n = (last - first); n > 0; --n)
-            *--dst_last = *--last;
-          return dst_last; // dst_last now points to the beginning of the destination sequence instead of the end.
+            *--dstLast = *--last;
+          return dstLast; // dstLast now points to the beginning of the destination sequence instead of the end.
         }
       };
 
       // Specialization for when we can use memmove/memcpy. See the notes above for what conditions allow this.
-      template <bool isMove>
-      struct MoveAndCopyBackwardHelper<rsl::random_access_iterator_tag, isMove, true>
+      template <bool IsMove>
+      struct move_and_copy_backward_helper<rsl::random_access_iterator_tag, IsMove, true>
       {
         template <typename T>
-        static T* move_or_copy_backward(const T* first, const T* last, T* dst_last)
+        static T* move_or_copy_backward(const T* first, const T* last, T* dstLast)
         {
           size_t len = (size_t)((uintptr)last - (uintptr)first);
-          return static_cast<T*>(memmove(dst_last - (last - first), first, len));
+          return static_cast<T*>(memmove(dstLast - (last - first), first, len));
           // We could use memcpy here if there's no range overlap, but memcpy is rarely much faster than memmove.
         }
       };
     } // namespace internal
 
     template <typename InputIterator, typename OutputIterator>
-    OutputIterator copy_backward(InputIterator first, InputIterator last, OutputIterator dst_first)
+    OutputIterator copy_backward(InputIterator first, InputIterator last, OutputIterator dstFirst)
     {
       using IIC               = typename InputIterator::iterator_category;
       using OIC               = typename OutputIterator::iterator_category;
@@ -111,7 +111,7 @@ namespace rsl
       REX_UNUSED(static constexpr bool CanBeMemmoved) = rsl::is_trivially_copyable_v<value_type_output>::value && rsl::is_same_v<value_type_input, value_type_output> &&
                                                         (rsl::is_pointer_v<InputIterator> || rsl::is_same_v<IIC, rsl::continuous_iterator_tag>)&&(rsl::is_pointer_v<OutputIterator> || rsl::is_same_v<OIC, rsl::continuous_iterator_tag>);
 
-      internal::MoveAndCopyBackwardHelper::move_or_copy_backward(first, last, dst_first);
+      internal::move_and_copy_backward_helper::move_or_copy_backward(first, last, dst_first);
     }
 
   } // namespace v1

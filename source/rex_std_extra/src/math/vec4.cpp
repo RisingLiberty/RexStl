@@ -23,11 +23,11 @@ rsl::vec4::vec4()
 {
 }
 
-rsl::vec4::vec4(const float32 _x, const float32 _y, const float32 _z, const float32 _w)
-    : x(_x)
-    , y(_y)
-    , z(_z)
-    , w(_w)
+rsl::vec4::vec4(const float32 x, const float32 y, const float32 z, const float32 w)
+    : x(x)
+    , y(y)
+    , z(z)
+    , w(w)
 {
 }
 
@@ -106,9 +106,9 @@ bool rsl::vec4::operator!=(const vec4& other) const
   return !equals(other);
 }
 
-bool rsl::vec4::equals(const vec4& other, const float32 comparison_threshold) const
+bool rsl::vec4::equals(const vec4& other, const float32 comparisonThreshold) const
 {
-  return rsl::equals(x, other.x, comparison_threshold) && rsl::equals(y, other.y, comparison_threshold) && rsl::equals(z, other.z, comparison_threshold) && rsl::equals(w, other.w, comparison_threshold);
+  return rsl::equals(x, other.x, comparisonThreshold) && rsl::equals(y, other.y, comparisonThreshold) && rsl::equals(z, other.z, comparisonThreshold) && rsl::equals(w, other.w, comparisonThreshold);
 }
 
 float32 rsl::vec4::dot(const vec4& other) const

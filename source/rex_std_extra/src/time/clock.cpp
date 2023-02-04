@@ -15,7 +15,7 @@
 #include "rex_std_extra/time/time.h"
 #include "rex_std_extra/time/timepoint.h"
 
-rsl::Clock::Clock()
+rsl::clock::clock()
     : m_start_time(current_timepoint())
     , m_current_time(m_start_time)
     , m_is_paused(false)
@@ -23,9 +23,9 @@ rsl::Clock::Clock()
 {
 }
 
-void rsl::Clock::update()
+void rsl::clock::update()
 {
-  TimePoint current_time = rsl::current_timepoint();
+  rsl::time_point current_time = rsl::current_timepoint();
 
   float32 duration = current_time - m_current_time;
 
@@ -34,16 +34,16 @@ void rsl::Clock::update()
   m_current_time = current_time;
 }
 
-void rsl::Clock::pause()
+void rsl::clock::pause()
 {
   m_is_paused = true;
 }
-void rsl::Clock::resume()
+void rsl::clock::resume()
 {
   m_is_paused = false;
 }
 
-float32 rsl::Clock::delta_time() const
+float32 rsl::clock::delta_time() const
 {
   return m_delta_time;
 }

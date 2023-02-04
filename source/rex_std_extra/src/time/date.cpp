@@ -15,22 +15,22 @@
 #include "rex_std/format.h"
 #include "rex_std_extra/time/time_digits.h"
 
-rsl::Date::Date()
+rsl::date::date()
     : m_week_day(0)
     , m_month_day(1)
     , m_month(1)
     , m_year(1970)
 {
 }
-rsl::Date::Date(card32 week_day, card32 month_day, card32 month, card32 year)
-    : m_week_day(week_day)
-    , m_month_day(month_day)
+rsl::date::date(card32 weekDay, card32 monthDay, card32 month, card32 year)
+    : m_week_day(weekDay)
+    , m_month_day(monthDay)
     , m_month(month)
     , m_year(year)
 {
 }
 
-rsl::tiny_stack_string rsl::Date::week_day() const
+rsl::tiny_stack_string rsl::date::week_day() const
 {
   switch(m_week_day)
   {
@@ -47,16 +47,16 @@ rsl::tiny_stack_string rsl::Date::week_day() const
   return ""_tiny;
 }
 
-card32 rsl::Date::month_day() const
+card32 rsl::date::month_day() const
 {
   return m_month_day;
 }
-card32 rsl::Date::month() const
+card32 rsl::date::month() const
 {
   return m_month;
 }
 
-rsl::tiny_stack_string rsl::Date::month_name() const
+rsl::tiny_stack_string rsl::date::month_name() const
 {
   switch(m_month)
   {
@@ -77,21 +77,21 @@ rsl::tiny_stack_string rsl::Date::month_name() const
   REX_ASSERT("Invalid month");
   return ""_tiny;
 }
-card32 rsl::Date::year() const
+card32 rsl::date::year() const
 {
   return m_year;
 }
 
-rsl::small_stack_string rsl::Date::to_string() const
+rsl::small_stack_string rsl::date::to_string() const
 {
   return rsl::small_stack_string(rsl::format("{} {}", week_day(), to_string_without_weekday()));
 }
-rsl::small_stack_string rsl::Date::to_string_without_weekday() const
+rsl::small_stack_string rsl::date::to_string_without_weekday() const
 {
   return rsl::small_stack_string(rsl::format("{}/{}/{}", time_digits(month_day()), time_digits(month()), year()));
 }
 
-bool rsl::Date::operator>(const Date& date) const
+bool rsl::date::operator>(const date& date) const
 {
   if(m_year > date.year())
     return true;
@@ -104,14 +104,14 @@ bool rsl::Date::operator>(const Date& date) const
 
   return false;
 }
-bool rsl::Date::operator>=(const Date& date) const
+bool rsl::date::operator>=(const date& date) const
 {
   if(operator>(date))
     return true;
 
   return *this == date;
 }
-bool rsl::Date::operator<(const Date& date) const
+bool rsl::date::operator<(const date& date) const
 {
   if(m_year < date.year())
     return true;
@@ -124,7 +124,7 @@ bool rsl::Date::operator<(const Date& date) const
 
   return false;
 }
-bool rsl::Date::operator<=(const Date& date) const
+bool rsl::date::operator<=(const date& date) const
 {
   if(operator<(date))
     return true;
@@ -132,16 +132,16 @@ bool rsl::Date::operator<=(const Date& date) const
   return *this == date;
 }
 
-bool rsl::Date::operator==(const rsl::Date& date) const
+bool rsl::date::operator==(const rsl::date& date) const
 {
   return m_month_day == date.month_day() && m_month == date.month() && m_year == date.year();
 }
-bool rsl::Date::operator!=(const rsl::Date& date) const
+bool rsl::date::operator!=(const rsl::date& date) const
 {
   return !(*this == date);
 }
 
-rsl::ostream& rsl::operator<<(ostream& os, const Date& date)
+rsl::ostream& rsl::operator<<(ostream& os, const date& date)
 {
   os << date.to_string();
   return os;

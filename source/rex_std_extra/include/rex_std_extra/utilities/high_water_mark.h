@@ -19,39 +19,40 @@ namespace rsl
   inline namespace v1
   {
 
-    class HighWaterMark
+    class high_water_mark
     {
     public:
-      HighWaterMark(card32 init_value = 0);
+      explicit high_water_mark(card32 maxValue);
+      high_water_mark(card32 initValue, card32 maxValue);
 
-      HighWaterMark& operator++();
-      HighWaterMark operator++(int);
+      high_water_mark& operator++();
+      high_water_mark operator++(int);
 
-      HighWaterMark& operator--();
-      HighWaterMark operator--(int);
+      high_water_mark& operator--();
+      high_water_mark operator--(int);
 
-      HighWaterMark operator+(int32 val) const;
-      HighWaterMark& operator+=(int32 val);
+      high_water_mark operator+(int32 val) const;
+      high_water_mark& operator+=(int32 val);
 
-      HighWaterMark operator-(int32 val) const;
-      HighWaterMark& operator-=(int32 val);
+      high_water_mark operator-(int32 val) const;
+      high_water_mark& operator-=(int32 val);
 
-      HighWaterMark operator*(int32 val) const;
-      HighWaterMark& operator*=(int32 val);
+      high_water_mark operator*(int32 val) const;
+      high_water_mark& operator*=(int32 val);
 
-      HighWaterMark operator/(int32 val) const;
-      HighWaterMark& operator/=(int32 val);
+      high_water_mark operator/(int32 val) const;
+      high_water_mark& operator/=(int32 val);
 
-      HighWaterMark operator%(int32 val) const;
-      HighWaterMark& operator%=(int32 val);
+      high_water_mark operator%(int32 val) const;
+      high_water_mark& operator%=(int32 val);
 
-      operator card32() const;
+      operator card32() const; // NOLINT(google-explicit-constructor)
       card32 value() const;
-      card32 high_water_mark() const;
+      card32 max_value() const;
 
     private:
       card32 m_value;
-      card32 m_high_water_mark;
+      card32 m_max_value;
     };
 
   } // namespace v1

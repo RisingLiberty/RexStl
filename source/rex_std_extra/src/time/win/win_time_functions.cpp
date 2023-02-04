@@ -57,15 +57,15 @@ card64 rsl::win::to_integer(const FILETIME& time)
   return value.QuadPart;
 }
 
-rsl::Date rsl::win::date(const SYSTEMTIME& date)
+rsl::date rsl::win::date(const SYSTEMTIME& date)
 {
-  return Date(date.wDayOfWeek, date.wDay, date.wMonth, date.wYear);
+  return rsl::date(date.wDayOfWeek, date.wDay, date.wMonth, date.wYear);
 }
 rsl::time rsl::win::time(const SYSTEMTIME& time)
 {
   return rsl::time(time.wHour, time.wMinute, time.wSecond);
 }
-rsl::TimePoint rsl::win::timepoint(const SYSTEMTIME& timepoint)
+rsl::time_point rsl::win::timepoint(const SYSTEMTIME& timepoint)
 {
-  return TimePoint(date(timepoint), time(timepoint));
+  return rsl::time_point(date(timepoint), time(timepoint));
 }

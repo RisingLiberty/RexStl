@@ -32,7 +32,7 @@ namespace rsl
         : m_id(other.m_id)
         , m_handle(other.m_handle)
     {
-      other.m_id     = 0;
+      other.m_id     = thread::id(0);
       other.m_handle = INVALID_HANDLE_VALUE;
     }
 
@@ -51,7 +51,7 @@ namespace rsl
         rsl::terminate();
       }
 
-      m_id     = rsl::exchange(other.m_id, 0);
+      m_id     = rsl::exchange(other.m_id, thread::id(0));
       m_handle = rsl::exchange(other.m_handle, native_handle_type());
 
       return *this;
@@ -68,7 +68,7 @@ namespace rsl
       CloseHandle(m_handle);
 
       m_handle = INVALID_HANDLE_VALUE;
-      m_id     = 0;
+      m_id     = thread::id(0);
     }
 
     void thread::detach()
@@ -85,7 +85,7 @@ namespace rsl
 
     void thread::create(thread_start_func func, void* param)
     {
-      m_handle = CreateThread(NULL, 0, func, param, 0, &m_id.m_id);
+      m_handle = CreateThread(nullptr, 0, func, param, 0, &m_id.m_id);
       REX_ASSERT_X(m_handle != INVALID_HANDLE_VALUE, "Failed to create thread with error: {}", GetLastError());
     }
 

@@ -24,9 +24,9 @@ rsl::vec2::vec2()
 {
 }
 
-rsl::vec2::vec2(const float32 _x, const float32 _y)
-    : x(_x)
-    , y(_y)
+rsl::vec2::vec2(const float32 x, const float32 y)
+    : x(x)
+    , y(y)
 {
 }
 
@@ -88,9 +88,9 @@ float32 rsl::vec2::dot(const vec2& other) const
   return (x * other.x) + (y * other.y);
 }
 
-bool rsl::vec2::equals(const vec2& other, const float32 comparison_threshold) const
+bool rsl::vec2::equals(const vec2& other, const float32 comparisonThreshold) const
 {
-  return rsl::equals(x, other.x, comparison_threshold) && rsl::equals(y, other.y, comparison_threshold);
+  return rsl::equals(x, other.x, comparisonThreshold) && rsl::equals(y, other.y, comparisonThreshold);
 }
 
 bool rsl::vec2::operator==(const vec2& other) const
@@ -134,7 +134,7 @@ float32 rsl::vec2::length_squared() const
   return dot(*this);
 }
 
-rsl::vec2& rsl::vec2::rotate(const RadAngle angle)
+rsl::vec2& rsl::vec2::rotate(const rad_angle angle)
 {
   const float32 copy_x = x;
 
@@ -146,7 +146,7 @@ rsl::vec2& rsl::vec2::rotate(const RadAngle angle)
 
   return *this;
 }
-rsl::vec2 rsl::vec2::rotated(const RadAngle angle) const
+rsl::vec2 rsl::vec2::rotated(const rad_angle angle) const
 {
   return vec2(*this).rotate(angle);
 }

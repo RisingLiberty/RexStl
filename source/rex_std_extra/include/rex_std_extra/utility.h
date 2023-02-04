@@ -31,4 +31,4 @@
 #include "rex_std_extra/utilities/swap.h"
 #include "rex_std_extra/utilities/version.h"
 #include "rex_std_extra/utilities/wrapped_index.h"
-#include "rex_std_extra/utilities/yes_no_enum.h"
+#include "rex_std_extra/utilities/yes_no.h"

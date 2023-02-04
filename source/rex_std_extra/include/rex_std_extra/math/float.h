@@ -19,10 +19,10 @@ namespace rsl
   inline namespace v1
   {
 
-    constexpr bool equals(float32 lhs, float32 rhs, float32 comparison_threshold = 0.0001f)
+    constexpr bool equals(float32 lhs, float32 rhs, float32 comparisonThreshold = 0.0001f)
     {
       float32 val = lhs - rhs;
-      return rsl::internal::abs(val) < comparison_threshold;
+      return rsl::internal::abs(val) < comparisonThreshold;
     }
 
   } // namespace v1

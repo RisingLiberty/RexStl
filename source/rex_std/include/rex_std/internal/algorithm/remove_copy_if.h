@@ -18,16 +18,16 @@ namespace rsl
   {
 
     template <class InputIterator, class OutputIterator, class Predicate>
-    OutputIterator remove_copy_if(InputIterator first, InputIterator last, OutputIterator d_first, Predicate p)
+    OutputIterator remove_copy_if(InputIterator first, InputIterator last, OutputIterator dstFirst, Predicate p)
     {
       for(; first != last; ++first)
       {
         if(!p(*first))
         {
-          *d_first++ = *first;
+          *dstFirst++ = *first;
         }
       }
-      return d_first;
+      return dstFirst;
     }
 
   } // namespace v1

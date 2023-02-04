@@ -32,17 +32,17 @@ namespace rsl
       namespace internal
       {
         template <typename Rep, typename Period>
-        auto to_abs_time(const chrono::duration<Rep, Period>& rel_time)
+        auto to_abs_time(const chrono::duration<Rep, Period>& relTime)
         {
-          const auto zero                   = chrono::duration<Rep, Period>::zero();
-          const auto now                    = chrono::steady_clock::now();
-          decltype(now + rel_time) abs_time = now;
-          if(rel_time > zero)
+          const auto zero                  = chrono::duration<Rep, Period>::zero();
+          const auto now                   = chrono::steady_clock::now();
+          decltype(now + relTime) abs_time = now;
+          if(relTime > zero)
           {
             const auto forever = (chrono::steady_clock::time_point::max)();
-            if(abs_time < forever - rel_time)
+            if(abs_time < forever - relTime)
             {
-              abs_time += rel_time;
+              abs_time += relTime;
             }
             else
             {
@@ -63,25 +63,25 @@ namespace rsl
       void yield();
       // stops execution of the current thread until a specified time point
       template <typename Clock, typename Duration>
-      void sleep_until(const chrono::time_point<Clock, Duration>& abs_time)
+      void sleep_until(const chrono::time_point<Clock, Duration>& absTime)
       {
         for(;;)
         {
           const auto now = Clock::now();
-          if(abs_time <= now)
+          if(absTime <= now)
           {
             return;
           }
 
-          rsl::internal::xtime xtime = rsl::internal::to_xtime_clamped(abs_time - now);
+          rsl::internal::xtime xtime = rsl::internal::to_xtime_clamped(absTime - now);
           internal::sleep_this_thread_until(xtime);
         }
       }
       // stops exeuction of the current thread for a specified time duration
       template <typename Rep, typename Period>
-      void sleep_for(const chrono::duration<Rep, Period>& rel_time)
+      void sleep_for(const chrono::duration<Rep, Period>& relTime)
       {
-        return sleep_until(internal::to_abs_time(rel_time));
+        return sleep_until(internal::to_abs_time(relTime));
       }
     } // namespace this_thread
   }   // namespace v1

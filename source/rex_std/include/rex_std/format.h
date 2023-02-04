@@ -709,7 +709,7 @@ namespace detail
    * occurs, this pointer will be a guess that depends on the particular
    * error, but it will always advance at least one byte.
    */
-  FMT_CONSTEXPR inline auto utf8_decode(const char* s, uint32_t* c, int* e) -> const char*
+  FMT_CONSTEXPR inline auto utf8_decode(const char* s, uint32_t* c, int* err) -> const char*
   {
     constexpr const int prefix_masks[] = {0x00, 0x80, 0xe0, 0xf0, 0xf8}; // NOLINT(modernize-avoid-c-arrays)
     constexpr const int masks[]        = {0x00, 0x7f, 0x1f, 0x0f, 0x07}; // NOLINT(modernize-avoid-c-arrays)
@@ -730,15 +730,15 @@ namespace detail
 
     // Accumulate the various error conditions.
     using uchar = unsigned char;
-    *e          = (*c < mins[len]) << 6; // NOLINT(readability-implicit-bool-conversion,-warnings-as-errors) // non-canonical encoding
-    *e |= ((*c >> 11) == 0x1b) << 7;     // NOLINT(readability-implicit-bool-conversion,-warnings-as-errors) // surrogate half?
-    *e |= (*c > 0x10FFFF) << 8;          // NOLINT(readability-implicit-bool-conversion,-warnings-as-errors) // out of range?
-    *e |= (uchar(s[1]) & 0xc0) >> 2;     // NOLINT(google-readability-casting)
-    *e |= (uchar(s[2]) & 0xc0) >> 4;     // NOLINT(google-readability-casting)
-    *e |= uchar(s[3]) >> 6;              // NOLINT(google-readability-casting)
-    *e ^= 0x2a;                          // top two bits of each tail byte correct?
-    *e >>= shifte[len];
-    *e |= ((uchar(s[0]) & prefix_masks[len]) != uchar((prefix_masks[len] << 1) & 0xFF)); // NOLINT(google-readability-casting, readability-implicit-bool-conversion) // first byte correct?
+    *err        = (*c < mins[len]) << 6; // NOLINT(readability-implicit-bool-conversion,-warnings-as-errors) // non-canonical encoding
+    *err |= ((*c >> 11) == 0x1b) << 7;   // NOLINT(readability-implicit-bool-conversion,-warnings-as-errors) // surrogate half?
+    *err |= (*c > 0x10FFFF) << 8;        // NOLINT(readability-implicit-bool-conversion,-warnings-as-errors) // out of range?
+    *err |= (uchar(s[1]) & 0xc0) >> 2;   // NOLINT(google-readability-casting)
+    *err |= (uchar(s[2]) & 0xc0) >> 4;   // NOLINT(google-readability-casting)
+    *err |= uchar(s[3]) >> 6;            // NOLINT(google-readability-casting)
+    *err ^= 0x2a;                        // top two bits of each tail byte correct?
+    *err >>= shifte[len];
+    *err |= ((uchar(s[0]) & prefix_masks[len]) != uchar((prefix_masks[len] << 1) & 0xFF)); // NOLINT(google-readability-casting, readability-implicit-bool-conversion) // first byte correct?
 
     return next;
   }

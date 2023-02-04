@@ -19,16 +19,16 @@ namespace rsl
   inline namespace v1
   {
 
-    class WrappedIndex
+    class wrapped_index
     {
     public:
-      WrappedIndex(card32 min, card32 max);
-      WrappedIndex(card32 value, card32 min, card32 max);
+      wrapped_index(card32 min, card32 max);
+      wrapped_index(card32 value, card32 min, card32 max);
 
       operator card32() const;
 
-      void increment(card32 inc_size = 1);
-      void decrement(card32 dec_size = 1);
+      void increment(card32 incSize = 1);
+      void decrement(card32 decSize = 1);
 
     private:
       card32 m_value;

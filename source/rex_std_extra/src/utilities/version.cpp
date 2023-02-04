@@ -14,13 +14,13 @@
 
 #include "rex_std_extra/utilities/casting.h"
 
-rsl::Version::Version(card8 major, card8 minor, card32 patch)
+rsl::version::version(card8 major, card8 minor, card32 patch)
     : m_major(major)
     , m_minor(minor)
     , m_patch(patch)
 {
 }
-rsl::Version::Version(const string_view version)
+rsl::version::version(const string_view version)
     : m_major(0)
     , m_minor(0)
     , m_patch(0)
@@ -33,29 +33,29 @@ rsl::Version::Version(const string_view version)
   m_patch = second_dot_pos != string_view::npos() ? numeric_cast<card32>(rsl::stoi(version.substr(second_dot_pos + 1)).value()) : 0;
 }
 
-card8 rsl::Version::major() const
+card8 rsl::version::major() const
 {
   return m_major;
 }
-card8 rsl::Version::minor() const
+card8 rsl::version::minor() const
 {
   return m_minor;
 }
-card32 rsl::Version::patch() const
+card32 rsl::version::patch() const
 {
   return m_patch;
 }
 
-bool rsl::Version::operator==(const Version& rhs) const
+bool rsl::version::operator==(const version& rhs) const
 {
   return m_major == rhs.major() && m_minor == rhs.minor() && m_patch == rhs.patch();
 }
-bool rsl::Version::operator!=(const Version& rhs) const
+bool rsl::version::operator!=(const version& rhs) const
 {
   return !(*this == rhs);
 }
 
-rsl::ostream& rsl::operator<<(ostream& os, const Version& version)
+rsl::ostream& rsl::operator<<(ostream& os, const version& version)
 {
   // need to convert major and minor to card32, otherwise they'll be formatted as a char
   os << (card32)version.major() << '.' << (card32)version.minor() << '.' << version.patch();

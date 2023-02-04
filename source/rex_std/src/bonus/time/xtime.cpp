@@ -26,7 +26,7 @@ namespace rsl
       {
         constexpr long nsec100_per_sec = rsl::nano::den / 100;
 
-        int64 now_in_ticks = get_time_in_ticks();
+        const int64 now_in_ticks = get_time_in_ticks();
 
         xtime time {};
         time.sec  = static_cast<uint64>(now_in_ticks / nsec100_per_sec);
@@ -53,22 +53,22 @@ namespace rsl
       }
 
       // return xtime object holding difference between xt and now, treating negative difference as 0
-      xtime xtime::diff(const xtime& now) const
+      xtime xtime::diff(const xtime& other) const
       {
         xtime diff = *this;
         diff.normalise();
 
         // avoid underflow
-        if(diff.nsec < now.nsec)
+        if(diff.nsec < other.nsec)
         {
-          diff.sec -= now.sec + 1;
-          diff.nsec += rsl::nano::den - now.nsec;
+          diff.sec -= other.sec + 1;
+          diff.nsec += rsl::nano::den - other.nsec;
         }
         // no underflow
         else
         {
-          diff.sec -= now.sec;
-          diff.nsec -= now.nsec;
+          diff.sec -= other.sec;
+          diff.nsec -= other.nsec;
         }
         // time is zero
         if(diff.sec < 0 || (diff.sec == 0 && diff.nsec <= 0))
@@ -79,9 +79,9 @@ namespace rsl
         return diff;
       }
 
-      int32 xtime::diff_in_ms(const xtime& xt2) const
+      int32 xtime::diff_in_ms(const xtime& other) const
       {
-        xtime diff = this->diff(xt2);
+        const xtime diff = this->diff(other);
         return static_cast<long>(diff.sec * rsl::milli::den + (diff.nsec + rsl::micro::den - 1) / rsl::micro::den);
       }
     } // namespace internal

@@ -39,14 +39,14 @@ namespace rsl
       public:
         explicit filebuf_impl();
         filebuf_impl(const filebuf_impl&) = delete;
-        filebuf_impl(filebuf_impl&&);
+        filebuf_impl(filebuf_impl&& other);
         ~filebuf_impl();
 
         filebuf_impl& operator=(const filebuf_impl&) = delete;
         filebuf_impl& operator=(filebuf_impl&&);
 
         bool open(const char8* filename, io::openmode mode);
-        bool open(const rsl::string_view filename, io::openmode mode);
+        bool open(rsl::string_view filename, io::openmode mode);
         // bool open(const rsl::filesystem::path& filename, io::openmode mode);
         // bool open(const rsl::filesystem::path::value_type* filename, io::openmode mode);
 
@@ -185,8 +185,8 @@ namespace rsl
       {
         close();
       }
-      basic_filebuf operator=(const basic_filebuf&) = delete;
-      basic_filebuf operator=(basic_filebuf&& rhs);
+      basic_filebuf& operator=(const basic_filebuf&) = delete;
+      basic_filebuf& operator=(basic_filebuf&& rhs);
 
       void swap(basic_filebuf& other);
 

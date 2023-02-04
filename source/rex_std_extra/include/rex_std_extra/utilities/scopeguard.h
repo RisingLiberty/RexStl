@@ -19,11 +19,11 @@ namespace rsl
   inline namespace v1
   {
 
-    class ScopeGuard
+    class scope_guard
     {
     public:
-      ScopeGuard(rsl::function<void()> func);
-      ~ScopeGuard();
+      scope_guard(rsl::function<void()> func);
+      ~scope_guard();
 
       void release();
 

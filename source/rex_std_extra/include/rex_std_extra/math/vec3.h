@@ -28,20 +28,20 @@ namespace rsl
 
       vec3 operator+(const vec3& rhs) const;
       vec3 operator-(const vec3& rhs) const;
-      vec3 operator*(const float32 scalar) const;
-      vec3 operator/(const float32 scalar) const;
+      vec3 operator*(float32 scalar) const;
+      vec3 operator/(float32 scalar) const;
 
       vec3& operator+=(const vec3& rhs);
       vec3& operator-=(const vec3& rhs);
-      vec3& operator*=(const float32 scalar);
-      vec3& operator/=(const float32 scalar);
+      vec3& operator*=(float32 scalar);
+      vec3& operator/=(float32 scalar);
 
       vec3 operator-() const;
 
       float32& operator[](card32 idx);
       float32 operator[](card32 idx) const;
 
-      bool equals(const vec3& other, const float32 comparison_threshold = s_ComparisonThreshold) const;
+      bool equals(const vec3& other, float32 comparisonThreshold = s_comparison_threshold) const;
 
       bool operator==(const vec3& other) const;
       bool operator!=(const vec3& other) const;
@@ -71,9 +71,9 @@ namespace rsl
 
       bool is_zero() const;
 
-      vec3& rotate_x(const RadAngle angle);
-      vec3& rotate_y(const RadAngle angle);
-      vec3& rotate_z(const RadAngle angle);
+      vec3& rotate_x(rad_angle angle);
+      vec3& rotate_y(rad_angle angle);
+      vec3& rotate_z(rad_angle angle);
 
       small_stack_string to_string() const;
 
@@ -81,7 +81,7 @@ namespace rsl
       float32 x, y, z;
 
     private:
-      static constexpr float32 s_ComparisonThreshold = 0.00005f;
+      static constexpr float32 s_comparison_threshold = 0.00005f;
     };
 
   } // namespace v1

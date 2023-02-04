@@ -26,8 +26,8 @@ namespace rsl
       using size_type = count_t;
       using pointer   = void*;
 
-      REX_NO_DISCARD pointer allocate(const size_type size);
-      void deallocate(pointer ptr, const size_type size);
+      REX_NO_DISCARD pointer allocate(size_type size);
+      void deallocate(pointer ptr, size_type size);
 
       bool operator==(const debug_allocator& rhs) const;
       bool operator!=(const debug_allocator& rhs) const;

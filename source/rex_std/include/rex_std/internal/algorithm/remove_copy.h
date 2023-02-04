@@ -18,16 +18,16 @@ namespace rsl
   {
 
     template <typename InputIterator, typename OutputIterator, typename T>
-    OutputIterator remove_copy(InputIterator first, InputIterator last, OutputIterator d_first, const T& value)
+    OutputIterator remove_copy(InputIterator first, InputIterator last, OutputIterator dstFirst, const T& value)
     {
       for(; first != last; ++first)
       {
         if(!(*first == value))
         {
-          *d_first++ = *first;
+          *dstFirst++ = *first;
         }
       }
-      return d_first;
+      return dstFirst;
     }
 
   } // namespace v1

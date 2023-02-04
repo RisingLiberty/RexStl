@@ -12,37 +12,37 @@
 
 #include "rex_std_extra/utilities/wrapped_index.h"
 
-rsl::WrappedIndex::WrappedIndex(card32 min, card32 max)
+rsl::wrapped_index::wrapped_index(card32 min, card32 max)
     : m_value(0)
     , m_min(min)
     , m_max(max)
 {
 }
 
-rsl::WrappedIndex::WrappedIndex(card32 value, card32 min, card32 max)
+rsl::wrapped_index::wrapped_index(card32 value, card32 min, card32 max)
     : m_value(value)
     , m_min(min)
     , m_max(max)
 {
 }
 
-rsl::WrappedIndex::operator rsl::card32() const
+rsl::wrapped_index::operator rsl::card32() const
 {
   return m_value;
 }
 
-void rsl::WrappedIndex::increment(card32 inc_size)
+void rsl::wrapped_index::increment(card32 incSize)
 {
-  m_value += inc_size;
+  m_value += incSize;
 
   if(m_value >= m_max)
   {
     m_value = m_min;
   }
 }
-void rsl::WrappedIndex::decrement(card32 dec_size)
+void rsl::wrapped_index::decrement(card32 decSize)
 {
-  m_value -= dec_size;
+  m_value -= decSize;
 
   if(m_value < m_min)
   {

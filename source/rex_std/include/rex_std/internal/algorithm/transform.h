@@ -18,14 +18,14 @@ namespace rsl
   {
 
     template <typename InputIterator, typename OutputIterator, typename Func>
-    void transform(InputIterator first, InputIterator last, OutputIterator dst_first, Func func)
+    void transform(InputIterator first, InputIterator last, OutputIterator dstFirst, Func func)
     {
       auto it = first;
       while(it != last)
       {
-        *dst_first = func(*it);
+        *dstFirst = func(*it);
         ++it;
-        ++dst_first;
+        ++dstFirst;
       }
     }
 

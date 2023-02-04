@@ -14,7 +14,7 @@
 
 #include "rex_std_extra/time/timepoint.h"
 
-rsl::Stopwatch::Stopwatch()
+rsl::stopwatch::stopwatch()
     : m_start(current_timepoint())
     , m_end(m_start)
     , m_pause_start()
@@ -22,28 +22,28 @@ rsl::Stopwatch::Stopwatch()
 {
 }
 
-void rsl::Stopwatch::stop()
+void rsl::stopwatch::stop()
 {
   m_end = current_timepoint();
 }
 
-float32 rsl::Stopwatch::time_in_seconds() const
+float32 rsl::stopwatch::time_in_seconds() const
 {
   return time_in_ms() * 0.001f;
 }
-float32 rsl::Stopwatch::time_in_ms() const
+float32 rsl::stopwatch::time_in_ms() const
 {
   float32 duration = m_end - m_start;
   return duration - m_paused_time_in_ms;
 }
 
-void rsl::Stopwatch::pause()
+void rsl::stopwatch::pause()
 {
   m_pause_start = current_timepoint();
 }
 
-void rsl::Stopwatch::resume()
+void rsl::stopwatch::resume()
 {
-  TimePoint pause_end = current_timepoint();
+  rsl::time_point pause_end = current_timepoint();
   m_paused_time_in_ms += pause_end - m_pause_start;
 }

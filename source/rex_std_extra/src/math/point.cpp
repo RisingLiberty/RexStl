@@ -17,9 +17,9 @@ rsl::point::point()
     , y(0)
 {
 }
-rsl::point::point(int16 _x, int16 _y)
-    : x(_x)
-    , y(_y)
+rsl::point::point(int16 x, int16 y)
+    : x(x)
+    , y(y)
 {
 }
 

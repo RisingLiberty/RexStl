@@ -16,7 +16,7 @@
 #include "rex_std_extra/time/win/win_date.h"
 #include "rex_std_extra/time/win/win_time.h"
 
-rsl::TimePoint rsl::current_timepoint()
+rsl::time_point rsl::current_timepoint()
 {
-  return rsl::TimePoint(current_date(), current_time());
+  return rsl::time_point(current_date(), current_time());
 }

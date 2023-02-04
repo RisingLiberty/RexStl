@@ -5,7 +5,7 @@
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
 //
-// File: yes_no_enum.h
+// File: yes_no.h
 // Copyright (c) Nick De Breuck 2023
 //
 // ============================================
@@ -17,37 +17,37 @@ namespace rsl
   inline namespace v1
   {
 
-    class YesNoEnum
+    class yes_no
     {
     public:
-      enum EYesNoEnum
+      enum eyes_no
       {
-        No  = 0,
-        Yes = 1
+        no  = 0,
+        yes = 1
       };
 
-      YesNoEnum(EYesNoEnum value);
+      yes_no(eyes_no value); // NOLINT(google-explicit-constructor)
 
-      operator bool() const;
+      operator bool() const; // NOLINT(google-explicit-constructor)
 
     private:
-      EYesNoEnum m_value;
+      eyes_no m_value;
     };
 
   } // namespace v1
 } // namespace rsl
 
 #define DEFINE_YES_NO_ENUM(ClassName)                                                                                                                                                                                                                    \
-  class ClassName : public rsl::YesNoEnum                                                                                                                                                                                                                \
+  class ClassName : public rsl::yes_no                                                                                                                                                                                                                   \
   {                                                                                                                                                                                                                                                      \
   public:                                                                                                                                                                                                                                                \
-    ClassName(EYesNoEnum value)                                                                                                                                                                                                                          \
-        : rsl::YesNoEnum(value)                                                                                                                                                                                                                          \
+    ClassName(eyes_no value)                                                                                                                                                                                                                             \
+        : rsl::yes_no(value)                                                                                                                                                                                                                             \
     {                                                                                                                                                                                                                                                    \
     }                                                                                                                                                                                                                                                    \
                                                                                                                                                                                                                                                          \
     explicit ClassName(bool value)                                                                                                                                                                                                                       \
-        : rsl::YesNoEnum(value ? EYesNoEnum::Yes : EYesNoEnum::No)                                                                                                                                                                                       \
+        : rsl::yes_no(value ? eyes_no::yes : eyes_no::no)                                                                                                                                                                                                \
     {                                                                                                                                                                                                                                                    \
     }                                                                                                                                                                                                                                                    \
   };

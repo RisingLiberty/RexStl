@@ -24,20 +24,20 @@ namespace rsl
     {
       namespace internal
       {
-        void sleep_this_thread_until(rsl::internal::xtime xtime)
+        void sleep_this_thread_until(rsl::internal::xtime sleeptime)
         {
           rsl::internal::xtime now = rsl::internal::xtime::get();
           do
           {
-            Sleep(xtime.diff_in_ms(now));
+            Sleep(sleeptime.diff_in_ms(now));
             now = rsl::internal::xtime::get();
-          } while(now.sec < xtime.sec || now.sec == xtime.sec && now.nsec < xtime.nsec);
+          } while(now.sec < sleeptime.sec || now.sec == sleeptime.sec && now.nsec < sleeptime.nsec);
         }
       } // namespace internal
 
       thread::id get_id()
       {
-        return GetCurrentThreadId();
+        return thread::id(GetCurrentThreadId());
       }
 
       void yield()

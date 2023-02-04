@@ -12,12 +12,12 @@
 
 #include "rex_std_extra/utilities/scopeguard.h"
 
-rsl::ScopeGuard::ScopeGuard(rsl::function<void()> func)
+rsl::scope_guard::scope_guard(rsl::function<void()> func)
     : m_function(func)
 {
 }
 
-rsl::ScopeGuard::~ScopeGuard()
+rsl::scope_guard::~scope_guard()
 {
   if(!m_is_released)
   {
@@ -25,7 +25,7 @@ rsl::ScopeGuard::~ScopeGuard()
   }
 }
 
-void rsl::ScopeGuard::release()
+void rsl::scope_guard::release()
 {
   m_is_released = true;
 }

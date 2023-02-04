@@ -15,54 +15,54 @@
 #include "rex_std_extra/time/date.h"
 #include "rex_std_extra/time/time.h"
 
-rsl::TimePoint::TimePoint() = default;
-rsl::TimePoint::TimePoint(const Date& date, const rsl::time& time)
+rsl::time_point::time_point() = default;
+rsl::time_point::time_point(const rsl::date& date, const rsl::time& time)
     : m_date(date)
     , m_time(time)
 {
 }
 
-const rsl::Date& rsl::TimePoint::date() const
+const rsl::date& rsl::time_point::date() const
 {
   return m_date;
 }
-const rsl::time& rsl::TimePoint::time() const
+const rsl::time& rsl::time_point::time() const
 {
   return m_time;
 }
 
-bool rsl::TimePoint::operator>(const TimePoint& timepoint) const
+bool rsl::time_point::operator>(const time_point& timepoint) const
 {
   return m_date > timepoint.date() && m_time > timepoint.time();
 }
-bool rsl::TimePoint::operator>=(const TimePoint& timepoint) const
+bool rsl::time_point::operator>=(const time_point& timepoint) const
 {
   return m_date >= timepoint.date() && m_time >= timepoint.time();
 }
-bool rsl::TimePoint::operator<(const TimePoint& timepoint) const
+bool rsl::time_point::operator<(const time_point& timepoint) const
 {
   return m_date < timepoint.date() && m_time < timepoint.time();
 }
-bool rsl::TimePoint::operator<=(const TimePoint& timepoint) const
+bool rsl::time_point::operator<=(const time_point& timepoint) const
 {
   return m_date <= timepoint.date() && m_time <= timepoint.time();
 }
 
-bool rsl::TimePoint::operator==(const TimePoint& timepoint) const
+bool rsl::time_point::operator==(const time_point& timepoint) const
 {
   return m_date == timepoint.date() && m_time == timepoint.time();
 }
-bool rsl::TimePoint::operator!=(const TimePoint& timepoint) const
+bool rsl::time_point::operator!=(const time_point& timepoint) const
 {
   return !(*this == timepoint);
 }
 
-float32 rsl::TimePoint::operator-(const TimePoint& /*other*/) const
+float32 rsl::time_point::operator-(const time_point& /*other*/) const
 {
   return 0.0f;
 }
 
-rsl::ostream& rsl::operator<<(ostream& os, const TimePoint& timepoint)
+rsl::ostream& rsl::operator<<(ostream& os, const time_point& timepoint)
 {
   os << timepoint.date() << ' ' << timepoint.time();
   return os;

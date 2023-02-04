@@ -19,15 +19,15 @@ namespace rsl
   inline namespace v1
   {
 
-    class Timer
+    class timer
     {
     public:
-      Timer(float32 max_time_in_seconds);
+      timer(float32 maxTimeInSeconds);
 
       void update();
       void reset();
 
-      void set_max_time(float32 max_time_in_seconds);
+      void set_max_time(float32 maxTimeInSeconds);
 
       bool is_done() const;
 
@@ -35,7 +35,7 @@ namespace rsl
       float32 m_max_time;
       float32 m_current_time;
 
-      TimePoint m_prev_time_point;
+      rsl::time_point m_prev_time_point;
     };
 
   } // namespace v1

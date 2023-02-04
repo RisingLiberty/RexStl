@@ -19,35 +19,31 @@ namespace rsl
 {
   inline namespace v1
   {
-
-    class Date;
-    class time;
-
-    class TimePoint
+    class time_point
     {
     public:
-      TimePoint();
-      TimePoint(const Date& date, const rsl::time& time);
+      time_point();
+      time_point(const rsl::date& date, const rsl::time& time);
 
-      const Date& date() const;
+      const rsl::date& date() const;
       const rsl::time& time() const;
 
-      bool operator>(const TimePoint& timepoint) const;
-      bool operator>=(const TimePoint& timepoint) const;
-      bool operator<(const TimePoint& timepoint) const;
-      bool operator<=(const TimePoint& timepoint) const;
+      bool operator>(const time_point& timepoint) const;
+      bool operator>=(const time_point& timepoint) const;
+      bool operator<(const time_point& timepoint) const;
+      bool operator<=(const time_point& timepoint) const;
 
-      bool operator==(const TimePoint& timepoint) const;
-      bool operator!=(const TimePoint& timepoint) const;
+      bool operator==(const time_point& timepoint) const;
+      bool operator!=(const time_point& timepoint) const;
 
-      float32 operator-(const TimePoint& other) const;
+      float32 operator-(const time_point& other) const;
 
     private:
       rsl::time m_time;
-      rsl::Date m_date;
+      rsl::date m_date;
     };
 
-    ostream& operator<<(ostream& os, const TimePoint& timepoint);
+    ostream& operator<<(ostream& os, const time_point& timepoint);
 
   } // namespace v1
 } // namespace rsl

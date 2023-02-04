@@ -19,10 +19,10 @@ namespace rsl
   inline namespace v1
   {
 
-    class Stopwatch
+    class stopwatch
     {
     public:
-      Stopwatch();
+      stopwatch();
 
       void stop();
       void pause();
@@ -32,10 +32,10 @@ namespace rsl
       float32 time_in_ms() const;
 
     private:
-      TimePoint m_start;
-      TimePoint m_end;
+      rsl::time_point m_start;
+      rsl::time_point m_end;
 
-      TimePoint m_pause_start;
+      rsl::time_point m_pause_start;
       float32 m_paused_time_in_ms;
     };
 

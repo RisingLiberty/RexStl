@@ -23,16 +23,16 @@ namespace rsl
   {
 
     template <typename Iterator>
-    struct EqualrangeResult
+    struct equal_range_result
     {
       Iterator first_it;
       Iterator second_it;
     };
 
     template <typename Iterator, typename T>
-    EqualrangeResult<Iterator> equal_range(Iterator first, Iterator last, const T& value)
+    equal_range_result<Iterator> equal_range(Iterator first, Iterator last, const T& value)
     {
-      using ResultType      = EqualrangeResult<Iterator>;
+      using ResultType      = equal_range_result<Iterator>;
       using difference_type = typename Iterator::difference_type;
 
       difference_type d = rsl::distance(first, last);
@@ -65,9 +65,9 @@ namespace rsl
     }
 
     template <typename Iterator, typename T, typename Compare>
-    EqualrangeResult<Iterator> equal_range(Iterator first, Iterator last, const T& value, Compare compare)
+    equal_range_result<Iterator> equal_range(Iterator first, Iterator last, const T& value, Compare compare)
     {
-      using ResultType      = EqualrangeResult<Iterator>;
+      using ResultType      = equal_range_result<Iterator>;
       using difference_type = typename Iterator::difference_type;
 
       difference_type d = rsl::distance(first, last);

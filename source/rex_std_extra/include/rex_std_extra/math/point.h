@@ -35,15 +35,15 @@ namespace rsl
       point& operator*=(const point& rhs);
       point& operator/=(const point& rhs);
 
-      point operator+(const int16 rhs) const;
-      point operator-(const int16 rhs) const;
-      point operator*(const int16 rhs) const;
-      point operator/(const int16 rhs) const;
+      point operator+(int16 rhs) const;
+      point operator-(int16 rhs) const;
+      point operator*(int16 rhs) const;
+      point operator/(int16 rhs) const;
 
-      point& operator+=(const int16 rhs);
-      point& operator-=(const int16 rhs);
-      point& operator*=(const int16 rhs);
-      point& operator/=(const int16 rhs);
+      point& operator+=(int16 rhs);
+      point& operator-=(int16 rhs);
+      point& operator*=(int16 rhs);
+      point& operator/=(int16 rhs);
 
       bool operator==(const point& point) const;
       bool operator!=(const point& point) const;

@@ -21,14 +21,14 @@ namespace rsl
   {
 
     template <class InputIterator, class OutputIterator>
-    constexpr OutputIterator reverse_copy(InputIterator first, InputIterator last, OutputIterator d_first)
+    constexpr OutputIterator reverse_copy(InputIterator first, InputIterator last, OutputIterator dstFirst)
     {
       while(first != last)
       {
-        *(d_first++) = *(--last);
+        *(dstFirst++) = *(--last);
       }
 
-      return d_first;
+      return dstFirst;
     }
 
   } // namespace v1

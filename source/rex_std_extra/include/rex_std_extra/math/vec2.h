@@ -24,31 +24,31 @@ namespace rsl
     {
     public:
       vec2();
-      vec2(const float32 x, const float32 y);
+      vec2(float32 x, float32 y);
 
       vec2 operator+(const vec2& rhs) const;
       vec2 operator-(const vec2& rhs) const;
-      vec2 operator*(const float32 scalar) const;
-      vec2 operator/(const float32 scalar) const;
+      vec2 operator*(float32 scalar) const;
+      vec2 operator/(float32 scalar) const;
 
       vec2& operator+=(const vec2& rhs);
       vec2& operator-=(const vec2& rhs);
-      vec2& operator*=(const float32 scalar);
-      vec2& operator/=(const float32 scalar);
+      vec2& operator*=(float32 scalar);
+      vec2& operator/=(float32 scalar);
 
       float32& operator[](card32 idx);
       float32 operator[](card32 idx) const;
 
       float32 dot(const vec2& other) const;
 
-      bool equals(const vec2& other, const float32 comparison_threshold = s_ComparisonThreshold) const;
+      bool equals(const vec2& other, float32 comparisonThreshold = s_comparison_threshold) const;
 
       bool operator==(const vec2& other) const;
       bool operator!=(const vec2& other) const;
 
       vec2 operator-() const;
 
-      vec2& set_length(const float32 length);
+      vec2& set_length(float32 length);
 
       vec2& normalise();
       vec2 normalised() const;
@@ -56,8 +56,8 @@ namespace rsl
       float32 length() const;
       float32 length_squared() const;
 
-      vec2& rotate(const RadAngle angle);
-      vec2 rotated(const RadAngle angle) const;
+      vec2& rotate(rad_angle angle);
+      vec2 rotated(rad_angle angle) const;
 
       vec2& scale(const vec2& scale);
       vec2 scaled(const vec2& scale) const;
@@ -73,10 +73,10 @@ namespace rsl
       float32 x, y;
 
     private:
-      static constexpr float32 s_ComparisonThreshold = 0.00005f;
+      static constexpr float32 s_comparison_threshold = 0.00005f;
     };
 
-    vec2 operator*(const float32 scalar, const vec2& vec2);
+    vec2 operator*(float32 scalar, const vec2& vec2);
 
   } // namespace v1
 } // namespace rsl

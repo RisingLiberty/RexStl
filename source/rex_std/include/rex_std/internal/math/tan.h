@@ -45,12 +45,12 @@ namespace rsl
       }
 
       template <typename T>
-      constexpr T tan_cf_recur(const T xx, const int depth, const int max_depth)
+      constexpr T tan_cf_recur(const T xx, const int depth, const int maxDepth)
       {
-        return (depth < max_depth ? // if
-                    T(2 * depth - 1) - xx / tan_cf_recur(xx, depth + 1, max_depth)
-                                  :
-                                  // else
+        return (depth < maxDepth ? // if
+                    T(2 * depth - 1) - xx / tan_cf_recur(xx, depth + 1, maxDepth)
+                                 :
+                                 // else
                     T(2 * depth - 1));
       }
 

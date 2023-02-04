@@ -16,11 +16,11 @@
 
 // Can't put this in a namespace
 // adding noexcept to avoid warnings on Windows
-void operator delete(void* ptr) noexcept
+void operator delete(void* ptr) noexcept // NOLINT(misc-new-delete-overloads)
 {
-  free(ptr);
+  free(ptr); // NOLINT(cppcoreguidelines-no-malloc)
 }
-void operator delete(void* ptr, size_t /*size*/) noexcept
+void operator delete(void* ptr, size_t /*size*/) noexcept // NOLINT(misc-new-delete-overloads)
 {
-  free(ptr);
+  free(ptr); // NOLINT(cppcoreguidelines-no-malloc)
 }
