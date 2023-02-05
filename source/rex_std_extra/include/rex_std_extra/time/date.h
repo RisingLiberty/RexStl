@@ -25,7 +25,7 @@ namespace rsl
     {
     public:
       date();
-      date(card32 weekDay, card32 monthData, card32 month, card32 year);
+      date(card32 weekDay, card32 monthDay, card32 month, card32 year);
 
       tiny_stack_string week_day() const;
       card32 month_day() const;

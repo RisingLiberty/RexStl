@@ -17,6 +17,6 @@
 
 rsl::time rsl::current_time()
 {
-  SYSTEMTIME sys_time = win::local_time();
+  const SYSTEMTIME sys_time = win::local_time();
   return time(sys_time.wHour, sys_time.wMinute, sys_time.wSecond);
 }

@@ -51,7 +51,7 @@ namespace rsl
 
       bool exists(value_type c) const
       {
-        rsl::make_unsigned_t<value_type> idx = static_cast<rsl::make_unsigned_t<value_type>>(c);
+        const rsl::make_unsigned_t<value_type> idx = static_cast<rsl::make_unsigned_t<value_type>>(c);
         return m_table[idx];
       }
 

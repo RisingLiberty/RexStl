@@ -33,12 +33,12 @@ rsl::vec4::vec4(const float32 x, const float32 y, const float32 z, const float32
 
 float32& rsl::vec4::operator[](card32 idx)
 {
-  float32* data = reinterpret_cast<float32*>(this);
+  float32* data = reinterpret_cast<float32*>(this); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
   return *(data + idx);
 }
 float rsl::vec4::operator[](card32 idx) const
 {
-  const float32* data = reinterpret_cast<const float32*>(this);
+  const float32* data = reinterpret_cast<const float32*>(this); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
   return *(data + idx);
 }
 

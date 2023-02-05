@@ -45,7 +45,7 @@ namespace rsl
       }
 
       template <typename T>
-      constexpr T atan_series_main(const T x)
+      constexpr T atan_series_main(const T x) // NOLINT(readability-function-cognitive-complexity)
       {
         return (x < T(3) ? atan_series_order(x, x, 1U, 10U) : // O(1/x^39)
                     x < T(4) ? atan_series_order(x, x, 1U, 9U)

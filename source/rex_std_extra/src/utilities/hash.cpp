@@ -22,5 +22,5 @@ rsl::hash_val rsl::hash_val::new_hash()
 
   seed     = hash_combine(seed, new_hash);
   new_hash = seed;
-  return new_hash;
+  return rsl::hash_val(new_hash);
 }

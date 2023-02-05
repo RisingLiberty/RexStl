@@ -14,7 +14,7 @@
 
 #include "rex_std/memory.h"
 
-rsl::debug_allocator::pointer rsl::debug_allocator::allocate([[maybe_unused]] const size_type size)
+rsl::debug_allocator::pointer rsl::debug_allocator::allocate([[maybe_unused]] const size_type size) // NOLINT(readability-convert-member-functions-to-static)
 {
 #ifndef RETAIL
   return static_cast<pointer>(operator new(size));
@@ -23,16 +23,16 @@ rsl::debug_allocator::pointer rsl::debug_allocator::allocate([[maybe_unused]] co
 #endif
 }
 
-void rsl::debug_allocator::deallocate(pointer ptr, const size_type size)
+void rsl::debug_allocator::deallocate(pointer ptr, const size_type size) // NOLINT(readability-convert-member-functions-to-static)
 {
   operator delete(ptr, size);
 }
 
-bool rsl::debug_allocator::operator==(const debug_allocator&) const
+bool rsl::debug_allocator::operator==(const debug_allocator& /*other*/) const
 {
   return true;
 }
-bool rsl::debug_allocator::operator!=(const debug_allocator&) const
+bool rsl::debug_allocator::operator!=(const debug_allocator& /*other*/) const
 {
   return false;
 }

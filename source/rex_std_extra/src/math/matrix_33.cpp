@@ -183,10 +183,10 @@ rsl::matrix33 rsl::matrix33::zero()
   return matrix33(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
 }
 
-void rsl::matrix33::rotate_x(const rad_angle rotX)
+void rsl::matrix33::rotate_x(const rad_angle angle)
 {
-  const float32 sa = rsl::sin(rotX.get());
-  const float32 ca = rsl::cos(rotX.get());
+  const float32 sa = rsl::sin(angle.get());
+  const float32 ca = rsl::cos(angle.get());
 
   float32 temp_1i = 0.0f;
 
@@ -197,10 +197,10 @@ void rsl::matrix33::rotate_x(const rad_angle rotX)
     elem(2, i) = temp_1i * sa + elem(2, i) * ca;
   }
 }
-void rsl::matrix33::rotate_y(const rad_angle rotY)
+void rsl::matrix33::rotate_y(const rad_angle angle)
 {
-  const float32 sa = rsl::sin(rotY.get());
-  const float32 ca = rsl::cos(rotY.get());
+  const float32 sa = rsl::sin(angle.get());
+  const float32 ca = rsl::cos(angle.get());
 
   float32 temp_0i = 0.0f;
 
@@ -211,10 +211,10 @@ void rsl::matrix33::rotate_y(const rad_angle rotY)
     elem(2, i) = elem(2, i) * ca - temp_0i * sa;
   }
 }
-void rsl::matrix33::rotate_z(const rad_angle rotZ)
+void rsl::matrix33::rotate_z(const rad_angle angle)
 {
-  const float32 sa = rsl::sin(rotZ.get());
-  const float32 ca = rsl::cos(rotZ.get());
+  const float32 sa = rsl::sin(angle.get());
+  const float32 ca = rsl::cos(angle.get());
 
   float32 temp_0i = 0.0f;
 
@@ -226,10 +226,10 @@ void rsl::matrix33::rotate_z(const rad_angle rotZ)
   }
 }
 
-rsl::matrix33& rsl::matrix33::set_rotate_x(const rad_angle rotX)
+rsl::matrix33& rsl::matrix33::set_rotate_x(const rad_angle angle)
 {
-  const float32 cosine = rsl::cos(rotX.get());
-  const float32 sine   = rsl::sin(rotX.get());
+  const float32 cosine = rsl::cos(angle.get());
+  const float32 sine   = rsl::sin(angle.get());
 
   elem(1, 1) = cosine;
   elem(1, 2) = -sine;
@@ -238,10 +238,10 @@ rsl::matrix33& rsl::matrix33::set_rotate_x(const rad_angle rotX)
 
   return *this;
 }
-rsl::matrix33& rsl::matrix33::set_rotate_y(const rad_angle rotY)
+rsl::matrix33& rsl::matrix33::set_rotate_y(const rad_angle angle)
 {
-  const float32 cosine = rsl::cos(rotY.get());
-  const float32 sine   = rsl::sin(rotY.get());
+  const float32 cosine = rsl::cos(angle.get());
+  const float32 sine   = rsl::sin(angle.get());
 
   elem(0, 0) = cosine;
   elem(0, 2) = sine;
@@ -250,10 +250,10 @@ rsl::matrix33& rsl::matrix33::set_rotate_y(const rad_angle rotY)
 
   return *this;
 }
-rsl::matrix33& rsl::matrix33::set_rotate_z(const rad_angle rotZ)
+rsl::matrix33& rsl::matrix33::set_rotate_z(const rad_angle angle)
 {
-  const float32 cosine = rsl::cos(rotZ.get());
-  const float32 sine   = rsl::sin(rotZ.get());
+  const float32 cosine = rsl::cos(angle.get());
+  const float32 sine   = rsl::sin(angle.get());
 
   elem(0, 0) = cosine;
   elem(0, 1) = -sine;
@@ -265,7 +265,7 @@ rsl::matrix33& rsl::matrix33::set_rotate_z(const rad_angle rotZ)
 
 void rsl::matrix33::swap_elements(card32 rowIdx, card32 columnIdx)
 {
-  float32 t               = elem(rowIdx, columnIdx);
-  elem(rowIdx, columnIdx) = elem(columnIdx, rowIdx);
-  elem(columnIdx, rowIdx) = t;
+  const float32 t         = elem(rowIdx, columnIdx);
+  elem(rowIdx, columnIdx) = elem(columnIdx, rowIdx); // NOLINT(readability-suspicious-call-argument)
+  elem(columnIdx, rowIdx) = t;                       // NOLINT(readability-suspicious-call-argument)
 }

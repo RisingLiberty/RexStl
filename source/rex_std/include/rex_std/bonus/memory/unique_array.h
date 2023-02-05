@@ -39,7 +39,7 @@ namespace rsl
           , m_count(0)
       {
       }
-      unique_array(rsl::nullptr_t)
+      unique_array(rsl::nullptr_t) // NOLINT(google-explicit-constructor)
           : m_ptr(nullptr)
           , m_count(0)
       {

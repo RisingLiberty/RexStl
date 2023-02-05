@@ -17,6 +17,6 @@
 
 rsl::date rsl::current_date()
 {
-  SYSTEMTIME sys_time = win::local_time();
+  const SYSTEMTIME sys_time = win::local_time();
   return rsl::date(sys_time.wDayOfWeek, sys_time.wDay, sys_time.wMonth, sys_time.wYear);
 }

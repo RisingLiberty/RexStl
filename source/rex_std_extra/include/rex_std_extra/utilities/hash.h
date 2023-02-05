@@ -42,7 +42,7 @@ namespace rsl
         c++;
       }
 
-      return (card32)hash_value;
+      return static_cast<card32>(hash_value);
     }
 #pragma warning(pop)
 
@@ -51,7 +51,7 @@ namespace rsl
     public:
       using type = card64;
 
-      constexpr hash_val(card64 hash)
+      constexpr explicit hash_val(card64 hash)
           : m_value(hash)
       {
       }

@@ -32,8 +32,8 @@ namespace rsl
       float32& elem(card32 row, card32 column);
       float32 elem(card32 row, card32 column) const;
 
-      matrix44 operator*(const matrix44& mat2) const;
-      matrix44& operator*=(const matrix44& mat2);
+      matrix44 operator*(const matrix44& other) const;
+      matrix44& operator*=(const matrix44& other);
 
       matrix44& transpose();
       matrix44& inverse();
@@ -57,9 +57,9 @@ namespace rsl
       static matrix44 identity();
       static matrix44 zero();
 
-      void rotate_x(rad_angle rotX);
-      void rotate_y(rad_angle rotY);
-      void rotate_z(rad_angle rotZ);
+      void rotate_x(rad_angle angle);
+      void rotate_y(rad_angle angle);
+      void rotate_z(rad_angle angle);
 
       matrix44& set_rotate_x(rad_angle angle);
       matrix44& set_rotate_y(rad_angle angle);

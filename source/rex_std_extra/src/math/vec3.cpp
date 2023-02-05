@@ -87,12 +87,12 @@ rsl::vec3 rsl::vec3::operator-() const
 
 float32& rsl::vec3::operator[](card32 idx)
 {
-  float32* data = reinterpret_cast<float32*>(this);
+  float32* data = reinterpret_cast<float32*>(this); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
   return *(data + idx);
 }
 float32 rsl::vec3::operator[](card32 idx) const
 {
-  const float32* data = reinterpret_cast<const float32*>(this);
+  const float32* data = reinterpret_cast<const float32*>(this); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
   return *(data + idx);
 }
 
@@ -178,32 +178,32 @@ rsl::vec3 rsl::vec3::scaled(const vec3& scale) const
 {
   return vec3(*this).scale(scale);
 }
-rsl::vec3& rsl::vec3::floor(const vec3& floor)
+rsl::vec3& rsl::vec3::floor(const vec3& scale)
 {
-  x = min(x, floor.x);
-  y = min(y, floor.y);
-  z = min(z, floor.z);
+  x = (min)(x, scale.x);
+  y = (min)(y, scale.y);
+  z = (min)(z, scale.z);
   return *this;
 }
-rsl::vec3 rsl::vec3::floored(const vec3& floor) const
+rsl::vec3 rsl::vec3::floored(const vec3& scale) const
 {
-  float32 new_x = min(x, floor.x);
-  float32 new_y = min(y, floor.y);
-  float32 new_z = min(z, floor.z);
+  const float32 new_x = (min)(x, scale.x);
+  const float32 new_y = (min)(y, scale.y);
+  const float32 new_z = (min)(z, scale.z);
   return vec3(new_x, new_y, new_z);
 }
-rsl::vec3& rsl::vec3::ceil(const vec3& ceil)
+rsl::vec3& rsl::vec3::ceil(const vec3& scale)
 {
-  x = max(x, ceil.x);
-  y = max(y, ceil.y);
-  z = max(z, ceil.z);
+  x = max(x, scale.x);
+  y = max(y, scale.y);
+  z = max(z, scale.z);
   return *this;
 }
-rsl::vec3 rsl::vec3::ceiled(const vec3& ceil) const
+rsl::vec3 rsl::vec3::ceiled(const vec3& scale) const
 {
-  float32 new_x = max(x, ceil.x);
-  float32 new_y = max(y, ceil.y);
-  float32 new_z = max(z, ceil.z);
+  const float32 new_x = max(x, scale.x);
+  const float32 new_y = max(y, scale.y);
+  const float32 new_z = max(z, scale.z);
   return vec3(new_x, new_y, new_z);
 }
 

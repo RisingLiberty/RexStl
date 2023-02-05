@@ -32,8 +32,8 @@ namespace rsl
       float32& elem(card32 row, card32 column);
       float32 elem(card32 row, card32 column) const;
 
-      matrix33 operator*(const matrix33& mat2) const;
-      matrix33& operator*=(const matrix33& mat2);
+      matrix33 operator*(const matrix33& other) const;
+      matrix33& operator*=(const matrix33& other);
 
       matrix33& transpose();
       matrix33& inverse();
@@ -57,9 +57,9 @@ namespace rsl
       static matrix33 identity();
       static matrix33 zero();
 
-      void rotate_x(rad_angle rotX);
-      void rotate_y(rad_angle rotY);
-      void rotate_z(rad_angle rotZ);
+      void rotate_x(rad_angle angle);
+      void rotate_y(rad_angle angle);
+      void rotate_z(rad_angle angle);
 
       matrix33& set_rotate_x(rad_angle angle);
       matrix33& set_rotate_y(rad_angle angle);

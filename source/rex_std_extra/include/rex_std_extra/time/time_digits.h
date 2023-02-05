@@ -22,11 +22,10 @@ namespace rsl
   {
     struct time_digits
     {
-      time_digits(card32 value)
+      explicit time_digits(card32 value)
+          : high(static_cast<char>(value * 0.1f))     // NOLINT(cppcoreguidelines-narrowing-conversions)
+          , low(static_cast<char>(value - high * 10)) // NOLINT(cppcoreguidelines-narrowing-conversions)
       {
-        high = static_cast<char>(value * 0.1f);
-        low  = static_cast<char>(value - high * 10);
-
         high += '0';
         low += '0';
       }
@@ -38,7 +37,7 @@ namespace rsl
     template <>
     struct formatter<time_digits>
     {
-      auto parse(format_parse_context& ctx) const -> decltype(ctx.begin())
+      auto parse(format_parse_context& ctx) const -> decltype(ctx.begin()) // NOLINT(readability-convert-member-functions-to-static)
       {
         return ctx.begin();
       }

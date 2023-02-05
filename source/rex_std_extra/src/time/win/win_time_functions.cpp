@@ -30,7 +30,7 @@ FILETIME rsl::win::to_local_time(const FILETIME& time)
 }
 SYSTEMTIME rsl::win::to_local_sys_time(const FILETIME& time)
 {
-  FILETIME local_file_time = to_local_time(time);
+  const FILETIME local_file_time = to_local_time(time);
   SYSTEMTIME sys_time;
   FileTimeToSystemTime(&local_file_time, &sys_time);
 
@@ -39,8 +39,8 @@ SYSTEMTIME rsl::win::to_local_sys_time(const FILETIME& time)
 
 SYSTEMTIME rsl::win::local_time()
 {
-  FILETIME file_time       = system_time();
-  FILETIME local_file_time = to_local_time(file_time);
+  const FILETIME file_time       = system_time();
+  const FILETIME local_file_time = to_local_time(file_time);
   SYSTEMTIME sys_time;
   FileTimeToSystemTime(&local_file_time, &sys_time);
 
@@ -54,7 +54,7 @@ card64 rsl::win::to_integer(const FILETIME& time)
   value.LowPart  = time.dwLowDateTime;
   value.HighPart = time.dwHighDateTime;
 
-  return value.QuadPart;
+  return static_cast<card64>(value.QuadPart);
 }
 
 rsl::date rsl::win::date(const SYSTEMTIME& date)

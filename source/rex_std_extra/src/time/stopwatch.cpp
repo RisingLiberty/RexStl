@@ -33,7 +33,7 @@ float32 rsl::stopwatch::time_in_seconds() const
 }
 float32 rsl::stopwatch::time_in_ms() const
 {
-  float32 duration = m_end - m_start;
+  const float32 duration = m_end - m_start;
   return duration - m_paused_time_in_ms;
 }
 
@@ -44,6 +44,6 @@ void rsl::stopwatch::pause()
 
 void rsl::stopwatch::resume()
 {
-  rsl::time_point pause_end = current_timepoint();
+  const rsl::time_point pause_end = current_timepoint();
   m_paused_time_in_ms += pause_end - m_pause_start;
 }

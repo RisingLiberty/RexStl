@@ -299,32 +299,32 @@ float32 rsl::matrix44::mul_element(card32 row, card32 col, const matrix44& m2)
 
 rsl::matrix44 rsl::matrix44::simd_mul(const matrix44& m2)
 {
-  float32 e00 = mul_element(0, 0, m2);
-  float32 e01 = mul_element(0, 1, m2);
-  float32 e02 = mul_element(0, 2, m2);
-  float32 e03 = mul_element(0, 3, m2);
+  const float32 e00 = mul_element(0, 0, m2);
+  const float32 e01 = mul_element(0, 1, m2);
+  const float32 e02 = mul_element(0, 2, m2);
+  const float32 e03 = mul_element(0, 3, m2);
 
-  float32 e10 = mul_element(1, 0, m2);
-  float32 e11 = mul_element(1, 1, m2);
-  float32 e12 = mul_element(1, 2, m2);
-  float32 e13 = mul_element(1, 3, m2);
+  const float32 e10 = mul_element(1, 0, m2);
+  const float32 e11 = mul_element(1, 1, m2);
+  const float32 e12 = mul_element(1, 2, m2);
+  const float32 e13 = mul_element(1, 3, m2);
 
-  float32 e20 = mul_element(2, 0, m2);
-  float32 e21 = mul_element(2, 1, m2);
-  float32 e22 = mul_element(2, 2, m2);
-  float32 e23 = mul_element(2, 3, m2);
+  const float32 e20 = mul_element(2, 0, m2);
+  const float32 e21 = mul_element(2, 1, m2);
+  const float32 e22 = mul_element(2, 2, m2);
+  const float32 e23 = mul_element(2, 3, m2);
 
-  float32 e30 = mul_element(3, 0, m2);
-  float32 e31 = mul_element(3, 1, m2);
-  float32 e32 = mul_element(3, 2, m2);
-  float32 e33 = mul_element(3, 3, m2);
+  const float32 e30 = mul_element(3, 0, m2);
+  const float32 e31 = mul_element(3, 1, m2);
+  const float32 e32 = mul_element(3, 2, m2);
+  const float32 e33 = mul_element(3, 3, m2);
 
   return matrix44(e00, e01, e02, e03, e10, e11, e12, e13, e20, e21, e22, e23, e30, e31, e32, e33);
 }
 
 void rsl::matrix44::swap_elements(card32 rowIdx, card32 columnIdx)
 {
-  float32 t               = elem(rowIdx, columnIdx);
-  elem(rowIdx, columnIdx) = elem(columnIdx, rowIdx);
-  elem(columnIdx, rowIdx) = t;
+  const float32 t         = elem(rowIdx, columnIdx);
+  elem(rowIdx, columnIdx) = elem(columnIdx, rowIdx); // NOLINT(readability-suspicious-call-argument)
+  elem(columnIdx, rowIdx) = t;                       // NOLINT(readability-suspicious-call-argument)
 }

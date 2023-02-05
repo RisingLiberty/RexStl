@@ -18,14 +18,13 @@ namespace rsl
 {
   inline namespace v1
   {
-
     class wrapped_index
     {
     public:
       wrapped_index(card32 min, card32 max);
       wrapped_index(card32 value, card32 min, card32 max);
 
-      operator card32() const;
+      operator card32() const; // NOLINT(google-explicit-constructor)
 
       void increment(card32 incSize = 1);
       void decrement(card32 decSize = 1);

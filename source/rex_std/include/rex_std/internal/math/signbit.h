@@ -22,22 +22,22 @@ namespace rsl
   {
     constexpr bool signbit(int8 arg)
     {
-      return arg & 0x80;
+      return arg & 0x80; // NOLINT(hicpp-signed-bitwise, readability-implicit-bool-conversion)
     }
     constexpr bool signbit(int16 arg)
     {
-      return arg & 0x8000;
+      return arg & 0x8000; // NOLINT(hicpp-signed-bitwise, readability-implicit-bool-conversion)
     }
     constexpr bool signbit(int32 arg)
     {
-      return arg & 0x80000000;
+      return arg & 0x80000000; // NOLINT(hicpp-signed-bitwise, readability-implicit-bool-conversion)
     }
     constexpr bool signbit(int64 arg)
     {
-      return arg & 0x8000000000000000;
+      return arg & 0x8000000000000000; // NOLINT(hicpp-signed-bitwise, readability-implicit-bool-conversion)
     }
     template <typename Unsigned>
-    constexpr bool signbit(Unsigned arg)
+    constexpr bool signbit(Unsigned /*arg*/)
     {
       static_assert(rsl::is_integral_v<Unsigned>, "arg must be an integral type");
       static_assert(rsl::is_unsigned_v<Unsigned>, "arg must be unsigned");
@@ -47,19 +47,19 @@ namespace rsl
     constexpr bool signbit(float32 arg)
     {
       // type punning is undefined behavior
-      int32 arg_int = static_cast<int32>(arg);
+      const int32 arg_int = static_cast<int32>(arg);
       return signbit(arg_int);
     }
     constexpr bool signbit(float64 arg)
     {
       // type punning is undefined behavior
-      int64 arg_int = static_cast<int64>(arg);
+      const int64 arg_int = static_cast<int64>(arg);
       return signbit(arg_int);
     }
     constexpr bool signbit(lfloat64 arg)
     {
       // type punning is undefined behavior
-      int64 arg_int = static_cast<int64>(arg);
+      const int64 arg_int = static_cast<int64>(arg);
       return signbit(arg_int);
     }
 

@@ -25,9 +25,8 @@ rsl::clock::clock()
 
 void rsl::clock::update()
 {
-  rsl::time_point current_time = rsl::current_timepoint();
-
-  float32 duration = current_time - m_current_time;
+  const rsl::time_point current_time = rsl::current_timepoint();
+  const float32 duration             = current_time - m_current_time;
 
   m_delta_time = m_is_paused ? 0 : duration;
 

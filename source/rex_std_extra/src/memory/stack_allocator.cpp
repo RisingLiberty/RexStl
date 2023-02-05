@@ -13,7 +13,7 @@
 #include "rex_std_extra/memory/stack_allocator.h"
 
 rsl::stack_allocator::stack_allocator(size_type size)
-    : m_base_ptr(rsl::make_unique<rsl::byte[]>(size))
+    : m_base_ptr(rsl::make_unique<rsl::byte[]>(size)) // NOLINT(modernize-avoid-c-arrays)
     , m_current_marker(0)
 {
 }
@@ -26,7 +26,7 @@ rsl::stack_allocator::pointer rsl::stack_allocator::allocate(const size_type siz
   m_current_marker += size;
   return mem;
 }
-void rsl::stack_allocator::deallocate(pointer, const size_type)
+void rsl::stack_allocator::deallocate(pointer /*ptr*/, const size_type /*size*/)
 {
   // Nothing to implement
 }

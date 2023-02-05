@@ -25,7 +25,7 @@ namespace rsl
     {
     public:
       version(card8 major, card8 minor, card32 patch);
-      version(string_view version);
+      explicit version(string_view version);
 
       card8 major() const;
       card8 minor() const;

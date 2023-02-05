@@ -74,12 +74,12 @@ rsl::vec2& rsl::vec2::operator/=(const float32 scalar)
 
 float32& rsl::vec2::operator[](card32 idx)
 {
-  float32* data = reinterpret_cast<float32*>(this);
+  float32* data = reinterpret_cast<float32*>(this); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
   return *(data + idx);
 }
 float32 rsl::vec2::operator[](card32 idx) const
 {
-  const float32* data = reinterpret_cast<const float32*>(this);
+  const float32* data = reinterpret_cast<const float32*>(this); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
   return *(data + idx);
 }
 
@@ -114,14 +114,14 @@ rsl::vec2& rsl::vec2::set_length(const float32 length)
 
 rsl::vec2& rsl::vec2::normalise()
 {
-  float32 vec_inv_length = 1 / length();
+  const float32 vec_inv_length = 1 / length();
   x *= vec_inv_length;
   y *= vec_inv_length;
   return *this;
 }
 rsl::vec2 rsl::vec2::normalised() const
 {
-  float32 vec_inv_length = 1 / length();
+  const float32 vec_inv_length = 1 / length();
   return vec2(x * vec_inv_length, y * vec_inv_length);
 }
 

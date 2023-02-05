@@ -22,7 +22,7 @@ namespace rsl
     class timer
     {
     public:
-      timer(float32 maxTimeInSeconds);
+      explicit timer(float32 maxTimeInSeconds);
 
       void update();
       void reset();

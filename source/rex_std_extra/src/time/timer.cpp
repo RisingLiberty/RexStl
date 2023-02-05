@@ -21,7 +21,7 @@ rsl::timer::timer(float32 maxTimeInSeconds)
 
 void rsl::timer::update()
 {
-  rsl::time_point now = current_timepoint();
+  const rsl::time_point now = current_timepoint();
   m_current_time += m_prev_time_point - now;
   m_prev_time_point = now;
 }

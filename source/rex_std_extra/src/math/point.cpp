@@ -25,88 +25,88 @@ rsl::point::point(int16 x, int16 y)
 
 rsl::point rsl::point::operator+(const point& rhs) const
 {
-  return rsl::point(x + rhs.x, y + rhs.y);
+  return rsl::point(x + rhs.x, y + rhs.y); // NOLINT(cppcoreguidelines-narrowing-conversions)
 }
 rsl::point rsl::point::operator-(const point& rhs) const
 {
-  return rsl::point(x - rhs.x, y - rhs.y);
+  return rsl::point(x - rhs.x, y - rhs.y); // NOLINT(cppcoreguidelines-narrowing-conversions)
 }
 rsl::point rsl::point::operator*(const point& rhs) const
 {
-  return rsl::point(x * rhs.x, y * rhs.y);
+  return rsl::point(x * rhs.x, y * rhs.y); // NOLINT(cppcoreguidelines-narrowing-conversions)
 }
 rsl::point rsl::point::operator/(const point& rhs) const
 {
-  return rsl::point(x / rhs.x, y / rhs.y);
+  return rsl::point(x / rhs.x, y / rhs.y); // NOLINT(cppcoreguidelines-narrowing-conversions)
 }
 
 rsl::point& rsl::point::operator+=(const point& rhs)
 {
-  x += rhs.x;
-  y += rhs.y;
+  x += rhs.x; // NOLINT(cppcoreguidelines-narrowing-conversions)
+  y += rhs.y; // NOLINT(cppcoreguidelines-narrowing-conversions)
   return *this;
 }
 rsl::point& rsl::point::operator-=(const point& rhs)
 {
-  x -= rhs.x;
-  y -= rhs.y;
+  x -= rhs.x; // NOLINT(cppcoreguidelines-narrowing-conversions)
+  y -= rhs.y; // NOLINT(cppcoreguidelines-narrowing-conversions)
   return *this;
 }
 rsl::point& rsl::point::operator*=(const point& rhs)
 {
-  x *= rhs.x;
-  y *= rhs.y;
+  x *= rhs.x; // NOLINT(cppcoreguidelines-narrowing-conversions)
+  y *= rhs.y; // NOLINT(cppcoreguidelines-narrowing-conversions)
   return *this;
 }
 rsl::point& rsl::point::operator/=(const point& rhs)
 {
-  x /= rhs.x;
-  y /= rhs.y;
+  x /= rhs.x; // NOLINT(cppcoreguidelines-narrowing-conversions)
+  y /= rhs.y; // NOLINT(cppcoreguidelines-narrowing-conversions)
   return *this;
 }
 
 rsl::point rsl::point::operator+(const int16 rhs) const
 {
-  return rsl::point(x + rhs, y + rhs);
+  return rsl::point(x + rhs, y + rhs); // NOLINT(cppcoreguidelines-narrowing-conversions)
 }
 
 rsl::point rsl::point::operator-(const int16 rhs) const
 {
-  return rsl::point(x - rhs, y - rhs);
+  return rsl::point(x - rhs, y - rhs); // NOLINT(cppcoreguidelines-narrowing-conversions)
 }
 
 rsl::point rsl::point::operator*(const int16 rhs) const
 {
-  return rsl::point(x * rhs, y * rhs);
+  return rsl::point(x * rhs, y * rhs); // NOLINT(cppcoreguidelines-narrowing-conversions)
 }
 
 rsl::point rsl::point::operator/(const int16 rhs) const
 {
-  return rsl::point(x / rhs, y / rhs);
+  return rsl::point(x / rhs, y / rhs); // NOLINT(cppcoreguidelines-narrowing-conversions)
 }
 
 rsl::point& rsl::point::operator+=(const int16 rhs)
 {
-  x += rhs;
-  y += rhs;
+  x += rhs; // NOLINT(cppcoreguidelines-narrowing-conversions)
+  y += rhs; // NOLINT(cppcoreguidelines-narrowing-conversions)
   return *this;
 }
 rsl::point& rsl::point::operator-=(const int16 rhs)
 {
-  x -= rhs;
-  y -= rhs;
+  x -= rhs; // NOLINT(cppcoreguidelines-narrowing-conversions)
+  y -= rhs; // NOLINT(cppcoreguidelines-narrowing-conversions)
   return *this;
 }
 rsl::point& rsl::point::operator*=(const int16 rhs)
 {
-  x *= rhs;
-  y *= rhs;
+  x *= rhs; // NOLINT(cppcoreguidelines-narrowing-conversions)
+  y *= rhs; // NOLINT(cppcoreguidelines-narrowing-conversions)
   return *this;
 }
 rsl::point& rsl::point::operator/=(const int16 rhs)
 {
-  x /= rhs;
-  y /= rhs;
+  x /= rhs; // NOLINT(cppcoreguidelines-narrowing-conversions)
+  y /= rhs; // NOLINT(cppcoreguidelines-narrowing-conversions)
   return *this;
 }
 
@@ -121,7 +121,7 @@ bool rsl::point::operator!=(const point& point) const
 
 rsl::point rsl::point::operator-() const
 {
-  return rsl::point(-x, -y);
+  return rsl::point(-x, -y); // NOLINT(cppcoreguidelines-narrowing-conversions)
 }
 
 rsl::ostream& rsl::operator<<(ostream& os, const point& point)

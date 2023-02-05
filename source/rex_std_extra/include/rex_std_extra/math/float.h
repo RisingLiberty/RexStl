@@ -12,6 +12,7 @@
 
 #pragma once
 
+#include "rex_std/bonus/types.h"
 #include "rex_std/internal/math/abs.h"
 
 namespace rsl
@@ -21,7 +22,7 @@ namespace rsl
 
     constexpr bool equals(float32 lhs, float32 rhs, float32 comparisonThreshold = 0.0001f)
     {
-      float32 val = lhs - rhs;
+      const float32 val = lhs - rhs;
       return rsl::internal::abs(val) < comparisonThreshold;
     }
 

@@ -103,7 +103,7 @@ namespace rsl
           return NAN;
         }
 
-        return x - (int)(x / div) * div;
+        return x - static_cast<card32>(x / div) * div;
       }
 
       template <typename T>
@@ -140,13 +140,13 @@ namespace rsl
       template <typename T>
       constexpr T round_downward(T arg)
       {
-        int64 target = static_cast<int64>(arg);
+        const int64 target = static_cast<int64>(arg);
         return static_cast<T>(target);
       }
       template <typename T>
       constexpr T round_to_nearest(T arg)
       {
-        int64 target = static_cast<int64>(arg);
+        const int64 target = static_cast<int64>(arg);
         if(arg - target > 0.5f)
         {
           return static_cast<T>(target + 1);
@@ -159,7 +159,7 @@ namespace rsl
       template <typename T>
       constexpr T round_upward(T arg)
       {
-        int64 target = static_cast<int64>(arg);
+        const int64 target = static_cast<int64>(arg);
         return static_cast<T>(target + 1);
       }
       template <typename T>
@@ -311,7 +311,7 @@ namespace rsl
     // the standard cast this value to a double and then performs rounding.
     // for optimization purposes, we just return the input as there's no point rounding an int
     template <typename IntegralType>
-    constexpr float64 rint(IntegralType arg, rounding_mode rmode = rounding_mode::to_nearest)
+    constexpr float64 rint(IntegralType arg, rounding_mode /*rmode*/ = rounding_mode::to_nearest)
     {
       static_assert(rsl::is_integral_v<IntegralType>, "arg must be an integral type");
       return arg;
@@ -340,7 +340,7 @@ namespace rsl
     // the standard cast this value to a double and then performs rounding.
     // for optimization purposes, we just return the input as there's no point rounding an int
     template <typename IntegralType>
-    constexpr long lrint(IntegralType arg, rounding_mode rmode = rounding_mode::to_nearest)
+    constexpr long lrint(IntegralType arg, rounding_mode /*rmode*/ = rounding_mode::to_nearest)
     {
       static_assert(rsl::is_integral_v<IntegralType>, "arg must be an integral type");
       return arg;
@@ -370,7 +370,7 @@ namespace rsl
     // the standard cast this value to a double and then performs rounding.
     // for optimization purposes, we just return the input as there's no point rounding an int
     template <typename IntegralType>
-    constexpr int64 llrint(IntegralType arg, rounding_mode rmode = rounding_mode::to_nearest)
+    constexpr int64 llrint(IntegralType arg, rounding_mode /*rmode*/ = rounding_mode::to_nearest)
     {
       static_assert(rsl::is_integral_v<IntegralType>, "arg must be an integral type");
       return arg;
