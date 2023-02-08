@@ -9,3 +9,18 @@
 // Copyright (c) Nick De Breuck 2022
 //
 // ============================================
+
+#include "rex_std/new.h"
+
+#include <cstdlib>
+
+void* operator new(size_t size)
+{
+  malloc(size);
+}
+
+void* operator new(size_t size, void* where) noexcept
+{
+  (void)size;
+  return where;
+}
