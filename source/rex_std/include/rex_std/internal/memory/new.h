@@ -14,5 +14,5 @@
 
 #include "rex_std/bonus/types.h"
 
-void* operator new(size_t size);
-void* operator new(size_t size, void* where) noexcept;
+// void* operator new(size_t size);
+// void* operator new(size_t size, void* where) noexcept;
