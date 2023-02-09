@@ -29,7 +29,7 @@ namespace rsl
       template <typename T>
       constexpr T sqrt_recur(const T x, const T xn, const int count)
       {
-        return (abs(xn - x / xn) / (T(1) + xn) < numeric_limits<T>::min() ? // if
+        return (abs(xn - x / xn) / (T(1) + xn) < (numeric_limits<T>::min)() ? // if
                     xn
                                                                           : count < sqrt_max_iter ? // else
                                                                                 sqrt_recur(x, T(0.5) * (xn + x / xn), count + 1)
@@ -47,8 +47,8 @@ namespace rsl
                     is_posinf(x) ? x
                                  :
                                  // indistinguishable from zero or one
-                    numeric_limits<T>::min() > abs(x)      ? T(0)
-                : numeric_limits<T>::min() > abs(T(1) - x) ? x
+                    (numeric_limits<T>::min)() > abs(x)      ? T(0)
+                : (numeric_limits<T>::min)() > abs(T(1) - x) ? x
                                                            :
                                                            // else
                     x > T(4) ? sqrt_check(x / T(4), T(2) * mVal)
