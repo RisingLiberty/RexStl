@@ -12,9 +12,9 @@
 
 #pragma once
 
+#include "rex_std/internal/type_traits/enable_if.h"
 #include "rex_std/internal/type_traits/is_enum.h"
 #include "rex_std/internal/type_traits/is_integral.h"
-#include "rex_std/internal/type_traits/enable_if.h"
 
 namespace rsl
 {

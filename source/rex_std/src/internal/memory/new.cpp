@@ -14,13 +14,13 @@
 
 #include <cstdlib>
 
-//void* operator new(size_t size)
+// void* operator new(size_t size)
 //{
-//  return malloc(size);
-//}
+//   return malloc(size);
+// }
 //
-//void* operator new(size_t size, void* where) noexcept
+// void* operator new(size_t size, void* where) noexcept
 //{
-//  (void)size;
-//  return where;
-//}
+//   (void)size;
+//   return where;
+// }
