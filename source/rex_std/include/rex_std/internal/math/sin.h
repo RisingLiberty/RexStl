@@ -36,14 +36,14 @@ namespace rsl
             is_nan(x) ? numeric_limits<T>::quiet_nan() :
                       // indistinguishable from zero
                 (numeric_limits<T>::min)() > abs(x) ? T(0) // NOLINT(google-readability-casting)
-                                                  :
-                                                  // special cases: pi/2 and pi
+                                                    :
+                                                    // special cases: pi/2 and pi
                 (numeric_limits<T>::min)() > abs(x - T(rsl::half_pi_v<lfloat64>)) ? T(1)  // NOLINT(google-readability-casting)
             : (numeric_limits<T>::min)() > abs(x + T(rsl::half_pi_v<lfloat64>))   ? -T(1) // NOLINT(google-readability-casting)
             : (numeric_limits<T>::min)() > abs(x - T(rsl::pi_v<lfloat64>))        ? T(0)  // NOLINT(google-readability-casting)
             : (numeric_limits<T>::min)() > abs(x + T(rsl::pi_v<lfloat64>))        ? -T(0) // NOLINT(google-readability-casting)
-                                                                                :
-                                                                         // else
+                                                                                  :
+                                                                           // else
                 sin_compute(tan(x / T(2)))); // NOLINT(google-readability-casting)
       }
     } // namespace internal

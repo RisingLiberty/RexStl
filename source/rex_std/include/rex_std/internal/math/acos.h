@@ -32,8 +32,8 @@ namespace rsl
                           // indistinguishable from one or zero
                 (numeric_limits<T>::min)() > abs(x - T(1)) ? T(0)
             : (numeric_limits<T>::min)() > abs(x)          ? T(rsl::half_pi_v<float64>)
-                                                         :
-                                                // else
+                                                           :
+                                                  // else
                 atan(sqrt(T(1) - x * x) / x));
       }
 

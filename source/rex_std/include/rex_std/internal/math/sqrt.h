@@ -31,9 +31,9 @@ namespace rsl
       {
         return (abs(xn - x / xn) / (T(1) + xn) < (numeric_limits<T>::min)() ? // if
                     xn
-                                                                          : count < sqrt_max_iter ? // else
-                                                                                sqrt_recur(x, T(0.5) * (xn + x / xn), count + 1)
-                                                                                                  : xn);
+                                                                            : count < sqrt_max_iter ? // else
+                                                                                  sqrt_recur(x, T(0.5) * (xn + x / xn), count + 1)
+                                                                                                    : xn);
       }
 
       template <typename T>
@@ -49,8 +49,8 @@ namespace rsl
                                  // indistinguishable from zero or one
                     (numeric_limits<T>::min)() > abs(x)      ? T(0)
                 : (numeric_limits<T>::min)() > abs(T(1) - x) ? x
-                                                           :
-                                                           // else
+                                                             :
+                                                             // else
                     x > T(4) ? sqrt_check(x / T(4), T(2) * mVal)
                              : mVal * sqrt_recur(x, x / T(2), 0));
       }
