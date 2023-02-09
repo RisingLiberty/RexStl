@@ -12,8 +12,7 @@
 
 #pragma once
 
-void* operator new(size_t size);
-void* operator new(size_t size, void* where) noexcept;
+//#include "rex_std/internal/memory/new.h"
 
 //#include "rex_std/bonus/defines.h"
 //#include "rex_std/disable_std_checking.h"
