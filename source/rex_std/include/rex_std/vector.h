@@ -386,7 +386,7 @@ namespace rsl
       // Returns the maximum number of elements the container is able to hold.
       size_type max_size() const
       {
-        return rsl::numeric_limits<difference_type>::max();
+        return (rsl::numeric_limits<difference_type>::max)();
       }
       // Returns the number of elements that the container has currently allocated space for.
       size_type capacity() const
