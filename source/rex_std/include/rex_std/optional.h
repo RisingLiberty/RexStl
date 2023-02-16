@@ -166,7 +166,7 @@ namespace rsl
 
       private:
         bool m_has_value;
-        aligned_storage<value_type> m_val {};
+        aligned_storage_t<value_type> m_val {};
       };
 
       template <typename T>
@@ -183,13 +183,13 @@ namespace rsl
         constexpr explicit optional_storage(const value_type& v)
             : m_has_value(true)
         {
-          m_val.set(v);
+          m_val.set<value_type>(v);
         }
 
         constexpr explicit optional_storage(value_type&& v)
             : m_has_value(true)
         {
-          m_val.set(rsl::move(v));
+          m_val.set<value_type>(rsl::move(v));
         }
 
         template <typename... Args>
@@ -212,7 +212,7 @@ namespace rsl
         template <typename... Args>
         constexpr void construct_value(Args&&... args)
         {
-          m_val.set(rsl::forward<Args>(args)...);
+          m_val.set<value_type>(rsl::forward<Args>(args)...);
         }
         constexpr void destroy_value() {}
 
@@ -234,11 +234,11 @@ namespace rsl
         }
         constexpr const value_type& val() const
         {
-          return *m_val.get();
+          return *m_val.get<value_type>();
         }
         constexpr value_type& val()
         {
-          return *m_val.get();
+          return *m_val.get<value_type>();
         }
 
         constexpr void swap(optional_storage<value_type>& other)
@@ -269,7 +269,7 @@ namespace rsl
 
       private:
         bool m_has_value;
-        aligned_storage<value_type> m_val {};
+        aligned_storage_t<value_type> m_val {};
       };
     } // namespace internal
 

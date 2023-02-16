@@ -129,7 +129,7 @@ namespace rsl
         using value_type     = T;
         using pointer        = T*;
         using allocator_type = allocator;
-        using storage_type   = rsl::aligned_storage<T>;
+        using storage_type   = rsl::aligned_storage_t<T>;
 
         pointer value()
         {
