@@ -13,3 +13,4 @@
 #pragma once
 
 #include "rex_std/internal/mutex/mutex.h"
+#include "rex_std/internal/mutex/unique_lock.h"
