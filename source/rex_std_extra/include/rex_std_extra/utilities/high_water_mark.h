@@ -19,40 +19,130 @@ namespace rsl
   inline namespace v1
   {
 
+    template <typename T>
     class high_water_mark
     {
     public:
-      explicit high_water_mark(card32 maxValue);
-      high_water_mark(card32 initValue, card32 maxValue);
+      explicit high_water_mark(T initValue)
+        : m_value(initValue)
+        , m_max_value(initValue)
+      {
+      }
+      high_water_mark(T initValue, T maxValue)
+        : m_value(initValue)
+        , m_max_value(maxValue)
+      {
+      }
 
-      high_water_mark& operator++();
-      high_water_mark operator++(int);
+      high_water_mark& operator++()
+      {
+        ++m_value;
+        m_max_value = rsl::max(m_max_value, m_value);
+        return *this;
+      }
+      high_water_mark operator++(int)
+      {
+        const card32 tmp = m_value;
+        ++m_value;
+        m_max_value = rsl::max(m_max_value, m_value);
+        return rsl::high_water_mark(tmp, m_max_value);
+      }
 
-      high_water_mark& operator--();
-      high_water_mark operator--(int);
+      high_water_mark& operator--()
+      {
+        --m_value;
+        return *this;
+      }
+      high_water_mark operator--(int)
+      {
+        const card32 tmp = m_value;
+        --m_value;
+        return rsl::high_water_mark(tmp, m_max_value);
+      }
 
-      high_water_mark operator+(int32 val) const;
-      high_water_mark& operator+=(int32 val);
+      template <typename U>
+      high_water_mark operator+(U val) const
+      {
+        return high_water_mark(m_value + val);
+      }
+      template <typename U>
+      high_water_mark& operator+=(U val)
+      {
+        m_value += val;
+        m_max_value = max(m_max_value, m_value);
+        return *this;
+      }
 
-      high_water_mark operator-(int32 val) const;
-      high_water_mark& operator-=(int32 val);
+      template <typename U>
+      high_water_mark operator-(U val) const
+      {
+        return high_water_mark(m_value - val);
+      }
+      template <typename U>
+      high_water_mark& operator-=(U val)
+      {
+        // there's no guarantee that val is positive
+        // so the subtraction could actually INCREASE the value
+        // which is wh we have to use max here
+        m_value -= val;
+        m_max_value = max(m_max_value, m_value);
+        return *this;
+      }
 
-      high_water_mark operator*(int32 val) const;
-      high_water_mark& operator*=(int32 val);
+      template <typename U>
+      high_water_mark operator*(U val) const
+      {
+        return high_water_mark(m_value * val);
+      }
+      template <typename U>
+      high_water_mark& operator*=(U val)
+      {
+        m_value *= val;
+        m_max_value = max(m_max_value, m_value);
+        return *this;
+      }
 
-      high_water_mark operator/(int32 val) const;
-      high_water_mark& operator/=(int32 val);
 
-      high_water_mark operator%(int32 val) const;
-      high_water_mark& operator%=(int32 val);
+      template <typename U>
+      high_water_mark operator/(U val) const
+      {
+        return high_water_mark(m_value / val);
+      }
+      template <typename U>
+      high_water_mark& operator/=(U val)
+      {
+        m_value /= val;
+        return *this;
+      }
 
-      operator card32() const; // NOLINT(google-explicit-constructor)
-      card32 value() const;
-      card32 max_value() const;
+      template <typename U>
+      high_water_mark operator%(U val) const
+      {
+        return high_water_mark(m_value % val);
+      }
+      template <typename U>
+      high_water_mark& operator%=(U val)
+      {
+        m_value %= val;
+        return *this;
+      }
+
+      operator T() const // NOLINT(google-explicit-constructor
+      {
+        return value();
+      }
+      T value() const
+      {
+        return m_value;
+      }
+      T max_value() const
+      {
+        return m_max_value;
+      }
 
     private:
-      card32 m_value;
-      card32 m_max_value;
+      T m_value;
+      T m_max_value;
     };
 
   } // namespace v1
