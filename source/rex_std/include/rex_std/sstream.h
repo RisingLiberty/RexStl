@@ -23,7 +23,7 @@ namespace rsl
 {
   inline namespace v1
   {
-
+    REX_STD_CLASS_ALIAS(stringstream);
   }
 } // namespace rsl
 

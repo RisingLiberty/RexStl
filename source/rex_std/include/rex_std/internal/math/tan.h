@@ -35,12 +35,12 @@ namespace rsl
       template <typename T>
       constexpr T tan_series_exp(const T x)
       {
-        return (numeric_limits<T>::min() > abs(x - T(rsl::half_pi_v<float64>)) ? // the value tan(pi/2) is somewhat of a convention;
-                                                                                 // technically the function is not defined at EXACTLY pi/2,
-                                                                                 // but this is floating point pi/2
+        return ((numeric_limits<T>::min)() > abs(x - T(rsl::half_pi_v<float64>)) ? // the value tan(pi/2) is somewhat of a convention;
+                                                                                   // technically the function is not defined at EXACTLY pi/2,
+                                                                                   // but this is floating point pi/2
                     T(1.633124e+16)
-                                                                               :
-                                                                               // otherwise we use an expansion around pi/2
+                                                                                 :
+                                                                                 // otherwise we use an expansion around pi/2
                     tan_series_exp_long(x - T(rsl::half_pi_v<float64>)));
       }
 
@@ -83,9 +83,9 @@ namespace rsl
         return ( // NaN check
             is_nan(x) ? numeric_limits<T>::quiet_nan() :
                       // indistinguishable from zero
-                numeric_limits<T>::min() > abs(x) ? T(0)
-                                                  :
-                                                  // else
+                (numeric_limits<T>::min)() > abs(x) ? T(0)
+                                                    :
+                                                    // else
                 x < T(0) ? -tan_begin(-x)
                          : tan_begin(x));
       }

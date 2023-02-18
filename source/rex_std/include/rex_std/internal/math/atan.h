@@ -97,9 +97,9 @@ namespace rsl
         return ( // NaN check
             is_nan(x) ? numeric_limits<T>::quiet_NaN() :
                       // indistinguishable from zero
-                numeric_limits<T>::min() > abs(x) ? T(0)
-                                                  :
-                                                  // negative or positive
+                (numeric_limits<T>::min)() > abs(x) ? T(0)
+                                                    :
+                                                    // negative or positive
                 x < T(0) ? -atan_begin(-x)
                          : atan_begin(x));
       }

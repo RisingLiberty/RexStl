@@ -27,10 +27,10 @@ namespace rsl
     constexpr card64 MibiByteMultiple = KibiByteMultiple * 1024;
     constexpr card64 GibiByteMultiple = MibiByteMultiple * 1024;
 
-    class MemorySize
+    class memory_size
     {
     public:
-      constexpr explicit MemorySize(card64 size_in_bytes = 0)
+      constexpr explicit memory_size(card64 size_in_bytes = 0)
           : m_size_in_bytes(size_in_bytes)
       {
       }
@@ -44,21 +44,21 @@ namespace rsl
         return m_size_in_bytes;
       }
 
-      constexpr MemorySize operator+(card64 bytes) const
+      constexpr memory_size operator+(card64 bytes) const
       {
-        return MemorySize(m_size_in_bytes + bytes);
+        return memory_size(m_size_in_bytes + bytes);
       }
-      constexpr MemorySize& operator+=(card64 bytes)
+      constexpr memory_size& operator+=(card64 bytes)
       {
         m_size_in_bytes += bytes;
         return *this;
       }
 
-      constexpr MemorySize operator-(card64 bytes) const
+      constexpr memory_size operator-(card64 bytes) const
       {
-        return MemorySize(m_size_in_bytes - bytes);
+        return memory_size(m_size_in_bytes - bytes);
       }
-      constexpr MemorySize operator-=(card64 bytes)
+      constexpr memory_size operator-=(card64 bytes)
       {
         m_size_in_bytes -= bytes;
         return *this;
@@ -96,32 +96,32 @@ namespace rsl
   } // namespace v1
 } // namespace rsl
 
-constexpr rsl::MemorySize operator"" _bytes(unsigned long long bytes)
+constexpr rsl::memory_size operator"" _bytes(unsigned long long bytes)
 {
-  return rsl::MemorySize((card64)bytes);
+  return rsl::memory_size((card64)bytes);
 }
-constexpr rsl::MemorySize operator"" _kb(unsigned long long bytes)
+constexpr rsl::memory_size operator"" _kb(unsigned long long bytes)
 {
-  return rsl::MemorySize((card64)bytes * rsl::KiloByteMultiple);
+  return rsl::memory_size((card64)bytes * rsl::KiloByteMultiple);
 }
-constexpr rsl::MemorySize operator"" _mb(unsigned long long bytes)
+constexpr rsl::memory_size operator"" _mb(unsigned long long bytes)
 {
-  return rsl::MemorySize((card64)bytes * rsl::MegaByteMultiple);
+  return rsl::memory_size((card64)bytes * rsl::MegaByteMultiple);
 }
-constexpr rsl::MemorySize operator"" _gb(unsigned long long bytes)
+constexpr rsl::memory_size operator"" _gb(unsigned long long bytes)
 {
-  return rsl::MemorySize((card64)bytes * rsl::GigaByteMultiple);
+  return rsl::memory_size((card64)bytes * rsl::GigaByteMultiple);
 }
 
-constexpr rsl::MemorySize operator"" _kib(unsigned long long bytes)
+constexpr rsl::memory_size operator"" _kib(unsigned long long bytes)
 {
-  return rsl::MemorySize((card64)bytes * rsl::KibiByteMultiple);
+  return rsl::memory_size((card64)bytes * rsl::KibiByteMultiple);
 }
-constexpr rsl::MemorySize operator"" _mib(unsigned long long bytes)
+constexpr rsl::memory_size operator"" _mib(unsigned long long bytes)
 {
-  return rsl::MemorySize((card64)bytes * rsl::MibiByteMultiple);
+  return rsl::memory_size((card64)bytes * rsl::MibiByteMultiple);
 }
-constexpr rsl::MemorySize operator"" _gib(unsigned long long bytes)
+constexpr rsl::memory_size operator"" _gib(unsigned long long bytes)
 {
-  return rsl::MemorySize((card64)bytes * rsl::GibiByteMultiple);
+  return rsl::memory_size((card64)bytes * rsl::GibiByteMultiple);
 }

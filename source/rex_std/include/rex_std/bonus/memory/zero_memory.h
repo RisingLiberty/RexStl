@@ -5,7 +5,7 @@
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
 //
-// File: new.h
+// File: zero_memory.h
 // Copyright (c) Nick De Breuck 2022
 //
 // ============================================
@@ -14,5 +14,10 @@
 
 #include "rex_std/bonus/types.h"
 
-// void* operator new(size_t size);
-// void* operator new(size_t size, void* where) noexcept;
+namespace rsl
+{
+  inline namespace v1
+  {
+    void zero_memory(void* dst, card64 size);
+  } // namespace v1
+} // namespace rsl

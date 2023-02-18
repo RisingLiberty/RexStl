@@ -111,7 +111,7 @@ namespace rsl
           T red, green, blue;
         };
 #pragma warning(pop)
-        Array<T, 3> color_data;
+        rsl::array<T, 3> color_data;
       };
     };
 
@@ -230,7 +230,7 @@ namespace rsl
           T red, green, blue, alpha;
         };
 #pragma warning(pop)
-        Array<T, 4> color_data;
+        rsl::array<T, 4> color_data;
       };
     };
 
@@ -253,7 +253,7 @@ namespace rsl
     }
 
     template <typename T>
-    ostream& operator<<(ostream& os, const Color3<T>& color)
+    ostream& operator<<(ostream& os, const Color4<T>& color)
     {
       os << "(r: " << color.red << ", g: " << color.green << ", b: " << color.blue << ", a: " << color.alpha << ")";
       return os;
