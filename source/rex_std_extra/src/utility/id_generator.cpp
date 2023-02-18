@@ -5,19 +5,15 @@
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
 //
-// File: yes_no.h
+// File: id_generator.cpp
 // Copyright (c) Nick De Breuck 2023
 //
 // ============================================
 
-#include "rex_std_extra/utilities/yes_no.h"
+#include "rex_std_extra/utility/id_generator.h"
 
-rsl::yes_no::yes_no(eyes_no value)
-    : m_value(value)
+rsl::ID rsl::id_generator::new_id()
 {
-}
-
-rsl::yes_no::operator bool() const
-{
-  return m_value == eyes_no::yes;
+  static ID id = 0;
+  return id++;
 }

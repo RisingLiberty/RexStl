@@ -10,7 +10,7 @@
 //
 // ============================================
 
-#include "rex_std_extra/utilities/wrapped_index.h"
+#include "rex_std_extra/utility/wrapped_index.h"
 
 rsl::wrapped_index::wrapped_index(card32 min, card32 max)
     : m_value(0)

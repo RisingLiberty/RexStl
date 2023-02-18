@@ -10,7 +10,7 @@
 //
 // ============================================
 
-#include "rex_std_extra/utilities/hash.h"
+#include "rex_std_extra/utility/hash.h"
 
 #include "rex_std_extra/random/rand.h"
 
