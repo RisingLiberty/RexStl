@@ -784,7 +784,7 @@ namespace rsl
         }
         // finds the first substring [str, str + toFindLength) within [lhsStr, lhsStr + lhsLength), starting from pos
         template <typename Traits, typename Pointer, typename SizeType>
-        SizeType find(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer toFindStr, SizeType toFindLength, SizeType defaultValue)
+        constexpr SizeType find(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer toFindStr, SizeType toFindLength, SizeType defaultValue)
         {
           REX_ASSERT_X(pos < lhsLength, "pos out of bounds");
 
