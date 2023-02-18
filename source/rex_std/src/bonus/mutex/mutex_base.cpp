@@ -11,6 +11,7 @@
 // ============================================
 
 #include "rex_std/bonus/mutex/mutex_base.h"
+
 #include "rex_std/assert.h"
 
 #include <Windows.h>
@@ -24,8 +25,8 @@ namespace rsl
       class mutex_base::internal
       {
       public:
-        mutex_base::internal()
-          : m_thread_id(0)
+        internal()
+            : m_thread_id(0)
         {
           InitializeSRWLock(&m_srw_lock);
         }
@@ -57,7 +58,6 @@ namespace rsl
       static_assert(sizeof(mutex_base::internal) <= g_mutex_size, "incorrect g_mutex_size");
       static_assert(alignof(mutex_base::internal) <= g_mutex_alignment, "incorrect g_mutex_alignment");
 
-
       mutex_base::mutex_base()
       {
         m_internal_storage.set<mutex_base::internal>();
@@ -81,6 +81,6 @@ namespace rsl
       {
         return m_internal;
       }
-    }
-  }
-}
+    } // namespace internal
+  }   // namespace v1
+} // namespace rsl

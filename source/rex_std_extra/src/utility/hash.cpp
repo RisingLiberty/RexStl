@@ -12,6 +12,7 @@
 
 #include "rex_std_extra/utility/hash.h"
 
+#include "rex_std/internal/functional/hash.h"
 #include "rex_std_extra/random/rand.h"
 
 rsl::hash_val rsl::hash_val::new_hash()
@@ -20,7 +21,7 @@ rsl::hash_val rsl::hash_val::new_hash()
   static card64 new_hash = rand.new_rand();
   card64 seed            = 0;
 
-  seed     = hash_combine(seed, new_hash);
+  seed     = internal::hash_combine(seed, new_hash);
   new_hash = seed;
   return rsl::hash_val(new_hash);
 }

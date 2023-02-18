@@ -30,8 +30,8 @@ namespace rsl
     {
       constexpr hash_result hash_combine(uint64 seed, uint64 hash)
       {
-        hash += 0X9E3779B9 + (seed << 6) + (seed >> 2);
-        return static_cast<hash_result>(seed ^ hash);
+        hash += 0X9E3779B9 + (seed << 6) + (seed >> 2); // NOLINT(hicpp-signed-bitwise)
+        return static_cast<hash_result>(seed ^ hash);   // NOLINT(hicpp-signed-bitwise)
       }
 
 #pragma warning(push)

@@ -12,8 +12,8 @@
 
 #pragma once
 
-#include "rex_std/internal/utility/exchange.h"
 #include "rex_std/assert.h"
+#include "rex_std/internal/utility/exchange.h"
 
 namespace rsl
 {
@@ -24,11 +24,12 @@ namespace rsl
     {
     public:
       unique_lock()
-        : m_mutex(nullptr)
-      {}
+          : m_mutex(nullptr)
+      {
+      }
 
       unique_lock(Mutex& mutex)
-        : m_mutex(&mutex)
+          : m_mutex(&mutex)
       {
         lock();
       }
@@ -70,7 +71,7 @@ namespace rsl
     private:
       void safe_unlock()
       {
-        if (m_mutex)
+        if(m_mutex)
         {
           unlock();
         }
@@ -79,5 +80,5 @@ namespace rsl
     private:
       Mutex* m_mutex;
     };
-  }
-}
+  } // namespace v1
+} // namespace rsl

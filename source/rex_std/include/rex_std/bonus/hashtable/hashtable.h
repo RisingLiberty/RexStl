@@ -503,7 +503,7 @@ namespace rsl
       iterator find(const key_type& key)
       {
         const hash_result hr = m_cp_key_hash_and_bucket_count.first()(key);
-        const size_type n = static_cast<size_type>(bucket_index(hr, bucket_count()));
+        const size_type n    = static_cast<size_type>(bucket_index(hr, bucket_count()));
 
         node_type* node = find_node(bucket_array()[n], key);
         return node ? iterator(node, bucket_array() + n) : iterator(nullptr, bucket_array() + bucket_count());
@@ -511,7 +511,7 @@ namespace rsl
       const_iterator find(const key_type& key) const
       {
         const hash_result hr = m_cp_key_hash_and_bucket_count.first()(key);
-        const size_type n = static_cast<size_type>(bucket_index(hr, bucket_count()));
+        const size_type n    = static_cast<size_type>(bucket_index(hr, bucket_count()));
 
         node_type* node = find_node(bucket_array()[n], key);
         return node ? const_iterator(node, bucket_array() + n) : iterator(bucket_array() + bucket_count());
@@ -520,7 +520,7 @@ namespace rsl
       iterator find(const K& x)
       {
         const hash_result hr = m_cp_key_hash_and_bucket_count.first()(x);
-        const size_type n = static_cast<size_type>(bucket_index(hr, bucket_count()));
+        const size_type n    = static_cast<size_type>(bucket_index(hr, bucket_count()));
 
         node_type* node = find_node(bucket_array()[n], x);
         return node ? iterator(node, bucket_array() + n) : end();
@@ -529,7 +529,7 @@ namespace rsl
       const_iterator find(const K& x) const
       {
         const hash_result hr = m_cp_key_hash_and_bucket_count.first()(x);
-        const size_type n = static_cast<size_type>(bucket_index(hr, bucket_count()));
+        const size_type n    = static_cast<size_type>(bucket_index(hr, bucket_count()));
 
         node_type* node = find_node(bucket_array()[n], x);
         return node ? const_iterator(node, bucket_array() + n) : cend();
@@ -538,7 +538,7 @@ namespace rsl
       size_type count(const K& x) const
       {
         const hash_result hr = m_cp_key_hash_and_bucket_count.first()(x);
-        const size_type n = static_cast<size_type>(bucket_index(hr, bucket_count()));
+        const size_type n    = static_cast<size_type>(bucket_index(hr, bucket_count()));
 
         node_type* node = find_node(bucket_array()[n], x);
 

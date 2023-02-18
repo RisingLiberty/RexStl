@@ -681,7 +681,7 @@ namespace rsl
     {
       hash_result operator()(const rsl::stack_string<CharType, Size>& str) const
       {
-        return rsl::hash<rsl::string_view>{}(str.to_view());
+        return rsl::hash<rsl::string_view> {}(str.to_view());
       }
     };
 

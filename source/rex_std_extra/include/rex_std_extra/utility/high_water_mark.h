@@ -24,13 +24,13 @@ namespace rsl
     {
     public:
       explicit high_water_mark(T initValue)
-        : m_value(initValue)
-        , m_max_value(initValue)
+          : m_value(initValue)
+          , m_max_value(initValue)
       {
       }
       high_water_mark(T initValue, T maxValue)
-        : m_value(initValue)
-        , m_max_value(maxValue)
+          : m_value(initValue)
+          , m_max_value(maxValue)
       {
       }
 
@@ -101,7 +101,6 @@ namespace rsl
         m_max_value = max(m_max_value, m_value);
         return *this;
       }
-
 
       template <typename U>
       high_water_mark operator/(U val) const
