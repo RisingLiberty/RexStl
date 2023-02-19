@@ -26,14 +26,15 @@ namespace rsl
       {
       public:
         internal()
-            : m_thread_id(0)
+          : m_srw_lock()
+          , m_thread_id(0)
         {
           InitializeSRWLock(&m_srw_lock);
         }
 
         void lock()
         {
-          DWORD thread_id = GetCurrentThreadId();
+          const DWORD thread_id = GetCurrentThreadId();
           REX_ASSERT_X(m_thread_id != thread_id, "deadlock! trying to lock the same mutex twice on the same thread");
           m_thread_id = thread_id;
           AcquireSRWLockExclusive(&m_srw_lock);
@@ -41,7 +42,7 @@ namespace rsl
 
         bool try_lock()
         {
-          return TryAcquireSRWLockExclusive(&m_srw_lock);
+          return TryAcquireSRWLockExclusive(&m_srw_lock) != 0;
         }
 
         void unlock()
@@ -59,9 +60,11 @@ namespace rsl
       static_assert(alignof(mutex_base::internal) <= g_mutex_alignment, "incorrect g_mutex_alignment");
 
       mutex_base::mutex_base()
+        : m_internal_storage()
+        , m_internal(nullptr)
       {
         m_internal_storage.set<mutex_base::internal>();
-        m_internal = m_internal_storage.get<mutex_base::internal>();
+        m_internal = m_internal_storage.get<mutex_base::internal>(); // NOLINT(cppcoreguidelines-prefer-member-initializer)
       }
 
       void mutex_base::lock()
