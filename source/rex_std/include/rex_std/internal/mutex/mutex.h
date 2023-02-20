@@ -24,10 +24,10 @@ namespace rsl
       mutex() = default;
 
       mutex(const mutex&) = delete;
-      mutex(mutex&&) = delete;
+      mutex(mutex&&)      = delete;
 
       mutex& operator=(const mutex&) = delete;
-      mutex& operator=(mutex&&) = delete;
+      mutex& operator=(mutex&&)      = delete;
     };
-  }
-}
+  } // namespace v1
+} // namespace rsl

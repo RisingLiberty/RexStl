@@ -146,7 +146,7 @@ namespace rsl
     }
     // compares at most count characters lexicographically
     template <typename Char, typename rsl::v1::enable_if_t<is_character_v<Char>, int> = 0>
-    int32 strncmp(const Char* lhs, const Char* rhs, count_t count)
+    constexpr int32 strncmp(const Char* lhs, const Char* rhs, count_t count)
     {
       while(count != 0 && *lhs && *rhs && *lhs == *rhs) // NOLINT(readability-implicit-bool-conversion)
       {

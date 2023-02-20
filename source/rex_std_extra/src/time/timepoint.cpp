@@ -17,8 +17,8 @@
 
 rsl::time_point::time_point() = default;
 rsl::time_point::time_point(const rsl::date& date, const rsl::time& time)
-    : m_date(date)
-    , m_time(time)
+    : m_time(time)
+    , m_date(date)
 {
 }
 

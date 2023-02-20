@@ -183,27 +183,27 @@ namespace rsl
         constexpr explicit optional_storage(const value_type& v)
             : m_has_value(true)
         {
-          m_val.set<value_type>(v);
+          m_val.template set<value_type>(v);
         }
 
         constexpr explicit optional_storage(value_type&& v)
             : m_has_value(true)
         {
-          m_val.set<value_type>(rsl::move(v));
+          m_val.template set<value_type>(rsl::move(v));
         }
 
         template <typename... Args>
         constexpr explicit optional_storage(in_place_t /*unused*/, Args&&... args)
             : m_has_value(true)
         {
-          m_val.set(rsl::forward<Args>(args)...);
+          m_val.template set(rsl::forward<Args>(args)...);
         }
 
         template <typename U, typename... Args, typename = enable_if_t<is_constructible_v<T, rsl::initializer_list<U>&, Args&&...>>>
         constexpr explicit optional_storage(in_place_t /*unused*/, rsl::initializer_list<U> ilist, Args&&... args)
             : m_has_value(true)
         {
-          m_val.set(ilist, rsl::forward<Args>(args)...);
+          m_val.template set(ilist, rsl::forward<Args>(args)...);
         }
 
         // default to make optional trivially destructible
@@ -212,7 +212,7 @@ namespace rsl
         template <typename... Args>
         constexpr void construct_value(Args&&... args)
         {
-          m_val.set<value_type>(rsl::forward<Args>(args)...);
+          m_val.template set<value_type>(rsl::forward<Args>(args)...);
         }
         constexpr void destroy_value() {}
 
@@ -234,11 +234,11 @@ namespace rsl
         }
         constexpr const value_type& val() const
         {
-          return *m_val.get<value_type>();
+          return *m_val.template get<value_type>();
         }
         constexpr value_type& val()
         {
-          return *m_val.get<value_type>();
+          return *m_val.template get<value_type>();
         }
 
         constexpr void swap(optional_storage<value_type>& other)

@@ -239,18 +239,27 @@ TEST_CASE("string view ends with")
 }
 TEST_CASE("string view contains")
 {
-  rsl::string_view str("Hello World");
-  const char8* hello = "Hello";
-  const char8* world = "World";
-  CHECK(str.contains("Hello") == true);
-  CHECK(str.contains(hello) == true);
-  CHECK(str.contains('H') == true);
+  {  
+    rsl::string_view str("Hello World");
+    const char8* hello = "Hello";
+    const char8* world = "World";
+    CHECK(str.contains("Hello") == true);
+    CHECK(str.contains(hello) == true);
+    CHECK(str.contains('H') == true);
 
-  CHECK(str.contains("World") == true);
-  CHECK(str.contains(world) == true);
-  CHECK(str.contains('W') == true);
+    CHECK(str.contains("World") == true);
+    CHECK(str.contains(world) == true);
+    CHECK(str.contains('W') == true);
 
-  CHECK(str.contains("Again") == false);
+    CHECK(str.contains("Again") == false);
+  }
+
+  {
+    rsl::string_view str      = "class rsl::v1::basic_string_view<char,class rsl::v1::char_traits<char> > __cdecl rsl::v1::internal::msvc_class_type_name<class rex::app_entry::MyClass>(void)";
+    rsl::string_view to_find  = "class rsl::v1::basic_string_view<char,class rsl::v1::char_traits<char> > __cdecl rsl::v1::internal::type_name<class ";
+
+    CHECK(str.contains(to_find) == true);
+  }
 }
 TEST_CASE("string view find")
 {
