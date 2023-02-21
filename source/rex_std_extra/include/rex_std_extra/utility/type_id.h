@@ -36,8 +36,8 @@ namespace rsl
         constexpr rsl::string_view prefix    = "class rsl::v1::basic_string_view<char,class rsl::v1::char_traits<char> > __cdecl rsl::v1::internal::msvc_class_type_name<class ";
         constexpr rsl::string_view suffix    = ">(void)";
 
-        static_assert(func_name.contains(prefix), /*"prefix not found in name!"*/ __FUNCSIG__);
-        static_assert(func_name.contains(suffix), /*"suffix not found in name!"*/ __FUNCSIG__);
+        static_assert(func_name.contains(prefix), "prefix not found in name!");
+        static_assert(func_name.contains(suffix), "suffix not found in name!");
 
         name.remove_prefix(prefix.size());
         name.remove_suffix(suffix.size());
@@ -52,8 +52,8 @@ namespace rsl
         constexpr rsl::string_view prefix    = "class rsl::v1::basic_string_view<char,class rsl::v1::char_traits<char> > __cdecl rsl::v1::internal::msvc_struct_type_name<struct ";
         constexpr rsl::string_view suffix    = ">(void)";
 
-        static_assert(func_name.contains(prefix), /*"prefix not found in name!"*/ __FUNCSIG__);
-        static_assert(func_name.contains(suffix), /*"suffix not found in name!"*/ __FUNCSIG__);
+        static_assert(func_name.contains(prefix), "prefix not found in name!");
+        static_assert(func_name.contains(suffix), "suffix not found in name!");
 
         name.remove_prefix(prefix.size());
         name.remove_suffix(suffix.size());
