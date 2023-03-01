@@ -502,14 +502,16 @@ namespace rsl
 
       iterator find(const key_type& key)
       {
-        const size_type n = static_cast<size_type>(bucket_index(key, bucket_count()));
+        const hash_result hr = m_cp_key_hash_and_bucket_count.first()(key);
+        const size_type n    = static_cast<size_type>(bucket_index(hr, bucket_count()));
 
         node_type* node = find_node(bucket_array()[n], key);
         return node ? iterator(node, bucket_array() + n) : iterator(nullptr, bucket_array() + bucket_count());
       }
       const_iterator find(const key_type& key) const
       {
-        const size_type n = static_cast<size_type>(bucket_index(key, bucket_count()));
+        const hash_result hr = m_cp_key_hash_and_bucket_count.first()(key);
+        const size_type n    = static_cast<size_type>(bucket_index(hr, bucket_count()));
 
         node_type* node = find_node(bucket_array()[n], key);
         return node ? const_iterator(node, bucket_array() + n) : iterator(bucket_array() + bucket_count());
@@ -517,7 +519,8 @@ namespace rsl
       template <typename K>
       iterator find(const K& x)
       {
-        const size_type n = static_cast<size_type>(bucket_index(x, bucket_count()));
+        const hash_result hr = m_cp_key_hash_and_bucket_count.first()(x);
+        const size_type n    = static_cast<size_type>(bucket_index(hr, bucket_count()));
 
         node_type* node = find_node(bucket_array()[n], x);
         return node ? iterator(node, bucket_array() + n) : end();
@@ -525,7 +528,8 @@ namespace rsl
       template <typename K>
       const_iterator find(const K& x) const
       {
-        const size_type n = static_cast<size_type>(bucket_index(x, bucket_count()));
+        const hash_result hr = m_cp_key_hash_and_bucket_count.first()(x);
+        const size_type n    = static_cast<size_type>(bucket_index(hr, bucket_count()));
 
         node_type* node = find_node(bucket_array()[n], x);
         return node ? const_iterator(node, bucket_array() + n) : cend();
@@ -533,7 +537,8 @@ namespace rsl
       template <typename K>
       size_type count(const K& x) const
       {
-        const size_type n = static_cast<size_type>(bucket_index(x, bucket_count()));
+        const hash_result hr = m_cp_key_hash_and_bucket_count.first()(x);
+        const size_type n    = static_cast<size_type>(bucket_index(hr, bucket_count()));
 
         node_type* node = find_node(bucket_array()[n], x);
 

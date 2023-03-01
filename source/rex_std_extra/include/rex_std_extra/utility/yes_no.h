@@ -50,4 +50,4 @@ namespace rsl
         : rsl::yes_no(value ? eyes_no::yes : eyes_no::no)                                                                                                                                                                                                \
     {                                                                                                                                                                                                                                                    \
     }                                                                                                                                                                                                                                                    \
-  };
+  }

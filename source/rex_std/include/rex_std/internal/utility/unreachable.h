@@ -19,7 +19,7 @@ namespace rsl
 {
   inline namespace v1
   {
-    REX_NO_RETURN void unreachable() // NOLINT(misc-definitions-in-headers)
+    REX_NO_RETURN inline void unreachable() // NOLINT(misc-definitions-in-headers)
     {
 #if defined(__GNUC__) // GCC, Clang, ICC
       __builtin_unreachable();

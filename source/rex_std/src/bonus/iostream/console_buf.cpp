@@ -39,12 +39,14 @@ namespace rsl
       {
         DWORD num_read = 0;
         ReadFile(m_handle, s, static_cast<DWORD>(count * elemSize), &num_read, nullptr);
+        SetLastError(0); // we don't care if it works, just got to make sure SetLastError is always valid
         return static_cast<streamsize>(num_read);
       }
       streamsize console_buf_impl::xsputn(const char8* s, size_t elemSize, streamsize count)
       {
         DWORD num_written = 0;
         WriteFile(m_handle, s, static_cast<DWORD>(count * elemSize), &num_written, nullptr);
+        SetLastError(0); // we don't care if it works, just got to make sure SetLastError is always valid
         return static_cast<streamsize>(num_written);
       }
 

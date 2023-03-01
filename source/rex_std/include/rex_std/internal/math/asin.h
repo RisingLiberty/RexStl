@@ -29,10 +29,10 @@ namespace rsl
         return ( // only defined on [-1,1]
             x > T(1) ? numeric_limits<T>::quiet_NaN() :
                      // indistinguishable from one or zero
-                numeric_limits<T>::min() > abs(x - T(1)) ? T(rsl::half_pi_v<float64>)
-            : numeric_limits<T>::min() > abs(x)          ? T(0)
-                                                         :
-                                                // else
+                (numeric_limits<T>::min)() > abs(x - T(1)) ? T(rsl::half_pi_v<float64>)
+            : (numeric_limits<T>::min)() > abs(x)          ? T(0)
+                                                           :
+                                                  // else
                 atan(x / sqrt(T(1) - x * x)));
       }
 

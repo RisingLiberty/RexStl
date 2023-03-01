@@ -19,6 +19,6 @@ public class RexStdExe : BasicCPPProject
 
     conf.Output = Configuration.OutputType.Exe;
 
-    conf.add_dependency<RexStd>(target);
+    conf.AddPublicDependency<RexStd>(target, DependencySetting.Default | DependencySetting.IncludeHeadersForClangtools);
   }
 }

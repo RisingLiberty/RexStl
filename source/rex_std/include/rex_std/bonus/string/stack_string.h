@@ -679,9 +679,9 @@ namespace rsl
     template <typename CharType, card32 Size>
     struct hash<rsl::stack_string<CharType, Size>>
     {
-      card32 operator()(const rsl::stack_string<CharType, Size>& str) const
+      hash_result operator()(const rsl::stack_string<CharType, Size>& str) const
       {
-        return rsl::hash(str);
+        return rsl::hash<rsl::string_view> {}(str.to_view());
       }
     };
 

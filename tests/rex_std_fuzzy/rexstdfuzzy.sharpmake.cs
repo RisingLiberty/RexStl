@@ -21,6 +21,6 @@ public class RexStdFuzzy : TestProject
 
     conf.Options.Remove(Options.Vc.Compiler.JumboBuild.Enable);
 
-    conf.add_dependency<RexStd>(target);
+    conf.AddPublicDependency<RexStd>(target, DependencySetting.Default | DependencySetting.IncludeHeadersForClangtools);
   }
 }
