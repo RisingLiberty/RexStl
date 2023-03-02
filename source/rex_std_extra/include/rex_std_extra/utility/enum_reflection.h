@@ -50,25 +50,30 @@
   #define enum_refl_VERSION_MINOR 7
   #define enum_refl_VERSION_PATCH 3
 
+  #include "rex_std/array.h"
+  #include "rex_std/assert.h"
   #include "rex_std/bonus/types.h"
+  #include "rex_std/iostream.h"
+  #include "rex_std/limits.h"
+  #include "rex_std/string.h"
   #include "rex_std/string_view.h"
-  #include "rex_std_extra/string/string.h"
+  #include "rex_std/type_traits.h"
 
-  #include <array>
-  #include <cassert>
-  #include <cstddef>
-  #include <cstdint>
-  #include <iosfwd>
-  #include <limits>
-  #include <type_traits>
-  #include <utility>
+// #include <array>
+// #include <cassert>
+// #include <cstddef>
+// #include <cstdint>
+// #include <iosfwd>
+// #include <limits>
+// #include <type_traits>
+// #include <utility>
 
   #if defined(enum_refl_CONFIG_FILE)
     #include enum_refl_CONFIG_FILE
   #endif
 
   #if !defined(enum_refl_USING_ALIAS_OPTIONAL)
-    #include <optional>
+    #include "rex_std/optional.h"
   #endif
 
   #if defined(__clang__)
@@ -78,7 +83,7 @@
     #pragma GCC diagnostic ignored "-Wmaybe-uninitialized" // May be used uninitialized 'return {};'.
   #elif defined(_MSC_VER)
     #pragma warning(push)
-    #pragma warning(disable : 26495) // Variable 'static_String<N>::chars_' is uninitialized.
+    #pragma warning(disable : 26495) // Variable 'static_string<N>::chars_' is uninitialized.
     #pragma warning(disable : 28020) // Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value.
     #pragma warning(disable : 26451) // The expression '0<=_Param_(1)&&_Param_(1)<=1-1' is not true at this call.
   #endif
@@ -111,28 +116,28 @@ namespace rsl
 {
   inline namespace v1
   {
-    ::enum_refl
+    namespace enum_refl
     { // I change the namespace from enum_refl to enum_relf
 
-  // If need another optional type, define the macro enum_refl_USING_ALIAS_OPTIONAL.
+      // If need another optional type, define the macro enum_refl_USING_ALIAS_OPTIONAL.
   #if defined(enum_refl_USING_ALIAS_OPTIONAL)
       enum_refl_USING_ALIAS_OPTIONAL
   #else
       using rsl::optional;
   #endif
 
-  // If need another string_view type, define the macro enum_refl_USING_ALIAS_STRING_VIEW.
+      // If need another string_view type, define the macro enum_refl_USING_ALIAS_STRING_VIEW.
   #if defined(enum_refl_USING_ALIAS_STRING_VIEW)
           enum_refl_USING_ALIAS_STRING_VIEW
   #else
       using rsl::string_view;
   #endif
 
-  // If need another String type, define the macro enum_refl_USING_ALIAS_STRING.
+      // If need another string type, define the macro enum_refl_USING_ALIAS_STRING.
   #if defined(enum_refl_USING_ALIAS_STRING)
               enum_refl_USING_ALIAS_STRING
   #else
-      using rsl::String;
+      using rsl::string;
   #endif
 
           namespace customize
@@ -150,10 +155,10 @@ namespace rsl
         };
 
         static_assert(enum_refl_RANGE_MIN <= 0, "enum_refl_RANGE_MIN must be less or equals than 0.");
-        static_assert(enum_refl_RANGE_MIN > (rsl::numeric_limits<rsl::int16_t>::min)(), "enum_refl_RANGE_MIN must be greater than INT16_MIN.");
+        static_assert(enum_refl_RANGE_MIN > (rsl::numeric_limits<rsl::int16>::min)(), "enum_refl_RANGE_MIN must be greater than INT16_MIN.");
 
         static_assert(enum_refl_RANGE_MAX > 0, "enum_refl_RANGE_MAX must be greater than 0.");
-        static_assert(enum_refl_RANGE_MAX < (rsl::numeric_limits<rsl::int16_t>::max)(), "enum_refl_RANGE_MAX must be less than INT16_MAX.");
+        static_assert(enum_refl_RANGE_MAX < (rsl::numeric_limits<rsl::int16>::max)(), "enum_refl_RANGE_MAX must be less than INT16_MAX.");
 
         static_assert(enum_refl_RANGE_MAX > enum_refl_RANGE_MIN, "enum_refl_RANGE_MAX must be greater than enum_refl_RANGE_MIN.");
 
@@ -174,11 +179,11 @@ namespace rsl
         template <typename T>
         struct supported
   #if defined(enum_refl_SUPPORTED) && enum_refl_SUPPORTED || defined(enum_refl_NO_CHECK_SUPPORT)
-            : rsl::TrueType
+            : rsl::true_type
         {
         };
   #else
-            : rsl::FalseType
+            : rsl::false_type
         {
         };
   #endif
@@ -192,13 +197,13 @@ namespace rsl
         };
 
         template <card32 N>
-        class static_String
+        class static_string
         {
         public:
-          constexpr explicit static_String(string_view str) noexcept
-              : static_String {str, rsl::make_index_sequence<N> {}}
+          constexpr explicit static_string(string_view str) noexcept
+              : static_string {str, rsl::make_index_sequence<N> {}}
           {
-            assert(str.size() == N);
+            REX_ASSERT_X(str.size() == N, "Invalid size for static string");
           }
 
           constexpr const char* data() const noexcept
@@ -218,7 +223,7 @@ namespace rsl
 
         private:
           template <card32... I>
-          constexpr static_String(string_view str, rsl::index_sequence<I...>) noexcept
+          constexpr static_string(string_view str, rsl::index_sequence<I...>) noexcept
               : chars_ {str[I]..., '\0'}
           {
           }
@@ -227,10 +232,10 @@ namespace rsl
         };
 
         template <>
-        class static_String<0>
+        class static_string<0>
         {
         public:
-          constexpr explicit static_String(string_view) noexcept {}
+          constexpr explicit static_string(string_view) noexcept {}
 
           constexpr const char* data() const noexcept
           {
@@ -304,7 +309,7 @@ namespace rsl
         }
 
         template <typename T, card32 N, card32... I>
-        constexpr rsl::Array<rsl::remove_cv_t<T>, N> to_array(T (&a)[N], rsl::index_sequence<I...>)
+        constexpr rsl::array<rsl::remove_cv_t<T>, N> to_array(T (&a)[N], rsl::index_sequence<I...>)
         {
           return {{a[I]...}};
         }
@@ -314,7 +319,7 @@ namespace rsl
         {
   #if defined(_MSC_VER) && _MSC_VER < 1920 && !defined(__clang__)
           // https://developercommunity.visualstudio.com/content/problem/360432/vs20178-regression-c-failed-in-test.html
-          // https://developercommunity.visualstudio.com/content/problem/232218/c-constexpr-String-view.html
+          // https://developercommunity.visualstudio.com/content/problem/232218/c-constexpr-string-view.html
           constexpr bool workaround = true;
   #else
           constexpr bool workaround = false;
@@ -350,7 +355,7 @@ namespace rsl
         template <typename L, typename R>
         constexpr bool cmp_less(L lhs, R rhs) noexcept
         {
-          static_assert(rsl::IsIntegral<L> && rsl::IsIntegral<R>, "enum_refl::detail::cmp_less requires integral type.");
+          static_assert(rsl::is_integral_v<L> && rsl::is_integral_v<R>, "enum_refl::detail::cmp_less requires integral type.");
 
           if constexpr(rsl::is_signed_v<L> == rsl::is_signed_v<R>)
           {
@@ -380,7 +385,7 @@ namespace rsl
         template <typename I>
         constexpr I log2(I value) noexcept
         {
-          static_assert(rsl::IsIntegral<I>, "enum_refl::detail::log2 requires integral type.");
+          static_assert(rsl::is_integral_v<I>, "enum_refl::detail::log2 requires integral type.");
 
           auto ret = I {0};
           for(; value > I {1}; value >>= I {1}, ++ret)
@@ -393,7 +398,7 @@ namespace rsl
         template <typename I>
         constexpr bool is_pow2(I x) noexcept
         {
-          static_assert(rsl::IsIntegral<I>, "enum_refl::detail::is_pow2 requires integral type.");
+          static_assert(rsl::is_integral_v<I>, "enum_refl::detail::is_pow2 requires integral type.");
 
           return x != 0 && (x & (x - 1)) == 0;
         }
@@ -413,7 +418,7 @@ namespace rsl
     #elif defined(_MSC_VER)
           constexpr string_view name {__FUNCSIG__ + 40, sizeof(__FUNCSIG__) - 57};
     #endif
-          return static_String<name.size()> {name};
+          return static_string<name.size()> {name};
   #else
           return string_view {};   // Unsupported compiler.
   #endif
@@ -437,14 +442,14 @@ namespace rsl
     #elif defined(_MSC_VER)
             constexpr auto name = pretty_name({__FUNCSIG__, sizeof(__FUNCSIG__) - 17});
     #endif
-            return static_String<name.size()> {name};
+            return static_string<name.size()> {name};
   #else
             return string_view {}; // Unsupported compiler.
   #endif
           }
           else
           {
-            return static_String<custom_name.size()> {custom_name};
+            return static_string<custom_name.size()> {custom_name};
           }
         }
 
@@ -486,7 +491,7 @@ namespace rsl
           else
           {
             constexpr auto lhs = customize::enum_range<E>::min;
-            static_assert(lhs > (rsl::numeric_limits<rsl::int16_t>::min)(), "enum_refl::enum_range requires min must be greater than INT16_MIN.");
+            static_assert(lhs > (rsl::numeric_limits<rsl::int16>::min)(), "enum_refl::enum_range requires min must be greater than INT16_MIN.");
             constexpr auto rhs = (rsl::numeric_limits<U>::min)();
 
             if constexpr(cmp_less(rhs, lhs))
@@ -513,7 +518,7 @@ namespace rsl
           else
           {
             constexpr auto lhs = customize::enum_range<E>::max;
-            static_assert(lhs < (rsl::numeric_limits<rsl::int16_t>::max)(), "enum_refl::enum_range requires max must be less than INT16_MAX.");
+            static_assert(lhs < (rsl::numeric_limits<rsl::int16>::max)(), "enum_refl::enum_range requires max must be less than INT16_MAX.");
             constexpr auto rhs = (rsl::numeric_limits<U>::max)();
 
             if constexpr(cmp_less(lhs, rhs))
@@ -571,7 +576,7 @@ namespace rsl
           }
           else
           {
-            return rsl::Array<E, 0> {};
+            return rsl::array<E, 0> {};
           }
         }
 
@@ -583,7 +588,7 @@ namespace rsl
           constexpr auto max        = reflected_max_v<E, IsFlags>;
           constexpr auto range_size = max - min + 1;
           static_assert(range_size > 0, "enum_refl::enum_range requires valid size.");
-          static_assert(range_size < (rsl::numeric_limits<rsl::uint16_t>::max)(), "enum_refl::enum_range requires valid size.");
+          static_assert(range_size < (rsl::numeric_limits<rsl::uint16>::max)(), "enum_refl::enum_range requires valid size.");
 
           return values<E, IsFlags, reflected_min_v<E, IsFlags>>(rsl::make_index_sequence<range_size> {});
         }
@@ -611,7 +616,7 @@ namespace rsl
           constexpr auto min        = IsFlags ? log2(min_v<E, IsFlags>) : min_v<E, IsFlags>;
           constexpr auto range_size = max - min + U {1};
           static_assert(range_size > 0, "enum_refl::enum_range requires valid size.");
-          static_assert(range_size < (rsl::numeric_limits<rsl::uint16_t>::max)(), "enum_refl::enum_range requires valid size.");
+          static_assert(range_size < (rsl::numeric_limits<rsl::uint16>::max)(), "enum_refl::enum_range requires valid size.");
 
           return static_cast<card32>(range_size);
         }
@@ -620,7 +625,7 @@ namespace rsl
         inline constexpr auto range_size_v = range_size<E, IsFlags>();
 
         template <typename E, bool IsFlags = false>
-        using index_t = rsl::conditional_t < range_size_v<E, IsFlags><(rsl::numeric_limits<rsl::uint8_t>::max)(), rsl::uint8_t, rsl::uint16_t>;
+        using index_t = rsl::conditional_t < range_size_v<E, IsFlags><(rsl::numeric_limits<rsl::uint8>::max)(), rsl::uint8, rsl::uint16>;
 
         template <typename E, bool IsFlags = false>
         inline constexpr auto invalid_index_v = (rsl::numeric_limits<index_t<E, IsFlags>>::max)();
@@ -632,7 +637,7 @@ namespace rsl
           constexpr auto min      = IsFlags ? log2(min_v<E, IsFlags>) : min_v<E, IsFlags>;
           [[maybe_unused]] auto i = index_t<E, IsFlags> {0};
 
-          return rsl::Array<decltype(i), sizeof...(I)> {{(is_valid<E, value<E, min, IsFlags>(I)>() ? i++ : invalid_index_v<E, IsFlags>)...}};
+          return rsl::array<decltype(i), sizeof...(I)> {{(is_valid<E, value<E, min, IsFlags>(I)>() ? i++ : invalid_index_v<E, IsFlags>)...}};
         }
 
         template <typename E, bool IsFlags = false>
@@ -643,7 +648,7 @@ namespace rsl
         {
           static_assert(is_enum_v<E>, "enum_refl::detail::names requires enum type.");
 
-          return rsl::Array<string_view, sizeof...(I)> {{enum_name_v<E, values_v<E, IsFlags>[I]>...}};
+          return rsl::array<string_view, sizeof...(I)> {{enum_name_v<E, values_v<E, IsFlags>[I]>...}};
         }
 
         template <typename E, bool IsFlags = false>
@@ -657,7 +662,7 @@ namespace rsl
         {
           static_assert(is_enum_v<E>, "enum_refl::detail::entries requires enum type.");
 
-          return rsl::Array<rsl::pair<E, string_view>, sizeof...(I)> {{{values_v<E, IsFlags>[I], enum_name_v<E, values_v<E, IsFlags>[I]>}...}};
+          return rsl::array<rsl::pair<E, string_view>, sizeof...(I)> {{{values_v<E, IsFlags>[I], enum_name_v<E, values_v<E, IsFlags>[I]>}...}};
         }
 
         template <typename E, bool IsFlags = false>
@@ -736,13 +741,13 @@ namespace rsl
         };
 
         template <typename T, typename R = void>
-        using enable_if_enum_t = rsl::EnableIf<rsl::is_enum_v<rsl::decay_t<T>>, R>;
+        using enable_if_enum_t = rsl::enable_if_t<rsl::is_enum_v<rsl::decay_t<T>>, R>;
 
-        template <typename T, typename Enable = rsl::EnableIf<rsl::is_enum_v<rsl::decay_t<T>>>>
+        template <typename T, typename Enable = rsl::enable_if_t<rsl::is_enum_v<rsl::decay_t<T>>>>
         using enum_concept = T;
 
         template <typename T, bool = rsl::is_enum_v<T>>
-        struct is_scoped_enum : rsl::FalseType
+        struct is_scoped_enum : rsl::false_type
         {
         };
 
@@ -752,7 +757,7 @@ namespace rsl
         };
 
         template <typename T, bool = rsl::is_enum_v<T>>
-        struct is_unscoped_enum : rsl::FalseType
+        struct is_unscoped_enum : rsl::false_type
         {
         };
 
@@ -839,11 +844,11 @@ namespace rsl
 
         if constexpr(detail::is_sparse_v<D>)
         {
-          return assert((index < detail::count_v<D>)), detail::values_v<D>[index];
+          return REX_ASSERT_X((index < detail::count_v<D>)), detail::values_v<D>[index];
         }
         else
         {
-          return assert((index < detail::count_v<D>)), detail::value<D, detail::min_v<D>>(index);
+          return REX_ASSERT_X((index < detail::count_v<D>)), detail::value<D, detail::min_v<D>>(index);
         }
       }
 
@@ -870,7 +875,7 @@ namespace rsl
       }
 
       // Returns name from enum value.
-      // If enum value does not have name or value out of range, returns empty String.
+      // If enum value does not have name or value out of range, returns empty string.
       template <typename E>
       REX_NO_DISCARD constexpr auto enum_name(E value) noexcept -> detail::enable_if_enum_t<E, string_view>
       {
@@ -922,7 +927,7 @@ namespace rsl
       // Obtains enum value from name.
       // Returns optional with enum value.
       template <typename E, typename BinaryPredicate>
-      REX_NO_DISCARD constexpr auto enum_cast(string_view value, BinaryPredicate p) noexcept(rsl::is_nothrow_invocable_r_v<bool, BinaryPredicate, char, char>)->detail::enable_if_enum_t<E, optional<rsl::decay_t<E>>>
+      REX_NO_DISCARD constexpr auto enum_cast(string_view value, BinaryPredicate p) noexcept(rsl::is_nothrow_invocable_r_v<bool, BinaryPredicate, char, char>) -> detail::enable_if_enum_t<E, optional<rsl::decay_t<E>>>
       {
         static_assert(rsl::is_invocable_r_v<bool, BinaryPredicate, char, char>, "enum_refl::enum_cast requires bool(char, char) invocable predicate.");
         using D = rsl::decay_t<E>;
@@ -990,7 +995,7 @@ namespace rsl
 
       // Checks whether enum contains enumerator with such name.
       template <typename E, typename BinaryPredicate>
-      REX_NO_DISCARD constexpr auto enum_contains(string_view value, BinaryPredicate p) noexcept(rsl::is_nothrow_invocable_r_v<bool, BinaryPredicate, char, char>)->detail::enable_if_enum_t<E, bool>
+      REX_NO_DISCARD constexpr auto enum_contains(string_view value, BinaryPredicate p) noexcept(rsl::is_nothrow_invocable_r_v<bool, BinaryPredicate, char, char>) -> detail::enable_if_enum_t<E, bool>
       {
         static_assert(rsl::is_invocable_r_v<bool, BinaryPredicate, char, char>, "enum_refl::enum_contains requires bool(char, char) invocable predicate.");
         using D = rsl::decay_t<E>;
@@ -1010,7 +1015,7 @@ namespace rsl
       namespace ostream_operators
       {
 
-        template <typename Char, typename Traits, typename E, rsl::EnableIf<rsl::is_enum_v<E>, bool> = true>
+        template <typename Char, typename Traits, typename E, rsl::enable_if_t<rsl::is_enum_v<E>, bool> = true>
         rsl::basic_ostream<Char, Traits>& operator<<(rsl::basic_ostream<Char, Traits>& os, E value)
         {
           using D = rsl::decay_t<E>;
@@ -1028,7 +1033,7 @@ namespace rsl
           return (os << static_cast<U>(value));
         }
 
-        template <typename Char, typename Traits, typename E, rsl::EnableIf<rsl::is_enum_v<E>, bool> = true>
+        template <typename Char, typename Traits, typename E, rsl::enable_if_t<rsl::is_enum_v<E>, bool> = true>
         rsl::basic_ostream<Char, Traits>& operator<<(rsl::basic_ostream<Char, Traits>& os, optional<E> value)
         {
           return value.has_value() ? (os << value.value()) : os;
@@ -1039,43 +1044,43 @@ namespace rsl
       namespace bitwise_operators
       {
 
-        template <typename E, rsl::EnableIf<rsl::is_enum_v<E>, bool> = true>
+        template <typename E, rsl::enable_if_t<rsl::is_enum_v<E>, bool> = true>
         constexpr E operator~(E rhs) noexcept
         {
           return static_cast<E>(~static_cast<underlying_type_t<E>>(rhs));
         }
 
-        template <typename E, rsl::EnableIf<rsl::is_enum_v<E>, bool> = true>
+        template <typename E, rsl::enable_if_t<rsl::is_enum_v<E>, bool> = true>
         constexpr E operator|(E lhs, E rhs) noexcept
         {
           return static_cast<E>(static_cast<underlying_type_t<E>>(lhs) | static_cast<underlying_type_t<E>>(rhs));
         }
 
-        template <typename E, rsl::EnableIf<rsl::is_enum_v<E>, bool> = true>
+        template <typename E, rsl::enable_if_t<rsl::is_enum_v<E>, bool> = true>
         constexpr E operator&(E lhs, E rhs) noexcept
         {
           return static_cast<E>(static_cast<underlying_type_t<E>>(lhs) & static_cast<underlying_type_t<E>>(rhs));
         }
 
-        template <typename E, rsl::EnableIf<rsl::is_enum_v<E>, bool> = true>
+        template <typename E, rsl::enable_if_t<rsl::is_enum_v<E>, bool> = true>
         constexpr E operator^(E lhs, E rhs) noexcept
         {
           return static_cast<E>(static_cast<underlying_type_t<E>>(lhs) ^ static_cast<underlying_type_t<E>>(rhs));
         }
 
-        template <typename E, rsl::EnableIf<rsl::is_enum_v<E>, bool> = true>
+        template <typename E, rsl::enable_if_t<rsl::is_enum_v<E>, bool> = true>
         constexpr E& operator|=(E& lhs, E rhs) noexcept
         {
           return lhs = (lhs | rhs);
         }
 
-        template <typename E, rsl::EnableIf<rsl::is_enum_v<E>, bool> = true>
+        template <typename E, rsl::enable_if_t<rsl::is_enum_v<E>, bool> = true>
         constexpr E& operator&=(E& lhs, E rhs) noexcept
         {
           return lhs = (lhs & rhs);
         }
 
-        template <typename E, rsl::EnableIf<rsl::is_enum_v<E>, bool> = true>
+        template <typename E, rsl::enable_if_t<rsl::is_enum_v<E>, bool> = true>
         constexpr E& operator^=(E& lhs, E rhs) noexcept
         {
           return lhs = (lhs ^ rhs);
@@ -1108,13 +1113,13 @@ namespace rsl
 
           if constexpr(detail::is_sparse_v<D, true>)
           {
-            return assert((index < detail::count_v<D, true>)), detail::values_v<D, true>[index];
+            return REX_ASSERT_X((index < detail::count_v<D, true>)), detail::values_v<D, true>[index];
           }
           else
           {
             constexpr auto min = detail::log2(detail::min_v<D, true>);
 
-            return assert((index < detail::count_v<D, true>)), detail::value<D, min, true>(index);
+            return REX_ASSERT_X((index < detail::count_v<D, true>)), detail::value<D, min, true>(index);
           }
         }
 
@@ -1129,14 +1134,14 @@ namespace rsl
         }
 
         // Returns name from enum-flags value.
-        // If enum-flags value does not have name or value out of range, returns empty String.
+        // If enum-flags value does not have name or value out of range, returns empty string.
         template <typename E>
-        REX_NO_DISCARD auto enum_name(E value) -> detail::enable_if_enum_t<E, String>
+        REX_NO_DISCARD auto enum_name(E value) -> detail::enable_if_enum_t<E, string>
         {
           using D = rsl::decay_t<E>;
           using U = underlying_type_t<D>;
 
-          String name;
+          string name;
           auto check_value = U {0};
           for(card32 i = 0; i < detail::count_v<D, true>; ++i)
           {
@@ -1160,7 +1165,7 @@ namespace rsl
           return {}; // Invalid value or out of range.
         }
 
-        // Returns rsl::array with String names, sorted by enum-flags value.
+        // Returns rsl::array with string names, sorted by enum-flags value.
         template <typename E>
         REX_NO_DISCARD constexpr auto enum_names() noexcept -> detail::enable_if_enum_t<E, detail::names_t<E, true>>
         {
@@ -1337,7 +1342,7 @@ namespace rsl
       namespace flags::ostream_operators
       {
 
-        template <typename Char, typename Traits, typename E, rsl::EnableIf<rsl::is_enum_v<E>, bool> = true>
+        template <typename Char, typename Traits, typename E, rsl::enable_if_t<rsl::is_enum_v<E>, bool> = true>
         rsl::basic_ostream<Char, Traits>& operator<<(rsl::basic_ostream<Char, Traits>& os, E value)
         {
           using D = rsl::decay_t<E>;
@@ -1355,7 +1360,7 @@ namespace rsl
           return (os << static_cast<U>(value));
         }
 
-        template <typename Char, typename Traits, typename E, rsl::EnableIf<rsl::is_enum_v<E>, bool> = true>
+        template <typename Char, typename Traits, typename E, rsl::enable_if_t<rsl::is_enum_v<E>, bool> = true>
         rsl::basic_ostream<Char, Traits>& operator<<(rsl::basic_ostream<Char, Traits>& os, optional<E> value)
         {
           return value.has_value() ? (os << value.value()) : os;
@@ -1366,16 +1371,20 @@ namespace rsl
       namespace flags::bitwise_operators
       {
 
-        using namespace rsl
+        namespace rsl
         {
           inline namespace v1
           {
-            ::enum_refl::bitwise_operators;
+            using namespace enum_refl::bitwise_operators;
 
-          } // namespace flags::bitwise_operators
+          } // namespace v1
 
-        } // namespace enum_refl
+        } // namespace rsl
+      }   // namespace flags::bitwise_operators
 
+    } // namespace enum_refl
+  }   // namespace v1
+} // namespace rsl
   #if defined(__clang__)
     #pragma clang diagnostic pop
   #elif defined(__GNUC__)

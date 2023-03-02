@@ -796,9 +796,9 @@ namespace rsl
           const Pointer end = lhs_end - toFindLength + 1;
           start             = Traits::find(start, static_cast<count_t>(end - start), *toFindStr);
 
-          while (start != nullptr && start != end)
+          while(start != nullptr && start != end)
           {
-            if (Traits::compare(start + 1, toFindStr + 1, toFindLength - 1) == 0)
+            if(Traits::compare(start + 1, toFindStr + 1, toFindLength - 1) == 0)
             {
               return static_cast<SizeType>(start - lhsStr);
             }
@@ -822,10 +822,10 @@ namespace rsl
           const Pointer to_find_last = toFindStr + toFindLength - 1;
           start                      = Traits::rfind(start, static_cast<count_t>(start - end), *to_find_last);
 
-          while (start != nullptr && start != end)
+          while(start != nullptr && start != end)
           {
             const Pointer new_start = start - (toFindLength - 1);
-            if (Traits::compare(new_start, toFindStr, toFindLength - 1) == 0)
+            if(Traits::compare(new_start, toFindStr, toFindLength - 1) == 0)
             {
               return static_cast<SizeType>(new_start - lhsStr);
             }

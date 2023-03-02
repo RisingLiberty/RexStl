@@ -1306,11 +1306,11 @@ TEST_CASE("remove all extents")
 }
 TEST_CASE("aligned storage")
 {
-  rsl::aligned_storage<int> storage;
+  rsl::aligned_storage_t<int> storage;
 
-  CHECK(*storage.get() == 0);
-  storage.set(1);
-  CHECK(*storage.get() == 1);
+  CHECK(*storage.get<int>() == 0);
+  storage.set<int>(1);
+  CHECK(*storage.get<int>() == 1);
 }
 TEST_CASE("decay")
 {

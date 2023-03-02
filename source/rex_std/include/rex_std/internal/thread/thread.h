@@ -158,7 +158,7 @@ namespace rsl
       }
 
       template <typename Func>
-      static uint32 __stdcall invoke(void* param)
+      static ulong __stdcall invoke(void* param)
       {
         // the reason why I copy the funciton ptr is so that we don't have a possible heap alloc
         // that lasts for the rest of the program
