@@ -315,6 +315,7 @@ namespace rsl
         {
           return s;
         }
+        ++str;
       }
 
       return nullptr;
