@@ -13,7 +13,6 @@
 #pragma once
 
 #include "rex_std/bonus/attributes.h"
-#include "rex_std/bonus/types.h"
 #include "rex_std/bonus/string/character_lookup.h"
 #include "rex_std/bonus/type_traits/is_character.h"
 #include "rex_std/bonus/types.h"
@@ -23,11 +22,11 @@
 #include "rex_std/internal/algorithm/min.h"
 #include "rex_std/internal/math/pow.h"
 #include "rex_std/internal/memory/memcpy.h"
+#include "rex_std/internal/optional/optional.h"
 #include "rex_std/internal/string/char_traits.h"
 #include "rex_std/internal/type_traits/is_unsigned.h"
 #include "rex_std/internal/utility/size.h"
 #include "rex_std/limits.h"
-#include "rex_std/internal/optional/optional.h"
 
 namespace rsl
 {
@@ -126,12 +125,12 @@ namespace rsl
     constexpr void to_lower(const Iterator* str, Iterator* buf, card32 length);
 
     template <typename Iterator, card32 Size>
-    constexpr void to_lower(const Iterator* str, Iterator(&buf)[Size]);
+    constexpr void to_lower(const Iterator* str, Iterator (&buf)[Size]);
     template <typename Iterator>
     constexpr void to_upper(const Iterator* str, Iterator* buf, card32 length);
 
     template <typename Iterator, card32 Size>
-    constexpr void to_upper(const Iterator* str, Iterator(&buf)[Size]);
+    constexpr void to_upper(const Iterator* str, Iterator (&buf)[Size]);
 
     template <typename T>
     class optional;
@@ -245,7 +244,7 @@ namespace rsl
       template <typename Iterator>
       constexpr optional<void*> str_to_pointer(const Iterator str);
 
-    }   // namespace internal
+    } // namespace internal
 
     namespace string_utils
     {
@@ -272,9 +271,9 @@ namespace rsl
       SizeType find_last_not_of(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer rhsStr, SizeType rhsLength, SizeType defaultValue);
     } // namespace string_utils
 
-  /// RSL Comment: Different from ISO C++ Standard at time of writing (17/Jul/2022)
-  // returns an optional instead of a basic type
-  // converts a byte string to a floating point value
+    /// RSL Comment: Different from ISO C++ Standard at time of writing (17/Jul/2022)
+    // returns an optional instead of a basic type
+    // converts a byte string to a floating point value
     REX_NO_DISCARD constexpr optional<float64> atof(const char8* str);
 
     /// RSL Comment: Different from ISO C++ Standard at time of writing (17/Jul/2022)

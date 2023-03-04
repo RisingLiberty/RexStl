@@ -12,10 +12,10 @@
 
 #include "rex_std/internal/thread/thread.h"
 
+#include "rex_std/assert.h"
 #include "rex_std/internal/exception/teminate.h"
 #include "rex_std/internal/utility/exchange.h"
 #include "rex_std/internal/utility/swap.h"
-#include "rex_std/assert.h"
 
 #include <Windows.h>
 

@@ -24,11 +24,11 @@ namespace rsl
     public:
       template <typename S, FMT_ENABLE_IF(rsl::is_convertible<const S&, basic_string_view<Char, rsl::char_traits<Char>>>::value)>
       FMT_CONSTEVAL FMT_INLINE basic_format_string(const S& s) // NOLINT(google-explicit-constructor)
-        : m_str(s)
+          : m_str(s)
       {
-        static_assert(detail::count<(rsl::is_base_of<detail::view, remove_reference_t<Args>>::value&& rsl::is_reference<Args>::value)...>() == 0, "passing views as lvalues is disallowed");
+        static_assert(detail::count<(rsl::is_base_of<detail::view, remove_reference_t<Args>>::value && rsl::is_reference<Args>::value)...>() == 0, "passing views as lvalues is disallowed");
 #ifdef FMT_HAS_CONSTEVAL
-        if constexpr (detail::count_named_args<Args...>() == detail::count_statically_named_args<Args...>())
+        if constexpr(detail::count_named_args<Args...>() == detail::count_statically_named_args<Args...>())
         {
           using checker = detail::format_string_checker<Char, detail::error_handler, remove_cvref_t<Args>...>;
           detail::parse_format_string<true>(m_str, checker(s, {}));
@@ -38,7 +38,7 @@ namespace rsl
 #endif
       }
       basic_format_string(basic_runtime<Char> r) // NOLINT(google-explicit-constructor)
-        : m_str(r.str)
+          : m_str(r.str)
       {
       }
 
@@ -71,9 +71,9 @@ namespace rsl
      */
     inline auto runtime(string_view s) -> basic_runtime<char>
     {
-      return { {s} };
+      return {{s}};
     }
 #endif
 
-  }
-}
+  } // namespace v1
+} // namespace rsl

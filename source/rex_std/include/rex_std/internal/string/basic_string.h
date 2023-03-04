@@ -1564,7 +1564,7 @@ namespace rsl
       void sso_assign(const_pointer str, size_type length)
       {
         REX_ASSERT_X(is_using_sso_string(), "Not using sso string when using sso assign");
-        //REX_ASSERT_X(str[length] == value_type(), "str doesn't end in a null termination char");
+        // REX_ASSERT_X(str[length] == value_type(), "str doesn't end in a null termination char");
 
         m_sso_buffer.assign(str, length);
         m_end = m_sso_buffer.data() + length;
@@ -1575,8 +1575,8 @@ namespace rsl
       // length doesn't include the null termination char
       void heap_assign(const_pointer str, size_type length)
       {
-        //REX_ASSERT_X(is_using_big_string(), "Not using big string when using heap assign");
-        //REX_ASSERT_X(str[length] == value_type(), "str doesn't end in a null termination char");
+        // REX_ASSERT_X(is_using_big_string(), "Not using big string when using heap assign");
+        // REX_ASSERT_X(str[length] == value_type(), "str doesn't end in a null termination char");
 
         if(length > capacity())
         {
@@ -2345,4 +2345,3 @@ inline rsl::basic_ostream<Char, Traits>& operator<<(rsl::basic_ostream<Char, Tra
 }
 
 #include "rex_std/bonus/string/string_utils_impl.h"
-

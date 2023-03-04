@@ -12,12 +12,12 @@
 
 #pragma once
 
-#include "rex_std/internal/array/array.h"
 #include "rex_std/bonus/algorithm/clamp_max.h"
 #include "rex_std/bonus/types.h"
 #include "rex_std/initializer_list.h"
 #include "rex_std/internal/algorithm/clamp.h"
 #include "rex_std/internal/algorithm/copy_n.h"
+#include "rex_std/internal/array/array.h"
 #include "rex_std/internal/functional/hash.h"
 #include "rex_std/internal/memory/memcpy.h"
 #include "rex_std/internal/string/char_traits.h"
@@ -697,4 +697,3 @@ namespace rsl
 
   } // namespace v1
 } // namespace rsl
-

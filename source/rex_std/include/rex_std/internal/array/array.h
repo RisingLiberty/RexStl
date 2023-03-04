@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: array.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -12,7 +12,6 @@
 
 #pragma once
 
-#include "rex_std/internal/assert/assert_fwd.h"
 #include "rex_std/internal/algorithm/fill_n.h"
 #include "rex_std/internal/algorithm/lexicographical_compare.h"
 #include "rex_std/internal/assert/assert_fwd.h"
@@ -34,18 +33,18 @@ namespace rsl
     class array
     {
     public:
-      using value_type = T;
-      using size_type = count_t; /// RSL Comment: Different from ISO C++ Standard at time of writing (26/Jun/2022)
+      using value_type      = T;
+      using size_type       = count_t; /// RSL Comment: Different from ISO C++ Standard at time of writing (26/Jun/2022)
       using difference_type = int32;   /// RSL Comment: Different from ISO C++ Standard at time of writing (26/Jun/2022)
-      using pointer = value_type*;
-      using const_pointer = const value_type*;
-      using reference = value_type&;
+      using pointer         = value_type*;
+      using const_pointer   = const value_type*;
+      using reference       = value_type&;
       using const_reference = const value_type&;
 
-      using iterator = random_access_iterator<T>;
+      using iterator       = random_access_iterator<T>;
       using const_iterator = const_random_access_iterator<T>;
 
-      using reverse_iterator = rsl::reverse_iterator<iterator>;
+      using reverse_iterator       = rsl::reverse_iterator<iterator>;
       using const_reverse_iterator = rsl::reverse_iterator<const_iterator>;
 
       // Returns a reference to the element at specified location pos, with bounds checking.
@@ -193,7 +192,7 @@ namespace rsl
       // Exchanges the contents of the container with those of other.
       constexpr void swap(array& other)
       {
-        for (card32 i = 0; i < size(); ++i)
+        for(card32 i = 0; i < size(); ++i)
         {
           rsl::swap(m_data[i], other[i]);
         }
@@ -212,18 +211,18 @@ namespace rsl
     class array<T, 0>
     {
     public:
-      using value_type = T;
-      using size_type = count_t; /// RSL Comment: Different from ISO C++ Standard at time of writing (26/Jun/2022)
+      using value_type      = T;
+      using size_type       = count_t; /// RSL Comment: Different from ISO C++ Standard at time of writing (26/Jun/2022)
       using difference_type = int32;   /// RSL Comment: Different from ISO C++ Standard at time of writing (26/Jun/2022)
-      using pointer = value_type*;
-      using const_pointer = const value_type*;
-      using reference = value_type&;
+      using pointer         = value_type*;
+      using const_pointer   = const value_type*;
+      using reference       = value_type&;
       using const_reference = const value_type&;
 
-      using iterator = random_access_iterator<T>;
+      using iterator       = random_access_iterator<T>;
       using const_iterator = const_random_access_iterator<T>;
 
-      using reverse_iterator = rsl::reverse_iterator<iterator>;
+      using reverse_iterator       = rsl::reverse_iterator<iterator>;
       using const_reverse_iterator = rsl::reverse_iterator<const_iterator>;
 
       // Returns a reference to the element at specified location pos, with bounds checking.
@@ -384,9 +383,9 @@ namespace rsl
     template <typename T, count_t Size>
     constexpr bool operator==(const rsl::array<T, Size>& lhs, const rsl::array<T, Size>& rhs)
     {
-      for (auto lhs_it = lhs.cbegin(), lhs_end = lhs.cend(), rhs_it = rhs.cbegin(); lhs_it != lhs_end; ++lhs_it)
+      for(auto lhs_it = lhs.cbegin(), lhs_end = lhs.cend(), rhs_it = rhs.cbegin(); lhs_it != lhs_end; ++lhs_it)
       {
-        if (*lhs_it != rhs_it)
+        if(*lhs_it != rhs_it)
         {
           return false;
         }
@@ -463,21 +462,21 @@ namespace rsl
     {
       // TODO: Check for the compile time overhead
       template <typename T, count_t Size, card32... I>
-      constexpr rsl::array<rsl::remove_cv_t<T>, Size> to_array(T(&a)[Size]) // NOLINT
+      constexpr rsl::array<rsl::remove_cv_t<T>, Size> to_array(T (&a)[Size]) // NOLINT
       {
-        return rsl::array<remove_cv_t<T>, Size> { {a[I]...}};
+        return rsl::array<remove_cv_t<T>, Size> {{a[I]...}};
       }
       template <typename T, count_t Size, card32... I>
-      constexpr rsl::array<rsl::remove_cv_t<T>, Size> to_array(T(&& a)[Size]) // NOLINT
+      constexpr rsl::array<rsl::remove_cv_t<T>, Size> to_array(T (&&a)[Size]) // NOLINT
       {
-        return rsl::array<remove_cv_t<T>, Size> { {rsl::move(a[I])...}};
+        return rsl::array<remove_cv_t<T>, Size> {{rsl::move(a[I])...}};
       }
     } // namespace internal
 
     // Create a rsl::array from the one dimensinoal built-in array.
     // elements are copy-initialized from the corresponding element of a
     template <typename T, count_t Size>
-    constexpr rsl::array<rsl::remove_cv_t<T>, Size> to_array(T(&a)[Size]) // NOLINT
+    constexpr rsl::array<rsl::remove_cv_t<T>, Size> to_array(T (&a)[Size]) // NOLINT
     {
       static_assert(rsl::is_constructible_v<T, T&>, "element of type T must be copy constructible");
       static_assert(!rsl::is_array_v<T>, "passing multidimensional arrays to to_array is ill-formed");
@@ -486,7 +485,7 @@ namespace rsl
     // Create a rsl::array from the one dimensinoal built-in array.
     // elements are move-initialized from the corresponding element of a
     template <typename T, count_t Size>
-    constexpr rsl::array<rsl::remove_cv_t<T>, Size> to_array(T(&& a)[Size]) // NOLINT
+    constexpr rsl::array<rsl::remove_cv_t<T>, Size> to_array(T (&&a)[Size]) // NOLINT
     {
       static_assert(rsl::is_constructible_v<T, T&>, "element of type T must be copy constructible");
       static_assert(!rsl::is_array_v<T>, "passing multidimensional arrays to to_array is ill-formed");
@@ -514,7 +513,7 @@ namespace rsl
 
     // Construction of rsl::array from a variadic parameter pack.
     template <typename T, typename... U>
-    array(T, U...)->array<T, 1 + sizeof...(U)>;
+    array(T, U...) -> array<T, 1 + sizeof...(U)>;
 
   } // namespace v1
 } // namespace rsl

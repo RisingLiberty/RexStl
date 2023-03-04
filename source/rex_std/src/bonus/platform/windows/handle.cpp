@@ -11,6 +11,7 @@
 // ============================================
 
 #include "rex_std/bonus/platform/windows/handle.h"
+
 #include "rex_std/internal/type_traits/is_same.h"
 
 #include <Windows.h>

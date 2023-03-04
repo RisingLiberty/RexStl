@@ -12,6 +12,7 @@
 
 #pragma once
 
+#include "rex_std/assert.h"
 #include "rex_std/ios.h"
 #include "rex_std/istream.h"
 #include "rex_std/ostream.h"

@@ -36,7 +36,7 @@ namespace rsl
     } // namespace internal
 
     template <typename... T>
-    REX_NO_DISCARD inline auto format(format_string<T...> fmt, T&&... args)->rsl::string;
+    REX_NO_DISCARD inline auto format(format_string<T...> fmt, T&&... args) -> rsl::string;
 
     template <typename... Args>
     bool rex_assert(bool cond, Args&&... args)

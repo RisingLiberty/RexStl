@@ -108,5 +108,4 @@
 
 // Bonus algorithms
 #include "rex_std/bonus/algorithm.h"
-
 #include "rex_std/internal/assert/assert_impl.h"

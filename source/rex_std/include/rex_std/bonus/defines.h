@@ -64,9 +64,9 @@ MERGE(str, __LINE__)
 #endif
 
 #if defined REX_COMPILER_CLANG
-#define DEBUG_BREAK() __builtin_trap()
+  #define DEBUG_BREAK() __builtin_trap()
 #elif defined REX_COMPILER_MSVC
-#define DEBUG_BREAK() __debugbreak()
+  #define DEBUG_BREAK() __debugbreak()
 #else
-#error DEBUG_BREAK unsupported machine instruction ...
+  #error DEBUG_BREAK unsupported machine instruction ...
 #endif

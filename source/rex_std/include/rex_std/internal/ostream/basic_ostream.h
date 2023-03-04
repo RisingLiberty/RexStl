@@ -548,4 +548,3 @@ namespace rsl
 } // namespace rsl
 
 #include "rex_std/bonus/string/string_utils_impl.h"
-#include "rex_std/bonus/string/string_utils_impl.h"

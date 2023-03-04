@@ -12,5 +12,5 @@
 
 #pragma once
 
-#include "rex_std/internal/optional/optional.h"
 #include "rex_std/internal/assert/assert_impl.h"
+#include "rex_std/internal/optional/optional.h"

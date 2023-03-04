@@ -1,10 +1,10 @@
-// ============================================ 
+// ============================================
 //
 // REX - STANDARD LIBRARY IMPLEMENTATION
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: optional.h
 // Copyright (c) Nick De Breuck 2022
 //

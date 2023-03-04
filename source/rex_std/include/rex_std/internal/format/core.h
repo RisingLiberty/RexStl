@@ -10,9 +10,12 @@
 #ifndef FMT_CORE_H_
 #define FMT_CORE_H_
 
-#include "rex_std/internal/format/fmt_string.h"
 #include "rex_std/internal/format/fmt_defines.h"
+#include "rex_std/internal/format/fmt_string.h"
 #include "rex_std/internal/iterator/back_insert_iterator.h"
+#include "rex_std/internal/string/basic_string.h"
+#include "rex_std/internal/string/memchr.h"
+#include "rex_std/internal/string_view/basic_string_view.h"
 #include "rex_std/internal/type_traits/is_class.h"
 #include "rex_std/internal/type_traits/is_constant_evaluated.h"
 #include "rex_std/internal/type_traits/is_convertible.h"
@@ -21,9 +24,6 @@
 #include "rex_std/internal/type_traits/remove_cvref.h"
 #include "rex_std/internal/type_traits/remove_pointer.h"
 #include "rex_std/internal/type_traits/underlying_type.h"
-#include "rex_std/internal/string/memchr.h"
-#include "rex_std/internal/string/basic_string.h"
-#include "rex_std/internal/string_view/basic_string_view.h"
 
 #include <cstddef> // rsl::byte
 #include <cstdio>  // std::FILE

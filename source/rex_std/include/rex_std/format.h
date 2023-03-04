@@ -53,12 +53,12 @@
   #include "rex_std/internal/memory/memset.h"
   #include "rex_std/internal/memory/shared_ptr.h"
   #include "rex_std/internal/memory/unique_ptr.h"
+  #include "rex_std/internal/string/basic_string.h"
   #include "rex_std/internal/type_traits/is_floating_point.h"
   #include "rex_std/internal/type_traits/is_integral.h"
   #include "rex_std/internal/type_traits/is_same.h"
   #include "rex_std/internal/utility/declval.h"
   #include "rex_std/limits.h"
-  #include "rex_std/internal/string/basic_string.h"
 
   #include <cmath>        // std::signbit
   #include <cstdint>      // uint32_t

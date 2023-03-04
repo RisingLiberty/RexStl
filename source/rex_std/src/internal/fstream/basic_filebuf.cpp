@@ -12,11 +12,11 @@
 
 #include "rex_std/internal/fstream/basic_filebuf.h"
 
-#include "rex_std/internal/array/array.h"
+#include "rex_std/assert.h"
 #include "rex_std/bonus/utility/has_flag.h"
 #include "rex_std/bonus/utility/nand.h"
+#include "rex_std/internal/array/array.h"
 #include "rex_std/internal/memory/memcpy.h"
-#include "rex_std/assert.h"
 
 #include <Windows.h>
 

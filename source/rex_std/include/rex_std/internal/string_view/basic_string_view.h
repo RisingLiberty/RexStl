@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: basic_string_view.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -28,9 +28,9 @@
 #include "rex_std/internal/memory/addressof.h"
 #include "rex_std/internal/memory/memcpy.h"
 #include "rex_std/internal/memory/nullptr.h"
+#include "rex_std/internal/optional/optional.h"
 #include "rex_std/internal/type_traits/is_base_of.h"
 #include "rex_std/internal/utility/swap.h"
-#include "rex_std/internal/optional/optional.h"
 
 namespace rsl
 {
@@ -41,24 +41,24 @@ namespace rsl
     class basic_string_view
     {
     public:
-      using traits_type = Traits;
-      using value_type = CharType;
-      using pointer = value_type*;
-      using const_pointer = const value_type*;
-      using reference = value_type&;
-      using const_reference = const value_type&;
-      using const_iterator = const_random_access_iterator<value_type>;
-      using iterator = const_iterator;
+      using traits_type            = Traits;
+      using value_type             = CharType;
+      using pointer                = value_type*;
+      using const_pointer          = const value_type*;
+      using reference              = value_type&;
+      using const_reference        = const value_type&;
+      using const_iterator         = const_random_access_iterator<value_type>;
+      using iterator               = const_iterator;
       using const_reverse_iterator = reverse_iterator<const_iterator>;
-      using reverse_iterator = const_reverse_iterator;
-      using size_type = count_t;
-      using difference_type = int32;
+      using reverse_iterator       = const_reverse_iterator;
+      using size_type              = count_t;
+      using difference_type        = int32;
 
       // Default constructor. Constructs an empty view.
       // after construction, data() is equal to nullptr, size() equals 0
       constexpr basic_string_view()
-        : m_data()
-        , m_length(0)
+          : m_data()
+          , m_length(0)
       {
       }
       // Copy constructor. defaulted, shallow copies members over from other
@@ -67,14 +67,14 @@ namespace rsl
       constexpr basic_string_view(basic_string_view&&) = default;
       // Constructs a view of the first count characters starting at s
       constexpr basic_string_view(const_pointer s, size_type count)
-        : m_data(s)
-        , m_length(count)
+          : m_data(s)
+          , m_length(count)
       {
       }
       // Constructs a view starting at s, reaching to the first null termination char.
       constexpr explicit basic_string_view(const CharType* s)
-        : m_data(s)
-        , m_length(traits_type::length(s))
+          : m_data(s)
+          , m_length(traits_type::length(s))
       {
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (07/Jul/2022)
@@ -82,17 +82,17 @@ namespace rsl
       // Constructs a view using a continuous iterator
       template <typename It1, typename It2, enable_if_t<is_base_of_v<input_iterator_tag, typename It2::iterator_category>, bool> = true>
       constexpr basic_string_view(It1 first, It2 last)
-        : m_data(rsl::iterator_to_pointer(first))
-        , m_length(last - first)
+          : m_data(rsl::iterator_to_pointer(first))
+          , m_length(last - first)
       {
       }
       /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
       // The standard doesn't provide an overload for a string literal
       // Constructs a view using a string literal
       template <count_t N>
-      constexpr basic_string_view(const CharType(&str)[N]) // NOLINT(google-explicit-constructor, modernize-avoid-c-arrays)
-        : m_data(str)
-        , m_length(N - 1)
+      constexpr basic_string_view(const CharType (&str)[N]) // NOLINT(google-explicit-constructor, modernize-avoid-c-arrays)
+          : m_data(str)
+          , m_length(N - 1)
       {
       }
       // can't construct a string view from a nullptr
@@ -250,7 +250,7 @@ namespace rsl
       // The standard doesn't provide an overload for a string literal
       // compares 2 character sequences
       template <count_t Size>
-      REX_NO_DISCARD constexpr int32 compare(const value_type(&s)[Size]) const // NOLINT(modernize-avoid-c-arrays)
+      REX_NO_DISCARD constexpr int32 compare(const value_type (&s)[Size]) const // NOLINT(modernize-avoid-c-arrays)
       {
         return compare(basic_string_view(s, Size - 1));
       }
@@ -258,7 +258,7 @@ namespace rsl
       // The standard doesn't provide an overload for a string literal
       // compares 2 character sequences
       template <count_t Size>
-      REX_NO_DISCARD constexpr int32 compare(size_type pos1, size_type count1, const value_type(&s)[Size]) const // NOLINT(modernize-avoid-c-arrays)
+      REX_NO_DISCARD constexpr int32 compare(size_type pos1, size_type count1, const value_type (&s)[Size]) const // NOLINT(modernize-avoid-c-arrays)
       {
         return substr(pos1, count1).compare(basic_string_view(s, Size - 1));
       }
@@ -349,7 +349,7 @@ namespace rsl
       // finds the last substring equal to the given character sequence in this view
       constexpr size_type rfind(basic_string_view view, card32 pos = s_npos) const
       {
-        if (pos == s_npos)
+        if(pos == s_npos)
         {
           pos = length();
         }
@@ -358,7 +358,7 @@ namespace rsl
       // finds the last substring equal to the given character sequence in this view
       constexpr size_type rfind(value_type c, card32 pos = s_npos) const
       {
-        if (pos == s_npos)
+        if(pos == s_npos)
         {
           pos = length();
         }
@@ -372,7 +372,7 @@ namespace rsl
       // finds the last substring equal to the given character sequence in this view
       constexpr size_type rfind(const_pointer str, card32 pos = s_npos) const
       {
-        if (pos == s_npos)
+        if(pos == s_npos)
         {
           pos = length();
         }
@@ -478,17 +478,17 @@ namespace rsl
       {
         int32 res = traits_type::compare(lhs, rhs, (rsl::min)(lhsLength, rhsLength));
 
-        if (res != 0)
+        if(res != 0)
         {
           return res;
         }
 
-        if (lhsLength < rhsLength)
+        if(lhsLength < rhsLength)
         {
           return -1;
         }
 
-        if (lhsLength > rhsLength)
+        if(lhsLength > rhsLength)
         {
           return 1;
         }
@@ -507,7 +507,7 @@ namespace rsl
     template <typename CharType, typename Traits>
     constexpr bool operator==(basic_string_view<CharType, Traits> lhs, basic_string_view<CharType, Traits> rhs)
     {
-      if (lhs.length() != rhs.length())
+      if(lhs.length() != rhs.length())
       {
         return false;
       }
@@ -626,22 +626,22 @@ namespace rsl
       return os;
     }
 
-    using string_view = basic_string_view<char8>;
-    using WStringView = basic_string_view<tchar>;
+    using string_view   = basic_string_view<char8>;
+    using WStringView   = basic_string_view<tchar>;
     using u16StringView = basic_string_view<char16_t>;
     using u32StringView = basic_string_view<char32_t>;
 
     namespace string_view_literals
     {
 #if defined(REX_COMPILER_MSVC)
-#pragma warning(push)
-#pragma warning(disable : 4455) // literal suffix identifiers that do not start with an underscore are reserved
+  #pragma warning(push)
+  #pragma warning(disable : 4455) // literal suffix identifiers that do not start with an underscore are reserved
 #elif defined(REX_COMPILER_CLANG)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wuser-defined-literals" // literal suffix identifiers that do not start with an underscore are reserved
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wuser-defined-literals" // literal suffix identifiers that do not start with an underscore are reserved
 #endif
       // returns a string view of the desired type
-      constexpr string_view operator""s(const char8 * s, size_t len) // NOLINT(clang-diagnostic-user-defined-literals)
+      constexpr string_view operator""s(const char8* s, size_t len) // NOLINT(clang-diagnostic-user-defined-literals)
       {
         const count_t len_as_count = static_cast<count_t>(len);
         return string_view(s, len_as_count);
@@ -659,15 +659,15 @@ namespace rsl
         return u32StringView(s, len_as_count);
       }
       // returns a string view of the desired type
-      constexpr WStringView operator""s(const tchar * s, size_t len) // NOLINT(clang-diagnostic-user-defined-literals)
+      constexpr WStringView operator""s(const tchar* s, size_t len) // NOLINT(clang-diagnostic-user-defined-literals)
       {
         const count_t len_as_count = static_cast<count_t>(len);
         return WStringView(s, len_as_count);
       }
 #if defined(REX_COMPILER_MSVC)
-#pragma warning(pop)
+  #pragma warning(pop)
 #elif defined(REX_COMPILER_CLANG)
-#pragma clang diagnostic pop
+  #pragma clang diagnostic pop
 #endif
     } // namespace string_view_literals
 
@@ -681,7 +681,7 @@ namespace rsl
     };
 
     template <typename It>
-    basic_string_view(It, It)->basic_string_view<typename rsl::iterator_traits<It>::value_type, rsl::char_traits<typename rsl::iterator_traits<It>::value_type>>;
+    basic_string_view(It, It) -> basic_string_view<typename rsl::iterator_traits<It>::value_type, rsl::char_traits<typename rsl::iterator_traits<It>::value_type>>;
 
     constexpr rsl::optional<int32> stoi(string_view view)
     {
