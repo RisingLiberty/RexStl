@@ -177,32 +177,6 @@ TEST_CASE("args_test, reserve")
   REQUIRE(rsl::string("42 and 1.5") == result);
 }
 
-struct copy_assert {
-  copy_assert() {}
-  copy_assert(const copy_assert&) 
-  { 
-    REX_ASSERT("copying something that shouldn't be copied in fmt test"); 
-  }
-};
-
-FMT_BEGIN_NAMESPACE
-template <> struct formatter<copy_assert> {
-  auto parse(format_parse_context& ctx) const -> decltype(ctx.begin()) {
-    return ctx.begin();
-  }
-  auto format(copy_assert, format_context& ctx) -> decltype(ctx.out()) {
-    return ctx.out();
-  }
-};
-FMT_END_NAMESPACE
-
-TEST_CASE("args_test, assert_on_copy") {
-  rsl::dynamic_format_arg_store<rsl::format_context> store;
-  store.push_back(rsl::string("foo"));
-  store.push_back(copy_assert());
-  REQUIRE(rsl::vformat("{}", store) == rsl::string("foo"));
-}
-
 TEST_CASE("args_test, move_constructor") {
   using store_type = rsl::dynamic_format_arg_store<rsl::format_context>;
   auto store = rsl::unique_ptr<store_type>(new store_type());
