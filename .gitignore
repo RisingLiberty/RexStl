@@ -41,3 +41,4 @@ build/scripts/rexpy/__pycache__/
 
 *.ninja
 *.sln
+*.nsln
