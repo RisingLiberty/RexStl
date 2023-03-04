@@ -123,25 +123,6 @@ TEST_CASE("in range")
   CHECK(rsl::in_range<int>(5'000'000'000) == false);
   CHECK(rsl::in_range<int>(2000) == true);
 }
-TEST_CASE("pair")
-{
-  rsl::pair my_pair(1, 2);
-  CHECK(my_pair.first == 1);
-  CHECK(my_pair.second == 2);
-}
-TEST_CASE("tuple size")
-{
-  rsl::pair my_pair(1, 2);
-
-  static_assert(rsl::tuple_size_v<decltype(my_pair)> == 2);
-}
-TEST_CASE("tuple element")
-{
-  rsl::pair my_pair(1, 2.0f);
-
-  static_assert(rsl::is_same_v<rsl::tuple_element_t<0, decltype(my_pair)>, int> == true);
-  static_assert(rsl::is_same_v<rsl::tuple_element_t<1, decltype(my_pair)>, float> == true);
-}
 TEST_CASE("integer sequence")
 {
   rsl::integer_sequence<int, 0, 1, 2> integers;
