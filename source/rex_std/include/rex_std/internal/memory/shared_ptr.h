@@ -101,7 +101,7 @@ namespace rsl
 
         void delete_this() override
         {
-          this->~RefCount();
+          this->~ref_count();
           m_allocator.deallocate(this, sizeof(*this));
         }
 
@@ -768,3 +768,6 @@ namespace rsl
     }
   } // namespace v1
 } // namespace rsl
+
+//#include "rex_std/internal/assert/assert_impl.h"
+

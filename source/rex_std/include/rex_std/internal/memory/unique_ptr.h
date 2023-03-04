@@ -30,7 +30,6 @@
 #include "rex_std/internal/type_traits/remove_reference.h"
 #include "rex_std/internal/utility/exchange.h"
 #include "rex_std/internal/utility/swap.h"
-#include "rex_std/ostream.h"
 
 namespace rsl
 {

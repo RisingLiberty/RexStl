@@ -88,7 +88,7 @@ namespace rsl
       }
       this_type& operator=(initializer_list<value_type> ilist)
       {
-        return static_Cast<this_type&>(base_type::operator=(ilist));
+        return static_cast<this_type&>(base_type::operator=(ilist));
       }
 
       Value& at(const key_type& k)

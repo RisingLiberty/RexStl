@@ -168,7 +168,7 @@ namespace rsl
             }
             else
             {
-              REX_ASSERT_X(node != nullptr && node->parent_node != nullptr);
+              REX_ASSERT_X(node != nullptr && node->parent_node != nullptr, "invalid node");
 
               if(node == node->parent_node->left_node)
               {
@@ -182,7 +182,7 @@ namespace rsl
             }
           }
 
-          REX_ASSERT_X(node_root_ref != nullptr);
+          REX_ASSERT_X(node_root_ref != nullptr, "invalid node root");
           node_root_ref->color = internal::RedBlackTreeColor::Black;
         }
       }
@@ -752,7 +752,7 @@ namespace rsl
 
       RedBlackTree& operator=(const this_type& other)
       {
-        REX_ASSERT_X(this, &other, "Can't copy to yourself");
+        REX_ASSERT_X(this != &other, "Can't copy to yourself");
         REX_ASSERT_X(get_allocator() == other.get_allocator(), "Different allocators in copy assignment, this is not allowed");
 
         clear();
@@ -770,7 +770,7 @@ namespace rsl
       }
       RedBlackTree& operator=(this_type&& other)
       {
-        REX_ASSERT_X(this, &other, "Can't copy to yourself");
+        REX_ASSERT_X(this != &other, "Can't copy to yourself");
         REX_ASSERT_X(get_allocator() == other.get_allocator(), "Different allocators in move assignment, this is not allowed");
 
         clear();
@@ -1786,3 +1786,6 @@ namespace rsl
 
   } // namespace v1
 } // namespace rsl
+
+//#include "rex_std/internal/assert/assert_impl.h"
+

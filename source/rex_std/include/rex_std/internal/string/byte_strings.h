@@ -13,6 +13,7 @@
 #pragma once
 
 #include "rex_std/bonus/string/string_utils.h"
+#include "rex_std/bonus/string/string_utils_impl.h"
 #include "rex_std/bonus/types.h"
 #include "rex_std/optional.h"
 

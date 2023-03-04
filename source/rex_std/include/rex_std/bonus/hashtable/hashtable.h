@@ -21,6 +21,7 @@
 #include "rex_std/bonus/utility/range.h"
 #include "rex_std/initializer_list.h"
 #include "rex_std/internal/assert/assert_fwd.h"
+#include "rex_std/internal/memory/addressof.h"
 #include "rex_std/internal/type_traits/integral_constant.h"
 #include "rex_std/internal/utility/forward.h"
 #include "rex_std/internal/utility/move.h"
@@ -98,7 +99,7 @@ namespace rsl
         }
         else
         {
-          REX_ASSERT_X(bucketCount < 10'000'000, "Bucket count too big for hashtable. bucketcount: {}", bucketCount);
+          REX_ASSERT_X(bucketCount.get() < 10'000'000, "Bucket count too big for hashtable. bucketcount: {}", bucketCount.get());
           m_cp_key_hash_and_bucket_count.second() = bucketCount.get();
         }
 
@@ -184,7 +185,7 @@ namespace rsl
       }
       this_type& operator=(this_type&& other)
       {
-        REX_ASSERT_X(this != addressof(other, "Can't move to yourself"));
+        REX_ASSERT_X(this != rsl::addressof(other), "Can't move to yourself");
 
         clear();
         swap(other);
@@ -771,4 +772,4 @@ namespace rsl
   } // namespace v1
 } // namespace rsl
 
-#include "rex_std/internal/assert/assert_impl.h"
+//#include "rex_std/internal/assert/assert_impl.h"

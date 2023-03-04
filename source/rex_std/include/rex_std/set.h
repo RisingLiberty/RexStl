@@ -174,7 +174,7 @@ namespace rsl
     };
 
     template <typename Key, typename Compare, typename Allocator, typename Predicate>
-    set<Key, Compare, allocator>::size_type erase_if(set<Key, Compare, allocator>& c, Predicate predicate)
+    typename set<Key, Compare, allocator>::size_type erase_if(set<Key, Compare, allocator>& c, Predicate predicate)
     {
       typename set<Key, Compare, allocator>::size_type old_size = c.size();
 

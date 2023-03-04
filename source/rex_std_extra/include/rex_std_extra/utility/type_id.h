@@ -36,8 +36,10 @@ namespace rsl
         constexpr rsl::string_view prefix    = "class rsl::v1::basic_string_view<char,class rsl::v1::char_traits<char> > __cdecl rsl::v1::internal::msvc_class_type_name<class ";
         constexpr rsl::string_view suffix    = ">(void)";
 
+#ifndef REX_ENABLE_ASSERTS // "contains" has an internal assert
         static_assert(func_name.contains(prefix), "prefix not found in name!");
         static_assert(func_name.contains(suffix), "suffix not found in name!");
+#endif
 
         name.remove_prefix(prefix.size());
         name.remove_suffix(suffix.size());
@@ -52,8 +54,10 @@ namespace rsl
         constexpr rsl::string_view prefix    = "class rsl::v1::basic_string_view<char,class rsl::v1::char_traits<char> > __cdecl rsl::v1::internal::msvc_struct_type_name<struct ";
         constexpr rsl::string_view suffix    = ">(void)";
 
+#ifndef REX_ENABLE_ASSERTS // "contains" has an internal assert
         static_assert(func_name.contains(prefix), "prefix not found in name!");
         static_assert(func_name.contains(suffix), "suffix not found in name!");
+#endif
 
         name.remove_prefix(prefix.size());
         name.remove_suffix(suffix.size());
@@ -70,8 +74,10 @@ namespace rsl
         constexpr rsl::string_view prefix    = "rsl::string_view rsl::internal::type_name() [T = ";
         constexpr rsl::string_view suffix    = "]";
 
+#ifndef REX_ENABLE_ASSERTS // "contains" has an internal assert
         static_assert(func_name.contains(prefix), "prefix not found in name!");
         static_assert(func_name.contains(suffix), "suffix not found in name!");
+#endif
 
         name.remove_prefix(prefix.size());
         name.remove_suffix(suffix.size());
@@ -82,15 +88,21 @@ namespace rsl
         constexpr rsl::string_view prefix    = "rsl::string_view rsl::internal::type_name() [T = ";
         constexpr rsl::string_view suffix    = "]";
 
+#ifndef REX_ENABLE_ASSERTS // "contains" has an internal assert
         static_assert(func_name.contains(prefix), "prefix not found in name!");
         static_assert(func_name.contains(suffix), "suffix not found in name!");
+#endif
 
         name.remove_prefix(prefix.size());
         name.remove_suffix(suffix.size());
         return name;
 #elif defined(REX_COMPILER_MSVC)
         constexpr rsl::string_view func_name = __FUNCSIG__;
+#ifndef REX_ENABLE_ASSERTS // "contains" has an internal assert
         if constexpr(func_name.contains("struct"))
+#else
+        if (func_name.contains("struct"))
+#endif
         {
           return msvc_struct_type_name<T>();
         }
@@ -112,8 +124,10 @@ namespace rsl
         constexpr rsl::string_view prefix    = "rsl::string_view rsl::internal::type_name() [T = ";
         constexpr rsl::string_view suffix    = "]";
 
+#ifndef REX_ENABLE_ASSERTS // "contains" has an internal assert
         static_assert(func_name.contains(prefix), "prefix not found in name!");
         static_assert(func_name.contains(suffix), "suffix not found in name!");
+#endif
 
 #elif defined(REX_COMPILER_GCC)
         rsl::string_view name                = __PRETTY_FUNCTION__;
@@ -121,8 +135,10 @@ namespace rsl
         constexpr rsl::string_view prefix    = "rsl::string_view rsl::internal::type_name() [T = ";
         constexpr rsl::string_view suffix    = "]";
 
+#ifndef REX_ENABLE_ASSERTS // "contains" has an internal assert
         static_assert(func_name.contains(prefix), "prefix not found in name!");
         static_assert(func_name.contains(suffix), "suffix not found in name!");
+#endif
 
 #elif defined(REX_COMPILER_MSVC)
         rsl::string_view name                = __FUNCSIG__;
@@ -130,8 +146,11 @@ namespace rsl
         constexpr rsl::string_view prefix    = "class rsl::v1::basic_string_view<char,class rsl::v1::char_traits<char> > __cdecl rsl::v1::internal::type_name<";
         constexpr rsl::string_view suffix    = ",true>(void)";
 
+#ifndef REX_ENABLE_ASSERTS // "contains" has an internal assert
         static_assert(func_name.contains(prefix), "prefix not found in name!");
         static_assert(func_name.contains(suffix), "suffix not found in name!");
+#endif
+
 #else
   #error "Unknown Compiler."
 #endif

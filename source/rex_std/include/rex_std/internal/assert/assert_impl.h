@@ -17,34 +17,42 @@
 
 #pragma once
 
-#include "rex_std/format.h"
+#include "rex_std/internal/format/fmt_string.h"
 #include "rex_std/internal/utility/forward.h"
-#include "rex_std/string.h"
 
 namespace rsl
 {
   inline namespace v1
   {
+    class allocator;
+    template <typename CharType, typename Traits, typename Allocator>
+    class basic_string;
+
+    using string = basic_string<char8, char_traits<char8>, allocator>;
+
     namespace internal
     {
       void log_assert(const rsl::string& msg);
     } // namespace internal
 
+    template <typename... T>
+    REX_NO_DISCARD inline auto format(format_string<T...> fmt, T&&... args)->rsl::string;
+
     template <typename... Args>
     bool rex_assert(bool cond, Args&&... args)
     {
-#ifdef _MSC_VER
-      if(cond)
+      if(!cond)
       {
-        rsl::string str = rsl::format(rsl::forward<Args>(args)...);
+        const rsl::string& str = rsl::format(rsl::forward<Args>(args)...);
         internal::log_assert(str);
-        __debugbreak();
+        DEBUG_BREAK();
         return true;
       }
-#endif // _MSC_VER
 
       return false;
     }
 
   } // namespace v1
 } // namespace rsl
+
+#include "rex_std/format.h"

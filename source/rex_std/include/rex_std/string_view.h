@@ -234,7 +234,7 @@ namespace rsl
       // compares 2 character sequences
       REX_NO_DISCARD constexpr int32 compare(basic_string_view sv) const
       {
-        return internal::string_utils::compare<traits_type>(data(), sv.data(), size(), sv.size());
+        return rsl::string_utils::compare<traits_type>(data(), sv.data(), size(), sv.size());
       }
       // compares 2 characters sequences
       REX_NO_DISCARD constexpr int32 compare(size_type pos1, size_type count1, basic_string_view v) const
@@ -287,7 +287,7 @@ namespace rsl
       // checks if the string view ends with the given suffix
       REX_NO_DISCARD constexpr bool ends_with(const basic_string_view rhs) const
       {
-        return internal::string_utils::compare<traits_type>(data() + (length() - rhs.size()), rhs.data(), rhs.length(), rhs.length()) == 0;
+        return rsl::string_utils::compare<traits_type>(data() + (length() - rhs.size()), rhs.data(), rhs.length(), rhs.length()) == 0;
       }
       // checks if the string view ends with the given suffix
       template <typename T, typename rsl::enable_if_t<rsl::is_same_v<T, CharType>, bool> = true>
@@ -328,22 +328,22 @@ namespace rsl
       // finds the first substring equal to the given character sequence in this view
       constexpr size_type find(basic_string_view view, card32 pos = 0) const
       {
-        return rsl::internal::string_utils::find<traits_type, const_pointer>(m_data, length(), pos, view.data(), view.length(), s_npos);
+        return rsl::string_utils::find<traits_type, const_pointer>(m_data, length(), pos, view.data(), view.length(), s_npos);
       }
       // finds the first substring equal to the given character sequence in this view
       constexpr size_type find(value_type c, card32 pos = 0) const
       {
-        return internal::string_utils::find<traits_type, const_pointer>(m_data, length(), pos, rsl::addressof(c), 1_elem, s_npos);
+        return rsl::string_utils::find<traits_type, const_pointer>(m_data, length(), pos, rsl::addressof(c), 1_elem, s_npos);
       }
       // finds the first substring equal to the given character sequence in this view
       constexpr size_type find(const_pointer str, card32 pos, card32 count) const
       {
-        return internal::string_utils::find<traits_type, const_pointer>(m_data, length(), pos, str, count, s_npos);
+        return rsl::string_utils::find<traits_type, const_pointer>(m_data, length(), pos, str, count, s_npos);
       }
       // finds the first substring equal to the given character sequence in this view
       constexpr size_type find(const_pointer str, card32 pos = 0) const
       {
-        return internal::string_utils::find<traits_type, const_pointer>(m_data, length(), pos, str, traits_type::length(str), s_npos);
+        return rsl::string_utils::find<traits_type, const_pointer>(m_data, length(), pos, str, traits_type::length(str), s_npos);
       }
 
       // finds the last substring equal to the given character sequence in this view
@@ -353,7 +353,7 @@ namespace rsl
         {
           pos = length();
         }
-        return internal::string_utils::rfind<traits_type, const_pointer>(m_data, length(), pos, view.data(), view.length(), s_npos);
+        return rsl::string_utils::rfind<traits_type, const_pointer>(m_data, length(), pos, view.data(), view.length(), s_npos);
       }
       // finds the last substring equal to the given character sequence in this view
       constexpr size_type rfind(value_type c, card32 pos = s_npos) const
@@ -362,12 +362,12 @@ namespace rsl
         {
           pos = length();
         }
-        return internal::string_utils::rfind<traits_type, const_pointer>(m_data, length(), pos, rsl::addressof(c), 1_elem, s_npos);
+        return rsl::string_utils::rfind<traits_type, const_pointer>(m_data, length(), pos, rsl::addressof(c), 1_elem, s_npos);
       }
       // finds the last substring equal to the given character sequence in this view
       constexpr size_type rfind(const_pointer str, card32 pos, card32 count) const
       {
-        return internal::string_utils::rfind<traits_type, const_pointer>(m_data, length(), pos, str, count, s_npos);
+        return rsl::string_utils::rfind<traits_type, const_pointer>(m_data, length(), pos, str, count, s_npos);
       }
       // finds the last substring equal to the given character sequence in this view
       constexpr size_type rfind(const_pointer str, card32 pos = s_npos) const
@@ -376,91 +376,91 @@ namespace rsl
         {
           pos = length();
         }
-        return internal::string_utils::rfind<traits_type, const_pointer>(m_data, length(), pos, str, traits_type::length(str), s_npos);
+        return rsl::string_utils::rfind<traits_type, const_pointer>(m_data, length(), pos, str, traits_type::length(str), s_npos);
       }
 
       // finds the first character equal to any of the characters in the given character sequence in this view.
       constexpr size_type find_first_of(basic_string_view view, card32 pos = 0) const
       {
-        return internal::string_utils::find_first_of<traits_type, const_pointer>(m_data, length(), pos, view.data(), view.length(), s_npos);
+        return rsl::string_utils::find_first_of<traits_type, const_pointer>(m_data, length(), pos, view.data(), view.length(), s_npos);
       }
       // finds the first character equal to any of the characters in the given character sequence in this view.
       constexpr size_type find_first_of(value_type c, card32 pos = 0) const
       {
-        return internal::string_utils::find_first_of<traits_type, const_pointer>(m_data, length(), pos, rsl::addressof(c), 1_elem, s_npos);
+        return rsl::string_utils::find_first_of<traits_type, const_pointer>(m_data, length(), pos, rsl::addressof(c), 1_elem, s_npos);
       }
       // finds the first character equal to any of the characters in the given character sequence in this view.
       constexpr size_type find_first_of(const_pointer str, card32 pos, card32 count) const
       {
-        return internal::string_utils::find_first_of<traits_type, const_pointer>(m_data, length(), pos, str, count, s_npos);
+        return rsl::string_utils::find_first_of<traits_type, const_pointer>(m_data, length(), pos, str, count, s_npos);
       }
       // finds the first character equal to any of the characters in the given character sequence in this view.
       constexpr size_type find_first_of(const_pointer str, card32 pos = 0) const
       {
-        return internal::string_utils::find_first_of<traits_type, const_pointer>(m_data, length(), pos, str, traits_type::length(str), s_npos);
+        return rsl::string_utils::find_first_of<traits_type, const_pointer>(m_data, length(), pos, str, traits_type::length(str), s_npos);
       }
 
       // finds the last character equal to any of the characters in the given character sequence in this view.
       constexpr size_type find_last_of(basic_string_view view, card32 pos = 0) const
       {
-        return internal::string_utils::find_last_of<traits_type, const_pointer>(m_data, length(), pos, view.data(), view.length(), s_npos);
+        return rsl::string_utils::find_last_of<traits_type, const_pointer>(m_data, length(), pos, view.data(), view.length(), s_npos);
       }
       // finds the last character equal to any of the characters in the given character sequence in this view.
       constexpr size_type find_last_of(value_type c, card32 pos = 0) const
       {
-        return internal::string_utils::find_last_of<traits_type, const_pointer>(m_data, length(), pos, rsl::addressof(c), 1_elem, s_npos);
+        return rsl::string_utils::find_last_of<traits_type, const_pointer>(m_data, length(), pos, rsl::addressof(c), 1_elem, s_npos);
       }
       // finds the last character equal to any of the characters in the given character sequence in this view.
       constexpr size_type find_last_of(const_pointer str, card32 pos, card32 count) const
       {
-        return internal::string_utils::find_last_of<traits_type, const_pointer>(m_data, length(), pos, str, count, s_npos);
+        return rsl::string_utils::find_last_of<traits_type, const_pointer>(m_data, length(), pos, str, count, s_npos);
       }
       // finds the last character equal to any of the characters in the given character sequence in this view.
       constexpr size_type find_last_of(const_pointer str, card32 pos = 0) const
       {
-        return internal::string_utils::find_last_of<traits_type, const_pointer>(m_data, length(), pos, str, traits_type::length(str), s_npos);
+        return rsl::string_utils::find_last_of<traits_type, const_pointer>(m_data, length(), pos, str, traits_type::length(str), s_npos);
       }
 
       // finds the first character not equal to any of the characters in the given character sequence in this view.
       constexpr size_type find_first_not_of(basic_string_view view, card32 pos = 0) const
       {
-        return internal::string_utils::find_first_not_of<traits_type, const_pointer>(m_data, length(), pos, view.data(), view.length(), s_npos);
+        return rsl::string_utils::find_first_not_of<traits_type, const_pointer>(m_data, length(), pos, view.data(), view.length(), s_npos);
       }
       // finds the first character not equal to any of the characters in the given character sequence in this view.
       constexpr size_type find_first_not_of(value_type c, card32 pos = 0) const
       {
-        return internal::string_utils::find_first_not_of<traits_type, const_pointer>(m_data, length(), pos, rsl::addressof(c), 1_elem, s_npos);
+        return rsl::string_utils::find_first_not_of<traits_type, const_pointer>(m_data, length(), pos, rsl::addressof(c), 1_elem, s_npos);
       }
       // finds the first character not equal to any of the characters in the given character sequence in this view.
       constexpr size_type find_first_not_of(const_pointer str, card32 pos, card32 count) const
       {
-        return internal::string_utils::find_first_not_of<traits_type, const_pointer>(m_data, length(), pos, str, count, s_npos);
+        return rsl::string_utils::find_first_not_of<traits_type, const_pointer>(m_data, length(), pos, str, count, s_npos);
       }
       // finds the first character not equal to any of the characters in the given character sequence in this view.
       constexpr size_type find_first_not_of(const_pointer str, card32 pos = 0) const
       {
-        return internal::string_utils::find_first_not_of<traits_type, const_pointer>(m_data, length(), pos, str, traits_type::length(str), s_npos);
+        return rsl::string_utils::find_first_not_of<traits_type, const_pointer>(m_data, length(), pos, str, traits_type::length(str), s_npos);
       }
 
       // finds the last character not equal to any of the characters in the given character sequence in this view.
       constexpr size_type find_last_not_of(basic_string_view view, card32 pos = 0) const
       {
-        return internal::string_utils::find_last_not_of<traits_type, const_pointer>(m_data, length(), pos, view.data(), view.length(), s_npos);
+        return rsl::string_utils::find_last_not_of<traits_type, const_pointer>(m_data, length(), pos, view.data(), view.length(), s_npos);
       }
       // finds the last character not equal to any of the characters in the given character sequence in this view.
       constexpr size_type find_last_not_of(value_type c, card32 pos = 0) const
       {
-        return internal::string_utils::find_last_not_of<traits_type, const_pointer>(m_data, length(), pos, rsl::addressof(c), 1_elem, s_npos);
+        return rsl::string_utils::find_last_not_of<traits_type, const_pointer>(m_data, length(), pos, rsl::addressof(c), 1_elem, s_npos);
       }
       // finds the last character not equal to any of the characters in the given character sequence in this view.
       constexpr size_type find_last_not_of(const_pointer str, card32 pos, card32 count) const
       {
-        return internal::string_utils::find_last_not_of<traits_type, const_pointer>(m_data, length(), pos, str, count, s_npos);
+        return rsl::string_utils::find_last_not_of<traits_type, const_pointer>(m_data, length(), pos, str, count, s_npos);
       }
       // finds the last character not equal to any of the characters in the given character sequence in this view.
       constexpr size_type find_last_not_of(const_pointer str, card32 pos = 0) const
       {
-        return internal::string_utils::find_last_not_of<traits_type, const_pointer>(m_data, length(), pos, str, traits_type::length(str), s_npos);
+        return rsl::string_utils::find_last_not_of<traits_type, const_pointer>(m_data, length(), pos, str, traits_type::length(str), s_npos);
       }
 
       /// RSL Comment: Different from ISO C++ Standard at time of writing (11/Jul/2022)
@@ -690,3 +690,6 @@ namespace rsl
 
   } // namespace v1
 } // namespace rsl
+
+//#include "rex_std/internal/assert/assert_impl.h"
+#include "rex_std/bonus/string/string_utils_impl.h"

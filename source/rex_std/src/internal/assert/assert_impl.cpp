@@ -22,7 +22,7 @@ namespace rsl
     {
       void log_assert(const rsl::string& msg)
       {
-        rsl::cerr << msg.data();
+        rsl::cerr << "Assert: " << msg.data();
       }
     } // namespace internal
   }   // namespace v1

@@ -12,10 +12,11 @@
 
 #include "rex_std/internal/fstream/basic_filebuf.h"
 
-#include "rex_std/array.h"
+#include "rex_std/internal/array/array.h"
 #include "rex_std/bonus/utility/has_flag.h"
 #include "rex_std/bonus/utility/nand.h"
 #include "rex_std/internal/memory/memcpy.h"
+#include "rex_std/assert.h"
 
 #include <Windows.h>
 
@@ -27,7 +28,7 @@ namespace rsl
     {
       DWORD mode_to_creation_disposition(io::openmode mode)
       {
-        REX_ASSERT_X(rsl::nand(rsl::has_flag(mode, io::openmode::app), rsl::has_flag(mode, io::openmode::trunc)));
+        REX_ASSERT_X(rsl::nand(rsl::has_flag(mode, io::openmode::app), rsl::has_flag(mode, io::openmode::trunc)), "both append and trunc provided as openmode");
 
         DWORD result = 0;
         if(rsl::has_flag(mode, io::openmode::trunc))
@@ -102,11 +103,11 @@ namespace rsl
       }
       bool filebuf_impl::open(const rsl::string_view filename, io::openmode mode)
       {
-        REX_ASSERT_X(filename.length() < sizeof(buff));
-
         // need to copy this into a temporary buffer because it's possible the string view
         // is not null terminated and would therefore pass in an invalid path
         rsl::array<char8, 256> buff = {};
+
+        REX_ASSERT_X(filename.length() < buff.max_size(), "exceeded max filename length of {} characters", buff.max_size());
         rsl::memcpy(buff.data(), filename.data(), filename.length());
 
         return open(buff.data(), mode);

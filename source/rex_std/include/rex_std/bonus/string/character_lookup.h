@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "rex_std/array.h"
+#include "rex_std/internal/array/array.h"
 #include "rex_std/internal/iterator/random_access_iterator.h"
 #include "rex_std/internal/iterator/reverse_iterator.h"
 #include "rex_std/internal/type_traits/make_unsigned.h"

@@ -12,19 +12,25 @@
 
 #pragma once
 
-#include "rex_std/array.h"
+#include "rex_std/internal/array/array.h"
 #include "rex_std/bonus/algorithm/clamp_max.h"
 #include "rex_std/bonus/types.h"
 #include "rex_std/initializer_list.h"
 #include "rex_std/internal/algorithm/clamp.h"
 #include "rex_std/internal/algorithm/copy_n.h"
+#include "rex_std/internal/functional/hash.h"
 #include "rex_std/internal/memory/memcpy.h"
-#include "rex_std/string_view.h"
+#include "rex_std/internal/string/char_traits.h"
 
 namespace rsl
 {
   inline namespace v1
   {
+    template <typename CharType, typename Traits>
+    class basic_string_view;
+
+    template <typename CharT>
+    class char_traits;
 
     template <typename CharType, card32 StrMaxSize>
     class stack_string
@@ -76,7 +82,7 @@ namespace rsl
         m_null_terminator_offset = copy_size;
       }
 
-      stack_string(basic_string_view<CharType> view) // NOLINT(google-explicit-constructor)
+      stack_string(basic_string_view<CharType, char_traits<CharType>> view) // NOLINT(google-explicit-constructor)
           : stack_string()
       {
         const card32 copy_size = rsl::clamp_max(view.length(), StrMaxSize);
@@ -95,7 +101,7 @@ namespace rsl
 
       stack_string(rsl::nullptr_t) = delete;
 
-      stack_string& operator=(basic_string_view<CharType> view)
+      stack_string& operator=(basic_string_view<CharType, char_traits<CharType>> view)
       {
         const card32 new_length = rsl::clamp_max(view.length(), StrMaxSize);
         rsl::memcpy(m_data.data(), view.data(), new_length);
@@ -230,11 +236,11 @@ namespace rsl
         return length() == 0;
       }
 
-      basic_string_view<CharType> to_view() const
+      basic_string_view<CharType, char_traits<CharType>> to_view() const
       {
-        return basic_string_view<CharType>(data(), length());
+        return basic_string_view<CharType, char_traits<CharType>>(data(), length());
       }
-      operator basic_string_view<CharType>() const // NOLINT(google-explicit-constructor)
+      operator basic_string_view<CharType, char_traits<CharType>>() const // NOLINT(google-explicit-constructor)
       {
         return to_view();
       }
@@ -274,59 +280,59 @@ namespace rsl
 
       void remove_prefix(card32 count)
       {
-        basic_string_view<CharType> view = to_view();
+        basic_string_view<CharType, char_traits<CharType>> view = to_view();
         view.remove_prefix(count);
         *this = view;
       }
       void remove_suffix(card32 count)
       {
-        basic_string_view<CharType> view = to_view();
+        basic_string_view<CharType, char_traits<CharType>> view = to_view();
         view.remove_suffix(count);
         *this = view;
       }
 
       void copy(value_type* dest, card32 count, card32 pos = 0) const
       {
-        basic_string_view<CharType> view = to_view();
+        basic_string_view<CharType, char_traits<CharType>> view = to_view();
         view.copy(dest, count, pos);
       }
 
       stack_string substr(card32 pos = 0, card32 count = npos()) const
       {
-        basic_string_view<CharType> view   = to_view();
-        basic_string_view<CharType> substr = view.substr(pos, count);
+        basic_string_view<CharType, char_traits<CharType>> view   = to_view();
+        basic_string_view<CharType, char_traits<CharType>> substr = view.substr(pos, count);
         return stack_string(substr);
       }
 
       template <card32 RhsSize>
       int32 compare(const stack_string<CharType, RhsSize>& rhs) const
       {
-        basic_string_view<CharType> view     = to_view();
-        basic_string_view<CharType> rhs_view = rhs.to_view();
+        basic_string_view<CharType, char_traits<CharType>> view     = to_view();
+        basic_string_view<CharType, char_traits<CharType>> rhs_view = rhs.to_view();
 
         return view.compare(rhs_view);
       }
       template <card32 RhsSize>
       int32 compare(card32 pos1, card32 count1, const stack_string<CharType, RhsSize>& rhs, card32 pos2, card32 count2) const
       {
-        basic_string_view<CharType> view     = to_view();
-        basic_string_view<CharType> rhs_view = rhs.to_view();
+        basic_string_view<CharType, char_traits<CharType>> view     = to_view();
+        basic_string_view<CharType, char_traits<CharType>> rhs_view = rhs.to_view();
 
         return view.compare(pos1, count1, rhs_view, pos2, count2);
       }
       int32 compare(const value_type* str) const
       {
-        basic_string_view<CharType> view = to_view();
+        basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.compare(str);
       }
       int32 compare(card32 pos1, card32 count1, const value_type* str) const
       {
-        basic_string_view<CharType> view = to_view();
+        basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.compare(pos1, count1, str);
       }
       int32 compare(card32 pos1, card32 count1, const value_type* str, card32 count2) const
       {
-        basic_string_view<CharType> view = to_view();
+        basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.compare(pos1, count1, str, count2);
       }
 
@@ -349,163 +355,163 @@ namespace rsl
         m_null_terminator_offset -= count;
       }
 
-      card32 find(basic_string_view<CharType> view, card32 pos = 0) const
+      card32 find(basic_string_view<CharType, char_traits<CharType>> view, card32 pos = 0) const
       {
-        basic_string_view<CharType> view_of_this = to_view();
+        basic_string_view<CharType, char_traits<CharType>> view_of_this = to_view();
         return view_of_this.find(view, pos);
       }
       card32 find(value_type c, card32 pos = 0) const
       {
-        basic_string_view<CharType> view = to_view();
+        basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.find(c, pos);
       }
       card32 find(const value_type* str, card32 pos, card32 count) const
       {
-        basic_string_view<CharType> view = to_view();
+        basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.find(str, pos, count);
       }
       card32 find(const value_type* str, card32 pos) const
       {
-        basic_string_view<CharType> view = to_view();
+        basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.find(str, pos);
       }
 
-      card32 rfind(basic_string_view<CharType> view, card32 pos = npos()) const
+      card32 rfind(basic_string_view<CharType, char_traits<CharType>> view, card32 pos = npos()) const
       {
-        basic_string_view<CharType> view_of_this = to_view();
+        basic_string_view<CharType, char_traits<CharType>> view_of_this = to_view();
         return view_of_this.rfind(view, pos);
       }
       card32 rfind(value_type c, card32 pos = npos()) const
       {
-        basic_string_view<CharType> view = to_view();
+        basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.rfind(c, pos);
       }
       card32 rfind(const value_type* str, card32 pos, card32 count) const
       {
-        basic_string_view<CharType> view = to_view();
+        basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.rfind(str, pos, count);
       }
       card32 rfind(const value_type* str, card32 pos = npos()) const
       {
-        basic_string_view<CharType> view = to_view();
+        basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.rfind(str, pos);
       }
 
-      card32 find_first_of(basic_string_view<CharType> v, card32 pos = 0) const
+      card32 find_first_of(basic_string_view<CharType, char_traits<CharType>> v, card32 pos = 0) const
       {
-        basic_string_view<CharType> view = to_view();
+        basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.find_first_of(v, pos);
       }
       card32 find_first_of(value_type c, card32 pos) const
       {
-        basic_string_view<CharType> view = to_view();
+        basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.find_first_of(c, pos);
       }
       card32 find_first_of(const value_type* s, card32 pos, card32 count) const
       {
-        basic_string_view<CharType> view = to_view();
+        basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.find_first_of(s, pos, count);
       }
       card32 find_first_of(const value_type* s, card32 pos = npos()) const
       {
-        basic_string_view<CharType> view = to_view();
+        basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.find_first_of(s, pos);
       }
 
-      card32 find_last_of(basic_string_view<CharType> v, card32 pos = npos()) const
+      card32 find_last_of(basic_string_view<CharType, char_traits<CharType>> v, card32 pos = npos()) const
       {
-        basic_string_view<CharType> view = to_view();
+        basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.find_last_of(v, pos);
       }
       card32 find_last_of(value_type c, card32 pos = npos()) const
       {
-        basic_string_view<CharType> view = to_view();
+        basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.find_last_of(c, pos);
       }
       card32 find_last_of(const value_type* s, card32 pos, card32 count) const
       {
-        basic_string_view<CharType> view = to_view();
+        basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.find_last_of(s, pos, count);
       }
       card32 find_last_of(const value_type* s, card32 pos = npos()) const
       {
-        basic_string_view<CharType> view = to_view();
+        basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.find_last_of(s, pos);
       }
 
-      card32 find_first_not_of(basic_string_view<CharType> v, card32 pos = 0) const
+      card32 find_first_not_of(basic_string_view<CharType, char_traits<CharType>> v, card32 pos = 0) const
       {
-        basic_string_view<CharType> view = to_view();
+        basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.find_first_not_of(v, pos);
       }
       card32 find_first_not_of(value_type c, card32 pos = 0) const
       {
-        basic_string_view<CharType> view = to_view();
+        basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.find_first_not_of(c, pos);
       }
       card32 find_first_not_of(const value_type* s, card32 pos, card32 count) const
       {
-        basic_string_view<CharType> view = to_view();
+        basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.find_first_not_of(s, pos, count);
       }
       card32 find_first_not_of(const value_type* s, card32 pos = 0) const
       {
-        basic_string_view<CharType> view = to_view();
+        basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.find_first_not_of(s, pos);
       }
 
-      card32 find_last_not_of(basic_string_view<CharType> v, card32 pos = 0) const
+      card32 find_last_not_of(basic_string_view<CharType, char_traits<CharType>> v, card32 pos = 0) const
       {
-        basic_string_view<CharType> view = to_view();
+        basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.find_last_not_of(v, pos);
       }
       card32 find_last_not_of(value_type c, card32 pos = npos()) const
       {
-        basic_string_view<CharType> view = to_view();
+        basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.find_last_not_of(c, pos);
       }
       card32 find_last_not_of(const value_type* s, card32 pos, card32 count) const
       {
-        basic_string_view<CharType> view = to_view();
+        basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.find_last_not_of(s, pos, count);
       }
       card32 find_last_not_of(const value_type* s, card32 pos = 0) const
       {
-        basic_string_view<CharType> view = to_view();
+        basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.find_last_not_of(s, pos);
       }
 
       template <card32 Size>
       bool starts_with(const stack_string<CharType, Size>& prefix) const
       {
-        basic_string_view<CharType> view = to_view();
+        basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.starts_with(prefix.to_view());
       }
       bool starts_with(const value_type* prefix) const
       {
-        basic_string_view<CharType> view = to_view();
+        basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.starts_with(prefix);
       }
-      bool starts_with(const basic_string_view<CharType> prefix) const
+      bool starts_with(const basic_string_view<CharType, char_traits<CharType>> prefix) const
       {
-        basic_string_view<CharType> view = to_view();
+        basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.starts_with(prefix);
       }
 
       template <card32 Size>
       bool ends_with(const stack_string<CharType, Size>& suffix) const
       {
-        basic_string_view<CharType> view = to_view();
+        basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.ends_with(suffix.to_view());
       }
       bool ends_with(const value_type* suffix) const
       {
-        basic_string_view<CharType> view = to_view();
+        basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.ends_width(suffix);
       }
-      bool ends_width(const basic_string_view<CharType> suffix) const
+      bool ends_width(const basic_string_view<CharType, char_traits<CharType>> suffix) const
       {
-        basic_string_view<CharType> view = to_view();
+        basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.ends_width(suffix);
       }
 
@@ -543,11 +549,11 @@ namespace rsl
         return rsl::is_digitsf(data(), length());
       }
 
-      bool operator==(const basic_string_view<CharType> str) const
+      bool operator==(const basic_string_view<CharType, char_traits<CharType>> str) const
       {
         return to_view() == str;
       }
-      bool operator!=(const basic_string_view<CharType> str) const
+      bool operator!=(const basic_string_view<CharType, char_traits<CharType>> str) const
       {
         return !(*this == str);
       }
@@ -559,7 +565,7 @@ namespace rsl
         return res;
       }
 
-      stack_string operator+(const basic_string_view<CharType>& str) const
+      stack_string operator+(const basic_string_view<CharType, char_traits<CharType>>& str) const
       {
         stack_string res = *this;
         res += str;
@@ -585,10 +591,10 @@ namespace rsl
 
       stack_string& operator+=(const value_type* str)
       {
-        return operator+=(basic_string_view<CharType>(str));
+        return operator+=(basic_string_view<CharType, char_traits<CharType>>(str));
       }
 
-      stack_string& operator+=(const basic_string_view<CharType> str)
+      stack_string& operator+=(const basic_string_view<CharType, char_traits<CharType>> str)
       {
         const card32 string_length   = str.length();
         const card32 remaining_bytes = rsl::clamp_max(string_length, StrMaxSize);
@@ -657,6 +663,9 @@ namespace rsl
     tiny_stack_string to_stack_string(float64 value, card32 precision = 4);
     tiny_stack_string to_stack_string(const void* ptr);
 
+    template <typename CharType, typename Traits>
+    class basic_ostream;
+
     template <typename CharType, card32 MaxSize>
     basic_ostream<CharType, char_traits<CharType>>& operator<<(basic_ostream<CharType, char_traits<CharType>>& os, const stack_string<CharType, MaxSize>& str)
     {
@@ -687,3 +696,5 @@ namespace rsl
 
   } // namespace v1
 } // namespace rsl
+
+#include "rex_std/assert.h"

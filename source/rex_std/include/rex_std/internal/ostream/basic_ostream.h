@@ -504,7 +504,7 @@ namespace rsl
     template <typename CharT, typename Traits, count_t N>
     basic_ostream<CharT, Traits>& operator<<(basic_ostream<CharT, Traits>& os, const CharT (&s)[N]) // NOLINT(modernize-avoid-c-arrays)
     {
-      os.write(s, N - 1);
+      os.write(s, N);
       return os;
     }
 
@@ -546,3 +546,6 @@ namespace rsl
 
   } // namespace v1
 } // namespace rsl
+
+#include "rex_std/bonus/string/string_utils_impl.h"
+#include "rex_std/bonus/string/string_utils_impl.h"

@@ -184,7 +184,7 @@ namespace rsl
       // This is not possible in RSL though as the ctor for const char* for string is explicit.
       // Therefore this takes a basic_string_view
       // Constructs the string using the contents of the string view
-      explicit basic_string(const basic_string_view<CharType>& sv, const allocator_type& alloc = allocator_type())
+      explicit basic_string(const basic_string_view<CharType, char_traits<CharType>>& sv, const allocator_type& alloc = allocator_type())
           : basic_string(alloc)
       {
         // using insert_n instead of insert because we know the length
@@ -219,7 +219,7 @@ namespace rsl
       // copy assignment. the contents of other are copied into this.
       basic_string& operator=(const basic_string& other)
       {
-        REX_ASSERT_X(this, &other, "Can't copy to yourself");
+        REX_ASSERT_X(this != &other, "Can't copy to yourself");
         REX_ASSERT_X(get_allocator() == other.get_allocator(), "Different allocators in copy assignment, this is not allowed");
 
         assign(other.data(), other.length());
@@ -231,7 +231,7 @@ namespace rsl
       // no allocation is performed
       basic_string& operator=(basic_string&& other) noexcept
       {
-        REX_ASSERT_X(this, &other, "Can't move to yourself");
+        REX_ASSERT_X(this != &other, "Can't move to yourself");
         REX_ASSERT_X(get_allocator() == other.get_allocator(), "Different allocators in move assignment, this is not allowed");
 
         move_assign(rsl::move(other));
@@ -244,7 +244,7 @@ namespace rsl
       // template <count_t Size>
       // basic_string& operator=(const_pointer (&str)[Size]);
       // basic_string& operator=(const_pointer str);
-      // basic_string& operator=(const rsl::basic_string_view<CharType>& view);
+      // basic_string& operator=(const rsl::basic_string_view<CharType, char_traits<CharType>>& view);
       //
       // copies the contents of the string by replacing the entire array with a single char
       basic_string& operator=(value_type ch)
@@ -1566,7 +1566,7 @@ namespace rsl
       void sso_assign(const_pointer str, size_type length)
       {
         REX_ASSERT_X(is_using_sso_string(), "Not using sso string when using sso assign");
-        REX_ASSERT_X(str[length] == value_type(), "str doesn't end in a null termination char");
+        //REX_ASSERT_X(str[length] == value_type(), "str doesn't end in a null termination char");
 
         m_sso_buffer.assign(str, length);
         m_end = m_sso_buffer.data() + length;
@@ -1577,8 +1577,8 @@ namespace rsl
       // length doesn't include the null termination char
       void heap_assign(const_pointer str, size_type length)
       {
-        REX_ASSERT_X(is_using_big_string(), "Not using big string when using heap assign");
-        REX_ASSERT_X(str[length] == value_type(), "str doesn't end in a null termination char");
+        //REX_ASSERT_X(is_using_big_string(), "Not using big string when using heap assign");
+        //REX_ASSERT_X(str[length] == value_type(), "str doesn't end in a null termination char");
 
         if(length > capacity())
         {
@@ -2345,3 +2345,7 @@ inline rsl::basic_ostream<Char, Traits>& operator<<(rsl::basic_ostream<Char, Tra
   os.rdbuf()->sputn(str.data(), str.length());
   return os;
 }
+
+#include "rex_std/internal/assert/assert_impl.h"
+#include "rex_std/bonus/string/string_utils_impl.h"
+

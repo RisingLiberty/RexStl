@@ -62,3 +62,11 @@ MERGE(str, __LINE__)
 #else
   #define REX_STATIC_TODO(msg)
 #endif
+
+#if defined REX_COMPILER_CLANG
+#define DEBUG_BREAK() __builtin_trap()
+#elif defined REX_COMPILER_MSVC
+#define DEBUG_BREAK() __debugbreak()
+#else
+#error DEBUG_BREAK unsupported machine instruction ...
+#endif

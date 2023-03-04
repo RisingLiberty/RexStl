@@ -12,7 +12,6 @@
 
 #pragma once
 
-#include "rex_std/bonus/string/string_utils.h"
 #include "rex_std/bonus/types.h"
 #include "rex_std/cstring.h"
 #include "rex_std/internal/ios/fpos.h"
@@ -268,3 +267,4 @@ namespace rsl
 
   } // namespace v1
 } // namespace rsl
+

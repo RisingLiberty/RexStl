@@ -15,7 +15,7 @@
 #include "rex_std/disable_std_checking.h"
 #include "rex_std/std_alias_defines.h"
 
-#include <wchar>
+#include <wchar.h>
 
 namespace rsl
 {

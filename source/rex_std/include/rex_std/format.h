@@ -59,6 +59,7 @@
   #include "rex_std/internal/utility/declval.h"
   #include "rex_std/limits.h"
   #include "rex_std/string.h"
+  #include "rex_std/assert.h"
 
   #include <cmath>        // std::signbit
   #include <cstdint>      // uint32_t
@@ -569,7 +570,7 @@ namespace detail
 
   // A workaround for rsl::string not having mutable data() until C++17.
   template <typename Char>
-  inline auto get_data(rsl::basic_string<Char>& s) -> Char*
+  inline auto get_data(rsl::basic_string<Char, rsl::char_traits<Char>, rsl::allocator>& s) -> Char*
   {
     return &s[0];
   }
@@ -4333,7 +4334,7 @@ auto ptr(T p) -> const void*
   return detail::bit_cast<const void*>(p);
 }
 template <typename T>
-auto ptr(const rsl::unique_ptr<T>& p) -> const void*
+auto ptr(const rsl::unique_ptr<T, rsl::default_delete<T>>& p) -> const void*
 {
   return p.get();
 }
