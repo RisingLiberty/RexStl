@@ -28,7 +28,6 @@
 #include "rex_std/internal/utility/move.h"
 #include "rex_std/internal/utility/piecewise_construct.h"
 #include "rex_std/internal/utility/swap.h"
-#include "rex_std/tuple.h"
 
 namespace rsl
 {
@@ -312,12 +311,12 @@ namespace rsl
       template <typename... Args>
       insert_return_type try_emplace(const key_type& k, Args&&... args)
       {
-        return insert_value(has_unique_keys_type(), piecewise_construct, rsl::forward_as_tuple(k), rsl::forward_as_tuple(rsl::forward<Args>(args)...));
+        return insert_value(has_unique_keys_type(), k, rsl::forward<Args>(args)...);
       }
       template <typename... Args>
       insert_return_type try_emplace(key_type&& k, Args&&... args)
       {
-        return insert_value(has_unique_keys_type(), piecewise_construct, rsl::forward_as_tuple(rsl::move(k)), rsl::forward_as_tuple(rsl::forward<Args>(args)...));
+        return insert_value(has_unique_keys_type(), rsl::move(k), rsl::forward<Args>(args)...);
       }
 
       insert_return_type insert(const value_type& value)
@@ -363,7 +362,7 @@ namespace rsl
         auto it = find(k);
         if(it == end())
         {
-          return insert(value_type(piecewise_construct, rsl::forward_as_tuple(k), rsl::forward_as_tuple(rsl::forward<M>(obj))));
+          return insert(value_type(k, rsl::forward<M>(obj)));
         }
         else
         {
@@ -377,7 +376,7 @@ namespace rsl
         auto it = find(k);
         if(it == end())
         {
-          return insert(value_type(piecewise_construct, rsl::forward_as_tuple(rsl::move(k)), rsl::forward_as_tuple(rsl::forward<M>(obj))));
+          return insert(value_type(rsl::move(k), rsl::forward<M>(obj)));
         }
         else
         {

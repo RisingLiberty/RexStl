@@ -12,6 +12,9 @@
 
 #pragma once
 
+#include "rex_std/internal/utility/forward.h"
+#include "rex_std/internal/utility/move.h"
+
 namespace rsl
 {
   inline namespace v1
@@ -27,6 +30,18 @@ namespace rsl
       // useful type alias for pair utilities
       using first_type  = key_type;
       using second_type = value_type;
+
+      key_value() = default;
+      template <typename ... Args>
+      key_value(const Key& k, Args&& ... args)
+        : key(k)
+        , value(rsl::forward<Args>(args)...)
+      {}
+      template <typename ... Args>
+      key_value(Key&& k, Args&& ... args)
+        : key(rsl::move(k))
+        , value(rsl::forward<Args>(args)...)
+      {}
 
       const Key& first() const
       {
