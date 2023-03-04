@@ -26,7 +26,7 @@ namespace rsl
   inline namespace v1
   {
     template <typename... Args>
-    bool rex_assert(bool cond, Args&&... args);
+    bool rex_assert(bool cond, Args&&... args); // NOLINT(misc-no-recursion)
 
   } // namespace v1
 } // namespace rsl

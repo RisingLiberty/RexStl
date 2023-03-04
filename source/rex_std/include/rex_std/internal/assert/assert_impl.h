@@ -36,17 +36,28 @@ namespace rsl
     } // namespace internal
 
     template <typename... T>
-    REX_NO_DISCARD inline auto format(format_string<T...> fmt, T&&... args) -> rsl::string;
+    REX_NO_DISCARD inline rsl::string format(format_string<T...> fmt, T&&... args); // NOLINT(misc-no-recursion, readability-redundant-declaration)
 
     template <typename... Args>
-    bool rex_assert(bool cond, Args&&... args)
+    bool rex_assert(bool cond, Args&&... args) // NOLINT(misc-no-recursion)
     {
-      if(!cond)
+      if (!cond)
       {
-        const rsl::string& str = rsl::format(rsl::forward<Args>(args)...);
-        internal::log_assert(str);
-        DEBUG_BREAK();
-        return true;
+        thread_local static bool is_processing_assert = false;
+        if (!is_processing_assert)
+        {
+          is_processing_assert = true;
+          const rsl::string& str = rsl::format(rsl::forward<Args>(args)...);
+          internal::log_assert(str);
+          DEBUG_BREAK();
+          return true;
+        }
+        else
+        {
+          // if this is hit, an assert occurred while processing another one.
+          // to avoid circular dependency, we break here if there's a debugger attached
+          DEBUG_BREAK();
+        }
       }
 
       return false;

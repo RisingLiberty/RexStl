@@ -7,7 +7,7 @@
 
 #pragma once
 
-// NOLINTBEGIN(hicpp-signed-bitwise, fuchsia-trailing-return)
+// NOLINTBEGIN(hicpp-signed-bitwise, fuchsia-trailing-return, misc-no-recursion)
 
 #include "rex_std/bonus/defines.h"
 
@@ -1698,4 +1698,4 @@ namespace detail
 
 FMT_END_NAMESPACE
 
-// NOLINTEND(hicpp-signed-bitwise, fuchsia-trailing-return)
+// NOLINTEND(hicpp-signed-bitwise, fuchsia-trailing-return, misc-no-recursion)

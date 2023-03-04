@@ -30,7 +30,7 @@
   without including the above copyright and permission notices.
  */
 
-// NOLINTBEGIN(fuchsia-trailing-return, hicpp-signed-bitwise)
+// NOLINTBEGIN(fuchsia-trailing-return, hicpp-signed-bitwise, misc-no-recursion)
 
 #pragma once
 
@@ -4789,7 +4789,7 @@ namespace rsl
 
 #endif // FMT_FORMAT_H_
 
-// NOLINTEND(fuchsia-trailing-return, hicpp-signed-bitwise)
+// NOLINTEND(fuchsia-trailing-return, hicpp-signed-bitwise, misc-no-recursion)
 
 #include "rex_std/internal/assert/assert_impl.h"
 

@@ -339,7 +339,7 @@ namespace rsl
       }
 
       // inserts a character
-      basic_ostream& put(char_type ch)
+      basic_ostream& put(char_type ch) // NOLINT(misc-no-recursion)
       {
         const sentry sentry(*this);
 
@@ -352,7 +352,7 @@ namespace rsl
       }
 
       // inserts blocks of characters
-      basic_ostream& write(const char_type* s, streamsize count)
+      basic_ostream& write(const char_type* s, streamsize count) // NOLINT(misc-no-recursion)
       {
         const sentry sentry(*this);
 
@@ -502,7 +502,7 @@ namespace rsl
     /// RSL Comment: Different from ISO C++ Standard at time of writing (07/Sep/2022)
     // writes a string literal to the stream
     template <typename CharT, typename Traits, count_t N>
-    basic_ostream<CharT, Traits>& operator<<(basic_ostream<CharT, Traits>& os, const CharT (&s)[N]) // NOLINT(modernize-avoid-c-arrays)
+    basic_ostream<CharT, Traits>& operator<<(basic_ostream<CharT, Traits>& os, const CharT (&s)[N]) // NOLINT(modernize-avoid-c-arrays, misc-no-recursion)
     {
       os.write(s, N);
       return os;
@@ -511,7 +511,7 @@ namespace rsl
     // writes a string to the stream
     // this is overloaded on const CharT*& const to make sure literals go to const CharT (&s)[N]
     template <typename CharT, typename Traits>
-    basic_ostream<CharT, Traits>& operator<<(basic_ostream<CharT, Traits>& os, const CharT* const& ptr) // NOLINT(modernize-avoid-c-arrays)
+    basic_ostream<CharT, Traits>& operator<<(basic_ostream<CharT, Traits>& os, const CharT* const& ptr) // NOLINT(modernize-avoid-c-arrays, misc-no-recursion)
     {
       const CharT* ptr_copy = ptr;
       while(*ptr_copy)

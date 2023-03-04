@@ -47,6 +47,8 @@
 // with a string, "end" will point to the null termination char
 // and "last" will point to the element following end
 
+// NOLINTBEGIN(misc-no-recursion)
+
 namespace rsl
 {
   inline namespace v1
@@ -2343,5 +2345,7 @@ inline rsl::basic_ostream<Char, Traits>& operator<<(rsl::basic_ostream<Char, Tra
   os.rdbuf()->sputn(str.data(), str.length());
   return os;
 }
+
+// NOLINTEND(misc-no-recursion)
 
 #include "rex_std/bonus/string/string_utils_impl.h"

@@ -125,12 +125,12 @@ namespace rsl
     constexpr void to_lower(const Iterator* str, Iterator* buf, card32 length);
 
     template <typename Iterator, card32 Size>
-    constexpr void to_lower(const Iterator* str, Iterator (&buf)[Size]);
+    constexpr void to_lower(const Iterator* str, Iterator (&buf)[Size]); // NOLINT(modernize-avoid-c-arrays)
     template <typename Iterator>
     constexpr void to_upper(const Iterator* str, Iterator* buf, card32 length);
 
     template <typename Iterator, card32 Size>
-    constexpr void to_upper(const Iterator* str, Iterator (&buf)[Size]);
+    constexpr void to_upper(const Iterator* str, Iterator (&buf)[Size]); // NOLINT(modernize-avoid-c-arrays)
 
     template <typename T>
     class optional;
@@ -204,7 +204,7 @@ namespace rsl
       constexpr optional<T> str_to_signed(Iterator str, IteratorPointer strEnd, int32 base);
 
       template <typename T, typename Iterator>
-      constexpr optional<T> str_to_signed(const Iterator str, int32 base);
+      constexpr optional<T> str_to_signed(Iterator str, int32 base);
 
       // iterator can be of type:
       // - char8*
@@ -231,7 +231,7 @@ namespace rsl
       constexpr optional<bool> str_to_bool(Iterator str, IteratorPointer strEnd);
 
       template <typename T, typename Iterator>
-      constexpr optional<T> str_to_bool(const Iterator str);
+      constexpr optional<T> str_to_bool(Iterator str);
 
       // iterator can be of type:
       // - char8*
@@ -242,7 +242,7 @@ namespace rsl
       constexpr optional<void*> str_to_pointer(Iterator str, IteratorPointer strEnd);
 
       template <typename Iterator>
-      constexpr optional<void*> str_to_pointer(const Iterator str);
+      constexpr optional<void*> str_to_pointer(Iterator str);
 
     } // namespace internal
 

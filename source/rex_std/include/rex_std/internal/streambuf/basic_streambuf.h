@@ -154,7 +154,7 @@ namespace rsl
       // put area
       //
       // write one character to the output stream
-      int_type sputc(char_type ch)
+      int_type sputc(char_type ch) // NOLINT(misc-no-recursion)
       {
         if(m_write_buf_curr == nullptr)
         {
@@ -165,7 +165,7 @@ namespace rsl
       }
 
       // calls xsputn(s, count) of the most derived class
-      streamsize sputn(const char_type* s, streamsize count)
+      streamsize sputn(const char_type* s, streamsize count) // NOLINT(misc-no-recursion)
       {
         return xsputn(s, count);
       }
@@ -378,7 +378,7 @@ namespace rsl
       //
 
       // write count characters to the output sequence from the character array whose element is pointed to by s.
-      virtual streamsize xsputn(const char_type* s, streamsize count)
+      virtual streamsize xsputn(const char_type* s, streamsize count) // NOLINT(misc-no-recursion)
       {
         streamsize num_chars_written          = 0;
         const streamsize to_write_to_put_area = (rsl::min)(count, available_in_put_area());
@@ -486,7 +486,7 @@ namespace rsl
 
       // increases current write pointer
       // returns previously pointed to element
-      CharT& inc_pptr(card32 amount = 1)
+      CharT& inc_pptr(card32 amount = 1) // NOLINT(misc-no-recursion)
       {
         REX_ASSERT_X(m_write_buf_curr != nullptr, "Trying to increase read buf pointer, which is nullptr");
         CharT& ch = **m_write_buf_curr;

@@ -69,7 +69,7 @@ namespace rsl
         rsl::print(rsl::runtime("{:d}"), "I am not a number");
       \endrst
      */
-    inline auto runtime(string_view s) -> basic_runtime<char>
+    inline basic_runtime<char> runtime(string_view s)
     {
       return {{s}};
     }
