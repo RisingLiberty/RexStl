@@ -27,7 +27,7 @@
 #include "rex_std/internal/type_traits/is_unsigned.h"
 #include "rex_std/internal/utility/size.h"
 #include "rex_std/limits.h"
-#include "rex_std/optional.h"
+#include "rex_std/internal/optional/optional.h"
 
 namespace rsl
 {

@@ -97,10 +97,10 @@
 //#include "rex_std/wchar.h"
 //#include "rex_std/wctype.h"
 
-#include "rex_std/vector.h"
+#include "rex_std/bonus/string.h"
 
 int main()
 {
-  rsl::vector<int> vec;
+  rsl::tiny_stack_string vec;
   vec.at(1);
 }

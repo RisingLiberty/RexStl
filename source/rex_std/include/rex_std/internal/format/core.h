@@ -23,7 +23,7 @@
 #include "rex_std/internal/type_traits/underlying_type.h"
 #include "rex_std/internal/string/memchr.h"
 #include "rex_std/internal/string/basic_string.h"
-#include "rex_std/string_view.h"
+#include "rex_std/internal/string_view/basic_string_view.h"
 
 #include <cstddef> // rsl::byte
 #include <cstdio>  // std::FILE

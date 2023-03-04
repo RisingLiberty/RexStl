@@ -15,7 +15,7 @@
 #include "rex_std/bonus/string/string_utils.h"
 #include "rex_std/bonus/string/string_utils_impl.h"
 #include "rex_std/bonus/types.h"
-#include "rex_std/optional.h"
+#include "rex_std/internal/optional/optional.h"
 
 // Character array functions (cstring.h)
 #include "rex_std/internal/memory/memcpy.h"

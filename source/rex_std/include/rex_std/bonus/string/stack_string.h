@@ -21,6 +21,7 @@
 #include "rex_std/internal/functional/hash.h"
 #include "rex_std/internal/memory/memcpy.h"
 #include "rex_std/internal/string/char_traits.h"
+#include "rex_std/internal/string_view/basic_string_view.h"
 
 namespace rsl
 {
@@ -697,4 +698,3 @@ namespace rsl
   } // namespace v1
 } // namespace rsl
 
-#include "rex_std/assert.h"

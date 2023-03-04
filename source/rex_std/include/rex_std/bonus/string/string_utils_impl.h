@@ -24,7 +24,7 @@
 #include "rex_std/internal/type_traits/is_unsigned.h"
 #include "rex_std/internal/type_traits/make_unsigned.h"
 #include "rex_std/iterator.h"
-#include "rex_std/optional.h"
+#include "rex_std/internal/optional/optional.h"
 
 namespace rsl
 {

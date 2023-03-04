@@ -11,6 +11,7 @@
 // ============================================
 
 #include "rex_std/internal/string/basic_string.h"
+#include "rex_std/assert.h"
 
 namespace rsl
 {

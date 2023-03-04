@@ -11,6 +11,7 @@
 // ============================================
 
 #include "rex_std/bonus/platform/windows/handle.h"
+#include "rex_std/internal/type_traits/is_same.h"
 
 #include <Windows.h>
 
@@ -20,7 +21,7 @@ namespace rsl
   {
     namespace win
     {
-      static_assert(sizeof(HANDLE) == sizeof(handle_t), "Rex internal handle should be the same as Windows' HANDLE");
+      static_assert(rsl::is_same_v<HANDLE, handle_t>, "Rex internal handle should be the same as Windows' HANDLE");
 
       handle::handle()
           : m_handle(invalid_value())

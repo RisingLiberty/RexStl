@@ -23,7 +23,7 @@
 #include "rex_std/bonus/platform/windows/handle.h"
 #include "rex_std/internal/ios/ios_base.h"
 #include "rex_std/internal/streambuf/basic_streambuf.h"
-#include "rex_std/string_view.h"
+#include "rex_std/internal/string_view/basic_string_view.h"
 
 namespace rsl
 {

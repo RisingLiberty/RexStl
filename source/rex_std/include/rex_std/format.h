@@ -58,8 +58,7 @@
   #include "rex_std/internal/type_traits/is_same.h"
   #include "rex_std/internal/utility/declval.h"
   #include "rex_std/limits.h"
-  #include "rex_std/string.h"
-  #include "rex_std/assert.h"
+  #include "rex_std/internal/string/basic_string.h"
 
   #include <cmath>        // std::signbit
   #include <cstdint>      // uint32_t
@@ -4791,6 +4790,8 @@ namespace rsl
 #endif // FMT_FORMAT_H_
 
 // NOLINTEND(fuchsia-trailing-return, hicpp-signed-bitwise)
+
+#include "rex_std/internal/assert/assert_impl.h"
 
 #ifdef __clang__
   #pragma clang diagnostic pop

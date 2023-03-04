@@ -1,8 +1,8 @@
 #pragma once
 
-#include "rex_std/internal/string/basic_string.h"
 #include "rex_std/internal/format/fmt_defines.h"
-#include "rex_std/string_view.h"
+#include "rex_std/internal/string/basic_string.h"
+#include "rex_std/internal/string_view/basic_string_view.h"
 
 namespace rsl
 {
@@ -11,7 +11,7 @@ namespace rsl
     template <typename Char>
     struct basic_runtime
     {
-      basic_string_view<Char> str;
+      basic_string_view<Char, rsl::char_traits<Char>> str;
     };
 
     /** A compile-time format string. */
@@ -19,10 +19,10 @@ namespace rsl
     class basic_format_string
     {
     private:
-      basic_string_view<Char> m_str;
+      basic_string_view<Char, rsl::char_traits<Char>> m_str;
 
     public:
-      template <typename S, FMT_ENABLE_IF(rsl::is_convertible<const S&, basic_string_view<Char>>::value)>
+      template <typename S, FMT_ENABLE_IF(rsl::is_convertible<const S&, basic_string_view<Char, rsl::char_traits<Char>>>::value)>
       FMT_CONSTEVAL FMT_INLINE basic_format_string(const S& s) // NOLINT(google-explicit-constructor)
         : m_str(s)
       {
@@ -42,7 +42,7 @@ namespace rsl
       {
       }
 
-      FMT_INLINE operator basic_string_view<Char>() const // NOLINT(google-explicit-constructor)
+      FMT_INLINE operator basic_string_view<Char, rsl::char_traits<Char>>() const // NOLINT(google-explicit-constructor)
       {
         return m_str;
       }

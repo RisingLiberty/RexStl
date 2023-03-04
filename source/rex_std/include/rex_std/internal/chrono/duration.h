@@ -565,5 +565,4 @@ namespace rsl
   }   // namespace v1
 } // namespace rsl
 
-//#include "rex_std/internal/assert/assert_impl.h"
 #include "rex_std/bonus/string/string_utils_impl.h"

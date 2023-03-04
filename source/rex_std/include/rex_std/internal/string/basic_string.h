@@ -37,8 +37,6 @@
 #include "rex_std/internal/string/byte_strings.h"
 #include "rex_std/internal/string/char_traits.h"
 #include "rex_std/internal/string/string_forward_declare.h"
-#include "rex_std/istream.h"
-#include "rex_std/ostream.h"
 #include "rex_std/stddef.h"
 
 // Strings are in theory just fancy vectors.
@@ -2186,8 +2184,8 @@ namespace rsl
     using u16string = basic_string<char16_t>;
     using u32string = basic_string<char32_t>;
 
-    // template <typename Char, typename Traits>
-    // class basic_istream;
+    template <typename Char, typename Traits>
+    class basic_istream;
 
     // extracts characters from input and appends them to str until the delim is found or the stream's eof.
     template <typename Char, typename Traits, typename Allocator>
@@ -2346,6 +2344,5 @@ inline rsl::basic_ostream<Char, Traits>& operator<<(rsl::basic_ostream<Char, Tra
   return os;
 }
 
-#include "rex_std/internal/assert/assert_impl.h"
 #include "rex_std/bonus/string/string_utils_impl.h"
 

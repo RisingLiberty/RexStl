@@ -107,9 +107,6 @@
 #include "rex_std/internal/algorithm/upper_bound.h"
 
 // Bonus algorithms
-#include "rex_std/bonus/algorithm/clamp_max.h"
-#include "rex_std/bonus/algorithm/clamp_min.h"
-#include "rex_std/bonus/algorithm/count.h"
-#include "rex_std/bonus/algorithm/transform_if.h"
+#include "rex_std/bonus/algorithm.h"
 
 #include "rex_std/internal/assert/assert_impl.h"

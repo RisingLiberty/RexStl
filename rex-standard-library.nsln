@@ -1,0 +1,6 @@
+{
+	"RexStd" : "d:\\libraries\\rexstl\\.rex\\build\\ninja\\rexstd\\RexStd.nproj",
+	"RexStdExtra" : "d:\\libraries\\rexstl\\.rex\\build\\ninja\\rexstdextra\\RexStdExtra.nproj",
+	"RexStdExe" : "d:\\libraries\\rexstl\\.rex\\build\\ninja\\rexstdexe\\RexStdExe.nproj"
+}
+
