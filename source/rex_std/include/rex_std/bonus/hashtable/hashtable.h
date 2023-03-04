@@ -334,7 +334,7 @@ namespace rsl
       template <typename InputIterator>
       void insert(InputIterator first, InputIterator last)
       {
-        const count_t num_elements_to_add = internal::ht_distance(first, last);
+        const count_t num_elements_to_add = static_cast<count_t>(internal::ht_distance(first, last));
         hash_required_result result       = m_cp_extract_key_and_rehash_policy.second().is_rehash_required(bucket_count(), size(), num_elements_to_add);
 
         if(result.is_hash_required)
