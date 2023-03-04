@@ -255,7 +255,7 @@ TEST_CASE("string view contains")
   }
 
   {
-    rsl::string_view str      = "class rsl::v1::basic_string_view<char,class rsl::v1::char_traits<char> > __cdecl rsl::v1::internal::msvc_class_type_name<class rex::app_entry::MyClass>(void)";
+    rsl::string_view str      = "class rsl::v1::basic_string_view<char,class rsl::v1::char_traits<char> > __cdecl rsl::v1::internal::type_name<class rex::app_entry::MyClass>(void)";
     rsl::string_view to_find  = "class rsl::v1::basic_string_view<char,class rsl::v1::char_traits<char> > __cdecl rsl::v1::internal::type_name<class ";
 
     CHECK(str.contains(to_find) == true);

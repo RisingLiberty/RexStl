@@ -78,4 +78,5 @@ namespace rsl
   } // namespace v1
 } // namespace rsl
 
+#include "rex_std/assert.h"
 #include "rex_std/enable_std_checking.h"

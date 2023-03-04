@@ -20,6 +20,7 @@
 #include "rex_std/bonus/utility/emplace_result.h"
 #include "rex_std/bonus/utility/range.h"
 #include "rex_std/initializer_list.h"
+#include "rex_std/internal/algorithm/max.h"
 #include "rex_std/internal/assert/assert_fwd.h"
 #include "rex_std/internal/memory/addressof.h"
 #include "rex_std/internal/type_traits/integral_constant.h"

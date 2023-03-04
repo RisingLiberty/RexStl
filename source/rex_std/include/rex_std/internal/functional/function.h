@@ -372,7 +372,7 @@ namespace rsl
 
         void swap(function_detail& other)
         {
-          REX_ASSERT_X(this != rsl::addressof(other));
+          REX_ASSERT_X(this != rsl::addressof(other), "Can't swap to yourself");
 
           functor_storage<SizeInBytes> tmp_storage {};
           if(other.has_manager())

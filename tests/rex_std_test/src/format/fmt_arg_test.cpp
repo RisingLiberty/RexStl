@@ -181,7 +181,7 @@ struct copy_assert {
   copy_assert() {}
   copy_assert(const copy_assert&) 
   { 
-    REX_ASSERT("deal with it"); 
+    REX_ASSERT("copying something that shouldn't be copied in fmt test"); 
   }
 };
 

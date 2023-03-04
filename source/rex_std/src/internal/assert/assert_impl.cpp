@@ -22,7 +22,7 @@ namespace rsl
     {
       void log_assert(const rsl::string& msg) // NOLINT(misc-no-recursion)
       {
-        rsl::cerr << "Assert: " << msg.data();
+        rsl::cerr << "Assert: " << msg.data() << "\n";
       }
     } // namespace internal
   }   // namespace v1

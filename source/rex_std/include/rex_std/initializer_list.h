@@ -16,9 +16,9 @@
 
 // MSVC STD include guard               LIBC++ STD include guard
 #if !defined(_INITIALIZER_LIST_) && !defined(_LIBCPP_INITIALIZER_LIST)
-  #define _INITIALIZER_LIST_ // NOLINT(bugprone-reserved-identifier, readability-identifier-naming)
+  #define _INITIALIZER_LIST_       // NOLINT(bugprone-reserved-identifier, readability-identifier-naming)
   #define _LIBCPP_INITIALIZER_LIST // NOLINT(bugprone-reserved-identifier, readability-identifier-naming)
-namespace std // needs to be in std namespace
+namespace std                      // needs to be in std namespace
 {
   // See the C++11 Standard, section 18.9.
   // This is MSVC's version of initializer_list.
