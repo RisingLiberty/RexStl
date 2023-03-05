@@ -14,7 +14,7 @@
 
 #include "rex_std/bonus/types.h"
 #include "rex_std_extra/concepts.h"
-#include "utilities/swap.h"
+#include "utility/swap.h"
 
 #include <algorithm>
 #include <iterator>
@@ -181,8 +181,14 @@ namespace rsl
       }
     }
 
+    template <typename It, typename It2>
+    struct mismatch_result
+    {
+      It lhs;
+      It rhs;
+    };
     template <typename It1, typename It2>
-    constexpr rsl::pair<It1, It2> mismatch(It1 first1, const It1 last1, It2 first2, const It2 last2)
+    constexpr mismatch_result<It1, It2> mismatch(It1 first1, const It1 last1, It2 first2, const It2 last2)
     {
       while(first1 != last1 && first2 != last2 && *first1 == *first2)
       {
@@ -190,7 +196,7 @@ namespace rsl
         ++first2;
       }
 
-      return rsl::make_pair(first1, first2);
+      return mismatch_result {first1, first2};
     }
 
     template <typename T, size_t Size>
