@@ -26,7 +26,7 @@
 #include "rex_std/internal/utility/integer_sequence.h"
 #include "rex_std/internal/utility/move.h"
 #include "rex_std/internal/utility/move_if_noexcept.h"
-//#include "rex_std/internal/utility/pair.h" // pair is excluded by default as it's use it not recommended
+// #include "rex_std/internal/utility/pair.h" // pair is excluded by default as it's use it not recommended
 #include "rex_std/internal/utility/piecewise_construct.h"
 #include "rex_std/internal/utility/size.h"
 #include "rex_std/internal/utility/swap.h"

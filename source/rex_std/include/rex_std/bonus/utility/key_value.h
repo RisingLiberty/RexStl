@@ -27,21 +27,23 @@ namespace rsl
       using key_type   = Key;
       using value_type = Value;
 
-      // useful type alias for pair utilities
+      // useful type alias for pair utility
       using first_type  = key_type;
       using second_type = value_type;
 
       key_value() = default;
-      template <typename ... Args>
-      key_value(const Key& k, Args&& ... args)
-        : key(k)
-        , value(rsl::forward<Args>(args)...)
-      {}
-      template <typename ... Args>
-      key_value(Key&& k, Args&& ... args)
-        : key(rsl::move(k))
-        , value(rsl::forward<Args>(args)...)
-      {}
+      template <typename... Args>
+      key_value(const Key& k, Args&&... args)
+          : key(k)
+          , value(rsl::forward<Args>(args)...)
+      {
+      }
+      template <typename... Args>
+      key_value(Key&& k, Args&&... args)
+          : key(rsl::move(k))
+          , value(rsl::forward<Args>(args)...)
+      {
+      }
 
       const Key& first() const
       {

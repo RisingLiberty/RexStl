@@ -13,7 +13,7 @@
 //-----------------------------------------------------------------------------
 // https://en.cppreference.com/w/cpp/header/memory
 //
-// High level memory management utilities
+// High level memory management utility
 //-----------------------------------------------------------------------------
 
 #pragma once
