@@ -19,47 +19,31 @@ namespace rsl
 {
   inline namespace v1
   {
-
-    template <typename T, T... Ints>
-    class integer_sequence
+    // sequence of integer parameters
+    template <typename T, T... Vals>
+    struct integer_sequence 
     {
-    public:
-      using value_type = T;
-      static_assert(rsl::is_integral_v<T>, "integer_sequence can only be instantiated with integer types");
+      static_assert(is_integral_v<T>, "integer_sequence<T, I...> requires T to be an integral type.");
 
-      static constexpr card32 size()
+      using value_type = T;
+
+      REX_NO_DISCARD static constexpr card32 size() noexcept 
       {
-        return sizeof...(Ints);
+        return sizeof...(Vals);
       }
     };
 
-    namespace internal
-    {
-      // breaking coding guidelines here.
-      template <card32 Size, typename IndexSeq>
-      struct make_index_sequence;
+    template <typename T, T Size>
+    using make_integer_sequence = __make_integer_seq<integer_sequence, T, Size>;
 
-      // breaking coding guidelines here.
-      template <card32 Size, card32... Ints>
-      struct make_index_sequence<Size, integer_sequence<card32, Ints...>>
-      {
-        using type = typename make_index_sequence<Size - 1, integer_sequence<card32, Size - 1, Ints...>>::type;
-      };
+    template <card32... Vals>
+    using index_sequence = integer_sequence<card32, Vals...>;
 
-      // breaking coding guidelines here.
-      template <card32... Ints>
-      struct make_index_sequence<0, integer_sequence<card32, Ints...>>
-      {
-        using type = integer_sequence<card32, Ints...>;
-      };
-    } // namespace internal
-
-    template <card32... Ints>
-    using index_sequence = integer_sequence<card32, Ints...>;
-
-    // breaking coding guidelines here.
     template <card32 Size>
-    using make_index_sequence = typename internal::make_index_sequence<Size, integer_sequence<card32>>::type;
+    using make_index_sequence = make_integer_sequence<card32, Size>;
+
+    template <typename... Types>
+    using index_sequence_for = make_index_sequence<sizeof...(Types)>;
 
   } // namespace v1
 } // namespace rsl

@@ -23,7 +23,7 @@ namespace rsl
     class high_water_mark
     {
     public:
-      explicit high_water_mark(T initValue = 0)
+      high_water_mark(T initValue = 0) // NOLINT(google-explicit-constructor)
           : m_value(initValue)
           , m_max_value(initValue)
       {
