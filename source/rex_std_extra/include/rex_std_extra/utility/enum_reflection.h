@@ -1073,7 +1073,7 @@ namespace rsl
           auto result = U{ 0 };
           while (!value.empty()) {
             const auto d = detail::find(value, '|');
-            const auto s = (d == rsl::string_view::npos) ? value : value.substr(0, d);
+            const auto s = (d == rsl::string_view::npos()) ? value : value.substr(0, d);
             auto f = U{ 0 };
             for (card32 i = 0; i < detail::count_v<D, true>; ++i) {
               if (detail::cmp_equal(s, detail::names_v<D, true>[i], p)) {
