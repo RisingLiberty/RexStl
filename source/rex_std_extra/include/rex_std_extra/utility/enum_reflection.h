@@ -561,11 +561,34 @@ namespace rsl
         template <typename E, bool IsFlags = false, typename D = rsl::decay_t<E>>
         using names_t = decltype((names_v<D, IsFlags>));
 
+        template <typename E>
+        class enum_entry
+        {
+        public:
+          enum_entry(E value, rsl::string_view name)
+          : m_value(value)
+          , m_name(name)
+          {}
+
+          E val() const
+          {
+            return m_value;
+          }
+          rsl::string_view name() const
+          {
+            return m_name;
+          }
+
+        private:
+          E m_value;
+          rsl::string_view m_name;
+        };
+
         template <typename E, bool IsFlags, card32... I>
         constexpr auto entries(rsl::index_sequence<I...>) noexcept {
           static_assert(is_enum_v<E>, "enum_refl::detail::entries requires enum type.");
 
-          return rsl::array<rsl::pair<E, rsl::string_view>, sizeof...(I)>{ { {values_v<E, IsFlags>[I], enum_name_v<E, values_v<E, IsFlags>[I]>}...}};
+          return rsl::array<enum_entry<E>, sizeof...(I)>{ { {values_v<E, IsFlags>[I], enum_name_v<E, values_v<E, IsFlags>[I]>}...}};
         }
 
         template <typename E, bool IsFlags = false>
