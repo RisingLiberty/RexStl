@@ -1085,7 +1085,7 @@ namespace rsl
             if (f == U{ 0 }) {
               return {}; // Invalid value or out of range.
             }
-            value.remove_prefix((d == rsl::string_view::npos) ? value.size() : d + 1);
+            value.remove_prefix((d == rsl::string_view::npos()) ? value.size() : d + 1);
           }
 
           if (result == U{ 0 }) {
