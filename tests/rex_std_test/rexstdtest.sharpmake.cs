@@ -7,6 +7,7 @@ public class RexStdTest : TestProject
   public RexStdTest() : base()
   {
     Name = GenerateName("RexStdTest");
+    GenerateCompilerDB = true;
     GenerateTargets();
 
     string ThisFileFolder = Path.GetDirectoryName(Utils.CurrentFile());

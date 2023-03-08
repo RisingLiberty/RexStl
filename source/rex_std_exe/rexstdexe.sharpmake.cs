@@ -7,6 +7,7 @@ public class RexStdExe : BasicCPPProject
   public RexStdExe() : base()
   {
     Name = GenerateName("RexStdExe");
+    GenerateCompilerDB = true;
     GenerateTargets();
 
     string ThisFileFolder = Path.GetDirectoryName(Utils.CurrentFile());
