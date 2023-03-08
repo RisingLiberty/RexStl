@@ -21,13 +21,13 @@ namespace rsl
   {
     // sequence of integer parameters
     template <typename T, T... Vals>
-    struct integer_sequence 
+    struct integer_sequence
     {
       static_assert(is_integral_v<T>, "integer_sequence<T, I...> requires T to be an integral type.");
 
       using value_type = T;
 
-      REX_NO_DISCARD static constexpr card32 size() noexcept 
+      REX_NO_DISCARD static constexpr card32 size() noexcept
       {
         return sizeof...(Vals);
       }
