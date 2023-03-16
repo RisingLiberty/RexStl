@@ -12,6 +12,36 @@
 
 #pragma once
 
+namespace rsl
+{
+  inline namespace v1
+  {
+    class stacktrace_entry
+    {
+    public:
+      using native_handle_type = void*;
+
+      constexpr stacktrace_entry();
+      constexpr stacktrace_entry(const stacktrace_entry& other);
+
+      constexpr stacktrace_entry& operator=(const stacktrace_entry& other);
+
+      constexpr native_handle_type native_handle() const;
+      constexpr operator bool() const;
+
+
+
+    private:
+    };
+
+    template <typename Allocator>
+    class basic_stacktrace
+    {
+
+    };
+  }
+}
+
 #ifdef REX_ENABLE_WITH_CPP23
 
   #include "rex_std/disable_std_checking.h"
