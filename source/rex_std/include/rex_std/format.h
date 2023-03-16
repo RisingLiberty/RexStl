@@ -44,6 +44,7 @@
 
   #include "rex_std/bonus/iterator/iter_val.h"
   #include "rex_std/bonus/memory/typed_allocator.h"
+  #include "rex_std/bonus/string.h"
   #include "rex_std/internal/algorithm/copy.h"
   #include "rex_std/internal/iterator/begin.h"
   #include "rex_std/internal/iterator/end.h"
@@ -4014,7 +4015,7 @@ struct udl_formatter
   basic_string_view<Char> str;
 
   template <typename... T>
-  auto operator()(T&&... args) const -> rsl::basic_string<Char>
+  auto operator()(T&&... args) const->rsl::stack_string<Char, 512>
   {
     return vformat(str, rsl::make_format_args<buffer_context<Char>>(args...));
   }
@@ -4068,7 +4069,7 @@ struct udl_arg
   #endif // FMT_USE_USER_DEFINED_LITERALS
 
 template <typename Locale, typename Char>
-auto vformat(const Locale& loc, basic_string_view<Char> formatStr, basic_format_args<buffer_context<type_identity_t<Char>>> args) -> rsl::basic_string<Char>
+auto vformat(const Locale& loc, basic_string_view<Char> formatStr, basic_format_args<buffer_context<type_identity_t<Char>>> args) -> rsl::stack_string<Char, 512>
 {
   basic_memory_buffer<Char> buffer;
   detail::vformat_to(buffer, formatStr, args, detail::locale_ref(loc));
@@ -4591,11 +4592,11 @@ FMT_NODISCARD inline auto to_string(T value) -> rsl::string
 }
 
 template <typename Char, count_t SIZE>
-FMT_NODISCARD auto to_string(const basic_memory_buffer<Char, SIZE>& buf) -> rsl::basic_string<Char>
+FMT_NODISCARD auto to_string(const basic_memory_buffer<Char, SIZE>& buf) -> rsl::stack_string<Char, SIZE>
 {
   auto size = buf.size();
-  detail::assume(size < rsl::basic_string<Char>().max_size());
-  return rsl::basic_string<Char>(buf.data(), size);
+  detail::assume(size < rsl::stack_string<Char, SIZE>().max_size());
+  return rsl::stack_string<Char, SIZE>(buf.data(), size);
 }
 
 FMT_BEGIN_DETAIL_NAMESPACE

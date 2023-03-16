@@ -30,24 +30,26 @@ namespace rsl
 
     using string = basic_string<char8, char_traits<char8>, allocator>;
 
+    using fmt_stack_string = rsl::stack_string<char8, 500>;
+
     namespace internal
     {
-      void log_assert(const rsl::string& msg);
+      void log_assert(const fmt_stack_string& msg);
     } // namespace internal
 
     template <typename... T>
-    REX_NO_DISCARD inline rsl::string format(format_string<T...> fmt, T&&... args); // NOLINT(misc-no-recursion, readability-redundant-declaration)
+    REX_NO_DISCARD inline rsl::fmt_stack_string format(format_string<T...> fmt, T&&... args); // NOLINT(misc-no-recursion, readability-redundant-declaration)
 
     template <typename... Args>
     bool rex_assert(bool cond, Args&&... args) // NOLINT(misc-no-recursion)
     {
-      if(!cond)
+      if (!cond)
       {
         thread_local static bool is_processing_assert = false;
-        if(!is_processing_assert)
+        if (!is_processing_assert)
         {
-          is_processing_assert  = true;
-          const rsl::string str = rsl::format(rsl::forward<Args>(args)...);
+          is_processing_assert = true;
+          const fmt_stack_string& str = rsl::format(rsl::forward<Args>(args)...);
           internal::log_assert(str);
           DEBUG_BREAK();
           return true;

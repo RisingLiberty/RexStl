@@ -96,8 +96,8 @@ namespace rsl
           : m_data()
           , m_null_terminator_offset(str.length())
       {
-        const card32 copy_size = rsl::clamp_max(rsl::string_length(str), StrMaxSize);
-        rsl::copy_n(str.data(), copy_size, m_data.data());
+        const card32 copy_size = rsl::clamp_max(str.length(), StrMaxSize);
+        rsl::copy_n(str.begin(), copy_size, m_data.data());
       }
 
       stack_string(rsl::nullptr_t) = delete;
@@ -165,7 +165,15 @@ namespace rsl
       {
         return m_data.begin();
       }
+      auto begin() const
+      {
+        return m_data.begin();
+      }
       auto end()
+      {
+        return begin() + m_null_terminator_offset;
+      }
+      auto end() const
       {
         return begin() + m_null_terminator_offset;
       }

@@ -20,7 +20,7 @@ namespace rsl
   {
     namespace internal
     {
-      void log_assert(const rsl::string& msg) // NOLINT(misc-no-recursion)
+      void log_assert(const fmt_stack_string& msg) // NOLINT(misc-no-recursion)
       {
         rsl::cerr << "Assert: " << msg.data() << "\n";
       }
