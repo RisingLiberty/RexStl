@@ -17,8 +17,6 @@
 #include "rex_std/internal/functional/reference_wrapper.h"
 #include "rex_std/bonus/type_traits/is_char_array.h"
 
-#include "rex_std/string.h"
-
 TEST_CASE("arg test, basic")
 {
   rsl::dynamic_format_arg_store<rsl::format_context> store;
@@ -26,7 +24,7 @@ TEST_CASE("arg test, basic")
   store.push_back("abc1");
   store.push_back(1.5f);
 
-  REQUIRE(rsl::string("42 and abc1 and 1.5") == rsl::vformat("{} and {} and {}", store));
+  REQUIRE(rsl::fmt_stack_string("42 and abc1 and 1.5") == rsl::vformat("{} and {} and {}", store));
 }
 
 TEST_CASE("arg test, strings and refs")
@@ -39,7 +37,7 @@ TEST_CASE("arg test, strings and refs")
   str[0] = 'X';
 
   auto result = rsl::vformat("{} and {} and {}", store);
-  REQUIRE(rsl::string("1234567890 and X234567890 and X234567890") == result);
+  REQUIRE(rsl::fmt_stack_string("1234567890 and X234567890 and X234567890") == result);
 }
 
 struct custom_type 
@@ -74,7 +72,7 @@ TEST_CASE("args_test, custom_format")
   store.push_back(rsl::cref(c));
   ++c.i;
   auto result = rsl::vformat("{} and {} and {}", store);
-  REQUIRE(rsl::string("cust=0 and cust=1 and cust=3") == result);
+  REQUIRE(rsl::fmt_stack_string("cust=0 and cust=1 and cust=3") == result);
 }
 
 struct to_stringable 
@@ -113,7 +111,7 @@ TEST_CASE("args_test, named_int")
 {
   rsl::dynamic_format_arg_store<rsl::format_context> store;
   store.push_back(rsl::arg("a1", 42));
-  REQUIRE(rsl::string("42") == rsl::vformat("{a1}", store));
+  REQUIRE(rsl::fmt_stack_string("42") == rsl::vformat("{a1}", store));
 }
 
 TEST_CASE("args_test, named_strings") 
@@ -123,7 +121,7 @@ TEST_CASE("args_test, named_strings")
   store.push_back(rsl::arg("a1", str));
   store.push_back(rsl::arg("a2", rsl::cref(str)));
   str[0] = 'X';
-  REQUIRE(rsl::string("1234567890 and X234567890") == rsl::vformat("{a1} and {a2}", store));
+  REQUIRE(rsl::fmt_stack_string("1234567890 and X234567890") == rsl::vformat("{a1} and {a2}", store));
 }
 
 TEST_CASE("args_test, named_arg_by_ref") 
@@ -132,7 +130,7 @@ TEST_CASE("args_test, named_arg_by_ref")
   char band[] = "Rolling Stones";
   store.push_back(rsl::arg("band", rsl::cref(band)));
   band[9] = 'c';  // Changing band affects the output.
-  REQUIRE(rsl::vformat("{band}", store) == rsl::string("Rolling Scones"));
+  REQUIRE(rsl::vformat("{band}", store) == rsl::fmt_stack_string("Rolling Scones"));
 }
 
 TEST_CASE("args_test, named_custom_format") 
@@ -146,7 +144,7 @@ TEST_CASE("args_test, named_custom_format")
   store.push_back(rsl::arg("c_ref", rsl::cref(c)));
   ++c.i;
   auto result = rsl::vformat("{c1} and {c2} and {c_ref}", store);
-  REQUIRE(rsl::string("cust=0 and cust=1 and cust=3") == result);
+  REQUIRE(rsl::fmt_stack_string("cust=0 and cust=1 and cust=3") == result);
 }
 
 TEST_CASE("args_test, clear") 
@@ -155,16 +153,16 @@ TEST_CASE("args_test, clear")
   store.push_back(42);
 
   auto result = rsl::vformat("{}", store);
-  REQUIRE(rsl::string("42") == result);
+  REQUIRE(rsl::fmt_stack_string("42") == result);
 
   store.push_back(43);
   result = rsl::vformat("{} and {}", store);
-  REQUIRE(rsl::string("42 and 43") == result);
+  REQUIRE(rsl::fmt_stack_string("42 and 43") == result);
 
   store.clear();
   store.push_back(44);
   result = rsl::vformat("{}", store);
-  REQUIRE(rsl::string("44") == result);
+  REQUIRE(rsl::fmt_stack_string("44") == result);
 }
 
 TEST_CASE("args_test, reserve") 
@@ -174,17 +172,17 @@ TEST_CASE("args_test, reserve")
   store.push_back(1.5f);
   store.push_back(rsl::arg("a1", 42));
   auto result = rsl::vformat("{a1} and {}", store);
-  REQUIRE(rsl::string("42 and 1.5") == result);
+  REQUIRE(rsl::fmt_stack_string("42 and 1.5") == result);
 }
 
 TEST_CASE("args_test, move_constructor") {
   using store_type = rsl::dynamic_format_arg_store<rsl::format_context>;
   auto store = rsl::unique_ptr<store_type>(new store_type());
   store->push_back(42);
-  store->push_back(rsl::string("foo"));
+  store->push_back(rsl::fmt_stack_string("foo"));
   store->push_back(rsl::arg("a1", "foo"));
   auto moved_store = rsl::move(*store);
   store.reset();
-  REQUIRE(rsl::vformat("{} {} {a1}", moved_store) == rsl::string("42 foo foo"));
+  REQUIRE(rsl::vformat("{} {} {a1}", moved_store) == rsl::fmt_stack_string("42 foo foo"));
 }
 

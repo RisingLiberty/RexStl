@@ -111,7 +111,7 @@ namespace rsl
     {
       hash_result operator()(T* p) const
       {
-        return static_cast<hash_result>(*reinterpret_cast<uintptr*>(&p));
+        return static_cast<hash_result>(*reinterpret_cast<uintptr*>(&p)); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
       }
     };
 

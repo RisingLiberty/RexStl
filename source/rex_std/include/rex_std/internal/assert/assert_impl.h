@@ -43,12 +43,12 @@ namespace rsl
     template <typename... Args>
     bool rex_assert(bool cond, Args&&... args) // NOLINT(misc-no-recursion)
     {
-      if (!cond)
+      if(!cond)
       {
         thread_local static bool is_processing_assert = false;
-        if (!is_processing_assert)
+        if(!is_processing_assert)
         {
-          is_processing_assert = true;
+          is_processing_assert        = true;
           const fmt_stack_string& str = rsl::format(rsl::forward<Args>(args)...);
           internal::log_assert(str);
           DEBUG_BREAK();

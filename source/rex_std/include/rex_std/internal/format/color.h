@@ -629,7 +629,7 @@ void print(const text_style& ts, const S& format_str, const Args&... args)
 }
 
 template <typename S, typename Char = char_t<S>>
-inline rsl::basic_string<Char> vformat(const text_style& ts, const S& format_str, basic_format_args<buffer_context<type_identity_t<Char>>> args)
+inline rsl::fmt_stack_string vformat(const text_style& ts, const S& format_str, basic_format_args<buffer_context<type_identity_t<Char>>> args)
 {
   basic_memory_buffer<Char> buf;
   detail::vformat_to(buf, ts, detail::to_string_view(format_str), args);
@@ -649,7 +649,7 @@ inline rsl::basic_string<Char> vformat(const text_style& ts, const S& format_str
   \endrst
 */
 template <typename S, typename... Args, typename Char = char_t<S>>
-inline rsl::basic_string<Char> format(const text_style& ts, const S& format_str, const Args&... args)
+inline rsl::fmt_stack_string format(const text_style& ts, const S& format_str, const Args&... args)
 {
   return rsl::vformat(ts, detail::to_string_view(format_str), rsl::make_format_args<buffer_context<Char>>(args...));
 }

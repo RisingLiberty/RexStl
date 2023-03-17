@@ -12,14 +12,14 @@
 
 #pragma once
 
+#include "rex_std/array.h"
 #include "rex_std/bonus/string.h"
 #include "rex_std/internal/functional/hash.h"
-#include "rex_std/internal/memory/allocator.h"
 #include "rex_std/internal/iterator/random_access_iterator.h"
 #include "rex_std/internal/iterator/reverse_iterator.h"
-#include "rex_std/vector.h"
-#include "rex_std/array.h"
+#include "rex_std/internal/memory/allocator.h"
 #include "rex_std/string.h"
+#include "rex_std/vector.h"
 
 namespace rsl
 {
@@ -30,25 +30,20 @@ namespace rsl
     public:
       using native_handle_type = void*;
 
+      stacktrace_entry();
       stacktrace_entry(native_handle_type handle, const big_stack_string& file, const big_stack_string& func, card32 lineNr);
-      stacktrace_entry() = default;
       stacktrace_entry(const stacktrace_entry& other) = default;
+      ~stacktrace_entry()                             = default;
 
-      stacktrace_entry& operator=(const stacktrace_entry& other)
-      {
-        m_file = other.m_file;
-        m_function = other.m_function;
-        m_handle = other.m_handle;
-        m_line_nr = other.m_line_nr;
-
-        return *this;
-      }
+      stacktrace_entry& operator=(const stacktrace_entry& other) = default;
 
       native_handle_type native_handle() const
       {
         return m_handle;
       }
-      operator bool() const
+      /// RSL Comment: Different from ISO C++ Standard at time of writing (17/Mar/2023)
+      // This is implicit in the standard
+      explicit operator bool() const
       {
         return m_handle != nullptr;
       }
@@ -57,7 +52,7 @@ namespace rsl
       // This returns a std::string in the standard
       rsl::big_stack_string description() const
       {
-        rsl::big_stack_string result = "";
+        rsl::big_stack_string result = ""_big;
 
         result += rsl::to_string(m_handle);
         result += " - ";
@@ -104,78 +99,85 @@ namespace rsl
       return os;
     }
 
-    template<>
+    template <>
     struct hash<rsl::stacktrace_entry>
     {
       hash_result operator()(const stacktrace_entry& entry)
       {
-        return hash<stacktrace_entry::native_handle_type>{}(entry.native_handle());
+        return hash<stacktrace_entry::native_handle_type> {}(entry.native_handle());
       }
     };
 
     namespace internal
     {
       __declspec(noinline) rsl::array<stacktrace_entry, 100> stack_trace(card32 skip, card32 maxDepth);
-    }
+    } // namespace internal
 
     template <typename Allocator>
     class basic_stacktrace
     {
     public:
-      using value_type = stacktrace_entry;
-      using reference = value_type&;
-      using const_reference = const value_type&;
-      using const_iterator = random_access_iterator<stacktrace_entry>;
-      using iterator = const_iterator;
-      using reverse_iterator = rsl::reverse_iterator<iterator>;
+      using value_type             = stacktrace_entry;
+      using reference              = value_type&;
+      using const_reference        = const value_type&;
+      using const_iterator         = random_access_iterator<stacktrace_entry>;
+      using iterator               = const_iterator;
+      using reverse_iterator       = rsl::reverse_iterator<iterator>;
       using reverse_const_iterator = rsl::reverse_iterator<const_iterator>;
-      using difference_type = ptrdiff;
-      using size_type = card32;
-      using allocator_type = Allocator;
+      using difference_type        = ptrdiff;
+      using size_type              = card32;
+      using allocator_type         = Allocator;
 
-      basic_stacktrace() = default;
-      explicit basic_stacktrace(const allocator_type&)
-        : m_entries()
-        , m_size(0)
-      {}
+      basic_stacktrace()
+          : m_entries()
+          , m_size(0)
+      {
+      }
+      explicit basic_stacktrace(const allocator_type& /*unused*/)
+          : m_entries()
+          , m_size(0)
+      {
+      }
       basic_stacktrace(const basic_stacktrace& other) = default;
-      basic_stacktrace(basic_stacktrace&& other) = default;
-      basic_stacktrace(const basic_stacktrace& other, const allocator_type&)
-        : basic_stacktrace(other)
-      {}
-      basic_stacktrace(basic_stacktrace&& other, const allocator_type&)
-        : basic_stacktrace(rsl::move(other))
-      {}
+      basic_stacktrace(basic_stacktrace&& other)      = default;
+      basic_stacktrace(const basic_stacktrace& other, const allocator_type& /*unused*/)
+          : basic_stacktrace(other)
+      {
+      }
+      basic_stacktrace(basic_stacktrace&& other, const allocator_type& /*unused*/)
+          : basic_stacktrace(rsl::move(other))
+      {
+      }
 
       ~basic_stacktrace() = default;
 
       basic_stacktrace& operator=(const basic_stacktrace& other)
       {
         m_entries = other.m_entries;
-        m_size = other.m_size;
+        m_size    = other.m_size;
         return *this;
       }
-      basic_stacktrace& operator=(const basic_stacktrace&& other)
+      basic_stacktrace& operator=(basic_stacktrace&& other)
       {
         m_entries = other.m_entries;
-        m_size = other.m_size;
+        m_size    = other.m_size;
         return *this;
       }
 
-      static basic_stacktrace<allocator_type> current(const allocator_type& = allocator_type())
+      static basic_stacktrace<allocator_type> current(const allocator_type& /*unused*/ = allocator_type())
       {
-        return basic_stacktrace<allocator_type>(internal::stack_trace(0, s_MaxEntries));
+        return basic_stacktrace<allocator_type>(internal::stack_trace(0, s_max_entries));
       }
-      static basic_stacktrace<allocator_type> current(size_type skip, const allocator_type & = allocator_type())
+      static basic_stacktrace<allocator_type> current(size_type skip, const allocator_type& /*unused*/ = allocator_type())
       {
-        return basic_stacktrace<allocator_type>(internal::stack_trace(skip, s_MaxEntries));
+        return basic_stacktrace<allocator_type>(internal::stack_trace(skip, s_max_entries));
       }
-      static basic_stacktrace<allocator_type> current(size_type skip, size_type maxDepth, const allocator_type & = allocator_type())
+      static basic_stacktrace<allocator_type> current(size_type skip, size_type maxDepth, const allocator_type& /*unused*/ = allocator_type())
       {
         return basic_stacktrace<allocator_type>(internal::stack_trace(skip, maxDepth));
       }
 
-      //const allocator_type& get_allocator();
+      // const allocator_type& get_allocator();
 
       iterator begin()
       {
@@ -255,18 +257,18 @@ namespace rsl
       void swap(basic_stacktrace& other)
       {
         basic_stacktrace tmp = *this;
-        *this = other;
-        other = tmp;
+        *this                = other;
+        other                = tmp;
       }
 
     private:
-      basic_stacktrace(const rsl::array<stacktrace_entry, 100>& entries)
-        : m_entries(entries)
-        , m_size(0)
+      explicit basic_stacktrace(const rsl::array<stacktrace_entry, 100>& entries)
+          : m_entries(entries)
+          , m_size(0)
       {
-        for (const stacktrace_entry& entry : m_entries)
+        for(const stacktrace_entry& entry: m_entries)
         {
-          if (entry)
+          if(entry)
           {
             ++m_size;
           }
@@ -278,8 +280,8 @@ namespace rsl
       }
 
     private:
-      constexpr static card32 s_MaxEntries = 100;
-      rsl::array<stacktrace_entry, s_MaxEntries> m_entries;
+      constexpr static card32 s_max_entries = 100;
+      rsl::array<stacktrace_entry, s_max_entries> m_entries;
       card32 m_size;
     };
 
@@ -288,7 +290,7 @@ namespace rsl
     {
       rsl::string result;
 
-      for (card32 i = 0; i < trace.size(); ++i)
+      for(card32 i = 0; i < trace.size(); ++i)
       {
         result += trace[i].description();
         result += "\n";
@@ -311,5 +313,5 @@ namespace rsl
       os << to_string(trace);
       return os;
     }
-  }
-}
+  } // namespace v1
+} // namespace rsl

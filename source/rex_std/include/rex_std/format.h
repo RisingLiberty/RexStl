@@ -4015,7 +4015,7 @@ struct udl_formatter
   basic_string_view<Char> str;
 
   template <typename... T>
-  auto operator()(T&&... args) const->rsl::stack_string<Char, 512>
+  auto operator()(T&&... args) const -> rsl::stack_string<Char, 512>
   {
     return vformat(str, rsl::make_format_args<buffer_context<Char>>(args...));
   }
@@ -4573,9 +4573,9 @@ auto join(Range&& range, string_view sep) -> join_view<detail::iterator_t<Range>
   \endrst
  */
 template <typename T, FMT_ENABLE_IF(!rsl::is_integral<T>::value)>
-inline auto to_string(const T& value) -> rsl::tiny_stack_string
+inline auto to_string(const T& value) -> rsl::big_stack_string
 {
-  auto result = rsl::tiny_stack_string();
+  auto result = rsl::big_stack_string();
   detail::write<char>(rsl::back_inserter(result), value);
   return result;
 }
