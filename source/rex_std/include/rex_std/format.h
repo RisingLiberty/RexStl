@@ -4573,22 +4573,22 @@ auto join(Range&& range, string_view sep) -> join_view<detail::iterator_t<Range>
   \endrst
  */
 template <typename T, FMT_ENABLE_IF(!rsl::is_integral<T>::value)>
-inline auto to_string(const T& value) -> rsl::string
+inline auto to_string(const T& value) -> rsl::tiny_stack_string
 {
-  auto result = rsl::string();
+  auto result = rsl::tiny_stack_string();
   detail::write<char>(rsl::back_inserter(result), value);
   return result;
 }
 
 template <typename T, FMT_ENABLE_IF(rsl::is_integral<T>::value)>
-FMT_NODISCARD inline auto to_string(T value) -> rsl::string
+FMT_NODISCARD inline auto to_string(T value) -> rsl::tiny_stack_string
 {
   // The buffer should be large enough to store the number including the sign
   // or "false" for bool.
   constexpr int max_size = detail::digits10<T>() + 2;
   char buffer[max_size > 5 ? static_cast<unsigned>(max_size) : 5];
   char* begin = buffer;
-  return rsl::string(begin, detail::write<char>(begin, value));
+  return rsl::tiny_stack_string(begin, detail::write<char>(begin, value));
 }
 
 template <typename Char, count_t SIZE>

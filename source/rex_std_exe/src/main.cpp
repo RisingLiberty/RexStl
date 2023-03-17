@@ -97,10 +97,10 @@
 // #include "rex_std/wchar.h"
 // #include "rex_std/wctype.h"
 
-#include "rex_std/bonus/string.h"
+#include "rex_std/iostream.h"
+#include "rex_std/stacktrace.h"
 
 int main()
 {
-  rsl::tiny_stack_string vec;
-  vec.at(1);
+  rsl::cout << rsl::to_string(rsl::stacktrace::current());
 }

@@ -36,5 +36,7 @@ public class RexStd : BasicCPPProject
       default:
         break;
     }
+
+    conf.LibraryFiles.Add("Dbghelp.lib");
   }
 }
