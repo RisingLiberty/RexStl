@@ -3365,7 +3365,9 @@ FMT_FORMAT_AS(rsl::fmt_string, basic_string_view<char>);
 FMT_FORMAT_AS(rsl::nullptr_t, const void*);
 // FMT_FORMAT_AS(detail::std_string_view<Char>, basic_string_view<Char>);
 
-FMT_API auto vformat(string_view fmt, format_args args) ->rsl::stack_string<char8, 500>;
+using fmt_stack_string = rsl::stack_string<char8, 500>;
+
+FMT_API auto vformat(string_view fmt, format_args args) ->fmt_stack_string;
 
 /**
   \rst
@@ -3379,7 +3381,7 @@ FMT_API auto vformat(string_view fmt, format_args args) ->rsl::stack_string<char
   \endrst
 */
 template <typename... T>
-FMT_NODISCARD FMT_INLINE auto format(format_string<T...> fmt, T&&... args) -> rsl::stack_string<char8, 500>
+FMT_NODISCARD FMT_INLINE auto format(format_string<T...> fmt, T&&... args) -> fmt_stack_string
 {
   return vformat(fmt, rsl::make_format_args(args...));
 }
