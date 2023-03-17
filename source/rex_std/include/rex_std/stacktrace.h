@@ -37,44 +37,20 @@ namespace rsl
 
       stacktrace_entry& operator=(const stacktrace_entry& other) = default;
 
-      native_handle_type native_handle() const
-      {
-        return m_handle;
-      }
+      native_handle_type native_handle() const;
+
       /// RSL Comment: Different from ISO C++ Standard at time of writing (17/Mar/2023)
       // This is implicit in the standard
-      explicit operator bool() const
-      {
-        return m_handle != nullptr;
-      }
+      explicit operator bool() const;
 
       /// RSL Comment: Different from ISO C++ Standard at time of writing (17/Mar/2023)
       // This returns a std::string in the standard
-      rsl::big_stack_string description() const
-      {
-        rsl::big_stack_string result = ""_big;
-
-        result += rsl::to_string(m_handle);
-        result += " - ";
-        result += m_file;
-        result += "(";
-        result += rsl::to_stack_string(m_line_nr);
-        result += ") ";
-        result += m_function;
-
-        return result;
-      }
+      rsl::big_stack_string description() const;
 
       /// RSL Comment: Different from ISO C++ Standard at time of writing (17/Mar/2023)
       // This returns a std::string in the standard
-      const rsl::big_stack_string& source_file() const
-      {
-        return m_file;
-      }
-      card32 source_line() const
-      {
-        return m_line_nr;
-      }
+      const rsl::big_stack_string& source_file() const;
+      card32 source_line() const;
 
     private:
       rsl::big_stack_string m_file;

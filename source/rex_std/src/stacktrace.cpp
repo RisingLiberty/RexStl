@@ -149,6 +149,45 @@ namespace rsl
     {
     }
 
+    stacktrace_entry::native_handle_type stacktrace_entry::native_handle() const
+    {
+      return m_handle;
+    }
+    /// RSL Comment: Different from ISO C++ Standard at time of writing (17/Mar/2023)
+    // This is implicit in the standard
+    stacktrace_entry::operator bool() const
+    {
+      return m_handle != nullptr;
+    }
+
+    /// RSL Comment: Different from ISO C++ Standard at time of writing (17/Mar/2023)
+    // This returns a std::string in the standard
+    rsl::big_stack_string stacktrace_entry::description() const
+    {
+      rsl::big_stack_string result = ""_big;
+
+      result += rsl::to_string(m_handle);
+      result += " - ";
+      result += m_file;
+      result += "(";
+      result += rsl::to_stack_string(m_line_nr);
+      result += ") ";
+      result += m_function;
+
+      return result;
+    }
+
+    /// RSL Comment: Different from ISO C++ Standard at time of writing (17/Mar/2023)
+    // This returns a std::string in the standard
+    const rsl::big_stack_string& stacktrace_entry::source_file() const
+    {
+      return m_file;
+    }
+    card32 stacktrace_entry::source_line() const
+    {
+      return m_line_nr;
+    }
+
     bool operator==(const stacktrace_entry& lhs, const stacktrace_entry& rhs)
     {
       return lhs.native_handle() == rhs.native_handle();
