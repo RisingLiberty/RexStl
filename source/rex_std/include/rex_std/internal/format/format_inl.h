@@ -1496,7 +1496,7 @@ FMT_FUNC void report_system_error(int errorCode, const char* message) noexcept /
   report_error(format_system_error, errorCode, message);
 }
 
-FMT_FUNC rsl::string vformat(string_view fmt, format_args args) // NOLINT(misc-definitions-in-headers)
+FMT_FUNC rsl::stack_string<char8, 500> vformat(string_view fmt, format_args args) // NOLINT(misc-definitions-in-headers)
 {
   // Don't optimize the "{}" case to keep the binary size small and because it
   // can be better optimized in rsl::format anyway.

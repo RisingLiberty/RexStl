@@ -32,11 +32,11 @@ namespace rsl
 
     namespace internal
     {
-      void log_assert(const rsl::string& msg);
+      void log_assert(const rsl::stack_string<char8, 500>& msg);
     } // namespace internal
 
     template <typename... T>
-    REX_NO_DISCARD inline rsl::string format(format_string<T...> fmt, T&&... args); // NOLINT(misc-no-recursion, readability-redundant-declaration)
+    REX_NO_DISCARD inline rsl::stack_string<char8, 500> format(format_string<T...> fmt, T&&... args); // NOLINT(misc-no-recursion, readability-redundant-declaration)
 
     template <typename... Args>
     bool rex_assert(bool cond, Args&&... args) // NOLINT(misc-no-recursion)
@@ -47,7 +47,7 @@ namespace rsl
         if(!is_processing_assert)
         {
           is_processing_assert  = true;
-          const rsl::string str = rsl::format(rsl::forward<Args>(args)...);
+          const rsl::stack_string<char8, 500> str = rsl::format(rsl::forward<Args>(args)...);
           internal::log_assert(str);
           DEBUG_BREAK();
           return true;
