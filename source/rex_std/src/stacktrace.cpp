@@ -52,9 +52,9 @@ namespace rsl
       }
 
       // no inline because we'll skip this stack frame when tracking the callstack
-      __declspec(noinline) rsl::array<void*, 100> load_stack_pointers(card32 framesToSkip)
+      __declspec(noinline) rsl::array<void*, stacktrace::max_entries()> load_stack_pointers(card32 framesToSkip)
       {
-        rsl::array<void*, 100> stacks_pointers;
+        rsl::array<void*, stacktrace::max_entries()> stacks_pointers;
         const card32 frames_to_skip = framesToSkip + 3;
 
         CaptureStackBackTrace(frames_to_skip, static_cast<DWORD>(stacks_pointers.size()), stacks_pointers.data(), NULL);
@@ -93,11 +93,11 @@ namespace rsl
         return SymGetModuleInfo64(process, addr, &module) != 0 ? rsl::tiny_stack_string(module.ModuleName) : ""_tiny;
       }
 
-      __declspec(noinline) rsl::array<stacktrace_entry, 100> stack_trace(card32 skip, card32 maxDepth)
+      __declspec(noinline) rsl::array<stacktrace_entry, stacktrace::max_entries()> stack_trace(card32 skip, card32 maxDepth)
       {
         static const bool s_initialised = load_symbols();
 
-        rsl::array<void*, 100> stack_pointers = load_stack_pointers(skip);
+        rsl::array<void*, stacktrace::max_entries()> stack_pointers = load_stack_pointers(skip);
 
         HANDLE process             = GetCurrentProcess();
         DWORD64 displacement       = 0;
@@ -108,7 +108,7 @@ namespace rsl
         symbol_info->SizeOfStruct = sizeof(SYMBOL_INFO);
         symbol_info->MaxNameLen   = MAX_SYM_NAME;
 
-        rsl::array<stacktrace_entry, 100> resolved_pointers = {};
+        rsl::array<stacktrace_entry, stacktrace::max_entries()> resolved_pointers = {};
         const card32 max_count                              = (rsl::min)(resolved_pointers.size(), maxDepth);
         for(card32 i = 0; i < max_count && stack_pointers[i] != nullptr; ++i)
         {

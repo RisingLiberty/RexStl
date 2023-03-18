@@ -84,9 +84,13 @@ namespace rsl
       }
     };
 
+    template <typename Allocator>
+    class basic_stacktrace;
+
     namespace internal
     {
-      __declspec(noinline) rsl::array<stacktrace_entry, 100> stack_trace(card32 skip, card32 maxDepth);
+      inline constexpr bool g_stacktrace_stack_size = 10;
+      __declspec(noinline) rsl::array<stacktrace_entry, g_stacktrace_stack_size> stack_trace(card32 skip, card32 maxDepth);
     } // namespace internal
 
     template <typename Allocator>
@@ -237,8 +241,13 @@ namespace rsl
         other                = tmp;
       }
 
+      constexpr static card32 max_entries()
+      {
+        return s_max_entries;
+      }
+
     private:
-      explicit basic_stacktrace(const rsl::array<stacktrace_entry, 100>& entries)
+      explicit basic_stacktrace(const rsl::array<stacktrace_entry, max_entries()>& entries)
           : m_entries(entries)
           , m_size(0)
       {
@@ -256,7 +265,7 @@ namespace rsl
       }
 
     private:
-      constexpr static card32 s_max_entries = 100;
+      constexpr static card32 s_max_entries = internal::g_stacktrace_stack_size;
       rsl::array<stacktrace_entry, s_max_entries> m_entries;
       card32 m_size;
     };
