@@ -34,8 +34,7 @@ namespace rsl
       }
       uint16 atomic_read(uint16* data)
       {
-        return _InterlockedCompareExchange(reinterpret_cast<volatile uint64*>(data), 0, 0);
-
+        return atomic_read(reinterpret_cast<int16*>(data));
       }
       uint32 atomic_read(uint32* data)
       {
@@ -51,7 +50,7 @@ namespace rsl
     int8 atomic_read(int8& val)
     {
       int32 i32_val = val; // NOLINT(bugprone-signed-char-misuse)
-      return internal::atomic_read(&i32_val);
+      return static_cast<int8>(internal::atomic_read(&i32_val));
     }
     int16 atomic_read(int16& val)
     {
@@ -69,7 +68,7 @@ namespace rsl
     uint8 atomic_read(uint8& val)
     {
       uint32 u32_val = val;
-      return internal::atomic_read(&u32_val);
+      return static_cast<uint8>(internal::atomic_read(&u32_val));
     }
     uint16 atomic_read(uint16& val)
     {
