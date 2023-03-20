@@ -89,13 +89,16 @@ namespace rsl
 
     namespace internal
     {
-      inline constexpr bool g_stacktrace_stack_size = 10;
+      inline constexpr card32 g_stacktrace_stack_size = 10;
       __declspec(noinline) rsl::array<stacktrace_entry, g_stacktrace_stack_size> stack_trace(card32 skip, card32 maxDepth);
     } // namespace internal
 
     template <typename Allocator>
     class basic_stacktrace
     {
+    private:
+      constexpr static card32 s_max_entries = internal::g_stacktrace_stack_size;
+
     public:
       using value_type             = stacktrace_entry;
       using reference              = value_type&;
@@ -265,7 +268,6 @@ namespace rsl
       }
 
     private:
-      constexpr static card32 s_max_entries = internal::g_stacktrace_stack_size;
       rsl::array<stacktrace_entry, s_max_entries> m_entries;
       card32 m_size;
     };
