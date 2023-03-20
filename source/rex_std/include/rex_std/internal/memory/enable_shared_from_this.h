@@ -14,24 +14,30 @@
 
 #include "rex_std/bonus/attributes.h"
 
-#include "rex_std/internal/memory/shared_ptr.h"
 #include "rex_std/internal/memory/weak_ptr.h"
+#include "rex_std/internal/type_traits/is_convertible.h"
+#include "rex_std/internal/type_traits/remove_cv.h"
 
 namespace rsl
 {
   inline namespace v1
   {
+    template <typename T>
+    class shared_ptr;
+
     // provide member functions that create shared_ptr to this
     template <typename T>
-    class enable_shared_from_this 
+    class enable_shared_from_this
     {
     public:
-      REX_NO_DISCARD shared_ptr<T> shared_from_this() 
+      using enable_shared_from_this_type = enable_shared_from_this;
+
+      REX_NO_DISCARD shared_ptr<T> shared_from_this()
       {
         return shared_ptr<T>(m_weak_ptr);
       }
 
-      REX_NO_DISCARD shared_ptr<const T> shared_from_this() const 
+      REX_NO_DISCARD shared_ptr<const T> shared_from_this() const
       {
         return shared_ptr<const T>(m_weak_ptr);
       }
@@ -48,18 +54,18 @@ namespace rsl
 
     protected:
       constexpr enable_shared_from_this()
-        : m_weak_ptr() 
+        : m_weak_ptr()
       {}
 
       // construct (must value-initialize m_weak_ptr)
       enable_shared_from_this(const enable_shared_from_this&)
-        : m_weak_ptr() 
+        : m_weak_ptr()
       {
-       
+
       }
 
       enable_shared_from_this& operator=(const enable_shared_from_this&)
-      { 
+      {
         // assign (must not change m_weak_ptr)
         return *this;
       }
@@ -72,5 +78,20 @@ namespace rsl
 
       mutable weak_ptr<T> m_weak_ptr;
     };
+
+    namespace internal
+    {
+      template <typename T, typename = void>
+      struct has_shared_from_this : false_type
+      {};
+
+      template <typename T>
+      struct has_shared_from_this<T, void_t<typename T::enable_shared_from_this_type>>
+        : is_convertible<remove_cv_t<T>*, typename T::enable_shared_from_this_type*>::type
+      {};
+
+      template <typename T>
+      inline constexpr bool has_shared_from_this_v = has_shared_from_this<T>::value;
+    }
   }
 }

@@ -28,6 +28,7 @@ namespace rsl
       constexpr weak_ptr()
       {}
       weak_ptr(const weak_ptr& ptr)
+        : internal::ref_ptr<T>(ptr)
       {
         internal::ref_ptr<T>::safe_inc_weak_ref();
       }
