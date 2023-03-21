@@ -99,7 +99,7 @@ namespace rsl
       
       bool expired() const
       {
-        return use_count() == 0;
+        return internal::ref_ptr<T>::use_count() == 0;
       }
       shared_ptr<T> lock() const
       {

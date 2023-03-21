@@ -190,6 +190,9 @@ namespace rsl
       template <typename T>
       class ref_ptr
       {
+        template <typename U>
+        friend class ref_ptr;
+
       public:
         ref_ptr()
           : m_ptr(nullptr)
@@ -199,7 +202,7 @@ namespace rsl
         /// RSL Comment: Different from ISO C++ Standard at time of writing (04/Aug/2022)
         // the pointer provided cannot be nullptr, in the standard, it can be
         template <typename U, typename Deleter>
-        ref_ptr(U* ptr, Deleter d = default_delete())
+        ref_ptr(U* ptr, Deleter d = default_delete<T>())
           : m_ptr(ptr)
           , m_ref_count(nullptr)
         {
@@ -209,11 +212,11 @@ namespace rsl
         /// RSL Comment: Different from ISO C++ Standard at time of writing (04/Aug/2022)
         // in the standard, the use count after this construct call == 1
         template <typename U, typename Deleter>
-        ref_ptr(nullptr_t, Deleter d = default_delete())
+        ref_ptr(nullptr_t, Deleter d = default_delete<T>())
           : m_ptr(nullptr)
           , m_ref_count(nullptr)
         {
-          alloc_without_ptr(ptr, d, allocator());
+          alloc_without_ptr(nullptr, d, allocator());
         }
 
         template <typename U, typename Deleter, typename Allocator>
@@ -288,7 +291,7 @@ namespace rsl
         // this returns a long in the standard
         card32 use_count() const
         {
-          return m_ref_count 
+          return m_ref_count
             ? m_ref_count->use_count()
             : 0;
         }

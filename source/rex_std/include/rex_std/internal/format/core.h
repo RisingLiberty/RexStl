@@ -149,16 +149,6 @@ struct is_char<char> : rsl::true_type
 
 FMT_BEGIN_DETAIL_NAMESPACE
 
-// A base class for compile-time strings.
-struct compile_string
-{
-};
-
-template <typename S>
-struct is_compile_string : rsl::is_base_of<compile_string, S>
-{
-};
-
 // Returns a string view of `s`.
 template <typename Char, FMT_ENABLE_IF(is_char<Char>::value)>
 FMT_INLINE auto to_string_view(const Char* s) -> basic_string_view<Char>
@@ -205,30 +195,6 @@ struct char_t_impl<S, enable_if_t<is_string<S>::value>>
 {
   using result = decltype(to_string_view(rsl::declval<S>()));
   using type   = typename result::value_type;
-};
-
-enum class type
-{
-  none_type,
-  // Integer types should go first,
-  int_type,
-  uint_type,
-  long_long_type,
-  ulong_long_type,
-  int128_type,
-  uint128_type,
-  bool_type,
-  char_type,
-  last_integer_type = char_type,
-  // followed by floating-point types.
-  float_type,
-  double_type,
-  long_double_type,
-  last_numeric_type = long_double_type,
-  cstring_type,
-  string_type,
-  pointer_type,
-  custom_type
 };
 
 // Maps core type T to the corresponding type enum constant.
@@ -964,10 +930,6 @@ using has_fallback_formatter =
     rsl::false_type;
 #endif
 
-struct view
-{
-};
-
 template <typename Char, typename T>
 struct named_arg : view
 {
@@ -1070,17 +1032,6 @@ void init_named_args(named_arg_info<Char>* namedArgs, int argCount, int namedArg
 template <typename... Args>
 FMT_CONSTEXPR FMT_INLINE void init_named_args(rsl::nullptr_t, int /*unused*/, int /*unused*/, const Args&... /*unused*/)
 {
-}
-
-template <bool B = false>
-constexpr auto count() -> count_t
-{
-  return B ? 1 : 0;
-}
-template <bool B1, bool B2, bool... Tail>
-constexpr auto count() -> count_t
-{
-  return (B1 ? 1 : 0) + count<B2, Tail...>();
 }
 
 template <typename... Args>
@@ -3131,8 +3082,6 @@ public:
   }
 };
 
-constexpr int invalid_arg_index = -1;
-
 #if FMT_USE_NONTYPE_TEMPLATE_ARGS
 template <int N, typename T, typename... Args, typename Char>
 constexpr auto get_arg_index_by_name(basic_string_view<Char> name) -> int
@@ -3159,89 +3108,6 @@ FMT_CONSTEXPR auto get_arg_index_by_name(basic_string_view<Char> name) -> int
   (void)name;
   return invalid_arg_index;
 }
-
-template <typename Char, typename ErrorHandler, typename... Args>
-class format_string_checker
-{
-private:
-  // In the future basic_format_parse_context will replace compile_parse_context
-  // here and will use is_constant_evaluated and downcasting to access the data
-  // needed for compile-time checks: https://godbolt.org/z/GvWzcTjh1.
-  using parse_context_type      = compile_parse_context<Char, ErrorHandler>;
-  static constexpr int num_args = sizeof...(Args);
-
-  // Format specifier parsing function.
-  using parse_func = const Char* (*)(parse_context_type&);
-
-  parse_context_type m_context;
-  parse_func m_parse_funcs[num_args > 0 ? static_cast<count_t>(num_args) : 1]; // NOLINT(modernize-avoid-c-arrays)
-  type m_types[num_args > 0 ? static_cast<count_t>(num_args) : 1];             // NOLINT(modernize-avoid-c-arrays)
-
-public:
-  explicit FMT_CONSTEXPR format_string_checker(basic_string_view<Char> formatStr, ErrorHandler eh)
-      : m_context(formatStr, num_args, m_types, eh)
-      , m_parse_funcs {&parse_format_specs<Args, parse_context_type>...}
-      , m_types {mapped_type_constant<Args, basic_format_context<Char*, Char>>::value...}
-  {
-  }
-
-  FMT_CONSTEXPR void on_text(const Char* /*unused*/, const Char* /*unused*/) {}
-
-  FMT_CONSTEXPR auto on_arg_id() -> int
-  {
-    return m_context.next_arg_id();
-  }
-  FMT_CONSTEXPR auto on_arg_id(int id) -> int
-  {
-    return m_context.check_arg_id(id), id;
-  }
-  FMT_CONSTEXPR auto on_arg_id(basic_string_view<Char> id) -> int
-  {
-#if FMT_USE_NONTYPE_TEMPLATE_ARGS
-    auto index = get_arg_index_by_name<Args...>(id);
-    if(index == invalid_arg_index)
-      on_error("named argument is not found");
-    return m_context.check_arg_id(index), index;
-#else
-    (void)id;
-    on_error("compile-time checks for named arguments require C++20 support");
-    return 0;
-#endif
-  }
-
-  FMT_CONSTEXPR void on_replacement_field(int /*unused*/, const Char* /*unused*/) {}
-
-  FMT_CONSTEXPR auto on_format_specs(int id, const Char* begin, const Char* /*unused*/) -> const Char*
-  {
-    m_context.advance_to(m_context.begin() + (static_cast<count_t>(begin - &*m_context.begin())));
-    // id >= 0 check is a workaround for gcc 10 bug (#2065).
-    return id >= 0 && id < num_args ? m_parse_funcs[id](m_context) : begin; // NOLINT(misc-redundant-expression)
-  }
-
-  FMT_CONSTEXPR void on_error(const char* message)
-  {
-    m_context.on_error(message);
-  }
-};
-
-// Reports a compile-time error if S is not a valid format string.
-template <typename..., typename S, FMT_ENABLE_IF(!is_compile_string<S>::value)>
-FMT_INLINE void check_format_string(const S& /*unused*/)
-{
-#ifdef FMT_ENFORCE_COMPILE_STRING
-  static_assert(is_compile_string<S>::value, "FMT_ENFORCE_COMPILE_STRING requires all format strings to use "
-                                             "FMT_STRING.");
-#endif
-}
-template <typename... Args, typename S, FMT_ENABLE_IF(is_compile_string<S>::value)>
-void check_format_string(S formatStr)
-{
-  FMT_CONSTEXPR auto s              = basic_string_view<typename S::char_type>(formatStr);
-  using checker                     = format_string_checker<typename S::char_type, error_handler, remove_cvref_t<Args>...>;
-  FMT_CONSTEXPR bool invalid_format = (parse_format_string<true>(s, checker(s, {})), true);
-  ignore_unused(invalid_format);
-}
-
 template <typename Char>
 void vformat_to(buffer<Char>& buf, basic_string_view<Char> fmt, basic_format_args<FMT_BUFFER_CONTEXT(type_identity_t<Char>)> args, locale_ref loc = {});
 

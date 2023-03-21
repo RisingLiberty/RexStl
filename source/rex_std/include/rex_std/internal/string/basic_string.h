@@ -1919,7 +1919,7 @@ namespace rsl
     rsl::basic_string<Char, Traits, Alloc> operator+(const rsl::basic_string<Char, Traits, Alloc>& lhs, rsl::basic_string<Char, Traits, Alloc>&& rhs)
     {
       rsl::basic_string<Char, Traits, Alloc> str(rsl::move(rhs));
-      str.insert(str.cbegin(), lhs);
+      str.insert(0, lhs);
       return str;
     }
 
@@ -1927,7 +1927,7 @@ namespace rsl
     rsl::basic_string<Char, Traits, Alloc> operator+(const rsl::basic_string<Char, Traits, Alloc>& lhs, rsl::basic_string_view<Char, Traits>&& rhs)
     {
       rsl::basic_string<Char, Traits, Alloc> str(rsl::move(rhs));
-      str.insert(str.cbegin(), lhs);
+      str.insert(0, lhs);
       return str;
     }
 
@@ -1936,7 +1936,7 @@ namespace rsl
     rsl::basic_string<Char, Traits, Alloc> operator+(const Char (&lhs)[Size], rsl::basic_string<Char, Traits, Alloc>&& rhs) // NOLINT(modernize-avoid-c-arrays)
     {
       rsl::basic_string<Char, Traits, Alloc> str(rsl::move(rhs));
-      str.insert(str.cbegin(), lhs);
+      str.insert(0, lhs);
       return str;
     }
 

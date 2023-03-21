@@ -104,7 +104,7 @@ namespace rsl
       explicit shared_ptr(const shared_ptr<U>& sharedPtr, element_type* ptr)
         : internal::ref_ptr<T>(sharedPtr, ptr)
       {
-        safe_inc_ref();
+          internal::ref_ptr<T>::safe_inc_ref();
       }
       // constructs a shared ptr that stores p and shares ownership with r
       // post condition: get() == ptr && use_count() == sharedPtr.use_count()
@@ -121,14 +121,14 @@ namespace rsl
       shared_ptr(const shared_ptr<T>& sharedPtr)
         : internal::ref_ptr<T>(sharedPtr)
       {
-        safe_inc_ref();
+          internal::ref_ptr<T>::safe_inc_ref();
       }
       // constructs a shared pointer which shares ownership with the sharedPtr provided
       template <typename U>
-      explicit shared_ptr(const shared_ptr<U>& sharedPtr)
+      shared_ptr(const shared_ptr<U>& sharedPtr)
         : internal::ref_ptr<T>(sharedPtr)
       {
-        safe_inc_ref();
+          internal::ref_ptr<T>::safe_inc_ref();
       }
       // moves ownership from the sharedPtr provided
       // after the call the sharedPtr provided is empty
@@ -163,7 +163,7 @@ namespace rsl
       // if this is the last managed object, it destroys it through the provided deleter
       ~shared_ptr()
       {
-        safe_dec_ref();
+          internal::ref_ptr<T>::safe_dec_ref();
       }
 
       // replaces the managed object with the one managed by r
@@ -260,29 +260,29 @@ namespace rsl
       // returns a reference to the managed object
       reference_type operator*() const
       {
-        return *get();
+        return *internal::ref_ptr<T>::get();
       }
       // returns a reference to the managed object
       reference_type operator*()
       {
-        return *get();
+        return *internal::ref_ptr<T>::get();
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (05/Aug/2022)
       // the standard doesn't propagate const, rex does
       // returns a pointer to the managed object
       const element_type* operator->() const
       {
-        return get();
+        return internal::ref_ptr<T>::get();
       }
       element_type* operator->()
       {
-        return get();
+        return internal::ref_ptr<T>::get();
       }
 
       // checks if the stored pointer is not null
       explicit operator bool() const
       {
-        return get() != nullptr;
+        return internal::ref_ptr<T>::get() != nullptr;
       }
 
     private:
@@ -290,9 +290,9 @@ namespace rsl
       {
         if constexpr (internal::has_shared_from_this_v<T>)
         {
-          if (get() && get()->m_weak_ptr.expired())
+          if (internal::ref_ptr<T>::get() && internal::ref_ptr<T>::get()->m_weak_ptr.expired())
           {
-            get()->m_weak_ptr = shared_ptr<remove_cv_t<T>>(*this, const_cast<remove_cv_t<T>*>(get()));
+              internal::ref_ptr<T>::get()->m_weak_ptr = shared_ptr<remove_cv_t<T>>(*this, const_cast<remove_cv_t<T>*>(internal::ref_ptr<T>::get()));
           }
         }
       }
