@@ -97,10 +97,9 @@
 // #include "rex_std/wchar.h"
 // #include "rex_std/wctype.h"
 
-#include "rex_std/iostream.h"
-#include "rex_std/stacktrace.h"
+#include "rex_std/atomic.h"
 
 int main()
 {
-  rsl::cout << rsl::to_string(rsl::stacktrace::current());
+  rsl::atomic<int> x;
 }

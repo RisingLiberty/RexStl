@@ -61,6 +61,9 @@ namespace rsl
       template <bool IsConstexpr, typename Char, typename Handler>
       FMT_CONSTEXPR FMT_INLINE void parse_format_string(basic_string_view<Char> formatStr, Handler&& handler);
 
+      template <typename Char, typename SpecHandler>
+      FMT_CONSTEXPR FMT_INLINE auto parse_format_specs(const Char* begin, const Char* end, SpecHandler&& handler) -> const Char*;
+
       template <typename Char, typename ErrorHandler, typename... Args>
       class format_string_checker
       {

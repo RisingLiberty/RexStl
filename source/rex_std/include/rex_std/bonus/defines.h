@@ -70,3 +70,5 @@ MERGE(str, __LINE__)
 #else
   #error DEBUG_BREAK unsupported machine instruction ...
 #endif
+
+#define REX_FORCE_INLINE __forceinline
