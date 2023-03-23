@@ -101,5 +101,8 @@
 
 int main()
 {
-  rsl::atomic<int> x;
+  [[maybe_unused]] rsl::atomic<char> x;
+  x.store(1);
+  [[maybe_unused]] int y = x.load();
+  // int y = x.load();
 }
