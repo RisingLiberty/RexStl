@@ -206,6 +206,16 @@ public class BasicCPPProject : BaseProject
         break;
     }
 
+    switch (target.Platform)
+    {
+      case Platform.win32:
+        conf.Defines.Add("REX_PLATFORM_PTR_SIZE=4");
+        break;
+      case Platform.win64:
+        conf.Defines.Add("REX_PLATFORM_PTR_SIZE=8");
+        break;
+    }
+
     switch (target.Config)
     {
       case Config.assert:
