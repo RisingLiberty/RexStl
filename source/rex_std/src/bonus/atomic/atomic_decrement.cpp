@@ -10,7 +10,7 @@
 //
 // ============================================
 
-#include "rex_std/bonus/concurrency/atomic_decrement.h"
+#include "rex_std/bonus/atomic//atomic_decrement.h"
 
 #include <Windows.h>
 

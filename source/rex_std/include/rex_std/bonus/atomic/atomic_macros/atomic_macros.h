@@ -26,8 +26,8 @@
 #include "atomic_macros_sub_fetch.h"
 #include "atomic_macros_thread_fence.h"
 #include "atomic_macros_xor_fetch.h"
+#include "rex_std/bonus/atomic/compiler/compiler.h"
 #include "rex_std/bonus/types.h"
-#include "rex_std/internal/atomic/compiler/compiler.h"
 
 /////////////////////////////////////////////////////////////////////////////////
 

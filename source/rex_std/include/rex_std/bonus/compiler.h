@@ -28,6 +28,7 @@ namespace rsl
 #if defined(REX_COMPILER_CLANG)
       constexpr compiler g_compiler = compiler::clang;
 #elif defined(REX_COMPILER_MSVC)
+  #define REX_COPMILER_VERSION = _MSC_VER
       constexpr compiler g_compiler = compiler::msvc;
 #elif defined(REX_COMPILER_GCC)
       constexpr compiler g_compiler = compiler::gcc;

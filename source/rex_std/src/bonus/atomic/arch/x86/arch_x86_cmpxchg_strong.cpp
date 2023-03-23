@@ -5,11 +5,15 @@
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
 //
-// File: atomic.h
-// Copyright (c) Nick De Breuck 2023
+// File: arch_x86_cmpxchg_strong.cpp
+// Copyright (c) Nick De Breuck 2022
 //
 // ============================================
 
-#pragma once
+namespace rsl
+{
+  inline namespace v1
+  {
 
-#include "rex_std/internal/atomic/atomic.h"
+  }
+} // namespace rsl

@@ -12,9 +12,9 @@
 
 #pragma once
 
-#include "rex_std/bonus/concurrency/atomic_decrement.h"
-#include "rex_std/bonus/concurrency/atomic_increment.h"
-#include "rex_std/bonus/concurrency/atomic_read.h"
+#include "rex_std/bonus/atomic//atomic_decrement.h"
+#include "rex_std/bonus/atomic//atomic_increment.h"
+#include "rex_std/bonus/atomic//atomic_read.h"
 #include "rex_std/internal/assert/assert_fwd.h"
 #include "rex_std/internal/memory/allocator.h"
 #include "rex_std/internal/memory/default_delete.h"

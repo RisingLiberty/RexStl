@@ -10,7 +10,7 @@
 //
 // ============================================
 
-#include "rex_std/bonus/concurrency/atomic_read.h"
+#include "rex_std/bonus/atomic//atomic_read.h"
 
 #include <Windows.h>
 
