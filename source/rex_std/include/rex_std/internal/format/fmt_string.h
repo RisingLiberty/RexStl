@@ -3,14 +3,17 @@
 #include "rex_std/internal/format/fmt_defines.h"
 #include "rex_std/internal/string/basic_string.h"
 #include "rex_std/internal/string_view/basic_string_view.h"
+#include "rex_std/internal/type_traits/is_base_of.h"
 #include "rex_std/internal/type_traits/is_reference.h"
 #include "rex_std/internal/type_traits/remove_reference.h"
-#include "rex_std/internal/type_traits/is_base_of.h"
 
 namespace rsl
 {
   inline namespace v1
   {
+    template <typename OutputIt, typename Char>
+    class basic_format_context;
+
     namespace detail
     {
       struct view
@@ -64,6 +67,22 @@ namespace rsl
       template <typename Char, typename SpecHandler>
       FMT_CONSTEXPR FMT_INLINE auto parse_format_specs(const Char* begin, const Char* end, SpecHandler&& handler) -> const Char*;
 
+      template <typename T, typename ParseContext>
+      FMT_CONSTEXPR auto parse_format_specs(ParseContext& ctx) -> decltype(rsl::iterator_to_pointer(ctx.begin()));
+
+      // Maps core type T to the corresponding type enum constant.
+      template <typename T, typename Char>
+      struct type_constant : rsl::integral_constant<type, type::custom_type>
+      {
+      };
+
+      template <typename Context>
+      struct arg_mapper;
+
+      // A type constant after applying arg_mapper<Context>.
+      template <typename T, typename Context>
+      using mapped_type_constant = type_constant<decltype(arg_mapper<Context>().map(rsl::declval<const T&>())), typename Context::char_type>;
+
       template <typename Char, typename ErrorHandler, typename... Args>
       class format_string_checker
       {
@@ -71,7 +90,7 @@ namespace rsl
         // In the future basic_format_parse_context will replace compile_parse_context
         // here and will use is_constant_evaluated and downcasting to access the data
         // needed for compile-time checks: https://godbolt.org/z/GvWzcTjh1.
-        using parse_context_type = compile_parse_context<Char, ErrorHandler>;
+        using parse_context_type      = compile_parse_context<Char, ErrorHandler>;
         static constexpr int num_args = sizeof...(Args);
 
         // Format specifier parsing function.
@@ -83,9 +102,9 @@ namespace rsl
 
       public:
         explicit FMT_CONSTEXPR format_string_checker(basic_string_view<Char> formatStr, ErrorHandler eh)
-          : m_context(formatStr, num_args, m_types, eh)
-          , m_parse_funcs{ &parse_format_specs<Args, parse_context_type>... }
-          , m_types{ mapped_type_constant<Args, basic_format_context<Char*, Char>>::value... }
+            : m_context(formatStr, num_args, m_types, eh)
+            , m_parse_funcs {&parse_format_specs<Args, parse_context_type>...}
+            , m_types {mapped_type_constant<Args, basic_format_context<Char*, Char>>::value...}
         {
         }
 
@@ -103,7 +122,7 @@ namespace rsl
         {
 #if FMT_USE_NONTYPE_TEMPLATE_ARGS
           auto index = get_arg_index_by_name<Args...>(id);
-          if (index == invalid_arg_index)
+          if(index == invalid_arg_index)
             on_error("named argument is not found");
           return m_context.check_arg_id(index), index;
 #else
@@ -134,14 +153,14 @@ namespace rsl
       {
 #ifdef FMT_ENFORCE_COMPILE_STRING
         static_assert(is_compile_string<S>::value, "FMT_ENFORCE_COMPILE_STRING requires all format strings to use "
-          "FMT_STRING.");
+                                                   "FMT_STRING.");
 #endif
       }
       template <typename... Args, typename S, FMT_ENABLE_IF(is_compile_string<S>::value)>
       void check_format_string(S formatStr)
       {
-        FMT_CONSTEXPR auto s = basic_string_view<typename S::char_type>(formatStr);
-        using checker = format_string_checker<typename S::char_type, error_handler, remove_cvref_t<Args>...>;
+        FMT_CONSTEXPR auto s              = basic_string_view<typename S::char_type>(formatStr);
+        using checker                     = format_string_checker<typename S::char_type, error_handler, remove_cvref_t<Args>...>;
         FMT_CONSTEXPR bool invalid_format = (parse_format_string<true>(s, checker(s, {})), true);
         ignore_unused(invalid_format);
       }
@@ -156,7 +175,7 @@ namespace rsl
       {
         return (B1 ? 1 : 0) + count<B2, Tail...>();
       }
-    }
+    } // namespace detail
 
     template <typename Char>
     struct basic_runtime

@@ -197,12 +197,6 @@ struct char_t_impl<S, enable_if_t<is_string<S>::value>>
   using type   = typename result::value_type;
 };
 
-// Maps core type T to the corresponding type enum constant.
-template <typename T, typename Char>
-struct type_constant : rsl::integral_constant<type, type::custom_type>
-{
-};
-
 #define FMT_TYPE_CONSTANT(Type, constant)                                                                                                                                                                                                                \
   template <typename Char>                                                                                                                                                                                                                               \
   struct type_constant<Type, Char> : rsl::integral_constant<type, type::constant>                                                                                                                                                                        \
@@ -1440,10 +1434,6 @@ struct arg_mapper
     return {};
   }
 };
-
-// A type constant after applying arg_mapper<Context>.
-template <typename T, typename Context>
-using mapped_type_constant = type_constant<decltype(arg_mapper<Context>().map(rsl::declval<const T&>())), typename Context::char_type>;
 
 enum
 {
