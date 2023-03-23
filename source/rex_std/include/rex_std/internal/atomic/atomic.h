@@ -1,14 +1,21 @@
 #pragma once
 
-#include "rex_std/internal/atomic/atomic_asserts.h"
-#include "rex_std/internal/atomic/atomic_base_width.h"
-#include "rex_std/internal/atomic/atomic_casts.h"
-#include "rex_std/internal/atomic/atomic_integral.h"
-#include "rex_std/internal/atomic/atomic_macros.h"
-#include "rex_std/internal/atomic/atomic_memory_order.h"
-#include "rex_std/internal/atomic/atomic_pointer.h"
-#include "rex_std/internal/atomic/atomic_size_aligned.h"
+// NOLINTBEGIN(llvm-include-order)
+// clang-format off
+
 #include "rex_std/type_traits.h"
+
+#include "rex_std/internal/atomic/atomic_macros.h"
+#include "rex_std/internal/atomic/atomic_casts.h"
+#include "rex_std/internal/atomic/atomic_memory_order.h"
+#include "rex_std/internal/atomic/atomic_asserts.h"
+#include "rex_std/internal/atomic/atomic_size_aligned.h"
+#include "rex_std/internal/atomic/atomic_base_width.h"
+#include "rex_std/internal/atomic/atomic_integral.h"
+#include "rex_std/internal/atomic/atomic_pointer.h"
+
+// clang-format on
+// NOLINTEND(llvm-include-order)
 
 namespace rsl
 {
