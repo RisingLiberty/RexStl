@@ -6,6 +6,7 @@
 // the following includes need to be in this order or the code doesn't compiler
 #include "rex_std/type_traits.h"
 #include "rex_std/bonus/compiler.h"
+#include "rex_std/bonus/utility/always_false.h"
 
 #include "rex_std/bonus/atomic/atomic_macros.h"
 #include "rex_std/bonus/atomic/atomic_casts.h"
@@ -32,15 +33,20 @@ namespace rsl
       };
 
       template <typename T>
+      inline constexpr bool is_atomic_lockfree_size_v = is_atomic_lockfree_size<T>::value;
+
+      template <typename T>
       struct is_user_type_suitable_for_primary_template
       {
-        static inline constexpr bool value = rsl::internal::is_atomic_lockfree_size<T>::value;
+        static inline constexpr bool value = rsl::internal::is_atomic_lockfree_size_v<T>;
       };
 
       template <typename T>
-      using select_atomic_inherit_0 = typename rsl::conditional<rsl::is_same_v<bool, T> || rsl::internal::is_user_type_suitable_for_primary_template<T>::value, rsl::internal::atomic_base_width<T>, /* True */
-                                                                rsl::internal::atomic_invalid_type<T>                                                                                                /* False */
-                                                                >::type;
+      inline constexpr bool is_user_type_suitable_for_primary_template_v = is_user_type_suitable_for_primary_template<T>::value;
+
+      template <typename T>
+      using select_atomic_inherit_0 = typename rsl::conditional_t<rsl::is_same_v<bool, T> || rsl::internal::is_user_type_suitable_for_primary_template_v<T>, rsl::internal::atomic_base_width<T>,     /* True */
+                                                                rsl::internal::atomic_invalid_type<T>>;                                                                                               /* False */
 
       template <typename T>
       using select_atomic_inherit = select_atomic_inherit_0<T>;
@@ -51,16 +57,16 @@ namespace rsl
   template <typename T, typename = void>
   struct atomic : protected rsl::internal::select_atomic_inherit<T>
   {
-    static_assert(!rsl::is_const<T>::value, "rsl::atomic<T> : template typename T cannot be const!");
-    static_assert(!rsl::is_volatile<T>::value, "rsl::atomic<T> : template typename T cannot be volatile! Use the memory orders to access the underlying type for the guarantees you need.");
-    static_assert(rsl::is_standard_layout<T>::value, "rsl::atomic<T> : Must have standard layout!");
-    static_assert(rsl::is_trivially_copyable<T>::value, "rsl::atomic<T> : template typename T must be trivially copyable!");
-    static_assert(rsl::is_copy_constructible<T>::value, "rsl::atomic<T> : template typename T must be copy constructible!");
-    static_assert(rsl::is_move_constructible<T>::value, "rsl::atomic<T> : template typename T must be move constructible!");
-    static_assert(rsl::is_copy_assignable<T>::value, "rsl::atomic<T> : template typename T must be copy assignable!");
-    static_assert(rsl::is_move_assignable<T>::value, "rsl::atomic<T> : template typename T must be move assignable!");
-    static_assert(rsl::is_trivially_destructible<T>::value, "rsl::atomic<T> : Must be trivially destructible!");
-    static_assert(rsl::internal::is_atomic_lockfree_size<T>::value, "rsl::atomic<T> : template typename T must be a lockfree size!");
+    static_assert(!rsl::is_const_v<T>, "rsl::atomic<T> : template typename T cannot be const!");
+    static_assert(!rsl::is_volatile_v<T>, "rsl::atomic<T> : template typename T cannot be volatile! Use the memory orders to access the underlying type for the guarantees you need.");
+    static_assert(rsl::is_standard_layout_v<T>, "rsl::atomic<T> : Must have standard layout!");
+    static_assert(rsl::is_trivially_copyable_v<T>, "rsl::atomic<T> : template typename T must be trivially copyable!");
+    static_assert(rsl::is_copy_constructible_v<T>, "rsl::atomic<T> : template typename T must be copy constructible!");
+    static_assert(rsl::is_move_constructible_v<T>, "rsl::atomic<T> : template typename T must be move constructible!");
+    static_assert(rsl::is_copy_assignable_v<T>, "rsl::atomic<T> : template typename T must be copy assignable!");
+    static_assert(rsl::is_move_assignable_v<T>, "rsl::atomic<T> : template typename T must be move assignable!");
+    static_assert(rsl::is_trivially_destructible_v<T>, "rsl::atomic<T> : Must be trivially destructible!");
+    static_assert(rsl::internal::is_atomic_lockfree_size_v<T>, "rsl::atomic<T> : template typename T must be a lockfree size!");
 
     using Base = rsl::internal::select_atomic_inherit<T>;
 
@@ -68,7 +74,7 @@ namespace rsl
     using value_type      = T;
     using difference_type = T;
 
-    static constexpr bool is_always_lock_free = rsl::internal::is_atomic_lockfree_size<T>::value;
+    static constexpr bool is_always_lock_free = rsl::internal::is_atomic_lockfree_size_v<T>;
 
     atomic(const atomic&)                      = delete;
     atomic& operator=(const atomic&)           = delete;
@@ -82,11 +88,11 @@ namespace rsl
 
     bool is_lock_free() const
     {
-      return rsl::internal::is_atomic_lockfree_size<T>::value;
+      return rsl::internal::is_atomic_lockfree_size_v<T>;
     }
     bool is_lock_free() const volatile
     {
-      static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in EASTL/atomic.h! Use the memory orders to access the atomic object!");
+      static_assert(rsl::internal::always_false<T>, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in EASTL/atomic.h! Use the memory orders to access the atomic object!");
       return false;
     }
 
@@ -99,7 +105,7 @@ namespace rsl
 
     operator T() const volatile 
     {
-      static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in EASTL/atomic.h! Use the memory orders to access the atomic object!");
+      static_assert(rsl::internal::always_false<T>, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in EASTL/atomic.h! Use the memory orders to access the atomic object!");
     }
     operator T() const 
     {
@@ -110,16 +116,16 @@ namespace rsl
   template <typename T>
   struct atomic<T, rsl::enable_if_t<rsl::is_integral_v<T> && !rsl::is_same_v<bool, T>>> : protected rsl::internal::atomic_integral_width<T>
   {
-    static_assert(!rsl::is_const<T>::value, "rsl::atomic<T> : template typename T cannot be const!");
-    static_assert(!rsl::is_volatile<T>::value, "rsl::atomic<T> : template typename T cannot be volatile! Use the memory orders to access the underlying type for the guarantees you need.");
-    static_assert(rsl::is_standard_layout<T>::value, "rsl::atomic<T> : Must have standard layout!");
-    static_assert(rsl::is_trivially_copyable<T>::value, "rsl::atomic<T> : template typename T must be trivially copyable!");
-    static_assert(rsl::is_copy_constructible<T>::value, "rsl::atomic<T> : template typename T must be copy constructible!");
-    static_assert(rsl::is_move_constructible<T>::value, "rsl::atomic<T> : template typename T must be move constructible!");
-    static_assert(rsl::is_copy_assignable<T>::value, "rsl::atomic<T> : template typename T must be copy assignable!");
-    static_assert(rsl::is_move_assignable<T>::value, "rsl::atomic<T> : template typename T must be move assignable!");
-    static_assert(rsl::is_trivially_destructible<T>::value, "rsl::atomic<T> : Must be trivially destructible!");
-    static_assert(rsl::internal::is_atomic_lockfree_size<T>::value, "rsl::atomic<T> : template typename T must be a lockfree size!");
+    static_assert(!rsl::is_const_v<T>, "rsl::atomic<T> : template typename T cannot be const!");
+    static_assert(!rsl::is_volatile_v<T>, "rsl::atomic<T> : template typename T cannot be volatile! Use the memory orders to access the underlying type for the guarantees you need.");
+    static_assert(rsl::is_standard_layout_v<T>, "rsl::atomic<T> : Must have standard layout!");
+    static_assert(rsl::is_trivially_copyable_v<T>, "rsl::atomic<T> : template typename T must be trivially copyable!");
+    static_assert(rsl::is_copy_constructible_v<T>, "rsl::atomic<T> : template typename T must be copy constructible!");
+    static_assert(rsl::is_move_constructible_v<T>, "rsl::atomic<T> : template typename T must be move constructible!");
+    static_assert(rsl::is_copy_assignable_v<T>, "rsl::atomic<T> : template typename T must be copy assignable!");
+    static_assert(rsl::is_move_assignable_v<T>, "rsl::atomic<T> : template typename T must be move assignable!");
+    static_assert(rsl::is_trivially_destructible_v<T>, "rsl::atomic<T> : Must be trivially destructible!");
+    static_assert(rsl::internal::is_atomic_lockfree_size_v<T>, "rsl::atomic<T> : template typename T must be a lockfree size!");
     
   public:
     using Base = rsl::internal::atomic_integral_width<T>;
@@ -127,7 +133,7 @@ namespace rsl
     using value_type = T;
     using difference_type = T;
 
-    static constexpr bool is_always_lock_free = rsl::internal::is_atomic_lockfree_size<T>::value;
+    static constexpr bool is_always_lock_free = rsl::internal::is_atomic_lockfree_size_v<T>;
 
     constexpr atomic() = default;
     constexpr atomic(T desired) 
@@ -141,11 +147,11 @@ namespace rsl
 
     bool is_lock_free() const 
     {
-      return rsl::internal::is_atomic_lockfree_size<T>::value;
+      return rsl::internal::is_atomic_lockfree_size_v<T>;
     }
     bool is_lock_free() const volatile 
     {
-      static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in EASTL/atomic.h! Use the memory orders to access the atomic object!");
+      static_assert(rsl::internal::always_false<T>, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in EASTL/atomic.h! Use the memory orders to access the atomic object!");
       return false;
     }
 
@@ -158,7 +164,7 @@ namespace rsl
 
     operator T() const volatile 
     {
-      static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in EASTL/atomic.h! Use the memory orders to access the atomic object!");
+      static_assert(rsl::internal::always_false<T>, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in EASTL/atomic.h! Use the memory orders to access the atomic object!");
     }
     operator T() const 
     {
@@ -187,16 +193,16 @@ namespace rsl
   template <typename T>
   struct atomic<T*> : protected rsl::internal::atomic_pointer_width<T*>
   {
-    static_assert(!rsl::is_const<T*>::value, "rsl::atomic<T> : template typename T cannot be const!");
-    static_assert(!rsl::is_volatile<T*>::value, "rsl::atomic<T> : template typename T cannot be volatile! Use the memory orders to access the underlying type for the guarantees you need.");
-    static_assert(rsl::is_standard_layout<T*>::value, "rsl::atomic<T> : Must have standard layout!");
-    static_assert(rsl::is_trivially_copyable<T*>::value, "rsl::atomic<T> : template typename T must be trivially copyable!");
-    static_assert(rsl::is_copy_constructible<T*>::value, "rsl::atomic<T> : template typename T must be copy constructible!");
-    static_assert(rsl::is_move_constructible<T*>::value, "rsl::atomic<T> : template typename T must be move constructible!");
-    static_assert(rsl::is_copy_assignable<T*>::value, "rsl::atomic<T> : template typename T must be copy assignable!");
-    static_assert(rsl::is_move_assignable<T*>::value, "rsl::atomic<T> : template typename T must be move assignable!");
-    static_assert(rsl::is_trivially_destructible<T*>::value, "rsl::atomic<T> : Must be trivially destructible!");
-    static_assert(rsl::internal::is_atomic_lockfree_size<T*>::value, "rsl::atomic<T> : template typename T must be a lockfree size!");
+    static_assert(!rsl::is_const_v<T*>, "rsl::atomic<T> : template typename T cannot be const!");
+    static_assert(!rsl::is_volatile_v<T*>, "rsl::atomic<T> : template typename T cannot be volatile! Use the memory orders to access the underlying type for the guarantees you need.");
+    static_assert(rsl::is_standard_layout_v<T*>, "rsl::atomic<T> : Must have standard layout!");
+    static_assert(rsl::is_trivially_copyable_v<T*>, "rsl::atomic<T> : template typename T must be trivially copyable!");
+    static_assert(rsl::is_copy_constructible_v<T*>, "rsl::atomic<T> : template typename T must be copy constructible!");
+    static_assert(rsl::is_move_constructible_v<T*>, "rsl::atomic<T> : template typename T must be move constructible!");
+    static_assert(rsl::is_copy_assignable_v<T*>, "rsl::atomic<T> : template typename T must be copy assignable!");
+    static_assert(rsl::is_move_assignable_v<T*>, "rsl::atomic<T> : template typename T must be move assignable!");
+    static_assert(rsl::is_trivially_destructible_v<T*>, "rsl::atomic<T> : Must be trivially destructible!");
+    static_assert(rsl::internal::is_atomic_lockfree_size_v<T*>, "rsl::atomic<T> : template typename T must be a lockfree size!");
 
     using Base = rsl::internal::atomic_pointer_width<T*>;
 
@@ -204,7 +210,7 @@ namespace rsl
     using value_type = T*;
     using difference_type = ptrdiff_t;
 
-    static constexpr bool is_always_lock_free = rsl::internal::is_atomic_lockfree_size<T*>::value;
+    static constexpr bool is_always_lock_free = rsl::internal::is_atomic_lockfree_size_v<T*>;
 
     constexpr atomic() = default;
     constexpr atomic(T* desired) 
@@ -218,11 +224,11 @@ namespace rsl
 
     bool is_lock_free() const 
     {
-      return rsl::internal::is_atomic_lockfree_size<T*>::value;
+      return rsl::internal::is_atomic_lockfree_size_v<T*>;
     }
     bool is_lock_free() const volatile 
     {
-      static_assert(!rsl::is_same<T*, T*>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in EASTL/atomic.h! Use the memory orders to access the atomic object!");
+      static_assert(rsl::internal::always_false<T>, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in EASTL/atomic.h! Use the memory orders to access the atomic object!");
       ;
       return false;
     }
@@ -236,7 +242,7 @@ namespace rsl
 
     operator T*() const volatile 
     {
-      static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in EASTL/atomic.h! Use the memory orders to access the atomic object!");
+      static_assert(rsl::internal::always_false<T>, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in EASTL/atomic.h! Use the memory orders to access the atomic object!");
     }
     operator T*() const 
     {

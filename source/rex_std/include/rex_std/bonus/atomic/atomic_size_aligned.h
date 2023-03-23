@@ -58,12 +58,12 @@ namespace rsl
       {
       public: /* ctors */
         constexpr atomic_size_aligned(T desired)
-            : mAtomic {desired}
+            : m_atomic_storage {desired}
         {
         }
 
         constexpr atomic_size_aligned()
-            : mAtomic {} /* Value-Initialize which will Zero-Initialize Trivial Constructible types */
+            : m_atomic_storage {} /* Value-Initialize which will Zero-Initialize Trivial Constructible types */
         {
         }
 
@@ -141,7 +141,7 @@ namespace rsl
       protected: /* Accessors */
         T* GetAtomicAddress() const
         {
-          return rsl::addressof(mAtomic);
+          return rsl::addressof(m_atomic_storage);
         }
 
       private:
@@ -155,7 +155,7 @@ namespace rsl
          * using a compare exchange, such as for 128-bit atomics, so we need to be able
          * to have write access to the variable as one example.
          */
-        alignas(sizeof(T)) mutable T mAtomic;
+        alignas(sizeof(T)) mutable T m_atomic_storage;
       };
 
     } // namespace internal
