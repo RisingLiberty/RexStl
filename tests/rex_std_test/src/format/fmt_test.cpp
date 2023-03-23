@@ -30,20 +30,20 @@ TEST(uint128_test, ctor) {
   EXPECT_EQ(n, 0);
   n = uint128_fallback(42);
   EXPECT_EQ(n, 42);
-  EXPECT_EQ(static_cast<uint64_t>(n), 42);
+  EXPECT_EQ(static_cast<uint64>(n), 42);
 }
 
 TEST(uint128_test, shift) {
   auto n = uint128_fallback(42);
   n = n << 64;
-  EXPECT_EQ(static_cast<uint64_t>(n), 0);
+  EXPECT_EQ(static_cast<uint64>(n), 0);
   n = n >> 64;
-  EXPECT_EQ(static_cast<uint64_t>(n), 42);
+  EXPECT_EQ(static_cast<uint64>(n), 42);
   n = n << 62;
-  EXPECT_EQ(static_cast<uint64_t>(n >> 64), 0xa);
-  EXPECT_EQ(static_cast<uint64_t>(n), 0x8000000000000000);
+  EXPECT_EQ(static_cast<uint64>(n >> 64), 0xa);
+  EXPECT_EQ(static_cast<uint64>(n), 0x8000000000000000);
   n = n >> 62;
-  EXPECT_EQ(static_cast<uint64_t>(n), 42);
+  EXPECT_EQ(static_cast<uint64>(n), 42);
   EXPECT_EQ(uint128_fallback(1) << 112, uint128_fallback(0x1000000000000, 0));
   EXPECT_EQ(uint128_fallback(0x1000000000000, 0) >> 112, uint128_fallback(1));
 }
@@ -57,7 +57,7 @@ TEST(uint128_test, plus_assign) {
   auto n = uint128_fallback(32);
   n += uint128_fallback(10);
   EXPECT_EQ(n, 42);
-  n = uint128_fallback(max_value<uint64_t>());
+  n = uint128_fallback(max_value<uint64>());
   n += uint128_fallback(1);
   EXPECT_EQ(n, uint128_fallback(1) << 64);
 }
@@ -65,7 +65,7 @@ TEST(uint128_test, plus_assign) {
 TEST(uint128_test, multiply) {
   auto n = uint128_fallback(2251799813685247);
   n = n * 3611864890;
-  EXPECT_EQ(static_cast<uint64_t>(n >> 64), 440901);
+  EXPECT_EQ(static_cast<uint64>(n >> 64), 440901);
 }
 
 template <typename Float> void check_isfinite() {
@@ -113,14 +113,14 @@ TEST(float_test, isnan) {
 }
 
 struct uint32_pair {
-  uint32_t u[2];
+  uint32 u[2];
 };
 
 TEST(util_test, bit_cast) {
-  auto s = fmt::detail::bit_cast<uint32_pair>(uint64_t{ 42 });
-  EXPECT_EQ(fmt::detail::bit_cast<uint64_t>(s), 42ull);
-  s = fmt::detail::bit_cast<uint32_pair>(~uint64_t{ 0 });
-  EXPECT_EQ(fmt::detail::bit_cast<uint64_t>(s), ~0ull);
+  auto s = fmt::detail::bit_cast<uint32_pair>(uint64{ 42 });
+  EXPECT_EQ(fmt::detail::bit_cast<uint64>(s), 42ull);
+  s = fmt::detail::bit_cast<uint32_pair>(~uint64{ 0 });
+  EXPECT_EQ(fmt::detail::bit_cast<uint64>(s), ~0ull);
 }
 
 // Increment a number in a string.
@@ -1189,7 +1189,7 @@ TEST(format_test, format_bin) {
   EXPECT_EQ("10010000101010111100110111101111",
     fmt::format("{0:b}", 0x90ABCDEF));
   EXPECT_EQ("11111111111111111111111111111111",
-    fmt::format("{0:b}", max_value<uint32_t>()));
+    fmt::format("{0:b}", max_value<uint32>()));
 }
 
 #if FMT_USE_INT128
@@ -1523,7 +1523,7 @@ TEST(format_test, format_volatile_char) {
 
 TEST(format_test, format_unsigned_char) {
   EXPECT_EQ("42", fmt::format("{}", static_cast<unsigned char>(42)));
-  EXPECT_EQ("42", fmt::format("{}", static_cast<uint8_t>(42)));
+  EXPECT_EQ("42", fmt::format("{}", static_cast<uint8>(42)));
 }
 
 TEST(format_test, format_cstring) {

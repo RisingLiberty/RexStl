@@ -13,7 +13,7 @@
 FMT_BEGIN_NAMESPACE
 FMT_MODULE_EXPORT_BEGIN
 
-enum class color : uint32_t
+enum class color : uint32
 {
   alice_blue              = 0xF0F8FF, // rgb(240,248,255)
   antique_white           = 0xFAEBD7, // rgb(250,235,215)
@@ -158,7 +158,7 @@ enum class color : uint32_t
   yellow_green            = 0x9ACD32  // rgb(154,205,50)
 };                                    // enum class color
 
-enum class terminal_color : uint8_t
+enum class terminal_color : uint8
 {
   black = 30,
   red,
@@ -178,7 +178,7 @@ enum class terminal_color : uint8_t
   bright_white
 };
 
-enum class emphasis : uint8_t
+enum class emphasis : uint8
 {
   bold          = 1,
   faint         = 1 << 1,
@@ -200,27 +200,27 @@ struct rgb
       , b(0)
   {
   }
-  FMT_CONSTEXPR rgb(uint8_t r_, uint8_t g_, uint8_t b_)
+  FMT_CONSTEXPR rgb(uint8 r_, uint8 g_, uint8 b_)
       : r(r_)
       , g(g_)
       , b(b_)
   {
   }
-  FMT_CONSTEXPR rgb(uint32_t hex)
+  FMT_CONSTEXPR rgb(uint32 hex)
       : r((hex >> 16) & 0xFF)
       , g((hex >> 8) & 0xFF)
       , b(hex & 0xFF)
   {
   }
   FMT_CONSTEXPR rgb(color hex)
-      : r((uint32_t(hex) >> 16) & 0xFF)
-      , g((uint32_t(hex) >> 8) & 0xFF)
-      , b(uint32_t(hex) & 0xFF)
+      : r((uint32(hex) >> 16) & 0xFF)
+      , g((uint32(hex) >> 8) & 0xFF)
+      , b(uint32(hex) & 0xFF)
   {
   }
-  uint8_t r;
-  uint8_t g;
-  uint8_t b;
+  uint8 r;
+  uint8 g;
+  uint8 b;
 };
 
 FMT_BEGIN_DETAIL_NAMESPACE
@@ -237,25 +237,25 @@ struct color_type
       : is_rgb(true)
       , value {}
   {
-    value.rgb_color = static_cast<uint32_t>(rgb_color);
+    value.rgb_color = static_cast<uint32>(rgb_color);
   }
   FMT_CONSTEXPR color_type(rgb rgb_color) noexcept
       : is_rgb(true)
       , value {}
   {
-    value.rgb_color = (static_cast<uint32_t>(rgb_color.r) << 16) | (static_cast<uint32_t>(rgb_color.g) << 8) | rgb_color.b;
+    value.rgb_color = (static_cast<uint32>(rgb_color.r) << 16) | (static_cast<uint32>(rgb_color.g) << 8) | rgb_color.b;
   }
   FMT_CONSTEXPR color_type(terminal_color term_color) noexcept
       : is_rgb()
       , value {}
   {
-    value.term_color = static_cast<uint8_t>(term_color);
+    value.term_color = static_cast<uint8>(term_color);
   }
   bool is_rgb;
   union color_union
   {
-    uint8_t term_color;
-    uint32_t rgb_color;
+    uint8 term_color;
+    uint32 rgb_color;
   } value;
 };
 
@@ -298,7 +298,7 @@ public:
       background_color.value.rgb_color |= rhs.background_color.value.rgb_color;
     }
 
-    ems = static_cast<emphasis>(static_cast<uint8_t>(ems) | static_cast<uint8_t>(rhs.ems));
+    ems = static_cast<emphasis>(static_cast<uint8>(ems) | static_cast<uint8>(rhs.ems));
     return *this;
   }
 
@@ -317,7 +317,7 @@ public:
   }
   FMT_CONSTEXPR bool has_emphasis() const noexcept
   {
-    return static_cast<uint8_t>(ems) != 0;
+    return static_cast<uint8>(ems) != 0;
   }
   FMT_CONSTEXPR detail::color_type get_foreground() const noexcept
   {
@@ -393,7 +393,7 @@ struct ansi_color_escape
     if(!text_color.is_rgb)
     {
       bool is_background = esc == string_view("\x1b[48;2;");
-      uint32_t value     = text_color.value.term_color;
+      uint32 value       = text_color.value.term_color;
       // Background ASCII codes are the same as the foreground ones but with
       // 10 more.
       if(is_background)
@@ -428,7 +428,7 @@ struct ansi_color_escape
   }
   FMT_CONSTEXPR ansi_color_escape(emphasis em) noexcept
   {
-    uint8_t em_codes[num_emphases] = {};
+    uint8 em_codes[num_emphases] = {};
     if(has_emphasis(em, emphasis::bold))
       em_codes[0] = 1;
     if(has_emphasis(em, emphasis::faint))
@@ -476,7 +476,7 @@ private:
   static constexpr size_t num_emphases = 8;
   Char buffer[7u + 3u * num_emphases + 1u];
 
-  static FMT_CONSTEXPR void to_esc(uint8_t c, Char* out, char delimiter) noexcept
+  static FMT_CONSTEXPR void to_esc(uint8 c, Char* out, char delimiter) noexcept
   {
     out[0] = static_cast<Char>('0' + c / 100);
     out[1] = static_cast<Char>('0' + c / 10 % 10);
@@ -485,7 +485,7 @@ private:
   }
   static FMT_CONSTEXPR bool has_emphasis(emphasis em, emphasis mask) noexcept
   {
-    return static_cast<uint8_t>(em) & static_cast<uint8_t>(mask);
+    return static_cast<uint8>(em) & static_cast<uint8>(mask);
   }
 };
 

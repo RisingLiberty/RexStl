@@ -384,7 +384,7 @@ namespace detail
       auto&& buf = basic_memory_buffer<char, unit_t::max_size * 4>();
       for(code_unit* p = unit.buf; p != unit.end; ++p)
       {
-        uint32_t c = static_cast<uint32_t>(*p);
+        uint32 c = static_cast<uint32>(*p);
         if(sizeof(code_unit) == 2 && c >= 0xd800 && c <= 0xdfff)
         {
           // surrogate pair
@@ -393,7 +393,7 @@ namespace detail
           {
             FMT_THROW(format_error("failed to format time"));
           }
-          c = (c << 10) + static_cast<uint32_t>(*p) - 0x35fdc00;
+          c = (c << 10) + static_cast<uint32>(*p) - 0x35fdc00;
         }
         if(c < 0x80)
         {
@@ -1725,7 +1725,7 @@ inline rsl::tm localtime(rsl::time_t time)
                   static constexpr int value = (Num % Den == 0) ? N : 6;
                 };
 
-                constexpr long long pow10(rsl::uint32_t n)
+                constexpr long long pow10(rsl::uint32 n)
                 {
                   return n == 0 ? 1 : 10 * pow10(n - 1);
                 }

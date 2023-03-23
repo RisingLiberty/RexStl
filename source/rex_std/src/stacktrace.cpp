@@ -109,11 +109,11 @@ namespace rsl
         symbol_info->MaxNameLen   = MAX_SYM_NAME;
 
         rsl::array<stacktrace_entry, stacktrace::max_entries()> resolved_pointers = {};
-        const card32 max_count                              = (rsl::min)(resolved_pointers.size(), maxDepth);
+        const card32 max_count                                                    = (rsl::min)(resolved_pointers.size(), maxDepth);
         for(card32 i = 0; i < max_count && stack_pointers[i] != nullptr; ++i)
         {
-          void* stack_ptr     = stack_pointers[i];
-          const uint64_t addr = *reinterpret_cast<uint64_t*>(&stack_ptr); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+          void* stack_ptr   = stack_pointers[i];
+          const uint64 addr = *reinterpret_cast<uint64*>(&stack_ptr); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
           stacktrace_entry stack_entry;
 
           if(SymFromAddr(process, addr, &displacement, symbol_info) != 0)

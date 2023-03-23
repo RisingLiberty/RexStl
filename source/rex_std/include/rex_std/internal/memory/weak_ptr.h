@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: weak_ptr.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -25,32 +25,31 @@ namespace rsl
     public:
       using element_type = T;
 
-      constexpr weak_ptr()
-      {}
+      constexpr weak_ptr() {}
       weak_ptr(const weak_ptr& ptr)
-        : internal::ref_ptr<T>(ptr)
+          : internal::ref_ptr<T>(ptr)
       {
         internal::ref_ptr<T>::safe_inc_weak_ref();
       }
       template <typename U>
       weak_ptr(const weak_ptr<U>& ptr)
-        : internal::ref_ptr<T>(ptr)
+          : internal::ref_ptr<T>(ptr)
       {
         internal::ref_ptr<T>::safe_inc_weak_ref();
       }
       template <typename U>
       weak_ptr(const rsl::shared_ptr<U>& ptr)
-        : internal::ref_ptr<T>(ptr)
+          : internal::ref_ptr<T>(ptr)
       {
         internal::ref_ptr<T>::safe_inc_weak_ref();
       }
       weak_ptr(weak_ptr&& ptr)
-        : internal::ref_ptr<T>(rsl::move(ptr))
+          : internal::ref_ptr<T>(rsl::move(ptr))
       {
       }
       template <typename U>
       weak_ptr(weak_ptr<U>&& ptr)
-        : internal::ref_ptr<T>(rsl::move(ptr))
+          : internal::ref_ptr<T>(rsl::move(ptr))
       {
       }
 
@@ -90,24 +89,24 @@ namespace rsl
 
       void reset()
       {
-        weak_ptr{}.swap(*this);
+        weak_ptr {}.swap(*this);
       }
       void swap(weak_ptr& ptr)
       {
         internal::ref_ptr<T>::swap(ptr);
       }
-      
+
       bool expired() const
       {
         return internal::ref_ptr<T>::use_count() == 0;
       }
       shared_ptr<T> lock() const
       {
-        if (expired())
+        if(expired())
         {
-          return shared_ptr<T>{};
+          return shared_ptr<T> {};
         }
-        
+
         return shared_ptr<T>(*this);
       }
     };
@@ -122,5 +121,5 @@ namespace rsl
 
     template <typename T>
     weak_ptr(shared_ptr<T>) -> weak_ptr<T>;
-  }
-}
+  } // namespace v1
+} // namespace rsl

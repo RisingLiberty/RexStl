@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: ref_ptr.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -16,8 +16,8 @@
 #include "rex_std/bonus/concurrency/atomic_increment.h"
 #include "rex_std/bonus/concurrency/atomic_read.h"
 #include "rex_std/internal/assert/assert_fwd.h"
-#include "rex_std/internal/memory/default_delete.h"
 #include "rex_std/internal/memory/allocator.h"
+#include "rex_std/internal/memory/default_delete.h"
 #include "rex_std/internal/utility/swap.h"
 
 namespace rsl
@@ -36,8 +36,8 @@ namespace rsl
       {
       public:
         explicit ref_count_base(count_t refCount)
-          : m_ref_count(refCount)
-          , m_weak_ref_count(0)
+            : m_ref_count(refCount)
+            , m_weak_ref_count(0)
         {
         }
 
@@ -62,7 +62,7 @@ namespace rsl
         bool release()
         {
           REX_ASSERT_X(use_count() > 0, "Invalid ref count for shared ptr");
-          if (rsl::atomic_decrement(m_ref_count) == 0)
+          if(rsl::atomic_decrement(m_ref_count) == 0)
           {
             // you can never delete the last shared_ptr with still having a weak ptr referencing the ptr
             // that's why if the last shared ptr decrement results in 0 ref count, you can safely delete the ptr
@@ -70,7 +70,7 @@ namespace rsl
             // that's why we can only delete the control block if the weak references are also 0
             delete_ptr();
 
-            if (rsl::atomic_read(m_weak_ref_count) == 0)
+            if(rsl::atomic_read(m_weak_ref_count) == 0)
             {
               delete_this();
             }
@@ -82,16 +82,16 @@ namespace rsl
         void dec_weak_ref()
         {
           // it's possible all shared references destroyed but the control block isn't yet
-          // because the weak ref is initialized with 1, 
-          if (rsl::atomic_decrement(m_weak_ref_count) == 0)
+          // because the weak ref is initialized with 1,
+          if(rsl::atomic_decrement(m_weak_ref_count) == 0)
           {
             delete_this();
           }
         }
 
       private:
-        virtual void delete_ptr() = 0;
-        virtual void delete_this() = 0;
+        virtual void delete_ptr()         = 0;
+        virtual void delete_this()        = 0;
         virtual void* get_deleter() const = 0;
 
       private:
@@ -103,16 +103,16 @@ namespace rsl
       class ref_count : ref_count_base
       {
       public:
-        using value_type = T;
-        using pointer = T*;
+        using value_type     = T;
+        using pointer        = T*;
         using allocator_type = allocator;
-        using deleter_type = Deleter;
+        using deleter_type   = Deleter;
 
         ref_count(T* ptr, allocator allocator, Deleter deleter)
-          : ref_count_base(1)
-          , m_ptr(ptr)
-          , m_deleter(rsl::move(deleter))
-          , m_allocator(rsl::move(allocator))
+            : ref_count_base(1)
+            , m_ptr(ptr)
+            , m_deleter(rsl::move(deleter))
+            , m_allocator(rsl::move(allocator))
         {
         }
 
@@ -146,10 +146,10 @@ namespace rsl
       class ref_count_inst : public ref_count_base
       {
       public:
-        using value_type = T;
-        using pointer = T*;
+        using value_type     = T;
+        using pointer        = T*;
         using allocator_type = allocator;
-        using storage_type = rsl::aligned_storage_t<T>;
+        using storage_type   = rsl::aligned_storage_t<T>;
 
         pointer value()
         {
@@ -158,8 +158,8 @@ namespace rsl
 
         template <typename... Args>
         explicit ref_count_inst(allocator_type allocator, Args&&... args)
-          : ref_count_base(1)
-          , m_allocator(allocator)
+            : ref_count_base(1)
+            , m_allocator(allocator)
         {
           new(&m_memory) value_type(rsl::forward<Args>(args)...);
         }
@@ -195,16 +195,17 @@ namespace rsl
 
       public:
         ref_ptr()
-          : m_ptr(nullptr)
-          , m_ref_count(nullptr)
-        {}
+            : m_ptr(nullptr)
+            , m_ref_count(nullptr)
+        {
+        }
 
         /// RSL Comment: Different from ISO C++ Standard at time of writing (04/Aug/2022)
         // the pointer provided cannot be nullptr, in the standard, it can be
         template <typename U, typename Deleter>
         ref_ptr(U* ptr, Deleter d = default_delete<T>())
-          : m_ptr(ptr)
-          , m_ref_count(nullptr)
+            : m_ptr(ptr)
+            , m_ref_count(nullptr)
         {
           REX_ASSERT_X(m_ptr != nullptr, "nullptr cannot be provided for this constructor");
           alloc(ptr, d, allocator());
@@ -213,16 +214,16 @@ namespace rsl
         // in the standard, the use count after this construct call == 1
         template <typename U, typename Deleter>
         ref_ptr(nullptr_t, Deleter d = default_delete<T>())
-          : m_ptr(nullptr)
-          , m_ref_count(nullptr)
+            : m_ptr(nullptr)
+            , m_ref_count(nullptr)
         {
           alloc_without_ptr(nullptr, d, allocator());
         }
 
         template <typename U, typename Deleter, typename Allocator>
         ref_ptr(U* ptr, Deleter d, Allocator& alloc)
-          : m_ptr(nullptr)
-          , m_ref_count(nullptr)
+            : m_ptr(nullptr)
+            , m_ref_count(nullptr)
         {
           REX_ASSERT_X(m_ptr != nullptr, "nullptr cannot be provided for this constructor");
           alloc(ptr, d, alloc);
@@ -230,47 +231,50 @@ namespace rsl
 
         template <typename U, typename Deleter, typename Allocator>
         ref_ptr(nullptr_t, Deleter d, Allocator& alloc)
-          : m_ptr(nullptr)
-          , m_ref_count(nullptr)
+            : m_ptr(nullptr)
+            , m_ref_count(nullptr)
         {
           alloc_without_ptr(d, alloc);
         }
 
         template <typename U>
         ref_ptr(const ref_ptr<U>& other, T* ptr)
-          : m_ptr(ptr)
-          , m_ref_count(other.m_ref_count)
-        {}
+            : m_ptr(ptr)
+            , m_ref_count(other.m_ref_count)
+        {
+        }
         template <typename U>
         ref_ptr(ref_ptr<U>&& other, T* ptr)
-          : m_ptr(ptr)
-          , m_ref_count(other.m_ref_count)
+            : m_ptr(ptr)
+            , m_ref_count(other.m_ref_count)
         {
-          other.m_ptr = nullptr;
+          other.m_ptr       = nullptr;
           other.m_ref_count = nullptr;
         }
         ref_ptr(const ref_ptr& other)
-          : m_ptr(other.m_ptr)
-          , m_ref_count(other.m_ref_count)
-        {}
+            : m_ptr(other.m_ptr)
+            , m_ref_count(other.m_ref_count)
+        {
+        }
         template <typename U>
         ref_ptr(const ref_ptr<U>& other)
-          : m_ptr(other.m_ptr)
-          , m_ref_count(other.m_ref_count)
-        {}
-        ref_ptr(ref_ptr&& other)
-          : m_ptr(other.m_ptr)
-          , m_ref_count(other.m_ref_count)
+            : m_ptr(other.m_ptr)
+            , m_ref_count(other.m_ref_count)
         {
-          other.m_ptr = nullptr;
+        }
+        ref_ptr(ref_ptr&& other)
+            : m_ptr(other.m_ptr)
+            , m_ref_count(other.m_ref_count)
+        {
+          other.m_ptr       = nullptr;
           other.m_ref_count = nullptr;
         }
         template <typename U>
         ref_ptr(ref_ptr<U>&& other)
-          : m_ptr(other.m_ptr)
-          , m_ref_count(other.m_ref_count)
+            : m_ptr(other.m_ptr)
+            , m_ref_count(other.m_ref_count)
         {
-          other.m_ptr = nullptr;
+          other.m_ptr       = nullptr;
           other.m_ref_count = nullptr;
         }
 
@@ -291,9 +295,7 @@ namespace rsl
         // this returns a long in the standard
         card32 use_count() const
         {
-          return m_ref_count
-            ? m_ref_count->use_count()
-            : 0;
+          return m_ref_count ? m_ref_count->use_count() : 0;
         }
 
         template <typename U>
@@ -309,7 +311,7 @@ namespace rsl
         }
         void safe_inc_ref()
         {
-          if (m_ref_count)
+          if(m_ref_count)
           {
             inc_ref();
           }
@@ -320,7 +322,7 @@ namespace rsl
         }
         void safe_inc_weak_ref()
         {
-          if (m_ref_count)
+          if(m_ref_count)
           {
             inc_weak_ref();
           }
@@ -332,7 +334,7 @@ namespace rsl
         }
         void safe_dec_ref()
         {
-          if (m_ref_count)
+          if(m_ref_count)
           {
             dec_ref();
           }
@@ -344,7 +346,7 @@ namespace rsl
         }
         void safe_dec_weak_ref()
         {
-          if (m_ref_count)
+          if(m_ref_count)
           {
             dec_weak_ref();
           }
@@ -364,7 +366,7 @@ namespace rsl
           void* mem = alloc.allocate(1_elem);
 
           m_ref_count = new(mem)(internal::ref_count<T, Allocator, Deleter>)(ptr, rsl::move(deleter), rsl::move(alloc));
-          m_ptr = ptr;
+          m_ptr       = ptr;
         }
         template <typename U, typename Deleter, typename Allocator, enable_if_t<!rsl::is_empty_v<Allocator>, bool> = true>
         void alloc(U* ptr, Deleter deleter, Allocator& alloc)
@@ -372,7 +374,7 @@ namespace rsl
           void* mem = alloc.allocate(1_elem);
 
           m_ref_count = new(mem)(internal::ref_count<T, Allocator, Deleter>)(ptr, rsl::move(deleter), rsl::move(alloc));
-          m_ptr = ptr;
+          m_ptr       = ptr;
         }
         template <typename Deleter, typename Allocator, enable_if_t<rsl::is_empty_v<Allocator>, bool> = true>
         void alloc_without_ptr(Deleter deleter, const Allocator& alloc)
@@ -396,6 +398,6 @@ namespace rsl
         T* m_ptr;
         internal::ref_count_base* m_ref_count;
       };
-    }
-  }
-}
+    } // namespace internal
+  }   // namespace v1
+} // namespace rsl

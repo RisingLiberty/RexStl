@@ -1,11 +1,9 @@
 
 
-
 #ifndef REX_ATOMIC_INTERNAL_ARCH_ARM_H
 #define REX_ATOMIC_INTERNAL_ARCH_ARM_H
 
 #pragma once
-
 
 /**
  * NOTE: We use this mapping
@@ -58,28 +56,21 @@
  * aren't that abundant.
  */
 
-
 /////////////////////////////////////////////////////////////////////////////////
-
 
 #if defined(REX_COMPILER_MSVC)
 
-	#if REX_PLATFORM_PTR_SIZE == 8
-		#define REX_ARCH_ATOMIC_HAS_128BIT
-	#endif
+  #if REX_PLATFORM_PTR_SIZE == 8
+    #define REX_ARCH_ATOMIC_HAS_128BIT
+  #endif
 
 #endif
 
-
 /////////////////////////////////////////////////////////////////////////////////
 
-
 #include "arch_arm_load.h"
-#include "arch_arm_store.h"
-
 #include "arch_arm_memory_barrier.h"
-
+#include "arch_arm_store.h"
 #include "arch_arm_thread_fence.h"
-
 
 #endif /* REX_ATOMIC_INTERNAL_ARCH_ARM_H */

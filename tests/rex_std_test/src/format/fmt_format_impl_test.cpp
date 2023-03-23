@@ -86,11 +86,11 @@ TEST(bigint_test, multiply) {
   n *= 0x12345678;
   EXPECT_EQ(fmt::to_string(n), "962fc95e0");
 
-  bigint bigmax(max_value<uint32_t>());
-  bigmax *= max_value<uint32_t>();
+  bigint bigmax(max_value<uint32>());
+  bigmax *= max_value<uint32>();
   EXPECT_EQ(fmt::to_string(bigmax), "fffffffe00000001");
 
-  const auto max64 = max_value<uint64_t>();
+  const auto max64 = max_value<uint64>();
   bigmax = max64;
   bigmax *= max64;
   EXPECT_EQ(fmt::to_string(bigmax), "fffffffffffffffe0000000000000001");
@@ -112,7 +112,7 @@ TEST(bigint_test, square) {
   bigint n2(0xfffffffff);
   n2.square();
   EXPECT_EQ(fmt::to_string(n2), "ffffffffe000000001");
-  bigint n3(max_value<uint64_t>());
+  bigint n3(max_value<uint64>());
   n3.square();
   EXPECT_EQ(fmt::to_string(n3), "fffffffffffffffe0000000000000001");
   bigint n4;
@@ -255,7 +255,7 @@ TEST(fp_test, get_round_direction) {
   EXPECT_EQ(get_round_direction(100, 60, 10), round_direction::up);
   for (size_t i = 41; i < 60; ++i)
     EXPECT_EQ(get_round_direction(100, i, 10), round_direction::unknown);
-  uint64_t max = max_value<uint64_t>();
+  uint64 max = max_value<uint64>();
   EXPECT_THROW(get_round_direction(100, 100, 0), assertion_failure);
   EXPECT_THROW(get_round_direction(100, 0, 100), assertion_failure);
   EXPECT_THROW(get_round_direction(100, 0, 50), assertion_failure);
@@ -285,7 +285,7 @@ TEST(fp_test, fixed_handler) {
   // Check that divisor - error doesn't overflow.
   EXPECT_EQ(handler(1).on_digit('0', 100, 10, 101, false), digits::error);
   // Check that 2 * error doesn't overflow.
-  uint64_t max = max_value<uint64_t>();
+  uint64 max = max_value<uint64>();
   EXPECT_EQ(handler(1).on_digit('0', max, 10, max - 1, false), digits::error);
 }
 
@@ -346,13 +346,13 @@ template <typename Int> void test_count_digits() {
 }
 
 TEST(format_impl_test, count_digits) {
-  test_count_digits<uint32_t>();
-  test_count_digits<uint64_t>();
+  test_count_digits<uint32>();
+  test_count_digits<uint64>();
 }
 
 TEST(format_impl_test, countl_zero) {
-  constexpr auto num_bits = fmt::detail::num_bits<uint32_t>();
-  uint32_t n = 1u;
+  constexpr auto num_bits = fmt::detail::num_bits<uint32>();
+  uint32 n = 1u;
   for (int i = 1; i < num_bits - 1; i++) {
     n <<= 1;
     EXPECT_EQ(fmt::detail::countl_zero(n - 1), num_bits - i);
@@ -408,7 +408,7 @@ namespace detail {
   template <> struct is_fast_float<slow_float> : std::false_type {};
   namespace dragonbox {
     template <> struct float_info<slow_float> {
-      using carrier_uint = uint32_t;
+      using carrier_uint = uint32;
       static const int exponent_bits = 8;
     };
   }  // namespace dragonbox
@@ -440,11 +440,11 @@ TEST(format_impl_test, write_console_signature) {
 
 // A public domain branchless UTF-8 decoder by Christopher Wellons:
 // https://github.com/skeeto/branchless-utf8
-constexpr bool unicode_is_surrogate(uint32_t c) {
+constexpr bool unicode_is_surrogate(uint32 c) {
   return c >= 0xD800U && c <= 0xDFFFU;
 }
 
-FMT_CONSTEXPR char* utf8_encode(char* s, uint32_t c) {
+FMT_CONSTEXPR char* utf8_encode(char* s, uint32 c) {
   if (c >= (1UL << 16)) {
     s[0] = static_cast<char>(0xf0 | (c >> 18));
     s[1] = static_cast<char>(0x80 | ((c >> 12) & 0x3f));
@@ -471,10 +471,10 @@ FMT_CONSTEXPR char* utf8_encode(char* s, uint32_t c) {
 
 // Make sure it can decode every character
 TEST(format_impl_test, utf8_decode_decode_all) {
-  for (uint32_t i = 0; i < 0x10ffff; i++) {
+  for (uint32 i = 0; i < 0x10ffff; i++) {
     if (!unicode_is_surrogate(i)) {
       int e;
-      uint32_t c;
+      uint32 c;
       char buf[8] = { 0 };
       char* end = utf8_encode(buf, i);
       const char* res = fmt::detail::utf8_decode(buf, &c, &e);
@@ -487,9 +487,9 @@ TEST(format_impl_test, utf8_decode_decode_all) {
 
 // Reject everything outside of U+0000..U+10FFFF
 TEST(format_impl_test, utf8_decode_out_of_range) {
-  for (uint32_t i = 0x110000; i < 0x1fffff; i++) {
+  for (uint32 i = 0x110000; i < 0x1fffff; i++) {
     int e;
-    uint32_t c;
+    uint32 c;
     char buf[8] = { 0 };
     utf8_encode(buf, i);
     const char* end = fmt::detail::utf8_decode(buf, &c, &e);
@@ -500,9 +500,9 @@ TEST(format_impl_test, utf8_decode_out_of_range) {
 
 // Does it reject all surrogate halves?
 TEST(format_impl_test, utf8_decode_surrogate_halves) {
-  for (uint32_t i = 0xd800; i <= 0xdfff; i++) {
+  for (uint32 i = 0xd800; i <= 0xdfff; i++) {
     int e;
-    uint32_t c;
+    uint32 c;
     char buf[8] = { 0 };
     utf8_encode(buf, i);
     fmt::detail::utf8_decode(buf, &c, &e);
@@ -513,7 +513,7 @@ TEST(format_impl_test, utf8_decode_surrogate_halves) {
 // How about non-canonical encodings?
 TEST(format_impl_test, utf8_decode_non_canonical_encodings) {
   int e;
-  uint32_t c;
+  uint32 c;
   const char* end;
 
   char buf2[8] = { char(0xc0), char(0xA4) };
@@ -535,7 +535,7 @@ TEST(format_impl_test, utf8_decode_non_canonical_encodings) {
 // Let's try some bogus byte sequences
 TEST(format_impl_test, utf8_decode_bogus_byte_sequences) {
   int e;
-  uint32_t c;
+  uint32 c;
 
   // Invalid first byte
   char buf0[4] = { char(0xff) };

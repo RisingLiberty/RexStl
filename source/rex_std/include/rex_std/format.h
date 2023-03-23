@@ -62,7 +62,7 @@
   #include "rex_std/limits.h"
 
   #include <cmath>        // std::signbit
-  #include <cstdint>      // uint32_t
+  #include <cstdint>      // uint32
   #include <memory>       // std::uninitialized_copy
   #include <stdexcept>    // std::runtime_error
   #include <system_error> // std::system_error
@@ -209,7 +209,7 @@ namespace detail
       #endif
     #endif
 
-  inline auto clz(uint32_t x) -> int
+  inline auto clz(uint32 x) -> int
   {
     unsigned long r = 0;
     _BitScanReverse(&r, x);
@@ -222,17 +222,17 @@ namespace detail
   }
     #define FMT_BUILTIN_CLZ(n) detail::clz(n)
 
-  inline auto clzll(uint64_t x) -> int
+  inline auto clzll(uint64 x) -> int
   {
     unsigned long r = 0;
     #ifdef _WIN64
     _BitScanReverse64(&r, x);
     #else
     // Scan the high 32 bits.
-    if(_BitScanReverse(&r, static_cast<uint32_t>(x >> 32)))
+    if(_BitScanReverse(&r, static_cast<uint32>(x >> 32)))
       return 63 ^ (r + 32);
     // Scan the low 32 bits.
-    _BitScanReverse(&r, static_cast<uint32_t>(x));
+    _BitScanReverse(&r, static_cast<uint32>(x));
     #endif
     FMT_ASSERT(x != 0, "");
     FMT_MSC_WARNING(suppress : 6102) // Suppress a bogus static analysis warning.
@@ -240,7 +240,7 @@ namespace detail
   }
     #define FMT_BUILTIN_CLZLL(n) detail::clzll(n)
 
-  inline auto ctz(uint32_t x) -> int
+  inline auto ctz(uint32 x) -> int
   {
     unsigned long r = 0;
     _BitScanForward(&r, x);
@@ -250,7 +250,7 @@ namespace detail
   }
     #define FMT_BUILTIN_CTZ(n) detail::ctz(n)
 
-  inline auto ctzll(uint64_t x) -> int
+  inline auto ctzll(uint64 x) -> int
   {
     unsigned long r = 0;
     FMT_ASSERT(x != 0, "");
@@ -259,10 +259,10 @@ namespace detail
     _BitScanForward64(&r, x);
     #else
     // Scan the low 32 bits.
-    if(_BitScanForward(&r, static_cast<uint32_t>(x)))
+    if(_BitScanForward(&r, static_cast<uint32>(x)))
       return static_cast<int>(r);
     // Scan the high 32 bits.
-    _BitScanForward(&r, static_cast<uint32_t>(x >> 32));
+    _BitScanForward(&r, static_cast<uint32>(x >> 32));
     r += 32;
     #endif
     return static_cast<int>(r);
@@ -372,27 +372,27 @@ namespace detail
   class uint128_fallback
   {
   private:
-    uint64_t m_lo, m_hi;
+    uint64 m_lo, m_hi;
 
-    friend uint128_fallback umul128(uint64_t x, uint64_t y) noexcept;
+    friend uint128_fallback umul128(uint64 x, uint64 y) noexcept;
 
   public:
-    constexpr uint128_fallback(uint64_t hi, uint64_t lo)
+    constexpr uint128_fallback(uint64 hi, uint64 lo)
         : m_lo(lo)
         , m_hi(hi)
     {
     }
-    constexpr uint128_fallback(uint64_t value = 0) // NOLINT(google-explicit-constructor)
+    constexpr uint128_fallback(uint64 value = 0) // NOLINT(google-explicit-constructor)
         : m_lo(value)
         , m_hi(0)
     {
     }
 
-    constexpr uint64_t high() const noexcept
+    constexpr uint64 high() const noexcept
     {
       return m_hi;
     }
-    constexpr uint64_t low() const noexcept
+    constexpr uint64 low() const noexcept
     {
       return m_lo;
     }
@@ -429,15 +429,15 @@ namespace detail
       result += rhs;
       return result;
     }
-    friend auto operator*(const uint128_fallback& lhs, uint32_t rhs) -> uint128_fallback
+    friend auto operator*(const uint128_fallback& lhs, uint32 rhs) -> uint128_fallback
     {
       FMT_ASSERT(lhs.m_hi == 0, "");
-      const uint64_t hi     = (lhs.m_lo >> 32) * rhs;
-      const uint64_t lo     = (lhs.m_lo & ~uint32_t()) * rhs;
-      const uint64_t new_lo = (hi << 32) + lo;
+      const uint64 hi     = (lhs.m_lo >> 32) * rhs;
+      const uint64 lo     = (lhs.m_lo & ~uint32()) * rhs;
+      const uint64 new_lo = (hi << 32) + lo;
       return {(hi >> 32) + (new_lo < lo ? 1 : 0), new_lo};
     }
-    friend auto operator-(const uint128_fallback& lhs, uint64_t rhs) -> uint128_fallback
+    friend auto operator-(const uint128_fallback& lhs, uint64 rhs) -> uint128_fallback
     {
       return {lhs.m_hi - (lhs.m_lo < rhs ? 1 : 0), lhs.m_lo - rhs};
     }
@@ -463,14 +463,14 @@ namespace detail
     }
     FMT_CONSTEXPR void operator+=(uint128_fallback n)
     {
-      const uint64_t new_lo = m_lo + n.m_lo;
-      const uint64_t new_hi = m_hi + n.m_hi + (new_lo < m_lo ? 1 : 0);
+      const uint64 new_lo = m_lo + n.m_lo;
+      const uint64 new_hi = m_hi + n.m_hi + (new_lo < m_lo ? 1 : 0);
       FMT_ASSERT(new_hi >= m_hi, "");
       m_lo = new_lo;
       m_hi = new_hi;
     }
 
-    FMT_CONSTEXPR20 uint128_fallback& operator+=(uint64_t n) noexcept
+    FMT_CONSTEXPR20 uint128_fallback& operator+=(uint64 n) noexcept
     {
       if(is_constant_evaluated())
       {
@@ -710,11 +710,11 @@ namespace detail
    * occurs, this pointer will be a guess that depends on the particular
    * error, but it will always advance at least one byte.
    */
-  FMT_CONSTEXPR inline auto utf8_decode(const char* s, uint32_t* c, int* err) -> const char*
+  FMT_CONSTEXPR inline auto utf8_decode(const char* s, uint32* c, int* err) -> const char*
   {
     constexpr const int prefix_masks[] = {0x00, 0x80, 0xe0, 0xf0, 0xf8}; // NOLINT(modernize-avoid-c-arrays)
     constexpr const int masks[]        = {0x00, 0x7f, 0x1f, 0x0f, 0x07}; // NOLINT(modernize-avoid-c-arrays)
-    constexpr const uint32_t mins[]    = {4194304, 0, 128, 2048, 65536}; // NOLINT(modernize-avoid-c-arrays)
+    constexpr const uint32 mins[]      = {4194304, 0, 128, 2048, 65536}; // NOLINT(modernize-avoid-c-arrays)
     constexpr const int shiftc[]       = {0, 18, 12, 6, 0};              // NOLINT(modernize-avoid-c-arrays)
     constexpr const int shifte[]       = {0, 6, 4, 2, 0};                // NOLINT(modernize-avoid-c-arrays)
 
@@ -723,10 +723,10 @@ namespace detail
 
     // Assume a four-byte character and load four bytes. Unused bits are
     // shifted out.
-    *c = uint32_t(s[0] & masks[len]) << 18; // NOLINT(google-readability-casting)
-    *c |= uint32_t(s[1] & 0x3f) << 12;      // NOLINT(google-readability-casting)
-    *c |= uint32_t(s[2] & 0x3f) << 6;       // NOLINT(google-readability-casting)
-    *c |= uint32_t(s[3] & 0x3f) << 0;       // NOLINT(google-readability-casting)
+    *c = uint32(s[0] & masks[len]) << 18; // NOLINT(google-readability-casting)
+    *c |= uint32(s[1] & 0x3f) << 12;      // NOLINT(google-readability-casting)
+    *c |= uint32(s[2] & 0x3f) << 6;       // NOLINT(google-readability-casting)
+    *c |= uint32(s[3] & 0x3f) << 0;       // NOLINT(google-readability-casting)
     *c >>= shiftc[len];
 
     // Accumulate the various error conditions.
@@ -744,7 +744,7 @@ namespace detail
     return next;
   }
 
-  constexpr uint32_t invalid_code_point = ~uint32_t();
+  constexpr uint32 invalid_code_point = ~uint32();
 
   // Invokes f(cp, sv) for every code point cp in s with sv being the string view
   // corresponding to the code point. cp is invalid_code_point on error.
@@ -753,7 +753,7 @@ namespace detail
   {
     auto decode = [f](const char* bufPtr, const char* ptr)
     {
-      auto cp           = uint32_t();
+      auto cp           = uint32();
       auto error        = 0;
       const auto* end   = utf8_decode(bufPtr, &cp, &error);
       bool const result = f(error ? invalid_code_point : cp, string_view(ptr, error ? 1 : to_unsigned(static_cast<count_t>(end - bufPtr)))); // NOLINT(cppcoreguidelines-narrowing-conversions)
@@ -800,7 +800,7 @@ namespace detail
     struct count_code_points
     {
       count_t* count;
-      FMT_CONSTEXPR auto operator()(uint32_t cp, string_view /*unused*/) const -> bool
+      FMT_CONSTEXPR auto operator()(uint32 cp, string_view /*unused*/) const -> bool
       {
         *count += detail::to_unsigned(1 + (cp >= 0x1100 && (cp <= 0x115f || // NOLINT(cppcoreguidelines-narrowing-conversions, readability-implicit-bool-conversion) Hangul Jamo init. consonants
                                                             cp == 0x2329 || // LEFT-POINTING ANGLE BRACKET
@@ -1193,12 +1193,12 @@ FMT_CONSTEXPR auto is_supported_floating_point(T /*unused*/) -> bool
   return true;
 }
 
-// Smallest of uint32_t, uint64_t, uint128_t that is large enough to
+// Smallest of uint32, uint64, uint128_t that is large enough to
 // represent all values of an integral type T.
 template <typename T>
-using uint32_or_64_or_128_t = conditional_t<num_bits<T>() <= 32 && !FMT_REDUCE_INT_INSTANTIATIONS, uint32_t, conditional_t<num_bits<T>() <= 64, uint64_t, uint128_t>>;
+using uint32_or_64_or_128_t = conditional_t<num_bits<T>() <= 32 && !FMT_REDUCE_INT_INSTANTIATIONS, uint32, conditional_t<num_bits<T>() <= 64, uint64, uint128_t>>;
 template <typename T>
-using uint64_or_128_t = conditional_t<num_bits<T>() <= 64, uint64_t, uint128_t>;
+using uint64_or_128_t = conditional_t<num_bits<T>() <= 64, uint64, uint128_t>;
 
   #define FMT_POWERS_OF_10(factor) factor * 10, (factor)*100, (factor)*1000, (factor)*10000, (factor)*100000, (factor)*1000000, (factor)*10000000, (factor)*100000000, (factor)*1000000000
 
@@ -1254,23 +1254,23 @@ FMT_CONSTEXPR inline auto count_digits(uint128_opt n) -> int
   #ifdef FMT_BUILTIN_CLZLL
 // It is a separate function rather than a part of count_digits to workaround
 // the lack of static constexpr in constexpr functions.
-inline auto do_count_digits(uint64_t n) -> int
+inline auto do_count_digits(uint64 n) -> int
 {
   // This has comparable performance to the version by Kendall Willets
   // (https://github.com/fmtlib/format-benchmark/blob/master/digits10)
   // but uses smaller tables.
   // Maps bsr(n) to ceil(log10(pow(2, bsr(n) + 1) - 1)).
-  static constexpr uint8_t bsr2log10[]                   = {1,  1,  1,  2,  2,  2,  3,  3,  3,  4,  4,  4,  4,  5,  5,  5,  6,  6,  6,  7,  7,  7,  7,  8,  8,  8,  9,  9,  9,  10, 10, 10,
-                                                            10, 11, 11, 11, 12, 12, 12, 13, 13, 13, 13, 14, 14, 14, 15, 15, 15, 16, 16, 16, 16, 17, 17, 17, 18, 18, 18, 19, 19, 19, 19, 20};
-  auto t                                                 = bsr2log10[FMT_BUILTIN_CLZLL(n | 1) ^ 63];
-  static constexpr const uint64_t zero_or_powers_of_10[] = {0, 0, FMT_POWERS_OF_10(1U), FMT_POWERS_OF_10(1000000000ULL), 10000000000000000000ULL};
+  static constexpr uint8 bsr2log10[]                   = {1,  1,  1,  2,  2,  2,  3,  3,  3,  4,  4,  4,  4,  5,  5,  5,  6,  6,  6,  7,  7,  7,  7,  8,  8,  8,  9,  9,  9,  10, 10, 10,
+                                                          10, 11, 11, 11, 12, 12, 12, 13, 13, 13, 13, 14, 14, 14, 15, 15, 15, 16, 16, 16, 16, 17, 17, 17, 18, 18, 18, 19, 19, 19, 19, 20};
+  auto t                                               = bsr2log10[FMT_BUILTIN_CLZLL(n | 1) ^ 63];
+  static constexpr const uint64 zero_or_powers_of_10[] = {0, 0, FMT_POWERS_OF_10(1U), FMT_POWERS_OF_10(1000000000ULL), 10000000000000000000ULL};
   return t - (n < zero_or_powers_of_10[t]);
 }
   #endif
 
 // Returns the number of decimal digits in n. Leading zeros are not counted
 // except for n == 0 in which case count_digits returns 1.
-FMT_CONSTEXPR20 inline auto count_digits(uint64_t n) -> int
+FMT_CONSTEXPR20 inline auto count_digits(uint64 n) -> int
 {
   #ifdef FMT_BUILTIN_CLZLL
   if(!is_constant_evaluated())
@@ -1287,7 +1287,7 @@ FMT_CONSTEXPR auto count_digits(UInt n) -> int
 {
   #ifdef FMT_BUILTIN_CLZ
   if(!is_constant_evaluated() && num_bits<UInt>() == 32)
-    return (FMT_BUILTIN_CLZ(static_cast<uint32_t>(n) | 1) ^ 31) / BITS + 1;
+    return (FMT_BUILTIN_CLZ(static_cast<uint32>(n) | 1) ^ 31) / BITS + 1;
   #endif
   // Lambda avoids unreachable code warnings from NVHPC.
   return [](UInt m)
@@ -1304,12 +1304,12 @@ FMT_CONSTEXPR auto count_digits(UInt n) -> int
   #ifdef FMT_BUILTIN_CLZ
 // It is a separate function rather than a part of count_digits to workaround
 // the lack of static constexpr in constexpr functions.
-FMT_INLINE auto do_count_digits(uint32_t n) -> int
+FMT_INLINE auto do_count_digits(uint32 n) -> int
 {
     // An optimization by Kendall Willets from https://bit.ly/3uOIQrB.
     // This increments the upper 32 bits (log10(T) - 1) when >= T is added.
     #define FMT_INC(T) (((sizeof(#T) - 1ull) << 32) - T)
-  static constexpr uint64_t table[] = {
+  static constexpr uint64 table[] = {
       FMT_INC(0),          FMT_INC(0),          FMT_INC(0),          // 8
       FMT_INC(10),         FMT_INC(10),         FMT_INC(10),         // 64
       FMT_INC(100),        FMT_INC(100),        FMT_INC(100),        // 512
@@ -1328,7 +1328,7 @@ FMT_INLINE auto do_count_digits(uint32_t n) -> int
   #endif
 
 // Optional version of count_digits for better performance on 32-bit platforms.
-FMT_CONSTEXPR20 inline auto count_digits(uint32_t n) -> int
+FMT_CONSTEXPR20 inline auto count_digits(uint32 n) -> int
 {
   #ifdef FMT_BUILTIN_CLZ
   if(!is_constant_evaluated())
@@ -1531,7 +1531,7 @@ namespace dragonbox
   template <>
   struct float_info<float>
   {
-    using carrier_uint                                        = uint32_t;
+    using carrier_uint                                        = uint32;
     static constexpr int exponent_bits                        = 8;
     static constexpr int kappa                                = 1;
     static constexpr int big_divisor                          = 100;
@@ -1545,7 +1545,7 @@ namespace dragonbox
   template <>
   struct float_info<double>
   {
-    using carrier_uint                                        = uint64_t;
+    using carrier_uint                                        = uint64;
     static constexpr int exponent_bits                        = 11;
     static constexpr int kappa                                = 2;
     static constexpr int big_divisor                          = 1000;
@@ -1655,7 +1655,7 @@ struct basic_fp
       , e(0)
   {
   }
-  constexpr basic_fp(uint64_t fVal, int eVal)
+  constexpr basic_fp(uint64 fVal, int eVal)
       : f(fVal)
       , e(eVal)
   {
@@ -1728,20 +1728,20 @@ FMT_CONSTEXPR basic_fp<F> normalize(basic_fp<F> value)
 }
 
 // Computes lhs * rhs / pow(2, 64) rounded to nearest with half-up tie breaking.
-FMT_CONSTEXPR inline uint64_t multiply(uint64_t lhs, uint64_t rhs)
+FMT_CONSTEXPR inline uint64 multiply(uint64 lhs, uint64 rhs)
 {
   #if FMT_USE_INT128
   auto product = static_cast<__uint128_t>(lhs) * rhs;
-  auto f       = static_cast<uint64_t>(product >> 64);
-  return (static_cast<uint64_t>(product) & (1ULL << 63)) != 0 ? f + 1 : f;
+  auto f       = static_cast<uint64>(product >> 64);
+  return (static_cast<uint64>(product) & (1ULL << 63)) != 0 ? f + 1 : f;
   #else
   // Multiply 32-bit parts of significands.
-  const uint64_t mask = (1ULL << 32) - 1;
-  const uint64_t a = lhs >> 32, b = lhs & mask;                  // NOLINT(readability-isolate-declaration)
-  const uint64_t c = rhs >> 32, d = rhs & mask;                  // NOLINT(readability-isolate-declaration)
-  const uint64_t ac = a * c, bc = b * c, ad = a * d, bd = b * d; // NOLINT(readability-isolate-declaration)
+  const uint64 mask = (1ULL << 32) - 1;
+  const uint64 a = lhs >> 32, b = lhs & mask;                  // NOLINT(readability-isolate-declaration)
+  const uint64 c = rhs >> 32, d = rhs & mask;                  // NOLINT(readability-isolate-declaration)
+  const uint64 ac = a * c, bc = b * c, ad = a * d, bd = b * d; // NOLINT(readability-isolate-declaration)
   // Compute mid 64-bit of result and round.
-  const uint64_t mid = (bd >> 32) + (ad & mask) + (bc & mask) + (1U << 31);
+  const uint64 mid = (bd >> 32) + (ad & mask) + (bc & mask) + (1U << 31);
   return ac + (ad >> 32) + (bc >> 32) + (mid >> 32);
   #endif
 }
@@ -1757,7 +1757,7 @@ struct basic_data
   // Normalized 64-bit significands of pow(10, k), for k = -348, -340, ..., 340.
   // These are generated by support/compute-powers.py.
   // NOLINTNEXTLINE(modernize-avoid-c-arrays)
-  static constexpr uint64_t pow10_significands[87] = {
+  static constexpr uint64 pow10_significands[87] = {
       0xfa8fd5a0081c0288, 0xbaaee17fa23ebf76, 0x8b16fb203055ac76, 0xcf42894a5dce35ea, 0x9a6bb0aa55653b2d, 0xe61acf033d1a45df, 0xab70fe17c79ac6ca, 0xff77b1fcbebcdc4f, 0xbe5691ef416bd60c, 0x8dd01fad907ffc3c, 0xd3515c2831559a83,
       0x9d71ac8fada6c9b5, 0xea9c227723ee8bcb, 0xaecc49914078536d, 0x823c12795db6ce57, 0xc21094364dfb5637, 0x9096ea6f3848984f, 0xd77485cb25823ac7, 0xa086cfcd97bf97f4, 0xef340a98172aace5, 0xb23867fb2a35b28e, 0x84c8d4dfd2c63f3b,
       0xc5dd44271ad3cdba, 0x936b9fcebb25c996, 0xdbac6c247d62a584, 0xa3ab66580d5fdaf6, 0xf3e2f893dec3f126, 0xb5b5ada8aaff80b8, 0x87625f056c7c4a8b, 0xc9bcff6034c13053, 0x964e858c91ba2655, 0xdff9772470297ebd, 0xa6dfbd9fb8e5b88f,
@@ -1782,16 +1782,16 @@ struct basic_data
     #pragma GCC diagnostic pop
   #endif
 
-  static constexpr uint64_t power_of_10_64[20] = {1, FMT_POWERS_OF_10(1ULL), FMT_POWERS_OF_10(1000000000ULL), 10000000000000000000ULL}; // NOLINT(modernize-avoid-c-arrays)
+  static constexpr uint64 power_of_10_64[20] = {1, FMT_POWERS_OF_10(1ULL), FMT_POWERS_OF_10(1000000000ULL), 10000000000000000000ULL}; // NOLINT(modernize-avoid-c-arrays)
 };
 
   #if FMT_CPLUSPLUS < 201703L
 template <typename T>
-constexpr uint64_t basic_data<T>::pow10_significands[];
+constexpr uint64 basic_data<T>::pow10_significands[];
 template <typename T>
 constexpr int16_t basic_data<T>::pow10_exponents[];
 template <typename T>
-constexpr uint64_t basic_data<T>::power_of_10_64[];
+constexpr uint64 basic_data<T>::power_of_10_64[];
   #endif
 
 // This is a struct rather than an alias to avoid shadowing warnings in gcc.
@@ -1954,9 +1954,9 @@ auto write_ptr(OutputIt out, UIntPtr value, const basic_format_specs<Char>* spec
 }
 
 // Returns true iff the code point cp is printable.
-FMT_API auto is_printable(uint32_t cp) -> bool;
+FMT_API auto is_printable(uint32 cp) -> bool;
 
-inline auto needs_escape(uint32_t cp) -> bool
+inline auto needs_escape(uint32 cp) -> bool
 {
   return cp < 0x20 || cp == 0x7f || cp == '"' || cp == '\\' || !is_printable(cp);
 }
@@ -1966,18 +1966,18 @@ struct find_escape_result
 {
   const Char* begin;
   const Char* end;
-  uint32_t cp;
+  uint32 cp;
 };
 
 template <typename Char>
-using make_unsigned_char = typename conditional_t<rsl::is_integral<Char>::value, rsl::make_unsigned<Char>, type_identity<uint32_t>>::type;
+using make_unsigned_char = typename conditional_t<rsl::is_integral<Char>::value, rsl::make_unsigned<Char>, type_identity<uint32>>::type;
 
 template <typename Char>
 auto find_escape(const Char* begin, const Char* end) -> find_escape_result<Char>
 {
   for(; begin != end; ++begin)
   {
-    const uint32_t cp = static_cast<make_unsigned_char<Char>>(*begin);
+    const uint32 cp = static_cast<make_unsigned_char<Char>>(*begin);
     if(const_check(sizeof(Char) == 1) && cp >= 0x80)
       continue;
     if(needs_escape(cp))
@@ -1992,7 +1992,7 @@ inline auto find_escape(const char* begin, const char* end) -> find_escape_resul
     return find_escape<char>(begin, end);
   auto result = find_escape_result<char> {end, nullptr, 0};
   for_each_codepoint(string_view(begin, to_unsigned(static_cast<count_t>(end - begin))), // NOLINT(cppcoreguidelines-narrowing-conversions)
-                     [&](uint32_t cp, string_view sv)
+                     [&](uint32 cp, string_view sv)
                      {
                        if(needs_escape(cp))
                        {
@@ -2033,7 +2033,7 @@ inline auto find_escape(const char* begin, const char* end) -> find_escape_resul
   #define FMT_STRING(s) FMT_STRING_IMPL(s, rsl::detail::compile_string, )
 
 template <count_t Width, typename Char, typename OutputIt>
-auto write_codepoint(OutputIt out, char prefix, uint32_t cp) -> OutputIt
+auto write_codepoint(OutputIt out, char prefix, uint32 cp) -> OutputIt
 {
   *out++ = static_cast<Char>('\\');
   *out++ = static_cast<Char>(prefix);
@@ -2082,7 +2082,7 @@ auto write_escaped_cp(OutputIt out, const find_escape_result<Char>& escape) -> O
       }
       for(Char escape_char: basic_string_view<Char>(escape.begin, to_unsigned(static_cast<count_t>(escape.end - escape.begin))))
       {
-        out = write_codepoint<2, Char>(out, 'x', static_cast<uint32_t>(escape_char) & 0xFF);
+        out = write_codepoint<2, Char>(out, 'x', static_cast<uint32>(escape_char) & 0xFF);
       }
       return out;
   }
@@ -2112,9 +2112,9 @@ template <typename Char, typename OutputIt>
 auto write_escaped_char(OutputIt out, Char v) -> OutputIt
 {
   *out++ = static_cast<Char>('\'');
-  if((needs_escape(static_cast<uint32_t>(v)) && v != static_cast<Char>('"')) || v == static_cast<Char>('\''))
+  if((needs_escape(static_cast<uint32>(v)) && v != static_cast<Char>('"')) || v == static_cast<Char>('\''))
   {
-    out = write_escaped_cp(out, find_escape_result<Char> {&v, &v + 1, static_cast<uint32_t>(v)});
+    out = write_escaped_cp(out, find_escape_result<Char> {&v, &v + 1, static_cast<uint32>(v)});
   }
   else
   {
@@ -2865,8 +2865,8 @@ FMT_INLINE FMT_CONSTEXPR bool signbit(T value)
   #ifdef __cpp_if_constexpr
     if constexpr(rsl::numeric_limits<double>::is_iec559)
     {
-      auto bits = detail::bit_cast<uint64_t>(static_cast<double>(value));
-      return (bits >> (num_bits<uint64_t>() - 1)) != 0;
+      auto bits = detail::bit_cast<uint64>(static_cast<double>(value));
+      return (bits >> (num_bits<uint64>() - 1)) != 0;
     }
   #endif
   }
@@ -2884,7 +2884,7 @@ enum class round_direction
 // some number v and the error, returns whether v should be rounded up, down, or
 // whether the rounding direction can't be determined due to error.
 // error should be less than divisor / 2.
-FMT_CONSTEXPR inline round_direction get_round_direction(uint64_t divisor, uint64_t remainder, uint64_t error)
+FMT_CONSTEXPR inline round_direction get_round_direction(uint64 divisor, uint64 remainder, uint64 error)
 {
   FMT_ASSERT(remainder < divisor, "");     // divisor - remainder won't overflow.
   FMT_ASSERT(error < divisor, "");         // divisor - error won't overflow.
@@ -2918,7 +2918,7 @@ struct gen_digits_handler
   int exp10;
   bool fixed;
 
-  FMT_CONSTEXPR digits::result on_digit(char digit, uint64_t divisor, uint64_t remainder, uint64_t error, bool integral)
+  FMT_CONSTEXPR digits::result on_digit(char digit, uint64 divisor, uint64 remainder, uint64 error, bool integral)
   {
     FMT_ASSERT(remainder < divisor, "");
     buf[size++] = digit;
@@ -2975,18 +2975,18 @@ inline FMT_CONSTEXPR20 void adjust_precision(int& precision, int exp10)
 // Generates output using the Grisu digit-gen algorithm.
 // error: the size of the region (lower, upper) outside of which numbers
 // definitely do not round to value (Delta in Grisu3).
-FMT_INLINE FMT_CONSTEXPR20 auto grisu_gen_digits(fp value, uint64_t error, int& exp, gen_digits_handler& handler) -> digits::result
+FMT_INLINE FMT_CONSTEXPR20 auto grisu_gen_digits(fp value, uint64 error, int& exp, gen_digits_handler& handler) -> digits::result
 {
   const fp one(1ULL << -value.e, value.e);
   // The integral part of scaled value (p1 in Grisu) = value / one. It cannot be
   // zero because it contains a product of two 64-bit numbers with MSB set (due
   // to normalization) - 1, shifted right by at most 60 bits.
-  auto integral = static_cast<uint32_t>(value.f >> -one.e);
+  auto integral = static_cast<uint32>(value.f >> -one.e);
   FMT_ASSERT(integral != 0, "");
   FMT_ASSERT(integral == value.f >> -one.e, "");
   // The fractional part of scaled value (p2 in Grisu) c = value % one.
-  uint64_t fractional = value.f & (one.f - 1);
-  exp                 = count_digits(integral); // kappa in Grisu.
+  uint64 fractional = value.f & (one.f - 1);
+  exp               = count_digits(integral); // kappa in Grisu.
   // Non-fixed formats require at least one digit and no precision adjustment.
   if(handler.fixed)
   {
@@ -2998,8 +2998,8 @@ FMT_INLINE FMT_CONSTEXPR20 auto grisu_gen_digits(fp value, uint64_t error, int& 
       if(handler.precision < 0)
         return digits::done;
       // Divide by 10 to prevent overflow.
-      const uint64_t divisor = data::power_of_10_64[exp - 1] << -one.e;
-      auto dir               = get_round_direction(divisor, value.f / 10, error * 10);
+      const uint64 divisor = data::power_of_10_64[exp - 1] << -one.e;
+      auto dir             = get_round_direction(divisor, value.f / 10, error * 10);
       if(dir == round_direction::unknown)
         return digits::error;
       handler.buf[handler.size++] = dir == round_direction::up ? '1' : '0';
@@ -3009,8 +3009,8 @@ FMT_INLINE FMT_CONSTEXPR20 auto grisu_gen_digits(fp value, uint64_t error, int& 
   // Generate digits for the integral part. This can produce up to 10 digits.
   do
   {
-    uint32_t digit       = 0;
-    auto divmod_integral = [&](uint32_t divisor)
+    uint32 digit         = 0;
+    auto divmod_integral = [&](uint32 divisor)
     {
       digit = integral / divisor;
       integral %= divisor;
@@ -3035,7 +3035,7 @@ FMT_INLINE FMT_CONSTEXPR20 auto grisu_gen_digits(fp value, uint64_t error, int& 
       default: FMT_ASSERT(false, "invalid number of digits");
     }
     --exp;
-    auto remainder = (static_cast<uint64_t>(integral) << -one.e) + fractional;
+    auto remainder = (static_cast<uint64>(integral) << -one.e) + fractional;
     auto result    = handler.on_digit(static_cast<char>('0' + digit), data::power_of_10_64[exp] << -one.e, remainder, error, true);
     if(result != digits::more)
       return result;
@@ -3059,8 +3059,8 @@ class bigint
 private:
   // A bigint is stored as an array of bigits (big digits), with bigit at index
   // 0 being the least significant one.
-  using bigit        = uint32_t;
-  using double_bigit = uint64_t;
+  using bigit        = uint32;
+  using double_bigit = uint64;
   enum
   {
     bigits_capacity = 32
@@ -3110,7 +3110,7 @@ private:
     remove_leading_zeros();
   }
 
-  FMT_CONSTEXPR20 void multiply(uint32_t value)
+  FMT_CONSTEXPR20 void multiply(uint32 value)
   {
     const double_bigit wide_value = value;
     bigit carry                   = 0;
@@ -3124,10 +3124,10 @@ private:
       m_bigits.push_back(carry);
   }
 
-  template <typename UInt, FMT_ENABLE_IF(rsl::is_same<UInt, uint64_t>::value || rsl::is_same<UInt, uint128_t>::value)>
+  template <typename UInt, FMT_ENABLE_IF(rsl::is_same<UInt, uint64>::value || rsl::is_same<UInt, uint128_t>::value)>
   FMT_CONSTEXPR20 void multiply(UInt value)
   {
-    using half_uint  = conditional_t<rsl::is_same<UInt, uint128_t>::value, uint64_t, uint32_t>;
+    using half_uint  = conditional_t<rsl::is_same<UInt, uint128_t>::value, uint64, uint32>;
     const int shift  = num_bits<half_uint>() - bigit_bits;
     const UInt lower = static_cast<half_uint>(value);
     const UInt upper = value >> num_bits<half_uint>();
@@ -3145,7 +3145,7 @@ private:
     }
   }
 
-  template <typename UInt, FMT_ENABLE_IF(rsl::is_same<UInt, uint64_t>::value || rsl::is_same<UInt, uint128_t>::value)>
+  template <typename UInt, FMT_ENABLE_IF(rsl::is_same<UInt, uint64>::value || rsl::is_same<UInt, uint128_t>::value)>
   FMT_CONSTEXPR20 void assign(UInt n)
   {
     count_t num_bigits = 0;
@@ -3163,7 +3163,7 @@ public:
       : m_exp(0)
   {
   }
-  explicit bigint(uint64_t n) // NOLINT(cppcoreguidelines-pro-type-member-init)
+  explicit bigint(uint64 n) // NOLINT(cppcoreguidelines-pro-type-member-init)
   {
     assign(n);
   }

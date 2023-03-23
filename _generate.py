@@ -23,6 +23,7 @@ if __name__ == "__main__":
   parser.add_argument("-asan", help="generate address sanitizer", action="store_true")
   parser.add_argument("-ubsan", help="generate undefined behavior sanitizer", action="store_true")
   parser.add_argument("-fuzzy", help="generate fuzzy testing", action="store_true")
+  parser.add_argument("-noclangtools", help="disable clang tools", action="store_true")
 
   args, unknown = parser.parse_known_args()
 
@@ -31,8 +32,13 @@ if __name__ == "__main__":
 
   run_any_tests = args.unittests or args.coverage or args.asan or args.ubsan or args.fuzzy
 
+  sharpmake_args = ""
+
+  if args.noclangtools:
+    sharpmake_args += "/noClangTools"
+
   if run_any_tests == False:
-    regis.generation.new_generation(settings_path, "")
+    regis.generation.new_generation(settings_path, sharpmake_args)
 
   if args.unittests:
     regis.generation.new_generation(settings_path, "/generateUnitTests")

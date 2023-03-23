@@ -155,41 +155,41 @@ namespace detail
   }
 
   // Compilers should be able to optimize this into the ror instruction.
-  FMT_CONSTEXPR inline uint32_t rotr(uint32_t n, uint32_t r) noexcept
+  FMT_CONSTEXPR inline uint32 rotr(uint32 n, uint32 r) noexcept
   {
     r &= 31;
     return (n >> r) | (n << (32 - r));
   }
-  FMT_CONSTEXPR inline uint64_t rotr(uint64_t n, uint32_t r) noexcept
+  FMT_CONSTEXPR inline uint64 rotr(uint64 n, uint32 r) noexcept
   {
     r &= 63;
     return (n >> r) | (n << (64 - r));
   }
 
   // Computes 128-bit result of multiplication of two 64-bit unsigned integers.
-  inline uint128_fallback umul128(uint64_t x, uint64_t y) noexcept
+  inline uint128_fallback umul128(uint64 x, uint64 y) noexcept
   {
 #if FMT_USE_INT128
     auto p = static_cast<uint128_opt>(x) * static_cast<uint128_opt>(y);
-    return {static_cast<uint64_t>(p >> 64), static_cast<uint64_t>(p)};
+    return {static_cast<uint64>(p >> 64), static_cast<uint64>(p)};
 #elif defined(_MSC_VER) && defined(_M_X64)
     auto result = uint128_fallback();
     result.m_lo = _umul128(x, y, &result.m_hi);
     return result;
 #else
-    const uint64_t mask = static_cast<uint64_t>(max_value<uint32_t>());
+    const uint64 mask = static_cast<uint64>(max_value<uint32>());
 
-    uint64_t a = x >> 32;
-    uint64_t b = x & mask;
-    uint64_t c = y >> 32;
-    uint64_t d = y & mask;
+    uint64 a = x >> 32;
+    uint64 b = x & mask;
+    uint64 c = y >> 32;
+    uint64 d = y & mask;
 
-    uint64_t ac = a * c;
-    uint64_t bc = b * c;
-    uint64_t ad = a * d;
-    uint64_t bd = b * d;
+    uint64 ac = a * c;
+    uint64 bc = b * c;
+    uint64 ad = a * d;
+    uint64 bd = b * d;
 
-    uint64_t intermediate = (bd >> 32) + (ad & mask) + (bc & mask);
+    uint64 intermediate = (bd >> 32) + (ad & mask) + (bc & mask);
 
     return {ac + (intermediate >> 32) + (ad >> 32) + (bc >> 32), (intermediate << 32) + (bd & mask)};
 #endif
@@ -199,11 +199,11 @@ namespace detail
   namespace dragonbox
   {
     // Computes upper 64 bits of multiplication of two 64-bit unsigned integers.
-    inline uint64_t umul128_upper64(uint64_t x, uint64_t y) noexcept
+    inline uint64 umul128_upper64(uint64 x, uint64 y) noexcept
     {
 #if FMT_USE_INT128
       auto p = static_cast<uint128_opt>(x) * static_cast<uint128_opt>(y);
-      return static_cast<uint64_t>(p >> 64);
+      return static_cast<uint64>(p >> 64);
 #elif defined(_MSC_VER) && defined(_M_X64)
       return __umulh(x, y);
 #else
@@ -213,7 +213,7 @@ namespace detail
 
     // Computes upper 128 bits of multiplication of a 64-bit unsigned integer and a
     // 128-bit unsigned integer.
-    inline uint128_fallback umul192_upper128(uint64_t x, uint128_fallback y) noexcept
+    inline uint128_fallback umul192_upper128(uint64 x, uint128_fallback y) noexcept
     {
       uint128_fallback r = umul128(x, y.high());
       r += umul128_upper64(x, y.low());
@@ -222,23 +222,23 @@ namespace detail
 
     // Computes upper 64 bits of multiplication of a 32-bit unsigned integer and a
     // 64-bit unsigned integer.
-    inline uint64_t umul96_upper64(uint32_t x, uint64_t y) noexcept
+    inline uint64 umul96_upper64(uint32 x, uint64 y) noexcept
     {
-      return umul128_upper64(static_cast<uint64_t>(x) << 32, y);
+      return umul128_upper64(static_cast<uint64>(x) << 32, y);
     }
 
     // Computes lower 128 bits of multiplication of a 64-bit unsigned integer and a
     // 128-bit unsigned integer.
-    inline uint128_fallback umul192_lower128(uint64_t x, uint128_fallback y) noexcept
+    inline uint128_fallback umul192_lower128(uint64 x, uint128_fallback y) noexcept
     {
-      const uint64_t high             = x * y.high();
+      const uint64 high               = x * y.high();
       const uint128_fallback high_low = umul128(x, y.low());
       return {high + high_low.high(), high_low.low()};
     }
 
     // Computes lower 64 bits of multiplication of a 32-bit unsigned integer and a
     // 64-bit unsigned integer.
-    inline uint64_t umul96_lower64(uint32_t x, uint64_t y) noexcept
+    inline uint64 umul96_lower64(uint32 x, uint64 y) noexcept
     {
       return x * y;
     }
@@ -266,7 +266,7 @@ namespace detail
 
     static constexpr struct // NOLINT(modernize-avoid-c-arrays)
     {
-      uint32_t divisor;
+      uint32 divisor;
       int shift_amount;
     } div_small_pow10_infos[] = {{10, 16}, {100, 16}};
 
@@ -274,7 +274,7 @@ namespace detail
     // divisible by pow(10, N).
     // Precondition: n <= pow(10, N + 1).
     template <int N>
-    bool check_divisibility_and_divide_by_pow10(uint32_t& n) noexcept
+    bool check_divisibility_and_divide_by_pow10(uint32& n) noexcept
     {
       // The numbers below are chosen such that:
       //   1. floor(n/d) = floor(nm / 2^k) where d=10 or d=100,
@@ -289,10 +289,10 @@ namespace detail
       // The idea for item 2 originates from Schubfach.
       constexpr auto info = div_small_pow10_infos[N - 1];
       FMT_ASSERT(n <= info.divisor * 10, "n is too large");
-      constexpr uint32_t magic_number = (1u << info.shift_amount) / info.divisor + 1;
+      constexpr uint32 magic_number = (1u << info.shift_amount) / info.divisor + 1;
       n *= magic_number;
-      const uint32_t comparison_mask = (1u << info.shift_amount) - 1;
-      const bool result              = (n & comparison_mask) < magic_number;
+      const uint32 comparison_mask = (1u << info.shift_amount) - 1;
+      const bool result            = (n & comparison_mask) < magic_number;
       n >>= info.shift_amount;
       return result;
     }
@@ -300,22 +300,22 @@ namespace detail
     // Computes floor(n / pow(10, N)) for small n and N.
     // Precondition: n <= pow(10, N + 1).
     template <int N>
-    uint32_t small_division_by_pow10(uint32_t n) noexcept
+    uint32 small_division_by_pow10(uint32 n) noexcept
     {
       constexpr auto info = div_small_pow10_infos[N - 1];
       FMT_ASSERT(n <= info.divisor * 10, "n is too large");
-      constexpr uint32_t magic_number = (1u << info.shift_amount) / info.divisor + 1;
+      constexpr uint32 magic_number = (1u << info.shift_amount) / info.divisor + 1;
       return (n * magic_number) >> info.shift_amount;
     }
 
     // Computes floor(n / 10^(kappa + 1)) (float)
-    inline uint32_t divide_by_10_to_kappa_plus_1(uint32_t n) noexcept
+    inline uint32 divide_by_10_to_kappa_plus_1(uint32 n) noexcept
     {
       // 1374389535 = ceil(2^37/100)
-      return static_cast<uint32_t>((static_cast<uint64_t>(n) * 1374389535) >> 37);
+      return static_cast<uint32>((static_cast<uint64>(n) * 1374389535) >> 37);
     }
     // Computes floor(n / 10^(kappa + 1)) (double)
-    inline uint64_t divide_by_10_to_kappa_plus_1(uint64_t n) noexcept
+    inline uint64 divide_by_10_to_kappa_plus_1(uint64 n) noexcept
     {
       // 2361183241434822607 = ceil(2^(64+7)/1000)
       return umul128_upper64(n, 2361183241434822607ull) >> 7;
@@ -329,13 +329,13 @@ namespace detail
     struct cache_accessor<float>
     {
       using carrier_uint     = float_info<float>::carrier_uint;
-      using cache_entry_type = uint64_t;
+      using cache_entry_type = uint64;
 
-      static uint64_t get_cached_power(int k) noexcept
+      static uint64 get_cached_power(int k) noexcept
       {
         FMT_ASSERT(k >= float_info<float>::min_k && k <= float_info<float>::max_k, "k is out of range");
         // NOLINTNEXTLINE(modernize-avoid-c-arrays)
-        static constexpr const uint64_t pow10_significands[] = {
+        static constexpr const uint64 pow10_significands[] = {
             0x81ceb32c4b43fcf5, 0xa2425ff75e14fc32, 0xcad2f7f5359a3b3f, 0xfd87b5f28300ca0e, 0x9e74d1b791e07e49, 0xc612062576589ddb, 0xf79687aed3eec552, 0x9abe14cd44753b53, 0xc16d9a0095928a28, // NOLINT(modernize-avoid-c-arrays)
             0xf1c90080baf72cb2, 0x971da05074da7bef, 0xbce5086492111aeb, 0xec1e4a7db69561a6, 0x9392ee8e921d5d08, 0xb877aa3236a4b44a, 0xe69594bec44de15c, 0x901d7cf73ab0acda, 0xb424dc35095cd810, 0xe12e13424bb40e14,
             0x8cbccc096f5088cc, 0xafebff0bcb24aaff, 0xdbe6fecebdedd5bf, 0x89705f4136b4a598, 0xabcc77118461cefd, 0xd6bf94d5e57a42bd, 0x8637bd05af6c69b6, 0xa7c5ac471b478424, 0xd1b71758e219652c, 0x83126e978d4fdf3c,
@@ -364,9 +364,9 @@ namespace detail
         return {static_cast<carrier_uint>(r >> 32), static_cast<carrier_uint>(r) == 0};
       }
 
-      static uint32_t compute_delta(const cache_entry_type& cache, int beta) noexcept
+      static uint32 compute_delta(const cache_entry_type& cache, int beta) noexcept
       {
-        return static_cast<uint32_t>(cache >> (64 - 1 - beta));
+        return static_cast<uint32>(cache >> (64 - 1 - beta));
       }
 
       static compute_mul_parity_result compute_mul_parity(carrier_uint twoF, const cache_entry_type& cache, int beta) noexcept
@@ -375,7 +375,7 @@ namespace detail
         FMT_ASSERT(beta < 64, "");
 
         auto r = umul96_lower64(twoF, cache);
-        return {((r >> (64 - beta)) & 1) != 0, static_cast<uint32_t>(r >> (32 - beta)) == 0};
+        return {((r >> (64 - beta)) & 1) != 0, static_cast<uint32>(r >> (32 - beta)) == 0};
       }
 
       static carrier_uint compute_left_endpoint_for_shorter_interval_case(const cache_entry_type& cache, int beta) noexcept
@@ -1056,10 +1056,10 @@ namespace detail
 #if FMT_USE_FULL_CACHE_DRAGONBOX
         return pow10_significands[k - float_info<double>::min_k];
 #else
-        static constexpr const uint64_t powers_of_5_64[] = {// NOLINT(modernize-avoid-c-arrays)
-                                                            0x0000000000000001, 0x0000000000000005, 0x0000000000000019, 0x000000000000007d, 0x0000000000000271, 0x0000000000000c35, 0x0000000000003d09, 0x000000000001312d, 0x000000000005f5e1,
-                                                            0x00000000001dcd65, 0x00000000009502f9, 0x0000000002e90edd, 0x000000000e8d4a51, 0x0000000048c27395, 0x000000016bcc41e9, 0x000000071afd498d, 0x0000002386f26fc1, 0x000000b1a2bc2ec5,
-                                                            0x000003782dace9d9, 0x00001158e460913d, 0x000056bc75e2d631, 0x0001b1ae4d6e2ef5, 0x000878678326eac9, 0x002a5a058fc295ed, 0x00d3c21bcecceda1, 0x0422ca8b0a00a425, 0x14adf4b7320334b9};
+        static constexpr const uint64 powers_of_5_64[] = {// NOLINT(modernize-avoid-c-arrays)
+                                                          0x0000000000000001, 0x0000000000000005, 0x0000000000000019, 0x000000000000007d, 0x0000000000000271, 0x0000000000000c35, 0x0000000000003d09, 0x000000000001312d, 0x000000000005f5e1,
+                                                          0x00000000001dcd65, 0x00000000009502f9, 0x0000000002e90edd, 0x000000000e8d4a51, 0x0000000048c27395, 0x000000016bcc41e9, 0x000000071afd498d, 0x0000002386f26fc1, 0x000000b1a2bc2ec5,
+                                                          0x000003782dace9d9, 0x00001158e460913d, 0x000056bc75e2d631, 0x0001b1ae4d6e2ef5, 0x000878678326eac9, 0x002a5a058fc295ed, 0x00d3c21bcecceda1, 0x0422ca8b0a00a425, 0x14adf4b7320334b9};
 
         static const int s_compression_ratio = 27;
 
@@ -1078,14 +1078,14 @@ namespace detail
         FMT_ASSERT(alpha > 0 && alpha < 64, "shifting error detected");
 
         // Try to recover the real cache.
-        const uint64_t pow5               = powers_of_5_64[offset];
+        const uint64 pow5                 = powers_of_5_64[offset];
         uint128_fallback recovered_cache  = umul128(base_cache.high(), pow5);
         const uint128_fallback middle_low = umul128(base_cache.low(), pow5);
 
         recovered_cache += middle_low.high();
 
-        const uint64_t high_to_middle = recovered_cache.high() << (64 - alpha);
-        const uint64_t middle_to_low  = recovered_cache.low() << (64 - alpha);
+        const uint64 high_to_middle = recovered_cache.high() << (64 - alpha);
+        const uint64 middle_to_low  = recovered_cache.low() << (64 - alpha);
 
         recovered_cache = uint128_fallback {(recovered_cache.low() >> alpha) | high_to_middle, ((middle_low.low() >> alpha) | middle_to_low)};
         FMT_ASSERT(recovered_cache.low() + 1 != 0, "");
@@ -1110,9 +1110,9 @@ namespace detail
         return {r.high(), r.low() == 0};
       }
 
-      static uint32_t compute_delta(const cache_entry_type& cache, int beta) noexcept
+      static uint32 compute_delta(const cache_entry_type& cache, int beta) noexcept
       {
-        return static_cast<uint32_t>(cache.high() >> (64 - 1 - beta));
+        return static_cast<uint32>(cache.high() >> (64 - 1 - beta));
       }
 
       static compute_mul_parity_result compute_mul_parity(carrier_uint twoF, const cache_entry_type& cache, int beta) noexcept
@@ -1150,23 +1150,23 @@ namespace detail
     }
 
     // Remove trailing zeros from n and return the number of zeros removed (float)
-    FMT_INLINE int remove_trailing_zeros(uint32_t& n) noexcept
+    FMT_INLINE int remove_trailing_zeros(uint32& n) noexcept
     {
       FMT_ASSERT(n != 0, "");
-      const uint32_t mod_inv_5  = 0xcccccccd;
-      const uint32_t mod_inv_25 = mod_inv_5 * mod_inv_5;
+      const uint32 mod_inv_5  = 0xcccccccd;
+      const uint32 mod_inv_25 = mod_inv_5 * mod_inv_5;
 
       int s = 0;
       while(true)
       {
         auto q = rotr(n * mod_inv_25, 2);
-        if(q > max_value<uint32_t>() / 100)
+        if(q > max_value<uint32>() / 100)
           break;
         n = q;
         s += 2;
       }
       auto q = rotr(n * mod_inv_5, 1);
-      if(q <= max_value<uint32_t>() / 10)
+      if(q <= max_value<uint32>() / 10)
       {
         n = q;
         s |= 1;
@@ -1176,34 +1176,34 @@ namespace detail
     }
 
     // Removes trailing zeros and returns the number of zeros removed (double)
-    FMT_INLINE int remove_trailing_zeros(uint64_t& n) noexcept
+    FMT_INLINE int remove_trailing_zeros(uint64& n) noexcept
     {
       FMT_ASSERT(n != 0, "");
 
       // This magic number is ceil(2^90 / 10^8).
-      constexpr uint64_t magic_number = 12379400392853802749ull;
-      auto nm                         = umul128(n, magic_number);
+      constexpr uint64 magic_number = 12379400392853802749ull;
+      auto nm                       = umul128(n, magic_number);
 
       // Is n is divisible by 10^8?
       if((nm.high() & ((1ull << (90 - 64)) - 1)) == 0 && nm.low() < magic_number)
       {
         // If yes, work with the quotient.
-        auto n32 = static_cast<uint32_t>(nm.high() >> (90 - 64));
+        auto n32 = static_cast<uint32>(nm.high() >> (90 - 64));
 
-        const uint32_t mod_inv_5  = 0xcccccccd;
-        const uint32_t mod_inv_25 = mod_inv_5 * mod_inv_5;
+        const uint32 mod_inv_5  = 0xcccccccd;
+        const uint32 mod_inv_25 = mod_inv_5 * mod_inv_5;
 
         int s = 8;
         while(true)
         {
           auto q = rotr(n32 * mod_inv_25, 2);
-          if(q > max_value<uint32_t>() / 100)
+          if(q > max_value<uint32>() / 100)
             break;
           n32 = q;
           s += 2;
         }
         auto q = rotr(n32 * mod_inv_5, 1);
-        if(q <= max_value<uint32_t>() / 10)
+        if(q <= max_value<uint32>() / 10)
         {
           n32 = q;
           s |= 1;
@@ -1214,20 +1214,20 @@ namespace detail
       }
 
       // If n is not divisible by 10^8, work with n itself.
-      const uint64_t mod_inv_5  = 0xcccccccccccccccd;
-      const uint64_t mod_inv_25 = mod_inv_5 * mod_inv_5;
+      const uint64 mod_inv_5  = 0xcccccccccccccccd;
+      const uint64 mod_inv_25 = mod_inv_5 * mod_inv_5;
 
       int s = 0;
       while(true)
       {
         auto q = rotr(n * mod_inv_25, 2);
-        if(q > max_value<uint64_t>() / 100)
+        if(q > max_value<uint64>() / 100)
           break;
         n = q;
         s += 2;
       }
       auto q = rotr(n * mod_inv_5, 1);
-      if(q <= max_value<uint64_t>() / 10)
+      if(q <= max_value<uint64>() / 10)
       {
         n = q;
         s |= 1;
@@ -1284,12 +1284,12 @@ namespace detail
     }
 
     template <typename T>
-    decimal_fp<T> to_decimal_small_divisor(decimal_fp<T> value, uint32_t r, int beta, uint32_t deltai, typename float_info<T>::carrier_uint twoFc, const int minusK, typename cache_accessor<T>::cache_entry_type cache)
+    decimal_fp<T> to_decimal_small_divisor(decimal_fp<T> value, uint32 r, int beta, uint32 deltai, typename float_info<T>::carrier_uint twoFc, const int minusK, typename cache_accessor<T>::cache_entry_type cache)
     {
       value.significand *= 10;
       value.exponent = minusK + float_info<T>::kappa;
 
-      uint32_t dist              = r - (deltai / 2) + (float_info<T>::small_divisor / 2);
+      uint32 dist                = r - (deltai / 2) + (float_info<T>::small_divisor / 2);
       const bool approx_y_parity = ((dist ^ (float_info<T>::small_divisor / 2)) & 1) != 0;
 
       // Is dist divisible by 10^kappa?
@@ -1362,7 +1362,7 @@ namespace detail
 
       // Compute zi and deltai.
       // 10^kappa <= deltai < 10^(kappa + 1)
-      const uint32_t deltai     = cache_accessor<T>::compute_delta(cache, beta);
+      const uint32 deltai       = cache_accessor<T>::compute_delta(cache, beta);
       const carrier_uint two_fc = significand << 1;
 
       // For the case of binary32, the result of integer check is not correct for
@@ -1383,7 +1383,7 @@ namespace detail
       // better than the compiler; we are computing zi / big_divisor here.
       decimal_fp<T> ret_value {};
       ret_value.significand = divide_by_10_to_kappa_plus_1(z_mul.result);
-      uint32_t r            = static_cast<uint32_t>(z_mul.result - float_info<T>::big_divisor * ret_value.significand);
+      uint32 r              = static_cast<uint32>(z_mul.result - float_info<T>::big_divisor * ret_value.significand);
 
       if(r < deltai)
       {
@@ -1460,7 +1460,7 @@ struct formatter<detail::bigint>
 FMT_FUNC detail::utf8_to_utf16::utf8_to_utf16(string_view s) // NOLINT(misc-definitions-in-headers)
 {
   for_each_codepoint(s,
-                     [this](uint32_t cp, string_view)
+                     [this](uint32 cp, string_view)
                      {
                        if(cp == invalid_code_point)
                          FMT_THROW(std::runtime_error("invalid utf8"));
@@ -1520,7 +1520,7 @@ namespace detail
       detail::utf8_to_utf16 const u16(string_view(text.data(), text.size()));
       auto written = detail::dword();
       // NOLINTNEXTLINE(performance-no-int-to-ptr, cppcoreguidelines-pro-type-reinterpret-cast, readability-implicit-bool-conversion)
-      if(detail::WriteConsoleW(reinterpret_cast<void*>(_get_osfhandle(fd)), u16.c_str(), static_cast<uint32_t>(u16.size()), &written, nullptr) != 0)
+      if(detail::WriteConsoleW(reinterpret_cast<void*>(_get_osfhandle(fd)), u16.c_str(), static_cast<uint32>(u16.size()), &written, nullptr) != 0)
       {
         return true;
       }
@@ -1574,7 +1574,7 @@ namespace detail
     unsigned char lower_count;
   };
 
-  inline auto is_printable(uint16_t x, const singleton* singletons, size_t singletonsSize, const unsigned char* singletonLowers, const unsigned char* normal, size_t normalSize) -> bool
+  inline auto is_printable(uint16 x, const singleton* singletons, size_t singletonsSize, const unsigned char* singletonLowers, const unsigned char* normal, size_t normalSize) -> bool
   {
     auto upper       = x >> 8;
     auto lower_start = 0;
@@ -1610,7 +1610,7 @@ namespace detail
   }
 
   // This code is generated by support/printable.py.
-  FMT_FUNC auto is_printable(uint32_t cp) -> bool // NOLINT(misc-definitions-in-headers)
+  FMT_FUNC auto is_printable(uint32 cp) -> bool // NOLINT(misc-definitions-in-headers)
   {
     // NOLINTNEXTLINE(modernize-avoid-c-arrays)
     static constexpr singleton singletons0[] = {
@@ -1666,7 +1666,7 @@ namespace detail
         0x81, 0x0e, 0x2c, 0x04, 0x64, 0x0c, 0x56, 0x0a, 0x80, 0xae, 0x38, 0x1d, 0x0d, 0x2c, 0x04, 0x09, 0x07, 0x02, 0x0e, 0x06, 0x80, 0x9a, 0x83, 0xd8, 0x08, 0x0d, 0x03, 0x0d, 0x03, 0x74, 0x0c, 0x59, 0x07, 0x0c, 0x14, 0x0c, 0x04, 0x38, 0x08,
         0x0a, 0x06, 0x28, 0x08, 0x22, 0x4e, 0x81, 0x54, 0x0c, 0x15, 0x03, 0x03, 0x05, 0x07, 0x09, 0x19, 0x07, 0x07, 0x09, 0x03, 0x0d, 0x07, 0x29, 0x80, 0xcb, 0x25, 0x0a, 0x84, 0x06,
     };
-    auto lower = static_cast<uint16_t>(cp);
+    auto lower = static_cast<uint16>(cp);
     if(cp < 0x10000)
     {
       return is_printable(lower, singletons0, sizeof(singletons0) / sizeof(*singletons0), singletons0_lower, normal0, sizeof(normal0));

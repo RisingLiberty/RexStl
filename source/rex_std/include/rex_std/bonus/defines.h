@@ -37,8 +37,9 @@
   #define STATIC_INFO(expr)  __pragma(message(STATIC_INFO_PREFIX##expr))
 #endif
 
-#define MERGE2(A, B) A##B
-#define MERGE(A, B)  MERGE2(A, B)
+#define MERGE(a, b)  MERGE1(a, b)
+#define MERGE1(a, b) MERGE2(a, b)
+#define MERGE2(a, b) a##b
 
 #define FUNC_SIGNATURE __FUNCSIG__
 

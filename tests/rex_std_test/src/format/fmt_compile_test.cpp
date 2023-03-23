@@ -331,7 +331,7 @@ TEST_CASE(compile_time_formatting_test, integer) {
   REQUIRE("420", test_format<4>(FMT_COMPILE("{}"), 420));
   REQUIRE("42 42", test_format<6>(FMT_COMPILE("{} {}"), 42, 42));
   REQUIRE("42 42",
-    test_format<6>(FMT_COMPILE("{} {}"), uint32_t{ 42 }, uint64_t{ 42 }));
+    test_format<6>(FMT_COMPILE("{} {}"), uint32{ 42 }, uint64{ 42 }));
 
   REQUIRE("+42", test_format<4>(FMT_COMPILE("{:+}"), 42));
   REQUIRE("42", test_format<3>(FMT_COMPILE("{:-}"), 42));

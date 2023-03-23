@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: atomic_read.cpp
 // Copyright (c) Nick De Breuck 2022
 //
@@ -39,13 +39,12 @@ namespace rsl
       uint32 atomic_read(uint32* data)
       {
         return _InterlockedCompareExchange(data, 0, 0);
-
       }
       uint64 atomic_read(uint64* data)
       {
         return _InterlockedCompareExchange(reinterpret_cast<volatile uint64*>(data), 0, 0);
       }
-    }
+    } // namespace internal
 
     int8 atomic_read(int8& val)
     {
@@ -82,5 +81,5 @@ namespace rsl
     {
       return internal::atomic_read(&val);
     }
-  }
-}
+  } // namespace v1
+} // namespace rsl

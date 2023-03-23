@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: atomic_read.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -27,5 +27,5 @@ namespace rsl
     uint16 atomic_read(uint16& val);
     uint32 atomic_read(uint32& val);
     uint64 atomic_read(uint64& val);
-  }
-}
+  } // namespace v1
+} // namespace rsl

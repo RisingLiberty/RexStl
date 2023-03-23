@@ -1,11 +1,9 @@
 
 
-
 #ifndef REX_ATOMIC_INTERNAL_ARCH_X86_H
 #define REX_ATOMIC_INTERNAL_ARCH_X86_H
 
 #pragma once
-
 
 /**
  * x86 && x64 Mappings
@@ -25,19 +23,17 @@
  * Seq_Cst FENCE      : MFENCE
  */
 
-
 /////////////////////////////////////////////////////////////////////////////////
 
-#if (defined(REX_COMPILER_CLANG) || defined(REX_COMPILER_GCC)) && defined(REX_PLATFORM_X64)
-	#define REX_ARCH_ATOMIC_HAS_128BIT
+#if(defined(REX_COMPILER_CLANG) || defined(REX_COMPILER_GCC)) && defined(REX_PLATFORM_X64)
+  #define REX_ARCH_ATOMIC_HAS_128BIT
 #elif defined(REX_COMPILER_MSVC)
-	#if REX_PLATFORM_PTR_SIZE == 8
-		#define REX_ARCH_ATOMIC_HAS_128BIT
-	#endif
+  #if REX_PLATFORM_PTR_SIZE == 8
+    #define REX_ARCH_ATOMIC_HAS_128BIT
+  #endif
 #endif
 
 /////////////////////////////////////////////////////////////////////////////////
-
 
 /**
  * NOTE:
@@ -55,29 +51,24 @@
  */
 #if defined(REX_COMPILER_MSVC) && defined(REX_PLATFORM_X86)
 
+  #define REX_ARCH_ATOMIC_X86_NOP_PRE_COMPUTE_DESIRED(ret, observed, val) static_assert(false, "REX_ARCH_ATOMIC_X86_NOP_PRE_COMPUTE_DESIRED() must be implmented!");
 
-	#define REX_ARCH_ATOMIC_X86_NOP_PRE_COMPUTE_DESIRED(ret, observed, val) \
-		static_assert(false, "REX_ARCH_ATOMIC_X86_NOP_PRE_COMPUTE_DESIRED() must be implmented!");
+  #define REX_ARCH_ATOMIC_X86_NOP_POST_COMPUTE_RET(ret, prevObserved, val)
 
-	#define REX_ARCH_ATOMIC_X86_NOP_POST_COMPUTE_RET(ret, prevObserved, val)
-
-
-	#define REX_ARCH_ATOMIC_X86_OP_64_IMPL(type, ret, ptr, val, MemoryOrder, PRE_COMPUTE_DESIRED, POST_COMPUTE_RET) \
-		{																	\
-			bool cmpxchgRet;												\
-			REX_ATOMIC_LOAD_RELAXED_64(type, ret, ptr);					\
-			do																\
-			{																\
-				type computedDesired;										\
-				PRE_COMPUTE_DESIRED(computedDesired, ret, (val));			\
-				MERGE(MERGE(REX_ATOMIC_CMPXCHG_STRONG_, MemoryOrder), _64)(type, cmpxchgRet, ptr, &(ret), computedDesired); \
-			} while (!cmpxchgRet);											\
-			POST_COMPUTE_RET(ret, ret, (val));								\
-		}
-
+  #define REX_ARCH_ATOMIC_X86_OP_64_IMPL(type, ret, ptr, val, MemoryOrder, PRE_COMPUTE_DESIRED, POST_COMPUTE_RET)                                                                                                                                        \
+    {                                                                                                                                                                                                                                                    \
+      bool cmpxchgRet;                                                                                                                                                                                                                                   \
+      REX_ATOMIC_LOAD_RELAXED_64(type, ret, ptr);                                                                                                                                                                                                        \
+      do                                                                                                                                                                                                                                                 \
+      {                                                                                                                                                                                                                                                  \
+        type computedDesired;                                                                                                                                                                                                                            \
+        PRE_COMPUTE_DESIRED(computedDesired, ret, (val));                                                                                                                                                                                                \
+        MERGE(MERGE(REX_ATOMIC_CMPXCHG_STRONG_, MemoryOrder), _64)(type, cmpxchgRet, ptr, &(ret), computedDesired);                                                                                                                                      \
+      } while(!cmpxchgRet);                                                                                                                                                                                                                              \
+      POST_COMPUTE_RET(ret, ret, (val));                                                                                                                                                                                                                 \
+    }
 
 #endif
-
 
 /**
  * NOTE:
@@ -91,64 +82,49 @@
  * SSE 128-bit loads are not guaranteed to be atomic even though some CPUs
  * make them atomic such as AMD Ryzen or Intel SandyBridge.
  */
-#if ((defined(REX_COMPILER_CLANG) || defined(REX_COMPILER_GCC)) && defined(REX_PLATFORM_X64))
+#if((defined(REX_COMPILER_CLANG) || defined(REX_COMPILER_GCC)) && defined(REX_PLATFORM_X64))
 
+  #define REX_ARCH_ATOMIC_X86_NOP_PRE_COMPUTE_DESIRED(ret, observed, val) static_assert(false, "REX_ARCH_ATOMIC_X86_NOP_PRE_COMPUTE_DESIRED() must be implmented!");
 
-	#define REX_ARCH_ATOMIC_X86_NOP_PRE_COMPUTE_DESIRED(ret, observed, val) \
-		static_assert(false, "REX_ARCH_ATOMIC_X86_NOP_PRE_COMPUTE_DESIRED() must be implmented!");
+  #define REX_ARCH_ATOMIC_X86_NOP_POST_COMPUTE_RET(ret, prevObserved, val)
 
-	#define REX_ARCH_ATOMIC_X86_NOP_POST_COMPUTE_RET(ret, prevObserved, val)
-
-
-	#define REX_ARCH_ATOMIC_X86_OP_128_IMPL(type, ret, ptr, val, MemoryOrder, PRE_COMPUTE_DESIRED, POST_COMPUTE_RET) \
-		{																	\
-			bool cmpxchgRet;												\
-			/* This is intentionally a non-atomic 128-bit load which may observe shearing. */ \
-			/* Either we do not observe *(ptr) but then the cmpxchg will fail and the observed */ \
-			/* atomic load will be returned. Or the non-atomic load got lucky and the cmpxchg succeeds */ \
-			/* because the observed value equals the value in *(ptr) thus we optimistically do a non-atomic load. */ \
-			ret = *(ptr);													\
-			do																\
-			{																\
-				type computedDesired;										\
-				PRE_COMPUTE_DESIRED(computedDesired, ret, (val));			\
-				MERGE(MERGE(REX_ATOMIC_CMPXCHG_STRONG_, MemoryOrder), _128)(type, cmpxchgRet, ptr, &(ret), computedDesired); \
-			} while (!cmpxchgRet);											\
-			POST_COMPUTE_RET(ret, ret, (val));								\
-		}
-
+  #define REX_ARCH_ATOMIC_X86_OP_128_IMPL(type, ret, ptr, val, MemoryOrder, PRE_COMPUTE_DESIRED, POST_COMPUTE_RET)                                                                                                                                       \
+    {                                                                                                                                                                                                                                                    \
+      bool cmpxchgRet;                                                                                                                                                                                                                                   \
+      /* This is intentionally a non-atomic 128-bit load which may observe shearing. */                                                                                                                                                                  \
+      /* Either we do not observe *(ptr) but then the cmpxchg will fail and the observed */                                                                                                                                                              \
+      /* atomic load will be returned. Or the non-atomic load got lucky and the cmpxchg succeeds */                                                                                                                                                      \
+      /* because the observed value equals the value in *(ptr) thus we optimistically do a non-atomic load. */                                                                                                                                           \
+      ret = *(ptr);                                                                                                                                                                                                                                      \
+      do                                                                                                                                                                                                                                                 \
+      {                                                                                                                                                                                                                                                  \
+        type computedDesired;                                                                                                                                                                                                                            \
+        PRE_COMPUTE_DESIRED(computedDesired, ret, (val));                                                                                                                                                                                                \
+        MERGE(MERGE(REX_ATOMIC_CMPXCHG_STRONG_, MemoryOrder), _128)(type, cmpxchgRet, ptr, &(ret), computedDesired);                                                                                                                                     \
+      } while(!cmpxchgRet);                                                                                                                                                                                                                              \
+      POST_COMPUTE_RET(ret, ret, (val));                                                                                                                                                                                                                 \
+    }
 
 #endif
 
-
 /////////////////////////////////////////////////////////////////////////////////
 
-
-#include "arch_x86_fetch_add.h"
-#include "arch_x86_fetch_sub.h"
-
-#include "arch_x86_fetch_and.h"
-#include "arch_x86_fetch_xor.h"
-#include "arch_x86_fetch_or.h"
-
 #include "arch_x86_add_fetch.h"
-#include "arch_x86_sub_fetch.h"
-
 #include "arch_x86_and_fetch.h"
-#include "arch_x86_xor_fetch.h"
-#include "arch_x86_or_fetch.h"
-
-#include "arch_x86_exchange.h"
-
-#include "arch_x86_cmpxchg_weak.h"
 #include "arch_x86_cmpxchg_strong.h"
-
-#include "arch_x86_memory_barrier.h"
-
-#include "arch_x86_thread_fence.h"
-
+#include "arch_x86_cmpxchg_weak.h"
+#include "arch_x86_exchange.h"
+#include "arch_x86_fetch_add.h"
+#include "arch_x86_fetch_and.h"
+#include "arch_x86_fetch_or.h"
+#include "arch_x86_fetch_sub.h"
+#include "arch_x86_fetch_xor.h"
 #include "arch_x86_load.h"
+#include "arch_x86_memory_barrier.h"
+#include "arch_x86_or_fetch.h"
 #include "arch_x86_store.h"
-
+#include "arch_x86_sub_fetch.h"
+#include "arch_x86_thread_fence.h"
+#include "arch_x86_xor_fetch.h"
 
 #endif /* REX_ATOMIC_INTERNAL_ARCH_X86_H */

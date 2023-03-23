@@ -6,14 +6,13 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: enable_shared_from_this.h
 // Copyright (c) Nick De Breuck 2022
 //
 // ============================================
 
 #include "rex_std/bonus/attributes.h"
-
 #include "rex_std/internal/memory/weak_ptr.h"
 #include "rex_std/internal/type_traits/is_convertible.h"
 #include "rex_std/internal/type_traits/remove_cv.h"
@@ -54,14 +53,14 @@ namespace rsl
 
     protected:
       constexpr enable_shared_from_this()
-        : m_weak_ptr()
-      {}
+          : m_weak_ptr()
+      {
+      }
 
       // construct (must value-initialize m_weak_ptr)
       enable_shared_from_this(const enable_shared_from_this&)
-        : m_weak_ptr()
+          : m_weak_ptr()
       {
-
       }
 
       enable_shared_from_this& operator=(const enable_shared_from_this&)
@@ -83,15 +82,16 @@ namespace rsl
     {
       template <typename T, typename = void>
       struct has_shared_from_this : false_type
-      {};
+      {
+      };
 
       template <typename T>
-      struct has_shared_from_this<T, void_t<typename T::enable_shared_from_this_type>>
-        : is_convertible<remove_cv_t<T>*, typename T::enable_shared_from_this_type*>::type
-      {};
+      struct has_shared_from_this<T, void_t<typename T::enable_shared_from_this_type>> : is_convertible<remove_cv_t<T>*, typename T::enable_shared_from_this_type*>::type
+      {
+      };
 
       template <typename T>
       inline constexpr bool has_shared_from_this_v = has_shared_from_this<T>::value;
-    }
-  }
-}
+    } // namespace internal
+  }   // namespace v1
+} // namespace rsl

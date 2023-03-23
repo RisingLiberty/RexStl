@@ -1,162 +1,151 @@
 
 
-
 #ifndef REX_ATOMIC_INTERNA_ATOMIC_FLAG_H
 #define REX_ATOMIC_INTERNA_ATOMIC_FLAG_H
 
 #pragma once
 
-
+#include "rex_std/atomic.h"
 
 namespace rsl
 {
 
+  class atomic_flag
+  {
+  public: /* ctors */
+    constexpr atomic_flag(bool desired)
+        : mFlag {desired}
+    {
+    }
 
-class atomic_flag
-{
-public: /* ctors */
+    constexpr atomic_flag()
+        : mFlag {false}
+    {
+    }
 
-	constexpr atomic_flag(bool desired)
-		: mFlag{ desired }
-	{
-	}
+  public: /* deleted ctors && assignment operators */
+    atomic_flag(const atomic_flag&) = delete;
 
-	constexpr atomic_flag()
-		: mFlag{ false }
-	{
-	}
+    atomic_flag& operator=(const atomic_flag&)          = delete;
+    atomic_flag& operator=(const atomic_flag&) volatile = delete;
 
-public: /* deleted ctors && assignment operators */
+  public: /* clear */
+    template <typename Order>
+    void clear(Order /*order*/) volatile
+    {
+      REX_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(Order);
+    }
 
-	atomic_flag(const atomic_flag&) = delete;
+    template <typename Order>
+    void clear(Order /*order*/)
+    {
+      REX_ATOMIC_STATIC_ASSERT_INVALID_MEMORY_ORDER(Order);
+    }
 
-	atomic_flag& operator=(const atomic_flag&)          = delete;
-	atomic_flag& operator=(const atomic_flag&) volatile = delete;
+    void clear(rsl::internal::memory_order_relaxed_s)
+    {
+      mFlag.store(false, rsl::memory_order_relaxed);
+    }
 
-public: /* clear */
+    void clear(rsl::internal::memory_order_release_s)
+    {
+      mFlag.store(false, rsl::memory_order_release);
+    }
 
-	template <typename Order>
-	void clear(Order /*order*/) volatile
-	{
-		REX_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(Order);
-	}
+    void clear(rsl::internal::memory_order_seq_cst_s)
+    {
+      mFlag.store(false, rsl::memory_order_seq_cst);
+    }
 
-	template <typename Order>
-	void clear(Order /*order*/)
-	{
-		REX_ATOMIC_STATIC_ASSERT_INVALID_MEMORY_ORDER(Order);
-	}
+    void clear()
+    {
+      mFlag.store(false, rsl::memory_order_seq_cst);
+    }
 
-	void clear(rsl::internal::memory_order_relaxed_s)
-	{
-		mFlag.store(false, rsl::memory_order_relaxed);
-	}
+  public: /* test_and_set */
+    template <typename Order>
+    bool test_and_set(Order /*order*/) volatile
+    {
+      REX_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(Order);
+      return false;
+    }
 
-	void clear(rsl::internal::memory_order_release_s)
-	{
-		mFlag.store(false, rsl::memory_order_release);
-	}
+    template <typename Order>
+    bool test_and_set(Order /*order*/)
+    {
+      REX_ATOMIC_STATIC_ASSERT_INVALID_MEMORY_ORDER(Order);
+      return false;
+    }
 
-	void clear(rsl::internal::memory_order_seq_cst_s)
-	{
-		mFlag.store(false, rsl::memory_order_seq_cst);
-	}
+    bool test_and_set(rsl::internal::memory_order_relaxed_s)
+    {
+      return mFlag.exchange(true, rsl::memory_order_relaxed);
+    }
 
-	void clear()
-	{
-		mFlag.store(false, rsl::memory_order_seq_cst);
-	}
+    bool test_and_set(rsl::internal::memory_order_acquire_s)
+    {
+      return mFlag.exchange(true, rsl::memory_order_acquire);
+    }
 
-public: /* test_and_set */
+    bool test_and_set(rsl::internal::memory_order_release_s)
+    {
+      return mFlag.exchange(true, rsl::memory_order_release);
+    }
 
-	template <typename Order>
-	bool test_and_set(Order /*order*/) volatile
-	{
-		REX_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(Order);
-		return false;
-	}
+    bool test_and_set(rsl::internal::memory_order_acq_rel_s)
+    {
+      return mFlag.exchange(true, rsl::memory_order_acq_rel);
+    }
 
-	template <typename Order>
-	bool test_and_set(Order /*order*/)
-	{
-		REX_ATOMIC_STATIC_ASSERT_INVALID_MEMORY_ORDER(Order);
-		return false;
-	}
+    bool test_and_set(rsl::internal::memory_order_seq_cst_s)
+    {
+      return mFlag.exchange(true, rsl::memory_order_seq_cst);
+    }
 
-	bool test_and_set(rsl::internal::memory_order_relaxed_s)
-	{
-		return mFlag.exchange(true, rsl::memory_order_relaxed);
-	}
+    bool test_and_set()
+    {
+      return mFlag.exchange(true, rsl::memory_order_seq_cst);
+    }
 
-	bool test_and_set(rsl::internal::memory_order_acquire_s)
-	{
-		return mFlag.exchange(true, rsl::memory_order_acquire);
-	}
+  public: /* test */
+    template <typename Order>
+    bool test(Order /*order*/) const volatile
+    {
+      REX_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(Order);
+      return false;
+    }
 
-	bool test_and_set(rsl::internal::memory_order_release_s)
-	{
-		return mFlag.exchange(true, rsl::memory_order_release);
-	}
+    template <typename Order>
+    bool test(Order /*order*/) const
+    {
+      REX_ATOMIC_STATIC_ASSERT_INVALID_MEMORY_ORDER(Order);
+      return false;
+    }
 
-	bool test_and_set(rsl::internal::memory_order_acq_rel_s)
-	{
-		return mFlag.exchange(true, rsl::memory_order_acq_rel);
-	}
+    bool test(rsl::internal::memory_order_relaxed_s) const
+    {
+      return mFlag.load(rsl::memory_order_relaxed);
+    }
 
-	bool test_and_set(rsl::internal::memory_order_seq_cst_s)
-	{
-		return mFlag.exchange(true, rsl::memory_order_seq_cst);
-	}
+    bool test(rsl::internal::memory_order_acquire_s) const
+    {
+      return mFlag.load(rsl::memory_order_acquire);
+    }
 
-	bool test_and_set()
-	{
-		return mFlag.exchange(true, rsl::memory_order_seq_cst);
-	}
+    bool test(rsl::internal::memory_order_seq_cst_s) const
+    {
+      return mFlag.load(rsl::memory_order_seq_cst);
+    }
 
-public: /* test */
+    bool test() const
+    {
+      return mFlag.load(rsl::memory_order_seq_cst);
+    }
 
-	template <typename Order>
-	bool test(Order /*order*/) const volatile
-	{
-		REX_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(Order);
-		return false;
-	}
-
-	template <typename Order>
-	bool test(Order /*order*/) const
-	{
-		REX_ATOMIC_STATIC_ASSERT_INVALID_MEMORY_ORDER(Order);
-		return false;
-	}
-
-	bool test(rsl::internal::memory_order_relaxed_s) const
-	{
-		return mFlag.load(rsl::memory_order_relaxed);
-	}
-
-	bool test(rsl::internal::memory_order_acquire_s) const
-	{
-		return mFlag.load(rsl::memory_order_acquire);
-	}
-
-	bool test(rsl::internal::memory_order_seq_cst_s) const
-	{
-		return mFlag.load(rsl::memory_order_seq_cst);
-	}
-
-	bool test() const
-	{
-		return mFlag.load(rsl::memory_order_seq_cst);
-	}
-
-private:
-
-	rsl::atomic<bool> mFlag;
-};
-
+  private:
+    rsl::atomic<bool> mFlag;
+  };
 
 } // namespace rsl
-
-
 
 #endif /* REX_ATOMIC_INTERNA_ATOMIC_FLAG_H */

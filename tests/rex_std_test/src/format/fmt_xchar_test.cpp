@@ -454,7 +454,7 @@ TEST(locale_test, format) {
   auto small_grouping_loc =
     std::locale(std::locale(), new small_grouping<char>());
   EXPECT_EQ("4,2,9,4,9,6,7,2,9,5",
-    fmt::format(small_grouping_loc, "{:L}", max_value<uint32_t>()));
+    fmt::format(small_grouping_loc, "{:L}", max_value<uint32>()));
 }
 
 TEST(locale_test, format_detault_align) {
@@ -488,7 +488,7 @@ TEST(locale_test, wformat) {
   auto small_grouping_loc =
     std::locale(std::locale(), new small_grouping<wchar_t>());
   EXPECT_EQ(L"4,2,9,4,9,6,7,2,9,5",
-    fmt::format(small_grouping_loc, L"{:L}", max_value<uint32_t>()));
+    fmt::format(small_grouping_loc, L"{:L}", max_value<uint32>()));
 }
 
 TEST(locale_test, int_formatter) {
