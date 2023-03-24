@@ -94,25 +94,25 @@ namespace rsl
         void store(T desired)
         {
           atomic_fixed_width_type_t<8> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<8>, desired);
-          MERGE(REX_ATOMIC_STORE_SEQ_CST_, 8)(atomic_fixed_width_type_t<8>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<8>, this->GetAtomicAddress()), fixedWidthDesired)
+          REX_ATOMIC_STORE_SEQ_CST_8(atomic_fixed_width_type_t<8>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<8>, this->GetAtomicAddress()), fixedWidthDesired)
         }
 
         void store(T desired, rsl::internal::memory_order_relaxed_s)
         {
           atomic_fixed_width_type_t<8> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<8>, desired);
-          MERGE(REX_ATOMIC_STORE_RELAXED_, 8)(atomic_fixed_width_type_t<8>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<8>, this->GetAtomicAddress()), fixedWidthDesired)
+          REX_ATOMIC_STORE_RELAXED_8(atomic_fixed_width_type_t<8>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<8>, this->GetAtomicAddress()), fixedWidthDesired)
         }
 
         void store(T desired, rsl::internal::memory_order_release_s)
         {
           atomic_fixed_width_type_t<8> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<8>, desired);
-          MERGE(REX_ATOMIC_STORE_RELEASE_, 8)(atomic_fixed_width_type_t<8>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<8>, this->GetAtomicAddress()), fixedWidthDesired)
+          REX_ATOMIC_STORE_RELEASE_8(atomic_fixed_width_type_t<8>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<8>, this->GetAtomicAddress()), fixedWidthDesired)
         }
 
         void store(T desired, rsl::internal::memory_order_seq_cst_s)
         {
           atomic_fixed_width_type_t<8> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<8>, desired);
-          MERGE(REX_ATOMIC_STORE_SEQ_CST_, 8)(atomic_fixed_width_type_t<8>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<8>, this->GetAtomicAddress()), fixedWidthDesired)
+          REX_ATOMIC_STORE_SEQ_CST_8(atomic_fixed_width_type_t<8>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<8>, this->GetAtomicAddress()), fixedWidthDesired)
         }
 
       public: /* load */
@@ -121,14 +121,14 @@ namespace rsl
         T load() const
         {
           atomic_fixed_width_type_t<8> retVal;
-          MERGE(REX_ATOMIC_LOAD_SEQ_CST_, 8)(atomic_fixed_width_type_t<8>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<8>, this->GetAtomicAddress()));
+          REX_ATOMIC_LOAD_SEQ_CST_8(atomic_fixed_width_type_t<8>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<8>, this->GetAtomicAddress()));
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
         }
 
         T load(rsl::internal::memory_order_relaxed_s) const
         {
           atomic_fixed_width_type_t<8> retVal;
-          MERGE(REX_ATOMIC_LOAD_RELAXED_, 8)(atomic_fixed_width_type_t<8>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<8>, this->GetAtomicAddress()));
+          REX_ATOMIC_LOAD_RELAXED_8(atomic_fixed_width_type_t<8>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<8>, this->GetAtomicAddress()));
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
 
         }
@@ -136,7 +136,7 @@ namespace rsl
         T load(rsl::internal::memory_order_acquire_s) const
         {
           atomic_fixed_width_type_t<8> retVal;
-          MERGE(REX_ATOMIC_LOAD_ACQUIRE_, 8)(atomic_fixed_width_type_t<8>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<8>, this->GetAtomicAddress()));
+          REX_ATOMIC_LOAD_ACQUIRE_8(atomic_fixed_width_type_t<8>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<8>, this->GetAtomicAddress()));
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
 
         }
@@ -144,7 +144,7 @@ namespace rsl
         T load(rsl::internal::memory_order_seq_cst_s) const
         {
           atomic_fixed_width_type_t<8> retVal;
-          MERGE(REX_ATOMIC_LOAD_SEQ_CST_, 8)(atomic_fixed_width_type_t<8>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<8>, this->GetAtomicAddress()));
+          REX_ATOMIC_LOAD_SEQ_CST_8(atomic_fixed_width_type_t<8>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<8>, this->GetAtomicAddress()));
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
 
         }
@@ -156,7 +156,7 @@ namespace rsl
         {
           atomic_fixed_width_type_t<8> retVal;
           atomic_fixed_width_type_t<8> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<8>, desired);
-          MERGE(REX_ATOMIC_EXCHANGE_SEQ_CST_, 8)(atomic_fixed_width_type_t<8>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<8>, this->GetAtomicAddress()), fixedWidthDesired);
+          REX_ATOMIC_EXCHANGE_SEQ_CST_8(atomic_fixed_width_type_t<8>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<8>, this->GetAtomicAddress()), fixedWidthDesired);
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
         }
 
@@ -164,7 +164,7 @@ namespace rsl
         {
           atomic_fixed_width_type_t<8> retVal;
           atomic_fixed_width_type_t<8> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<8>, desired);
-          MERGE(REX_ATOMIC_EXCHANGE_RELAXED_, 8)(atomic_fixed_width_type_t<8>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<8>, this->GetAtomicAddress()), fixedWidthDesired);
+          REX_ATOMIC_EXCHANGE_RELAXED_8(atomic_fixed_width_type_t<8>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<8>, this->GetAtomicAddress()), fixedWidthDesired);
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
         }
 
@@ -172,7 +172,7 @@ namespace rsl
         {
           atomic_fixed_width_type_t<8> retVal;
           atomic_fixed_width_type_t<8> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<8>, desired);
-          MERGE(REX_ATOMIC_EXCHANGE_ACQUIRE_, 8)(atomic_fixed_width_type_t<8>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<8>, this->GetAtomicAddress()), fixedWidthDesired);
+          REX_ATOMIC_EXCHANGE_ACQUIRE_8(atomic_fixed_width_type_t<8>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<8>, this->GetAtomicAddress()), fixedWidthDesired);
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
         }
 
@@ -180,7 +180,7 @@ namespace rsl
         {
           atomic_fixed_width_type_t<8> retVal;
           atomic_fixed_width_type_t<8> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<8>, desired);
-          MERGE(REX_ATOMIC_EXCHANGE_RELEASE_, 8)(atomic_fixed_width_type_t<8>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<8>, this->GetAtomicAddress()), fixedWidthDesired);
+          REX_ATOMIC_EXCHANGE_RELEASE_8(atomic_fixed_width_type_t<8>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<8>, this->GetAtomicAddress()), fixedWidthDesired);
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
         }
 
@@ -188,7 +188,7 @@ namespace rsl
         {
           atomic_fixed_width_type_t<8> retVal;
           atomic_fixed_width_type_t<8> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<8>, desired);
-          MERGE(REX_ATOMIC_EXCHANGE_ACQ_REL_, 8)(atomic_fixed_width_type_t<8>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<8>, this->GetAtomicAddress()), fixedWidthDesired);
+          REX_ATOMIC_EXCHANGE_ACQ_REL_8(atomic_fixed_width_type_t<8>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<8>, this->GetAtomicAddress()), fixedWidthDesired);
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
         }
 
@@ -196,7 +196,7 @@ namespace rsl
         {
           atomic_fixed_width_type_t<8> retVal;
           atomic_fixed_width_type_t<8> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<8>, desired);
-          MERGE(REX_ATOMIC_EXCHANGE_SEQ_CST_, 8)(atomic_fixed_width_type_t<8>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<8>, this->GetAtomicAddress()), fixedWidthDesired);
+          REX_ATOMIC_EXCHANGE_SEQ_CST_8(atomic_fixed_width_type_t<8>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<8>, this->GetAtomicAddress()), fixedWidthDesired);
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
         }
 
@@ -485,25 +485,25 @@ namespace rsl
         void store(T desired)
         {
           atomic_fixed_width_type_t<16> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<16>, desired);
-          MERGE(REX_ATOMIC_STORE_SEQ_CST_, 16)(atomic_fixed_width_type_t<16>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<16>, this->GetAtomicAddress()), fixedWidthDesired)
+          REX_ATOMIC_STORE_SEQ_CST_16(atomic_fixed_width_type_t<16>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<16>, this->GetAtomicAddress()), fixedWidthDesired)
         }
 
         void store(T desired, rsl::internal::memory_order_relaxed_s)
         {
           atomic_fixed_width_type_t<16> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<16>, desired);
-          MERGE(REX_ATOMIC_STORE_RELAXED_, 16)(atomic_fixed_width_type_t<16>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<16>, this->GetAtomicAddress()), fixedWidthDesired)
+          REX_ATOMIC_STORE_RELAXED_16(atomic_fixed_width_type_t<16>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<16>, this->GetAtomicAddress()), fixedWidthDesired)
         }
 
         void store(T desired, rsl::internal::memory_order_release_s)
         {
           atomic_fixed_width_type_t<16> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<16>, desired);
-          MERGE(REX_ATOMIC_STORE_RELEASE_, 16)(atomic_fixed_width_type_t<16>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<16>, this->GetAtomicAddress()), fixedWidthDesired)
+          REX_ATOMIC_STORE_RELEASE_16(atomic_fixed_width_type_t<16>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<16>, this->GetAtomicAddress()), fixedWidthDesired)
         }
 
         void store(T desired, rsl::internal::memory_order_seq_cst_s)
         {
           atomic_fixed_width_type_t<16> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<16>, desired);
-          MERGE(REX_ATOMIC_STORE_SEQ_CST_, 16)(atomic_fixed_width_type_t<16>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<16>, this->GetAtomicAddress()), fixedWidthDesired)
+          REX_ATOMIC_STORE_SEQ_CST_16(atomic_fixed_width_type_t<16>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<16>, this->GetAtomicAddress()), fixedWidthDesired)
         }
 
       public: /* load */
@@ -512,14 +512,14 @@ namespace rsl
         T load() const
         {
           atomic_fixed_width_type_t<16> retVal;
-          MERGE(REX_ATOMIC_LOAD_SEQ_CST_, 16)(atomic_fixed_width_type_t<16>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<16>, this->GetAtomicAddress()));
+          REX_ATOMIC_LOAD_SEQ_CST_16(atomic_fixed_width_type_t<16>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<16>, this->GetAtomicAddress()));
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
         }
 
         T load(rsl::internal::memory_order_relaxed_s) const
         {
           atomic_fixed_width_type_t<16> retVal;
-          MERGE(REX_ATOMIC_LOAD_RELAXED_, 16)(atomic_fixed_width_type_t<16>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<16>, this->GetAtomicAddress()));
+          REX_ATOMIC_LOAD_RELAXED_16(atomic_fixed_width_type_t<16>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<16>, this->GetAtomicAddress()));
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
 
         }
@@ -527,7 +527,7 @@ namespace rsl
         T load(rsl::internal::memory_order_acquire_s) const
         {
           atomic_fixed_width_type_t<16> retVal;
-          MERGE(REX_ATOMIC_LOAD_ACQUIRE_, 16)(atomic_fixed_width_type_t<16>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<16>, this->GetAtomicAddress()));
+          REX_ATOMIC_LOAD_ACQUIRE_16(atomic_fixed_width_type_t<16>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<16>, this->GetAtomicAddress()));
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
 
         }
@@ -535,7 +535,7 @@ namespace rsl
         T load(rsl::internal::memory_order_seq_cst_s) const
         {
           atomic_fixed_width_type_t<16> retVal;
-          MERGE(REX_ATOMIC_LOAD_SEQ_CST_, 16)(atomic_fixed_width_type_t<16>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<16>, this->GetAtomicAddress()));
+          REX_ATOMIC_LOAD_SEQ_CST_16(atomic_fixed_width_type_t<16>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<16>, this->GetAtomicAddress()));
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
 
         }
@@ -547,7 +547,7 @@ namespace rsl
         {
           atomic_fixed_width_type_t<16> retVal;
           atomic_fixed_width_type_t<16> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<16>, desired);
-          MERGE(REX_ATOMIC_EXCHANGE_SEQ_CST_, 16)(atomic_fixed_width_type_t<16>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<16>, this->GetAtomicAddress()), fixedWidthDesired);
+          REX_ATOMIC_EXCHANGE_SEQ_CST_16(atomic_fixed_width_type_t<16>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<16>, this->GetAtomicAddress()), fixedWidthDesired);
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
         }
 
@@ -555,7 +555,7 @@ namespace rsl
         {
           atomic_fixed_width_type_t<16> retVal;
           atomic_fixed_width_type_t<16> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<16>, desired);
-          MERGE(REX_ATOMIC_EXCHANGE_RELAXED_, 16)(atomic_fixed_width_type_t<16>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<16>, this->GetAtomicAddress()), fixedWidthDesired);
+          REX_ATOMIC_EXCHANGE_RELAXED_16(atomic_fixed_width_type_t<16>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<16>, this->GetAtomicAddress()), fixedWidthDesired);
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
         }
 
@@ -563,7 +563,7 @@ namespace rsl
         {
           atomic_fixed_width_type_t<16> retVal;
           atomic_fixed_width_type_t<16> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<16>, desired);
-          MERGE(REX_ATOMIC_EXCHANGE_ACQUIRE_, 16)(atomic_fixed_width_type_t<16>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<16>, this->GetAtomicAddress()), fixedWidthDesired);
+          REX_ATOMIC_EXCHANGE_ACQUIRE_16(atomic_fixed_width_type_t<16>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<16>, this->GetAtomicAddress()), fixedWidthDesired);
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
         }
 
@@ -571,7 +571,7 @@ namespace rsl
         {
           atomic_fixed_width_type_t<16> retVal;
           atomic_fixed_width_type_t<16> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<16>, desired);
-          MERGE(REX_ATOMIC_EXCHANGE_RELEASE_, 16)(atomic_fixed_width_type_t<16>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<16>, this->GetAtomicAddress()), fixedWidthDesired);
+          REX_ATOMIC_EXCHANGE_RELEASE_16(atomic_fixed_width_type_t<16>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<16>, this->GetAtomicAddress()), fixedWidthDesired);
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
         }
 
@@ -579,7 +579,7 @@ namespace rsl
         {
           atomic_fixed_width_type_t<16> retVal;
           atomic_fixed_width_type_t<16> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<16>, desired);
-          MERGE(REX_ATOMIC_EXCHANGE_ACQ_REL_, 16)(atomic_fixed_width_type_t<16>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<16>, this->GetAtomicAddress()), fixedWidthDesired);
+          REX_ATOMIC_EXCHANGE_ACQ_REL_16(atomic_fixed_width_type_t<16>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<16>, this->GetAtomicAddress()), fixedWidthDesired);
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
         }
 
@@ -587,7 +587,7 @@ namespace rsl
         {
           atomic_fixed_width_type_t<16> retVal;
           atomic_fixed_width_type_t<16> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<16>, desired);
-          MERGE(REX_ATOMIC_EXCHANGE_SEQ_CST_, 16)(atomic_fixed_width_type_t<16>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<16>, this->GetAtomicAddress()), fixedWidthDesired);
+          REX_ATOMIC_EXCHANGE_SEQ_CST_16(atomic_fixed_width_type_t<16>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<16>, this->GetAtomicAddress()), fixedWidthDesired);
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
         }
 
@@ -875,25 +875,25 @@ namespace rsl
         void store(T desired)
         {
           atomic_fixed_width_type_t<32> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<32>, desired);
-          MERGE(REX_ATOMIC_STORE_SEQ_CST_, 32)(atomic_fixed_width_type_t<32>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<32>, this->GetAtomicAddress()), fixedWidthDesired)
+          REX_ATOMIC_STORE_SEQ_CST_32(atomic_fixed_width_type_t<32>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<32>, this->GetAtomicAddress()), fixedWidthDesired)
         }
 
         void store(T desired, rsl::internal::memory_order_relaxed_s)
         {
           atomic_fixed_width_type_t<32> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<32>, desired);
-          MERGE(REX_ATOMIC_STORE_RELAXED_, 32)(atomic_fixed_width_type_t<32>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<32>, this->GetAtomicAddress()), fixedWidthDesired)
+          REX_ATOMIC_STORE_RELAXED_32(atomic_fixed_width_type_t<32>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<32>, this->GetAtomicAddress()), fixedWidthDesired)
         }
 
         void store(T desired, rsl::internal::memory_order_release_s)
         {
           atomic_fixed_width_type_t<32> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<32>, desired);
-          MERGE(REX_ATOMIC_STORE_RELEASE_, 32)(atomic_fixed_width_type_t<32>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<32>, this->GetAtomicAddress()), fixedWidthDesired)
+          REX_ATOMIC_STORE_RELEASE_32(atomic_fixed_width_type_t<32>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<32>, this->GetAtomicAddress()), fixedWidthDesired)
         }
 
         void store(T desired, rsl::internal::memory_order_seq_cst_s)
         {
           atomic_fixed_width_type_t<32> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<32>, desired);
-          MERGE(REX_ATOMIC_STORE_SEQ_CST_, 32)(atomic_fixed_width_type_t<32>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<32>, this->GetAtomicAddress()), fixedWidthDesired)
+          REX_ATOMIC_STORE_SEQ_CST_32(atomic_fixed_width_type_t<32>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<32>, this->GetAtomicAddress()), fixedWidthDesired)
         }
 
       public: /* load */
@@ -902,14 +902,14 @@ namespace rsl
         T load() const
         {
           atomic_fixed_width_type_t<32> retVal;
-          MERGE(REX_ATOMIC_LOAD_SEQ_CST_, 32)(atomic_fixed_width_type_t<32>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<32>, this->GetAtomicAddress()));
+          REX_ATOMIC_LOAD_SEQ_CST_32(atomic_fixed_width_type_t<32>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<32>, this->GetAtomicAddress()));
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
         }
 
         T load(rsl::internal::memory_order_relaxed_s) const
         {
           atomic_fixed_width_type_t<32> retVal;
-          MERGE(REX_ATOMIC_LOAD_RELAXED_, 32)(atomic_fixed_width_type_t<32>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<32>, this->GetAtomicAddress()));
+          REX_ATOMIC_LOAD_RELAXED_32(atomic_fixed_width_type_t<32>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<32>, this->GetAtomicAddress()));
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
 
         }
@@ -917,7 +917,7 @@ namespace rsl
         T load(rsl::internal::memory_order_acquire_s) const
         {
           atomic_fixed_width_type_t<32> retVal;
-          MERGE(REX_ATOMIC_LOAD_ACQUIRE_, 32)(atomic_fixed_width_type_t<32>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<32>, this->GetAtomicAddress()));
+          REX_ATOMIC_LOAD_ACQUIRE_32(atomic_fixed_width_type_t<32>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<32>, this->GetAtomicAddress()));
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
 
         }
@@ -925,7 +925,7 @@ namespace rsl
         T load(rsl::internal::memory_order_seq_cst_s) const
         {
           atomic_fixed_width_type_t<32> retVal;
-          MERGE(REX_ATOMIC_LOAD_SEQ_CST_, 32)(atomic_fixed_width_type_t<32>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<32>, this->GetAtomicAddress()));
+          REX_ATOMIC_LOAD_SEQ_CST_32(atomic_fixed_width_type_t<32>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<32>, this->GetAtomicAddress()));
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
 
         }
@@ -937,7 +937,7 @@ namespace rsl
         {
           atomic_fixed_width_type_t<32> retVal;
           atomic_fixed_width_type_t<32> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<32>, desired);
-          MERGE(REX_ATOMIC_EXCHANGE_SEQ_CST_, 32)(atomic_fixed_width_type_t<32>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<32>, this->GetAtomicAddress()), fixedWidthDesired);
+          REX_ATOMIC_EXCHANGE_SEQ_CST_32(atomic_fixed_width_type_t<32>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<32>, this->GetAtomicAddress()), fixedWidthDesired);
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
         }
 
@@ -945,7 +945,7 @@ namespace rsl
         {
           atomic_fixed_width_type_t<32> retVal;
           atomic_fixed_width_type_t<32> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<32>, desired);
-          MERGE(REX_ATOMIC_EXCHANGE_RELAXED_, 32)(atomic_fixed_width_type_t<32>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<32>, this->GetAtomicAddress()), fixedWidthDesired);
+          REX_ATOMIC_EXCHANGE_RELAXED_32(atomic_fixed_width_type_t<32>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<32>, this->GetAtomicAddress()), fixedWidthDesired);
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
         }
 
@@ -953,7 +953,7 @@ namespace rsl
         {
           atomic_fixed_width_type_t<32> retVal;
           atomic_fixed_width_type_t<32> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<32>, desired);
-          MERGE(REX_ATOMIC_EXCHANGE_ACQUIRE_, 32)(atomic_fixed_width_type_t<32>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<32>, this->GetAtomicAddress()), fixedWidthDesired);
+          REX_ATOMIC_EXCHANGE_ACQUIRE_32(atomic_fixed_width_type_t<32>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<32>, this->GetAtomicAddress()), fixedWidthDesired);
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
         }
 
@@ -961,7 +961,7 @@ namespace rsl
         {
           atomic_fixed_width_type_t<32> retVal;
           atomic_fixed_width_type_t<32> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<32>, desired);
-          MERGE(REX_ATOMIC_EXCHANGE_RELEASE_, 32)(atomic_fixed_width_type_t<32>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<32>, this->GetAtomicAddress()), fixedWidthDesired);
+          REX_ATOMIC_EXCHANGE_RELEASE_32(atomic_fixed_width_type_t<32>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<32>, this->GetAtomicAddress()), fixedWidthDesired);
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
         }
 
@@ -969,7 +969,7 @@ namespace rsl
         {
           atomic_fixed_width_type_t<32> retVal;
           atomic_fixed_width_type_t<32> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<32>, desired);
-          MERGE(REX_ATOMIC_EXCHANGE_ACQ_REL_, 32)(atomic_fixed_width_type_t<32>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<32>, this->GetAtomicAddress()), fixedWidthDesired);
+          REX_ATOMIC_EXCHANGE_ACQ_REL_32(atomic_fixed_width_type_t<32>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<32>, this->GetAtomicAddress()), fixedWidthDesired);
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
         }
 
@@ -977,7 +977,7 @@ namespace rsl
         {
           atomic_fixed_width_type_t<32> retVal;
           atomic_fixed_width_type_t<32> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<32>, desired);
-          MERGE(REX_ATOMIC_EXCHANGE_SEQ_CST_, 32)(atomic_fixed_width_type_t<32>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<32>, this->GetAtomicAddress()), fixedWidthDesired);
+          REX_ATOMIC_EXCHANGE_SEQ_CST_32(atomic_fixed_width_type_t<32>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<32>, this->GetAtomicAddress()), fixedWidthDesired);
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
         }
 
@@ -1265,25 +1265,25 @@ namespace rsl
         void store(T desired)
         {
           atomic_fixed_width_type_t<64> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<64>, desired);
-          MERGE(REX_ATOMIC_STORE_SEQ_CST_, 64)(atomic_fixed_width_type_t<64>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<64>, this->GetAtomicAddress()), fixedWidthDesired)
+          REX_ATOMIC_STORE_SEQ_CST_64(atomic_fixed_width_type_t<64>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<64>, this->GetAtomicAddress()), fixedWidthDesired)
         }
 
         void store(T desired, rsl::internal::memory_order_relaxed_s)
         {
           atomic_fixed_width_type_t<64> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<64>, desired);
-          MERGE(REX_ATOMIC_STORE_RELAXED_, 64)(atomic_fixed_width_type_t<64>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<64>, this->GetAtomicAddress()), fixedWidthDesired)
+          REX_ATOMIC_STORE_RELAXED_64(atomic_fixed_width_type_t<64>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<64>, this->GetAtomicAddress()), fixedWidthDesired)
         }
 
         void store(T desired, rsl::internal::memory_order_release_s)
         {
           atomic_fixed_width_type_t<64> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<64>, desired);
-          MERGE(REX_ATOMIC_STORE_RELEASE_, 64)(atomic_fixed_width_type_t<64>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<64>, this->GetAtomicAddress()), fixedWidthDesired)
+          REX_ATOMIC_STORE_RELEASE_64(atomic_fixed_width_type_t<64>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<64>, this->GetAtomicAddress()), fixedWidthDesired)
         }
 
         void store(T desired, rsl::internal::memory_order_seq_cst_s)
         {
           atomic_fixed_width_type_t<64> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<64>, desired);
-          MERGE(REX_ATOMIC_STORE_SEQ_CST_, 64)(atomic_fixed_width_type_t<64>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<64>, this->GetAtomicAddress()), fixedWidthDesired)
+          REX_ATOMIC_STORE_SEQ_CST_64(atomic_fixed_width_type_t<64>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<64>, this->GetAtomicAddress()), fixedWidthDesired)
         }
 
       public: /* load */
@@ -1292,14 +1292,14 @@ namespace rsl
         T load() const
         {
           atomic_fixed_width_type_t<64> retVal;
-          MERGE(REX_ATOMIC_LOAD_SEQ_CST_, 64)(atomic_fixed_width_type_t<64>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<64>, this->GetAtomicAddress()));
+          REX_ATOMIC_LOAD_SEQ_CST_64(atomic_fixed_width_type_t<64>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<64>, this->GetAtomicAddress()));
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
         }
 
         T load(rsl::internal::memory_order_relaxed_s) const
         {
           atomic_fixed_width_type_t<64> retVal;
-          MERGE(REX_ATOMIC_LOAD_RELAXED_, 64)(atomic_fixed_width_type_t<64>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<64>, this->GetAtomicAddress()));
+          REX_ATOMIC_LOAD_RELAXED_64(atomic_fixed_width_type_t<64>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<64>, this->GetAtomicAddress()));
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
 
         }
@@ -1307,7 +1307,7 @@ namespace rsl
         T load(rsl::internal::memory_order_acquire_s) const
         {
           atomic_fixed_width_type_t<64> retVal;
-          MERGE(REX_ATOMIC_LOAD_ACQUIRE_, 64)(atomic_fixed_width_type_t<64>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<64>, this->GetAtomicAddress()));
+          REX_ATOMIC_LOAD_ACQUIRE_64(atomic_fixed_width_type_t<64>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<64>, this->GetAtomicAddress()));
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
 
         }
@@ -1315,7 +1315,7 @@ namespace rsl
         T load(rsl::internal::memory_order_seq_cst_s) const
         {
           atomic_fixed_width_type_t<64> retVal;
-          MERGE(REX_ATOMIC_LOAD_SEQ_CST_, 64)(atomic_fixed_width_type_t<64>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<64>, this->GetAtomicAddress()));
+          REX_ATOMIC_LOAD_SEQ_CST_64(atomic_fixed_width_type_t<64>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<64>, this->GetAtomicAddress()));
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
 
         }
@@ -1327,7 +1327,7 @@ namespace rsl
         {
           atomic_fixed_width_type_t<64> retVal;
           atomic_fixed_width_type_t<64> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<64>, desired);
-          MERGE(REX_ATOMIC_EXCHANGE_SEQ_CST_, 64)(atomic_fixed_width_type_t<64>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<64>, this->GetAtomicAddress()), fixedWidthDesired);
+          REX_ATOMIC_EXCHANGE_SEQ_CST_64(atomic_fixed_width_type_t<64>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<64>, this->GetAtomicAddress()), fixedWidthDesired);
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
         }
 
@@ -1335,7 +1335,7 @@ namespace rsl
         {
           atomic_fixed_width_type_t<64> retVal;
           atomic_fixed_width_type_t<64> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<64>, desired);
-          MERGE(REX_ATOMIC_EXCHANGE_RELAXED_, 64)(atomic_fixed_width_type_t<64>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<64>, this->GetAtomicAddress()), fixedWidthDesired);
+          REX_ATOMIC_EXCHANGE_RELAXED_64(atomic_fixed_width_type_t<64>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<64>, this->GetAtomicAddress()), fixedWidthDesired);
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
         }
 
@@ -1343,7 +1343,7 @@ namespace rsl
         {
           atomic_fixed_width_type_t<64> retVal;
           atomic_fixed_width_type_t<64> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<64>, desired);
-          MERGE(REX_ATOMIC_EXCHANGE_ACQUIRE_, 64)(atomic_fixed_width_type_t<64>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<64>, this->GetAtomicAddress()), fixedWidthDesired);
+          REX_ATOMIC_EXCHANGE_ACQUIRE_64(atomic_fixed_width_type_t<64>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<64>, this->GetAtomicAddress()), fixedWidthDesired);
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
         }
 
@@ -1351,7 +1351,7 @@ namespace rsl
         {
           atomic_fixed_width_type_t<64> retVal;
           atomic_fixed_width_type_t<64> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<64>, desired);
-          MERGE(REX_ATOMIC_EXCHANGE_RELEASE_, 64)(atomic_fixed_width_type_t<64>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<64>, this->GetAtomicAddress()), fixedWidthDesired);
+          REX_ATOMIC_EXCHANGE_RELEASE_64(atomic_fixed_width_type_t<64>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<64>, this->GetAtomicAddress()), fixedWidthDesired);
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
         }
 
@@ -1359,7 +1359,7 @@ namespace rsl
         {
           atomic_fixed_width_type_t<64> retVal;
           atomic_fixed_width_type_t<64> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<64>, desired);
-          MERGE(REX_ATOMIC_EXCHANGE_ACQ_REL_, 64)(atomic_fixed_width_type_t<64>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<64>, this->GetAtomicAddress()), fixedWidthDesired);
+          REX_ATOMIC_EXCHANGE_ACQ_REL_64(atomic_fixed_width_type_t<64>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<64>, this->GetAtomicAddress()), fixedWidthDesired);
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
         }
 
@@ -1367,7 +1367,7 @@ namespace rsl
         {
           atomic_fixed_width_type_t<64> retVal;
           atomic_fixed_width_type_t<64> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<64>, desired);
-          MERGE(REX_ATOMIC_EXCHANGE_SEQ_CST_, 64)(atomic_fixed_width_type_t<64>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<64>, this->GetAtomicAddress()), fixedWidthDesired);
+          REX_ATOMIC_EXCHANGE_SEQ_CST_64(atomic_fixed_width_type_t<64>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<64>, this->GetAtomicAddress()), fixedWidthDesired);
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
         }
 
@@ -1654,25 +1654,25 @@ namespace rsl
         void store(T desired)
         {
           atomic_fixed_width_type_t<128> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<128>, desired);
-          MERGE(REX_ATOMIC_STORE_SEQ_CST_, 128)(atomic_fixed_width_type_t<128>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<128>, this->GetAtomicAddress()), fixedWidthDesired)
+          REX_ATOMIC_STORE_SEQ_CST_128(atomic_fixed_width_type_t<128>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<128>, this->GetAtomicAddress()), fixedWidthDesired)
         }
 
         void store(T desired, rsl::internal::memory_order_relaxed_s)
         {
           atomic_fixed_width_type_t<128> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<128>, desired);
-          MERGE(REX_ATOMIC_STORE_RELAXED_, 128)(atomic_fixed_width_type_t<128>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<128>, this->GetAtomicAddress()), fixedWidthDesired)
+          REX_ATOMIC_STORE_RELAXED_128(atomic_fixed_width_type_t<128>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<128>, this->GetAtomicAddress()), fixedWidthDesired)
         }
 
         void store(T desired, rsl::internal::memory_order_release_s)
         {
           atomic_fixed_width_type_t<128> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<128>, desired);
-          MERGE(REX_ATOMIC_STORE_RELEASE_, 128)(atomic_fixed_width_type_t<128>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<128>, this->GetAtomicAddress()), fixedWidthDesired)
+          REX_ATOMIC_STORE_RELEASE_128(atomic_fixed_width_type_t<128>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<128>, this->GetAtomicAddress()), fixedWidthDesired)
         }
 
         void store(T desired, rsl::internal::memory_order_seq_cst_s)
         {
           atomic_fixed_width_type_t<128> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<128>, desired);
-          MERGE(REX_ATOMIC_STORE_SEQ_CST_, 128)(atomic_fixed_width_type_t<128>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<128>, this->GetAtomicAddress()), fixedWidthDesired)
+          REX_ATOMIC_STORE_SEQ_CST_128(atomic_fixed_width_type_t<128>, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<128>, this->GetAtomicAddress()), fixedWidthDesired)
         }
 
       public: /* load */
@@ -1681,14 +1681,14 @@ namespace rsl
         T load() const
         {
           atomic_fixed_width_type_t<128> retVal;
-          MERGE(REX_ATOMIC_LOAD_SEQ_CST_, 128)(atomic_fixed_width_type_t<128>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<128>, this->GetAtomicAddress()));
+          REX_ATOMIC_LOAD_SEQ_CST_128(atomic_fixed_width_type_t<128>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<128>, this->GetAtomicAddress()));
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
         }
 
         T load(rsl::internal::memory_order_relaxed_s) const
         {
           atomic_fixed_width_type_t<128> retVal;
-          MERGE(REX_ATOMIC_LOAD_RELAXED_, 128)(atomic_fixed_width_type_t<128>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<128>, this->GetAtomicAddress()));
+          REX_ATOMIC_LOAD_RELAXED_128(atomic_fixed_width_type_t<128>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<128>, this->GetAtomicAddress()));
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
 
         }
@@ -1696,7 +1696,7 @@ namespace rsl
         T load(rsl::internal::memory_order_acquire_s) const
         {
           atomic_fixed_width_type_t<128> retVal;
-          MERGE(REX_ATOMIC_LOAD_ACQUIRE_, 128)(atomic_fixed_width_type_t<128>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<128>, this->GetAtomicAddress()));
+          REX_ATOMIC_LOAD_ACQUIRE_128(atomic_fixed_width_type_t<128>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<128>, this->GetAtomicAddress()));
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
 
         }
@@ -1704,7 +1704,7 @@ namespace rsl
         T load(rsl::internal::memory_order_seq_cst_s) const
         {
           atomic_fixed_width_type_t<128> retVal;
-          MERGE(REX_ATOMIC_LOAD_SEQ_CST_, 128)(atomic_fixed_width_type_t<128>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<128>, this->GetAtomicAddress()));
+          REX_ATOMIC_LOAD_SEQ_CST_128(atomic_fixed_width_type_t<128>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<128>, this->GetAtomicAddress()));
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
 
         }
@@ -1716,7 +1716,7 @@ namespace rsl
         {
           atomic_fixed_width_type_t<128> retVal;
           atomic_fixed_width_type_t<128> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<128>, desired);
-          MERGE(REX_ATOMIC_EXCHANGE_SEQ_CST_, 128)(atomic_fixed_width_type_t<128>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<128>, this->GetAtomicAddress()), fixedWidthDesired);
+          REX_ATOMIC_EXCHANGE_SEQ_CST_128(atomic_fixed_width_type_t<128>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<128>, this->GetAtomicAddress()), fixedWidthDesired);
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
         }
 
@@ -1724,7 +1724,7 @@ namespace rsl
         {
           atomic_fixed_width_type_t<128> retVal;
           atomic_fixed_width_type_t<128> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<128>, desired);
-          MERGE(REX_ATOMIC_EXCHANGE_RELAXED_, 128)(atomic_fixed_width_type_t<128>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<128>, this->GetAtomicAddress()), fixedWidthDesired);
+          REX_ATOMIC_EXCHANGE_RELAXED_128(atomic_fixed_width_type_t<128>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<128>, this->GetAtomicAddress()), fixedWidthDesired);
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
         }
 
@@ -1732,7 +1732,7 @@ namespace rsl
         {
           atomic_fixed_width_type_t<128> retVal;
           atomic_fixed_width_type_t<128> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<128>, desired);
-          MERGE(REX_ATOMIC_EXCHANGE_ACQUIRE_, 128)(atomic_fixed_width_type_t<128>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<128>, this->GetAtomicAddress()), fixedWidthDesired);
+          REX_ATOMIC_EXCHANGE_ACQUIRE_128(atomic_fixed_width_type_t<128>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<128>, this->GetAtomicAddress()), fixedWidthDesired);
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
         }
 
@@ -1740,7 +1740,7 @@ namespace rsl
         {
           atomic_fixed_width_type_t<128> retVal;
           atomic_fixed_width_type_t<128> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<128>, desired);
-          MERGE(REX_ATOMIC_EXCHANGE_RELEASE_, 128)(atomic_fixed_width_type_t<128>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<128>, this->GetAtomicAddress()), fixedWidthDesired);
+          REX_ATOMIC_EXCHANGE_RELEASE_128(atomic_fixed_width_type_t<128>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<128>, this->GetAtomicAddress()), fixedWidthDesired);
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
         }
 
@@ -1748,7 +1748,7 @@ namespace rsl
         {
           atomic_fixed_width_type_t<128> retVal;
           atomic_fixed_width_type_t<128> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<128>, desired);
-          MERGE(REX_ATOMIC_EXCHANGE_ACQ_REL_, 128)(atomic_fixed_width_type_t<128>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<128>, this->GetAtomicAddress()), fixedWidthDesired);
+          REX_ATOMIC_EXCHANGE_ACQ_REL_128(atomic_fixed_width_type_t<128>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<128>, this->GetAtomicAddress()), fixedWidthDesired);
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
         }
 
@@ -1756,7 +1756,7 @@ namespace rsl
         {
           atomic_fixed_width_type_t<128> retVal;
           atomic_fixed_width_type_t<128> fixedWidthDesired = REX_ATOMIC_TYPE_PUN_CAST(atomic_fixed_width_type_t<128>, desired);
-          MERGE(REX_ATOMIC_EXCHANGE_SEQ_CST_, 128)(atomic_fixed_width_type_t<128>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<128>, this->GetAtomicAddress()), fixedWidthDesired);
+          REX_ATOMIC_EXCHANGE_SEQ_CST_128(atomic_fixed_width_type_t<128>, retVal, REX_ATOMIC_TYPE_CAST(atomic_fixed_width_type_t<128>, this->GetAtomicAddress()), fixedWidthDesired);
           return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
         }
 
