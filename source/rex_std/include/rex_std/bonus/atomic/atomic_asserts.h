@@ -5,7 +5,17 @@
 
 #pragma once
 
-#include "rex_std/internal/type_traits/is_same.h"
+#include "rex_std/bonus/utility/always_false.h"
+
+#include "rex_std/internal/type_traits/is_const.h"
+#include "rex_std/internal/type_traits/is_volatile.h"
+#include "rex_std/internal/type_traits/is_standard_layout.h"
+#include "rex_std/internal/type_traits/is_trivially_copyable.h"
+#include "rex_std/internal/type_traits/is_copy_constructible.h"
+#include "rex_std/internal/type_traits/is_move_constructible.h"
+#include "rex_std/internal/type_traits/is_copy_assignable.h"
+#include "rex_std/internal/type_traits/is_move_assignable.h"
+#include "rex_std/internal/type_traits/is_trivially_destructible.h"
 
 #define REX_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(type)                                                                                                                                                                                                   \
   static_assert(!rsl::is_same<type, type>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
@@ -56,7 +66,7 @@ namespace rsl
          * supported on the given platform.
          */
 
-        static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : invalid template type T!");
+        static_assert(!rsl::internal::always_false<T>, "rsl::atomic<T> : invalid template type T!");
       };
 
     } // namespace internal

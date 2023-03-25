@@ -1,8 +1,3 @@
-
-
-#ifndef REX_ATOMIC_INTERNAL_ARCH_X86_CMPXCHG_STRONG_H
-#define REX_ATOMIC_INTERNAL_ARCH_X86_CMPXCHG_STRONG_H
-
 #pragma once
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -41,5 +36,3 @@
   #define REX_ARCH_ATOMIC_CMPXCHG_STRONG_SEQ_CST_SEQ_CST_128(type, ret, ptr, expected, desired) REX_ARCH_ATOMIC_X86_CMPXCHG_STRONG_128_IMPL(type, ret, ptr, expected, desired)
 
 #endif
-
-#endif /* REX_ATOMIC_INTERNAL_ARCH_X86_CMPXCHG_STRONG_H */

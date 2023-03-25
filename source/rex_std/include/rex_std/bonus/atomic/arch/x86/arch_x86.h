@@ -1,8 +1,3 @@
-
-
-#ifndef REX_ATOMIC_INTERNAL_ARCH_X86_H
-#define REX_ATOMIC_INTERNAL_ARCH_X86_H
-
 #pragma once
 
 /**
@@ -126,5 +121,3 @@
 #include "arch_x86_sub_fetch.h"
 #include "arch_x86_thread_fence.h"
 #include "arch_x86_xor_fetch.h"
-
-#endif /* REX_ATOMIC_INTERNAL_ARCH_X86_H */

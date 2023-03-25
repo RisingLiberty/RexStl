@@ -1,8 +1,3 @@
-
-
-#ifndef REX_ATOMIC_INTERNAL_ARCH_ARM_H
-#define REX_ATOMIC_INTERNAL_ARCH_ARM_H
-
 #pragma once
 
 /**
@@ -73,4 +68,3 @@
 #include "arch_arm_store.h"
 #include "arch_arm_thread_fence.h"
 
-#endif /* REX_ATOMIC_INTERNAL_ARCH_ARM_H */
