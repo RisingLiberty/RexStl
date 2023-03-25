@@ -236,7 +236,8 @@ namespace rsl
       }
       int_type underflow() final
       {
-        if(base::gptr() && base::gptr() < base::egptr()) // can we still get characters from the get area?
+        // can we still get characters from the get area?
+        if(base::gptr() && base::gptr() < base::egptr())
         {
           return traits_type::to_int_type(*base::gptr());
         }
