@@ -30,11 +30,14 @@ namespace rsl
   #error No platform defined
 #endif
 
+      class mutex_base;
+      bool does_current_thread_own_mtx(mutex_base* mtx);
+
       class mutex_base
       {
       public:
         class internal;
-        using native_handle_type = void*;
+        using native_handle_type = internal*;
 
         mutex_base();
         ~mutex_base() = default;
@@ -55,6 +58,11 @@ namespace rsl
         aligned_storage<g_mutex_size, g_mutex_alignment> m_internal_storage;
         internal* m_internal;
       };
+
+      void mtx_clear_owner(mutex_base::internal* mtx);
+      void mtx_reset_owner(mutex_base::internal* mtx);
+      void* mtx_os_handle(mutex_base::internal* mtx);
+
     } // namespace internal
   }   // namespace v1
 } // namespace rsl

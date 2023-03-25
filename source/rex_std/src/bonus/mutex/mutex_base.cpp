@@ -24,6 +24,8 @@ namespace rsl
     {
       class mutex_base::internal
       {
+        friend bool does_current_thread_own_mtx(mutex_base* mtx);
+
       public:
         internal()
             : m_srw_lock()
@@ -39,22 +41,54 @@ namespace rsl
           m_thread_id = thread_id;
           AcquireSRWLockExclusive(&m_srw_lock);
         }
-
         bool try_lock()
         {
           return TryAcquireSRWLockExclusive(&m_srw_lock) != 0;
         }
-
         void unlock()
         {
           m_thread_id = 0;
           ReleaseSRWLockExclusive(&m_srw_lock);
         }
 
+        void clear_owner()
+        {
+          m_thread_id = -1;
+          --m_count;
+        }
+        void reset_owner()
+        {
+          m_thread_id = GetCurrentThreadId();
+          ++m_count;
+        }
+        SRWLOCK* os_handle()
+        {
+          return &m_srw_lock;
+        }
+
       private:
         SRWLOCK m_srw_lock;
+        card32 m_count;
         DWORD m_thread_id;
       };
+
+      bool does_current_thread_own_mtx(mutex_base* mtx)
+      {
+        return mtx->native_handle()->m_count != 0 && mtx->native_handle()->m_thread_id == GetCurrentThreadId();
+      }
+
+      void mtx_clear_owner(mutex_base::internal* mtx)
+      {
+        mtx->clear_owner();
+      }
+      void mtx_reset_owner(mutex_base::internal* mtx)
+      {
+        mtx->reset_owner();
+      }
+      void* mtx_os_hadnle(mutex_base::internal* mtx)
+      {
+        return mtx->os_handle();
+      }
 
       static_assert(sizeof(mutex_base::internal) <= g_mutex_size, "incorrect g_mutex_size");
       static_assert(alignof(mutex_base::internal) <= g_mutex_alignment, "incorrect g_mutex_alignment");
@@ -84,6 +118,7 @@ namespace rsl
       {
         return m_internal;
       }
+
     } // namespace internal
   }   // namespace v1
 } // namespace rsl

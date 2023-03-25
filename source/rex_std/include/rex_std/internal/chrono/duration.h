@@ -108,6 +108,28 @@ namespace rsl
             return ToDuration(static_cast<typename ToDuration::rep>(static_cast<CommonRep>(d.count()) * static_cast<CommonRep>(CommonPeriod::num) / static_cast<CommonRep>(CommonPeriod::den)));
           }
         };
+
+        template <typename Rep, typename Period>
+        auto to_abs_time(const chrono::duration<Rep, Period>& relTime)
+        {
+          const auto zero = chrono::duration<Rep, Period>::zero();
+          const auto now = chrono::steady_clock::now();
+          decltype(now + relTime) abs_time = now;
+          if (relTime > zero)
+          {
+            const auto forever = (chrono::steady_clock::time_point::max)();
+            if (abs_time < forever - relTime)
+            {
+              abs_time += relTime;
+            }
+            else
+            {
+              abs_time = forever;
+            }
+          }
+
+          return abs_time;
+        }
       } // namespace internal
 
       template <typename ToDuration, typename Rep, typename Period, enable_if_t<internal::is_duration<ToDuration>::value, bool> Enabled = true>

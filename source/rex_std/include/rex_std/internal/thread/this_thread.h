@@ -31,28 +31,6 @@ namespace rsl
     {
       namespace internal
       {
-        template <typename Rep, typename Period>
-        auto to_abs_time(const chrono::duration<Rep, Period>& relTime)
-        {
-          const auto zero                  = chrono::duration<Rep, Period>::zero();
-          const auto now                   = chrono::steady_clock::now();
-          decltype(now + relTime) abs_time = now;
-          if(relTime > zero)
-          {
-            const auto forever = (chrono::steady_clock::time_point::max)();
-            if(abs_time < forever - relTime)
-            {
-              abs_time += relTime;
-            }
-            else
-            {
-              abs_time = forever;
-            }
-          }
-
-          return abs_time;
-        }
-
         void sleep_this_thread_until(rsl::internal::xtime sleeptime);
       } // namespace internal
 
@@ -81,7 +59,7 @@ namespace rsl
       template <typename Rep, typename Period>
       void sleep_for(const chrono::duration<Rep, Period>& relTime)
       {
-        return sleep_until(internal::to_abs_time(relTime));
+        return sleep_until(chrono::internal::to_abs_time(relTime));
       }
     } // namespace this_thread
   }   // namespace v1

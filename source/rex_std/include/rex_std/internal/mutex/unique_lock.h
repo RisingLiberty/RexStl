@@ -23,6 +23,8 @@ namespace rsl
     class unique_lock
     {
     public:
+      using mutex_type = Mutex;
+
       unique_lock()
           : m_mutex(nullptr)
       {
@@ -66,6 +68,11 @@ namespace rsl
         REX_ASSERT_X(m_mutex != nullptr, "Trying to unlock mutex, but no is provided");
         m_mutex->unlock();
         m_mutex = nullptr;
+      }
+
+      mutex_type* mutex()
+      {
+        return m_mutex;
       }
 
     private:
