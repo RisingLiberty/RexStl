@@ -14,6 +14,7 @@
 #include "rex_std/bonus/mutex/mutex_base.h"
 #include "rex_std/assert.h"
 #include "rex_std/internal/exception/teminate.h"
+#include "rex_std/internal/thread/this_thread.h"
 
 #include <Windows.h>
 
@@ -85,6 +86,17 @@ namespace rsl
       }
 
       inline constexpr card32 num_items = 20;
+      SRWLOCK thread_exit_mtx;
+
+      void lock_thread_exit_mtx()
+      {
+        AcquireSRWLockExclusive(&thread_exit_mtx);
+      }
+      void unlock_thread_exit_mtx()
+      {
+        ReleaseSRWLockExclusive(&thread_exit_mtx);
+      }
+
       struct at_thread_exit_data
       {
         DWORD thread_id;
@@ -100,13 +112,73 @@ namespace rsl
         at_thread_exit_block* next;
       };
 
-      void cnd_register_at_thread_exit(condition_variable::impl*, const mutex::native_handle_type mtx, int* p)
-      {
+      at_thread_exit_block thread_exit_data;
 
+      void cnd_register_at_thread_exit(condition_variable::impl* cnd, const mutex::native_handle_type mtx, int* p)
+      {
+        at_thread_exit_block* block = &thread_exit_data;
+        lock_thread_exit_mtx();
+
+        // loop through list of blocks
+        while (block != nullptr)
+        {
+          // block is full. move to next block and allocate
+          if (block->num_used = num_items)
+          {
+            if (block->next == nullptr)
+            {
+              block->next = static_cast<at_thread_exit_block*>(calloc(1, sizeof(at_thread_exit_block)));
+            }
+            block = block->next;
+          }
+
+          // found block with available space
+          else
+          {
+            // find an empty slot
+            for (card32 i = 0; i < num_items; ++i)
+            {
+              // store into empty slot
+              if (block->data[i].mtx == nullptr)
+              {
+                block->data[i].thread_id = GetCurrentThreadId();
+                block->data[i].mtx = mtx;
+                block->data[i].cv = cnd;
+                block->data[i].res = p;
+                ++block->num_used;
+                break;
+              }
+
+              block = nullptr;
+            }
+          }
+        }
+
+        unlock_thread_exit_mtx();
       }
       void cnd_unregister_at_thread_exit(const mutex::native_handle_type mtx)
       {
+        at_thread_exit_block* block = &thread_exit_data;
 
+        lock_thread_exit_mtx();
+
+        // loop through list of blocks
+        while (block != nullptr)
+        {
+          for (card32 i = 0; block->num_used != 0 && i < num_items; ++i)
+          {
+            // release slot
+            if (block->data[i].mtx == mtx)
+            {
+              block->data[i].mtx = nullptr;
+              --block->num_used;
+            }
+          }
+
+          block = block->next;
+        }
+
+        unlock_thread_exit_mtx();
       }
     }
 
@@ -114,8 +186,6 @@ namespace rsl
     {
       m_storage.set<condition_variable::impl>();
     }
-
-    condition_variable::condition_variable(const condition_variable&) = delete;
 
     condition_variable::~condition_variable() = default;
 
@@ -157,12 +227,12 @@ namespace rsl
 
     void condition_variable::register_at_thread_exit(unique_lock<mutex>& lock, int* ready)
     {
-      _Cnd_register_at_thread_exit(_Mycnd(), lock.release()->_Mymtx(), ready);
+      internal::cnd_register_at_thread_exit(internal_impl(), lock.mutex()->native_handle(), ready);
     }
 
-    void condition_variable::unregister_at_thread_exit(mutex& _Mtx)
+    void condition_variable::unregister_at_thread_exit(unique_lock<mutex>& lock)
     {
-      _Cnd_unregister_at_thread_exit(_Mtx._Mymtx());
+      internal::cnd_unregister_at_thread_exit(lock.mutex()->native_handle());
     }
 
     condition_variable::impl* condition_variable::internal_impl()

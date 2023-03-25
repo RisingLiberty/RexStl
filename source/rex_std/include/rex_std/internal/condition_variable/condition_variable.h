@@ -129,8 +129,9 @@ namespace rsl
 
       void register_at_thread_exit(unique_lock<mutex>& lock, int* ready);
 
-      void unregister_at_thread_exit(mutex& _Mtx);
+      void unregister_at_thread_exit(unique_lock<mutex>& lock);
 
+    private:
       impl* internal_impl();
 
       template <typename Predicate>
