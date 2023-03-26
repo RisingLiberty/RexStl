@@ -31,14 +31,20 @@
 *.out
 *.app
 
-*.bak
-.rex/
+# IDE
 .vscode/
 .vs/
-.ninja/
-docs/book/
-build/scripts/rexpy/__pycache__/
 
+# Backup
+*.bak
+
+# Python
+**/__pycache__/
+
+# Rex
+docs/book/
+
+.rex/
 *.ninja
 *.sln
 *.nsln
