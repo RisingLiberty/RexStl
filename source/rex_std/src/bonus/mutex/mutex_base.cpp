@@ -53,7 +53,7 @@ namespace rsl
 
         void clear_owner()
         {
-          m_thread_id = -1;
+          m_thread_id = static_cast<DWORD>(-1);
           --m_count;
         }
         void reset_owner()
@@ -85,7 +85,7 @@ namespace rsl
       {
         mtx->reset_owner();
       }
-      void* mtx_os_hadnle(mutex_base::internal* mtx)
+      void* mtx_os_handle(mutex_base::internal* mtx)
       {
         return mtx->os_handle();
       }
