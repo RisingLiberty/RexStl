@@ -98,9 +98,16 @@
 // #include "rex_std/wctype.h"
 
 #include "rex_std/atomic.h"
+#include "rex_std/sstream.h"
 
 int main()
 {
+  rsl::stringstream ss;
+  ss << "Hello";
+
+
+
+
   [[maybe_unused]] rsl::atomic<char> x;
   x.store(1);
   [[maybe_unused]] int y = x.load();

@@ -1,8 +1,3 @@
-
-
-#ifndef REX_ATOMIC_INTERNAL_ARCH_X86_THREAD_FENCE_H
-#define REX_ATOMIC_INTERNAL_ARCH_X86_THREAD_FENCE_H
-
 #pragma once
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -26,5 +21,3 @@
   #define REX_ARCH_ATOMIC_THREAD_FENCE_SEQ_CST() REX_ATOMIC_CPU_MB()
 
 #endif
-
-#endif /* REX_ATOMIC_INTERNAL_ARCH_X86_THREAD_FENCE_H */

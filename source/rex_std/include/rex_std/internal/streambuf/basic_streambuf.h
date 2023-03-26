@@ -156,7 +156,7 @@ namespace rsl
       // write one character to the output stream
       int_type sputc(char_type ch) // NOLINT(misc-no-recursion)
       {
-        if(m_write_buf_curr == nullptr)
+        if(m_write_buf_curr == nullptr || available_in_put_area() <= 0)
         {
           return overflow(ch);
         }
@@ -313,10 +313,19 @@ namespace rsl
       // this is different version of uflow where multiple chars can be read in 1 go.
       // this is to avoid multiple sequential virtual calls and have all characters up to count
       // read in 1 go.
-      // the function is pure virtual as the derived classes have the responsibility
-      // to define what needs to happen when this function is called.
       // reads characters from the associated input sequence to the get area and advance the next pointer
-      virtual streamsize uflown(char_type* s, streamsize count) = 0;
+      virtual streamsize uflown(char_type* /*s*/, streamsize count)
+      {
+        while (count--)
+        {
+          if (uflow() == Traits::eof())
+          {
+            return -1;
+          }
+        }
+
+        return count;
+      }
 
       // reads count characters from the input sequence and stores them into a character array pointed to by s.
       // works as if by repeated calls to sbumpc.
@@ -414,8 +423,6 @@ namespace rsl
       // this is different version of overflow where multiple chars can be written in 1 go.
       // this is to avoid multiple sequential virtual calls and have all characters up to count
       // written in 1 go.
-      // the function is pure virtual as the derived classes have the responsibility
-      // to define what needs to happen when this function is called.
       // writes characters to the associated output sequence and advances the next pointer
       virtual streamsize overflown(const char_type* s, streamsize count) = 0;
 
@@ -444,8 +451,8 @@ namespace rsl
       void setp(char_type** beg, char_type** current, char_type** end)
       {
         m_write_buf_begin = beg;
-        m_write_buf_curr  = beg;
-        m_read_buf_end    = end;
+        m_write_buf_curr  = current;
+        m_write_buf_end    = end;
       }
 
       // repositions the beginning, next and end pointers of the output sequence

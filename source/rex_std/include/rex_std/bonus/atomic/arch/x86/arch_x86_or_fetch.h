@@ -1,8 +1,3 @@
-
-
-#ifndef REX_ATOMIC_INTERNAL_ARCH_X86_OR_FETCH_H
-#define REX_ATOMIC_INTERNAL_ARCH_X86_OR_FETCH_H
-
 #pragma once
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -44,5 +39,3 @@
   #define REX_ARCH_ATOMIC_OR_FETCH_SEQ_CST_128(type, ret, ptr, val) REX_ARCH_ATOMIC_X86_OP_128_IMPL(type, ret, ptr, val, SEQ_CST, REX_ARCH_ATOMIC_X86_OR_FETCH_PRE_COMPUTE_DESIRED, REX_ARCH_ATOMIC_X86_OR_FETCH_POST_COMPUTE_RET)
 
 #endif
-
-#endif /* REX_ATOMIC_INTERNAL_ARCH_X86_OR_FETCH_H */

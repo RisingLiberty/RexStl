@@ -1,8 +1,3 @@
-
-
-#ifndef REX_ATOMIC_INTERNAL_ARCH_X86_EXCHANGE_H
-#define REX_ATOMIC_INTERNAL_ARCH_X86_EXCHANGE_H
-
 #pragma once
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -52,5 +47,3 @@
   #define REX_ARCH_ATOMIC_EXCHANGE_SEQ_CST_128(type, ret, ptr, val) REX_ARCH_ATOMIC_X86_EXCHANGE_128(type, ret, ptr, val, SEQ_CST)
 
 #endif
-
-#endif /* REX_ATOMIC_INTERNAL_ARCH_X86_EXCHANGE_H */

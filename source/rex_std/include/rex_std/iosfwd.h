@@ -75,16 +75,16 @@ namespace rsl
     class basic_fstream;
 
     // defined in rex_std/sstream.h
-    template <typename CharT, typename Traits = char_traits<CharT>, typename Allocator = allocator>
+    template <typename CharT, typename Traits, typename Allocator>
     class basic_stringbuf;
 
-    template <typename CharT, typename Traits = char_traits<CharT>, typename Allocator = allocator>
+    template <typename CharT, typename Traits, typename Allocator>
     class basic_istringstream;
 
-    template <typename CharT, typename Traits = char_traits<CharT>, typename Allocator = allocator>
+    template <typename CharT, typename Traits, typename Allocator>
     class basic_ostringstream;
 
-    template <typename CharT, typename Traits = char_traits<CharT>, typename Allocator = allocator>
+    template <typename CharT, typename Traits, typename Allocator>
     class basic_stringstream;
 
 #ifdef REX_ENABLE_WITH_CPP20

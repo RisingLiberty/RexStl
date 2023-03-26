@@ -20,7 +20,7 @@ namespace rsl
     {
 
       template <typename T>
-      REX_FORCE_INLINE volatile T* AtomicVolatileCast(T* ptr)
+      REX_FORCE_INLINE volatile T* atomic_volatile_cast(T* ptr)
       {
         static_assert(!rsl::is_volatile<volatile T*>::value, "rsl::atomic<T> : pointer must not be volatile, the pointed to type must be volatile!");
         static_assert(rsl::is_volatile<volatile T>::value, "rsl::atomic<T> : the pointed to type must be volatile!");
@@ -48,7 +48,7 @@ namespace rsl
        * unsigned integral type.
        */
       template <typename Integral, typename T>
-      REX_FORCE_INLINE volatile Integral* AtomicVolatileIntegralCast(T* ptr)
+      REX_FORCE_INLINE volatile Integral* atomic_volatile_integral_cast(T* ptr)
       {
         static_assert(!rsl::is_volatile<volatile Integral*>::value, "rsl::atomic<T> : pointer must not be volatile, the pointed to type must be volatile!");
         static_assert(rsl::is_volatile<volatile Integral>::value, "rsl::atomic<T> : the pointed to type must be volatile!");
@@ -59,7 +59,7 @@ namespace rsl
       }
 
       template <typename Integral, typename T>
-      REX_FORCE_INLINE Integral* AtomicIntegralCast(T* ptr)
+      REX_FORCE_INLINE Integral* atomic_integral_cast(T* ptr)
       {
         static_assert(rsl::is_integral<Integral>::value, "rsl::atomic<T> : Integral cast must cast to an Integral type!");
         static_assert(sizeof(Integral) == sizeof(T), "rsl::atomic<T> : Integral and T must be same size for casting!");
@@ -77,7 +77,7 @@ namespace rsl
        * since a poiter to Foo128 is a pointer to the first member.
        */
       template <typename ToType, typename FromType>
-      REX_FORCE_INLINE volatile ToType* AtomicVolatileTypeCast(FromType* ptr)
+      REX_FORCE_INLINE volatile ToType* atomic_volatile_type_cast(FromType* ptr)
       {
         static_assert(!rsl::is_volatile<volatile ToType*>::value, "rsl::atomic<T> : pointer must not be volatile, the pointed to type must be volatile!");
         static_assert(rsl::is_volatile<volatile ToType>::value, "rsl::atomic<T> : the pointed to type must be volatile!");
@@ -86,7 +86,7 @@ namespace rsl
       }
 
       template <typename ToType, typename FromType>
-      REX_FORCE_INLINE ToType* AtomicTypeCast(FromType* ptr)
+      REX_FORCE_INLINE ToType* atomic_type_cast(FromType* ptr)
       {
         return reinterpret_cast<ToType*>(ptr);
       }
@@ -100,16 +100,16 @@ namespace rsl
        *
        * Example:
        * uint64 atomicLoad = *((volatile uint64*)&Test);
-       * Test load = AtomicTypePunCast<Test, uint64>(atomicLoad);
+       * Test load = atomic_type_pun_cast<Test, uint64>(atomicLoad);
        *
-       * uint64 comparand = AtomicTypePunCast<uint64, Test>(Test);
+       * uint64 comparand = atomic_type_pun_cast<uint64, Test>(Test);
        * cmpxchg(&Test, comparand, desired);
        *
        * This can be implemented in many different ways depending on the compiler such
        * as thru a union, memcpy, reinterpret_cast<Test&>(atomicLoad), etc.
        */
       template <typename Pun, typename T, rsl::enable_if_t<!rsl::is_same_v<Pun, T>, int> = 0>
-      REX_FORCE_INLINE Pun AtomicTypePunCast(const T& fromType)
+      REX_FORCE_INLINE Pun atomic_type_pun_cast(const T& fromType)
       {
         static_assert(sizeof(Pun) == sizeof(T), "rsl::atomic<T> : Pun and T must be the same size for type punning!");
 
@@ -123,13 +123,13 @@ namespace rsl
       }
 
       template <typename Pun, typename T, rsl::enable_if_t<rsl::is_same_v<Pun, T>, int> = 0>
-      REX_FORCE_INLINE Pun AtomicTypePunCast(const T& fromType)
+      REX_FORCE_INLINE Pun atomic_type_pun_cast(const T& fromType)
       {
         return fromType;
       }
 
       template <typename T>
-      REX_FORCE_INLINE T AtomicNegateOperand(T val)
+      REX_FORCE_INLINE T atomic_negate_operand(T val)
       {
         static_assert(rsl::is_integral<T>::value, "rsl::atomic<T> : Integral Negation must be an Integral type!");
         static_assert(!rsl::is_volatile<T>::value, "rsl::atomic<T> : T must not be volatile!");
@@ -137,7 +137,7 @@ namespace rsl
         return static_cast<T>(0U - static_cast<rsl::make_unsigned_t<T>>(val));
       }
 
-      REX_FORCE_INLINE ptrdiff_t AtomicNegateOperand(ptrdiff_t val)
+      REX_FORCE_INLINE ptrdiff_t atomic_negate_operand(ptrdiff_t val)
       {
         return -val;
       }
@@ -154,18 +154,18 @@ namespace rsl
  *  These macros are meant to prevent inclusion hell.
  *  Also so that it fits with the style of the rest of the atomic macro implementation.
  */
-#define REX_ATOMIC_VOLATILE_CAST(ptr) rsl::internal::AtomicVolatileCast((ptr))
+#define REX_ATOMIC_VOLATILE_CAST(ptr) rsl::internal::atomic_volatile_cast((ptr))
 
-#define REX_ATOMIC_VOLATILE_INTEGRAL_CAST(IntegralType, ptr) rsl::internal::AtomicVolatileIntegralCast<IntegralType>((ptr))
+#define REX_ATOMIC_VOLATILE_INTEGRAL_CAST(IntegralType, ptr) rsl::internal::atomic_volatile_integral_cast<IntegralType>((ptr))
 
-#define REX_ATOMIC_INTEGRAL_CAST(IntegralType, ptr) rsl::internal::AtomicIntegralCast<IntegralType>((ptr))
+#define REX_ATOMIC_INTEGRAL_CAST(IntegralType, ptr) rsl::internal::atomic_integral_cast<IntegralType>((ptr))
 
-#define REX_ATOMIC_VOLATILE_TYPE_CAST(ToType, ptr) rsl::internal::AtomicVolatileTypeCast<ToType>((ptr))
+#define REX_ATOMIC_VOLATILE_TYPE_CAST(ToType, ptr) rsl::internal::atomic_volatile_type_cast<ToType>((ptr))
 
-#define REX_ATOMIC_TYPE_CAST(ToType, ptr) rsl::internal::AtomicTypeCast<ToType>((ptr))
+#define REX_ATOMIC_TYPE_CAST(ToType, ptr) rsl::internal::atomic_type_cast<ToType>((ptr))
 
-#define REX_ATOMIC_TYPE_PUN_CAST(PunType, fromType) rsl::internal::AtomicTypePunCast<PunType>((fromType))
+#define REX_ATOMIC_TYPE_PUN_CAST(PunType, fromType) rsl::internal::atomic_type_pun_cast<PunType>((fromType))
 
-#define REX_ATOMIC_NEGATE_OPERAND(val) rsl::internal::AtomicNegateOperand((val))
+#define REX_ATOMIC_NEGATE_OPERAND(val) rsl::internal::atomic_negate_operand((val))
 
 #endif /* REX_ATOMIC_INTERNAL_CASTS_H */

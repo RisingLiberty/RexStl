@@ -63,7 +63,7 @@ namespace rsl
 
       operator streamoff() const // NOLINT(google-explicit-constructor)
       {
-        return m_offset + m_fpos;
+        return static_cast<streamoff>(m_offset + m_fpos);
       }
 
       streamoff operator-(const fpos& right) const

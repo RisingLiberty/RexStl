@@ -1,30 +1,25 @@
-
-
-#ifndef REX_ATOMIC_INTERNAL_ARCH_X86_STORE_H
-#define REX_ATOMIC_INTERNAL_ARCH_X86_STORE_H
-
 #pragma once
 
+#include "rex_std/bonus/atomic/atomic_fixed_width_type.h"
+
+namespace rsl
+{
+  inline namespace v1
+  {
+    namespace internal
+    {
+      void x86_atomic_store(atomic_fixed_width_type_t<8>* ptr, atomic_fixed_width_type_t<8> val);
+      void x86_atomic_store(atomic_fixed_width_type_t<16>* ptr, atomic_fixed_width_type_t<16> val);
+      void x86_atomic_store(atomic_fixed_width_type_t<32>* ptr, atomic_fixed_width_type_t<32> val);
+      void x86_atomic_store(atomic_fixed_width_type_t<64>* ptr, atomic_fixed_width_type_t<64> val);
+    }
+  }
+}
 /////////////////////////////////////////////////////////////////////////////////
 //
 // void REX_ARCH_ATOMIC_STORE_*_N(type, type * ptr, type val)
 //
 #if defined(REX_COMPILER_MSVC)
-
-  #if defined(REX_COMPILER_MSVC) && (REX_COMPILER_VERSION >= 1920) // >= VS2019
-
-    #define REX_ARCH_ATOMIC_X86_STORE_N(integralType, bits, type, ptr, val) MERGE(__iso_volatile_store, bits)(REX_ATOMIC_VOLATILE_INTEGRAL_CAST(integralType, (ptr)), REX_ATOMIC_TYPE_PUN_CAST(integralType, (val)))
-
-  #else
-
-    #define REX_ARCH_ATOMIC_X86_STORE_N(integralType, bits, type, ptr, val)                                                                                                                                                                              \
-      {                                                                                                                                                                                                                                                  \
-        integralType valIntegral = REX_ATOMIC_TYPE_PUN_CAST(integralType, (val));                                                                                                                                                                        \
-                                                                                                                                                                                                                                                         \
-        (*(REX_ATOMIC_VOLATILE_INTEGRAL_CAST(integralType, (ptr)))) = valIntegral;                                                                                                                                                                       \
-      }
-
-  #endif
 
   #define REX_ARCH_ATOMIC_X86_STORE_128(type, ptr, val, MemoryOrder)                                                                                                                                                                                     \
     {                                                                                                                                                                                                                                                    \
@@ -33,39 +28,31 @@
       MERGE(MERGE(REX_ATOMIC_EXCHANGE_, MemoryOrder), _128)(type, exchange128, ptr, val);                                                                                                                                                                \
     }
 
-  #define REX_ARCH_ATOMIC_X86_STORE_8(type, ptr, val) REX_ARCH_ATOMIC_X86_STORE_N(__int8, 8, type, ptr, val)
+  #define REX_ARCH_ATOMIC_STORE_RELAXED_8(type, ptr, val) rsl::internal::x86_atomic_store(ptr, val)
 
-  #define REX_ARCH_ATOMIC_X86_STORE_16(type, ptr, val) REX_ARCH_ATOMIC_X86_STORE_N(__int16, 16, type, ptr, val)
+  #define REX_ARCH_ATOMIC_STORE_RELAXED_16(type, ptr, val) rsl::internal::x86_atomic_store(ptr, val)
 
-  #define REX_ARCH_ATOMIC_X86_STORE_32(type, ptr, val) REX_ARCH_ATOMIC_X86_STORE_N(__int32, 32, type, ptr, val)
+  #define REX_ARCH_ATOMIC_STORE_RELAXED_32(type, ptr, val) rsl::internal::x86_atomic_store(ptr, val)
 
-  #define REX_ARCH_ATOMIC_X86_STORE_64(type, ptr, val) REX_ARCH_ATOMIC_X86_STORE_N(__int64, 64, type, ptr, val)
-
-  #define REX_ARCH_ATOMIC_STORE_RELAXED_8(type, ptr, val) REX_ARCH_ATOMIC_X86_STORE_8(type, ptr, val)
-
-  #define REX_ARCH_ATOMIC_STORE_RELAXED_16(type, ptr, val) REX_ARCH_ATOMIC_X86_STORE_16(type, ptr, val)
-
-  #define REX_ARCH_ATOMIC_STORE_RELAXED_32(type, ptr, val) REX_ARCH_ATOMIC_X86_STORE_32(type, ptr, val)
-
-  #define REX_ARCH_ATOMIC_STORE_RELAXED_64(type, ptr, val) REX_ARCH_ATOMIC_X86_STORE_64(type, ptr, val)
+  #define REX_ARCH_ATOMIC_STORE_RELAXED_64(type, ptr, val) rsl::internal::x86_atomic_store(ptr, val)
 
   #define REX_ARCH_ATOMIC_STORE_RELAXED_128(type, ptr, val) REX_ARCH_ATOMIC_X86_STORE_128(type, ptr, val, RELAXED)
 
   #define REX_ARCH_ATOMIC_STORE_RELEASE_8(type, ptr, val)                                                                                                                                                                                                \
     REX_ATOMIC_COMPILER_BARRIER();                                                                                                                                                                                                                       \
-    REX_ARCH_ATOMIC_X86_STORE_8(type, ptr, val)
+    rsl::internal::x86_atomic_store(ptr, val)
 
   #define REX_ARCH_ATOMIC_STORE_RELEASE_16(type, ptr, val)                                                                                                                                                                                               \
     REX_ATOMIC_COMPILER_BARRIER();                                                                                                                                                                                                                       \
-    REX_ARCH_ATOMIC_X86_STORE_16(type, ptr, val)
+    rsl::internal::x86_atomic_store(ptr, val)
 
   #define REX_ARCH_ATOMIC_STORE_RELEASE_32(type, ptr, val)                                                                                                                                                                                               \
     REX_ATOMIC_COMPILER_BARRIER();                                                                                                                                                                                                                       \
-    REX_ARCH_ATOMIC_X86_STORE_32(type, ptr, val)
+    rsl::internal::x86_atomic_store(ptr, val)
 
   #define REX_ARCH_ATOMIC_STORE_RELEASE_64(type, ptr, val)                                                                                                                                                                                               \
     REX_ATOMIC_COMPILER_BARRIER();                                                                                                                                                                                                                       \
-    REX_ARCH_ATOMIC_X86_STORE_64(type, ptr, val)
+    rsl::internal::x86_atomic_store(ptr, val)
 
   #define REX_ARCH_ATOMIC_STORE_RELEASE_128(type, ptr, val) REX_ARCH_ATOMIC_X86_STORE_128(type, ptr, val, RELEASE)
 
@@ -90,20 +77,7 @@
       REX_ATOMIC_EXCHANGE_SEQ_CST_32(type, exchange32, ptr, val);                                                                                                                                                                                        \
     }
 
-  /**
-   * NOTE:
-   *
-   * Since 64-bit exchange is wrapped around a cmpxchg8b on 32-bit x86, it is
-   * faster to just do a mov; mfence.
-   */
-  #if defined(REX_PLATFORM_X86)
-
-    #define REX_ARCH_ATOMIC_STORE_SEQ_CST_64(type, ptr, val)                                                                                                                                                                                             \
-      REX_ATOMIC_COMPILER_BARRIER();                                                                                                                                                                                                                     \
-      REX_ARCH_ATOMIC_X86_STORE_64(type, ptr, val);                                                                                                                                                                                                      \
-      REX_ATOMIC_CPU_MB()
-
-  #elif defined(REX_PLATFORM_X64)
+  #if defined(REX_PLATFORM_X64)
 
     #define REX_ARCH_ATOMIC_STORE_SEQ_CST_64(type, ptr, val)                                                                                                                                                                                             \
       {                                                                                                                                                                                                                                                  \
@@ -134,5 +108,3 @@
   #define REX_ARCH_ATOMIC_STORE_SEQ_CST_128(type, ptr, val) REX_ARCH_ATOMIC_X86_STORE_128(type, ptr, val, SEQ_CST)
 
 #endif
-
-#endif /* REX_ATOMIC_INTERNAL_ARCH_X86_STORE_H */

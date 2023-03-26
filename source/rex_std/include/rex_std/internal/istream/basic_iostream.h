@@ -30,7 +30,7 @@ namespace rsl
   {
 
     template <typename CharT, typename Traits>
-    class basic_iostream : public basic_ostream<CharT, Traits>, public basic_istream<CharT, Traits>
+    class basic_iostream : public basic_istream<CharT, Traits>, public basic_ostream<CharT, Traits>
     {
     private:
       using my_istream = basic_istream<CharT, Traits>;

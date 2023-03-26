@@ -13,6 +13,7 @@
 #pragma once
 
 #include "rex_std/internal/istream/basic_iostream.h"
+#include "rex_std/internal/memory/addressof.h"
 
 namespace rsl
 {
@@ -27,14 +28,13 @@ namespace rsl
     public:
       // constructs a stream that is not associated with a file
       basic_fstream()
-          : basic_iostream<CharType, Traits>(&m_filebuf)
+          : basic_iostream<CharType, Traits>(rsl::addressof(m_filebuf))
       {
       }
 
       // associates the stream with a file that has the given filename
       explicit basic_fstream(const char8* filename, io::openmode mode = io::openmode::in | io::openmode::out)
-          : basic_ios(&m_filebuf)
-          , basic_iostream<CharType, Traits>(&m_filebuf)
+          : basic_iostream<CharType, Traits>(rsl::addressof(m_filebuf))
       {
         open(filename, mode);
       }
