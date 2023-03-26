@@ -50,26 +50,25 @@ namespace rsl
 
         void store(T desired)
         {
-          atomic_fixed_width_type_t<NumBits> fixedWidthDesired = rsl::internal::atomic_type_pun_cast<atomic_fixed_width_type_t<NumBits>>((desired));
-          REX_ATOMIC_STORE_SEQ_CST_8(atomic_fixed_width_type_t<NumBits>, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())), fixedWidthDesired)
+          store(desired, memory_order_seq_cst);
         }
 
         void store(T desired, rsl::internal::memory_order_relaxed_s)
         {
           atomic_fixed_width_type_t<NumBits> fixedWidthDesired = rsl::internal::atomic_type_pun_cast<atomic_fixed_width_type_t<NumBits>>((desired));
-          REX_ATOMIC_STORE_RELAXED_8(atomic_fixed_width_type_t<NumBits>, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())), fixedWidthDesired)
+          REX_ATOMIC_STORE_RELAXED_8(atomic_fixed_width_type_t<NumBits>, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())), fixedWidthDesired);
         }
 
         void store(T desired, rsl::internal::memory_order_release_s)
         {
           atomic_fixed_width_type_t<NumBits> fixedWidthDesired = rsl::internal::atomic_type_pun_cast<atomic_fixed_width_type_t<NumBits>>((desired));
-          REX_ATOMIC_STORE_RELEASE_8(atomic_fixed_width_type_t<NumBits>, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())), fixedWidthDesired)
+          REX_ATOMIC_STORE_RELEASE_8(atomic_fixed_width_type_t<NumBits>, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())), fixedWidthDesired);
         }
 
         void store(T desired, rsl::internal::memory_order_seq_cst_s)
         {
           atomic_fixed_width_type_t<NumBits> fixedWidthDesired = rsl::internal::atomic_type_pun_cast<atomic_fixed_width_type_t<NumBits>>((desired));
-          REX_ATOMIC_STORE_SEQ_CST_8(atomic_fixed_width_type_t<NumBits>, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())), fixedWidthDesired)
+          REX_ATOMIC_STORE_SEQ_CST_8(atomic_fixed_width_type_t<NumBits>, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())), fixedWidthDesired);
         }
 
       public: /* load */
@@ -77,9 +76,7 @@ namespace rsl
 
         T load() const
         {
-          atomic_fixed_width_type_t<NumBits> retVal;
-          REX_ATOMIC_LOAD_SEQ_CST_8(atomic_fixed_width_type_t<NumBits>, retVal, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())));
-          return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
+          return load(memory_order_seq_cst);
         }
 
         T load(rsl::internal::memory_order_relaxed_s) const
@@ -442,26 +439,25 @@ namespace rsl
 
         void store(T desired)
         {
-          atomic_fixed_width_type_t<NumBits> fixedWidthDesired = rsl::internal::atomic_type_pun_cast<atomic_fixed_width_type_t<NumBits>>((desired));
-          REX_ATOMIC_STORE_SEQ_CST_16(atomic_fixed_width_type_t<NumBits>, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())), fixedWidthDesired)
+          store(desired, memory_order_seq_cst);
         }
 
         void store(T desired, rsl::internal::memory_order_relaxed_s)
         {
           atomic_fixed_width_type_t<NumBits> fixedWidthDesired = rsl::internal::atomic_type_pun_cast<atomic_fixed_width_type_t<NumBits>>((desired));
-          REX_ATOMIC_STORE_RELAXED_16(atomic_fixed_width_type_t<NumBits>, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())), fixedWidthDesired)
+          REX_ATOMIC_STORE_RELAXED_16(atomic_fixed_width_type_t<NumBits>, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())), fixedWidthDesired);
         }
 
         void store(T desired, rsl::internal::memory_order_release_s)
         {
           atomic_fixed_width_type_t<NumBits> fixedWidthDesired = rsl::internal::atomic_type_pun_cast<atomic_fixed_width_type_t<NumBits>>((desired));
-          REX_ATOMIC_STORE_RELEASE_16(atomic_fixed_width_type_t<NumBits>, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())), fixedWidthDesired)
+          REX_ATOMIC_STORE_RELEASE_16(atomic_fixed_width_type_t<NumBits>, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())), fixedWidthDesired);
         }
 
         void store(T desired, rsl::internal::memory_order_seq_cst_s)
         {
           atomic_fixed_width_type_t<NumBits> fixedWidthDesired = rsl::internal::atomic_type_pun_cast<atomic_fixed_width_type_t<NumBits>>((desired));
-          REX_ATOMIC_STORE_SEQ_CST_16(atomic_fixed_width_type_t<NumBits>, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())), fixedWidthDesired)
+          REX_ATOMIC_STORE_SEQ_CST_16(atomic_fixed_width_type_t<NumBits>, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())), fixedWidthDesired);
         }
 
       public: /* load */
@@ -469,9 +465,7 @@ namespace rsl
 
         T load() const
         {
-          atomic_fixed_width_type_t<NumBits> retVal;
-          REX_ATOMIC_LOAD_SEQ_CST_16(atomic_fixed_width_type_t<NumBits>, retVal, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())));
-          return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
+          return load(memory_order_seq_cst);
         }
 
         T load(rsl::internal::memory_order_relaxed_s) const
@@ -833,26 +827,25 @@ namespace rsl
 
         void store(T desired)
         {
-          atomic_fixed_width_type_t<NumBits> fixedWidthDesired = rsl::internal::atomic_type_pun_cast<atomic_fixed_width_type_t<NumBits>>((desired));
-          REX_ATOMIC_STORE_SEQ_CST_32(atomic_fixed_width_type_t<NumBits>, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())), fixedWidthDesired)
+          store(desired, memory_order_seq_cst);
         }
 
         void store(T desired, rsl::internal::memory_order_relaxed_s)
         {
           atomic_fixed_width_type_t<NumBits> fixedWidthDesired = rsl::internal::atomic_type_pun_cast<atomic_fixed_width_type_t<NumBits>>((desired));
-          REX_ATOMIC_STORE_RELAXED_32(atomic_fixed_width_type_t<NumBits>, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())), fixedWidthDesired)
+          REX_ATOMIC_STORE_RELAXED_32(atomic_fixed_width_type_t<NumBits>, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())), fixedWidthDesired);
         }
 
         void store(T desired, rsl::internal::memory_order_release_s)
         {
           atomic_fixed_width_type_t<NumBits> fixedWidthDesired = rsl::internal::atomic_type_pun_cast<atomic_fixed_width_type_t<NumBits>>((desired));
-          REX_ATOMIC_STORE_RELEASE_32(atomic_fixed_width_type_t<NumBits>, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())), fixedWidthDesired)
+          REX_ATOMIC_STORE_RELEASE_32(atomic_fixed_width_type_t<NumBits>, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())), fixedWidthDesired);
         }
 
         void store(T desired, rsl::internal::memory_order_seq_cst_s)
         {
           atomic_fixed_width_type_t<NumBits> fixedWidthDesired = rsl::internal::atomic_type_pun_cast<atomic_fixed_width_type_t<NumBits>>((desired));
-          REX_ATOMIC_STORE_SEQ_CST_32(atomic_fixed_width_type_t<NumBits>, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())), fixedWidthDesired)
+          REX_ATOMIC_STORE_SEQ_CST_32(atomic_fixed_width_type_t<NumBits>, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())), fixedWidthDesired);
         }
 
       public: /* load */
@@ -860,9 +853,7 @@ namespace rsl
 
         T load() const
         {
-          atomic_fixed_width_type_t<NumBits> retVal;
-          REX_ATOMIC_LOAD_SEQ_CST_32(atomic_fixed_width_type_t<NumBits>, retVal, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())));
-          return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
+          return load(memory_order_seq_cst);
         }
 
         T load(rsl::internal::memory_order_relaxed_s) const
@@ -1224,26 +1215,25 @@ namespace rsl
 
         void store(T desired)
         {
-          atomic_fixed_width_type_t<NumBits> fixedWidthDesired = rsl::internal::atomic_type_pun_cast<atomic_fixed_width_type_t<NumBits>>((desired));
-          REX_ATOMIC_STORE_SEQ_CST_64(atomic_fixed_width_type_t<NumBits>, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())), fixedWidthDesired)
+          store(desired, memory_order_seq_cst);
         }
 
         void store(T desired, rsl::internal::memory_order_relaxed_s)
         {
           atomic_fixed_width_type_t<NumBits> fixedWidthDesired = rsl::internal::atomic_type_pun_cast<atomic_fixed_width_type_t<NumBits>>((desired));
-          REX_ATOMIC_STORE_RELAXED_64(atomic_fixed_width_type_t<NumBits>, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())), fixedWidthDesired)
+          REX_ATOMIC_STORE_RELAXED_64(atomic_fixed_width_type_t<NumBits>, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())), fixedWidthDesired);
         }
 
         void store(T desired, rsl::internal::memory_order_release_s)
         {
           atomic_fixed_width_type_t<NumBits> fixedWidthDesired = rsl::internal::atomic_type_pun_cast<atomic_fixed_width_type_t<NumBits>>((desired));
-          REX_ATOMIC_STORE_RELEASE_64(atomic_fixed_width_type_t<NumBits>, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())), fixedWidthDesired)
+          REX_ATOMIC_STORE_RELEASE_64(atomic_fixed_width_type_t<NumBits>, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())), fixedWidthDesired);
         }
 
         void store(T desired, rsl::internal::memory_order_seq_cst_s)
         {
           atomic_fixed_width_type_t<NumBits> fixedWidthDesired = rsl::internal::atomic_type_pun_cast<atomic_fixed_width_type_t<NumBits>>((desired));
-          REX_ATOMIC_STORE_SEQ_CST_64(atomic_fixed_width_type_t<NumBits>, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())), fixedWidthDesired)
+          REX_ATOMIC_STORE_SEQ_CST_64(atomic_fixed_width_type_t<NumBits>, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())), fixedWidthDesired);
         }
 
       public: /* load */
@@ -1251,9 +1241,7 @@ namespace rsl
 
         T load() const
         {
-          atomic_fixed_width_type_t<NumBits> retVal;
-          REX_ATOMIC_LOAD_SEQ_CST_64(atomic_fixed_width_type_t<NumBits>, retVal, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())));
-          return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
+          return load(memory_order_seq_cst);
         }
 
         T load(rsl::internal::memory_order_relaxed_s) const
@@ -1614,26 +1602,25 @@ namespace rsl
 
         void store(T desired)
         {
-          atomic_fixed_width_type_t<NumBits> fixedWidthDesired = rsl::internal::atomic_type_pun_cast<atomic_fixed_width_type_t<NumBits>>((desired));
-          REX_ATOMIC_STORE_SEQ_CST_128(atomic_fixed_width_type_t<NumBits>, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())), fixedWidthDesired)
+          store(desired, memory_order_seq_cst);
         }
 
         void store(T desired, rsl::internal::memory_order_relaxed_s)
         {
           atomic_fixed_width_type_t<NumBits> fixedWidthDesired = rsl::internal::atomic_type_pun_cast<atomic_fixed_width_type_t<NumBits>>((desired));
-          REX_ATOMIC_STORE_RELAXED_128(atomic_fixed_width_type_t<NumBits>, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())), fixedWidthDesired)
+          REX_ATOMIC_STORE_RELAXED_128(atomic_fixed_width_type_t<NumBits>, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())), fixedWidthDesired);
         }
 
         void store(T desired, rsl::internal::memory_order_release_s)
         {
           atomic_fixed_width_type_t<NumBits> fixedWidthDesired = rsl::internal::atomic_type_pun_cast<atomic_fixed_width_type_t<NumBits>>((desired));
-          REX_ATOMIC_STORE_RELEASE_128(atomic_fixed_width_type_t<NumBits>, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())), fixedWidthDesired)
+          REX_ATOMIC_STORE_RELEASE_128(atomic_fixed_width_type_t<NumBits>, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())), fixedWidthDesired);
         }
 
         void store(T desired, rsl::internal::memory_order_seq_cst_s)
         {
           atomic_fixed_width_type_t<NumBits> fixedWidthDesired = rsl::internal::atomic_type_pun_cast<atomic_fixed_width_type_t<NumBits>>((desired));
-          REX_ATOMIC_STORE_SEQ_CST_128(atomic_fixed_width_type_t<NumBits>, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())), fixedWidthDesired)
+          REX_ATOMIC_STORE_SEQ_CST_128(atomic_fixed_width_type_t<NumBits>, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())), fixedWidthDesired);
         }
 
       public: /* load */
@@ -1641,9 +1628,7 @@ namespace rsl
 
         T load() const
         {
-          atomic_fixed_width_type_t<NumBits> retVal;
-          REX_ATOMIC_LOAD_SEQ_CST_128(atomic_fixed_width_type_t<NumBits>, retVal, rsl::internal::atomic_type_cast<atomic_fixed_width_type_t<NumBits>>((this->GetAtomicAddress())));
-          return REX_ATOMIC_TYPE_PUN_CAST(T, retVal);
+          return load(memory_order_seq_cst);
         }
 
         T load(rsl::internal::memory_order_relaxed_s) const

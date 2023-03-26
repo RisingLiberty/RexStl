@@ -69,6 +69,8 @@ namespace rsl
   }
 }
 
+#define REX_ARCH_ATOMIC_CPU_MB() rsl::internal::x86_memory_barrier()
+
 /////////////////////////////////////////////////////////////////////////////////
 //
 // void REX_ARCH_ATOMIC_CPU_WMB()

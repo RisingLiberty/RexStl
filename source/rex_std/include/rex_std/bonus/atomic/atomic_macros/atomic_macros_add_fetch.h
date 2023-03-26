@@ -1,8 +1,3 @@
-
-
-#ifndef REX_ATOMIC_INTERNAL_MACROS_ADD_FETCH_H
-#define REX_ATOMIC_INTERNAL_MACROS_ADD_FETCH_H
-
 #pragma once
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -59,4 +54,3 @@
 
 #define REX_ATOMIC_ADD_FETCH_SEQ_CST_128(type, ret, ptr, val) REX_ATOMIC_CHOOSE_OP_IMPL(ATOMIC_ADD_FETCH_SEQ_CST_128)(type, ret, ptr, val)
 
-#endif /* REX_ATOMIC_INTERNAL_MACROS_ADD_FETCH_H */
