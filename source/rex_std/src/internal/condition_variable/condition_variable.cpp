@@ -123,7 +123,7 @@ namespace rsl
         while (block != nullptr)
         {
           // block is full. move to next block and allocate
-          if (block->num_used = num_items)
+          if (block->num_used == num_items)
           {
             if (block->next == nullptr)
             {
