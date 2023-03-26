@@ -14,6 +14,7 @@
 
 #include "rex_std/internal/istream/basic_iostream.h"
 #include "rex_std/internal/ios/io_types.h"
+#include "rex_std/internal/sstream/basic_stringbuf.h"
 
 #include "rex_std/internal/type_traits/is_same.h"
 
@@ -35,20 +36,61 @@ namespace rsl
       using off_type = typename Traits::off_type;
       using allocator_type = Allocator;
 
-      basic_stringstream();
-      explicit basic_stringstream(io::openmode mode);
-      explicit basic_stringstream(const basic_string<CharType, Traits, Allocator>& str, io::openmode mode = io::openmode::in | io::openmode::out);
-      basic_stringstream(basic_stringstream&& other);
-      basic_stringstream(io::openmode mode, const Allocator& alloc);
-      explicit basic_stringstream(basic_string<CharType, Traits, Allocator>&& str, io::openmode mode = io::openmode::in | io::openmode::out);
+      basic_stringstream()
+        : base(&m_str_buff)
+        , m_str_buff()
+      {
+        
+      }
+      explicit basic_stringstream(io::openmode mode)
+        : base(&m_str_buff)
+        , m_str_buff(mode)
+      {}
 
-      basic_stringstream& operator=(basic_stringstream&& other);
+      explicit basic_stringstream(const basic_string<CharType, Traits, Allocator>& str, io::openmode mode = io::openmode::in | io::openmode::out)
+        : base(&m_str_buff)
+        , m_str_buff(str, mode)
+      {}
+      basic_stringstream(basic_stringstream&& other)
+        : base(rsl::move(other))
+        , m_str_buff(rsl::move(other.m_str_buff))
+      {}
+      basic_stringstream(io::openmode mode, const Allocator& alloc)
+        : base(&m_str_buff)
+        , m_str_buff(mode, alloc)
+      {}
 
-      void swap(basic_stringstream& other);
-      basic_stringbuf<CharType, Traits, Allocator>* rdbuf();
+      basic_stringstream& operator=(basic_stringstream&& other)
+      {
+        base::operator=(rsl::move(other));
+        m_str_buff = rsl::move(other.m_str_buff);
+      }
 
-      basic_string<CharType, Traits, Allocator> str() const;
-      basic_string_view<CharType, Traits> view() const;
+      void swap(basic_stringstream& other)
+      {
+        base::swap(other);
+        rsl::swap(m_str_buff, other.m_str_buff);
+      }
+      basic_stringbuf<CharType, Traits, Allocator>* rdbuf()
+      {
+        return &m_str_buff;
+      }
+
+      basic_string<CharType, Traits, Allocator> str() const
+      {
+        return m_str_buff.str();
+      }
+      void str(const basic_string<CharType, Traits, Allocator>& str)
+      {
+        m_str_buff.str(str);
+      }
+      basic_string_view<CharType, Traits> view() const
+      {
+        return m_str_buff.view();
+      }
+
+    private:
+      basic_stringbuf<CharType, Traits, Allocator> m_str_buff;
     };
 
     template <typename CharType, typename Traits, typename Allocator>
@@ -56,5 +98,8 @@ namespace rsl
     {
       lhs.swap(rhs);
     }
+
+    using stringstream = basic_stringstream<rsl::char8>;
+    using wstringstream = basic_stringstream<rsl::char16>;
   }
 }
