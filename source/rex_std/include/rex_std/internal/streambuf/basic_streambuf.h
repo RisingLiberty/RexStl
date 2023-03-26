@@ -156,7 +156,7 @@ namespace rsl
       // write one character to the output stream
       int_type sputc(char_type ch) // NOLINT(misc-no-recursion)
       {
-        if(m_write_buf_curr == nullptr)
+        if(m_write_buf_curr == nullptr || available_in_put_area() <= 0)
         {
           return overflow(ch);
         }
@@ -424,18 +424,7 @@ namespace rsl
       // this is to avoid multiple sequential virtual calls and have all characters up to count
       // written in 1 go.
       // writes characters to the associated output sequence and advances the next pointer
-      virtual streamsize overflown(const char_type* s, streamsize count)
-      {
-        while (count--)
-        {
-          if (overflow(*s++) == Traits::eof())
-          {
-            return -1;
-          }
-        }
-
-        return count;
-      }
+      virtual streamsize overflown(const char_type* s, streamsize count) = 0;
 
       // returns the pointer to the beginning of the put area
       char_type* pbase() const
@@ -463,7 +452,7 @@ namespace rsl
       {
         m_write_buf_begin = beg;
         m_write_buf_curr  = current;
-        m_read_buf_end    = end;
+        m_write_buf_end    = end;
       }
 
       // repositions the beginning, next and end pointers of the output sequence

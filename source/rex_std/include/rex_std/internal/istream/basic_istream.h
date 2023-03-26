@@ -113,6 +113,7 @@ namespace rsl
           : basic_ios<CharT, Traits>(sb)
           , m_gcount(0)
       {
+        basic_ios<CharT, Traits>::init(sb);
       }
 
       // you can't copy an input stream

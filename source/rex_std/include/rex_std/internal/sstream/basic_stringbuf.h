@@ -119,7 +119,18 @@ namespace rsl
 
       basic_string<CharType, Traits, Allocator> str() const
       {
-        return rsl::basic_string<CharType, Traits, Allocator>(m_buffer, m_buffer_end);
+        if (rsl::has_flag(m_openmode, io::openmode::out))
+        {
+          return rsl::basic_string<CharType, Traits, Allocator>(m_buffer, m_current_write);
+        }
+        else if (rsl::has_flag(m_openmode, io::openmode::in))
+        {
+          return rsl::basic_string<CharType, Traits, Allocator>(m_buffer, m_current_read);
+        }
+        else
+        {
+          return basic_string<CharType, Traits, Allocator>{};
+        }
       }
       void str(const basic_string<CharType, Traits, Allocator>& str)
       {
@@ -186,16 +197,24 @@ namespace rsl
       }
       int_type overflow(int_type c)
       {
-        if (traits_type::eq_int_type(traits_type::eof(), c))
+        char_type ch = traits_type::to_char_type(c);
+        if (overflown(&ch, 1) == -1)
         {
           return traits_type::not_eof(c);
         }
-
+        return c;
+      }
+      int_type overflown(const char_type* s, streamsize count) override
+      {
         const auto old_size = base::epptr() - base::pbase();
         auto new_size = old_size;
-        if (old_size < (rsl::numeric_limits<int32>::max)() / 2)
+        if (old_size == 0)
         {
-          new_size = old_size * 2;
+          new_size = count;
+        }
+        else if (old_size < (rsl::numeric_limits<int32>::max)() / 2)
+        {
+          new_size = (old_size * 2) + count;
         }
         else if (old_size < (rsl::numeric_limits<int32>::max)())
         {
@@ -208,23 +227,28 @@ namespace rsl
 
         const auto old_read_size = base::gptr() - base::eback();
         const auto new_buffer = static_cast<CharType*>(m_allocator.allocate(new_size));
+
         traits_type::copy(new_buffer, base::eback(), static_cast<count_t>(old_size));
+        traits_type::copy(new_buffer + old_size, s, count);
 
         m_allocator.deallocate(m_buffer, old_size);
         m_buffer = new_buffer;
 
-        m_current_write = m_buffer + old_size;
+        m_current_write = m_buffer + old_size + count;
         m_current_read = m_buffer + old_read_size;
         m_buffer_end = new_buffer + new_size;
 
         base::setg(&m_buffer, &m_current_read, &m_buffer_end);
         base::setp(&m_buffer, &m_current_write, &m_buffer_end);
+
+        return count;
       }
+
       pos_type seekoff(off_type off, io::seekdir dir, io::openmode which = io::openmode::in | io::openmode::out)
       {
-        const auto buffer_length = m_buffer_end - m_buffer;
-        const auto read_off = m_current_read - m_buffer;
-        const auto write_off = m_current_write - m_buffer;
+        const pos_type buffer_length = static_cast<off_type>(m_buffer_end - m_buffer);
+        const pos_type read_off = static_cast<off_type>(m_current_read - m_buffer);
+        const pos_type write_off = static_cast<off_type>(m_current_write - m_buffer);
 
         switch (dir)
         {

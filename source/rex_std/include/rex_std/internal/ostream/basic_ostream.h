@@ -504,7 +504,7 @@ namespace rsl
     template <typename CharT, typename Traits, count_t N>
     basic_ostream<CharT, Traits>& operator<<(basic_ostream<CharT, Traits>& os, const CharT (&s)[N]) // NOLINT(modernize-avoid-c-arrays, misc-no-recursion)
     {
-      os.write(s, N);
+      os.write(s, N - 1);
       return os;
     }
 
