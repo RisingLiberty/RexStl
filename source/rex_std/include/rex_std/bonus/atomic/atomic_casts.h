@@ -74,7 +74,7 @@ namespace rsl
        * down to the smaller integral types. Like with 128-bit atomics and msvc intrinsics.
        *
        * struct Foo128 { __int64 array[2]; }; can be casted to a __int64*
-       * since a poiter to Foo128 is a pointer to the first member.
+       * since a pointer to Foo128 is a pointer to the first member.
        */
       template <typename ToType, typename FromType>
       REX_FORCE_INLINE volatile ToType* atomic_volatile_type_cast(FromType* ptr)
