@@ -32,9 +32,10 @@ namespace rsl
     REX_FORCE_INLINE void compiler_barrier(const T* ptr)
     {
 #if defined(REX_COMPILER_MSVC)
-      _ReadWriteBarrier(const_cast<T*>(rsl::addressof(ptr)));
+      g_compiler_barrier_data_dependency_func(ptr);
+      compiler_barrier();
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
-      __asm__ __volatile__("" ::: "memory");
+      __asm__ __volatile__("" : /* Output Operands */ : "r"(ptr) : "memory")
 #endif
     }
   }

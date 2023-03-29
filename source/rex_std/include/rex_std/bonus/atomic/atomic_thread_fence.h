@@ -25,9 +25,9 @@ namespace rsl
     {
 #if defined(REX_COMPILER_MSVC)
       (void)order;
-#if defined(REX_PLATFORM_ARM64)
+  #if defined(REX_PLATFORM_ARM64)
       memory_barrier();
-  #else
+  #elif defined (REX_PLATFORM_X64)
       compiler_barrier();
   #endif
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)

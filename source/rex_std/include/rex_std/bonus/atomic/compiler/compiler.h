@@ -57,9 +57,9 @@ namespace rsl
 
       typedef void (*CompilerBarrierDataDependencyFuncPtr)(void*);
 
-      extern volatile CompilerBarrierDataDependencyFuncPtr gCompilerBarrierDataDependencyFunc;
+      extern volatile CompilerBarrierDataDependencyFuncPtr g_compiler_barrier_data_dependency_func;
 
-#define REX_COMPILER_ATOMIC_COMPILER_BARRIER_DATA_DEPENDENCY_FUNC(ptr) rsl::internal::gCompilerBarrierDataDependencyFunc(ptr)
+#define REX_COMPILER_ATOMIC_COMPILER_BARRIER_DATA_DEPENDENCY_FUNC(ptr) rsl::internal::g_compiler_barrier_data_dependency_func(ptr)
 
     } // namespace internal
 

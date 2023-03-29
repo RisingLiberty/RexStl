@@ -125,7 +125,7 @@ namespace rsl
 
 #define REX_ATOMIC_INTEGRAL_FUNC_IMPL(op, bits)                                                                                                                                                                                                          \
   T retVal;                                                                                                                                                                                                                                              \
-  MERGE(op, bits)(T, retVal, this->GetAtomicAddress(), arg);                                                                                                                                                                                             \
+  MERGE(op, bits)(T, retVal, this->atomic_address(), arg);                                                                                                                                                                                             \
   return retVal;
 
 #define REX_ATOMIC_INTEGRAL_FETCH_IMPL(funcName, op, bits)                                                                                                                                                                                               \

@@ -139,7 +139,7 @@ namespace rsl
         atomic_size_aligned& operator=(const atomic_size_aligned&) volatile = delete;
 
       protected: /* Accessors */
-        T* GetAtomicAddress() const
+        T* atomic_address() const
         {
           return rsl::addressof(m_atomic_storage);
         }

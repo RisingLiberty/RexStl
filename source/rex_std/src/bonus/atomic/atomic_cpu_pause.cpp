@@ -21,10 +21,12 @@ namespace rsl
 #if defined(REX_COMPILER_MSVC)
       YieldProcessor();
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
-#ifdef REX_PLATFORM_ARM64 
+#if defined(REX_PLATFORM_ARM64)
     __asm__ __volatile__("yield")
-#else
+#elif defined(REX_PLATFORM_X64)
     __asm__ __volatile__("pause")
+#else
+      static_assert(false, "cpu pause not implemented");
 #endif
 #endif
     }
