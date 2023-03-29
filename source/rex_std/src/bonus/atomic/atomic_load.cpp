@@ -14,6 +14,7 @@
 #include "rex_std/bonus/atomic/atomic_fixed_width_type.h"
 #include "rex_std/bonus/atomic/atomic_memory_order.h"
 #include "rex_std/bonus/atomic/atomic_casts.h"
+#include "rex_std/bonus/atomic/atomic_compiler_barrier.h"
 #include <intrin.h>
 
 namespace rsl
@@ -103,7 +104,9 @@ namespace rsl
     uint8 atomic_load_acquire(uint8* obj)
     {
 #if defined(REX_COMPILER_MSVC)
-      return atomic_load_msvc(obj);
+      auto res = atomic_load_msvc(obj);
+      rsl::compiler_barrier(); 
+      return res;
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
       return atomic_load_clang(obj, rsl::memory_order::acquire);
 #endif
@@ -127,7 +130,9 @@ namespace rsl
     uint8 atomic_load_seq_cst(uint8* obj)
     {
 #if defined(REX_COMPILER_MSVC)
-      return atomic_load_msvc(obj);
+      auto res = atomic_load_msvc(obj);
+      rsl::compiler_barrier();
+      return res;
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
       return atomic_load_clang(obj, rsl::memory_order::seq_cst);
 #endif
@@ -145,7 +150,9 @@ namespace rsl
     int8 atomic_load_acquire(int8* obj)
     {
 #if defined(REX_COMPILER_MSVC)
-      return atomic_load_msvc(obj);
+      auto res = atomic_load_msvc(obj);
+      rsl::compiler_barrier();
+      return res;
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
       return atomic_load_clang(obj, rsl::memory_order::acquire);
 #endif
@@ -169,7 +176,9 @@ namespace rsl
     int8 atomic_load_seq_cst(int8* obj)
     {
 #if defined(REX_COMPILER_MSVC)
-      return atomic_load_msvc(obj);
+      auto res = atomic_load_msvc(obj);
+      rsl::compiler_barrier();
+      return res;
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
       return atomic_load_clang(obj, rsl::memory_order::seq_cst);
 #endif
@@ -187,7 +196,9 @@ namespace rsl
     uint16 atomic_load_acquire(uint16* obj)
     {
 #if defined(REX_COMPILER_MSVC)
-      return atomic_load_msvc(obj);
+      auto res = atomic_load_msvc(obj);
+      rsl::compiler_barrier();
+      return res;
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
       return atomic_load_clang(obj, rsl::memory_order::acquire);
 #endif
@@ -211,7 +222,9 @@ namespace rsl
     uint16 atomic_load_seq_cst(uint16* obj)
     {
 #if defined(REX_COMPILER_MSVC)
-      return atomic_load_msvc(obj);
+      auto res = atomic_load_msvc(obj);
+      rsl::compiler_barrier();
+      return res;
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
       return atomic_load_clang(obj, rsl::memory_order::seq_cst);
 #endif
@@ -229,7 +242,9 @@ namespace rsl
     int16 atomic_load_acquire(int16* obj)
     {
 #if defined(REX_COMPILER_MSVC)
-      return atomic_load_msvc(obj);
+      auto res = atomic_load_msvc(obj);
+      rsl::compiler_barrier();
+      return res;
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
       return atomic_load_clang(obj, rsl::memory_order::acquire);
 #endif
@@ -253,7 +268,9 @@ namespace rsl
     int16 atomic_load_seq_cst(int16* obj)
     {
 #if defined(REX_COMPILER_MSVC)
-      return atomic_load_msvc(obj);
+      auto res = atomic_load_msvc(obj);
+      rsl::compiler_barrier();
+      return res;
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
       return atomic_load_clang(obj, rsl::memory_order::seq_cst);
 #endif
@@ -271,7 +288,9 @@ namespace rsl
     uint32 atomic_load_acquire(uint32* obj)
     {
 #if defined(REX_COMPILER_MSVC)
-      return atomic_load_msvc(obj);
+      auto res = atomic_load_msvc(obj);
+      rsl::compiler_barrier();
+      return res;
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
       return atomic_load_clang(obj, rsl::memory_order::acquire);
 #endif
@@ -295,7 +314,9 @@ namespace rsl
     uint32 atomic_load_seq_cst(uint32* obj)
     {
 #if defined(REX_COMPILER_MSVC)
-      return atomic_load_msvc(obj);
+      auto res = atomic_load_msvc(obj);
+      rsl::compiler_barrier();
+      return res;
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
       return atomic_load_clang(obj, rsl::memory_order::seq_cst);
 #endif
@@ -313,7 +334,9 @@ namespace rsl
     int32 atomic_load_acquire(int32* obj)
     {
 #if defined(REX_COMPILER_MSVC)
-      return atomic_load_msvc(obj);
+      auto res = atomic_load_msvc(obj);
+      rsl::compiler_barrier();
+      return res;
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
       return atomic_load_clang(obj, rsl::memory_order::acquire);
 #endif
@@ -337,7 +360,9 @@ namespace rsl
     int32 atomic_load_seq_cst(int32* obj)
     {
 #if defined(REX_COMPILER_MSVC)
-      return atomic_load_msvc(obj);
+      auto res = atomic_load_msvc(obj);
+      rsl::compiler_barrier();
+      return res;
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
       return atomic_load_clang(obj, rsl::memory_order::seq_cst);
 #endif
@@ -355,7 +380,9 @@ namespace rsl
     uint64 atomic_load_acquire(uint64* obj)
     {
 #if defined(REX_COMPILER_MSVC)
-      return atomic_load_msvc(obj);
+      auto res = atomic_load_msvc(obj);
+      rsl::compiler_barrier();
+      return res;
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
       return atomic_load_clang(obj, rsl::memory_order::acquire);
 #endif
@@ -379,7 +406,9 @@ namespace rsl
     uint64 atomic_load_seq_cst(uint64* obj)
     {
 #if defined(REX_COMPILER_MSVC)
-      return atomic_load_msvc(obj);
+      auto res = atomic_load_msvc(obj);
+      rsl::compiler_barrier();
+      return res;
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
       return atomic_load_clang(obj, rsl::memory_order::seq_cst);
 #endif
@@ -397,7 +426,9 @@ namespace rsl
     int64 atomic_load_acquire(int64* obj)
     {
 #if defined(REX_COMPILER_MSVC)
-      return atomic_load_msvc(obj);
+      auto res = atomic_load_msvc(obj);
+      rsl::compiler_barrier();
+      return res;
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
       return atomic_load_clang(obj, rsl::memory_order::acquire);
 #endif
@@ -421,7 +452,9 @@ namespace rsl
     int64 atomic_load_seq_cst(int64* obj)
     {
 #if defined(REX_COMPILER_MSVC)
-      return atomic_load_msvc(obj);
+      auto res = atomic_load_msvc(obj);
+      rsl::compiler_barrier();
+      return res;
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
       return atomic_load_clang(obj, rsl::memory_order::seq_cst);
 #endif

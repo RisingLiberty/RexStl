@@ -14,6 +14,8 @@
 #include "rex_std/bonus/atomic/atomic_fixed_width_type.h"
 #include "rex_std/bonus/atomic/atomic_memory_order.h"
 #include "rex_std/bonus/atomic/atomic_casts.h"
+#include "rex_std/bonus/atomic/atomic_compiler_barrier.h"
+#include "rex_std/bonus/atomic/atomic_exchange.h"
 #include <intrin.h>
 
 namespace rsl
@@ -113,6 +115,7 @@ namespace rsl
     void atomic_store_release(uint8* obj, uint8 valToStore)
     {
 #if defined(REX_COMPILER_MSVC)
+      rsl::compiler_barrier();
       atomic_store_msvc(obj, valToStore);
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
       atomic_store_clang(obj, valToStore, rsl::memory_order::release);
@@ -129,7 +132,7 @@ namespace rsl
     void atomic_store_seq_cst(uint8* obj, uint8 valToStore)
     {
 #if defined(REX_COMPILER_MSVC)
-      atomic_store_msvc(obj, valToStore);
+      rsl::atomic_exchange_seq_cst(obj, valToStore);
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
       atomic_store_clang(obj, valToStore, rsl::memory_order::seq_cst);
 #endif
@@ -155,6 +158,7 @@ namespace rsl
     void atomic_store_release(int8* obj, int8 valToStore)
     {
 #if defined(REX_COMPILER_MSVC)
+      rsl::compiler_barrier();
       atomic_store_msvc(obj, valToStore);
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
       atomic_store_clang(obj, valToStore, rsl::memory_order::release);
@@ -171,7 +175,7 @@ namespace rsl
     void atomic_store_seq_cst(int8* obj, int8 valToStore)
     {
 #if defined(REX_COMPILER_MSVC)
-      atomic_store_msvc(obj, valToStore);
+      rsl::atomic_exchange_seq_cst(obj, valToStore);
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
       atomic_store_clang(obj, valToStore, rsl::memory_order::seq_cst);
 #endif
@@ -197,6 +201,7 @@ namespace rsl
     void atomic_store_release(uint16* obj, uint16 valToStore)
     {
 #if defined(REX_COMPILER_MSVC)
+      rsl::compiler_barrier();
       atomic_store_msvc(obj, valToStore);
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
       atomic_store_clang(obj, valToStore, rsl::memory_order::release);
@@ -213,7 +218,7 @@ namespace rsl
     void atomic_store_seq_cst(uint16* obj, uint16 valToStore)
     {
 #if defined(REX_COMPILER_MSVC)
-      atomic_store_msvc(obj, valToStore);
+      rsl::atomic_exchange_seq_cst(obj, valToStore);
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
       atomic_store_clang(obj, valToStore, rsl::memory_order::seq_cst);
 #endif
@@ -239,6 +244,7 @@ namespace rsl
     void atomic_store_release(int16* obj, int16 valToStore)
     {
 #if defined(REX_COMPILER_MSVC)
+      rsl::compiler_barrier();
       atomic_store_msvc(obj, valToStore);
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
       atomic_store_clang(obj, valToStore, rsl::memory_order::release);
@@ -255,7 +261,7 @@ namespace rsl
     void atomic_store_seq_cst(int16* obj, int16 valToStore)
     {
 #if defined(REX_COMPILER_MSVC)
-      atomic_store_msvc(obj, valToStore);
+      rsl::atomic_exchange_seq_cst(obj, valToStore);
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
       atomic_store_clang(obj, valToStore, rsl::memory_order::seq_cst);
 #endif
@@ -281,6 +287,7 @@ namespace rsl
     void atomic_store_release(uint32* obj, uint32 valToStore)
     {
 #if defined(REX_COMPILER_MSVC)
+      rsl::compiler_barrier();
       atomic_store_msvc(obj, valToStore);
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
       atomic_store_clang(obj, valToStore, rsl::memory_order::release);
@@ -297,7 +304,7 @@ namespace rsl
     void atomic_store_seq_cst(uint32* obj, uint32 valToStore)
     {
 #if defined(REX_COMPILER_MSVC)
-      atomic_store_msvc(obj, valToStore);
+      rsl::atomic_exchange_seq_cst(obj, valToStore);
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
       atomic_store_clang(obj, valToStore, rsl::memory_order::seq_cst);
 #endif
@@ -323,6 +330,7 @@ namespace rsl
     void atomic_store_release(int32* obj, int32 valToStore)
     {
 #if defined(REX_COMPILER_MSVC)
+      rsl::compiler_barrier();
       atomic_store_msvc(obj, valToStore);
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
       atomic_store_clang(obj, valToStore, rsl::memory_order::release);
@@ -339,7 +347,7 @@ namespace rsl
     void atomic_store_seq_cst(int32* obj, int32 valToStore)
     {
 #if defined(REX_COMPILER_MSVC)
-      atomic_store_msvc(obj, valToStore);
+      rsl::atomic_exchange_seq_cst(obj, valToStore);
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
       atomic_store_clang(obj, valToStore, rsl::memory_order::seq_cst);
 #endif
@@ -365,6 +373,7 @@ namespace rsl
     void atomic_store_release(uint64* obj, uint64 valToStore)
     {
 #if defined(REX_COMPILER_MSVC)
+      rsl::compiler_barrier();
       atomic_store_msvc(obj, valToStore);
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
       atomic_store_clang(obj, valToStore, rsl::memory_order::release);
@@ -381,7 +390,7 @@ namespace rsl
     void atomic_store_seq_cst(uint64* obj, uint64 valToStore)
     {
 #if defined(REX_COMPILER_MSVC)
-      atomic_store_msvc(obj, valToStore);
+      rsl::atomic_exchange_seq_cst(obj, valToStore);
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
       atomic_store_clang(obj, valToStore, rsl::memory_order::seq_cst);
 #endif
@@ -407,6 +416,7 @@ namespace rsl
     void atomic_store_release(int64* obj, int64 valToStore)
     {
 #if defined(REX_COMPILER_MSVC)
+      rsl::compiler_barrier();
       atomic_store_msvc(obj, valToStore);
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
       atomic_store_clang(obj, valToStore, rsl::memory_order::release);
@@ -423,7 +433,7 @@ namespace rsl
     void atomic_store_seq_cst(int64* obj, int64 valToStore)
     {
 #if defined(REX_COMPILER_MSVC)
-      atomic_store_msvc(obj, valToStore);
+      rsl::atomic_exchange_seq_cst(obj, valToStore);
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
       atomic_store_clang(obj, valToStore, rsl::memory_order::seq_cst);
 #endif
