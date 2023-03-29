@@ -13,65 +13,66 @@
 #pragma once
 
 #include "rex_std/bonus/types.h"
+#include "rex_std/bonus/atomic/atomic_memory_order.h"
 
 namespace rsl
 {
   inline namespace v1
   {
     // uint8
-    void atomic_cmpxchg_weak_relaxed(uint8 val, uint8* address);
-    void atomic_cmpxchg_weak_acquire(uint8 val, uint8* address);
-    void atomic_cmpxchg_weak_release(uint8 val, uint8* address);
-    void atomic_cmpxchg_weak_acq_rel(uint8 val, uint8* address);
-    void atomic_cmpxchg_weak_seq_cst(uint8 val, uint8* address);
+    uint8 atomic_cmpxchg_weak_relaxed(uint8* obj, uint8 expected, uint8 desired, rsl::memory_order failureOrder);
+    uint8 atomic_cmpxchg_weak_acquire(uint8* obj, uint8 expected, uint8 desired, rsl::memory_order failureOrder);
+    uint8 atomic_cmpxchg_weak_release(uint8* obj, uint8 expected, uint8 desired, rsl::memory_order failureOrder);
+    uint8 atomic_cmpxchg_weak_acq_rel(uint8* obj, uint8 expected, uint8 desired, rsl::memory_order failureOrder);
+    uint8 atomic_cmpxchg_weak_seq_cst(uint8* obj, uint8 expected, uint8 desired, rsl::memory_order failureOrder);
 
     // int8
-    void atomic_cmpxchg_weak_relaxed(int8 val, int8* address);
-    void atomic_cmpxchg_weak_acquire(int8 val, int8* address);
-    void atomic_cmpxchg_weak_release(int8 val, int8* address);
-    void atomic_cmpxchg_weak_acq_rel(int8 val, int8* address);
-    void atomic_cmpxchg_weak_seq_cst(int8 val, int8* address);
+    int8 atomic_cmpxchg_weak_relaxed(int8* obj, int8 expected, int8 desired, rsl::memory_order failureOrder);
+    int8 atomic_cmpxchg_weak_acquire(int8* obj, int8 expected, int8 desired, rsl::memory_order failureOrder);
+    int8 atomic_cmpxchg_weak_release(int8* obj, int8 expected, int8 desired, rsl::memory_order failureOrder);
+    int8 atomic_cmpxchg_weak_acq_rel(int8* obj, int8 expected, int8 desired, rsl::memory_order failureOrder);
+    int8 atomic_cmpxchg_weak_seq_cst(int8* obj, int8 expected, int8 desired, rsl::memory_order failureOrder);
 
     // uint16
-    void atomic_cmpxchg_weak_relaxed(uint16 val, uint16* address);
-    void atomic_cmpxchg_weak_acquire(uint16 val, uint16* address);
-    void atomic_cmpxchg_weak_release(uint16 val, uint16* address);
-    void atomic_cmpxchg_weak_acq_rel(uint16 val, uint16* address);
-    void atomic_cmpxchg_weak_seq_cst(uint16 val, uint16* address);
+    uint16 atomic_cmpxchg_weak_relaxed(uint16* obj, uint16 expected, uint16 desired, rsl::memory_order failureOrder);
+    uint16 atomic_cmpxchg_weak_acquire(uint16* obj, uint16 expected, uint16 desired, rsl::memory_order failureOrder);
+    uint16 atomic_cmpxchg_weak_release(uint16* obj, uint16 expected, uint16 desired, rsl::memory_order failureOrder);
+    uint16 atomic_cmpxchg_weak_acq_rel(uint16* obj, uint16 expected, uint16 desired, rsl::memory_order failureOrder);
+    uint16 atomic_cmpxchg_weak_seq_cst(uint16* obj, uint16 expected, uint16 desired, rsl::memory_order failureOrder);
 
     // int16
-    void atomic_cmpxchg_weak_relaxed(int16 val, int16* address);
-    void atomic_cmpxchg_weak_acquire(int16 val, int16* address);
-    void atomic_cmpxchg_weak_release(int16 val, int16* address);
-    void atomic_cmpxchg_weak_acq_rel(int16 val, int16* address);
-    void atomic_cmpxchg_weak_seq_cst(int16 val, int16* address);
+    int16 atomic_cmpxchg_weak_relaxed(int16* obj, int16 expected, int16 desired, rsl::memory_order failureOrder);
+    int16 atomic_cmpxchg_weak_acquire(int16* obj, int16 expected, int16 desired, rsl::memory_order failureOrder);
+    int16 atomic_cmpxchg_weak_release(int16* obj, int16 expected, int16 desired, rsl::memory_order failureOrder);
+    int16 atomic_cmpxchg_weak_acq_rel(int16* obj, int16 expected, int16 desired, rsl::memory_order failureOrder);
+    int16 atomic_cmpxchg_weak_seq_cst(int16* obj, int16 expected, int16 desired, rsl::memory_order failureOrder);
 
     // uint32
-    void atomic_cmpxchg_weak_relaxed(uint32 val, uint32* address);
-    void atomic_cmpxchg_weak_acquire(uint32 val, uint32* address);
-    void atomic_cmpxchg_weak_release(uint32 val, uint32* address);
-    void atomic_cmpxchg_weak_acq_rel(uint32 val, uint32* address);
-    void atomic_cmpxchg_weak_seq_cst(uint32 val, uint32* address);
+    uint32 atomic_cmpxchg_weak_relaxed(uint32* obj, uint32 expected, uint32 desired, rsl::memory_order failureOrder);
+    uint32 atomic_cmpxchg_weak_acquire(uint32* obj, uint32 expected, uint32 desired, rsl::memory_order failureOrder);
+    uint32 atomic_cmpxchg_weak_release(uint32* obj, uint32 expected, uint32 desired, rsl::memory_order failureOrder);
+    uint32 atomic_cmpxchg_weak_acq_rel(uint32* obj, uint32 expected, uint32 desired, rsl::memory_order failureOrder);
+    uint32 atomic_cmpxchg_weak_seq_cst(uint32* obj, uint32 expected, uint32 desired, rsl::memory_order failureOrder);
 
     // int32
-    void atomic_cmpxchg_weak_relaxed(int32 val, int32* address);
-    void atomic_cmpxchg_weak_acquire(int32 val, int32* address);
-    void atomic_cmpxchg_weak_release(int32 val, int32* address);
-    void atomic_cmpxchg_weak_acq_rel(int32 val, int32* address);
-    void atomic_cmpxchg_weak_seq_cst(int32 val, int32* address);
+    int32 atomic_cmpxchg_weak_relaxed(int32* obj, int32 expected, int32 desired, rsl::memory_order failureOrder);
+    int32 atomic_cmpxchg_weak_acquire(int32* obj, int32 expected, int32 desired, rsl::memory_order failureOrder);
+    int32 atomic_cmpxchg_weak_release(int32* obj, int32 expected, int32 desired, rsl::memory_order failureOrder);
+    int32 atomic_cmpxchg_weak_acq_rel(int32* obj, int32 expected, int32 desired, rsl::memory_order failureOrder);
+    int32 atomic_cmpxchg_weak_seq_cst(int32* obj, int32 expected, int32 desired, rsl::memory_order failureOrder);
 
     // uint64
-    void atomic_cmpxchg_weak_relaxed(uint64 val, uint64* address);
-    void atomic_cmpxchg_weak_acquire(uint64 val, uint64* address);
-    void atomic_cmpxchg_weak_release(uint64 val, uint64* address);
-    void atomic_cmpxchg_weak_acq_rel(uint64 val, uint64* address);
-    void atomic_cmpxchg_weak_seq_cst(uint64 val, uint64* address);
+    uint64 atomic_cmpxchg_weak_relaxed(uint64* obj, uint64 expected, uint64 desired, rsl::memory_order failureOrder);
+    uint64 atomic_cmpxchg_weak_acquire(uint64* obj, uint64 expected, uint64 desired, rsl::memory_order failureOrder);
+    uint64 atomic_cmpxchg_weak_release(uint64* obj, uint64 expected, uint64 desired, rsl::memory_order failureOrder);
+    uint64 atomic_cmpxchg_weak_acq_rel(uint64* obj, uint64 expected, uint64 desired, rsl::memory_order failureOrder);
+    uint64 atomic_cmpxchg_weak_seq_cst(uint64* obj, uint64 expected, uint64 desired, rsl::memory_order failureOrder);
 
     // int64
-    void atomic_cmpxchg_weak_relaxed(int64 val, int64* address);
-    void atomic_cmpxchg_weak_acquire(int64 val, int64* address);
-    void atomic_cmpxchg_weak_release(int64 val, int64* address);
-    void atomic_cmpxchg_weak_acq_rel(int64 val, int64* address);
-    void atomic_cmpxchg_weak_seq_cst(int64 val, int64* address);
+    int64 atomic_cmpxchg_weak_relaxed(int64* obj, int64 expected, int64 desired, rsl::memory_order failureOrder);
+    int64 atomic_cmpxchg_weak_acquire(int64* obj, int64 expected, int64 desired, rsl::memory_order failureOrder);
+    int64 atomic_cmpxchg_weak_release(int64* obj, int64 expected, int64 desired, rsl::memory_order failureOrder);
+    int64 atomic_cmpxchg_weak_acq_rel(int64* obj, int64 expected, int64 desired, rsl::memory_order failureOrder);
+    int64 atomic_cmpxchg_weak_seq_cst(int64* obj, int64 expected, int64 desired, rsl::memory_order failureOrder);
   }
 }

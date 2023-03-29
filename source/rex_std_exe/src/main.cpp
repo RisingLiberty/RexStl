@@ -98,18 +98,16 @@
 // #include "rex_std/wctype.h"
 
 #include "rex_std/atomic.h"
-#include "rex_std/sstream.h"
+
+#include "rex_std/bonus/atomic/atomic_add_fetch.h"
 
 int main()
 {
-  rsl::stringstream ss;
-  ss << "Hello";
-
-
+  rsl::atomic_add_fetch_relaxed(nullptr, 0);
 
 
   [[maybe_unused]] rsl::atomic<char> x;
+  x.add_fetch(1);
   x.store(1);
   [[maybe_unused]] int y = x.load();
-  // int y = x.load();
 }

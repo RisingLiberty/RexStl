@@ -6,13 +6,13 @@ namespace rsl
 {
   inline namespace v1
   {
-    namespace internal
-    {
-      void x86_atomic_store(atomic_fixed_width_type_t<8>* ptr, atomic_fixed_width_type_t<8> val);
-      void x86_atomic_store(atomic_fixed_width_type_t<16>* ptr, atomic_fixed_width_type_t<16> val);
-      void x86_atomic_store(atomic_fixed_width_type_t<32>* ptr, atomic_fixed_width_type_t<32> val);
-      void x86_atomic_store(atomic_fixed_width_type_t<64>* ptr, atomic_fixed_width_type_t<64> val);
-    }
+    //namespace internal
+    //{
+    //  void x86_atomic_store(atomic_fixed_width_type_t<8>* ptr, atomic_fixed_width_type_t<8> val);
+    //  void x86_atomic_store(atomic_fixed_width_type_t<16>* ptr, atomic_fixed_width_type_t<16> val);
+    //  void x86_atomic_store(atomic_fixed_width_type_t<32>* ptr, atomic_fixed_width_type_t<32> val);
+    //  void x86_atomic_store(atomic_fixed_width_type_t<64>* ptr, atomic_fixed_width_type_t<64> val);
+    //}
   }
 }
 /////////////////////////////////////////////////////////////////////////////////

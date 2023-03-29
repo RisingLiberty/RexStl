@@ -10,12 +10,12 @@ namespace rsl
   {
     namespace internal
     {
-#if defined(REX_COMPILER_MSVC)
-      atomic_fixed_width_type_t<8> x86_atomic_load(atomic_fixed_width_type_t<8>* ptr);
-      atomic_fixed_width_type_t<16> x86_atomic_load(atomic_fixed_width_type_t<16>* ptr);
-      atomic_fixed_width_type_t<32> x86_atomic_load(atomic_fixed_width_type_t<32>* ptr);
-      atomic_fixed_width_type_t<64> x86_atomic_load(atomic_fixed_width_type_t<64>* ptr);
-#endif
+//#if defined(REX_COMPILER_MSVC)
+//      atomic_fixed_width_type_t<8> x86_atomic_load(atomic_fixed_width_type_t<8>* ptr);
+//      atomic_fixed_width_type_t<16> x86_atomic_load(atomic_fixed_width_type_t<16>* ptr);
+//      atomic_fixed_width_type_t<32> x86_atomic_load(atomic_fixed_width_type_t<32>* ptr);
+//      atomic_fixed_width_type_t<64> x86_atomic_load(atomic_fixed_width_type_t<64>* ptr);
+//#endif
     }
   }
 }
@@ -65,56 +65,56 @@ namespace rsl
       MERGE(MERGE(REX_ATOMIC_CMPXCHG_STRONG_, MemoryOrder), _128)(type, cmpxchgRetBool, ptr, &(ret), ret);                                                                                                                                               \
     }
 
-  #define REX_ARCH_ATOMIC_X86_LOAD_8(type, ret, ptr) rsl::internal::x86_atomic_load(ptr)
+  #define REX_ARCH_ATOMIC_X86_LOAD_8(type, ret, ptr) rsl::atomic_load(ptr)
 
-  #define REX_ARCH_ATOMIC_X86_LOAD_16(type, ret, ptr) rsl::internal::x86_atomic_load(ptr)
+  #define REX_ARCH_ATOMIC_X86_LOAD_16(type, ret, ptr) rsl::atomic_load(ptr)
 
-  #define REX_ARCH_ATOMIC_X86_LOAD_32(type, ret, ptr) rsl::internal::x86_atomic_load(ptr)
+  #define REX_ARCH_ATOMIC_X86_LOAD_32(type, ret, ptr) rsl::atomic_load(ptr)
 
-  #define REX_ARCH_ATOMIC_X86_LOAD_64(type, ret, ptr) rsl::internal::x86_atomic_load(ptr)
+  #define REX_ARCH_ATOMIC_X86_LOAD_64(type, ret, ptr) rsl::atomic_load(ptr)
 
-  #define REX_ARCH_ATOMIC_LOAD_RELAXED_8(type, ret, ptr) rsl::internal::x86_atomic_load(ptr)
+  #define REX_ARCH_ATOMIC_LOAD_RELAXED_8(type, ret, ptr) rsl::atomic_load(ptr)
 
-  #define REX_ARCH_ATOMIC_LOAD_RELAXED_16(type, ret, ptr) rsl::internal::x86_atomic_load(ptr)
+  #define REX_ARCH_ATOMIC_LOAD_RELAXED_16(type, ret, ptr) rsl::atomic_load(ptr)
 
-  #define REX_ARCH_ATOMIC_LOAD_RELAXED_32(type, ret, ptr) rsl::internal::x86_atomic_load(ptr)
+  #define REX_ARCH_ATOMIC_LOAD_RELAXED_32(type, ret, ptr) rsl::atomic_load(ptr)
 
-  #define REX_ARCH_ATOMIC_LOAD_RELAXED_64(type, ret, ptr) rsl::internal::x86_atomic_load(ptr)
+  #define REX_ARCH_ATOMIC_LOAD_RELAXED_64(type, ret, ptr) rsl::atomic_load(ptr)
 
   #define REX_ARCH_ATOMIC_LOAD_RELAXED_128(type, ret, ptr) REX_ARCH_ATOMIC_X86_LOAD_128(type, ret, ptr, RELAXED)
 
   #define REX_ARCH_ATOMIC_LOAD_ACQUIRE_8(type, ret, ptr)                                                                                                                                                                                                 \
-    rsl::internal::x86_atomic_load(ptr);                                                                                                                                                                                                          \
+    rsl::atomic_load(ptr);                                                                                                                                                                                                          \
     REX_ATOMIC_COMPILER_BARRIER()
 
   #define REX_ARCH_ATOMIC_LOAD_ACQUIRE_16(type, ret, ptr)                                                                                                                                                                                                \
-    rsl::internal::x86_atomic_load(ptr);                                                                                                                                                                                                         \
+    rsl::atomic_load(ptr);                                                                                                                                                                                                         \
     REX_ATOMIC_COMPILER_BARRIER()
 
   #define REX_ARCH_ATOMIC_LOAD_ACQUIRE_32(type, ret, ptr)                                                                                                                                                                                                \
-    rsl::internal::x86_atomic_load(ptr);                                                                                                                                                                                                         \
+    rsl::atomic_load(ptr);                                                                                                                                                                                                         \
     REX_ATOMIC_COMPILER_BARRIER()
 
   #define REX_ARCH_ATOMIC_LOAD_ACQUIRE_64(type, ret, ptr)                                                                                                                                                                                                \
-    rsl::internal::x86_atomic_load(ptr);                                                                                                                                                                                                         \
+    rsl::atomic_load(ptr);                                                                                                                                                                                                         \
     REX_ATOMIC_COMPILER_BARRIER()
 
   #define REX_ARCH_ATOMIC_LOAD_ACQUIRE_128(type, ret, ptr) REX_ARCH_ATOMIC_X86_LOAD_128(type, ret, ptr, ACQUIRE)
 
   #define REX_ARCH_ATOMIC_LOAD_SEQ_CST_8(type, ret, ptr)                                                                                                                                                                                                 \
-    rsl::internal::x86_atomic_load(ptr);                                                                                                                                                                                                          \
+    rsl::atomic_load(ptr);                                                                                                                                                                                                          \
     REX_ATOMIC_COMPILER_BARRIER()
 
   #define REX_ARCH_ATOMIC_LOAD_SEQ_CST_16(type, ret, ptr)                                                                                                                                                                                                \
-    rsl::internal::x86_atomic_load(ptr);                                                                                                                                                                                                         \
+    rsl::atomic_load(ptr);                                                                                                                                                                                                         \
     REX_ATOMIC_COMPILER_BARRIER()
 
   #define REX_ARCH_ATOMIC_LOAD_SEQ_CST_32(type, ret, ptr)                                                                                                                                                                                                \
-    rsl::internal::x86_atomic_load(ptr);                                                                                                                                                                                                         \
+    rsl::atomic_load(ptr);                                                                                                                                                                                                         \
     REX_ATOMIC_COMPILER_BARRIER()
 
   #define REX_ARCH_ATOMIC_LOAD_SEQ_CST_64(type, ret, ptr)                                                                                                                                                                                                \
-    rsl::internal::x86_atomic_load(ptr);                                                                                                                                                                                                         \
+    rsl::atomic_load(ptr);                                                                                                                                                                                                         \
     REX_ATOMIC_COMPILER_BARRIER()
 
   #define REX_ARCH_ATOMIC_LOAD_SEQ_CST_128(type, ret, ptr) REX_ARCH_ATOMIC_X86_LOAD_128(type, ret, ptr, SEQ_CST)

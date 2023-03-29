@@ -9,6 +9,33 @@
 #include "rex_std/bonus/utility/always_false.h"
 
 #include "rex_std/bonus/atomic/atomic_macros.h"
+
+#include "rex_std/bonus/atomic/atomic_add_fetch.h"
+#include "rex_std/bonus/atomic/atomic_and_fetch.h"
+#include "rex_std/bonus/atomic/atomic_cmpxchg_strong.h"
+#include "rex_std/bonus/atomic/atomic_cmpxchg_weak.h"
+#include "rex_std/bonus/atomic/atomic_compiler_barrier.h"
+#include "rex_std/bonus/atomic/atomic_cpu_pause.h"
+#include "rex_std/bonus/atomic/atomic_decrement.h"
+#include "rex_std/bonus/atomic/atomic_exchange.h"
+#include "rex_std/bonus/atomic/atomic_fetch_add.h"
+#include "rex_std/bonus/atomic/atomic_fetch_and.h"
+#include "rex_std/bonus/atomic/atomic_fetch_or.h"
+#include "rex_std/bonus/atomic/atomic_fetch_sub.h"
+#include "rex_std/bonus/atomic/atomic_fetch_xor.h"
+#include "rex_std/bonus/atomic/atomic_increment.h"
+#include "rex_std/bonus/atomic/atomic_load.h"
+#include "rex_std/bonus/atomic/atomic_memory_barrier.h"
+#include "rex_std/bonus/atomic/atomic_or_fetch.h"
+#include "rex_std/bonus/atomic/atomic_read.h"
+#include "rex_std/bonus/atomic/atomic_signal_fence.h"
+#include "rex_std/bonus/atomic/atomic_store.h"
+#include "rex_std/bonus/atomic/atomic_thread_fence.h"
+#include "rex_std/bonus/atomic/atomic_xor_fetch.h"
+
+
+
+
 #include "rex_std/bonus/atomic/atomic_casts.h"
 #include "rex_std/bonus/atomic/atomic_memory_order.h"
 #include "rex_std/bonus/atomic/atomic_asserts.h"

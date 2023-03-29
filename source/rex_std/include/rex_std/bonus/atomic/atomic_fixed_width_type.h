@@ -13,6 +13,7 @@
 #pragma once
 
 #include "rex_std/bonus/types.h"
+#include "rex_std/internal/limits/numeric_limits.h"
 
 namespace rsl
 {
@@ -28,7 +29,7 @@ namespace rsl
     struct atomic_fixed_width_type<8>
     {
 #ifdef REX_COMPILER_MSVC
-      using type = __int8;
+      using type = char;
 #elif REX_COMPILER_CLANG
       using type = rsl::uint8;
 #endif
@@ -37,7 +38,7 @@ namespace rsl
     struct atomic_fixed_width_type<16>
     {
 #ifdef REX_COMPILER_MSVC
-      using type = __int16;
+      using type = short;
 #else
       using type = rsl::uint16;
 #endif
@@ -46,7 +47,7 @@ namespace rsl
     struct atomic_fixed_width_type<32>
     {
 #ifdef REX_COMPILER_MSVC
-      using type = __int32;
+      using type = long;
 #elif REX_COMPILER_CLANG
       using type = rsl::uint32;
 #endif
@@ -55,7 +56,7 @@ namespace rsl
     struct atomic_fixed_width_type<64>
     {
 #ifdef REX_COMPILER_MSVC
-      using type = __int64;
+      using type = long long;
 #elif REX_COMPILER_CLANG
       using type = rsl::uint64;
 #endif
@@ -63,5 +64,8 @@ namespace rsl
 
     template <size_t Bits>
     using atomic_fixed_width_type_t = typename atomic_fixed_width_type<Bits>::type;
+
+    template <typename T>
+    using atomic_t = typename atomic_fixed_width_type<sizeof(T) * rsl::limits_byte::num_bits_per_byte>::type;
   }
 }

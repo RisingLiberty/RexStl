@@ -12,237 +12,406 @@
 //
 // ============================================
 
-#include "rex_std/bonus/atomic/atomic_add_fetch.h"
-
+#include "rex_std/bonus/atomic/atomic_xor_fetch.h"
 #include "rex_std/bonus/atomic/atomic_fixed_width_type.h"
-
-#include "rex_std/atomic.h"
+#include "rex_std/bonus/atomic/atomic_memory_order.h"
+#include "rex_std/bonus/atomic/atomic_casts.h"
+#include <intrin.h>
 
 namespace rsl
 {
   inline namespace v1
   {
-    // uint8
-    void atomic_add_fetch_relaxed(uint8* obj, uint8 valToAdd)
+#if defined(REX_COMPILER_MSVC)
+    template <typename T>
+    atomic_t<T> atomic_add_fetch_msvc(T* obj, T valToAdd)
     {
-#if defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
-      atomic_fixed_width_type_t<8> retIntegral;
-      atomic_fixed_width_type_t<8> valIntegral = REX_ATOMIC_TYPE_PUN_CAST(integralType, (val));
+      atomic_t<T> atom_value_to_add = valToAdd;
+      volatile atomic_t<T>* volatile_obj = rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>(obj);
 
-      retIntegral = fetchIntrinsic(REX_ATOMIC_VOLATILE_INTEGRAL_CAST(integralType, (ptr)), valIntegral, gccMemoryOrder);
+      if constexpr (sizeof(T) == 1)
+      {
+        return _InterlockedExchangeAdd8(volatile_obj, atom_value_to_add) + atom_value_to_add;
+      }
+      else if constexpr (sizeof(T) == 2)
+      {
+        return _InterlockedExchangeAdd16(volatile_obj, atom_value_to_add) + atom_value_to_add;
+      }
+      else if constexpr (sizeof(T) == 4)
+      {
+        return _InterlockedExchangeAdd(volatile_obj, atom_value_to_add) + atom_value_to_add;
+      }
+      else if constexpr (sizeof(T) == 8)
+      {
+        return _InterlockedExchangeAdd64(volatile_obj, atom_value_to_add) + atom_value_to_add;
+      }
+      else
+      {
+        static_assert(rsl::internal::always_false<T>, "Invalid type used for atomic add fetch");
+        return 0;
+      }
+    }
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+    template <typename T>
+    atomic_t<T> atomic_add_fetch_clang(T* obj, T valToAdd, rsl::memory_order order)
+    {
+      // GCC Documentation says:
+      // These built-in functions perform the operation suggested by the name, and return the value that had previously been in *ptr. 
+      // Operations on pointer arguments are performed as if the operands were of the uintptr_t type. 
+      // That is, they are not scaled by the size of the type to which the pointer points.
+      // { tmp = *ptr; *ptr op= val; return tmp; }
+      // Therefore we save their value to a temporary of type uintptr first and perform the operation on that
+      rsl::uintptr tmp = *obj;
 
-      ret = REX_ATOMIC_TYPE_PUN_CAST(type, retIntegral);
-#elif defined(REX_COMPILER_MSVC))
+      switch (order)
+      {
+      case rsl::v1::memory_order::relaxed: return __atomic_add_fetch(obj, valToAdd, __ATOMIC_RELAXED);
+      case rsl::v1::memory_order::consume: return __atomic_add_fetch(obj, valToAdd, __ATOMIC_CONSUME);
+      case rsl::v1::memory_order::acquire: return __atomic_add_fetch(obj, valToAdd, __ATOMIC_ACQUIRE);
+      case rsl::v1::memory_order::release: return __atomic_add_fetch(obj, valToAdd, __ATOMIC_RELEASE);
+      case rsl::v1::memory_order::acq_rel: return __atomic_add_fetch(obj, valToAdd, __ATOMIC_ACQ_REL);
+      case rsl::v1::memory_order::seq_cst: return __atomic_add_fetch(obj, valToAdd, __ATOMIC_SEQ_CST);
+      default:
+        REX_ASSERT("Invalid memory order for operation");
+        break;
+      }
+    }
+#endif
 
-
-      char c;
-      char c2 = 1;
-
-      { 
-        char retIntegral; 
-        char valCompute; 
-        valCompute = ((1)); 
-        const char valIntegral = rsl::internal::atomic_type_pun_cast<char>((valCompute)); 
-        retIntegral = _InterlockedExchangeAdd8(rsl::internal::atomic_volatile_integral_cast<char>(((&c2))), valIntegral); 
-        c = rsl::internal::atomic_type_pun_cast<char>((retIntegral));
-        c = (c)+((1)); 
-      };
-
-
-
-
-
-
-
-
-
-
-      char c;
-      char c2 = 1;
-      { 
-        // prepare by casting everything to the right type
-        atomic_fixed_width_type_t<8> valCompute = valToAdd; 
-        const atomic_fixed_width_type_t<8> valIntegral = rsl::internal::atomic_type_pun_cast<atomic_fixed_width_type_t<8>>((valCompute));
-        volatile atomic_fixed_width_type_t<8>* volatile_obj = rsl::internal::atomic_volatile_integral_cast<atomic_fixed_width_type_t<8>>(obj);
-
-        // perform the atomic operatoins
-        atomic_fixed_width_type_t<8> retIntegral = _InterlockedExchangeAdd8(volatile_obj, valIntegral);
-
-        // cleanup by casting everything back to the right type and performing the add
-        c = rsl::internal::atomic_type_pun_cast<atomic_fixed_width_type_t<8>>((retIntegral));
-        c = (c) + valToAdd; 
-      };
+    // uint8
+    uint8 atomic_add_fetch_relaxed(uint8* obj, uint8 valToAdd)
+    {
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::relaxed);
 #endif
     }
-    void atomic_add_fetch_acquire(uint8 val, uint8* address)
+    uint8 atomic_add_fetch_acquire(uint8* obj, uint8 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::acquire);
+#endif
     }
-    void atomic_add_fetch_release(uint8 val, uint8* address)
+    uint8 atomic_add_fetch_release(uint8* obj, uint8 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::release);
+#endif
     }
-    void atomic_add_fetch_acq_rel(uint8 val, uint8* address)
+    uint8 atomic_add_fetch_acq_rel(uint8* obj, uint8 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::acq_rel);
+#endif
     }
-    void atomic_add_fetch_seq_cst(uint8 val, uint8* address)
+    uint8 atomic_add_fetch_seq_cst(uint8* obj, uint8 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::seq_cst);
+#endif
     }
 
     // int8
-    void atomic_add_fetch_relaxed(int8 val, int8* address)
+    int8 atomic_add_fetch_relaxed(int8* obj, int8 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::relaxed);
+#endif
     }
-    void atomic_add_fetch_acquire(int8 val, int8* address)
+    int8 atomic_add_fetch_acquire(int8* obj, int8 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::acquire);
+#endif
     }
-    void atomic_add_fetch_release(int8 val, int8* address)
+    int8 atomic_add_fetch_release(int8* obj, int8 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::release);
+#endif
     }
-    void atomic_add_fetch_acq_rel(int8 val, int8* address)
+    int8 atomic_add_fetch_acq_rel(int8* obj, int8 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::acq_rel);
+#endif
     }
-    void atomic_add_fetch_seq_cst(int8 val, int8* address)
+    int8 atomic_add_fetch_seq_cst(int8* obj, int8 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::seq_cst);
+#endif
     }
 
     // uint16
-    void atomic_add_fetch_relaxed(uint16 val, uint16* address)
+    uint16 atomic_add_fetch_relaxed(uint16* obj, uint16 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::relaxed);
+#endif
     }
-    void atomic_add_fetch_acquire(uint16 val, uint16* address)
+    uint16 atomic_add_fetch_acquire(uint16* obj, uint16 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::acquire);
+#endif
     }
-    void atomic_add_fetch_release(uint16 val, uint16* address)
+    uint16 atomic_add_fetch_release(uint16* obj, uint16 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::release);
+#endif
     }
-    void atomic_add_fetch_acq_rel(uint16 val, uint16* address)
+    uint16 atomic_add_fetch_acq_rel(uint16* obj, uint16 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::acq_rel);
+#endif
     }
-    void atomic_add_fetch_seq_cst(uint16 val, uint16* address)
+    uint16 atomic_add_fetch_seq_cst(uint16* obj, uint16 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::seq_cst);
+#endif
     }
 
     // int16
-    void atomic_add_fetch_relaxed(int16 val, int16* address)
+    int16 atomic_add_fetch_relaxed(int16* obj, int16 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::relaxed);
+#endif
     }
-    void atomic_add_fetch_acquire(int16 val, int16* address)
+    int16 atomic_add_fetch_acquire(int16* obj, int16 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::acquire);
+#endif
     }
-    void atomic_add_fetch_release(int16 val, int16* address)
+    int16 atomic_add_fetch_release(int16* obj, int16 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::release);
+#endif
     }
-    void atomic_add_fetch_acq_rel(int16 val, int16* address)
+    int16 atomic_add_fetch_acq_rel(int16* obj, int16 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::acq_rel);
+#endif
     }
-    void atomic_add_fetch_seq_cst(int16 val, int16* address)
+    int16 atomic_add_fetch_seq_cst(int16* obj, int16 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::seq_cst);
+#endif
     }
 
     // uint32
-    void atomic_add_fetch_relaxed(uint32 val, uint32* address)
+    uint32 atomic_add_fetch_relaxed(uint32* obj, uint32 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::relaxed);
+#endif
     }
-    void atomic_add_fetch_acquire(uint32 val, uint32* address)
+    uint32 atomic_add_fetch_acquire(uint32* obj, uint32 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::acquire);
+#endif
     }
-    void atomic_add_fetch_release(uint32 val, uint32* address)
+    uint32 atomic_add_fetch_release(uint32* obj, uint32 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::release);
+#endif
     }
-    void atomic_add_fetch_acq_rel(uint32 val, uint32* address)
+    uint32 atomic_add_fetch_acq_rel(uint32* obj, uint32 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::acq_rel);
+#endif
     }
-    void atomic_add_fetch_seq_cst(uint32 val, uint32* address)
+    uint32 atomic_add_fetch_seq_cst(uint32* obj, uint32 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::seq_cst);
+#endif
     }
 
     // int32
-    void atomic_add_fetch_relaxed(int32 val, int32* address)
+    int32 atomic_add_fetch_relaxed(int32* obj, int32 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::relaxed);
+#endif
     }
-    void atomic_add_fetch_acquire(int32 val, int32* address)
+    int32 atomic_add_fetch_acquire(int32* obj, int32 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::acquire);
+#endif
     }
-    void atomic_add_fetch_release(int32 val, int32* address)
+    int32 atomic_add_fetch_release(int32* obj, int32 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::release);
+#endif
     }
-    void atomic_add_fetch_acq_rel(int32 val, int32* address)
+    int32 atomic_add_fetch_acq_rel(int32* obj, int32 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::acq_rel);
+#endif
     }
-    void atomic_add_fetch_seq_cst(int32 val, int32* address)
+    int32 atomic_add_fetch_seq_cst(int32* obj, int32 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::seq_cst);
+#endif
     }
 
     // uint64
-    void atomic_add_fetch_relaxed(uint64 val, uint64* address)
+    uint64 atomic_add_fetch_relaxed(uint64* obj, uint64 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::relaxed);
+#endif
     }
-    void atomic_add_fetch_acquire(uint64 val, uint64* address)
+    uint64 atomic_add_fetch_acquire(uint64* obj, uint64 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::acquire);
+#endif
     }
-    void atomic_add_fetch_release(uint64 val, uint64* address)
+    uint64 atomic_add_fetch_release(uint64* obj, uint64 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::release);
+#endif
     }
-    void atomic_add_fetch_acq_rel(uint64 val, uint64* address)
+    uint64 atomic_add_fetch_acq_rel(uint64* obj, uint64 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::acq_rel);
+#endif
     }
-    void atomic_add_fetch_seq_cst(uint64 val, uint64* address)
+    uint64 atomic_add_fetch_seq_cst(uint64* obj, uint64 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::seq_cst);
+#endif
     }
 
     // int64
-    void atomic_add_fetch_relaxed(int64 val, int64* address)
+    int64 atomic_add_fetch_relaxed(int64* obj, int64 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::relaxed);
+#endif
     }
-    void atomic_add_fetch_acquire(int64 val, int64* address)
+    int64 atomic_add_fetch_acquire(int64* obj, int64 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::acquire);
+#endif
     }
-    void atomic_add_fetch_release(int64 val, int64* address)
+    int64 atomic_add_fetch_release(int64* obj, int64 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::release);
+#endif
     }
-    void atomic_add_fetch_acq_rel(int64 val, int64* address)
+    int64 atomic_add_fetch_acq_rel(int64* obj, int64 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::acq_rel);
+#endif
     }
-    void atomic_add_fetch_seq_cst(int64 val, int64* address)
+    int64 atomic_add_fetch_seq_cst(int64* obj, int64 valToAdd)
     {
-
+#if defined(REX_COMPILER_MSVC)
+      return atomic_add_fetch_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_add_fetch_clang(obj, valToAdd, rsl::memory_order::seq_cst);
+#endif
     }
   }
 }

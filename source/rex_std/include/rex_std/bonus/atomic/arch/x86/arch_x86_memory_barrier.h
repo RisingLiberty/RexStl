@@ -52,18 +52,18 @@ namespace rsl
         // in cases where the compiler reads from the stack pointer after the lock; addl instruction
         //
         // Accounting for Red Zones or Cachelines doesn't provide extra benefit.
-        __asm__ __volatile__("lock; addl $0, -8(%%rsp)" ::: "memory", "cc")
+        __asm__ __volatile__("lock; addl $0, -8(%%rsp)" ::: "memory", "cc");
       }
       REX_FORCE_INLINE void x86_read_memory_barrier()
       {
-        static_assert(false, "read memory barrier not implemented for " REX_COMPILER_NAME)
+        __asm__ __volatile__("" ::: "memory");
       }
       REX_FORCE_INLINE void x86_write_memory_barrier()
       {
-        static_assert(false, "write memory barrier not implemented for " REX_COMPILER_NAME)
+        __asm__ __volatile__("" ::: "memory");
       }
 #else
-      static_assert(false, "memory barrier not implemented for " REX_COMPILER_NAME)
+      static_assert(false, "memory barrier not implemented for " REX_COMPILER_NAME);
 #endif
     }
   }

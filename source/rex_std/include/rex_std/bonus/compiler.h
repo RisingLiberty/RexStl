@@ -27,16 +27,16 @@ namespace rsl
 
 #if defined(REX_COMPILER_CLANG)
   #define REX_COMPILER_VERSION (__clang_major__ * 100 + __clang_minor__)
-  #define REX_COMPILER_NAME = "Clang"
+  #define REX_COMPILER_NAME "Clang"
 #elif defined(REX_COMPILER_MSVC)
   #define REX_COMPILER_VERSION _MSC_VER
-  #define REX_COMPILER_NAME = "MSVC"
+  #define REX_COMPILER_NAME "MSVC"
 #elif defined(REX_COMPILER_GCC)
   #define REX_COMPILER_VERSION (__GNUC__ * 1000 + __GNUC_MINOR__)
-  #define REX_COMPILER_NAME = "GCC"
+  #define REX_COMPILER_NAME "GCC"
 #else
   #define REX_COMPILER_VERSION = 0
-  #define REX_COMPILER_NAME = "Unknown Compiler"
+  #define REX_COMPILER_NAME "Unknown Compiler"
 #endif
 
       constexpr compiler get_compiler()

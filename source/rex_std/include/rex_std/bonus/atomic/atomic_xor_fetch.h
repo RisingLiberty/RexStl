@@ -19,59 +19,59 @@ namespace rsl
   inline namespace v1
   {
     // uint8
-    void atomic_xor_fetch_relaxed(uint8 val, uint8* address);
-    void atomic_xor_fetch_acquire(uint8 val, uint8* address);
-    void atomic_xor_fetch_release(uint8 val, uint8* address);
-    void atomic_xor_fetch_acq_rel(uint8 val, uint8* address);
-    void atomic_xor_fetch_seq_cst(uint8 val, uint8* address);
+    uint8 atomic_xor_fetch_relaxed(uint8* obj, uint8 mask);
+    uint8 atomic_xor_fetch_acquire(uint8* obj, uint8 mask);
+    uint8 atomic_xor_fetch_release(uint8* obj, uint8 mask);
+    uint8 atomic_xor_fetch_acq_rel(uint8* obj, uint8 mask);
+    uint8 atomic_xor_fetch_seq_cst(uint8* obj, uint8 mask);
 
     // int8
-    void atomic_xor_fetch_relaxed(int8 val, int8* address);
-    void atomic_xor_fetch_acquire(int8 val, int8* address);
-    void atomic_xor_fetch_release(int8 val, int8* address);
-    void atomic_xor_fetch_acq_rel(int8 val, int8* address);
-    void atomic_xor_fetch_seq_cst(int8 val, int8* address);
+    int8 atomic_xor_fetch_relaxed(int8* obj, int8 mask);
+    int8 atomic_xor_fetch_acquire(int8* obj, int8 mask);
+    int8 atomic_xor_fetch_release(int8* obj, int8 mask);
+    int8 atomic_xor_fetch_acq_rel(int8* obj, int8 mask);
+    int8 atomic_xor_fetch_seq_cst(int8* obj, int8 mask);
 
     // uint16
-    void atomic_xor_fetch_relaxed(uint16 val, uint16* address);
-    void atomic_xor_fetch_acquire(uint16 val, uint16* address);
-    void atomic_xor_fetch_release(uint16 val, uint16* address);
-    void atomic_xor_fetch_acq_rel(uint16 val, uint16* address);
-    void atomic_xor_fetch_seq_cst(uint16 val, uint16* address);
+    uint16 atomic_xor_fetch_relaxed(uint16* obj, uint16 mask);
+    uint16 atomic_xor_fetch_acquire(uint16* obj, uint16 mask);
+    uint16 atomic_xor_fetch_release(uint16* obj, uint16 mask);
+    uint16 atomic_xor_fetch_acq_rel(uint16* obj, uint16 mask);
+    uint16 atomic_xor_fetch_seq_cst(uint16* obj, uint16 mask);
 
     // int16
-    void atomic_xor_fetch_relaxed(int16 val, int16* address);
-    void atomic_xor_fetch_acquire(int16 val, int16* address);
-    void atomic_xor_fetch_release(int16 val, int16* address);
-    void atomic_xor_fetch_acq_rel(int16 val, int16* address);
-    void atomic_xor_fetch_seq_cst(int16 val, int16* address);
+    int16 atomic_xor_fetch_relaxed(int16* obj, int16 mask);
+    int16 atomic_xor_fetch_acquire(int16* obj, int16 mask);
+    int16 atomic_xor_fetch_release(int16* obj, int16 mask);
+    int16 atomic_xor_fetch_acq_rel(int16* obj, int16 mask);
+    int16 atomic_xor_fetch_seq_cst(int16* obj, int16 mask);
 
     // uint32
-    void atomic_xor_fetch_relaxed(uint32 val, uint32* address);
-    void atomic_xor_fetch_acquire(uint32 val, uint32* address);
-    void atomic_xor_fetch_release(uint32 val, uint32* address);
-    void atomic_xor_fetch_acq_rel(uint32 val, uint32* address);
-    void atomic_xor_fetch_seq_cst(uint32 val, uint32* address);
+    uint32 atomic_xor_fetch_relaxed(uint32* obj, uint32 mask);
+    uint32 atomic_xor_fetch_acquire(uint32* obj, uint32 mask);
+    uint32 atomic_xor_fetch_release(uint32* obj, uint32 mask);
+    uint32 atomic_xor_fetch_acq_rel(uint32* obj, uint32 mask);
+    uint32 atomic_xor_fetch_seq_cst(uint32* obj, uint32 mask);
 
     // int32
-    void atomic_xor_fetch_relaxed(int32 val, int32* address);
-    void atomic_xor_fetch_acquire(int32 val, int32* address);
-    void atomic_xor_fetch_release(int32 val, int32* address);
-    void atomic_xor_fetch_acq_rel(int32 val, int32* address);
-    void atomic_xor_fetch_seq_cst(int32 val, int32* address);
+    int32 atomic_xor_fetch_relaxed(int32* obj, int32 mask);
+    int32 atomic_xor_fetch_acquire(int32* obj, int32 mask);
+    int32 atomic_xor_fetch_release(int32* obj, int32 mask);
+    int32 atomic_xor_fetch_acq_rel(int32* obj, int32 mask);
+    int32 atomic_xor_fetch_seq_cst(int32* obj, int32 mask);
 
     // uint64
-    void atomic_xor_fetch_relaxed(uint64 val, uint64* address);
-    void atomic_xor_fetch_acquire(uint64 val, uint64* address);
-    void atomic_xor_fetch_release(uint64 val, uint64* address);
-    void atomic_xor_fetch_acq_rel(uint64 val, uint64* address);
-    void atomic_xor_fetch_seq_cst(uint64 val, uint64* address);
+    uint64 atomic_xor_fetch_relaxed(uint64* obj, uint64 mask);
+    uint64 atomic_xor_fetch_acquire(uint64* obj, uint64 mask);
+    uint64 atomic_xor_fetch_release(uint64* obj, uint64 mask);
+    uint64 atomic_xor_fetch_acq_rel(uint64* obj, uint64 mask);
+    uint64 atomic_xor_fetch_seq_cst(uint64* obj, uint64 mask);
 
     // int64
-    void atomic_xor_fetch_relaxed(int64 val, int64* address);
-    void atomic_xor_fetch_acquire(int64 val, int64* address);
-    void atomic_xor_fetch_release(int64 val, int64* address);
-    void atomic_xor_fetch_acq_rel(int64 val, int64* address);
-    void atomic_xor_fetch_seq_cst(int64 val, int64* address);
+    int64 atomic_xor_fetch_relaxed(int64* obj, int64 mask);
+    int64 atomic_xor_fetch_acquire(int64* obj, int64 mask);
+    int64 atomic_xor_fetch_release(int64* obj, int64 mask);
+    int64 atomic_xor_fetch_acq_rel(int64* obj, int64 mask);
+    int64 atomic_xor_fetch_seq_cst(int64* obj, int64 mask);
   }
 }

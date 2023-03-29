@@ -9,7 +9,6 @@ public class RexStdExtra : BasicCPPProject
     // The name of the project in Visual Studio. The default is the name of
     // the class, but you usually want to override that.
     Name = GenerateName("RexStdExtra");
-    GenerateCompilerDB = true;
     GenerateTargets();
 
     // The directory that contains the source code we want to build is the

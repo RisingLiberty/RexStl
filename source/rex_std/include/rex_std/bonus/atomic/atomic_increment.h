@@ -18,7 +18,6 @@ namespace rsl
 {
   inline namespace v1
   {
-
     int8 atomic_increment(int8& val);
     int16 atomic_increment(int16& val);
     int32 atomic_increment(int32& val);
