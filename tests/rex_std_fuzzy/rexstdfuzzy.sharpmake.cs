@@ -7,7 +7,6 @@ public class RexStdFuzzy : TestProject
   public RexStdFuzzy() : base()
   {
     Name = GenerateName("RexStdFuzzy");
-    GenerateCompilerDB = true;
     GenerateTargets();
 
     string ThisFileFolder = Path.GetDirectoryName(Utils.CurrentFile());
