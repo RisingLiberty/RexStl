@@ -20,8 +20,9 @@ namespace rsl
   {
 #if defined(REX_COMPILER_MSVC)
     template <typename T>
-    atomic_t<T> atomic_load_msvc(T* obj)
+    atomic_t<T> atomic_load(T* obj, rsl::memory_order order)
     {
+      (void)order;
       volatile atomic_t<T>* volatile_obj = rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>(obj);
 
       if constexpr (sizeof(T) == 1)
@@ -64,7 +65,7 @@ namespace rsl
     }
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
     template <typename T>
-    atomic_t<T> atomic_load_clang(T* obj, rsl::memory_order order)
+    atomic_t<T> atomic_load(T* obj, rsl::memory_order order)
     {
       // GCC Documentation says:
       // These built-in functions perform the operation suggested by the name, and return the value that had previously been in *ptr.

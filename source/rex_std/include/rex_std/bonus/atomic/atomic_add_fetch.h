@@ -15,6 +15,7 @@
 #include "rex_std/bonus/types.h"
 #include "rex_std/bonus/atomic/atomic_fixed_width_type.h"
 #include "rex_std/bonus/atomic/atomic_casts.h"
+#include "rex_std/bonus/atomic/atomic_memory_order.h"
 #include "rex_std/bonus/atomic/atomic_compiler_barrier.h"
 #include "rex_std/bonus/atomic/atomic_fixed_width_type.h"
 
@@ -28,7 +29,7 @@ namespace rsl
   {
 #if defined(REX_COMPILER_MSVC)
     template <typename T>
-    atomic_t<T> atomic_add_fetch_msvc(T* obj, T valToAdd, rsl::memory_order order)
+    atomic_t<T> atomic_add_fetch(T* obj, T valToAdd, rsl::memory_order order)
     {
       (void)order;
 
@@ -59,7 +60,7 @@ namespace rsl
     }
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
     template <typename T>
-    atomic_t<T> atomic_add_fetch_clang(T* obj, T valToAdd, rsl::memory_order order)
+    atomic_t<T> atomic_add_fetch(T* obj, T valToAdd, rsl::memory_order order)
     {
       // GCC Documentation says:
       // These built-in functions perform the operation suggested by the name, and return the value that had previously been in *ptr.

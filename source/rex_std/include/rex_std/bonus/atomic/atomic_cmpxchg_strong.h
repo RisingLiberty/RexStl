@@ -28,7 +28,7 @@ namespace rsl
   {
 #if defined(REX_COMPILER_MSVC)
     template <typename T>
-    atomic_t<T> atomic_cmpxchg_strong_msvc(T* obj, T expected, T desired, rsl::memory_order successOrder, rsl::memory_order failureOrder)
+    atomic_t<T> atomic_cmpxchg_strong(T* obj, T expected, T desired, rsl::memory_order successOrder, rsl::memory_order failureOrder)
     {
       (void)successOrder;
       (void)failureOrder;
@@ -61,7 +61,7 @@ namespace rsl
     }
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
     template <typename T>
-    atomic_t<T> atomic_cmpxchg_strong_clang(T* obj, T expected, T desired, rsl::memory_order successOrder, rsl::memory_order failureOrder)
+    atomic_t<T> atomic_cmpxchg_strong(T* obj, T expected, T desired, rsl::memory_order successOrder, rsl::memory_order failureOrder)
     {
       // GCC Documentation says:
       // These built-in functions perform the operation suggested by the name, and return the value that had previously been in *ptr.

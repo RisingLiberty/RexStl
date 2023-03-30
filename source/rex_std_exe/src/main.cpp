@@ -103,9 +103,6 @@
 
 int main()
 {
-  rsl::atomic_add_fetch_relaxed(nullptr, 0);
-
-
   [[maybe_unused]] rsl::atomic<rsl::uint8> x;
   x.add_fetch(1);
   x.store(1);

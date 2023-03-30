@@ -40,20 +40,19 @@ namespace rsl
         void store(T desired, rsl::internal::memory_order_relaxed_s)
         {
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_store_relaxed(this->atomic_address(), fixed_width_desired);
-          rsl::atomic_store_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired);
+          rsl::atomic_store(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::relaxed);
         }
 
         void store(T desired, rsl::internal::memory_order_release_s)
         {
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_store_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired);
+          rsl::atomic_store(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::release);
         }
 
         void store(T desired, rsl::internal::memory_order_seq_cst_s)
         {
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_store_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired);
+          rsl::atomic_store(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst);
         }
 
       public:
@@ -66,17 +65,17 @@ namespace rsl
 
         T load(rsl::internal::memory_order_relaxed_s) const
         {
-          return rsl::atomic_load_relaxed(reinterpret_cast<unsigned char*>(this->atomic_address()));
+          return rsl::atomic_load(reinterpret_cast<unsigned char*>(this->atomic_address()), rsl::memory_order::relaxed);
         }
 
         T load(rsl::internal::memory_order_acquire_s) const
         {
-          return rsl::atomic_load_acquire(reinterpret_cast<unsigned char*>(this->atomic_address()));
+          return rsl::atomic_load(reinterpret_cast<unsigned char*>(this->atomic_address()), rsl::memory_order::acquire);
         }
 
         T load(rsl::internal::memory_order_seq_cst_s) const
         {
-          return rsl::atomic_load_seq_cst(reinterpret_cast<unsigned char*>(this->atomic_address()));
+          return rsl::atomic_load(reinterpret_cast<unsigned char*>(this->atomic_address()), rsl::memory_order::seq_cst);
         }
 
       public:
@@ -86,7 +85,7 @@ namespace rsl
         {
           atomic_t<T> retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_exchange_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired);
+          rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst);
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
         }
 
@@ -94,7 +93,7 @@ namespace rsl
         {
           atomic_t<T> retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_exchange_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired);
+          rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::relaxed);
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
         }
 
@@ -102,7 +101,7 @@ namespace rsl
         {
           atomic_t<T> retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_exchange_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired);
+          rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::acquire);
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
         }
 
@@ -110,7 +109,7 @@ namespace rsl
         {
           atomic_t<T> retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_exchange_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired);
+          rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::release);
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
         }
 
@@ -118,7 +117,7 @@ namespace rsl
         {
           atomic_t<T> retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_exchange_acq_rel(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired);
+          rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::acq_rel);
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
         }
 
@@ -126,7 +125,7 @@ namespace rsl
         {
           atomic_t<T> retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_exchange_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired);
+          rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst);
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
         }
 
@@ -137,7 +136,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
           return retVal;
         }
 
@@ -145,7 +144,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -153,7 +152,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -161,7 +160,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::release, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -169,7 +168,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_acq_rel(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -177,7 +176,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
           return retVal;
         }
 
@@ -185,7 +184,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_relaxed_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -193,7 +192,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_acquire_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -201,7 +200,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_acquire_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -209,7 +208,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_release_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::release, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -217,7 +216,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_acq_rel_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -225,7 +224,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_acq_rel_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak_acq_rel_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -233,7 +232,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_seq_cst_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -241,7 +240,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_seq_cst_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak_seq_cst_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -249,7 +248,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_seq_cst_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
           return retVal;
         }
 
@@ -260,7 +259,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
           return retVal;
         }
 
@@ -268,7 +267,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -276,7 +275,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -284,7 +283,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::release, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -292,7 +291,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_acq_rel(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_acq_rel(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -300,7 +299,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
           return retVal;
         }
 
@@ -308,7 +307,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_relaxed_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -316,7 +315,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_acquire_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -324,7 +323,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_acquire_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_acquire_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -332,7 +331,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_release_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::release, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -340,7 +339,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_acq_rel_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_acq_rel(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -348,7 +347,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_acq_rel_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_acq_rel_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -356,7 +355,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_seq_cst_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -364,7 +363,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_seq_cst_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_seq_cst_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -372,7 +371,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_seq_cst_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
           return retVal;
         }
 
@@ -419,19 +418,19 @@ namespace rsl
         void store(T desired, rsl::internal::memory_order_relaxed_s)
         {
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_store_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired);
+          rsl::atomic_store(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::relaxed);
         }
 
         void store(T desired, rsl::internal::memory_order_release_s)
         {
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_store_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired);
+          rsl::atomic_store(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::release);
         }
 
         void store(T desired, rsl::internal::memory_order_seq_cst_s)
         {
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_store_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired);
+          rsl::atomic_store(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst);
         }
 
       public:
@@ -445,21 +444,21 @@ namespace rsl
         T load(rsl::internal::memory_order_relaxed_s) const
         {
           atomic_t<T> retVal;
-          rsl::atomic_load_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())));
+          rsl::atomic_load(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::memory_order::relaxed);
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
         }
 
         T load(rsl::internal::memory_order_acquire_s) const
         {
           atomic_t<T> retVal;
-          rsl::atomic_load_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())));
+          rsl::atomic_load(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::memory_order::acquire);
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
         }
 
         T load(rsl::internal::memory_order_seq_cst_s) const
         {
           atomic_t<T> retVal;
-          rsl::atomic_load_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())));
+          rsl::atomic_load(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::memory_order::seq_cst);
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
         }
 
@@ -470,7 +469,7 @@ namespace rsl
         {
           atomic_t<T> retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_exchange_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired);
+          rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst);
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
         }
 
@@ -478,7 +477,7 @@ namespace rsl
         {
           atomic_t<T> retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_exchange_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired);
+          rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::relaxed);
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
         }
 
@@ -486,7 +485,7 @@ namespace rsl
         {
           atomic_t<T> retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_exchange_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired);
+          rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::acquire);
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
         }
 
@@ -494,7 +493,7 @@ namespace rsl
         {
           atomic_t<T> retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_exchange_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired);
+          rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::release);
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
         }
 
@@ -502,7 +501,7 @@ namespace rsl
         {
           atomic_t<T> retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_exchange_acq_rel(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired);
+          rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::acq_rel);
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
         }
 
@@ -510,7 +509,7 @@ namespace rsl
         {
           atomic_t<T> retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_exchange_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired);
+          rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst);
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
         }
 
@@ -521,7 +520,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
           return retVal;
         }
 
@@ -529,7 +528,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -537,7 +536,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -545,7 +544,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::release, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -553,7 +552,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_acq_rel(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -561,7 +560,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
           return retVal;
         }
 
@@ -569,7 +568,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_relaxed_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -577,7 +576,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_acquire_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -585,7 +584,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_acquire_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -593,7 +592,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_release_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::release, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -601,7 +600,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_acq_rel_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -609,7 +608,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_acq_rel_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak_acq_rel_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -617,7 +616,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_seq_cst_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -625,7 +624,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_seq_cst_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak_seq_cst_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -633,7 +632,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_seq_cst_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
           return retVal;
         }
 
@@ -644,7 +643,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
           return retVal;
         }
 
@@ -652,7 +651,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -660,7 +659,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -668,7 +667,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::release, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -676,7 +675,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_acq_rel(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_acq_rel(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -684,7 +683,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
           return retVal;
         }
 
@@ -692,7 +691,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_relaxed_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -700,7 +699,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_acquire_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -708,7 +707,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_acquire_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_acquire_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -716,7 +715,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_release_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::release, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -724,7 +723,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_acq_rel_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_acq_rel(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -732,7 +731,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_acq_rel_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_acq_rel_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -740,7 +739,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_seq_cst_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -748,7 +747,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_seq_cst_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_seq_cst_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -756,7 +755,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_seq_cst_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
           return retVal;
         }
 
@@ -803,19 +802,19 @@ namespace rsl
         void store(T desired, rsl::internal::memory_order_relaxed_s)
         {
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_store_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired);
+          rsl::atomic_store(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::relaxed);
         }
 
         void store(T desired, rsl::internal::memory_order_release_s)
         {
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_store_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired);
+          rsl::atomic_store(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::release);
         }
 
         void store(T desired, rsl::internal::memory_order_seq_cst_s)
         {
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_store_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired);
+          rsl::atomic_store(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst);
         }
 
       public:
@@ -829,21 +828,21 @@ namespace rsl
         T load(rsl::internal::memory_order_relaxed_s) const
         {
           atomic_t<T> retVal;
-          rsl::atomic_load_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())));
+          rsl::atomic_load(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::memory_order::relaxed);
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
         }
 
         T load(rsl::internal::memory_order_acquire_s) const
         {
           atomic_t<T> retVal;
-          rsl::atomic_load_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())));
+          rsl::atomic_load(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::memory_order::acquire);
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
         }
 
         T load(rsl::internal::memory_order_seq_cst_s) const
         {
           atomic_t<T> retVal;
-          rsl::atomic_load_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())));
+          rsl::atomic_load(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::memory_order::seq_cst);
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
         }
 
@@ -854,7 +853,7 @@ namespace rsl
         {
           atomic_t<T> retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_exchange_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired);
+          rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst);
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
         }
 
@@ -862,7 +861,7 @@ namespace rsl
         {
           atomic_t<T> retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_exchange_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired);
+          rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::relaxed);
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
         }
 
@@ -870,7 +869,7 @@ namespace rsl
         {
           atomic_t<T> retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_exchange_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired);
+          rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::acquire);
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
         }
 
@@ -878,7 +877,7 @@ namespace rsl
         {
           atomic_t<T> retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_exchange_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired);
+          rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::release);
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
         }
 
@@ -886,7 +885,7 @@ namespace rsl
         {
           atomic_t<T> retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_exchange_acq_rel(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired);
+          rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::acq_rel);
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
         }
 
@@ -894,7 +893,7 @@ namespace rsl
         {
           atomic_t<T> retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_exchange_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired);
+          rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst);
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
         }
 
@@ -905,7 +904,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
           return retVal;
         }
 
@@ -913,7 +912,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -921,7 +920,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -929,7 +928,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::release, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -937,7 +936,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_acq_rel(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -945,7 +944,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
           return retVal;
         }
 
@@ -953,7 +952,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_relaxed_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -961,7 +960,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_acquire_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -969,7 +968,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_acquire_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -977,7 +976,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_release_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::release, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -985,7 +984,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_acq_rel_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -993,7 +992,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_acq_rel_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak_acq_rel_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -1001,7 +1000,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_seq_cst_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -1009,7 +1008,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_seq_cst_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak_seq_cst_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -1017,7 +1016,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_seq_cst_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
           return retVal;
         }
 
@@ -1028,7 +1027,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
           return retVal;
         }
 
@@ -1036,7 +1035,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -1044,7 +1043,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -1052,7 +1051,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::release, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -1060,7 +1059,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_acq_rel(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_acq_rel(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -1068,7 +1067,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
           return retVal;
         }
 
@@ -1076,7 +1075,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_relaxed_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -1084,7 +1083,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_acquire_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -1092,7 +1091,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_acquire_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_acquire_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -1100,7 +1099,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_release_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::release, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -1108,7 +1107,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_acq_rel_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_acq_rel(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -1116,7 +1115,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_acq_rel_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_acq_rel_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -1124,7 +1123,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_seq_cst_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -1132,7 +1131,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_seq_cst_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_seq_cst_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -1140,7 +1139,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_seq_cst_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
           return retVal;
         }
 
@@ -1187,19 +1186,19 @@ namespace rsl
         void store(T desired, rsl::internal::memory_order_relaxed_s)
         {
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_store_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired);
+          rsl::atomic_store(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::relaxed);
         }
 
         void store(T desired, rsl::internal::memory_order_release_s)
         {
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_store_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired);
+          rsl::atomic_store(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::release);
         }
 
         void store(T desired, rsl::internal::memory_order_seq_cst_s)
         {
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_store_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired);
+          rsl::atomic_store(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst);
         }
 
       public:
@@ -1213,21 +1212,21 @@ namespace rsl
         T load(rsl::internal::memory_order_relaxed_s) const
         {
           atomic_t<T> retVal;
-          rsl::atomic_load_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())));
+          rsl::atomic_load(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::memory_order::relaxed);
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
         }
 
         T load(rsl::internal::memory_order_acquire_s) const
         {
           atomic_t<T> retVal;
-          rsl::atomic_load_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())));
+          rsl::atomic_load(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::memory_order::acquire);
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
         }
 
         T load(rsl::internal::memory_order_seq_cst_s) const
         {
           atomic_t<T> retVal;
-          rsl::atomic_load_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())));
+          rsl::atomic_load(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::memory_order::seq_cst);
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
         }
 
@@ -1238,7 +1237,7 @@ namespace rsl
         {
           atomic_t<T> retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_exchange_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired);
+          rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst);
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
         }
 
@@ -1246,7 +1245,7 @@ namespace rsl
         {
           atomic_t<T> retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_exchange_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired);
+          rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::relaxed);
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
         }
 
@@ -1254,7 +1253,7 @@ namespace rsl
         {
           atomic_t<T> retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_exchange_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired);
+          rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::acquire);
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
         }
 
@@ -1262,7 +1261,7 @@ namespace rsl
         {
           atomic_t<T> retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_exchange_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired);
+          rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::release);
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
         }
 
@@ -1270,7 +1269,7 @@ namespace rsl
         {
           atomic_t<T> retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_exchange_acq_rel(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired);
+          rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::acq_rel);
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
         }
 
@@ -1278,7 +1277,7 @@ namespace rsl
         {
           atomic_t<T> retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_exchange_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired);
+          rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst);
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
         }
 
@@ -1289,7 +1288,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
           return retVal;
         }
 
@@ -1297,7 +1296,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -1305,7 +1304,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -1313,7 +1312,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::release, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -1321,7 +1320,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_acq_rel(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -1329,7 +1328,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
           return retVal;
         }
 
@@ -1337,7 +1336,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_relaxed_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -1345,7 +1344,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_acquire_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -1353,7 +1352,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_acquire_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -1361,7 +1360,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_release_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::release, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -1369,7 +1368,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_acq_rel_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -1377,7 +1376,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_acq_rel_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak_acq_rel_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -1385,7 +1384,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_seq_cst_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -1393,7 +1392,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_seq_cst_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak_seq_cst_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -1401,7 +1400,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_weak_seq_cst_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_weak_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
           return retVal;
         }
 
@@ -1412,7 +1411,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
           return retVal;
         }
 
@@ -1420,7 +1419,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -1428,7 +1427,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -1436,7 +1435,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::release, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -1444,7 +1443,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_acq_rel(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_acq_rel(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -1452,7 +1451,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
           return retVal;
         }
 
@@ -1460,7 +1459,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_relaxed_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -1468,7 +1467,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_acquire_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -1476,7 +1475,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_acquire_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_acquire_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -1484,7 +1483,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_release_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::release, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -1492,7 +1491,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_acq_rel_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_acq_rel(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -1500,7 +1499,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_acq_rel_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_acq_rel_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -1508,7 +1507,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_seq_cst_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::relaxed);
           return retVal;
         }
 
@@ -1516,7 +1515,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_seq_cst_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_seq_cst_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::acquire);
           return retVal;
         }
 
@@ -1524,7 +1523,7 @@ namespace rsl
         {
           bool retVal;
           atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_cmpxchg_strong_seq_cst_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired);
+          rsl::atomic_cmpxchg_strong_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
           return retVal;
         }
 

@@ -27,8 +27,9 @@ namespace rsl
   {
 #if defined(REX_COMPILER_MSVC)
     template <typename T>
-    void atomic_store_msvc(T* obj, T valToStore)
+    void atomic_store(T* obj, T valToStore, rsl::memory_order order)
     {
+      (void)order;
       atomic_t<T> atom_value_to_store = valToStore;
       volatile atomic_t<T>* volatile_obj = rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>(obj);
 
@@ -73,7 +74,7 @@ namespace rsl
     }
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
     template <typename T>
-    void atomic_store_clang(T* obj, T valToStore, rsl::memory_order order)
+    void atomic_store(T* obj, T valToStore, rsl::memory_order order)
     {
       // GCC Documentation says:
       // These built-in functions perform the operation suggested by the name, and the value that had previously been in *obj.

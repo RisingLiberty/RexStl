@@ -15,6 +15,7 @@
 #include "rex_std/bonus/types.h"
 #include "rex_std/bonus/atomic/atomic_fixed_width_type.h"
 #include "rex_std/bonus/atomic/atomic_casts.h"
+#include "rex_std/bonus/atomic/atomic_memory_order.h"
 #include "rex_std/bonus/atomic/atomic_compiler_barrier.h"
 #include "rex_std/bonus/atomic/atomic_fixed_width_type.h"
 
@@ -28,10 +29,10 @@ namespace rsl
   {
 #if defined(REX_COMPILER_MSVC)
     template <typename T>
-    atomic_t<T> atomic_cmpxchg_weak_msvc(T* obj, T expected, T desired, rsl::memory_order successOrder, rsl::memory_order failureOrder)
+    atomic_t<T> atomic_cmpxchg_weak(T* obj, T expected, T desired, rsl::memory_order successOrder, rsl::memory_order failureOrder)
     {
       (void)successOrder;
-      (void)failureOrder);
+      (void)failureOrder;
 
       atomic_t<T> atom_expected_value = expected;
       atomic_t<T> atom_desired_value = desired;
@@ -61,7 +62,7 @@ namespace rsl
     }
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
     template <typename T>
-    atomic_t<T> atomic_cmpxchg_weak_clang(T* obj, T expected, T desired, rsl::memory_order successOrder, rsl::memory_order failureOrder)
+    atomic_t<T> atomic_cmpxchg_weak(T* obj, T expected, T desired, rsl::memory_order successOrder, rsl::memory_order failureOrder)
     {
       // GCC Documentation says:
       // These built-in functions perform the operation suggested by the name, and return the value that had previously been in *ptr.

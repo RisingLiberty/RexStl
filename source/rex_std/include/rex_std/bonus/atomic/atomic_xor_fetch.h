@@ -20,7 +20,7 @@ namespace rsl
   {
 #if defined(REX_COMPILER_MSVC)
     template <typename T>
-    atomic_t<T> atomic_xor_fetch_msvc(T* obj, T mask, rsl::memory_order order)
+    atomic_t<T> atomic_xor_fetch(T* obj, T mask, rsl::memory_order order)
     {
       (void)order;
       atomic_t<T> atom_mask = mask;
@@ -50,7 +50,7 @@ namespace rsl
     }
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
     template <typename T>
-    atomic_t<T> atomic_xor_fetch_clang(T* obj, T mask, rsl::memory_order order)
+    atomic_t<T> atomic_xor_fetch(T* obj, T mask, rsl::memory_order order)
     {
       // GCC Documentation says:
       // These built-in functions perform the operation suggested by the name, and return the value that had previously been in *ptr.
