@@ -14,7 +14,7 @@ namespace rsl
 
       public:
         constexpr atomic_integral_base(T desired)
-          : Base(desired)
+            : Base(desired)
         {
         }
 
@@ -249,15 +249,15 @@ namespace rsl
 
       public:
         constexpr atomic_integral_width(T desired)
-          : Base(desired)
+            : Base(desired)
         {
         }
-        constexpr atomic_integral_width() = default;
+        constexpr atomic_integral_width()                   = default;
         atomic_integral_width(const atomic_integral_width&) = delete;
 
       public:
         using Base::operator=;
-        atomic_integral_width& operator=(const atomic_integral_width&) = delete;
+        atomic_integral_width& operator=(const atomic_integral_width&)          = delete;
         atomic_integral_width& operator=(const atomic_integral_width&) volatile = delete;
 
       public:
@@ -592,15 +592,15 @@ namespace rsl
 
       public:
         constexpr atomic_integral_width(T desired)
-          : Base(desired)
+            : Base(desired)
         {
         }
-        constexpr atomic_integral_width() = default;
+        constexpr atomic_integral_width()                   = default;
         atomic_integral_width(const atomic_integral_width&) = delete;
 
       public:
         using Base::operator=;
-        atomic_integral_width& operator=(const atomic_integral_width&) = delete;
+        atomic_integral_width& operator=(const atomic_integral_width&)          = delete;
         atomic_integral_width& operator=(const atomic_integral_width&) volatile = delete;
 
       public:
@@ -935,15 +935,15 @@ namespace rsl
 
       public:
         constexpr atomic_integral_width(T desired)
-          : Base(desired)
+            : Base(desired)
         {
         }
-        constexpr atomic_integral_width() = default;
+        constexpr atomic_integral_width()                   = default;
         atomic_integral_width(const atomic_integral_width&) = delete;
 
       public:
         using Base::operator=;
-        atomic_integral_width& operator=(const atomic_integral_width&) = delete;
+        atomic_integral_width& operator=(const atomic_integral_width&)          = delete;
         atomic_integral_width& operator=(const atomic_integral_width&) volatile = delete;
 
       public:
@@ -1278,15 +1278,15 @@ namespace rsl
 
       public:
         constexpr atomic_integral_width(T desired)
-          : Base(desired)
+            : Base(desired)
         {
         }
-        constexpr atomic_integral_width() = default;
+        constexpr atomic_integral_width()                   = default;
         atomic_integral_width(const atomic_integral_width&) = delete;
 
       public:
         using Base::operator=;
-        atomic_integral_width& operator=(const atomic_integral_width&) = delete;
+        atomic_integral_width& operator=(const atomic_integral_width&)          = delete;
         atomic_integral_width& operator=(const atomic_integral_width&) volatile = delete;
 
       public:
@@ -1621,15 +1621,15 @@ namespace rsl
 
       public:
         constexpr atomic_integral_width(T desired)
-          : Base(desired)
+            : Base(desired)
         {
         }
-        constexpr atomic_integral_width() = default;
+        constexpr atomic_integral_width()                   = default;
         atomic_integral_width(const atomic_integral_width&) = delete;
 
       public:
         using Base::operator=;
-        atomic_integral_width& operator=(const atomic_integral_width&) = delete;
+        atomic_integral_width& operator=(const atomic_integral_width&)          = delete;
         atomic_integral_width& operator=(const atomic_integral_width&) volatile = delete;
 
       public:

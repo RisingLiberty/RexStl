@@ -12,13 +12,12 @@
 
 #pragma once
 
-#include "rex_std/bonus/atomic/atomic_fixed_width_type.h"
 #include "rex_std/bonus/atomic/atomic_casts.h"
 #include "rex_std/bonus/atomic/atomic_compiler_barrier.h"
 #include "rex_std/bonus/atomic/atomic_fixed_width_type.h"
 
 #if defined(REX_COMPILER_MSVC)
-#include <intrin.h>
+  #include <intrin.h>
 #endif
 
 namespace rsl
@@ -30,41 +29,41 @@ namespace rsl
     void atomic_store(T* obj, T valToStore, rsl::memory_order order)
     {
       (void)order;
-      atomic_t<T> atom_value_to_store = valToStore;
+      atomic_t<T> atom_value_to_store    = valToStore;
       volatile atomic_t<T>* volatile_obj = rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>(obj);
 
-      if constexpr (sizeof(T) == 1)
+      if constexpr(sizeof(T) == 1)
       {
-#if defined(REX_COMPILER_MSVC) && (REX_COMPILER_VERSION >= 1920) // >= VS2019
+  #if defined(REX_COMPILER_MSVC) && (REX_COMPILER_VERSION >= 1920) // >= VS2019
         __iso_volatile_store8(volatile_obj, atom_value_to_store);
 
-#else
+  #else
         (*rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>((obj))) = atom_value_to_store;
-#endif
+  #endif
       }
-      else if constexpr (sizeof(T) == 2)
+      else if constexpr(sizeof(T) == 2)
       {
-#if defined(REX_COMPILER_MSVC) && (REX_COMPILER_VERSION >= 1920) // >= VS2019
+  #if defined(REX_COMPILER_MSVC) && (REX_COMPILER_VERSION >= 1920) // >= VS2019
         __iso_volatile_store16(volatile_obj, atom_value_to_store);
-#else
+  #else
         (*rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>((obj))) = atom_value_to_store;
-#endif
+  #endif
       }
-      else if constexpr (sizeof(T) == 4)
+      else if constexpr(sizeof(T) == 4)
       {
-#if defined(REX_COMPILER_MSVC) && (REX_COMPILER_VERSION >= 1920) // >= VS2019
+  #if defined(REX_COMPILER_MSVC) && (REX_COMPILER_VERSION >= 1920) // >= VS2019
         __iso_volatile_store32(rsl::internal::atomic_volatile_integral_cast<int>(volatile_obj), atom_value_to_store);
-#else
+  #else
         (*rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>((obj))) = atom_value_to_store;
-#endif
+  #endif
       }
-      else if constexpr (sizeof(T) == 8)
+      else if constexpr(sizeof(T) == 8)
       {
-#if defined(REX_COMPILER_MSVC) && (REX_COMPILER_VERSION >= 1920) // >= VS2019
+  #if defined(REX_COMPILER_MSVC) && (REX_COMPILER_VERSION >= 1920) // >= VS2019
         __iso_volatile_store64(volatile_obj, atom_value_to_store);
-#else
+  #else
         (*rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>((obj))) = atom_value_to_store;
-#endif
+  #endif
       }
       else
       {
@@ -84,12 +83,12 @@ namespace rsl
       // Therefore we save their value to a temporary of type uintptr first and perform the operation on that
       rsl::uintptr tmp = *obj;
 
-      switch (order)
+      switch(order)
       {
-      case rsl::v1::memory_order::relaxed: __atomic_store(obj, &valToStore, __ATOMIC_RELAXED);
-      case rsl::v1::memory_order::release: __atomic_store(obj, &valToStore, __ATOMIC_RELEASE);
-      case rsl::v1::memory_order::seq_cst: __atomic_store(obj, &valToStore, __ATOMIC_SEQ_CST);
-      default: REX_ASSERT("Invalid memory order for operation"); break;
+        case rsl::v1::memory_order::relaxed: __atomic_store(obj, &valToStore, __ATOMIC_RELAXED);
+        case rsl::v1::memory_order::release: __atomic_store(obj, &valToStore, __ATOMIC_RELEASE);
+        case rsl::v1::memory_order::seq_cst: __atomic_store(obj, &valToStore, __ATOMIC_SEQ_CST);
+        default: REX_ASSERT("Invalid memory order for operation"); break;
       }
     }
 #endif

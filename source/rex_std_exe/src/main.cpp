@@ -98,7 +98,6 @@
 // #include "rex_std/wctype.h"
 
 #include "rex_std/atomic.h"
-
 #include "rex_std/bonus/atomic/atomic_add_fetch.h"
 
 int main()

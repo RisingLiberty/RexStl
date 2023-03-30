@@ -25,37 +25,37 @@ namespace rsl
       (void)order;
       volatile atomic_t<T>* volatile_obj = rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>(obj);
 
-      if constexpr (sizeof(T) == 1)
+      if constexpr(sizeof(T) == 1)
       {
-#if(REX_COMPILER_VERSION >= 1920)
+  #if(REX_COMPILER_VERSION >= 1920)
         return __iso_volatile_load8(volatile_obj);
-#else
+  #else
         return (*(rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>(obj)));
-#endif
+  #endif
       }
-      else if constexpr (sizeof(T) == 2)
+      else if constexpr(sizeof(T) == 2)
       {
-#if(REX_COMPILER_VERSION >= 1920)
+  #if(REX_COMPILER_VERSION >= 1920)
         return __iso_volatile_load16(volatile_obj);
-#else
+  #else
         return (*(rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>(obj)));
-#endif
+  #endif
       }
-      else if constexpr (sizeof(T) == 4)
+      else if constexpr(sizeof(T) == 4)
       {
-#if(REX_COMPILER_VERSION >= 1920)
+  #if(REX_COMPILER_VERSION >= 1920)
         return __iso_volatile_load32(rsl::internal::atomic_volatile_integral_cast<int>(volatile_obj));
-#else
+  #else
         return (*(rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>(obj)));
-#endif
+  #endif
       }
-      else if constexpr (sizeof(T) == 8)
+      else if constexpr(sizeof(T) == 8)
       {
-#if(REX_COMPILER_VERSION >= 1920)
+  #if(REX_COMPILER_VERSION >= 1920)
         return __iso_volatile_load64(volatile_obj);
-#else
+  #else
         return (*(rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>(obj)));
-#endif
+  #endif
       }
       else
       {
@@ -75,12 +75,12 @@ namespace rsl
       // Therefore we save their value to a temporary of type uintptr first and perform the operation on that
       rsl::uintptr tmp = *obj;
 
-      switch (order)
+      switch(order)
       {
-      case rsl::v1::memory_order::consume: return __atomic_load_n(obj, __ATOMIC_CONSUME);
-      case rsl::v1::memory_order::acquire: return __atomic_load_n(obj, __ATOMIC_ACQUIRE);
-      case rsl::v1::memory_order::seq_cst: return __atomic_load_n(obj, __ATOMIC_SEQ_CST);
-      default: REX_ASSERT("Invalid memory order for operation"); break;
+        case rsl::v1::memory_order::consume: return __atomic_load_n(obj, __ATOMIC_CONSUME);
+        case rsl::v1::memory_order::acquire: return __atomic_load_n(obj, __ATOMIC_ACQUIRE);
+        case rsl::v1::memory_order::seq_cst: return __atomic_load_n(obj, __ATOMIC_SEQ_CST);
+        default: REX_ASSERT("Invalid memory order for operation"); break;
       }
 
       return 0;
