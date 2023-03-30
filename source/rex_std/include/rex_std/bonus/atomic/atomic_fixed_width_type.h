@@ -29,7 +29,7 @@ namespace rsl
     struct atomic_fixed_width_type<8>
     {
 #ifdef REX_COMPILER_MSVC
-      using type = char;
+      using type = signed char;
 #elif REX_COMPILER_CLANG
       using type = rsl::uint8;
 #endif

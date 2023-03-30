@@ -1,266 +1,3165 @@
-
-
-#ifndef REX_ATOMIC_INTERNAL_INTEGRAL_H
-#define REX_ATOMIC_INTERNAL_INTEGRAL_H
-
 #pragma once
 
 namespace rsl
+
 {
+
   inline namespace v1
+
   {
 
     namespace internal
+
     {
-
-#define REX_ATOMIC_INTEGRAL_STATIC_ASSERT_FUNCS_IMPL(funcName)                                                                                                                                                                                           \
-  template <typename Order>                                                                                                                                                                                                                              \
-  T funcName(T /*arg*/, Order /*order*/)                                                                                                                                                                                                                 \
-  {                                                                                                                                                                                                                                                      \
-    REX_ATOMIC_STATIC_ASSERT_INVALID_MEMORY_ORDER(T);                                                                                                                                                                                                    \
-  }                                                                                                                                                                                                                                                      \
-                                                                                                                                                                                                                                                         \
-  template <typename Order>                                                                                                                                                                                                                              \
-  T funcName(T /*arg*/, Order /*order*/) volatile                                                                                                                                                                                                        \
-  {                                                                                                                                                                                                                                                      \
-    REX_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);                                                                                                                                                                                                         \
-  }                                                                                                                                                                                                                                                      \
-                                                                                                                                                                                                                                                         \
-  T funcName(T /*arg*/) volatile                                                                                                                                                                                                                         \
-  {                                                                                                                                                                                                                                                      \
-    REX_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);                                                                                                                                                                                                         \
-  }
-
-#define REX_ATOMIC_INTEGRAL_STATIC_ASSERT_INC_DEC_OPERATOR_IMPL(operatorOp)                                                                                                                                                                              \
-  T operator operatorOp() volatile                                                                                                                                                                                                                       \
-  {                                                                                                                                                                                                                                                      \
-    REX_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);                                                                                                                                                                                                         \
-  }                                                                                                                                                                                                                                                      \
-                                                                                                                                                                                                                                                         \
-  T operator operatorOp(int) volatile                                                                                                                                                                                                                    \
-  {                                                                                                                                                                                                                                                      \
-    REX_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);                                                                                                                                                                                                         \
-  }
-
-#define REX_ATOMIC_INTEGRAL_STATIC_ASSERT_ASSIGNMENT_OPERATOR_IMPL(operatorOp)                                                                                                                                                                           \
-  T operator operatorOp(T /*arg*/) volatile                                                                                                                                                                                                              \
-  {                                                                                                                                                                                                                                                      \
-    REX_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);                                                                                                                                                                                                         \
-  }
 
       template <typename T, unsigned width = sizeof(T)>
       struct atomic_integral_base : public atomic_base_width<T, width>
+
       {
+
       private:
         using Base = atomic_base_width<T, width>;
 
-      public: /* ctors */
+
+      public:
         constexpr atomic_integral_base(T desired)
-            : Base {desired}
+          : Base
         {
+         desired
         }
+
+
+        {
+
+
+        }
+
 
         constexpr atomic_integral_base() = default;
 
+
         atomic_integral_base(const atomic_integral_base&) = delete;
 
-      public: /* assignment operator */
+
+      public:
         using Base::operator=;
 
-        atomic_integral_base& operator=(const atomic_integral_base&)          = delete;
+
+        atomic_integral_base& operator=(const atomic_integral_base&) = delete;
+
         atomic_integral_base& operator=(const atomic_integral_base&) volatile = delete;
 
-      public: /* fetch_add */
-        REX_ATOMIC_INTEGRAL_STATIC_ASSERT_FUNCS_IMPL(fetch_add)
 
-      public: /* add_fetch */
-        REX_ATOMIC_INTEGRAL_STATIC_ASSERT_FUNCS_IMPL(add_fetch)
+      public:
+        template <typename Order> T fetch_add(T, Order)
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : invalid memory order for the given operation!");
+          ;
 
-      public: /* fetch_sub */
-        REX_ATOMIC_INTEGRAL_STATIC_ASSERT_FUNCS_IMPL(fetch_sub)
+        }
+        template <typename Order> T fetch_add(T, Order) volatile
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
+          ;
 
-      public: /* sub_fetch */
-        REX_ATOMIC_INTEGRAL_STATIC_ASSERT_FUNCS_IMPL(sub_fetch)
+        }
+        T fetch_add(T) volatile
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
+          ;
 
-      public: /* fetch_and */
-        REX_ATOMIC_INTEGRAL_STATIC_ASSERT_FUNCS_IMPL(fetch_and)
+        }
 
-      public: /* and_fetch */
-        REX_ATOMIC_INTEGRAL_STATIC_ASSERT_FUNCS_IMPL(and_fetch)
 
-      public: /* fetch_or */
-        REX_ATOMIC_INTEGRAL_STATIC_ASSERT_FUNCS_IMPL(fetch_or)
+      public:
+        template <typename Order> T add_fetch(T, Order)
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : invalid memory order for the given operation!");
+          ;
 
-      public: /* or_fetch */
-        REX_ATOMIC_INTEGRAL_STATIC_ASSERT_FUNCS_IMPL(or_fetch)
+        }
+        template <typename Order> T add_fetch(T, Order) volatile
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
+          ;
 
-      public: /* fetch_xor */
-        REX_ATOMIC_INTEGRAL_STATIC_ASSERT_FUNCS_IMPL(fetch_xor)
+        }
+        T add_fetch(T) volatile
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
+          ;
 
-      public: /* xor_fetch */
-        REX_ATOMIC_INTEGRAL_STATIC_ASSERT_FUNCS_IMPL(xor_fetch)
+        }
 
-      public: /* operator++ && operator-- */
-        REX_ATOMIC_INTEGRAL_STATIC_ASSERT_INC_DEC_OPERATOR_IMPL(++)
 
-        REX_ATOMIC_INTEGRAL_STATIC_ASSERT_INC_DEC_OPERATOR_IMPL(--)
+      public:
+        template <typename Order> T fetch_sub(T, Order)
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : invalid memory order for the given operation!");
+          ;
 
-      public: /* operator+= && operator-= */
-        REX_ATOMIC_INTEGRAL_STATIC_ASSERT_ASSIGNMENT_OPERATOR_IMPL(+=)
+        }
+        template <typename Order> T fetch_sub(T, Order) volatile
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
+          ;
 
-        REX_ATOMIC_INTEGRAL_STATIC_ASSERT_ASSIGNMENT_OPERATOR_IMPL(-=)
+        }
+        T fetch_sub(T) volatile
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
+          ;
 
-      public: /* operator&= */
-        REX_ATOMIC_INTEGRAL_STATIC_ASSERT_ASSIGNMENT_OPERATOR_IMPL(&=)
+        }
 
-      public: /* operator|= */
-        REX_ATOMIC_INTEGRAL_STATIC_ASSERT_ASSIGNMENT_OPERATOR_IMPL(|=)
 
-      public: /* operator^= */
-        REX_ATOMIC_INTEGRAL_STATIC_ASSERT_ASSIGNMENT_OPERATOR_IMPL(^=)
-      };
+      public:
+        template <typename Order> T sub_fetch(T, Order)
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : invalid memory order for the given operation!");
+          ;
+
+        }
+        template <typename Order> T sub_fetch(T, Order) volatile
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
+          ;
+
+        }
+        T sub_fetch(T) volatile
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
+          ;
+
+        }
+
+
+      public:
+        template <typename Order> T fetch_and(T, Order)
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : invalid memory order for the given operation!");
+          ;
+
+        }
+        template <typename Order> T fetch_and(T, Order) volatile
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
+          ;
+
+        }
+        T fetch_and(T) volatile
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
+          ;
+
+        }
+
+
+      public:
+        template <typename Order> T and_fetch(T, Order)
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : invalid memory order for the given operation!");
+          ;
+
+        }
+        template <typename Order> T and_fetch(T, Order) volatile
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
+          ;
+
+        }
+        T and_fetch(T) volatile
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
+          ;
+
+        }
+
+
+      public:
+        template <typename Order> T fetch_or(T, Order)
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : invalid memory order for the given operation!");
+          ;
+
+        }
+        template <typename Order> T fetch_or(T, Order) volatile
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
+          ;
+
+        }
+        T fetch_or(T) volatile
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
+          ;
+
+        }
+
+
+      public:
+        template <typename Order> T or_fetch(T, Order)
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : invalid memory order for the given operation!");
+          ;
+
+        }
+        template <typename Order> T or_fetch(T, Order) volatile
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
+          ;
+
+        }
+        T or_fetch(T) volatile
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
+          ;
+
+        }
+
+
+      public:
+        template <typename Order> T fetch_xor(T, Order)
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : invalid memory order for the given operation!");
+          ;
+
+        }
+        template <typename Order> T fetch_xor(T, Order) volatile
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
+          ;
+
+        }
+        T fetch_xor(T) volatile
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
+          ;
+
+        }
+
+
+      public:
+        template <typename Order> T xor_fetch(T, Order)
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : invalid memory order for the given operation!");
+          ;
+
+        }
+        template <typename Order> T xor_fetch(T, Order) volatile
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
+          ;
+
+        }
+        T xor_fetch(T) volatile
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
+          ;
+
+        }
+
+
+      public:
+        T operator ++() volatile
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
+          ;
+
+        }
+        T operator ++(int) volatile
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
+          ;
+
+        }
+
+
+        T operator --() volatile
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
+          ;
+
+        }
+        T operator --(int) volatile
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
+          ;
+
+        }
+
+
+      public:
+        T operator +=(T) volatile
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
+          ;
+
+        }
+
+
+        T operator -=(T) volatile
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
+          ;
+
+        }
+
+
+      public:
+        T operator &=(T) volatile
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
+          ;
+
+        }
+
+
+      public:
+        T operator |=(T) volatile
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
+          ;
+
+        }
+
+
+      public:
+        T operator ^=(T) volatile
+        {
+          static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
+          ;
+
+        }
+
+
+      }
+      ;
+
 
       template <typename T, unsigned width = sizeof(T)>
       struct atomic_integral_width;
 
-#define REX_ATOMIC_INTEGRAL_FUNC_IMPL(op, bits)                                                                                                                                                                                                          \
-  T retVal;                                                                                                                                                                                                                                              \
-  MERGE(op, bits)(T, retVal, this->atomic_address(), arg);                                                                                                                                                                                             \
-  return retVal;
 
-#define REX_ATOMIC_INTEGRAL_FETCH_IMPL(funcName, op, bits)                                                                                                                                                                                               \
-  T funcName(T arg)                                                                                                                                                                                                                                      \
-  {                                                                                                                                                                                                                                                      \
-    REX_ATOMIC_INTEGRAL_FUNC_IMPL(op, bits);                                                                                                                                                                                                             \
+      template <typename T> struct atomic_integral_width<T, 1> : public atomic_integral_base<T, 1>
+      {
+      private: using Base = atomic_integral_base<T, 1>;
+      public: constexpr atomic_integral_width(T desired) : Base
+      {
+       desired
+      }
+
+      {
+
+      }
+            constexpr atomic_integral_width() = default;
+            atomic_integral_width(const atomic_integral_width&) = delete;
+      public: using Base::operator=;
+            atomic_integral_width& operator=(const atomic_integral_width&) = delete;
+            atomic_integral_width& operator=(const atomic_integral_width&) volatile = delete;
+      public: using Base::fetch_add;
+            T fetch_add(T arg)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_add(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_add(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_add(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_add(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_add(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::add_fetch;
+            T add_fetch(T arg)
+            {
+              T retVal;
+              rsl::atomic_add_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T add_fetch(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_add_fetch_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T add_fetch(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_add_fetch_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T add_fetch(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_add_fetch_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T add_fetch(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_add_fetch_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T add_fetch(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_add_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::fetch_sub;
+            T fetch_sub(T arg)
+            {
+              T retVal;
+              rsl::atomic_fetch_sub_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_sub(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_sub_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_sub(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_sub_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_sub(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_sub_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_sub(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_sub_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_sub(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_sub_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::sub_fetch;
+            T sub_fetch(T arg)
+            {
+              T retVal;
+              rsl::atomic_sub_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T sub_fetch(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_sub_fetch_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T sub_fetch(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_sub_fetch_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T sub_fetch(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_sub_fetch_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T sub_fetch(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_sub_fetch_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T sub_fetch(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_sub_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::fetch_and;
+            T fetch_and(T arg)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_and(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_and(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_and(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_and(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_and(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::and_fetch;
+            T and_fetch(T arg)
+            {
+              T retVal;
+              rsl::atomic_and_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T and_fetch(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_and_fetch_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T and_fetch(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_and_fetch_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T and_fetch(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_and_fetch_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T and_fetch(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_and_fetch_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T and_fetch(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_and_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::fetch_or;
+            T fetch_or(T arg)
+            {
+              T retVal;
+              rsl::atomic_fetch_or_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_or(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_or_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_or(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_or_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_or(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_or_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_or(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_or_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_or(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_or_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::or_fetch;
+            T or_fetch(T arg)
+            {
+              T retVal;
+              rsl::atomic_or_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T or_fetch(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_or_fetch_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T or_fetch(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_or_fetch_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T or_fetch(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_or_fetch_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T or_fetch(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_or_fetch_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T or_fetch(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_or_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::fetch_xor;
+            T fetch_xor(T arg)
+            {
+              T retVal;
+              rsl::atomic_fetch_xor_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_xor(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_xor_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_xor(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_xor_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_xor(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_xor_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_xor(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_xor_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_xor(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_xor_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::xor_fetch;
+            T xor_fetch(T arg)
+            {
+              T retVal;
+              rsl::atomic_xor_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T xor_fetch(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_xor_fetch_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T xor_fetch(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_xor_fetch_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T xor_fetch(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_xor_fetch_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T xor_fetch(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_xor_fetch_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T xor_fetch(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_xor_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::operator ++;
+            T operator ++()
+            {
+              return add_fetch(1, rsl::memory_order_seq_cst);
+
+            }
+            T operator ++(int)
+            {
+              return fetch_add(1, rsl::memory_order_seq_cst);
+
+            }
+            using Base::operator --;
+            T operator --()
+            {
+              return sub_fetch(1, rsl::memory_order_seq_cst);
+
+            }
+            T operator --(int)
+            {
+              return fetch_sub(1, rsl::memory_order_seq_cst);
+
+            }
+      public: using Base::operator +=;
+            T operator +=(T arg)
+            {
+              return add_fetch(arg, rsl::memory_order_seq_cst);
+
+            }
+            using Base::operator -=;
+            T operator -=(T arg)
+            {
+              return sub_fetch(arg, rsl::memory_order_seq_cst);
+
+            }
+      public: using Base::operator &=;
+            T operator &=(T arg)
+            {
+              return and_fetch(arg, rsl::memory_order_seq_cst);
+
+            }
+      public: using Base::operator |=;
+            T operator |=(T arg)
+            {
+              return or_fetch(arg, rsl::memory_order_seq_cst);
+
+            }
+      public: using Base::operator ^=;
+            T operator ^=(T arg)
+            {
+              return xor_fetch(arg, rsl::memory_order_seq_cst);
+
+            }
+
+      }
+      ;
+
+      template <typename T> struct atomic_integral_width<T, 2> : public atomic_integral_base<T, 2>
+      {
+      private: using Base = atomic_integral_base<T, 2>;
+      public: constexpr atomic_integral_width(T desired) : Base
+      {
+       desired
+      }
+
+      {
+
+      }
+            constexpr atomic_integral_width() = default;
+            atomic_integral_width(const atomic_integral_width&) = delete;
+      public: using Base::operator=;
+            atomic_integral_width& operator=(const atomic_integral_width&) = delete;
+            atomic_integral_width& operator=(const atomic_integral_width&) volatile = delete;
+      public: using Base::fetch_add;
+            T fetch_add(T arg)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_add(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_add(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_add(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_add(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_add(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::add_fetch;
+            T add_fetch(T arg)
+            {
+              T retVal;
+              rsl::atomic_add_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T add_fetch(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_add_fetch_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T add_fetch(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_add_fetch_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T add_fetch(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_add_fetch_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T add_fetch(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_add_fetch_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T add_fetch(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_add_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::fetch_sub;
+            T fetch_sub(T arg)
+            {
+              T retVal;
+              rsl::atomic_fetch_sub_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_sub(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_sub_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_sub(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_sub_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_sub(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_sub_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_sub(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_sub_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_sub(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_sub_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::sub_fetch;
+            T sub_fetch(T arg)
+            {
+              T retVal;
+              rsl::atomic_sub_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T sub_fetch(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_sub_fetch_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T sub_fetch(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_sub_fetch_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T sub_fetch(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_sub_fetch_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T sub_fetch(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_sub_fetch_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T sub_fetch(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_sub_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::fetch_and;
+            T fetch_and(T arg)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_and(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_and(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_and(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_and(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_and(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::and_fetch;
+            T and_fetch(T arg)
+            {
+              T retVal;
+              rsl::atomic_and_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T and_fetch(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_and_fetch_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T and_fetch(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_and_fetch_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T and_fetch(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_and_fetch_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T and_fetch(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_and_fetch_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T and_fetch(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_and_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::fetch_or;
+            T fetch_or(T arg)
+            {
+              T retVal;
+              rsl::atomic_fetch_or_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_or(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_or_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_or(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_or_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_or(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_or_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_or(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_or_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_or(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_or_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::or_fetch;
+            T or_fetch(T arg)
+            {
+              T retVal;
+              rsl::atomic_or_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T or_fetch(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_or_fetch_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T or_fetch(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_or_fetch_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T or_fetch(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_or_fetch_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T or_fetch(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_or_fetch_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T or_fetch(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_or_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::fetch_xor;
+            T fetch_xor(T arg)
+            {
+              T retVal;
+              rsl::atomic_fetch_xor_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_xor(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_xor_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_xor(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_xor_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_xor(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_xor_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_xor(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_xor_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_xor(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_xor_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::xor_fetch;
+            T xor_fetch(T arg)
+            {
+              T retVal;
+              rsl::atomic_xor_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T xor_fetch(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_xor_fetch_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T xor_fetch(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_xor_fetch_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T xor_fetch(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_xor_fetch_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T xor_fetch(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_xor_fetch_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T xor_fetch(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_xor_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::operator ++;
+            T operator ++()
+            {
+              return add_fetch(1, rsl::memory_order_seq_cst);
+
+            }
+            T operator ++(int)
+            {
+              return fetch_add(1, rsl::memory_order_seq_cst);
+
+            }
+            using Base::operator --;
+            T operator --()
+            {
+              return sub_fetch(1, rsl::memory_order_seq_cst);
+
+            }
+            T operator --(int)
+            {
+              return fetch_sub(1, rsl::memory_order_seq_cst);
+
+            }
+      public: using Base::operator +=;
+            T operator +=(T arg)
+            {
+              return add_fetch(arg, rsl::memory_order_seq_cst);
+
+            }
+            using Base::operator -=;
+            T operator -=(T arg)
+            {
+              return sub_fetch(arg, rsl::memory_order_seq_cst);
+
+            }
+      public: using Base::operator &=;
+            T operator &=(T arg)
+            {
+              return and_fetch(arg, rsl::memory_order_seq_cst);
+
+            }
+      public: using Base::operator |=;
+            T operator |=(T arg)
+            {
+              return or_fetch(arg, rsl::memory_order_seq_cst);
+
+            }
+      public: using Base::operator ^=;
+            T operator ^=(T arg)
+            {
+              return xor_fetch(arg, rsl::memory_order_seq_cst);
+
+            }
+
+      }
+      ;
+
+      template <typename T> struct atomic_integral_width<T, 4> : public atomic_integral_base<T, 4>
+      {
+      private: using Base = atomic_integral_base<T, 4>;
+      public: constexpr atomic_integral_width(T desired) : Base
+      {
+       desired
+      }
+
+      {
+
+      }
+            constexpr atomic_integral_width() = default;
+            atomic_integral_width(const atomic_integral_width&) = delete;
+      public: using Base::operator=;
+            atomic_integral_width& operator=(const atomic_integral_width&) = delete;
+            atomic_integral_width& operator=(const atomic_integral_width&) volatile = delete;
+      public: using Base::fetch_add;
+            T fetch_add(T arg)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_add(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_add(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_add(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_add(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_add(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::add_fetch;
+            T add_fetch(T arg)
+            {
+              T retVal;
+              rsl::atomic_add_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T add_fetch(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_add_fetch_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T add_fetch(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_add_fetch_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T add_fetch(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_add_fetch_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T add_fetch(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_add_fetch_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T add_fetch(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_add_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::fetch_sub;
+            T fetch_sub(T arg)
+            {
+              T retVal;
+              rsl::atomic_fetch_sub_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_sub(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_sub_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_sub(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_sub_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_sub(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_sub_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_sub(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_sub_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_sub(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_sub_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::sub_fetch;
+            T sub_fetch(T arg)
+            {
+              T retVal;
+              rsl::atomic_sub_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T sub_fetch(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_sub_fetch_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T sub_fetch(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_sub_fetch_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T sub_fetch(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_sub_fetch_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T sub_fetch(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_sub_fetch_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T sub_fetch(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_sub_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::fetch_and;
+            T fetch_and(T arg)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_and(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_and(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_and(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_and(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_and(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::and_fetch;
+            T and_fetch(T arg)
+            {
+              T retVal;
+              rsl::atomic_and_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T and_fetch(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_and_fetch_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T and_fetch(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_and_fetch_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T and_fetch(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_and_fetch_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T and_fetch(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_and_fetch_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T and_fetch(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_and_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::fetch_or;
+            T fetch_or(T arg)
+            {
+              T retVal;
+              rsl::atomic_fetch_or_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_or(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_or_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_or(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_or_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_or(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_or_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_or(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_or_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_or(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_or_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::or_fetch;
+            T or_fetch(T arg)
+            {
+              T retVal;
+              rsl::atomic_or_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T or_fetch(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_or_fetch_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T or_fetch(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_or_fetch_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T or_fetch(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_or_fetch_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T or_fetch(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_or_fetch_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T or_fetch(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_or_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::fetch_xor;
+            T fetch_xor(T arg)
+            {
+              T retVal;
+              rsl::atomic_fetch_xor_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_xor(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_xor_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_xor(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_xor_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_xor(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_xor_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_xor(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_xor_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_xor(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_xor_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::xor_fetch;
+            T xor_fetch(T arg)
+            {
+              T retVal;
+              rsl::atomic_xor_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T xor_fetch(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_xor_fetch_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T xor_fetch(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_xor_fetch_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T xor_fetch(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_xor_fetch_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T xor_fetch(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_xor_fetch_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T xor_fetch(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_xor_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::operator ++;
+            T operator ++()
+            {
+              return add_fetch(1, rsl::memory_order_seq_cst);
+
+            }
+            T operator ++(int)
+            {
+              return fetch_add(1, rsl::memory_order_seq_cst);
+
+            }
+            using Base::operator --;
+            T operator --()
+            {
+              return sub_fetch(1, rsl::memory_order_seq_cst);
+
+            }
+            T operator --(int)
+            {
+              return fetch_sub(1, rsl::memory_order_seq_cst);
+
+            }
+      public: using Base::operator +=;
+            T operator +=(T arg)
+            {
+              return add_fetch(arg, rsl::memory_order_seq_cst);
+
+            }
+            using Base::operator -=;
+            T operator -=(T arg)
+            {
+              return sub_fetch(arg, rsl::memory_order_seq_cst);
+
+            }
+      public: using Base::operator &=;
+            T operator &=(T arg)
+            {
+              return and_fetch(arg, rsl::memory_order_seq_cst);
+
+            }
+      public: using Base::operator |=;
+            T operator |=(T arg)
+            {
+              return or_fetch(arg, rsl::memory_order_seq_cst);
+
+            }
+      public: using Base::operator ^=;
+            T operator ^=(T arg)
+            {
+              return xor_fetch(arg, rsl::memory_order_seq_cst);
+
+            }
+
+      }
+      ;
+
+      template <typename T> struct atomic_integral_width<T, 8> : public atomic_integral_base<T, 8>
+      {
+      private: using Base = atomic_integral_base<T, 8>;
+      public: constexpr atomic_integral_width(T desired) : Base
+      {
+       desired
+      }
+
+      {
+
+      }
+            constexpr atomic_integral_width() = default;
+            atomic_integral_width(const atomic_integral_width&) = delete;
+      public: using Base::operator=;
+            atomic_integral_width& operator=(const atomic_integral_width&) = delete;
+            atomic_integral_width& operator=(const atomic_integral_width&) volatile = delete;
+      public: using Base::fetch_add;
+            T fetch_add(T arg)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_add(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_add(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_add(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_add(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_add(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::add_fetch;
+            T add_fetch(T arg)
+            {
+              T retVal;
+              rsl::atomic_add_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T add_fetch(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_add_fetch_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T add_fetch(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_add_fetch_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T add_fetch(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_add_fetch_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T add_fetch(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_add_fetch_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T add_fetch(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_add_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::fetch_sub;
+            T fetch_sub(T arg)
+            {
+              T retVal;
+              rsl::atomic_fetch_sub_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_sub(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_sub_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_sub(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_sub_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_sub(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_sub_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_sub(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_sub_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_sub(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_sub_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::sub_fetch;
+            T sub_fetch(T arg)
+            {
+              T retVal;
+              rsl::atomic_sub_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T sub_fetch(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_sub_fetch_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T sub_fetch(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_sub_fetch_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T sub_fetch(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_sub_fetch_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T sub_fetch(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_sub_fetch_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T sub_fetch(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_sub_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::fetch_and;
+            T fetch_and(T arg)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_and(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_and(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_and(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_and(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_and(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::and_fetch;
+            T and_fetch(T arg)
+            {
+              T retVal;
+              rsl::atomic_and_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T and_fetch(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_and_fetch_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T and_fetch(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_and_fetch_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T and_fetch(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_and_fetch_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T and_fetch(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_and_fetch_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T and_fetch(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_and_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::fetch_or;
+            T fetch_or(T arg)
+            {
+              T retVal;
+              rsl::atomic_fetch_or_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_or(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_or_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_or(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_or_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_or(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_or_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_or(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_or_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_or(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_or_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::or_fetch;
+            T or_fetch(T arg)
+            {
+              T retVal;
+              rsl::atomic_or_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T or_fetch(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_or_fetch_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T or_fetch(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_or_fetch_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T or_fetch(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_or_fetch_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T or_fetch(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_or_fetch_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T or_fetch(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_or_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::fetch_xor;
+            T fetch_xor(T arg)
+            {
+              T retVal;
+              rsl::atomic_fetch_xor_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_xor(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_xor_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_xor(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_xor_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_xor(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_xor_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_xor(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_xor_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_xor(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_xor_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::xor_fetch;
+            T xor_fetch(T arg)
+            {
+              T retVal;
+              rsl::atomic_xor_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T xor_fetch(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_xor_fetch_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T xor_fetch(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_xor_fetch_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T xor_fetch(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_xor_fetch_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T xor_fetch(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_xor_fetch_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T xor_fetch(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_xor_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::operator ++;
+            T operator ++()
+            {
+              return add_fetch(1, rsl::memory_order_seq_cst);
+
+            }
+            T operator ++(int)
+            {
+              return fetch_add(1, rsl::memory_order_seq_cst);
+
+            }
+            using Base::operator --;
+            T operator --()
+            {
+              return sub_fetch(1, rsl::memory_order_seq_cst);
+
+            }
+            T operator --(int)
+            {
+              return fetch_sub(1, rsl::memory_order_seq_cst);
+
+            }
+      public: using Base::operator +=;
+            T operator +=(T arg)
+            {
+              return add_fetch(arg, rsl::memory_order_seq_cst);
+
+            }
+            using Base::operator -=;
+            T operator -=(T arg)
+            {
+              return sub_fetch(arg, rsl::memory_order_seq_cst);
+
+            }
+      public: using Base::operator &=;
+            T operator &=(T arg)
+            {
+              return and_fetch(arg, rsl::memory_order_seq_cst);
+
+            }
+      public: using Base::operator |=;
+            T operator |=(T arg)
+            {
+              return or_fetch(arg, rsl::memory_order_seq_cst);
+
+            }
+      public: using Base::operator ^=;
+            T operator ^=(T arg)
+            {
+              return xor_fetch(arg, rsl::memory_order_seq_cst);
+
+            }
+
+      }
+      ;
+
+      template <typename T> struct atomic_integral_width<T, 16> : public atomic_integral_base<T, 16>
+      {
+      private: using Base = atomic_integral_base<T, 16>;
+      public: constexpr atomic_integral_width(T desired) : Base
+      {
+       desired
+      }
+
+      {
+
+      }
+            constexpr atomic_integral_width() = default;
+            atomic_integral_width(const atomic_integral_width&) = delete;
+      public: using Base::operator=;
+            atomic_integral_width& operator=(const atomic_integral_width&) = delete;
+            atomic_integral_width& operator=(const atomic_integral_width&) volatile = delete;
+      public: using Base::fetch_add;
+            T fetch_add(T arg)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_add(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_add(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_add(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_add(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_add(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::add_fetch;
+            T add_fetch(T arg)
+            {
+              T retVal;
+              rsl::atomic_add_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T add_fetch(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_add_fetch_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T add_fetch(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_add_fetch_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T add_fetch(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_add_fetch_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T add_fetch(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_add_fetch_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T add_fetch(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_add_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::fetch_sub;
+            T fetch_sub(T arg)
+            {
+              T retVal;
+              rsl::atomic_fetch_sub_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_sub(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_sub_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_sub(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_sub_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_sub(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_sub_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_sub(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_sub_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_sub(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_sub_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::sub_fetch;
+            T sub_fetch(T arg)
+            {
+              T retVal;
+              rsl::atomic_sub_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T sub_fetch(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_sub_fetch_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T sub_fetch(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_sub_fetch_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T sub_fetch(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_sub_fetch_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T sub_fetch(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_sub_fetch_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T sub_fetch(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_sub_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::fetch_and;
+            T fetch_and(T arg)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_and(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_and(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_and(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_and(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_and(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_and_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::and_fetch;
+            T and_fetch(T arg)
+            {
+              T retVal;
+              rsl::atomic_and_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T and_fetch(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_and_fetch_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T and_fetch(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_and_fetch_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T and_fetch(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_and_fetch_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T and_fetch(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_and_fetch_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T and_fetch(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_and_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::fetch_or;
+            T fetch_or(T arg)
+            {
+              T retVal;
+              rsl::atomic_fetch_or_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_or(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_or_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_or(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_or_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_or(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_or_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_or(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_or_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_or(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_or_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::or_fetch;
+            T or_fetch(T arg)
+            {
+              T retVal;
+              rsl::atomic_or_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T or_fetch(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_or_fetch_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T or_fetch(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_or_fetch_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T or_fetch(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_or_fetch_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T or_fetch(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_or_fetch_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T or_fetch(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_or_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::fetch_xor;
+            T fetch_xor(T arg)
+            {
+              T retVal;
+              rsl::atomic_fetch_xor_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_xor(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_xor_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_xor(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_xor_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_xor(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_xor_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_xor(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_xor_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T fetch_xor(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_fetch_xor_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::xor_fetch;
+            T xor_fetch(T arg)
+            {
+              T retVal;
+              rsl::atomic_xor_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T xor_fetch(T arg, rsl::internal::memory_order_relaxed_s)
+            {
+              T retVal;
+              rsl::atomic_xor_fetch_relaxed(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T xor_fetch(T arg, rsl::internal::memory_order_acquire_s)
+            {
+              T retVal;
+              rsl::atomic_xor_fetch_acquire(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T xor_fetch(T arg, rsl::internal::memory_order_release_s)
+            {
+              T retVal;
+              rsl::atomic_xor_fetch_release(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T xor_fetch(T arg, rsl::internal::memory_order_acq_rel_s)
+            {
+              T retVal;
+              rsl::atomic_xor_fetch_acq_rel(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+            T xor_fetch(T arg, rsl::internal::memory_order_seq_cst_s)
+            {
+              T retVal;
+              rsl::atomic_xor_fetch_seq_cst(this->atomic_address(), arg);
+              return retVal;
+              ;
+
+            }
+      public: using Base::operator ++;
+            T operator ++()
+            {
+              return add_fetch(1, rsl::memory_order_seq_cst);
+
+            }
+            T operator ++(int)
+            {
+              return fetch_add(1, rsl::memory_order_seq_cst);
+
+            }
+            using Base::operator --;
+            T operator --()
+            {
+              return sub_fetch(1, rsl::memory_order_seq_cst);
+
+            }
+            T operator --(int)
+            {
+              return fetch_sub(1, rsl::memory_order_seq_cst);
+
+            }
+      public: using Base::operator +=;
+            T operator +=(T arg)
+            {
+              return add_fetch(arg, rsl::memory_order_seq_cst);
+
+            }
+            using Base::operator -=;
+            T operator -=(T arg)
+            {
+              return sub_fetch(arg, rsl::memory_order_seq_cst);
+
+            }
+      public: using Base::operator &=;
+            T operator &=(T arg)
+            {
+              return and_fetch(arg, rsl::memory_order_seq_cst);
+
+            }
+      public: using Base::operator |=;
+            T operator |=(T arg)
+            {
+              return or_fetch(arg, rsl::memory_order_seq_cst);
+
+            }
+      public: using Base::operator ^=;
+            T operator ^=(T arg)
+            {
+              return xor_fetch(arg, rsl::memory_order_seq_cst);
+
+            }
+
+      }
+      ;
+
+
+
+    }
+
+
+
   }
 
-#define REX_ATOMIC_INTEGRAL_FETCH_ORDER_IMPL(funcName, orderType, op, bits)                                                                                                                                                                              \
-  T funcName(T arg, orderType)                                                                                                                                                                                                                           \
-  {                                                                                                                                                                                                                                                      \
-    REX_ATOMIC_INTEGRAL_FUNC_IMPL(op, bits);                                                                                                                                                                                                             \
-  }
 
-#define REX_ATOMIC_INTEGRAL_FETCH_OP_JOIN(fetchOp, Order) MERGE(MERGE(REX_ATOMIC_, fetchOp), Order)
 
-#define REX_ATOMIC_INTEGRAL_FETCH_FUNCS_IMPL(funcName, fetchOp, bits)                                                                                                                                                                                    \
-  using Base::funcName;                                                                                                                                                                                                                                  \
-                                                                                                                                                                                                                                                         \
-  REX_ATOMIC_INTEGRAL_FETCH_IMPL(funcName, REX_ATOMIC_INTEGRAL_FETCH_OP_JOIN(fetchOp, _SEQ_CST_), bits)                                                                                                                                                  \
-                                                                                                                                                                                                                                                         \
-  REX_ATOMIC_INTEGRAL_FETCH_ORDER_IMPL(funcName, rsl::internal::memory_order_relaxed_s, REX_ATOMIC_INTEGRAL_FETCH_OP_JOIN(fetchOp, _RELAXED_), bits)                                                                                                     \
-                                                                                                                                                                                                                                                         \
-  REX_ATOMIC_INTEGRAL_FETCH_ORDER_IMPL(funcName, rsl::internal::memory_order_acquire_s, REX_ATOMIC_INTEGRAL_FETCH_OP_JOIN(fetchOp, _ACQUIRE_), bits)                                                                                                     \
-                                                                                                                                                                                                                                                         \
-  REX_ATOMIC_INTEGRAL_FETCH_ORDER_IMPL(funcName, rsl::internal::memory_order_release_s, REX_ATOMIC_INTEGRAL_FETCH_OP_JOIN(fetchOp, _RELEASE_), bits)                                                                                                     \
-                                                                                                                                                                                                                                                         \
-  REX_ATOMIC_INTEGRAL_FETCH_ORDER_IMPL(funcName, rsl::internal::memory_order_acq_rel_s, REX_ATOMIC_INTEGRAL_FETCH_OP_JOIN(fetchOp, _ACQ_REL_), bits)                                                                                                     \
-                                                                                                                                                                                                                                                         \
-  REX_ATOMIC_INTEGRAL_FETCH_ORDER_IMPL(funcName, rsl::internal::memory_order_seq_cst_s, REX_ATOMIC_INTEGRAL_FETCH_OP_JOIN(fetchOp, _SEQ_CST_), bits)
+}
 
-#define REX_ATOMIC_INTEGRAL_FETCH_INC_DEC_OPERATOR_IMPL(operatorOp, preFuncName, postFuncName)                                                                                                                                                           \
-  using Base::operator operatorOp;                                                                                                                                                                                                                       \
-                                                                                                                                                                                                                                                         \
-  T operator operatorOp()                                                                                                                                                                                                                                \
-  {                                                                                                                                                                                                                                                      \
-    return preFuncName(1, rsl::memory_order_seq_cst);                                                                                                                                                                                                    \
-  }                                                                                                                                                                                                                                                      \
-                                                                                                                                                                                                                                                         \
-  T operator operatorOp(int)                                                                                                                                                                                                                             \
-  {                                                                                                                                                                                                                                                      \
-    return postFuncName(1, rsl::memory_order_seq_cst);                                                                                                                                                                                                   \
-  }
-
-#define REX_ATOMIC_INTEGRAL_FETCH_ASSIGNMENT_OPERATOR_IMPL(operatorOp, funcName)                                                                                                                                                                         \
-  using Base::operator operatorOp;                                                                                                                                                                                                                       \
-                                                                                                                                                                                                                                                         \
-  T operator operatorOp(T arg)                                                                                                                                                                                                                           \
-  {                                                                                                                                                                                                                                                      \
-    return funcName(arg, rsl::memory_order_seq_cst);                                                                                                                                                                                                     \
-  }
-
-#define REX_ATOMIC_INTEGRAL_WIDTH_SPECIALIZE(bytes, bits)                                                                                                                                                                                                \
-  template <typename T>                                                                                                                                                                                                                                  \
-  struct atomic_integral_width<T, bytes> : public atomic_integral_base<T, bytes>                                                                                                                                                                         \
-  {                                                                                                                                                                                                                                                      \
-  private:                                                                                                                                                                                                                                               \
-    using Base = atomic_integral_base<T, bytes>;                                                                                                                                                                                                         \
-                                                                                                                                                                                                                                                         \
-  public: /* ctors */                                                                                                                                                                                                                                    \
-    constexpr atomic_integral_width(T desired)                                                                                                                                                                                                           \
-        : Base {desired}                                                                                                                                                                                                                                 \
-    {                                                                                                                                                                                                                                                    \
-    }                                                                                                                                                                                                                                                    \
-                                                                                                                                                                                                                                                         \
-    constexpr atomic_integral_width() = default;                                                                                                                                                                                                         \
-                                                                                                                                                                                                                                                         \
-    atomic_integral_width(const atomic_integral_width&) = delete;                                                                                                                                                                                        \
-                                                                                                                                                                                                                                                         \
-  public: /* assignment operator */                                                                                                                                                                                                                      \
-    using Base::operator=;                                                                                                                                                                                                                               \
-                                                                                                                                                                                                                                                         \
-    atomic_integral_width& operator=(const atomic_integral_width&)          = delete;                                                                                                                                                                    \
-    atomic_integral_width& operator=(const atomic_integral_width&) volatile = delete;                                                                                                                                                                    \
-                                                                                                                                                                                                                                                         \
-  public: /* fetch_add */                                                                                                                                                                                                                                \
-    REX_ATOMIC_INTEGRAL_FETCH_FUNCS_IMPL(fetch_add, FETCH_ADD, bits)                                                                                                                                                                                     \
-                                                                                                                                                                                                                                                         \
-  public: /* add_fetch */                                                                                                                                                                                                                                \
-    REX_ATOMIC_INTEGRAL_FETCH_FUNCS_IMPL(add_fetch, ADD_FETCH, bits)                                                                                                                                                                                     \
-                                                                                                                                                                                                                                                         \
-  public: /* fetch_sub */                                                                                                                                                                                                                                \
-    REX_ATOMIC_INTEGRAL_FETCH_FUNCS_IMPL(fetch_sub, FETCH_SUB, bits)                                                                                                                                                                                     \
-                                                                                                                                                                                                                                                         \
-  public: /* sub_fetch */                                                                                                                                                                                                                                \
-    REX_ATOMIC_INTEGRAL_FETCH_FUNCS_IMPL(sub_fetch, SUB_FETCH, bits)                                                                                                                                                                                     \
-                                                                                                                                                                                                                                                         \
-  public: /* fetch_and */                                                                                                                                                                                                                                \
-    REX_ATOMIC_INTEGRAL_FETCH_FUNCS_IMPL(fetch_and, FETCH_AND, bits)                                                                                                                                                                                     \
-                                                                                                                                                                                                                                                         \
-  public: /* and_fetch */                                                                                                                                                                                                                                \
-    REX_ATOMIC_INTEGRAL_FETCH_FUNCS_IMPL(and_fetch, AND_FETCH, bits)                                                                                                                                                                                     \
-                                                                                                                                                                                                                                                         \
-  public: /* fetch_or */                                                                                                                                                                                                                                 \
-    REX_ATOMIC_INTEGRAL_FETCH_FUNCS_IMPL(fetch_or, FETCH_OR, bits)                                                                                                                                                                                       \
-                                                                                                                                                                                                                                                         \
-  public: /* or_fetch */                                                                                                                                                                                                                                 \
-    REX_ATOMIC_INTEGRAL_FETCH_FUNCS_IMPL(or_fetch, OR_FETCH, bits)                                                                                                                                                                                       \
-                                                                                                                                                                                                                                                         \
-  public: /* fetch_xor */                                                                                                                                                                                                                                \
-    REX_ATOMIC_INTEGRAL_FETCH_FUNCS_IMPL(fetch_xor, FETCH_XOR, bits)                                                                                                                                                                                     \
-                                                                                                                                                                                                                                                         \
-  public: /* xor_fetch */                                                                                                                                                                                                                                \
-    REX_ATOMIC_INTEGRAL_FETCH_FUNCS_IMPL(xor_fetch, XOR_FETCH, bits)                                                                                                                                                                                     \
-                                                                                                                                                                                                                                                         \
-  public: /* operator++ && operator-- */                                                                                                                                                                                                                 \
-    REX_ATOMIC_INTEGRAL_FETCH_INC_DEC_OPERATOR_IMPL(++, add_fetch, fetch_add)                                                                                                                                                                            \
-                                                                                                                                                                                                                                                         \
-    REX_ATOMIC_INTEGRAL_FETCH_INC_DEC_OPERATOR_IMPL(--, sub_fetch, fetch_sub)                                                                                                                                                                            \
-                                                                                                                                                                                                                                                         \
-  public: /* operator+= && operator-= */                                                                                                                                                                                                                 \
-    REX_ATOMIC_INTEGRAL_FETCH_ASSIGNMENT_OPERATOR_IMPL(+=, add_fetch)                                                                                                                                                                                    \
-                                                                                                                                                                                                                                                         \
-    REX_ATOMIC_INTEGRAL_FETCH_ASSIGNMENT_OPERATOR_IMPL(-=, sub_fetch)                                                                                                                                                                                    \
-                                                                                                                                                                                                                                                         \
-  public: /* operator&= */                                                                                                                                                                                                                               \
-    REX_ATOMIC_INTEGRAL_FETCH_ASSIGNMENT_OPERATOR_IMPL(&=, and_fetch)                                                                                                                                                                                    \
-                                                                                                                                                                                                                                                         \
-  public: /* operator|= */                                                                                                                                                                                                                               \
-    REX_ATOMIC_INTEGRAL_FETCH_ASSIGNMENT_OPERATOR_IMPL(|=, or_fetch)                                                                                                                                                                                     \
-                                                                                                                                                                                                                                                         \
-  public: /* operator^= */                                                                                                                                                                                                                               \
-    REX_ATOMIC_INTEGRAL_FETCH_ASSIGNMENT_OPERATOR_IMPL(^=, xor_fetch)                                                                                                                                                                                    \
-  };
-
-      REX_ATOMIC_INTEGRAL_WIDTH_SPECIALIZE(1, 8)
-      REX_ATOMIC_INTEGRAL_WIDTH_SPECIALIZE(2, 16)
-      REX_ATOMIC_INTEGRAL_WIDTH_SPECIALIZE(4, 32)
-      REX_ATOMIC_INTEGRAL_WIDTH_SPECIALIZE(8, 64)
-      REX_ATOMIC_INTEGRAL_WIDTH_SPECIALIZE(16, 128)
-
-    } // namespace internal
-
-  } // namespace v1
-
-} // namespace rsl
-
-#endif /* REX_ATOMIC_INTERNAL_INTEGRAL_H */

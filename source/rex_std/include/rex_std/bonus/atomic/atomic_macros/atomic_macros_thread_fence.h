@@ -9,14 +9,14 @@
 //
 // void REX_ATOMIC_THREAD_FENCE_*()
 //
-#define REX_ATOMIC_THREAD_FENCE_RELAXED() REX_ATOMIC_CHOOSE_OP_IMPL(ATOMIC_THREAD_FENCE_RELAXED)()
+#define REX_ATOMIC_THREAD_FENCE_RELAXED() rsl::atomic_thread_fence(rsl::memory_order::relaxed)
 
-#define REX_ATOMIC_THREAD_FENCE_ACQUIRE() REX_ATOMIC_CHOOSE_OP_IMPL(ATOMIC_THREAD_FENCE_ACQUIRE)()
+#define REX_ATOMIC_THREAD_FENCE_ACQUIRE() rsl::atomic_thread_fence(rsl::memory_order::acquire)
 
-#define REX_ATOMIC_THREAD_FENCE_RELEASE() REX_ATOMIC_CHOOSE_OP_IMPL(ATOMIC_THREAD_FENCE_RELEASE)()
+#define REX_ATOMIC_THREAD_FENCE_RELEASE() rsl::atomic_thread_fence(rsl::memory_order::release)
 
-#define REX_ATOMIC_THREAD_FENCE_ACQ_REL() REX_ATOMIC_CHOOSE_OP_IMPL(ATOMIC_THREAD_FENCE_ACQ_REL)()
+#define REX_ATOMIC_THREAD_FENCE_ACQ_REL() rsl::atomic_thread_fence(rsl::memory_order::acq_rel)
 
-#define REX_ATOMIC_THREAD_FENCE_SEQ_CST() REX_ATOMIC_CHOOSE_OP_IMPL(ATOMIC_THREAD_FENCE_SEQ_CST)()
+#define REX_ATOMIC_THREAD_FENCE_SEQ_CST() rsl::atomic_thread_fence(rsl::memory_order::seq_cst)
 
 #endif /* REX_ATOMIC_INTERNAL_MACROS_THREAD_FENCE_H */
