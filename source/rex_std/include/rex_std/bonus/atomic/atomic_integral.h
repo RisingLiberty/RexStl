@@ -21,8 +21,7 @@ namespace rsl
 
       public:
         constexpr atomic_integral_base(T desired)
-            : Base {desired}
-
+          : Base(desired)
         {
         }
 
@@ -42,18 +41,15 @@ namespace rsl
         T fetch_add(T, Order)
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : invalid memory order for the given operation!");
-          ;
         }
         template <typename Order>
         T fetch_add(T, Order) volatile
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
-          ;
         }
         T fetch_add(T) volatile
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
-          ;
         }
 
       public:
@@ -61,18 +57,15 @@ namespace rsl
         T add_fetch(T, Order)
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : invalid memory order for the given operation!");
-          ;
         }
         template <typename Order>
         T add_fetch(T, Order) volatile
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
-          ;
         }
         T add_fetch(T) volatile
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
-          ;
         }
 
       public:
@@ -80,18 +73,15 @@ namespace rsl
         T fetch_sub(T, Order)
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : invalid memory order for the given operation!");
-          ;
         }
         template <typename Order>
         T fetch_sub(T, Order) volatile
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
-          ;
         }
         T fetch_sub(T) volatile
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
-          ;
         }
 
       public:
@@ -99,18 +89,15 @@ namespace rsl
         T sub_fetch(T, Order)
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : invalid memory order for the given operation!");
-          ;
         }
         template <typename Order>
         T sub_fetch(T, Order) volatile
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
-          ;
         }
         T sub_fetch(T) volatile
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
-          ;
         }
 
       public:
@@ -118,18 +105,15 @@ namespace rsl
         T fetch_and(T, Order)
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : invalid memory order for the given operation!");
-          ;
         }
         template <typename Order>
         T fetch_and(T, Order) volatile
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
-          ;
         }
         T fetch_and(T) volatile
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
-          ;
         }
 
       public:
@@ -137,18 +121,15 @@ namespace rsl
         T and_fetch(T, Order)
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : invalid memory order for the given operation!");
-          ;
         }
         template <typename Order>
         T and_fetch(T, Order) volatile
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
-          ;
         }
         T and_fetch(T) volatile
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
-          ;
         }
 
       public:
@@ -156,18 +137,15 @@ namespace rsl
         T fetch_or(T, Order)
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : invalid memory order for the given operation!");
-          ;
         }
         template <typename Order>
         T fetch_or(T, Order) volatile
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
-          ;
         }
         T fetch_or(T) volatile
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
-          ;
         }
 
       public:
@@ -175,18 +153,15 @@ namespace rsl
         T or_fetch(T, Order)
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : invalid memory order for the given operation!");
-          ;
         }
         template <typename Order>
         T or_fetch(T, Order) volatile
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
-          ;
         }
         T or_fetch(T) volatile
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
-          ;
         }
 
       public:
@@ -194,18 +169,15 @@ namespace rsl
         T fetch_xor(T, Order)
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : invalid memory order for the given operation!");
-          ;
         }
         template <typename Order>
         T fetch_xor(T, Order) volatile
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
-          ;
         }
         T fetch_xor(T) volatile
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
-          ;
         }
 
       public:
@@ -213,75 +185,63 @@ namespace rsl
         T xor_fetch(T, Order)
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : invalid memory order for the given operation!");
-          ;
         }
         template <typename Order>
         T xor_fetch(T, Order) volatile
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
-          ;
         }
         T xor_fetch(T) volatile
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
-          ;
         }
 
       public:
         T operator++() volatile
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
-          ;
         }
         T operator++(int) volatile
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
-          ;
         }
 
         T operator--() volatile
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
-          ;
         }
         T operator--(int) volatile
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
-          ;
         }
 
       public:
         T operator+=(T) volatile
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
-          ;
         }
 
         T operator-=(T) volatile
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
-          ;
         }
 
       public:
         T operator&=(T) volatile
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
-          ;
         }
 
       public:
         T operator|=(T) volatile
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
-          ;
         }
 
       public:
         T operator^=(T) volatile
         {
           static_assert(!rsl::is_same<T, T>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
-          ;
         }
       };
 
@@ -296,16 +256,15 @@ namespace rsl
 
       public:
         constexpr atomic_integral_width(T desired)
-            : Base {desired}
-
+          : Base(desired)
         {
         }
-        constexpr atomic_integral_width()                   = default;
+        constexpr atomic_integral_width() = default;
         atomic_integral_width(const atomic_integral_width&) = delete;
 
       public:
         using Base::operator=;
-        atomic_integral_width& operator=(const atomic_integral_width&)          = delete;
+        atomic_integral_width& operator=(const atomic_integral_width&) = delete;
         atomic_integral_width& operator=(const atomic_integral_width&) volatile = delete;
 
       public:
@@ -640,16 +599,15 @@ namespace rsl
 
       public:
         constexpr atomic_integral_width(T desired)
-            : Base {desired}
-
+          : Base(desired)
         {
         }
-        constexpr atomic_integral_width()                   = default;
+        constexpr atomic_integral_width() = default;
         atomic_integral_width(const atomic_integral_width&) = delete;
 
       public:
         using Base::operator=;
-        atomic_integral_width& operator=(const atomic_integral_width&)          = delete;
+        atomic_integral_width& operator=(const atomic_integral_width&) = delete;
         atomic_integral_width& operator=(const atomic_integral_width&) volatile = delete;
 
       public:
@@ -984,16 +942,15 @@ namespace rsl
 
       public:
         constexpr atomic_integral_width(T desired)
-            : Base {desired}
-
+          : Base(desired)
         {
         }
-        constexpr atomic_integral_width()                   = default;
+        constexpr atomic_integral_width() = default;
         atomic_integral_width(const atomic_integral_width&) = delete;
 
       public:
         using Base::operator=;
-        atomic_integral_width& operator=(const atomic_integral_width&)          = delete;
+        atomic_integral_width& operator=(const atomic_integral_width&) = delete;
         atomic_integral_width& operator=(const atomic_integral_width&) volatile = delete;
 
       public:
@@ -1328,16 +1285,15 @@ namespace rsl
 
       public:
         constexpr atomic_integral_width(T desired)
-            : Base {desired}
-
+          : Base(desired)
         {
         }
-        constexpr atomic_integral_width()                   = default;
+        constexpr atomic_integral_width() = default;
         atomic_integral_width(const atomic_integral_width&) = delete;
 
       public:
         using Base::operator=;
-        atomic_integral_width& operator=(const atomic_integral_width&)          = delete;
+        atomic_integral_width& operator=(const atomic_integral_width&) = delete;
         atomic_integral_width& operator=(const atomic_integral_width&) volatile = delete;
 
       public:
@@ -1672,16 +1628,15 @@ namespace rsl
 
       public:
         constexpr atomic_integral_width(T desired)
-            : Base {desired}
-
+          : Base(desired)
         {
         }
-        constexpr atomic_integral_width()                   = default;
+        constexpr atomic_integral_width() = default;
         atomic_integral_width(const atomic_integral_width&) = delete;
 
       public:
         using Base::operator=;
-        atomic_integral_width& operator=(const atomic_integral_width&)          = delete;
+        atomic_integral_width& operator=(const atomic_integral_width&) = delete;
         atomic_integral_width& operator=(const atomic_integral_width&) volatile = delete;
 
       public:
@@ -1940,7 +1895,6 @@ namespace rsl
         T xor_fetch(T arg, rsl::internal::memory_order_acquire_s)
         {
           return rsl::atomic_xor_fetch_acquire(this->atomic_address(), arg);
-          ;
         }
         T xor_fetch(T arg, rsl::internal::memory_order_release_s)
         {
