@@ -76,6 +76,90 @@ namespace rsl
     }
 #endif
 
+    // bool
+    bool atomic_fetch_xor_relaxed(bool* obj, bool valToAdd)
+    {
+#if defined(REX_COMPILER_MSVC)
+      return atomic_fetch_xor_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_fetch_xor_clang(obj, valToAdd, rsl::memory_order::relaxed);
+#endif
+    }
+    bool atomic_fetch_xor_acquire(bool* obj, bool valToAdd)
+    {
+#if defined(REX_COMPILER_MSVC)
+      return atomic_fetch_xor_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_fetch_xor_clang(obj, valToAdd, rsl::memory_order::acquire);
+#endif
+    }
+    bool atomic_fetch_xor_release(bool* obj, bool valToAdd)
+    {
+#if defined(REX_COMPILER_MSVC)
+      return atomic_fetch_xor_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_fetch_xor_clang(obj, valToAdd, rsl::memory_order::release);
+#endif
+    }
+    bool atomic_fetch_xor_acq_rel(bool* obj, bool valToAdd)
+    {
+#if defined(REX_COMPILER_MSVC)
+      return atomic_fetch_xor_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_fetch_xor_clang(obj, valToAdd, rsl::memory_order::acq_rel);
+#endif
+    }
+    bool atomic_fetch_xor_seq_cst(bool* obj, bool valToAdd)
+    {
+#if defined(REX_COMPILER_MSVC)
+      return atomic_fetch_xor_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_fetch_xor_clang(obj, valToAdd, rsl::memory_order::seq_cst);
+#endif
+    }
+
+    // char8
+    char8 atomic_fetch_xor_relaxed(char8* obj, char8 valToAdd)
+    {
+#if defined(REX_COMPILER_MSVC)
+      return atomic_fetch_xor_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_fetch_xor_clang(obj, valToAdd, rsl::memory_order::relaxed);
+#endif
+    }
+    char8 atomic_fetch_xor_acquire(char8* obj, char8 valToAdd)
+    {
+#if defined(REX_COMPILER_MSVC)
+      return atomic_fetch_xor_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_fetch_xor_clang(obj, valToAdd, rsl::memory_order::acquire);
+#endif
+    }
+    char8 atomic_fetch_xor_release(char8* obj, char8 valToAdd)
+    {
+#if defined(REX_COMPILER_MSVC)
+      return atomic_fetch_xor_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_fetch_xor_clang(obj, valToAdd, rsl::memory_order::release);
+#endif
+    }
+    char8 atomic_fetch_xor_acq_rel(char8* obj, char8 valToAdd)
+    {
+#if defined(REX_COMPILER_MSVC)
+      return atomic_fetch_xor_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_fetch_xor_clang(obj, valToAdd, rsl::memory_order::acq_rel);
+#endif
+    }
+    char8 atomic_fetch_xor_seq_cst(char8* obj, char8 valToAdd)
+    {
+#if defined(REX_COMPILER_MSVC)
+      return atomic_fetch_xor_msvc(obj, valToAdd);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_fetch_xor_clang(obj, valToAdd, rsl::memory_order::seq_cst);
+#endif
+    }
+
     // uint8
     uint8 atomic_fetch_xor_relaxed(uint8* obj, uint8 valToAdd)
     {

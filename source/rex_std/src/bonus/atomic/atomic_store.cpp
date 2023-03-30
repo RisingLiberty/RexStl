@@ -95,6 +95,92 @@ namespace rsl
     }
 #endif
 
+    // bool
+    void atomic_store_relaxed(bool* obj, bool valToStore)
+    {
+#if defined(REX_COMPILER_MSVC)
+      atomic_store_msvc(obj, valToStore);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      atomic_store_clang(obj, valToStore, rsl::memory_order::relaxed);
+#endif
+    }
+    void atomic_store_acquire(bool* obj, bool valToStore)
+    {
+#if defined(REX_COMPILER_MSVC)
+      atomic_store_msvc(obj, valToStore);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      atomic_store_clang(obj, valToStore, rsl::memory_order::acquire);
+#endif
+    }
+    void atomic_store_release(bool* obj, bool valToStore)
+    {
+#if defined(REX_COMPILER_MSVC)
+      rsl::compiler_barrier();
+      atomic_store_msvc(obj, valToStore);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      atomic_store_clang(obj, valToStore, rsl::memory_order::release);
+#endif
+    }
+    void atomic_store_acq_rel(bool* obj, bool valToStore)
+    {
+#if defined(REX_COMPILER_MSVC)
+      atomic_store_msvc(obj, valToStore);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      atomic_store_clang(obj, valToStore, rsl::memory_order::acq_rel);
+#endif
+    }
+    void atomic_store_seq_cst(bool* obj, bool valToStore)
+    {
+#if defined(REX_COMPILER_MSVC)
+      rsl::atomic_exchange_seq_cst(obj, valToStore);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      atomic_store_clang(obj, valToStore, rsl::memory_order::seq_cst);
+#endif
+    }
+
+    // char8
+    void atomic_store_relaxed(char8* obj, char8 valToStore)
+    {
+#if defined(REX_COMPILER_MSVC)
+      atomic_store_msvc(obj, valToStore);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      atomic_store_clang(obj, valToStore, rsl::memory_order::relaxed);
+#endif
+    }
+    void atomic_store_acquire(char8* obj, char8 valToStore)
+    {
+#if defined(REX_COMPILER_MSVC)
+      atomic_store_msvc(obj, valToStore);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      atomic_store_clang(obj, valToStore, rsl::memory_order::acquire);
+#endif
+    }
+    void atomic_store_release(char8* obj, char8 valToStore)
+    {
+#if defined(REX_COMPILER_MSVC)
+      rsl::compiler_barrier();
+      atomic_store_msvc(obj, valToStore);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      atomic_store_clang(obj, valToStore, rsl::memory_order::release);
+#endif
+    }
+    void atomic_store_acq_rel(char8* obj, char8 valToStore)
+    {
+#if defined(REX_COMPILER_MSVC)
+      atomic_store_msvc(obj, valToStore);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      atomic_store_clang(obj, valToStore, rsl::memory_order::acq_rel);
+#endif
+    }
+    void atomic_store_seq_cst(char8* obj, char8 valToStore)
+    {
+#if defined(REX_COMPILER_MSVC)
+      rsl::atomic_exchange_seq_cst(obj, valToStore);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      atomic_store_clang(obj, valToStore, rsl::memory_order::seq_cst);
+#endif
+    }
+
     // uint8
     void atomic_store_relaxed(uint8* obj, uint8 valToStore)
     {

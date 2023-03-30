@@ -13,6 +13,7 @@
 #include "rex_std/bonus/atomic/atomic_xor_fetch.h"
 #include "rex_std/bonus/atomic/atomic_fixed_width_type.h"
 #include "rex_std/bonus/atomic/atomic_memory_order.h"
+#include "rex_std/bonus/atomic/atomic_casts.h"
 #include <intrin.h>
 
 namespace rsl
@@ -74,6 +75,90 @@ namespace rsl
       }
     }
 #endif
+
+    // bool
+    bool atomic_exchange_relaxed(bool* obj, bool value)
+    {
+#if defined(REX_COMPILER_MSVC)
+      return atomic_exchange_msvc(obj, value);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_exchange_clang(obj, value, rsl::memory_order::relaxed);
+#endif
+    }
+    bool atomic_exchange_acquire(bool* obj, bool value)
+    {
+#if defined(REX_COMPILER_MSVC)
+      return atomic_exchange_msvc(obj, value);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_exchange_clang(obj, value, rsl::memory_order::acquire);
+#endif
+    }
+    bool atomic_exchange_release(bool* obj, bool value)
+    {
+#if defined(REX_COMPILER_MSVC)
+      return atomic_exchange_msvc(obj, value);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_exchange_clang(obj, value, rsl::memory_order::release);
+#endif
+    }
+    bool atomic_exchange_acq_rel(bool* obj, bool value)
+    {
+#if defined(REX_COMPILER_MSVC)
+      return atomic_exchange_msvc(obj, value);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_exchange_clang(obj, value, rsl::memory_order::acq_rel);
+#endif
+    }
+    bool atomic_exchange_seq_cst(bool* obj, bool value)
+    {
+#if defined(REX_COMPILER_MSVC)
+      return atomic_exchange_msvc(obj, value);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_exchange_clang(obj, value, rsl::memory_order::seq_cst);
+#endif
+    }
+
+    // char8
+    char8 atomic_exchange_relaxed(char8* obj, char8 value)
+    {
+#if defined(REX_COMPILER_MSVC)
+      return atomic_exchange_msvc(obj, value);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_exchange_clang(obj, value, rsl::memory_order::relaxed);
+#endif
+    }
+    char8 atomic_exchange_acquire(char8* obj, char8 value)
+    {
+#if defined(REX_COMPILER_MSVC)
+      return atomic_exchange_msvc(obj, value);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_exchange_clang(obj, value, rsl::memory_order::acquire);
+#endif
+    }
+    char8 atomic_exchange_release(char8* obj, char8 value)
+    {
+#if defined(REX_COMPILER_MSVC)
+      return atomic_exchange_msvc(obj, value);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_exchange_clang(obj, value, rsl::memory_order::release);
+#endif
+    }
+    char8 atomic_exchange_acq_rel(char8* obj, char8 value)
+    {
+#if defined(REX_COMPILER_MSVC)
+      return atomic_exchange_msvc(obj, value);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_exchange_clang(obj, value, rsl::memory_order::acq_rel);
+#endif
+    }
+    char8 atomic_exchange_seq_cst(char8* obj, char8 value)
+    {
+#if defined(REX_COMPILER_MSVC)
+      return atomic_exchange_msvc(obj, value);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_exchange_clang(obj, value, rsl::memory_order::seq_cst);
+#endif
+    }
 
     // uint8
     uint8 atomic_exchange_relaxed(uint8* obj, uint8 value)

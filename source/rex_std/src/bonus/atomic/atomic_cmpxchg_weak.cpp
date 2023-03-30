@@ -91,6 +91,100 @@ namespace rsl
     }
 #endif
 
+    // bool
+    bool atomic_cmpxchg_weak_relaxed(bool* obj, bool expected, bool desired, rsl::memory_order failureOrder)
+    {
+#if defined(REX_COMPILER_MSVC)
+      (void)failureOrder;
+      return atomic_cmpxchg_weak_msvc(obj, expected, desired);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_cmpxchg_weak_clang(obj, expected, desired, rsl::memory_order::relaxed, failureOrder);
+#endif
+    }
+    bool atomic_cmpxchg_weak_acquire(bool* obj, bool expected, bool desired, rsl::memory_order failureOrder)
+    {
+#if defined(REX_COMPILER_MSVC)
+      (void)failureOrder;
+      return atomic_cmpxchg_weak_msvc(obj, expected, desired);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_cmpxchg_weak_clang(obj, expected, desired, rsl::memory_order::acquire, failureOrder);
+#endif
+    }
+    bool atomic_cmpxchg_weak_release(bool* obj, bool expected, bool desired, rsl::memory_order failureOrder)
+    {
+#if defined(REX_COMPILER_MSVC)
+      (void)failureOrder;
+      return atomic_cmpxchg_weak_msvc(obj, expected, desired);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_cmpxchg_weak_clang(obj, expected, desired, rsl::memory_order::release, failureOrder);
+#endif
+    }
+    bool atomic_cmpxchg_weak_acq_rel(bool* obj, bool expected, bool desired, rsl::memory_order failureOrder)
+    {
+#if defined(REX_COMPILER_MSVC)
+      (void)failureOrder;
+      return atomic_cmpxchg_weak_msvc(obj, expected, desired);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_cmpxchg_weak_clang(obj, expected, desired, rsl::memory_order::acq_rel, failureOrder);
+#endif
+    }
+    bool atomic_cmpxchg_weak_seq_cst(bool* obj, bool expected, bool desired, rsl::memory_order failureOrder)
+    {
+#if defined(REX_COMPILER_MSVC)
+      (void)failureOrder;
+      return atomic_cmpxchg_weak_msvc(obj, expected, desired);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_cmpxchg_weak_clang(obj, expected, desired, rsl::memory_order::seq_cst, failureOrder);
+#endif
+    }
+
+    // char8
+    char8 atomic_cmpxchg_weak_relaxed(char8* obj, char8 expected, char8 desired, rsl::memory_order failureOrder)
+    {
+#if defined(REX_COMPILER_MSVC)
+      (void)failureOrder;
+      return atomic_cmpxchg_weak_msvc(obj, expected, desired);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_cmpxchg_weak_clang(obj, expected, desired, rsl::memory_order::relaxed, failureOrder);
+#endif
+    }
+    char8 atomic_cmpxchg_weak_acquire(char8* obj, char8 expected, char8 desired, rsl::memory_order failureOrder)
+    {
+#if defined(REX_COMPILER_MSVC)
+      (void)failureOrder;
+      return atomic_cmpxchg_weak_msvc(obj, expected, desired);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_cmpxchg_weak_clang(obj, expected, desired, rsl::memory_order::acquire, failureOrder);
+#endif
+    }
+    char8 atomic_cmpxchg_weak_release(char8* obj, char8 expected, char8 desired, rsl::memory_order failureOrder)
+    {
+#if defined(REX_COMPILER_MSVC)
+      (void)failureOrder;
+      return atomic_cmpxchg_weak_msvc(obj, expected, desired);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_cmpxchg_weak_clang(obj, expected, desired, rsl::memory_order::release, failureOrder);
+#endif
+    }
+    char8 atomic_cmpxchg_weak_acq_rel(char8* obj, char8 expected, char8 desired, rsl::memory_order failureOrder)
+    {
+#if defined(REX_COMPILER_MSVC)
+      (void)failureOrder;
+      return atomic_cmpxchg_weak_msvc(obj, expected, desired);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_cmpxchg_weak_clang(obj, expected, desired, rsl::memory_order::acq_rel, failureOrder);
+#endif
+    }
+    char8 atomic_cmpxchg_weak_seq_cst(char8* obj, char8 expected, char8 desired, rsl::memory_order failureOrder)
+    {
+#if defined(REX_COMPILER_MSVC)
+      (void)failureOrder;
+      return atomic_cmpxchg_weak_msvc(obj, expected, desired);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_cmpxchg_weak_clang(obj, expected, desired, rsl::memory_order::seq_cst, failureOrder);
+#endif
+    }
+
     // uint8
     uint8 atomic_cmpxchg_weak_relaxed(uint8* obj, uint8 expected, uint8 desired, rsl::memory_order failureOrder)
     {

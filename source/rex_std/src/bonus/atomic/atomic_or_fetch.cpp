@@ -76,6 +76,90 @@ namespace rsl
     }
 #endif
 
+    // bool
+    bool atomic_or_fetch_relaxed(bool* obj, bool valToOr)
+    {
+#if defined(REX_COMPILER_MSVC)
+      return atomic_or_fetch_msvc(obj, valToOr);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_or_fetch_clang(obj, valToOr, rsl::memory_order::relaxed);
+#endif
+    }
+    bool atomic_or_fetch_acquire(bool* obj, bool valToOr)
+    {
+#if defined(REX_COMPILER_MSVC)
+      return atomic_or_fetch_msvc(obj, valToOr);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_or_fetch_clang(obj, valToOr, rsl::memory_order::acquire);
+#endif
+    }
+    bool atomic_or_fetch_release(bool* obj, bool valToOr)
+    {
+#if defined(REX_COMPILER_MSVC)
+      return atomic_or_fetch_msvc(obj, valToOr);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_or_fetch_clang(obj, valToOr, rsl::memory_order::release);
+#endif
+    }
+    bool atomic_or_fetch_acq_rel(bool* obj, bool valToOr)
+    {
+#if defined(REX_COMPILER_MSVC)
+      return atomic_or_fetch_msvc(obj, valToOr);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_or_fetch_clang(obj, valToOr, rsl::memory_order::acq_rel);
+#endif
+    }
+    bool atomic_or_fetch_seq_cst(bool* obj, bool valToOr)
+    {
+#if defined(REX_COMPILER_MSVC)
+      return atomic_or_fetch_msvc(obj, valToOr);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_or_fetch_clang(obj, valToOr, rsl::memory_order::seq_cst);
+#endif
+    }
+
+    // char8
+    char8 atomic_or_fetch_relaxed(char8* obj, char8 valToOr)
+    {
+#if defined(REX_COMPILER_MSVC)
+      return atomic_or_fetch_msvc(obj, valToOr);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_or_fetch_clang(obj, valToOr, rsl::memory_order::relaxed);
+#endif
+    }
+    char8 atomic_or_fetch_acquire(char8* obj, char8 valToOr)
+    {
+#if defined(REX_COMPILER_MSVC)
+      return atomic_or_fetch_msvc(obj, valToOr);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_or_fetch_clang(obj, valToOr, rsl::memory_order::acquire);
+#endif
+    }
+    char8 atomic_or_fetch_release(char8* obj, char8 valToOr)
+    {
+#if defined(REX_COMPILER_MSVC)
+      return atomic_or_fetch_msvc(obj, valToOr);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_or_fetch_clang(obj, valToOr, rsl::memory_order::release);
+#endif
+    }
+    char8 atomic_or_fetch_acq_rel(char8* obj, char8 valToOr)
+    {
+#if defined(REX_COMPILER_MSVC)
+      return atomic_or_fetch_msvc(obj, valToOr);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_or_fetch_clang(obj, valToOr, rsl::memory_order::acq_rel);
+#endif
+    }
+    char8 atomic_or_fetch_seq_cst(char8* obj, char8 valToOr)
+    {
+#if defined(REX_COMPILER_MSVC)
+      return atomic_or_fetch_msvc(obj, valToOr);
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+      return atomic_or_fetch_clang(obj, valToOr, rsl::memory_order::seq_cst);
+#endif
+    }
+
     // uint8
     uint8 atomic_or_fetch_relaxed(uint8* obj, uint8 valToOr)
     {

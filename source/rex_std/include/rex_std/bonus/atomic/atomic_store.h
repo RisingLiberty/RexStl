@@ -18,6 +18,20 @@ namespace rsl
 {
   inline namespace v1
   {
+    // bool
+    void atomic_store_relaxed(bool* obj, bool valToStore);
+    void atomic_store_acquire(bool* obj, bool valToStore);
+    void atomic_store_release(bool* obj, bool valToStore);
+    void atomic_store_acq_rel(bool* obj, bool valToStore);
+    void atomic_store_seq_cst(bool* obj, bool valToStore);
+
+    // char8
+    void atomic_store_relaxed(char8* obj, char8 valToStore);
+    void atomic_store_acquire(char8* obj, char8 valToStore);
+    void atomic_store_release(char8* obj, char8 valToStore);
+    void atomic_store_acq_rel(char8* obj, char8 valToStore);
+    void atomic_store_seq_cst(char8* obj, char8 valToStore);
+
     // uint8
     void atomic_store_relaxed(uint8* obj, uint8 valToStore);
     void atomic_store_acquire(uint8* obj, uint8 valToStore);

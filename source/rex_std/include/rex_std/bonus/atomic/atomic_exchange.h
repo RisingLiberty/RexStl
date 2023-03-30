@@ -18,6 +18,20 @@ namespace rsl
 {
   inline namespace v1
   {
+    // bool
+    bool atomic_exchange_relaxed(bool* obj, bool value);
+    bool atomic_exchange_acquire(bool* obj, bool value);
+    bool atomic_exchange_release(bool* obj, bool value);
+    bool atomic_exchange_acq_rel(bool* obj, bool value);
+    bool atomic_exchange_seq_cst(bool* obj, bool value);
+
+    // char8
+    char8 atomic_exchange_relaxed(char8* obj, char8 value);
+    char8 atomic_exchange_acquire(char8* obj, char8 value);
+    char8 atomic_exchange_release(char8* obj, char8 value);
+    char8 atomic_exchange_acq_rel(char8* obj, char8 value);
+    char8 atomic_exchange_seq_cst(char8* obj, char8 value);
+
     // uint8
     uint8 atomic_exchange_relaxed(uint8* obj, uint8 value);
     uint8 atomic_exchange_acquire(uint8* obj, uint8 value);

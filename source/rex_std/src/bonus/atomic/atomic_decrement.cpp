@@ -39,7 +39,7 @@ namespace rsl
       }
       uint32 atomic_decrement(ulong* data)
       {
-        return _InterlockedDecrement(data);
+        return static_cast<ulong>(atomic_decrement(reinterpret_cast<long*>(data)));
       }
       uint64 atomic_decrement(uint64* data)
       {

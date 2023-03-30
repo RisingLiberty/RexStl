@@ -18,6 +18,20 @@ namespace rsl
 {
   inline namespace v1
   {
+    // bool
+    bool atomic_xor_fetch_relaxed(bool* obj, bool mask);
+    bool atomic_xor_fetch_acquire(bool* obj, bool mask);
+    bool atomic_xor_fetch_release(bool* obj, bool mask);
+    bool atomic_xor_fetch_acq_rel(bool* obj, bool mask);
+    bool atomic_xor_fetch_seq_cst(bool* obj, bool mask);
+
+    // char8
+    char8 atomic_xor_fetch_relaxed(char8* obj, char8 mask);
+    char8 atomic_xor_fetch_acquire(char8* obj, char8 mask);
+    char8 atomic_xor_fetch_release(char8* obj, char8 mask);
+    char8 atomic_xor_fetch_acq_rel(char8* obj, char8 mask);
+    char8 atomic_xor_fetch_seq_cst(char8* obj, char8 mask);
+
     // uint8
     uint8 atomic_xor_fetch_relaxed(uint8* obj, uint8 mask);
     uint8 atomic_xor_fetch_acquire(uint8* obj, uint8 mask);

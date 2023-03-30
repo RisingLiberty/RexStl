@@ -19,6 +19,20 @@ namespace rsl
 {
   inline namespace v1
   {
+    // bool
+    bool atomic_cmpxchg_weak_relaxed(bool* obj, bool expected, bool desired, rsl::memory_order failureOrder);
+    bool atomic_cmpxchg_weak_acquire(bool* obj, bool expected, bool desired, rsl::memory_order failureOrder);
+    bool atomic_cmpxchg_weak_release(bool* obj, bool expected, bool desired, rsl::memory_order failureOrder);
+    bool atomic_cmpxchg_weak_acq_rel(bool* obj, bool expected, bool desired, rsl::memory_order failureOrder);
+    bool atomic_cmpxchg_weak_seq_cst(bool* obj, bool expected, bool desired, rsl::memory_order failureOrder);
+
+    // char8
+    char8 atomic_cmpxchg_weak_relaxed(char8* obj, char8 expected, char8 desired, rsl::memory_order failureOrder);
+    char8 atomic_cmpxchg_weak_acquire(char8* obj, char8 expected, char8 desired, rsl::memory_order failureOrder);
+    char8 atomic_cmpxchg_weak_release(char8* obj, char8 expected, char8 desired, rsl::memory_order failureOrder);
+    char8 atomic_cmpxchg_weak_acq_rel(char8* obj, char8 expected, char8 desired, rsl::memory_order failureOrder);
+    char8 atomic_cmpxchg_weak_seq_cst(char8* obj, char8 expected, char8 desired, rsl::memory_order failureOrder);
+
     // uint8
     uint8 atomic_cmpxchg_weak_relaxed(uint8* obj, uint8 expected, uint8 desired, rsl::memory_order failureOrder);
     uint8 atomic_cmpxchg_weak_acquire(uint8* obj, uint8 expected, uint8 desired, rsl::memory_order failureOrder);

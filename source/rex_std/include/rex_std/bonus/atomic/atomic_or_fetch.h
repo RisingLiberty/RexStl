@@ -18,6 +18,20 @@ namespace rsl
 {
   inline namespace v1
   {
+    // bool
+    bool atomic_or_fetch_relaxed(bool* obj, bool valToOr);
+    bool atomic_or_fetch_acquire(bool* obj, bool valToOr);
+    bool atomic_or_fetch_release(bool* obj, bool valToOr);
+    bool atomic_or_fetch_acq_rel(bool* obj, bool valToOr);
+    bool atomic_or_fetch_seq_cst(bool* obj, bool valToOr);
+
+    // char8
+    char8 atomic_or_fetch_relaxed(char8* obj, char8 valToOr);
+    char8 atomic_or_fetch_acquire(char8* obj, char8 valToOr);
+    char8 atomic_or_fetch_release(char8* obj, char8 valToOr);
+    char8 atomic_or_fetch_acq_rel(char8* obj, char8 valToOr);
+    char8 atomic_or_fetch_seq_cst(char8* obj, char8 valToOr);
+
     // uint8
     uint8 atomic_or_fetch_relaxed(uint8* obj, uint8 valToOr);
     uint8 atomic_or_fetch_acquire(uint8* obj, uint8 valToOr);
