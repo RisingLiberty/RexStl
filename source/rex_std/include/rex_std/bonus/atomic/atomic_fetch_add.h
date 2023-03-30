@@ -13,79 +13,72 @@
 #pragma once
 
 #include "rex_std/bonus/types.h"
+#include "rex_std/bonus/atomic/atomic_fixed_width_type.h"
+#include "rex_std/bonus/atomic/atomic_casts.h"
+#include "rex_std/bonus/atomic/atomic_compiler_barrier.h"
+#include "rex_std/bonus/atomic/atomic_fixed_width_type.h"
+
+#if defined(REX_COMPILER_MSVC)
+#include <intrin.h>
+#endif
 
 namespace rsl
 {
   inline namespace v1
   {
-    // bool
-    bool atomic_fetch_add_relaxed(bool* obj, bool valToAdd);
-    bool atomic_fetch_add_acquire(bool* obj, bool valToAdd);
-    bool atomic_fetch_add_release(bool* obj, bool valToAdd);
-    bool atomic_fetch_add_acq_rel(bool* obj, bool valToAdd);
-    bool atomic_fetch_add_seq_cst(bool* obj, bool valToAdd);
+#if defined(REX_COMPILER_MSVC)
+    template <typename T>
+    atomic_t<T> atomic_fetch_add_msvc(T* obj, T valToAdd, rsl::memory_order order)
+    {
+      (void)order;
+      atomic_t<T> atom_value_to_add = valToAdd;
+      volatile atomic_t<T>* volatile_obj = rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>(obj);
 
-    // char8
-    char8 atomic_fetch_add_relaxed(char8* obj, char8 valToAdd);
-    char8 atomic_fetch_add_acquire(char8* obj, char8 valToAdd);
-    char8 atomic_fetch_add_release(char8* obj, char8 valToAdd);
-    char8 atomic_fetch_add_acq_rel(char8* obj, char8 valToAdd);
-    char8 atomic_fetch_add_seq_cst(char8* obj, char8 valToAdd);
+      if constexpr (sizeof(T) == 1)
+      {
+        return _InterlockedExchangeAdd8(volatile_obj, atom_value_to_add);
+      }
+      else if constexpr (sizeof(T) == 2)
+      {
+        return _InterlockedExchangeAdd16(volatile_obj, atom_value_to_add);
+      }
+      else if constexpr (sizeof(T) == 4)
+      {
+        return _InterlockedExchangeAdd(volatile_obj, atom_value_to_add);
+      }
+      else if constexpr (sizeof(T) == 8)
+      {
+        return _InterlockedExchangeAdd64(volatile_obj, atom_value_to_add);
+      }
+      else
+      {
+        static_assert(rsl::internal::always_false<T>, "Invalid type used for atomic add fetch");
+        return 0;
+      }
+    }
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+    template <typename T>
+    atomic_t<T> atomic_fetch_add_clang(T* obj, T valToAdd, rsl::memory_order order)
+    {
+      // GCC Documentation says:
+      // These built-in functions perform the operation suggested by the name, and return the value that had previously been in *ptr.
+      // Operations on pointer arguments are performed as if the operands were of the uintptr_t type.
+      // That is, they are not scaled by the size of the type to which the pointer points.
+      // { tmp = *ptr; *ptr op= val; return tmp; }
+      // Therefore we save their value to a temporary of type uintptr first and perform the operation on that
+      rsl::uintptr tmp = *obj;
 
-    // uint8
-    uint8 atomic_fetch_add_relaxed(uint8* obj, uint8 valToAdd);
-    uint8 atomic_fetch_add_acquire(uint8* obj, uint8 valToAdd);
-    uint8 atomic_fetch_add_release(uint8* obj, uint8 valToAdd);
-    uint8 atomic_fetch_add_acq_rel(uint8* obj, uint8 valToAdd);
-    uint8 atomic_fetch_add_seq_cst(uint8* obj, uint8 valToAdd);
-
-    // int8
-    int8 atomic_fetch_add_relaxed(int8* obj, int8 valToAdd);
-    int8 atomic_fetch_add_acquire(int8* obj, int8 valToAdd);
-    int8 atomic_fetch_add_release(int8* obj, int8 valToAdd);
-    int8 atomic_fetch_add_acq_rel(int8* obj, int8 valToAdd);
-    int8 atomic_fetch_add_seq_cst(int8* obj, int8 valToAdd);
-
-    // uint16
-    uint16 atomic_fetch_add_relaxed(uint16* obj, uint16 valToAdd);
-    uint16 atomic_fetch_add_acquire(uint16* obj, uint16 valToAdd);
-    uint16 atomic_fetch_add_release(uint16* obj, uint16 valToAdd);
-    uint16 atomic_fetch_add_acq_rel(uint16* obj, uint16 valToAdd);
-    uint16 atomic_fetch_add_seq_cst(uint16* obj, uint16 valToAdd);
-
-    // int16
-    int16 atomic_fetch_add_relaxed(int16* obj, int16 valToAdd);
-    int16 atomic_fetch_add_acquire(int16* obj, int16 valToAdd);
-    int16 atomic_fetch_add_release(int16* obj, int16 valToAdd);
-    int16 atomic_fetch_add_acq_rel(int16* obj, int16 valToAdd);
-    int16 atomic_fetch_add_seq_cst(int16* obj, int16 valToAdd);
-
-    // uint32
-    uint32 atomic_fetch_add_relaxed(uint32* obj, uint32 valToAdd);
-    uint32 atomic_fetch_add_acquire(uint32* obj, uint32 valToAdd);
-    uint32 atomic_fetch_add_release(uint32* obj, uint32 valToAdd);
-    uint32 atomic_fetch_add_acq_rel(uint32* obj, uint32 valToAdd);
-    uint32 atomic_fetch_add_seq_cst(uint32* obj, uint32 valToAdd);
-
-    // int32
-    int32 atomic_fetch_add_relaxed(int32* obj, int32 valToAdd);
-    int32 atomic_fetch_add_acquire(int32* obj, int32 valToAdd);
-    int32 atomic_fetch_add_release(int32* obj, int32 valToAdd);
-    int32 atomic_fetch_add_acq_rel(int32* obj, int32 valToAdd);
-    int32 atomic_fetch_add_seq_cst(int32* obj, int32 valToAdd);
-
-    // uint64
-    uint64 atomic_fetch_add_relaxed(uint64* obj, uint64 valToAdd);
-    uint64 atomic_fetch_add_acquire(uint64* obj, uint64 valToAdd);
-    uint64 atomic_fetch_add_release(uint64* obj, uint64 valToAdd);
-    uint64 atomic_fetch_add_acq_rel(uint64* obj, uint64 valToAdd);
-    uint64 atomic_fetch_add_seq_cst(uint64* obj, uint64 valToAdd);
-
-    // int64
-    int64 atomic_fetch_add_relaxed(int64* obj, int64 valToAdd);
-    int64 atomic_fetch_add_acquire(int64* obj, int64 valToAdd);
-    int64 atomic_fetch_add_release(int64* obj, int64 valToAdd);
-    int64 atomic_fetch_add_acq_rel(int64* obj, int64 valToAdd);
-    int64 atomic_fetch_add_seq_cst(int64* obj, int64 valToAdd);
+      switch (order)
+      {
+      case rsl::v1::memory_order::relaxed: return __atomic_fetch_add(obj, valToAdd, __ATOMIC_RELAXED);
+      case rsl::v1::memory_order::consume: return __atomic_fetch_add(obj, valToAdd, __ATOMIC_CONSUME);
+      case rsl::v1::memory_order::acquire: return __atomic_fetch_add(obj, valToAdd, __ATOMIC_ACQUIRE);
+      case rsl::v1::memory_order::release: return __atomic_fetch_add(obj, valToAdd, __ATOMIC_RELEASE);
+      case rsl::v1::memory_order::acq_rel: return __atomic_fetch_add(obj, valToAdd, __ATOMIC_ACQ_REL);
+      case rsl::v1::memory_order::seq_cst: return __atomic_fetch_add(obj, valToAdd, __ATOMIC_SEQ_CST);
+      default: REX_ASSERT("Invalid memory order for operation"); break;
+      }
+    }
+#endif
   } // namespace v1
 } // namespace rsl

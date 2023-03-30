@@ -18,60 +18,72 @@ namespace rsl
 {
   inline namespace v1
   {
-    // uint8
-    uint8 atomic_load_relaxed(uint8* obj);
-    uint8 atomic_load_acquire(uint8* obj);
-    uint8 atomic_load_release(uint8* obj);
-    uint8 atomic_load_acq_rel(uint8* obj);
-    uint8 atomic_load_seq_cst(uint8* obj);
+#if defined(REX_COMPILER_MSVC)
+    template <typename T>
+    atomic_t<T> atomic_load_msvc(T* obj)
+    {
+      volatile atomic_t<T>* volatile_obj = rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>(obj);
 
-    // int8
-    int8 atomic_load_relaxed(int8* obj);
-    int8 atomic_load_acquire(int8* obj);
-    int8 atomic_load_release(int8* obj);
-    int8 atomic_load_acq_rel(int8* obj);
-    int8 atomic_load_seq_cst(int8* obj);
+      if constexpr (sizeof(T) == 1)
+      {
+#if(REX_COMPILER_VERSION >= 1920)
+        return __iso_volatile_load8(volatile_obj);
+#else
+        return (*(rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>(obj)));
+#endif
+      }
+      else if constexpr (sizeof(T) == 2)
+      {
+#if(REX_COMPILER_VERSION >= 1920)
+        return __iso_volatile_load16(volatile_obj);
+#else
+        return (*(rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>(obj)));
+#endif
+      }
+      else if constexpr (sizeof(T) == 4)
+      {
+#if(REX_COMPILER_VERSION >= 1920)
+        return __iso_volatile_load32(rsl::internal::atomic_volatile_integral_cast<int>(volatile_obj));
+#else
+        return (*(rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>(obj)));
+#endif
+      }
+      else if constexpr (sizeof(T) == 8)
+      {
+#if(REX_COMPILER_VERSION >= 1920)
+        return __iso_volatile_load64(volatile_obj);
+#else
+        return (*(rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>(obj)));
+#endif
+      }
+      else
+      {
+        static_assert(rsl::internal::always_false<T>, "Invalid type used for atomic add fetch");
+        return 0;
+      }
+    }
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+    template <typename T>
+    atomic_t<T> atomic_load_clang(T* obj, rsl::memory_order order)
+    {
+      // GCC Documentation says:
+      // These built-in functions perform the operation suggested by the name, and return the value that had previously been in *ptr.
+      // Operations on pointer arguments are performed as if the operands were of the uintptr_t type.
+      // That is, they are not scaled by the size of the type to which the pointer points.
+      // { tmp = *ptr; *ptr op= val; return tmp; }
+      // Therefore we save their value to a temporary of type uintptr first and perform the operation on that
+      rsl::uintptr tmp = *obj;
 
-    // uint16
-    uint16 atomic_load_relaxed(uint16* obj);
-    uint16 atomic_load_acquire(uint16* obj);
-    uint16 atomic_load_release(uint16* obj);
-    uint16 atomic_load_acq_rel(uint16* obj);
-    uint16 atomic_load_seq_cst(uint16* obj);
+      switch (order)
+      {
+      case rsl::v1::memory_order::consume: return __atomic_load_n(obj, __ATOMIC_CONSUME);
+      case rsl::v1::memory_order::acquire: return __atomic_load_n(obj, __ATOMIC_ACQUIRE);
+      case rsl::v1::memory_order::seq_cst: return __atomic_load_n(obj, __ATOMIC_SEQ_CST);
+      default: REX_ASSERT("Invalid memory order for operation"); break;
+      }
 
-    // int16
-    int16 atomic_load_relaxed(int16* obj);
-    int16 atomic_load_acquire(int16* obj);
-    int16 atomic_load_release(int16* obj);
-    int16 atomic_load_acq_rel(int16* obj);
-    int16 atomic_load_seq_cst(int16* obj);
-
-    // uint32
-    uint32 atomic_load_relaxed(uint32* obj);
-    uint32 atomic_load_acquire(uint32* obj);
-    uint32 atomic_load_release(uint32* obj);
-    uint32 atomic_load_acq_rel(uint32* obj);
-    uint32 atomic_load_seq_cst(uint32* obj);
-
-    // int32
-    int32 atomic_load_relaxed(int32* obj);
-    int32 atomic_load_acquire(int32* obj);
-    int32 atomic_load_release(int32* obj);
-    int32 atomic_load_acq_rel(int32* obj);
-    int32 atomic_load_seq_cst(int32* obj);
-
-    // uint64
-    uint64 atomic_load_relaxed(uint64* obj);
-    uint64 atomic_load_acquire(uint64* obj);
-    uint64 atomic_load_release(uint64* obj);
-    uint64 atomic_load_acq_rel(uint64* obj);
-    uint64 atomic_load_seq_cst(uint64* obj);
-
-    // int64
-    int64 atomic_load_relaxed(int64* obj, int64 valToSub);
-    int64 atomic_load_acquire(int64* obj, int64 valToSub);
-    int64 atomic_load_release(int64* obj, int64 valToSub);
-    int64 atomic_load_acq_rel(int64* obj, int64 valToSub);
-    int64 atomic_load_seq_cst(int64* obj, int64 valToSub);
+      return 0;
+    }
+#endif
   } // namespace v1
 } // namespace rsl
