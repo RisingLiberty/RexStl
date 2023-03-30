@@ -4,7 +4,7 @@
 //
 // Authsub: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: atomic_fetch_sub.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -73,5 +73,5 @@ namespace rsl
     int64 atomic_fetch_sub_release(int64* obj, int64 valToSub);
     int64 atomic_fetch_sub_acq_rel(int64* obj, int64 valToSub);
     int64 atomic_fetch_sub_seq_cst(int64* obj, int64 valToSub);
-  }
-}
+  } // namespace v1
+} // namespace rsl

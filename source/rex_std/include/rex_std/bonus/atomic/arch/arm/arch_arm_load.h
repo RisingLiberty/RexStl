@@ -14,9 +14,9 @@ namespace rsl
       atomic_fixed_width_type_t<32> arm_atomic_load(atomic_fixed_width_type_t<32>* ptr);
       atomic_fixed_width_type_t<64> arm_atomic_load(atomic_fixed_width_type_t<64>* ptr);
 #endif
-    }
-  }
-}
+    } // namespace internal
+  }   // namespace v1
+} // namespace rsl
 
 /////////////////////////////////////////////////////////////////////////////////
 //
@@ -54,37 +54,37 @@ namespace rsl
   #define REX_ARCH_ATOMIC_LOAD_RELAXED_128(type, ret, ptr) REX_ARCH_ATOMIC_ARM_LOAD_128(type, ret, ptr, RELAXED)
 
   #define REX_ARCH_ATOMIC_LOAD_ACQUIRE_8(type, ret, ptr)                                                                                                                                                                                                 \
-    rsl::internal::arm_atomic_load(ptr);                                                                                                                                                                                                          \
+    rsl::internal::arm_atomic_load(ptr);                                                                                                                                                                                                                 \
     REX_ATOMIC_CPU_MB()
 
   #define REX_ARCH_ATOMIC_LOAD_ACQUIRE_16(type, ret, ptr)                                                                                                                                                                                                \
-    rsl::internal::arm_atomic_load(ptr);                                                                                                                                                                                                         \
+    rsl::internal::arm_atomic_load(ptr);                                                                                                                                                                                                                 \
     REX_ATOMIC_CPU_MB()
 
   #define REX_ARCH_ATOMIC_LOAD_ACQUIRE_32(type, ret, ptr)                                                                                                                                                                                                \
-    rsl::internal::arm_atomic_load(ptr);                                                                                                                                                                                                         \
+    rsl::internal::arm_atomic_load(ptr);                                                                                                                                                                                                                 \
     REX_ATOMIC_CPU_MB()
 
   #define REX_ARCH_ATOMIC_LOAD_ACQUIRE_64(type, ret, ptr)                                                                                                                                                                                                \
-    rsl::internal::arm_atomic_load(ptr);                                                                                                                                                                                                         \
+    rsl::internal::arm_atomic_load(ptr);                                                                                                                                                                                                                 \
     REX_ATOMIC_CPU_MB()
 
   #define REX_ARCH_ATOMIC_LOAD_ACQUIRE_128(type, ret, ptr) REX_ARCH_ATOMIC_ARM_LOAD_128(type, ret, ptr, ACQUIRE)
 
   #define REX_ARCH_ATOMIC_LOAD_SEQ_CST_8(type, ret, ptr)                                                                                                                                                                                                 \
-    rsl::internal::arm_atomic_load(ptr);                                                                                                                                                                                                          \
+    rsl::internal::arm_atomic_load(ptr);                                                                                                                                                                                                                 \
     REX_ATOMIC_CPU_MB()
 
   #define REX_ARCH_ATOMIC_LOAD_SEQ_CST_16(type, ret, ptr)                                                                                                                                                                                                \
-    rsl::internal::arm_atomic_load(ptr);                                                                                                                                                                                                         \
+    rsl::internal::arm_atomic_load(ptr);                                                                                                                                                                                                                 \
     REX_ATOMIC_CPU_MB()
 
   #define REX_ARCH_ATOMIC_LOAD_SEQ_CST_32(type, ret, ptr)                                                                                                                                                                                                \
-    rsl::internal::arm_atomic_load(ptr);                                                                                                                                                                                                         \
+    rsl::internal::arm_atomic_load(ptr);                                                                                                                                                                                                                 \
     REX_ATOMIC_CPU_MB()
 
   #define REX_ARCH_ATOMIC_LOAD_SEQ_CST_64(type, ret, ptr)                                                                                                                                                                                                \
-    rsl::internal::arm_atomic_load(ptr);                                                                                                                                                                                                         \
+    rsl::internal::arm_atomic_load(ptr);                                                                                                                                                                                                                 \
     REX_ATOMIC_CPU_MB()
 
   #define REX_ARCH_ATOMIC_LOAD_SEQ_CST_128(type, ret, ptr) REX_ARCH_ATOMIC_ARM_LOAD_128(type, ret, ptr, SEQ_CST)

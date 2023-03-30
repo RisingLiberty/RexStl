@@ -358,7 +358,7 @@ namespace rsl
   //
   // void rsl::compiler_barrier()
   //
-  //REX_FORCE_INLINE void compiler_barrier()
+  // REX_FORCE_INLINE void compiler_barrier()
   //{
   //  REX_ATOMIC_COMPILER_BARRIER();
   //}
@@ -377,7 +377,7 @@ namespace rsl
   //
   // void rsl::cpu_pause()
   //
-  //REX_FORCE_INLINE void cpu_pause()
+  // REX_FORCE_INLINE void cpu_pause()
   //{
   //  REX_ATOMIC_CPU_PAUSE();
   //}

@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: atomic_exchange.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -87,5 +87,5 @@ namespace rsl
     int64 atomic_exchange_release(int64* obj, int64 value);
     int64 atomic_exchange_acq_rel(int64* obj, int64 value);
     int64 atomic_exchange_seq_cst(int64* obj, int64 value);
-  }
-}
+  } // namespace v1
+} // namespace rsl

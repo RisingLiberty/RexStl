@@ -48,6 +48,6 @@ namespace rsl
     {
       return atomicObj->test(order);
     }
-  }
+  } // namespace v1
 
 } // namespace rsl

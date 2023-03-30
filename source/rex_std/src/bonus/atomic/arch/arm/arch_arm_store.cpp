@@ -41,6 +41,6 @@ namespace rsl
       }
   #endif
 #endif
-    }
-  }
-}
+    } // namespace internal
+  }   // namespace v1
+} // namespace rsl

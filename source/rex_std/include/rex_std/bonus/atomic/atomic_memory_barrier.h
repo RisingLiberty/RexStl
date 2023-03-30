@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: atomic_memory_barrier.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -12,34 +12,31 @@
 
 #pragma once
 
-#include "rex_std/bonus/types.h"
 #include "rex_std/bonus/atomic/atomic_compiler_barrier.h"
+#include "rex_std/bonus/types.h"
+
 #include <intrin.h>
 
 namespace rsl
 {
   inline namespace v1
   {
-#if defined (REX_PLATFORM_ARM64)
-#if defined(REX_COMPILER_MSVC)
-#define REX_ARM_DMB_ISH _ARM64_BARRIER_ISH
-#define REX_ARM_DMB_ISHST _ARM64_BARRIER_ISHST
-#define REX_ARM_DMB_ISHLD _ARM64_BARRIER_ISHLD
-#elif defined (REX_COMPILER_GCC) || defined (REX_COMPILED_CLANG)
-#define REX_ARM_DMB_ISH ish
-#define REX_ARM_DMB_ISHST ishst
-#define REX_ARM_DMB_ISHLD ishld
+#if defined(REX_PLATFORM_ARM64)
+  #if defined(REX_COMPILER_MSVC)
+    #define REX_ARM_DMB_ISH   _ARM64_BARRIER_ISH
+    #define REX_ARM_DMB_ISHST _ARM64_BARRIER_ISHST
+    #define REX_ARM_DMB_ISHLD _ARM64_BARRIER_ISHLD
+  #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILED_CLANG)
+    #define REX_ARM_DMB_ISH   ish
+    #define REX_ARM_DMB_ISHST ishst
+    #define REX_ARM_DMB_ISHLD ishld
+  #endif
 #endif
-#endif
-
-
-
-
 
     REX_FORCE_INLINE void memory_barrier()
     {
-#if defined (REX_COMPILER_MSVC)
-  #if defined (REX_PLATFORM_X64)
+#if defined(REX_COMPILER_MSVC)
+  #if defined(REX_PLATFORM_X64)
       // NOTE:
       // While it makes no sense for a hardware memory barrier to not imply a compiler barrier.
       // MSVC docs do not explicitly state that, so better to be safe than sorry chasing down
@@ -47,12 +44,12 @@ namespace rsl
 
       volatile long _;
       _InterlockedExchangeAdd(&_, 0);
-  #elif defined (REX_PLATFORM_ARM64)
+  #elif defined(REX_PLATFORM_ARM64)
       compiler_barrier();
       __dmb(REX_ARM_DMB_ISH);
       compiler_barrier();
   #endif
-#elif defined ((REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG))
+#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
   #if defined(REX_PLATFORM_X64)
       // NOTE:
       //
@@ -68,8 +65,8 @@ namespace rsl
       //
       // Accounting for Red Zones or Cachelines doesn't provide extra benefit.
       __asm__ __volatile__("lock; addl $0, -8(%%rsp)" ::: "memory", "cc");
-  #elif defined (REX_PLATFORM_ARM64)
-      __asm__ __volatile__("dmb " STRINGIZE(REX_ARM_DMB_ISH) ::: "memory")
+  #elif defined(REX_PLATFORM_ARM64)
+      __asm__ __volatile__("dmb " STRINGIZE(REX_ARM_DMB_ISH) ::: "memory");
   #endif
 #else
       static_assert("memory barrier not implemented");
@@ -80,7 +77,7 @@ namespace rsl
 #ifdef REX_PLATFORM_X64
       compiler_barrier();
 #else
-      __asm__ __volatile__("dmb " STRINGIZE(REX_ARM_DMB_ISHLD) ::: "memory")
+      __asm__ __volatile__("dmb " STRINGIZE(REX_ARM_DMB_ISHLD) ::: "memory");
 #endif
     }
     REX_FORCE_INLINE void write_memory_barrier()
@@ -88,8 +85,8 @@ namespace rsl
 #ifdef REX_PLATFORM_X64
       compiler_barrier();
 #else
-      __asm__ __volatile__("dmb " STRINGIZE(REX_ARM_DMB_ISHST) ::: "memory")
+      __asm__ __volatile__("dmb " STRINGIZE(REX_ARM_DMB_ISHST) ::: "memory");
 #endif
     }
-  }
-}
+  } // namespace v1
+} // namespace rsl

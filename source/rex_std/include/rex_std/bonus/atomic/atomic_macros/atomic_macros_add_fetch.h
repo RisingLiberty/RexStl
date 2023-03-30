@@ -53,4 +53,3 @@
 #define REX_ATOMIC_ADD_FETCH_ACQ_REL_128(type, ret, ptr, val) rsl::atomic_add_fetch_acq_rel(ptr, val)
 
 #define REX_ATOMIC_ADD_FETCH_SEQ_CST_128(type, ret, ptr, val) rsl::atomic_add_fetch_seq_cst(ptr, val)
-

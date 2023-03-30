@@ -4,17 +4,18 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: atomic_load.cpp
 // Copyright (c) Nick De Breuck 2022
 //
 // ============================================
 
-#include "rex_std/bonus/atomic/atomic_xor_fetch.h"
-#include "rex_std/bonus/atomic/atomic_fixed_width_type.h"
-#include "rex_std/bonus/atomic/atomic_memory_order.h"
 #include "rex_std/bonus/atomic/atomic_casts.h"
 #include "rex_std/bonus/atomic/atomic_compiler_barrier.h"
+#include "rex_std/bonus/atomic/atomic_fixed_width_type.h"
+#include "rex_std/bonus/atomic/atomic_memory_order.h"
+#include "rex_std/bonus/atomic/atomic_xor_fetch.h"
+
 #include <intrin.h>
 
 namespace rsl
@@ -27,37 +28,37 @@ namespace rsl
     {
       volatile atomic_t<T>* volatile_obj = rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>(obj);
 
-      if constexpr (sizeof(T) == 1)
+      if constexpr(sizeof(T) == 1)
       {
-#if (REX_COMPILER_VERSION >= 1920)
+  #if(REX_COMPILER_VERSION >= 1920)
         return __iso_volatile_load8(volatile_obj);
-#else
+  #else
         return (*(rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>(obj)));
-#endif
+  #endif
       }
-      else if constexpr (sizeof(T) == 2)
+      else if constexpr(sizeof(T) == 2)
       {
-#if (REX_COMPILER_VERSION >= 1920)
+  #if(REX_COMPILER_VERSION >= 1920)
         return __iso_volatile_load16(volatile_obj);
-#else
+  #else
         return (*(rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>(obj)));
-#endif
+  #endif
       }
-      else if constexpr (sizeof(T) == 4)
+      else if constexpr(sizeof(T) == 4)
       {
-#if (REX_COMPILER_VERSION >= 1920)
+  #if(REX_COMPILER_VERSION >= 1920)
         return __iso_volatile_load32(rsl::internal::atomic_volatile_integral_cast<int>(volatile_obj));
-#else
+  #else
         return (*(rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>(obj)));
-#endif
+  #endif
       }
-      else if constexpr (sizeof(T) == 8)
+      else if constexpr(sizeof(T) == 8)
       {
-#if (REX_COMPILER_VERSION >= 1920)
+  #if(REX_COMPILER_VERSION >= 1920)
         return __iso_volatile_load64(volatile_obj);
-#else
+  #else
         return (*(rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>(obj)));
-#endif
+  #endif
       }
       else
       {
@@ -70,25 +71,22 @@ namespace rsl
     atomic_t<T> atomic_load_clang(T* obj, rsl::memory_order order)
     {
       // GCC Documentation says:
-      // These built-in functions perform the operation suggested by the name, and return the value that had previously been in *ptr. 
-      // Operations on pointer arguments are performed as if the operands were of the uintptr_t type. 
+      // These built-in functions perform the operation suggested by the name, and return the value that had previously been in *ptr.
+      // Operations on pointer arguments are performed as if the operands were of the uintptr_t type.
       // That is, they are not scaled by the size of the type to which the pointer points.
       // { tmp = *ptr; *ptr op= val; return tmp; }
       // Therefore we save their value to a temporary of type uintptr first and perform the operation on that
       rsl::uintptr tmp = *obj;
 
-      switch (order)
+      switch(order)
       {
-      case rsl::v1::memory_order::relaxed: return __atomic_load(obj, __ATOMIC_RELAXED);
-      case rsl::v1::memory_order::consume: return __atomic_load(obj, __ATOMIC_CONSUME);
-      case rsl::v1::memory_order::acquire: return __atomic_load(obj, __ATOMIC_ACQUIRE);
-      case rsl::v1::memory_order::release: return __atomic_load(obj, __ATOMIC_RELEASE);
-      case rsl::v1::memory_order::acq_rel: return __atomic_load(obj, __ATOMIC_ACQ_REL);
-      case rsl::v1::memory_order::seq_cst: return __atomic_load(obj, __ATOMIC_SEQ_CST);
-      default:
-        REX_ASSERT("Invalid memory order for operation");
-        break;
+        case rsl::v1::memory_order::consume: return __atomic_load_n(obj, __ATOMIC_CONSUME);
+        case rsl::v1::memory_order::acquire: return __atomic_load_n(obj, __ATOMIC_ACQUIRE);
+        case rsl::v1::memory_order::seq_cst: return __atomic_load_n(obj, __ATOMIC_SEQ_CST);
+        default: REX_ASSERT("Invalid memory order for operation"); break;
       }
+
+      return 0;
     }
 #endif
 
@@ -105,7 +103,7 @@ namespace rsl
     {
 #if defined(REX_COMPILER_MSVC)
       auto res = atomic_load_msvc(obj);
-      rsl::compiler_barrier(); 
+      rsl::compiler_barrier();
       return res;
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
       return atomic_load_clang(obj, rsl::memory_order::acquire);
@@ -459,5 +457,5 @@ namespace rsl
       return atomic_load_clang(obj, rsl::memory_order::seq_cst);
 #endif
     }
-  }
-}
+  } // namespace v1
+} // namespace rsl

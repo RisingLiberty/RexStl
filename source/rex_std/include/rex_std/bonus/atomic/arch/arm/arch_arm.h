@@ -67,4 +67,3 @@
 #include "arch_arm_memory_barrier.h"
 #include "arch_arm_store.h"
 #include "arch_arm_thread_fence.h"
-

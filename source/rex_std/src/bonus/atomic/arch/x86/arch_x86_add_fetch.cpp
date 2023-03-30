@@ -9,11 +9,3 @@
 // Copyright (c) Nick De Breuck 2022
 //
 // ============================================
-
-namespace rsl
-{
-  inline namespace v1
-  {
-
-  }
-} // namespace rsl

@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: atomic.cpp
 // Copyright (c) Nick De Breuck 2022
 //
@@ -19,11 +19,9 @@ namespace rsl
     namespace internal
     {
 
-      static void EastlCompilerBarrierDataDependencyFunc(void*)
-      {
-      }
+      static void EastlCompilerBarrierDataDependencyFunc(void*) {}
 
       volatile CompilerBarrierDataDependencyFuncPtr gCompilerBarrierDataDependencyFunc = &EastlCompilerBarrierDataDependencyFunc;
-    }
-  }
-}
+    } // namespace internal
+  }   // namespace v1
+} // namespace rsl

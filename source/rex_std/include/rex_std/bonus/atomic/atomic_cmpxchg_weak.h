@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: atomic_cmpxchg_weak.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -12,8 +12,8 @@
 
 #pragma once
 
-#include "rex_std/bonus/types.h"
 #include "rex_std/bonus/atomic/atomic_memory_order.h"
+#include "rex_std/bonus/types.h"
 
 namespace rsl
 {
@@ -88,5 +88,5 @@ namespace rsl
     int64 atomic_cmpxchg_weak_release(int64* obj, int64 expected, int64 desired, rsl::memory_order failureOrder);
     int64 atomic_cmpxchg_weak_acq_rel(int64* obj, int64 expected, int64 desired, rsl::memory_order failureOrder);
     int64 atomic_cmpxchg_weak_seq_cst(int64* obj, int64 expected, int64 desired, rsl::memory_order failureOrder);
-  }
-}
+  } // namespace v1
+} // namespace rsl

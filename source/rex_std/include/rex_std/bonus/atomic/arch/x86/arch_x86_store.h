@@ -2,19 +2,6 @@
 
 #include "rex_std/bonus/atomic/atomic_fixed_width_type.h"
 
-namespace rsl
-{
-  inline namespace v1
-  {
-    //namespace internal
-    //{
-    //  void x86_atomic_store(atomic_fixed_width_type_t<8>* ptr, atomic_fixed_width_type_t<8> val);
-    //  void x86_atomic_store(atomic_fixed_width_type_t<16>* ptr, atomic_fixed_width_type_t<16> val);
-    //  void x86_atomic_store(atomic_fixed_width_type_t<32>* ptr, atomic_fixed_width_type_t<32> val);
-    //  void x86_atomic_store(atomic_fixed_width_type_t<64>* ptr, atomic_fixed_width_type_t<64> val);
-    //}
-  }
-}
 /////////////////////////////////////////////////////////////////////////////////
 //
 // void REX_ARCH_ATOMIC_STORE_*_N(type, type * ptr, type val)

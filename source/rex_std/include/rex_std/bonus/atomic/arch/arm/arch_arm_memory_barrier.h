@@ -9,15 +9,15 @@ namespace rsl
     namespace internal
     {
 #if defined(REX_PLATFORM_ARM64)
-  #if defined(REX_COMPILER_MSVC) || defined(REX_COMPILER_CLANG) || defined(REX_COMPILER_GCC) 
-        void arm_memory_barrier();
-        void arm_read_memory_barrier();
-        void arm_write_memory_barrier();
+  #if defined(REX_COMPILER_MSVC) || defined(REX_COMPILER_CLANG) || defined(REX_COMPILER_GCC)
+      void arm_memory_barrier();
+      void arm_read_memory_barrier();
+      void arm_write_memory_barrier();
   #endif
 #endif
-    }
-  }
-}
+    } // namespace internal
+  }   // namespace v1
+} // namespace rsl
 
 #if defined(REX_COMPILER_MSVC) && !defined(REX_COMPILER_CLANG_CL)
 

@@ -96,7 +96,6 @@ namespace rsl
     template <>
     struct make_unsigned<bool>
     {
-
     };
     template <>
     struct make_unsigned<int8>

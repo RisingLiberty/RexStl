@@ -13,19 +13,19 @@ namespace rsl
     {
     public: /* ctors */
       constexpr atomic_flag(bool desired)
-        : m_flag{ desired }
+          : m_flag {desired}
       {
       }
 
       constexpr atomic_flag()
-        : m_flag{ false }
+          : m_flag {false}
       {
       }
 
     public: /* deleted ctors && assignment operators */
       atomic_flag(const atomic_flag&) = delete;
 
-      atomic_flag& operator=(const atomic_flag&) = delete;
+      atomic_flag& operator=(const atomic_flag&)          = delete;
       atomic_flag& operator=(const atomic_flag&) volatile = delete;
 
     public: /* clear */
@@ -144,6 +144,6 @@ namespace rsl
     private:
       rsl::atomic<bool> m_flag;
     };
-  }
+  } // namespace v1
 
 } // namespace rsl

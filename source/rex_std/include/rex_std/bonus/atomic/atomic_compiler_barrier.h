@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: atomic_compiler_barrier.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -13,6 +13,7 @@
 #pragma once
 
 #include "rex_std/bonus/types.h"
+
 #include <intrin.h>
 
 namespace rsl
@@ -35,8 +36,8 @@ namespace rsl
       g_compiler_barrier_data_dependency_func(ptr);
       compiler_barrier();
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
-      __asm__ __volatile__("" : /* Output Operands */ : "r"(ptr) : "memory")
+      __asm__ __volatile__("" : /* Output Operands */ : "r"(ptr) : "memory");
 #endif
     }
-  }
-}
+  } // namespace v1
+} // namespace rsl

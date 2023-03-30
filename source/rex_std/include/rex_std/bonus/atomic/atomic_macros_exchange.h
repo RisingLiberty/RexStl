@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: atomic_macros_exchange.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -20,4 +20,4 @@ namespace rsl
   {
 
   }
-}
+} // namespace rsl

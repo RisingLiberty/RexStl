@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: atomic_load.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -73,5 +73,5 @@ namespace rsl
     int64 atomic_load_release(int64* obj, int64 valToSub);
     int64 atomic_load_acq_rel(int64* obj, int64 valToSub);
     int64 atomic_load_seq_cst(int64* obj, int64 valToSub);
-  }
-}
+  } // namespace v1
+} // namespace rsl

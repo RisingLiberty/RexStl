@@ -316,9 +316,9 @@ namespace rsl
       // reads characters from the associated input sequence to the get area and advance the next pointer
       virtual streamsize uflown(char_type* /*s*/, streamsize count)
       {
-        while (count--)
+        while(count--)
         {
-          if (uflow() == Traits::eof())
+          if(uflow() == Traits::eof())
           {
             return -1;
           }
@@ -452,7 +452,7 @@ namespace rsl
       {
         m_write_buf_begin = beg;
         m_write_buf_curr  = current;
-        m_write_buf_end    = end;
+        m_write_buf_end   = end;
       }
 
       // repositions the beginning, next and end pointers of the output sequence

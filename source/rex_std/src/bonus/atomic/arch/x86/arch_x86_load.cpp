@@ -10,18 +10,18 @@
 ////
 //// ============================================
 //
-//#include "rex_std/bonus/atomic/arch/x86/arch_x86_load.h"
+// #include "rex_std/bonus/atomic/arch/x86/arch_x86_load.h"
 //
-//#include "rex_std/bonus/atomic/atomic_casts.h"
-//#include "rex_std/bonus/compiler.h"
+// #include "rex_std/bonus/atomic/atomic_casts.h"
+// #include "rex_std/bonus/compiler.h"
 //
-//namespace rsl
+// namespace rsl
 //{
 //  inline namespace v1
 //  {
 //    namespace internal
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      atomic_fixed_width_type_t<8> x86_atomic_load(atomic_fixed_width_type_t<8>* ptr)
 //      {
 //  #if (REX_COMPILER_VERSION >= 1920)
@@ -65,7 +65,7 @@
 //        return rsl::internal::atomic_type_pun_cast<atomic_fixed_width_type_t<64>>(retIntegral);
 //  #endif
 //      }
-//#endif
+// #endif
 //    }
 //  }
 //} // namespace rsl

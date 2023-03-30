@@ -72,8 +72,8 @@ namespace rsl
       inline constexpr bool is_user_type_suitable_for_primary_template_v = is_user_type_suitable_for_primary_template<T>::value;
 
       template <typename T>
-      using select_atomic_inherit_0 = typename rsl::conditional_t<rsl::is_same_v<bool, T> || rsl::internal::is_user_type_suitable_for_primary_template_v<T>, rsl::internal::atomic_base_width<T>,     /* True */
-                                                                rsl::internal::atomic_invalid_type<T>>;                                                                                               /* False */
+      using select_atomic_inherit_0 = typename rsl::conditional_t<rsl::is_same_v<bool, T> || rsl::internal::is_user_type_suitable_for_primary_template_v<T>, rsl::internal::atomic_base_width<T>, /* True */
+                                                                  rsl::internal::atomic_invalid_type<T>>;                                                                                         /* False */
 
       template <typename T>
       using select_atomic_inherit = select_atomic_inherit_0<T>;
@@ -103,12 +103,12 @@ namespace rsl
 
     static constexpr bool is_always_lock_free = rsl::internal::is_atomic_lockfree_size_v<T>;
 
-    atomic(const atomic&)                      = delete;
-    atomic& operator=(const atomic&)           = delete;
-    atomic& operator=(const atomic&) volatile  = delete;
+    atomic(const atomic&)                     = delete;
+    atomic& operator=(const atomic&)          = delete;
+    atomic& operator=(const atomic&) volatile = delete;
 
     constexpr atomic() = default;
-    constexpr atomic(T desired) 
+    constexpr atomic(T desired)
         : Base(desired)
     {
     }
@@ -130,11 +130,11 @@ namespace rsl
     using Base::load;
     using Base::store;
 
-    operator T() const volatile 
+    operator T() const volatile
     {
       static_assert(rsl::internal::always_false<T>, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in EASTL/atomic.h! Use the memory orders to access the atomic object!");
     }
-    operator T() const 
+    operator T() const
     {
       return load(rsl::memory_order_seq_cst);
     }
@@ -153,30 +153,30 @@ namespace rsl
     static_assert(rsl::is_move_assignable_v<T>, "rsl::atomic<T> : template typename T must be move assignable!");
     static_assert(rsl::is_trivially_destructible_v<T>, "rsl::atomic<T> : Must be trivially destructible!");
     static_assert(rsl::internal::is_atomic_lockfree_size_v<T>, "rsl::atomic<T> : template typename T must be a lockfree size!");
-    
+
   public:
     using Base = rsl::internal::atomic_integral_width<T>;
 
-    using value_type = T;
+    using value_type      = T;
     using difference_type = T;
 
     static constexpr bool is_always_lock_free = rsl::internal::is_atomic_lockfree_size_v<T>;
 
     constexpr atomic() = default;
-    constexpr atomic(T desired) 
+    constexpr atomic(T desired)
         : Base(desired)
     {
     }
 
-    atomic(const atomic&)                      = delete;
-    atomic& operator=(const atomic&)           = delete;
-    atomic& operator=(const atomic&) volatile  = delete;
+    atomic(const atomic&)                     = delete;
+    atomic& operator=(const atomic&)          = delete;
+    atomic& operator=(const atomic&) volatile = delete;
 
-    bool is_lock_free() const 
+    bool is_lock_free() const
     {
       return rsl::internal::is_atomic_lockfree_size_v<T>;
     }
-    bool is_lock_free() const volatile 
+    bool is_lock_free() const volatile
     {
       static_assert(rsl::internal::always_false<T>, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in EASTL/atomic.h! Use the memory orders to access the atomic object!");
       return false;
@@ -189,11 +189,11 @@ namespace rsl
     using Base::load;
     using Base::store;
 
-    operator T() const volatile 
+    operator T() const volatile
     {
       static_assert(rsl::internal::always_false<T>, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in EASTL/atomic.h! Use the memory orders to access the atomic object!");
     }
-    operator T() const 
+    operator T() const
     {
       return load(rsl::memory_order_seq_cst);
     }
@@ -234,26 +234,26 @@ namespace rsl
     using Base = rsl::internal::atomic_pointer_width<T*>;
 
   public:
-    using value_type = T*;
+    using value_type      = T*;
     using difference_type = ptrdiff_t;
 
     static constexpr bool is_always_lock_free = rsl::internal::is_atomic_lockfree_size_v<T*>;
 
     constexpr atomic() = default;
-    constexpr atomic(T* desired) 
+    constexpr atomic(T* desired)
         : Base(desired)
     {
     }
 
-    atomic(const atomic&)                      = delete;
-    atomic& operator=(const atomic&)           = delete;
-    atomic& operator=(const atomic&) volatile  = delete;
+    atomic(const atomic&)                     = delete;
+    atomic& operator=(const atomic&)          = delete;
+    atomic& operator=(const atomic&) volatile = delete;
 
-    bool is_lock_free() const 
+    bool is_lock_free() const
     {
       return rsl::internal::is_atomic_lockfree_size_v<T*>;
     }
-    bool is_lock_free() const volatile 
+    bool is_lock_free() const volatile
     {
       static_assert(rsl::internal::always_false<T>, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in EASTL/atomic.h! Use the memory orders to access the atomic object!");
       ;
@@ -267,11 +267,11 @@ namespace rsl
     using Base::load;
     using Base::store;
 
-    operator T*() const volatile 
+    operator T*() const volatile
     {
       static_assert(rsl::internal::always_false<T>, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in EASTL/atomic.h! Use the memory orders to access the atomic object!");
     }
-    operator T*() const 
+    operator T*() const
     {
       return load(rsl::memory_order_seq_cst);
     }

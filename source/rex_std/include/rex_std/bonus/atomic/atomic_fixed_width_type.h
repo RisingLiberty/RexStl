@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: atomic_fixed_width_type.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -22,7 +22,6 @@ namespace rsl
     template <size_t bytes>
     struct atomic_fixed_width_type
     {
-
     };
 
     template <>
@@ -67,5 +66,5 @@ namespace rsl
 
     template <typename T>
     using atomic_t = typename atomic_fixed_width_type<sizeof(T) * rsl::limits_byte::num_bits_per_byte>::type;
-  }
-}
+  } // namespace v1
+} // namespace rsl

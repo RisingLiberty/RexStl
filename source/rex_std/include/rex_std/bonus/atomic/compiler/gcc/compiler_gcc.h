@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include "rex_std/bonus/types.h"
 #include "rex_std/bonus/atomic/atomic_fixed_width_type.h"
+#include "rex_std/bonus/types.h"
 
 /**
  * NOTE:

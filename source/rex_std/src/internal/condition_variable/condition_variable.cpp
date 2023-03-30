@@ -4,15 +4,16 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: condition_variable.cpp
 // Copyright (c) Nick De Breuck 2022
 //
 // ============================================
 
 #include "rex_std/internal/condition_variable/condition_variable.h"
-#include "rex_std/bonus/mutex/mutex_base.h"
+
 #include "rex_std/assert.h"
+#include "rex_std/bonus/mutex/mutex_base.h"
 #include "rex_std/internal/exception/teminate.h"
 #include "rex_std/internal/thread/this_thread.h"
 
@@ -26,21 +27,20 @@ namespace rsl
     {
     public:
       impl()
-        : m_condition_variable()
+          : m_condition_variable()
       {
         InitializeConditionVariable(&m_condition_variable);
       }
 
-      impl(const impl&) = delete;
-      ~impl() = delete;
+      impl(const impl&)            = delete;
+      ~impl()                      = delete;
       impl& operator=(const impl&) = delete;
 
-      void destroy()
-      {}
+      void destroy() {}
 
       void wait(const mutex::native_handle_type mtx)
       {
-        if (!wait_for(mtx, INFINITE))
+        if(!wait_for(mtx, INFINITE))
         {
           rsl::terminate();
         }
@@ -73,10 +73,10 @@ namespace rsl
 
         rsl::internal::xtime now = rsl::internal::xtime::get();
         mtx_clear_owner(mtx);
-        if (!cond->wait_for(mtx, target.diff_in_ms(now)))
+        if(!cond->wait_for(mtx, target.diff_in_ms(now)))
         {
           now = rsl::internal::xtime::get();
-          if (target.diff_in_ms(now) == 0)
+          if(target.diff_in_ms(now) == 0)
           {
             res = false;
           }
@@ -120,12 +120,12 @@ namespace rsl
         lock_thread_exit_mtx();
 
         // loop through list of blocks
-        while (block != nullptr)
+        while(block != nullptr)
         {
           // block is full. move to next block and allocate
-          if (block->num_used == num_items)
+          if(block->num_used == num_items)
           {
-            if (block->next == nullptr)
+            if(block->next == nullptr)
             {
               block->next = static_cast<at_thread_exit_block*>(calloc(1, sizeof(at_thread_exit_block)));
             }
@@ -136,15 +136,15 @@ namespace rsl
           else
           {
             // find an empty slot
-            for (card32 i = 0; i < num_items; ++i)
+            for(card32 i = 0; i < num_items; ++i)
             {
               // store into empty slot
-              if (block->data[i].mtx == nullptr)
+              if(block->data[i].mtx == nullptr)
               {
                 block->data[i].thread_id = GetCurrentThreadId();
-                block->data[i].mtx = mtx;
-                block->data[i].cv = cnd;
-                block->data[i].res = p;
+                block->data[i].mtx       = mtx;
+                block->data[i].cv        = cnd;
+                block->data[i].res       = p;
                 ++block->num_used;
                 break;
               }
@@ -163,12 +163,12 @@ namespace rsl
         lock_thread_exit_mtx();
 
         // loop through list of blocks
-        while (block != nullptr)
+        while(block != nullptr)
         {
-          for (card32 i = 0; block->num_used != 0 && i < num_items; ++i)
+          for(card32 i = 0; block->num_used != 0 && i < num_items; ++i)
           {
             // release slot
-            if (block->data[i].mtx == mtx)
+            if(block->data[i].mtx == mtx)
             {
               block->data[i].mtx = nullptr;
               --block->num_used;
@@ -180,7 +180,7 @@ namespace rsl
 
         unlock_thread_exit_mtx();
       }
-    }
+    } // namespace internal
 
     condition_variable::condition_variable()
     {
@@ -207,7 +207,7 @@ namespace rsl
     cv_status condition_variable::wait_until(unique_lock<mutex>& lock, const internal::xtime& absTime)
     {
       // wait for signal with timeout
-      if (!rsl::internal::does_current_thread_own_mtx(lock.mutex()))
+      if(!rsl::internal::does_current_thread_own_mtx(lock.mutex()))
       {
         REX_ASSERT("Trying to wait for a mutex that's not locked or owned by thead");
       }
@@ -215,9 +215,7 @@ namespace rsl
       // Nothing to do to comply with LWG-2135 because std::mutex lock/unlock are nothrow
       const bool res = internal::cnd_timedwait(internal_impl(), lock.mutex()->native_handle(), absTime);
 
-      return res
-        ? cv_status::no_timeout
-        : cv_status::timeout;
+      return res ? cv_status::no_timeout : cv_status::timeout;
     }
 
     condition_variable::native_handle_type condition_variable::native_handle()
@@ -239,5 +237,5 @@ namespace rsl
     {
       return m_storage.get<condition_variable::impl>();
     }
-  }
-}
+  } // namespace v1
+} // namespace rsl

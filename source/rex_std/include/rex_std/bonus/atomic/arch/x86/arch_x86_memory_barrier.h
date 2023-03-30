@@ -7,7 +7,7 @@
 // void REX_ARCH_ATOMIC_CPU_MB()
 //
 #if defined(REX_COMPILER_MSVC)
-#include <intrin.h>
+  #include <intrin.h>
 #endif
 
 namespace rsl
@@ -65,9 +65,9 @@ namespace rsl
 #else
       static_assert(false, "memory barrier not implemented for " REX_COMPILER_NAME);
 #endif
-    }
-  }
-}
+    } // namespace internal
+  }   // namespace v1
+} // namespace rsl
 
 #define REX_ARCH_ATOMIC_CPU_MB() rsl::internal::x86_memory_barrier()
 

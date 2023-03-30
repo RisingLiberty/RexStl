@@ -74,6 +74,31 @@ namespace rsl
 
       using high_resolution_clock = steady_clock;
 
+      namespace internal
+      {
+        template <typename Rep, typename Period>
+        auto to_abs_time(const chrono::duration<Rep, Period>& relTime)
+        {
+          const auto zero                  = chrono::duration<Rep, Period>::zero();
+          const auto now                   = chrono::steady_clock::now();
+          decltype(now + relTime) abs_time = now;
+          if(relTime > zero)
+          {
+            const auto forever = (chrono::steady_clock::time_point::max)();
+            if(abs_time < forever - relTime)
+            {
+              abs_time += relTime;
+            }
+            else
+            {
+              abs_time = forever;
+            }
+          }
+
+          return abs_time;
+        }
+      } // namespace internal
+
 #ifdef REX_ENABLE_WITH_CPP20
       class utc_clock;
       template <typename Duration>

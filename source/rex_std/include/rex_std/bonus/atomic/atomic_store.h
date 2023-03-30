@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: atomic_store.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -87,5 +87,5 @@ namespace rsl
     void atomic_store_release(int64* obj, int64 valToStore);
     void atomic_store_acq_rel(int64* obj, int64 valToStore);
     void atomic_store_seq_cst(int64* obj, int64 valToStore);
-  }
-}
+  } // namespace v1
+} // namespace rsl

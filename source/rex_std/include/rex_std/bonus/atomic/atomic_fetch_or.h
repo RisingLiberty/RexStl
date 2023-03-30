@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: atomic_fetch_or.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -87,6 +87,5 @@ namespace rsl
     int64 atomic_fetch_or_release(int64* obj, int64 valToOr);
     int64 atomic_fetch_or_acq_rel(int64* obj, int64 valToOr);
     int64 atomic_fetch_or_seq_cst(int64* obj, int64 valToOr);
-  }
-}
-
+  } // namespace v1
+} // namespace rsl

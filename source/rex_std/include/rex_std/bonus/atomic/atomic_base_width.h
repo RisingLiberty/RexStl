@@ -1,10 +1,5 @@
 #pragma once
 
-
-
-
-
-
 namespace rsl
 {
   inline namespace v1
@@ -15,27 +10,18 @@ namespace rsl
       template <typename T, unsigned width = sizeof(T)>
       struct atomic_base_width;
 
-
-
-
-
-
-
-
-
-
       template <typename T>
       struct atomic_base_width<T, 1> : public atomic_size_aligned<T>
       {
       private:
         static_assert(alignof(atomic_size_aligned<T>) == 1, "rsl::atomic<T> must be sizeof(T) aligned!");
         static_assert(alignof(atomic_size_aligned<T>) == sizeof(T), "rsl::atomic<T> must be sizeof(T) aligned!");
-        using Base = atomic_size_aligned<T>;
+        using Base                  = atomic_size_aligned<T>;
         static const size_t NumBits = sizeof(T) * 8;
 
       public:
         constexpr atomic_base_width(T desired)
-          : Base(desired)
+            : Base(desired)
         {
         }
 
@@ -80,29 +66,17 @@ namespace rsl
 
         T load(rsl::internal::memory_order_relaxed_s) const
         {
-
           return rsl::atomic_load_relaxed(reinterpret_cast<unsigned char*>(this->atomic_address()));
-
-
-
         }
 
         T load(rsl::internal::memory_order_acquire_s) const
         {
-
           return rsl::atomic_load_acquire(reinterpret_cast<unsigned char*>(this->atomic_address()));
-
-
-
         }
 
         T load(rsl::internal::memory_order_seq_cst_s) const
         {
-
           return rsl::atomic_load_seq_cst(reinterpret_cast<unsigned char*>(this->atomic_address()));
-
-
-
         }
 
       public:
@@ -411,11 +385,9 @@ namespace rsl
           return desired;
         }
 
-        atomic_base_width& operator=(const atomic_base_width&) = delete;
+        atomic_base_width& operator=(const atomic_base_width&)          = delete;
         atomic_base_width& operator=(const atomic_base_width&) volatile = delete;
       };
-
-
 
       template <typename T>
       struct atomic_base_width<T, 2> : public atomic_size_aligned<T>
@@ -423,12 +395,12 @@ namespace rsl
       private:
         static_assert(alignof(atomic_size_aligned<T>) == 2, "rsl::atomic<T> must be sizeof(T) aligned!");
         static_assert(alignof(atomic_size_aligned<T>) == sizeof(T), "rsl::atomic<T> must be sizeof(T) aligned!");
-        using Base = atomic_size_aligned<T>;
+        using Base                  = atomic_size_aligned<T>;
         static const size_t NumBits = sizeof(T) * 8;
 
       public:
         constexpr atomic_base_width(T desired)
-          : Base(desired)
+            : Base(desired)
         {
         }
 
@@ -475,7 +447,6 @@ namespace rsl
           atomic_t<T> retVal;
           rsl::atomic_load_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())));
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
-
         }
 
         T load(rsl::internal::memory_order_acquire_s) const
@@ -483,7 +454,6 @@ namespace rsl
           atomic_t<T> retVal;
           rsl::atomic_load_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())));
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
-
         }
 
         T load(rsl::internal::memory_order_seq_cst_s) const
@@ -491,7 +461,6 @@ namespace rsl
           atomic_t<T> retVal;
           rsl::atomic_load_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())));
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
-
         }
 
       public:
@@ -800,10 +769,9 @@ namespace rsl
           return desired;
         }
 
-        atomic_base_width& operator=(const atomic_base_width&) = delete;
+        atomic_base_width& operator=(const atomic_base_width&)          = delete;
         atomic_base_width& operator=(const atomic_base_width&) volatile = delete;
       };
-
 
       template <typename T>
       struct atomic_base_width<T, 4> : public atomic_size_aligned<T>
@@ -811,12 +779,12 @@ namespace rsl
       private:
         static_assert(alignof(atomic_size_aligned<T>) == 4, "rsl::atomic<T> must be sizeof(T) aligned!");
         static_assert(alignof(atomic_size_aligned<T>) == sizeof(T), "rsl::atomic<T> must be sizeof(T) aligned!");
-        using Base = atomic_size_aligned<T>;
+        using Base                  = atomic_size_aligned<T>;
         static const size_t NumBits = sizeof(T) * 8;
 
       public:
         constexpr atomic_base_width(T desired)
-          : Base(desired)
+            : Base(desired)
         {
         }
 
@@ -863,7 +831,6 @@ namespace rsl
           atomic_t<T> retVal;
           rsl::atomic_load_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())));
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
-
         }
 
         T load(rsl::internal::memory_order_acquire_s) const
@@ -871,7 +838,6 @@ namespace rsl
           atomic_t<T> retVal;
           rsl::atomic_load_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())));
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
-
         }
 
         T load(rsl::internal::memory_order_seq_cst_s) const
@@ -879,7 +845,6 @@ namespace rsl
           atomic_t<T> retVal;
           rsl::atomic_load_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())));
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
-
         }
 
       public:
@@ -1188,10 +1153,9 @@ namespace rsl
           return desired;
         }
 
-        atomic_base_width& operator=(const atomic_base_width&) = delete;
+        atomic_base_width& operator=(const atomic_base_width&)          = delete;
         atomic_base_width& operator=(const atomic_base_width&) volatile = delete;
       };
-
 
       template <typename T>
       struct atomic_base_width<T, 8> : public atomic_size_aligned<T>
@@ -1199,12 +1163,12 @@ namespace rsl
       private:
         static_assert(alignof(atomic_size_aligned<T>) == 8, "rsl::atomic<T> must be sizeof(T) aligned!");
         static_assert(alignof(atomic_size_aligned<T>) == sizeof(T), "rsl::atomic<T> must be sizeof(T) aligned!");
-        using Base = atomic_size_aligned<T>;
+        using Base                  = atomic_size_aligned<T>;
         static const size_t NumBits = sizeof(T) * 8;
 
       public:
         constexpr atomic_base_width(T desired)
-          : Base(desired)
+            : Base(desired)
         {
         }
 
@@ -1251,7 +1215,6 @@ namespace rsl
           atomic_t<T> retVal;
           rsl::atomic_load_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())));
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
-
         }
 
         T load(rsl::internal::memory_order_acquire_s) const
@@ -1259,7 +1222,6 @@ namespace rsl
           atomic_t<T> retVal;
           rsl::atomic_load_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())));
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
-
         }
 
         T load(rsl::internal::memory_order_seq_cst_s) const
@@ -1267,7 +1229,6 @@ namespace rsl
           atomic_t<T> retVal;
           rsl::atomic_load_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())));
           return rsl::internal::atomic_type_pun_cast<T>((retVal));
-
         }
 
       public:
@@ -1576,10 +1537,10 @@ namespace rsl
           return desired;
         }
 
-        atomic_base_width& operator=(const atomic_base_width&) = delete;
+        atomic_base_width& operator=(const atomic_base_width&)          = delete;
         atomic_base_width& operator=(const atomic_base_width&) volatile = delete;
       };
-    }
-  }
+    } // namespace internal
+  }   // namespace v1
 
-}
+} // namespace rsl

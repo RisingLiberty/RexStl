@@ -12,10 +12,9 @@
 
 #pragma once
 
-#include "rex_std/internal/istream/basic_iostream.h"
 #include "rex_std/internal/ios/io_types.h"
+#include "rex_std/internal/istream/basic_iostream.h"
 #include "rex_std/internal/sstream/basic_stringbuf.h"
-
 #include "rex_std/internal/type_traits/is_same.h"
 
 namespace rsl
@@ -29,36 +28,39 @@ namespace rsl
       using base = basic_iostream<CharType, Traits>;
 
     public:
-      using char_type = CharType;
-      using traits_type = Traits;
-      using int_type = typename Traits::int_type;
-      using pos_type = typename Traits::pos_type;
-      using off_type = typename Traits::off_type;
+      using char_type      = CharType;
+      using traits_type    = Traits;
+      using int_type       = typename Traits::int_type;
+      using pos_type       = typename Traits::pos_type;
+      using off_type       = typename Traits::off_type;
       using allocator_type = Allocator;
 
       basic_stringstream()
-        : base(&m_str_buff)
-        , m_str_buff()
+          : base(&m_str_buff)
+          , m_str_buff()
       {
-        
       }
       explicit basic_stringstream(io::openmode mode)
-        : base(&m_str_buff)
-        , m_str_buff(mode)
-      {}
+          : base(&m_str_buff)
+          , m_str_buff(mode)
+      {
+      }
 
       explicit basic_stringstream(const basic_string<CharType, Traits, Allocator>& str, io::openmode mode = io::openmode::in | io::openmode::out)
-        : base(&m_str_buff)
-        , m_str_buff(str, mode)
-      {}
+          : base(&m_str_buff)
+          , m_str_buff(str, mode)
+      {
+      }
       basic_stringstream(basic_stringstream&& other)
-        : base(rsl::move(other))
-        , m_str_buff(rsl::move(other.m_str_buff))
-      {}
+          : base(rsl::move(other))
+          , m_str_buff(rsl::move(other.m_str_buff))
+      {
+      }
       basic_stringstream(io::openmode mode, const Allocator& alloc)
-        : base(&m_str_buff)
-        , m_str_buff(mode, alloc)
-      {}
+          : base(&m_str_buff)
+          , m_str_buff(mode, alloc)
+      {
+      }
 
       basic_stringstream& operator=(basic_stringstream&& other)
       {
@@ -99,7 +101,7 @@ namespace rsl
       lhs.swap(rhs);
     }
 
-    using stringstream = basic_stringstream<rsl::char8>;
+    using stringstream  = basic_stringstream<rsl::char8>;
     using wstringstream = basic_stringstream<rsl::char16>;
-  }
-}
+  } // namespace v1
+} // namespace rsl

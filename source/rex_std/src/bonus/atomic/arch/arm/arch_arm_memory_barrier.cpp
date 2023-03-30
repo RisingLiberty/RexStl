@@ -19,7 +19,7 @@ namespace rsl
 #if defined(REX_PLATFORM_ARM64)
       void arm_memory_barrier()
       {
-#if defined(REX_COMPILER_MSVC)
+  #if defined(REX_COMPILER_MSVC)
         // NOTE:
         //
         // While it makes no sense for a hardware memory barrier to not imply a compiler barrier.
@@ -29,13 +29,13 @@ namespace rsl
         __dmb(REX_ARM_DMB_ISH);
         REX_ATOMIC_COMPILER_BARRIER();
 
-#elif defined(REX_COMPILER_CLANG) || defined(REX_COMPILER_GCC)
-        __asm__ __volatile__("dmb " STRINGIZE(REX_ARM_DMB_ISH) ::: "memory")
-#endif
+  #elif defined(REX_COMPILER_CLANG) || defined(REX_COMPILER_GCC)
+        __asm__ __volatile__("dmb " STRINGIZE(REX_ARM_DMB_ISH) ::: "memory");
+  #endif
       }
       void arm_read_memory_barrier()
       {
-#if defined(REX_COMPILER_MSVC)
+  #if defined(REX_COMPILER_MSVC)
         // NOTE:
         //
         // While it makes no sense for a hardware memory barrier to not imply a compiler barrier.
@@ -45,13 +45,13 @@ namespace rsl
         __dmb(REX_ARM_DMB_ISHST);
         REX_ATOMIC_COMPILER_BARRIER();
 
-#elif defined(REX_COMPILER_CLANG) || defined(REX_COMPILER_GCC)
-        __asm__ __volatile__("dmb " STRINGIZE(REX_ARM_DMB_ISHST) ::: "memory")
-#endif
+  #elif defined(REX_COMPILER_CLANG) || defined(REX_COMPILER_GCC)
+        __asm__ __volatile__("dmb " STRINGIZE(REX_ARM_DMB_ISHST) ::: "memory");
+  #endif
       }
       void arm_write_memory_barrier()
       {
-#if defined(REX_COMPILER_MSVC)
+  #if defined(REX_COMPILER_MSVC)
         // NOTE:
         //
         // While it makes no sense for a hardware memory barrier to not imply a compiler barrier.
@@ -61,11 +61,11 @@ namespace rsl
         __dmb(REX_ARM_DMB_ISHLD);
         REX_ATOMIC_COMPILER_BARRIER();
 
-#elif defined(REX_COMPILER_CLANG) || defined(REX_COMPILER_GCC)
-        __asm__ __volatile__("dmb " STRINGIZE(REX_ARM_DMB_ISHLD) ::: "memory")
-#endif
+  #elif defined(REX_COMPILER_CLANG) || defined(REX_COMPILER_GCC)
+        __asm__ __volatile__("dmb " STRINGIZE(REX_ARM_DMB_ISHLD) ::: "memory");
+  #endif
       }
 #endif
-    }
-  }
-}
+    } // namespace internal
+  }   // namespace v1
+} // namespace rsl
