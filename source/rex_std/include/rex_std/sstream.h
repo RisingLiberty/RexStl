@@ -13,3 +13,4 @@
 #pragma once
 
 #include "rex_std/internal/sstream/basic_sstream.h"
+#include "rex_std/internal/sstream/basic_isstream.h"

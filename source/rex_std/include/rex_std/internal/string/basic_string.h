@@ -136,10 +136,7 @@ namespace rsl
       {
         assign(first, last);
       }
-      /// RSL Comment: Different from ISO C++ Standard at time of writing (28/Jun/2022)
-      // marked explicit in RSL
-      // copy constructor. copies the contents of other.
-      explicit basic_string(const basic_string& other) // NOLINT(google-explicit-constructor)
+      basic_string(const basic_string& other) // NOLINT(google-explicit-constructor)
           : basic_string(other.get_allocator())
       {
         assign(other.data(), other.length());
@@ -802,7 +799,7 @@ namespace rsl
       template <typename InputIt>
       basic_string& append(InputIt first, InputIt last)
       {
-        const size_type count = rsl::distance(first, last);
+        const size_type count = static_cast<size_type>(rsl::distance(first, last));
 
         increase_capacity_if_needed(count);
 
@@ -2189,8 +2186,54 @@ namespace rsl
     template <typename Char, typename Traits, typename Allocator>
     basic_istream<Char, Traits>& getline(basic_istream<Char, Traits>& input, basic_string<Char, Traits, Allocator>& str, Char delim)
     {
-      str.erase();
-      input.getline(str, delim);
+      using my_is = basic_istream<Char, Traits>;
+
+      rsl::io::iostate state = rsl::io::iostate::goodbit;
+      bool changed = false;
+      const typename my_is::sentry is_ok(input);
+
+      if (is_ok)
+      {
+        str.erase();
+        const typename Traits::int_type meta_delim = Traits::to_int_type(delim);
+        typename Traits::int_type meta = input.rdbuf()->sgetc();
+
+        for (;; meta = input.rdbuf()->snextc())
+        {
+          // end of file, quit
+          if (Traits::eq_int_type(Traits::eof(), meta))
+          {
+            state |= rsl::io::iostate::eofbit;
+            break;
+          }
+          // got a delimiter, discard it and quit
+          else if (Traits::eq_int_type(meta, meta_delim))
+          {
+            changed = true;
+            input.rdbuf()->sbumpc();
+            break;
+          }
+          // string too large, quit
+          else if (str.max_size() <= str.size())
+          {
+            state |= rsl::io::iostate::failbit;
+            break;
+          }
+          // got a character, add it to string
+          else
+          {
+            str += Traits::to_char_type(meta);
+            changed = true;
+          }
+        }
+      }
+
+      if (!changed)
+      {
+        state |= rsl::io::iostate::failbit;
+      }
+
+      input.setstate(state);
       return input;
     }
 

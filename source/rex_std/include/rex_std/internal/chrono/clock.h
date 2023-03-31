@@ -49,6 +49,11 @@ namespace rsl
         {
           return time_point(duration(rsl::internal::get_time_in_ticks()));
         }
+
+        REX_NO_DISCARD static __time64_t to_time_t(const time_point& time)
+        {
+          return duration_cast<seconds>(time.time_since_epoch()).count();
+        }
       };
 
       template <typename Duration>

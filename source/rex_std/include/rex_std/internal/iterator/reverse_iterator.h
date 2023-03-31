@@ -116,11 +116,11 @@ namespace rsl
 
       constexpr reference operator[](card32 index)
       {
-        return *(this + index);
+        return *(*this + index);
       }
       constexpr const_reference operator[](card32 index) const
       {
-        return *(this + index);
+        return *(*this + index);
       }
 
     private:

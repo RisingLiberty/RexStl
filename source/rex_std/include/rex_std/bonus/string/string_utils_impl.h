@@ -480,15 +480,15 @@ namespace rsl
       SizeType to_find_length = string_length(toFindBegin);
       return rfind<SizeType>(srcBegin, srcEnd, toFindBegin, to_find_length, defaultValue);
     }
-    template <typename SizeType, typename Iterator>
-    constexpr SizeType find_first_of(Iterator srcBegin, SizeType numCharsToCheck, Iterator toFindBegin, SizeType toFindLength, SizeType defaultValue)
+    template <typename SizeType, typename Iterator1, typename Iterator2>
+    constexpr SizeType find_first_of(Iterator1 srcBegin, SizeType numCharsToCheck, Iterator2 toFindBegin, SizeType toFindLength, SizeType defaultValue)
     {
-      character_lookup<typename Iterator::value_type> lookup(iterator_to_pointer(toFindBegin), toFindLength);
+      character_lookup<typename rsl::iterator_traits<Iterator2>::value_type> lookup(iterator_to_pointer(toFindBegin), toFindLength);
 
-      for(SizeType i = 0; i < numCharsToCheck; ++i)
+      for (SizeType i = 0; i < numCharsToCheck; ++i)
       {
         auto c = srcBegin[i];
-        if(lookup.exists(c))
+        if (lookup.exists(c))
         {
           return i;
         }
@@ -496,8 +496,8 @@ namespace rsl
 
       return defaultValue;
     }
-    template <typename SizeType, typename Iterator>
-    constexpr SizeType find_first_of(Iterator srcBegin, SizeType numCharsToCheck, Iterator toFindBegin, SizeType defaultValue)
+    template <typename SizeType, typename Iterator1, typename Iterator2>
+    constexpr SizeType find_first_of(Iterator1 srcBegin, SizeType numCharsToCheck, Iterator2 toFindBegin, SizeType defaultValue)
     {
       SizeType to_find_length = string_length(toFindBegin);
       return find_first_of<SizeType>(srcBegin, numCharsToCheck, toFindBegin, to_find_length, defaultValue);
