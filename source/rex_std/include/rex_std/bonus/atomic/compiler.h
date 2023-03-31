@@ -3,20 +3,6 @@
 #include "rex_std/bonus/defines.h"
 
 /////////////////////////////////////////////////////////////////////////////////
-//
-// Include the compiler specific implementations
-//
-#if defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
-
-  #include "gcc/compiler_gcc.h"
-
-#elif defined(REX_COMPILER_MSVC)
-
-  #include "msvc/compiler_msvc.h"
-
-#endif
-
-/////////////////////////////////////////////////////////////////////////////////
 
 namespace rsl
 {
@@ -68,24 +54,3 @@ namespace rsl
 } // namespace rsl
 
 /////////////////////////////////////////////////////////////////////////////////
-
-#include "compiler_add_fetch.h"
-#include "compiler_and_fetch.h"
-#include "compiler_barrier.h"
-#include "compiler_cmpxchg_strong.h"
-#include "compiler_cmpxchg_weak.h"
-#include "compiler_cpu_pause.h"
-#include "compiler_exchange.h"
-#include "compiler_fetch_add.h"
-#include "compiler_fetch_and.h"
-#include "compiler_fetch_or.h"
-#include "compiler_fetch_sub.h"
-#include "compiler_fetch_xor.h"
-#include "compiler_load.h"
-#include "compiler_memory_barrier.h"
-#include "compiler_or_fetch.h"
-#include "compiler_signal_fence.h"
-#include "compiler_store.h"
-#include "compiler_sub_fetch.h"
-#include "compiler_thread_fence.h"
-#include "compiler_xor_fetch.h"

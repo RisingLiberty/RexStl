@@ -8,8 +8,6 @@
 #include "rex_std/bonus/compiler.h"
 #include "rex_std/bonus/utility/always_false.h"
 
-#include "rex_std/bonus/atomic/atomic_macros.h"
-
 #include "rex_std/bonus/atomic/atomic_add_fetch.h"
 #include "rex_std/bonus/atomic/atomic_and_fetch.h"
 #include "rex_std/bonus/atomic/atomic_cmpxchg_strong.h"
@@ -32,9 +30,6 @@
 #include "rex_std/bonus/atomic/atomic_store.h"
 #include "rex_std/bonus/atomic/atomic_thread_fence.h"
 #include "rex_std/bonus/atomic/atomic_xor_fetch.h"
-
-
-
 
 #include "rex_std/bonus/atomic/atomic_casts.h"
 #include "rex_std/bonus/atomic/atomic_memory_order.h"
