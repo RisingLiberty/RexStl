@@ -199,7 +199,7 @@ namespace rsl
 
         return traits_type::not_eof(c);
       }
-      int_type overflow(int_type c)
+      int_type overflow(int_type c) override
       {
         char_type ch = traits_type::to_char_type(c);
         if(overflown(&ch, 1) == -1)
@@ -248,7 +248,7 @@ namespace rsl
         return count;
       }
 
-      pos_type seekoff(off_type off, io::seekdir dir, io::openmode which = io::openmode::in | io::openmode::out)
+      pos_type seekoff(off_type off, io::seekdir dir, io::openmode which = io::openmode::in | io::openmode::out) override
       {
         const pos_type buffer_length = static_cast<off_type>(m_buffer_end - m_buffer);
         const pos_type read_off      = static_cast<off_type>(m_current_read - m_buffer);
@@ -304,7 +304,7 @@ namespace rsl
 
         return pos_type(-1);
       }
-      pos_type seekpos(pos_type sp, io::openmode which = io::openmode::in | io::openmode::out)
+      pos_type seekpos(pos_type sp, io::openmode which = io::openmode::in | io::openmode::out) override
       {
         const auto buffer_length = m_buffer_end - m_buffer;
         if(sp < 0 || sp > buffer_length)
