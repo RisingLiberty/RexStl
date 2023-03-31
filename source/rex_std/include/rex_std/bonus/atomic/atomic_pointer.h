@@ -1,8 +1,3 @@
-
-
-#ifndef REX_ATOMIC_INTERNAL_POINTER_H
-#define REX_ATOMIC_INTERNAL_POINTER_H
-
 #pragma once
 
 namespace rsl
@@ -234,4 +229,3 @@ namespace rsl
 
 } // namespace rsl
 
-#endif /* REX_ATOMIC_INTERNAL_POINTER_H */

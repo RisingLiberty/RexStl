@@ -1,8 +1,3 @@
-
-
-#ifndef REX_ATOMIC_INTERNAL_STATIC_ASSERTS_H
-#define REX_ATOMIC_INTERNAL_STATIC_ASSERTS_H
-
 #pragma once
 
 #include "rex_std/bonus/utility/always_false.h"
@@ -74,4 +69,3 @@ namespace rsl
 
 } // namespace rsl
 
-#endif /* REX_ATOMIC_INTERNAL_STATIC_ASSERTS_H */

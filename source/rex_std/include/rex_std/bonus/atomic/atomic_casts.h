@@ -1,8 +1,3 @@
-
-
-#ifndef REX_ATOMIC_INTERNAL_CASTS_H
-#define REX_ATOMIC_INTERNAL_CASTS_H
-
 #pragma once
 
 #include "rex_std/bonus/defines.h"
@@ -168,4 +163,3 @@ namespace rsl
 
 #define REX_ATOMIC_NEGATE_OPERAND(val) rsl::internal::atomic_negate_operand((val))
 
-#endif /* REX_ATOMIC_INTERNAL_CASTS_H */

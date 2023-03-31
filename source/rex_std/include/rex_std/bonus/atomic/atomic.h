@@ -1,3 +1,15 @@
+// ============================================
+//
+// REX - STANDARD LIBRARY IMPLEMENTATION
+//
+// Author: Nick De Breuck
+// Twitter: @nick_debreuck
+//
+// File: atomic.h
+// Copyright (c) Nick De Breuck 2022
+//
+// ============================================
+
 #pragma once
 
 // NOLINTBEGIN(llvm-include-order)

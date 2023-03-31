@@ -1,8 +1,3 @@
-
-
-#ifndef REX_ATOMIC_INTERNAL_SIZE_ALIGNED_H
-#define REX_ATOMIC_INTERNAL_SIZE_ALIGNED_H
-
 #pragma once
 
 namespace rsl
@@ -163,5 +158,3 @@ namespace rsl
   } // namespace v1
 
 } // namespace rsl
-
-#endif /* REX_ATOMIC_INTERNAL_SIZE_ALIGNED_H */

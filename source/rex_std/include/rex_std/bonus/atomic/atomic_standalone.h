@@ -1,8 +1,3 @@
-
-
-#ifndef REX_ATOMIC_INTERNAL_STANDALONE_H
-#define REX_ATOMIC_INTERNAL_STANDALONE_H
-
 #pragma once
 
 namespace rsl
@@ -394,4 +389,3 @@ namespace rsl
 
 } // namespace rsl
 
-#endif /* REX_ATOMIC_INTERNAL_STANDALONE_H */
