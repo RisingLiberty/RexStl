@@ -175,6 +175,15 @@ namespace rsl
       {
         return m_bucket;
       }
+      void increment_bucket()
+      {
+        ++m_bucket;
+        while (*m_bucket == nullptr)
+        {
+          ++m_bucket;
+        }
+        m_node = *m_bucket;
+      }
 
     private:
       void increment()
@@ -185,16 +194,6 @@ namespace rsl
         {
           m_node = *++m_bucket;
         }
-      }
-
-      void increment_bucket()
-      {
-        ++m_bucket;
-        while(*m_bucket == nullptr)
-        {
-          ++m_bucket;
-        }
-        m_node = *m_bucket;
       }
 
     private:

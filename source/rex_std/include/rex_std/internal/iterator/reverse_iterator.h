@@ -13,6 +13,8 @@
 #pragma once
 
 #include "rex_std/bonus/types.h"
+#include "rex_std/internal/iterator/iterator_traits.h"
+#include "rex_std/internal/type_traits/void.h"
 
 namespace rsl
 {
@@ -25,13 +27,13 @@ namespace rsl
     public:
       using iterator_type = Iter;
 
-      using value_type        = typename iterator_type::value_type;
-      using pointer           = typename iterator_type::pointer;
-      using const_pointer     = typename iterator_type::const_pointer;
-      using reference         = typename iterator_type::reference;
-      using const_reference   = typename iterator_type::const_reference;
-      using iterator_category = typename iterator_type::iterator_category;
-      using difference_type   = typename iterator_type::difference_type;
+      using value_type        = typename iterator_traits<iterator_type>::value_type;
+      using pointer           = typename iterator_traits<iterator_type>::pointer;
+      using const_pointer     = typename iterator_traits<iterator_type>::const_pointer;
+      using reference         = typename iterator_traits<iterator_type>::reference;
+      using const_reference   = typename iterator_traits<iterator_type>::const_reference;
+      using iterator_category = typename iterator_traits<iterator_type>::iterator_category;
+      using difference_type   = typename iterator_traits<iterator_type>::difference_type;
 
       constexpr explicit reverse_iterator(Iter baseIterator)
           : m_base_iterator(baseIterator)

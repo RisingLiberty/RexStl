@@ -59,7 +59,7 @@ namespace rsl
     template <typename T>
     struct hash;
 
-    template <typename T>
+    template <typename T, typename>
     class atomic;
 
   } // namespace v1
