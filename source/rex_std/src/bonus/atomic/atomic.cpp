@@ -10,7 +10,7 @@
 //
 // ============================================
 
-#include "rex_std/bonus/atomic/compiler/compiler.h"
+#include "rex_std/bonus/atomic/compiler.h"
 
 namespace rsl
 {
