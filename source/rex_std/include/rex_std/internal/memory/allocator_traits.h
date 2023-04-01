@@ -29,7 +29,7 @@ namespace rsl
         using type = void;
       };
       template <typename T>
-      struct get_value_type<T, void_t<typename T::pointer>>
+      struct get_value_type<T, void_t<typename T::value_type>>
       {
         using type = typename T::value_type;
       };

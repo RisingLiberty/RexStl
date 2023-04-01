@@ -68,7 +68,7 @@ namespace rsl
           , m_current_read(nullptr)
           , m_current_write(nullptr)
           , m_openmode(which)
-          , m_allocator()
+          , m_allocator(s.get_allocator())
       {
         str(s);
       }
