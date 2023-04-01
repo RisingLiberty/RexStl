@@ -1751,26 +1751,7 @@ namespace rsl
       {
         return size() * 2 + numElementsToAdd + 1;
       }
-      // replace substring with given substring, doesn't perform any checking
-      basic_string& replace(size_type pos, size_type count1, pointer str, size_type count2)
-      {
-        if(count2 == count1)
-        {
-          traits_type::copy(rsl::addressof(m_begin[pos]), str, count2);
-        }
-        else if(count2 > count1)
-        {
-          prepare_for_new_insert(pos + count1, count2 - count1);
-          traits_type::copy(rsl::addressof(m_begin[pos]), str, count2);
-        }
-        else
-        {
-          traits_type::copy(rsl::addressof(m_begin[pos]), str, str);
-          erase(pos + count2, count1 - count2);
-        }
-
-        return *this;
-      }
+      
       // returns the allocator_type used by the string
       allocator_type& get_mutable_allocator()
       {
