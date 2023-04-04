@@ -43,7 +43,7 @@ namespace rsl
       {
         using type = typename T::const_reference;
       };
-    }
+    } // namespace internal
 
     /// RSL Comment: Different from ISO C++ Standard at time of writing (17/Aug/2022)
     // in C++20, this structure changed making it more complex to implement.
@@ -53,34 +53,34 @@ namespace rsl
     struct iterator_traits
     {
       using iterator_category = typename Iterator::iterator_category;
-      using value_type = typename Iterator::value_type;
-      using difference_type = typename Iterator::difference_type;
-      using pointer = typename Iterator::pointer;
-      using const_pointer = typename internal::get_itr_pointer_type<Iterator>::type;
-      using reference = typename Iterator::reference;
-      using const_reference = typename internal::get_itr_reference_type<Iterator>::type;
+      using value_type        = typename Iterator::value_type;
+      using difference_type   = typename Iterator::difference_type;
+      using pointer           = typename Iterator::pointer;
+      using const_pointer     = typename internal::get_itr_pointer_type<Iterator>::type;
+      using reference         = typename Iterator::reference;
+      using const_reference   = typename internal::get_itr_reference_type<Iterator>::type;
     };
     template <typename T>
     struct iterator_traits<T*>
     {
       using iterator_category = rsl::random_access_iterator_tag;
-      using value_type = T;
-      using difference_type = ptrdiff;
-      using pointer = T*;
-      using const_pointer = const T*;
-      using reference = T&;
-      using const_reference = const T&;
+      using value_type        = T;
+      using difference_type   = ptrdiff;
+      using pointer           = T*;
+      using const_pointer     = const T*;
+      using reference         = T&;
+      using const_reference   = const T&;
     };
     template <typename T>
     struct iterator_traits<const T*>
     {
       using iterator_category = rsl::random_access_iterator_tag;
-      using value_type = T;
-      using difference_type = ptrdiff;
-      using pointer = const T*;
-      using const_pointer = const T*;
-      using reference = const T&;
-      using const_reference = const T&;
+      using value_type        = T;
+      using difference_type   = ptrdiff;
+      using pointer           = const T*;
+      using const_pointer     = const T*;
+      using reference         = const T&;
+      using const_reference   = const T&;
     };
 
   } // namespace v1

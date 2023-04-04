@@ -54,8 +54,8 @@ namespace rsl
       using allocator_type         = Allocator;
       using reference              = value_type&;
       using const_reference        = const value_type&;
-      using pointer                = typename rsl::allocator_traits<Allocator>::template pointer_or<value_type*>;
-      using const_pointer          = typename rsl::allocator_traits<Allocator>::template const_pointer_or<const value_type*>;
+      using pointer                = typename rsl::allocator_traits<Allocator>::template non_void_pointer_or<value_type*>;
+      using const_pointer          = typename rsl::allocator_traits<Allocator>::template non_void_const_pointer_or<const value_type*>;
       using iterator               = random_access_iterator<T>;
       using const_iterator         = const_random_access_iterator<T>;
       using reverse_iterator       = rsl::reverse_iterator<iterator>;

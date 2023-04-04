@@ -53,6 +53,26 @@ namespace rsl
       {
         using type = typename T::pointer;
       };
+
+      template <typename Pointer, typename U>
+      struct get_non_void_pointer_or_impl
+      {
+        using type = Pointer;
+      };
+
+      template <typename U>
+      struct get_non_void_pointer_or_impl<void*, U>
+      {
+        using type = U;
+      };
+
+      template <typename T, typename U>
+      struct non_void_pointer_or
+      {
+        using type = get_pointer_type_or<T, U>::template type;
+        using pointer = typename internal::get_non_void_pointer_or_impl<type, U>::type;
+      };
+
       template <typename T, typename = void>
       struct get_const_pointer_type
       {
@@ -80,6 +100,13 @@ namespace rsl
       {
         using type = typename T::const_pointer;
       };
+      template <typename T, typename U>
+      struct get_non_void_const_pointer_or
+      {
+        using type = get_const_pointer_type_or<T, U>::template type;
+        using pointer = typename internal::get_non_void_pointer_or_impl<type, U>::type;
+      };
+
       template <typename T, typename = void>
       struct get_void_pointer_type
       {
@@ -143,9 +170,13 @@ namespace rsl
       using pointer = typename internal::get_pointer_type<Alloc>::type;
       template <typename T>
       using pointer_or    = typename internal::get_pointer_type_or<Alloc, T>::type;
+      template <typename T>
+      using non_void_pointer_or = typename internal::get_non_void_pointer_or_impl<pointer_or<T>, T>::type;
       using const_pointer = typename internal::get_const_pointer_type<Alloc>::type;
       template <typename T>
       using const_pointer_or   = typename internal::get_const_pointer_type_or<Alloc, T>::type;
+      template <typename T>
+      using non_void_const_pointer_or = typename internal::get_non_void_const_pointer_or<const_pointer_or<T>, T>::type;
       using void_pointer       = typename internal::get_void_pointer_type<Alloc>::type;
       using const_void_pointer = typename internal::get_const_void_pointer_type<Alloc>::type;
 

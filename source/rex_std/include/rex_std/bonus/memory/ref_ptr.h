@@ -392,11 +392,11 @@ namespace rsl
         }
 
         template <typename U>
-        friend void internal::allocate_shared_helper(shared_ptr<U>&, ref_count_base*, U*);
+        friend void allocate_shared_helper(shared_ptr<U>&, ref_count_base*, U*);
 
       private:
         T* m_ptr;
-        internal::ref_count_base* m_ref_count;
+        ref_count_base* m_ref_count;
       };
     } // namespace internal
   }   // namespace v1

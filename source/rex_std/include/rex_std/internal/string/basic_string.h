@@ -68,8 +68,8 @@ namespace rsl
       using difference_type = int32;   /// RSL Comment: Different from ISO C++ Standard at time of writing (28/Jun/2022)
       using reference       = value_type&;
       using const_reference = const value_type&;
-      using pointer         = typename rsl::allocator_traits<allocator_type>::template pointer_or<value_type*>;
-      using const_pointer   = typename rsl::allocator_traits<allocator_type>::template const_pointer_or<const value_type*>;
+      using pointer         = value_type*; /// RSL Comment: Different from ISO C++ Standard at time of writing (01/Apr/2023)
+      using const_pointer   = const value_type*; /// RSL Comment: Different from ISO C++ Standard at time of writing (01/Apr/2023)
 
       using iterator               = random_access_iterator<value_type>;
       using const_iterator         = const_random_access_iterator<value_type>;
@@ -1751,7 +1751,6 @@ namespace rsl
       {
         return size() * 2 + numElementsToAdd + 1;
       }
-      
       // returns the allocator_type used by the string
       allocator_type& get_mutable_allocator()
       {
@@ -2170,32 +2169,32 @@ namespace rsl
       using my_is = basic_istream<Char, Traits>;
 
       rsl::io::iostate state = rsl::io::iostate::goodbit;
-      bool changed = false;
+      bool changed           = false;
       const typename my_is::sentry is_ok(input);
 
-      if (is_ok)
+      if(is_ok)
       {
         str.erase();
         const typename Traits::int_type meta_delim = Traits::to_int_type(delim);
-        typename Traits::int_type meta = input.rdbuf()->sgetc();
+        typename Traits::int_type meta             = input.rdbuf()->sgetc();
 
-        for (;; meta = input.rdbuf()->snextc())
+        for(;; meta = input.rdbuf()->snextc())
         {
           // end of file, quit
-          if (Traits::eq_int_type(Traits::eof(), meta))
+          if(Traits::eq_int_type(Traits::eof(), meta))
           {
             state |= rsl::io::iostate::eofbit;
             break;
           }
           // got a delimiter, discard it and quit
-          else if (Traits::eq_int_type(meta, meta_delim))
+          else if(Traits::eq_int_type(meta, meta_delim))
           {
             changed = true;
             input.rdbuf()->sbumpc();
             break;
           }
           // string too large, quit
-          else if (str.max_size() <= str.size())
+          else if(str.max_size() <= str.size())
           {
             state |= rsl::io::iostate::failbit;
             break;
@@ -2209,7 +2208,7 @@ namespace rsl
         }
       }
 
-      if (!changed)
+      if(!changed)
       {
         state |= rsl::io::iostate::failbit;
       }
