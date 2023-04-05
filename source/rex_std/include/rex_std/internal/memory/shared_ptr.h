@@ -128,7 +128,7 @@ namespace rsl
       }
       // constructs a shared pointer which shares ownership with the sharedPtr provided
       template <typename U>
-      shared_ptr(const shared_ptr<U>& sharedPtr)
+      shared_ptr(const shared_ptr<U>& sharedPtr) // NOLINT(google-explicit-constructor)
           : internal::ref_ptr<T>(sharedPtr)
       {
         internal::ref_ptr<T>::safe_inc_ref();

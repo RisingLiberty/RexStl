@@ -485,10 +485,10 @@ namespace rsl
     {
       character_lookup<typename rsl::iterator_traits<Iterator2>::value_type> lookup(iterator_to_pointer(toFindBegin), toFindLength);
 
-      for (SizeType i = 0; i < numCharsToCheck; ++i)
+      for(SizeType i = 0; i < numCharsToCheck; ++i)
       {
         auto c = srcBegin[i];
-        if (lookup.exists(c))
+        if(lookup.exists(c))
         {
           return i;
         }

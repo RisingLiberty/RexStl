@@ -71,7 +71,7 @@ namespace detail
       }
     };
 
-    rsl::unique_ptr<node<>> head_;
+    rsl::unique_ptr<node<>> m_head;
 
   public:
     template <typename T, typename Arg>
@@ -79,8 +79,8 @@ namespace detail
     {
       auto new_node  = rsl::unique_ptr<typed_node<T>>(new typed_node<T>(arg));
       auto& value    = new_node->value;
-      new_node->next = rsl::move(head_);
-      head_          = rsl::move(new_node);
+      new_node->next = rsl::move(m_head);
+      m_head          = rsl::move(new_node);
       return value;
     }
   };

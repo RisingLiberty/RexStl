@@ -68,7 +68,7 @@ namespace rsl
       using difference_type = int32;   /// RSL Comment: Different from ISO C++ Standard at time of writing (28/Jun/2022)
       using reference       = value_type&;
       using const_reference = const value_type&;
-      using pointer         = value_type*; /// RSL Comment: Different from ISO C++ Standard at time of writing (01/Apr/2023)
+      using pointer         = value_type*;       /// RSL Comment: Different from ISO C++ Standard at time of writing (01/Apr/2023)
       using const_pointer   = const value_type*; /// RSL Comment: Different from ISO C++ Standard at time of writing (01/Apr/2023)
 
       using iterator               = random_access_iterator<value_type>;

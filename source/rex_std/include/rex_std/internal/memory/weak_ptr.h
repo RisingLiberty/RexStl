@@ -25,20 +25,21 @@ namespace rsl
     public:
       using element_type = T;
 
-      constexpr weak_ptr() {}
+      constexpr weak_ptr() = default;
+
       weak_ptr(const weak_ptr& ptr)
           : internal::ref_ptr<T>(ptr)
       {
         internal::ref_ptr<T>::safe_inc_weak_ref();
       }
       template <typename U>
-      weak_ptr(const weak_ptr<U>& ptr)
+      weak_ptr(const weak_ptr<U>& ptr) // NOLINT(google-explicit-constructor)
           : internal::ref_ptr<T>(ptr)
       {
         internal::ref_ptr<T>::safe_inc_weak_ref();
       }
       template <typename U>
-      weak_ptr(const rsl::shared_ptr<U>& ptr)
+      weak_ptr(const rsl::shared_ptr<U>& ptr) // NOLINT(google-explicit-constructor)
           : internal::ref_ptr<T>(ptr)
       {
         internal::ref_ptr<T>::safe_inc_weak_ref();
@@ -48,7 +49,7 @@ namespace rsl
       {
       }
       template <typename U>
-      weak_ptr(weak_ptr<U>&& ptr)
+      weak_ptr(weak_ptr<U>&& ptr) // NOLINT(google-explicit-constructor)
           : internal::ref_ptr<T>(rsl::move(ptr))
       {
       }

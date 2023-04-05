@@ -427,18 +427,18 @@ namespace rsl
       }
       size_type erase(const key_type& k)
       {
-        const hash_result hr = m_cp_key_hash_and_bucket_count.first()(k);
-        const size_type n = static_cast<size_type>(bucket_index(hr, bucket_count()));
+        const hash_result hr                = m_cp_key_hash_and_bucket_count.first()(k);
+        const size_type n                   = static_cast<size_type>(bucket_index(hr, bucket_count()));
         const size_type element_count_saved = size();
 
         node_type** bucket_array = m_cp_key_equal_and_bucket_array.second() + n;
 
-        while (*bucket_array && !m_cp_key_equal_and_bucket_array.first()(k, m_cp_extract_key_and_rehash_policy.first()((*bucket_array)->value)))
+        while(*bucket_array && !m_cp_key_equal_and_bucket_array.first()(k, m_cp_extract_key_and_rehash_policy.first()((*bucket_array)->value)))
         {
           bucket_array = &(*bucket_array)->next;
         }
 
-        while (*bucket_array && m_cp_key_equal_and_bucket_array.first()(k, m_cp_extract_key_and_rehash_policy.first()((*bucket_array)->value)))
+        while(*bucket_array && m_cp_key_equal_and_bucket_array.first()(k, m_cp_extract_key_and_rehash_policy.first()((*bucket_array)->value)))
         {
           node_type* node = *bucket_array;
           *bucket_array   = node->next;

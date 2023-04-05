@@ -162,4 +162,3 @@ namespace rsl
 #define REX_ATOMIC_TYPE_PUN_CAST(PunType, fromType) rsl::internal::atomic_type_pun_cast<PunType>((fromType))
 
 #define REX_ATOMIC_NEGATE_OPERAND(val) rsl::internal::atomic_negate_operand((val))
-

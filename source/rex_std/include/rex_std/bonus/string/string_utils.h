@@ -155,7 +155,7 @@ namespace rsl
     template <typename SizeType, typename Iterator1, typename Iterator2>
     constexpr SizeType find_first_of(Iterator1 srcBegin, SizeType numCharsToCheck, Iterator2 toFindBegin, SizeType toFindLength, SizeType defaultValue);
     template <typename SizeType, typename Iterator1, typename Iterator2>
-    constexpr SizeType find_first_of(Iterator1 srcBegin, SizeType numCharsToCheck, Iterator2 toFindBegin, SizeType defaultValue);    
+    constexpr SizeType find_first_of(Iterator1 srcBegin, SizeType numCharsToCheck, Iterator2 toFindBegin, SizeType defaultValue);
     template <typename SizeType, typename Iterator>
     constexpr SizeType find_first_not_of(Iterator srcBegin, SizeType numCharsToCheck, Iterator toFindBegin, SizeType toFindLength, SizeType defaultValue);
     template <typename SizeType, typename Iterator>

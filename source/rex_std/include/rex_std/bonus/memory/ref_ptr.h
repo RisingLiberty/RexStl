@@ -203,7 +203,7 @@ namespace rsl
         /// RSL Comment: Different from ISO C++ Standard at time of writing (04/Aug/2022)
         // the pointer provided cannot be nullptr, in the standard, it can be
         template <typename U, typename Deleter>
-        ref_ptr(U* ptr, Deleter d = default_delete<T>())
+        explicit ref_ptr(U* ptr, Deleter d = default_delete<T>())
             : m_ptr(ptr)
             , m_ref_count(nullptr)
         {
@@ -213,7 +213,7 @@ namespace rsl
         /// RSL Comment: Different from ISO C++ Standard at time of writing (04/Aug/2022)
         // in the standard, the use count after this construct call == 1
         template <typename U, typename Deleter>
-        ref_ptr(nullptr_t, Deleter d = default_delete<T>())
+        explicit ref_ptr(nullptr_t, Deleter d = default_delete<T>())
             : m_ptr(nullptr)
             , m_ref_count(nullptr)
         {
@@ -257,7 +257,7 @@ namespace rsl
         {
         }
         template <typename U>
-        ref_ptr(const ref_ptr<U>& other)
+        ref_ptr(const ref_ptr<U>& other) // NOLINT(google-explicit-constructor)
             : m_ptr(other.m_ptr)
             , m_ref_count(other.m_ref_count)
         {
@@ -270,13 +270,15 @@ namespace rsl
           other.m_ref_count = nullptr;
         }
         template <typename U>
-        ref_ptr(ref_ptr<U>&& other)
+        ref_ptr(ref_ptr<U>&& other)  // NOLINT(google-explicit-constructor)
             : m_ptr(other.m_ptr)
             , m_ref_count(other.m_ref_count)
         {
           other.m_ptr       = nullptr;
           other.m_ref_count = nullptr;
         }
+
+        ~ref_ptr() = default;
 
         /// RSL Comment: Different from ISO C++ Standard at time of writing (05/Aug/2022)
         // the standard doesn't propagate const, rex does

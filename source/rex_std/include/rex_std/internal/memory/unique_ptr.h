@@ -110,7 +110,7 @@ namespace rsl
       template <
           typename T2, typename Deleter2,
           enable_if_t<conjunction_v<negation<is_array<T2>>, is_convertible<typename unique_ptr<T2, Deleter2>::pointer, pointer>, conditional_t<is_reference_v<Deleter>, is_same<Deleter, Deleter>, is_convertible<Deleter2, Deleter>>>, bool> = true>
-      unique_ptr(unique_ptr<T2, Deleter2>&& right)
+      unique_ptr(unique_ptr<T2, Deleter2>&& right) // NOLINT(google-explicit-constructor)
           : m_cp_ptr_and_deleter(right.release(), rsl::forward<Deleter2>(right.get_deleter()))
       {
       }

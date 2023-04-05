@@ -58,12 +58,12 @@ namespace rsl
       }
 
       // construct (must value-initialize m_weak_ptr)
-      enable_shared_from_this(const enable_shared_from_this&)
+      enable_shared_from_this(const enable_shared_from_this& /*other*/)
           : m_weak_ptr()
       {
       }
 
-      enable_shared_from_this& operator=(const enable_shared_from_this&)
+      enable_shared_from_this& operator=(const enable_shared_from_this& /*other*/)
       {
         // assign (must not change m_weak_ptr)
         return *this;

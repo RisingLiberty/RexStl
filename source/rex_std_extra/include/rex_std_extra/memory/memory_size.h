@@ -31,8 +31,9 @@ namespace rsl
     {
     public:
       constexpr memory_size()
-        : m_size_in_bytes(0)
-      {}
+          : m_size_in_bytes(0)
+      {
+      }
 
       constexpr explicit memory_size(card64 size_in_bytes)
           : m_size_in_bytes(size_in_bytes)

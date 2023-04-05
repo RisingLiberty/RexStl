@@ -142,7 +142,7 @@ namespace rsl
         if(str.size() > buffer_size)
         {
           m_allocator.deallocate(m_buffer, buffer_size);
-          m_buffer = static_cast<char_type*>(m_allocator.allocate(str.size() + 1));
+          m_buffer     = static_cast<char_type*>(m_allocator.allocate(str.size() + 1));
           m_buffer_end = m_buffer + str.size();
         }
 

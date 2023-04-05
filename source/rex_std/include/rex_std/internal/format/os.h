@@ -281,10 +281,10 @@
 //// invalid parameter handler with _set_invalid_parameter_handler.
 // class FMT_API file {
 //  private:
-//   int fd_;  // File descriptor.
+//   int m_fd;  // File descriptor.
 //
 //   // Constructs a file object with a given descriptor.
-//   explicit file(int fd) : fd_(fd) {}
+//   explicit file(int fd) : m_fd(fd) {}
 //
 //  public:
 //   // Possible values for the oflag argument to the constructor.
@@ -298,7 +298,7 @@
 //   };
 //
 //   // Constructs a file object which doesn't represent any file.
-//   file() noexcept : fd_(-1) {}
+//   file() noexcept : m_fd(-1) {}
 //
 //   // Opens a file and constructs a file object representing this file.
 //   file(cstring_view path, int oflag);
@@ -307,13 +307,13 @@
 //   file(const file&) = delete;
 //   void operator=(const file&) = delete;
 //
-//   file(file&& other) noexcept : fd_(other.fd_) { other.fd_ = -1; }
+//   file(file&& other) noexcept : m_fd(other.m_fd) { other.m_fd = -1; }
 //
 //   // Move assignment is not noexcept because close may throw.
 //   file& operator=(file&& other) {
 //     close();
-//     fd_ = other.fd_;
-//     other.fd_ = -1;
+//     m_fd = other.m_fd;
+//     other.m_fd = -1;
 //     return *this;
 //   }
 //
@@ -321,7 +321,7 @@
 //   ~file() noexcept;
 //
 //   // Returns the file descriptor.
-//   int descriptor() const noexcept { return fd_; }
+//   int descriptor() const noexcept { return m_fd; }
 //
 //   // Closes the file.
 //   void close();

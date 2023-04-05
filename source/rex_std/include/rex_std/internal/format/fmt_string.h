@@ -65,7 +65,7 @@ namespace rsl
       FMT_CONSTEXPR FMT_INLINE void parse_format_string(basic_string_view<Char> formatStr, Handler&& handler);
 
       template <typename Char, typename SpecHandler>
-      FMT_CONSTEXPR FMT_INLINE auto parse_format_specs(const Char* begin, const Char* end, SpecHandler&& handler) -> const Char*;
+      FMT_CONSTEXPR FMT_INLINE const Char* parse_format_specs(const Char* begin, const Char* end, SpecHandler&& handler);
 
       template <typename T, typename ParseContext>
       FMT_CONSTEXPR auto parse_format_specs(ParseContext& ctx) -> decltype(rsl::iterator_to_pointer(ctx.begin()));
@@ -110,15 +110,15 @@ namespace rsl
 
         FMT_CONSTEXPR void on_text(const Char* /*unused*/, const Char* /*unused*/) {}
 
-        FMT_CONSTEXPR auto on_arg_id() -> int
+        FMT_CONSTEXPR int on_arg_id()
         {
           return m_context.next_arg_id();
         }
-        FMT_CONSTEXPR auto on_arg_id(int id) -> int
+        FMT_CONSTEXPR int on_arg_id(int id)
         {
           return m_context.check_arg_id(id), id;
         }
-        FMT_CONSTEXPR auto on_arg_id(basic_string_view<Char> id) -> int
+        FMT_CONSTEXPR int on_arg_id(basic_string_view<Char> id)
         {
 #if FMT_USE_NONTYPE_TEMPLATE_ARGS
           auto index = get_arg_index_by_name<Args...>(id);
@@ -134,7 +134,7 @@ namespace rsl
 
         FMT_CONSTEXPR void on_replacement_field(int /*unused*/, const Char* /*unused*/) {}
 
-        FMT_CONSTEXPR auto on_format_specs(int id, const Char* begin, const Char* /*unused*/) -> const Char*
+        FMT_CONSTEXPR const Char* on_format_specs(int id, const Char* begin, const Char* /*unused*/)
         {
           m_context.advance_to(m_context.begin() + (static_cast<count_t>(begin - &*m_context.begin())));
           // id >= 0 check is a workaround for gcc 10 bug (#2065).
@@ -166,12 +166,12 @@ namespace rsl
       }
 
       template <bool B = false>
-      constexpr auto count() -> count_t
+      constexpr count_t count()
       {
         return B ? 1 : 0;
       }
       template <bool B1, bool B2, bool... Tail>
-      constexpr auto count() -> count_t
+      constexpr count_t count()
       {
         return (B1 ? 1 : 0) + count<B2, Tail...>();
       }
