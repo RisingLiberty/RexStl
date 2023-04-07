@@ -159,7 +159,7 @@ namespace rsl
       template <typename... Args, typename S, FMT_ENABLE_IF(is_compile_string<S>::value)>
       void check_format_string(S formatStr)
       {
-        FMT_CONSTEXPR auto s              = basic_string_view<typename S::char_type>(formatStr);
+        FMT_CONSTEXPR basic_string_view<typename S::char_type> s(formatStr);
         using checker                     = format_string_checker<typename S::char_type, error_handler, remove_cvref_t<Args>...>;
         FMT_CONSTEXPR bool invalid_format = (parse_format_string<true>(s, checker(s, {})), true);
         ignore_unused(invalid_format);

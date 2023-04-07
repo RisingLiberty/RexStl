@@ -43,7 +43,7 @@ namespace rsl
 
       condition_variable();
       condition_variable(const condition_variable&) = delete;
-      ~condition_variable();
+      ~condition_variable() = default;
 
       condition_variable& operator=(const condition_variable&) = delete;
 
@@ -128,7 +128,7 @@ namespace rsl
 
       void register_at_thread_exit(unique_lock<mutex>& lock, int* ready);
 
-      void unregister_at_thread_exit(unique_lock<mutex>& lock);
+      static void unregister_at_thread_exit(unique_lock<mutex>& lock);
 
     private:
       impl* internal_impl();

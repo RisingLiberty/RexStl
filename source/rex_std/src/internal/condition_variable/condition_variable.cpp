@@ -69,7 +69,7 @@ namespace rsl
     {
       bool cnd_timedwait(condition_variable::impl* cond, const mutex::native_handle_type mtx, const xtime& target)
       {
-        int res = true;
+        int res = 1;
 
         rsl::internal::xtime now = rsl::internal::xtime::get();
         mtx_clear_owner(mtx);
@@ -78,23 +78,23 @@ namespace rsl
           now = rsl::internal::xtime::get();
           if(target.diff_in_ms(now) == 0)
           {
-            res = false;
+            res = 0;
           }
         }
         mtx_reset_owner(mtx);
-        return res;
+        return res != 0;
       }
 
       inline constexpr card32 num_items = 20;
-      SRWLOCK thread_exit_mtx;
+      SRWLOCK g_thread_exit_mtx;
 
       void lock_thread_exit_mtx()
       {
-        AcquireSRWLockExclusive(&thread_exit_mtx);
+        AcquireSRWLockExclusive(&g_thread_exit_mtx);
       }
       void unlock_thread_exit_mtx()
       {
-        ReleaseSRWLockExclusive(&thread_exit_mtx);
+        ReleaseSRWLockExclusive(&g_thread_exit_mtx);
       }
 
       struct at_thread_exit_data
@@ -112,11 +112,11 @@ namespace rsl
         at_thread_exit_block* next;
       };
 
-      at_thread_exit_block thread_exit_data;
+      at_thread_exit_block g_thread_exit_data;
 
       void cnd_register_at_thread_exit(condition_variable::impl* cnd, const mutex::native_handle_type mtx, int* p)
       {
-        at_thread_exit_block* block = &thread_exit_data;
+        at_thread_exit_block* block = &g_thread_exit_data;
         lock_thread_exit_mtx();
 
         // loop through list of blocks
@@ -136,15 +136,15 @@ namespace rsl
           else
           {
             // find an empty slot
-            for(card32 i = 0; i < num_items; ++i)
+            for(auto & i : block->data)
             {
               // store into empty slot
-              if(block->data[i].mtx == nullptr)
+              if(i.mtx == nullptr)
               {
-                block->data[i].thread_id = GetCurrentThreadId();
-                block->data[i].mtx       = mtx;
-                block->data[i].cv        = cnd;
-                block->data[i].res       = p;
+                i.thread_id = GetCurrentThreadId();
+                i.mtx       = mtx;
+                i.cv        = cnd;
+                i.res       = p;
                 ++block->num_used;
                 break;
               }
@@ -158,7 +158,7 @@ namespace rsl
       }
       void cnd_unregister_at_thread_exit(const mutex::native_handle_type mtx)
       {
-        at_thread_exit_block* block = &thread_exit_data;
+        at_thread_exit_block* block = &g_thread_exit_data;
 
         lock_thread_exit_mtx();
 
@@ -187,7 +187,7 @@ namespace rsl
       m_storage.set<condition_variable::impl>();
     }
 
-    condition_variable::~condition_variable() = default;
+    
 
     void condition_variable::notify_one()
     {

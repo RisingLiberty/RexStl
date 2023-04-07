@@ -26,7 +26,7 @@ namespace rsl
       }
       int32 atomic_read(int32* data)
       {
-        return _InterlockedCompareExchange(reinterpret_cast<volatile long*>(data), 0, 0);
+        return _InterlockedCompareExchange(reinterpret_cast<volatile long*>(data), 0, 0); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
       }
       int64 atomic_read(int64* data)
       {
@@ -34,7 +34,7 @@ namespace rsl
       }
       uint16 atomic_read(uint16* data)
       {
-        return atomic_read(reinterpret_cast<int16*>(data));
+        return static_cast<uint16>(atomic_read(reinterpret_cast<int16*>(data)));
       }
       uint32 atomic_read(uint32* data)
       {
@@ -42,7 +42,7 @@ namespace rsl
       }
       uint64 atomic_read(uint64* data)
       {
-        return _InterlockedCompareExchange(reinterpret_cast<volatile uint64*>(data), 0, 0);
+        return _InterlockedCompareExchange(reinterpret_cast<volatile uint64*>(data), 0, 0); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
       }
     } // namespace internal
 

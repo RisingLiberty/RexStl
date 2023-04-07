@@ -19,7 +19,7 @@ namespace rsl
 {
   inline namespace v1
   {
-    template <size_t bytes>
+    template <size_t Bytes>
     struct atomic_fixed_width_type
     {
     };

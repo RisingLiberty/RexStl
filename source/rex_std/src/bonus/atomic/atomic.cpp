@@ -19,9 +19,9 @@ namespace rsl
     namespace internal
     {
 
-      static void EastlCompilerBarrierDataDependencyFunc(void*) {}
+      static void rex_compiler_barrier_data_dependency_func(void* /*unused*/) {}
 
-      volatile CompilerBarrierDataDependencyFuncPtr gCompilerBarrierDataDependencyFunc = &EastlCompilerBarrierDataDependencyFunc;
+      volatile CompilerBarrierDataDependencyFuncPtr g_compiler_barrier_data_dependency_func = &rex_compiler_barrier_data_dependency_func;
     } // namespace internal
   }   // namespace v1
 } // namespace rsl

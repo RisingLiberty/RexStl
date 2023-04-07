@@ -30,7 +30,7 @@ namespace rsl
       {
       }
 
-      unique_lock(Mutex& mutex)
+      explicit unique_lock(Mutex& mutex)
           : m_mutex(&mutex)
       {
         lock();

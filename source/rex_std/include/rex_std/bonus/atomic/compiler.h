@@ -41,7 +41,7 @@ namespace rsl
        * it isn't removed. This is also useful when writing test code that the compiler may remove.
        */
 
-      typedef void (*CompilerBarrierDataDependencyFuncPtr)(void*);
+      using CompilerBarrierDataDependencyFuncPtr = void (*)(void *);
 
       extern volatile CompilerBarrierDataDependencyFuncPtr g_compiler_barrier_data_dependency_func;
 

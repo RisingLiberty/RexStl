@@ -316,7 +316,7 @@ namespace rsl
       // reads characters from the associated input sequence to the get area and advance the next pointer
       virtual streamsize uflown(char_type* /*s*/, streamsize count)
       {
-        while(count--)
+        while((count--) != 0)
         {
           if(uflow() == Traits::eof())
           {

@@ -280,6 +280,13 @@ namespace rsl
 
         ~ref_ptr() = default;
 
+        ref_ptr& operator=(const ref_ptr&) = default;
+        ref_ptr& operator=(ref_ptr&& other)
+        {
+          rsl::exchange(m_ptr, other.m_ptr, nullptr);
+          rsl::exchange(m_ref_count, other.m_ref_count, nullptr);
+        }
+
         /// RSL Comment: Different from ISO C++ Standard at time of writing (05/Aug/2022)
         // the standard doesn't propagate const, rex does
         // returns a pointer to the managed object

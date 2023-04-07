@@ -25,7 +25,7 @@ namespace rsl
 #if defined(REX_COMPILER_MSVC)
       _ReadWriteBarrier();
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
-      __asm__ __volatile__("" ::: "memory");
+      __asm__ __volatile__("" ::: "memory"); // NOLINT(hicpp-no-assembler)
 #endif
     }
 
