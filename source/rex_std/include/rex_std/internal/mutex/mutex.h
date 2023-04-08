@@ -25,6 +25,7 @@ namespace rsl
 
       mutex(const mutex&) = delete;
       mutex(mutex&&)      = delete;
+      ~mutex() = default;
 
       mutex& operator=(const mutex&) = delete;
       mutex& operator=(mutex&&)      = delete;

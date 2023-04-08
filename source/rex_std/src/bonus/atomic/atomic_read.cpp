@@ -34,7 +34,7 @@ namespace rsl
       }
       uint16 atomic_read(uint16* data)
       {
-        return static_cast<uint16>(atomic_read(reinterpret_cast<int16*>(data)));
+        return static_cast<uint16>(atomic_read(reinterpret_cast<int16*>(data))); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
       }
       uint32 atomic_read(uint32* data)
       {

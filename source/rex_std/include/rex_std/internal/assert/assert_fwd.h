@@ -42,6 +42,6 @@ namespace rsl
 #else
   // #define assert(cond, ...) // NOLINT(readability-identifier-naming)
 
-  #define REX_ASSERT_X(cond, ...) false
+  #define REX_ASSERT_X(cond, ...) (cond) && false
   #define REX_ASSERT(...)         true
 #endif

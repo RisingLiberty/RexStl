@@ -38,7 +38,7 @@ namespace rsl
 
       void destroy() {}
 
-      void wait(const mutex::native_handle_type mtx)
+      void wait(mutex::native_handle_type mtx)
       {
         if(!wait_for(mtx, INFINITE))
         {
@@ -46,9 +46,9 @@ namespace rsl
         }
       }
 
-      bool wait_for(const mutex::native_handle_type mtx, int32 timeoutMs)
+      bool wait_for(mutex::native_handle_type mtx, int32 timeoutMs)
       {
-        SRWLOCK* lock = reinterpret_cast<SRWLOCK*>(mtx_os_handle(mtx));
+        SRWLOCK* lock = reinterpret_cast<SRWLOCK*>(mtx_os_handle(mtx)); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
         return SleepConditionVariableSRW(&m_condition_variable, lock, timeoutMs, 0) != 0;
       }
 
@@ -85,8 +85,8 @@ namespace rsl
         return res != 0;
       }
 
-      inline constexpr card32 num_items = 20;
-      SRWLOCK g_thread_exit_mtx;
+      inline constexpr card32 num_items = 20; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+      SRWLOCK g_thread_exit_mtx; // NOLINT(fuchsia-statically-constructed-objects)
 
       void lock_thread_exit_mtx()
       {
@@ -107,14 +107,14 @@ namespace rsl
 
       struct at_thread_exit_block
       {
-        at_thread_exit_data data[num_items];
+        rsl::array<at_thread_exit_data, num_items> data;
         card32 num_used;
         at_thread_exit_block* next;
       };
 
       at_thread_exit_block g_thread_exit_data;
 
-      void cnd_register_at_thread_exit(condition_variable::impl* cnd, const mutex::native_handle_type mtx, int* p)
+      void cnd_register_at_thread_exit(condition_variable::impl* cnd, mutex::native_handle_type mtx, int* p)
       {
         at_thread_exit_block* block = &g_thread_exit_data;
         lock_thread_exit_mtx();
@@ -127,7 +127,7 @@ namespace rsl
           {
             if(block->next == nullptr)
             {
-              block->next = static_cast<at_thread_exit_block*>(calloc(1, sizeof(at_thread_exit_block)));
+              block->next = static_cast<at_thread_exit_block*>(calloc(1, sizeof(at_thread_exit_block))); // NOLINT(cppcoreguidelines-no-malloc)
             }
             block = block->next;
           }
@@ -156,7 +156,7 @@ namespace rsl
 
         unlock_thread_exit_mtx();
       }
-      void cnd_unregister_at_thread_exit(const mutex::native_handle_type mtx)
+      void cnd_unregister_at_thread_exit(mutex::native_handle_type mtx)
       {
         at_thread_exit_block* block = &g_thread_exit_data;
 
