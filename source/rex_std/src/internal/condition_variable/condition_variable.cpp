@@ -67,7 +67,7 @@ namespace rsl
 
     namespace internal
     {
-      bool cnd_timedwait(condition_variable::impl* cond, const mutex::native_handle_type mtx, const xtime& target)
+      bool cnd_timedwait(condition_variable::impl* cond, mutex::native_handle_type mtx, const xtime& target)
       {
         int res = 1;
 
@@ -86,7 +86,7 @@ namespace rsl
       }
 
       inline constexpr card32 num_items = 20; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
-      SRWLOCK g_thread_exit_mtx; // NOLINT(fuchsia-statically-constructed-objects)
+      SRWLOCK g_thread_exit_mtx; // NOLINT(fuchsia-statically-constructed-objects, cppcoreguidelines-avoid-non-const-global-variables)
 
       void lock_thread_exit_mtx()
       {
@@ -108,11 +108,11 @@ namespace rsl
       struct at_thread_exit_block
       {
         rsl::array<at_thread_exit_data, num_items> data;
-        card32 num_used;
-        at_thread_exit_block* next;
+        card32 num_used = 0;
+        at_thread_exit_block* next = nullptr;
       };
 
-      at_thread_exit_block g_thread_exit_data;
+      at_thread_exit_block g_thread_exit_data; // NOLINT(fuchsia-statically-constructed-objects, cppcoreguidelines-avoid-non-const-global-variables)
 
       void cnd_register_at_thread_exit(condition_variable::impl* cnd, mutex::native_handle_type mtx, int* p)
       {
