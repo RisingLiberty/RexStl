@@ -86,7 +86,7 @@ namespace rsl
       }
 
       inline constexpr card32 num_items = 20; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
-      SRWLOCK g_thread_exit_mtx; // NOLINT(fuchsia-statically-constructed-objects, cppcoreguidelines-avoid-non-const-global-variables)
+      SRWLOCK g_thread_exit_mtx;              // NOLINT(fuchsia-statically-constructed-objects, cppcoreguidelines-avoid-non-const-global-variables)
 
       void lock_thread_exit_mtx()
       {
@@ -108,7 +108,7 @@ namespace rsl
       struct at_thread_exit_block
       {
         rsl::array<at_thread_exit_data, num_items> data;
-        card32 num_used = 0;
+        card32 num_used            = 0;
         at_thread_exit_block* next = nullptr;
       };
 
@@ -136,7 +136,7 @@ namespace rsl
           else
           {
             // find an empty slot
-            for(auto & i : block->data)
+            for(auto& i: block->data)
             {
               // store into empty slot
               if(i.mtx == nullptr)
@@ -186,8 +186,6 @@ namespace rsl
     {
       m_storage.set<condition_variable::impl>();
     }
-
-    
 
     void condition_variable::notify_one()
     {

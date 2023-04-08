@@ -15,6 +15,7 @@
 #include "rex_std/internal/iterator/iterator_tags.h"
 #include "rex_std/internal/iterator/iterator_traits.h"
 #include "rex_std/internal/type_traits/is_base_of.h"
+#include "rex_std/internal/type_traits/is_pointer.h"
 
 namespace rsl
 {
@@ -45,7 +46,7 @@ namespace rsl
     template <typename Iterator>
     auto distance(Iterator lhs, Iterator rhs)
     {
-      if constexpr(is_base_of_v<random_access_iterator_tag, typename iterator_traits<Iterator>::iterator_category>)
+      if constexpr(is_base_of_v<random_access_iterator_tag, typename iterator_traits<Iterator>::iterator_category> || rsl::is_pointer_v<Iterator>)
       {
         return internal::random_access_distance(lhs, rhs);
       }

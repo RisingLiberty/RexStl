@@ -68,7 +68,7 @@ namespace rsl
 
       private:
         SRWLOCK m_srw_lock;
-        card32 m_count{};
+        card32 m_count {};
         DWORD m_thread_id;
       };
 

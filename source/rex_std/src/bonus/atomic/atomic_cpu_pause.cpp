@@ -24,7 +24,7 @@ namespace rsl
   #if defined(REX_PLATFORM_ARM64)
       __asm__ __volatile__("yield"); // NOLINT(hicpp-no-assembler)
   #elif defined(REX_PLATFORM_X64)
-      __asm__ __volatile__("pause");// NOLINT(hicpp-no-assembler)
+      __asm__ __volatile__("pause"); // NOLINT(hicpp-no-assembler)
   #else
       static_assert(false, "cpu pause not implemented");
   #endif

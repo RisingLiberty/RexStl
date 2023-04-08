@@ -43,7 +43,7 @@ namespace rsl
 
       condition_variable();
       condition_variable(const condition_variable&) = delete;
-      ~condition_variable() = default;
+      ~condition_variable()                         = default;
 
       condition_variable& operator=(const condition_variable&) = delete;
 

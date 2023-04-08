@@ -270,7 +270,7 @@ namespace rsl
           other.m_ref_count = nullptr;
         }
         template <typename U>
-        ref_ptr(ref_ptr<U>&& other)  // NOLINT(google-explicit-constructor)
+        ref_ptr(ref_ptr<U>&& other) // NOLINT(google-explicit-constructor)
             : m_ptr(other.m_ptr)
             , m_ref_count(other.m_ref_count)
         {

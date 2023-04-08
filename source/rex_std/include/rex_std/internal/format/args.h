@@ -80,7 +80,7 @@ namespace detail
       auto new_node  = rsl::unique_ptr<typed_node<T>>(new typed_node<T>(arg));
       auto& value    = new_node->value;
       new_node->next = rsl::move(m_head);
-      m_head          = rsl::move(new_node);
+      m_head         = rsl::move(new_node);
       return value;
     }
   };

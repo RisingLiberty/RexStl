@@ -39,6 +39,12 @@ namespace rsl
     {
       return c.cbegin();
     }
+    /// RSL Comment: Not in ISO C++ Standard at time of writing (08/Apr/2023)
+    template <typename T, card32 N>
+    const T* cbegin(const T (&array)[N]) // NOLINT(modernize-avoid-c-arrays)
+    {
+      return &array[0];
+    }
 
   } // namespace v1
 } // namespace rsl
