@@ -39,6 +39,10 @@ namespace rsl
     {
       return c.cend();
     }
-
+    template <typename T, card32 N>
+    const T* cend(T (&array)[N]) // NOLINT(modernize-avoid-c-arrays)
+    {
+      return &array[N];
+    }
   } // namespace v1
 } // namespace rsl
