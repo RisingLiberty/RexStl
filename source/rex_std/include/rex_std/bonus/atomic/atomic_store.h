@@ -85,10 +85,10 @@ namespace rsl
 
       switch(order)
       {
-        case rsl::v1::memory_order::relaxed: __atomic_store(obj, &valToStore, __ATOMIC_RELAXED);
-        case rsl::v1::memory_order::release: __atomic_store(obj, &valToStore, __ATOMIC_RELEASE);
-        case rsl::v1::memory_order::seq_cst: __atomic_store(obj, &valToStore, __ATOMIC_SEQ_CST);
-        default: REX_ASSERT("Invalid memory order for operation"); break;
+        case rsl::v1::memory_order::relaxed: __atomic_store(obj, &valToStore, __ATOMIC_RELAXED); break;
+        case rsl::v1::memory_order::release: __atomic_store(obj, &valToStore, __ATOMIC_RELEASE); break;
+        case rsl::v1::memory_order::seq_cst: __atomic_store(obj, &valToStore, __ATOMIC_SEQ_CST); break;
+        default: REX_ASSERT("Invalid memory order for atomic store"); break;
       }
     }
 #endif

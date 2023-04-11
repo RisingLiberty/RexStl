@@ -11,6 +11,7 @@
 // ============================================
 
 #include "rex_std/internal/assert/assert_impl.h"
+#include "rex_std/stacktrace.h"
 
 #include "rex_std/iostream.h"
 
@@ -23,6 +24,7 @@ namespace rsl
       void log_assert(const fmt_stack_string& msg) // NOLINT(misc-no-recursion)
       {
         rsl::cerr << "Assert: " << msg.data() << "\n";
+        rsl::cerr << "Callstack: " << rsl::stacktrace::current() << "\n";
       }
     } // namespace internal
   }   // namespace v1

@@ -39,7 +39,7 @@ namespace rsl
         case rsl::v1::memory_order::release: return __atomic_thread_fence(__ATOMIC_RELEASE);
         case rsl::v1::memory_order::acq_rel: return __atomic_thread_fence(__ATOMIC_ACQ_REL);
         case rsl::v1::memory_order::seq_cst: return __atomic_thread_fence(__ATOMIC_SEQ_CST);
-        default: REX_ASSERT("Invalid memory order for operation"); break;
+        default: REX_ASSERT("Invalid memory order for atomic thread_fence"); break;
       }
 #endif
     }

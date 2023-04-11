@@ -295,7 +295,7 @@ namespace rsl
     using stacktrace = basic_stacktrace<allocator>;
 
     template <typename Char, typename Traits, typename Allocator>
-    rsl::basic_ostream<Char, Traits> operator<<(rsl::basic_ostream<Char, Traits>& os, const basic_stacktrace<Allocator>& trace)
+    rsl::basic_ostream<Char, Traits>& operator<<(rsl::basic_ostream<Char, Traits>& os, const basic_stacktrace<Allocator>& trace)
     {
       os << to_string(trace);
       return os;

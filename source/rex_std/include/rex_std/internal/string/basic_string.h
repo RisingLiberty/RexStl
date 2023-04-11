@@ -2354,16 +2354,16 @@ namespace rsl
     template <typename Char, typename Traits>
     class basic_ostream;
 
+    // stores each characters from the resulting sequence to the output stream
+    template <typename Char, typename Traits, typename Allocator>
+    inline basic_ostream<Char, Traits>& operator<<(basic_ostream<Char, Traits>& os, const basic_string<Char, Traits, Allocator>& str)
+    {
+      os.rdbuf()->sputn(str.data(), str.length());
+      return os;
+    }
   } // namespace v1
 } // namespace rsl
 
-// stores each characters from the resulting sequence to the output stream
-template <typename Char, typename Traits, typename Allocator>
-inline rsl::basic_ostream<Char, Traits>& operator<<(rsl::basic_ostream<Char, Traits>& os, const rsl::basic_string<Char, Traits, Allocator>& str)
-{
-  os.rdbuf()->sputn(str.data(), str.length());
-  return os;
-}
 
 // NOLINTEND(misc-no-recursion)
 

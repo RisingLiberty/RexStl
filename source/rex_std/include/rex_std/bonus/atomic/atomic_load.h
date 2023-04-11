@@ -13,6 +13,7 @@
 #pragma once
 
 #include "rex_std/bonus/types.h"
+#include "rex_std/iostream.h"
 
 namespace rsl
 {
@@ -75,12 +76,15 @@ namespace rsl
       // Therefore we save their value to a temporary of type uintptr first and perform the operation on that
       rsl::uintptr tmp = *obj;
 
+      rsl::cout << "tmp: " << tmp << "\n";
+
       switch(order)
       {
-        case rsl::v1::memory_order::consume: return __atomic_load_n(obj, __ATOMIC_CONSUME);
-        case rsl::v1::memory_order::acquire: return __atomic_load_n(obj, __ATOMIC_ACQUIRE);
-        case rsl::v1::memory_order::seq_cst: return __atomic_load_n(obj, __ATOMIC_SEQ_CST);
-        default: REX_ASSERT("Invalid memory order for operation"); break;
+        case rsl::v1::memory_order::relaxed: return __atomic_load_n(&tmp, __ATOMIC_RELAXED);
+        case rsl::v1::memory_order::consume: return __atomic_load_n(&tmp, __ATOMIC_CONSUME);
+        case rsl::v1::memory_order::acquire: return __atomic_load_n(&tmp, __ATOMIC_ACQUIRE);
+        case rsl::v1::memory_order::seq_cst: return __atomic_load_n(&tmp, __ATOMIC_SEQ_CST);
+        default: REX_ASSERT("Invalid memory order for atomic load"); break;
       }
 
       return 0;
