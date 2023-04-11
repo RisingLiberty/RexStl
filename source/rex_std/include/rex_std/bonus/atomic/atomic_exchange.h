@@ -69,12 +69,12 @@ namespace rsl
 
       switch(order)
       {
-        case rsl::v1::memory_order::relaxed: return __atomic_exchange_n(obj, value, __ATOMIC_RELAXED);
-        case rsl::v1::memory_order::consume: return __atomic_exchange_n(obj, value, __ATOMIC_CONSUME);
-        case rsl::v1::memory_order::acquire: return __atomic_exchange_n(obj, value, __ATOMIC_ACQUIRE);
-        case rsl::v1::memory_order::release: return __atomic_exchange_n(obj, value, __ATOMIC_RELEASE);
-        case rsl::v1::memory_order::acq_rel: return __atomic_exchange_n(obj, value, __ATOMIC_ACQ_REL);
-        case rsl::v1::memory_order::seq_cst: return __atomic_exchange_n(obj, value, __ATOMIC_SEQ_CST);
+        case rsl::v1::memory_order::relaxed: return __atomic_exchange_n(&tmp, value, __ATOMIC_RELAXED);
+        case rsl::v1::memory_order::consume: return __atomic_exchange_n(&tmp, value, __ATOMIC_CONSUME);
+        case rsl::v1::memory_order::acquire: return __atomic_exchange_n(&tmp, value, __ATOMIC_ACQUIRE);
+        case rsl::v1::memory_order::release: return __atomic_exchange_n(&tmp, value, __ATOMIC_RELEASE);
+        case rsl::v1::memory_order::acq_rel: return __atomic_exchange_n(&tmp, value, __ATOMIC_ACQ_REL);
+        case rsl::v1::memory_order::seq_cst: return __atomic_exchange_n(&tmp, value, __ATOMIC_SEQ_CST);
         default: REX_ASSERT("Invalid sucess memory order for operation"); break;
       }
     }

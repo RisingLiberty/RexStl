@@ -11,6 +11,7 @@
 // ============================================
 
 #include "rex_std/bonus/string/stack_string.h"
+#include "rex_std/assert.h"
 
 #include "rex_std/bonus/string/string_utils_impl.h"
 

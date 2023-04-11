@@ -51,7 +51,7 @@ namespace rsl
 
       constexpr Color3& clamp(T min, T max)
       {
-        *this = clamped();
+        *this = clamped(min, max);
 
         return *this;
       }
@@ -170,7 +170,7 @@ namespace rsl
 
       constexpr Color4& clamp(T min, T max)
       {
-        *this = clamped();
+        *this = clamped(min, max);
 
         return *this;
       }

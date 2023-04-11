@@ -31,7 +31,7 @@ namespace rsl
           {
             Sleep(sleeptime.diff_in_ms(now));
             now = rsl::internal::xtime::get();
-          } while(now.sec < sleeptime.sec || now.sec == sleeptime.sec && now.nsec < sleeptime.nsec);
+          } while((now.sec < sleeptime.sec || now.sec == sleeptime.sec) && now.nsec < sleeptime.nsec);
         }
       } // namespace internal
 

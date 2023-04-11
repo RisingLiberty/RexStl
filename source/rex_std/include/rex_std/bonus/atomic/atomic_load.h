@@ -13,7 +13,6 @@
 #pragma once
 
 #include "rex_std/bonus/types.h"
-#include "rex_std/iostream.h"
 
 namespace rsl
 {
@@ -75,8 +74,6 @@ namespace rsl
       // { tmp = *ptr; *ptr op= val; return tmp; }
       // Therefore we save their value to a temporary of type uintptr first and perform the operation on that
       rsl::uintptr tmp = *obj;
-
-      rsl::cout << "tmp: " << tmp << "\n";
 
       switch(order)
       {

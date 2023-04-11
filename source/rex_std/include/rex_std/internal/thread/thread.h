@@ -170,8 +170,8 @@ namespace rsl
       }
 
     private:
-      id m_id;
       native_handle_type m_handle;
+      id m_id;
     };
 
     // swap two thread objects

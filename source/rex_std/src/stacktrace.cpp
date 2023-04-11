@@ -73,7 +73,8 @@ namespace rsl
       {
         const rsl::big_stack_string undecorated_name = get_undecorated_name(symbolName);
 
-        IMAGEHLP_LINE64 line = {sizeof(IMAGEHLP_LINE64)};
+        IMAGEHLP_LINE64 line{};
+        line.SizeOfStruct = sizeof(IMAGEHLP_LINE64);
         if(SymGetLineFromAddr64(process, addr, reinterpret_cast<DWORD*>(displacement), &line) == TRUE) // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast, performance-no-int-to-ptr)
         {
           return stacktrace_entry(reinterpret_cast<void*>(addr), rsl::big_stack_string(line.FileName), undecorated_name, static_cast<card32>(line.LineNumber)); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast, performance-no-int-to-ptr)
@@ -88,14 +89,15 @@ namespace rsl
 
       rsl::tiny_stack_string get_module_name(HANDLE process, card64 addr)
       {
-        IMAGEHLP_MODULE64 module = {sizeof(IMAGEHLP_MODULE64)};
+        IMAGEHLP_MODULE64 module{};
+        module.SizeOfStruct = sizeof(IMAGEHLP_MODULE64);
 
         return SymGetModuleInfo64(process, addr, &module) != 0 ? rsl::tiny_stack_string(module.ModuleName) : ""_tiny;
       }
 
       __declspec(noinline) rsl::array<stacktrace_entry, stacktrace::max_entries()> stack_trace(card32 skip, card32 maxDepth)
       {
-        static const bool s_initialised = load_symbols();
+        [[maybe_unused]] static const bool s_initialised = load_symbols();
 
         rsl::array<void*, stacktrace::max_entries()> stack_pointers = load_stack_pointers(skip);
 

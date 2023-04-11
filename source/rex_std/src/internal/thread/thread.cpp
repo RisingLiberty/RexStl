@@ -24,14 +24,14 @@ namespace rsl
   inline namespace v1
   {
     thread::thread()
-        : m_id(0)
-        , m_handle(INVALID_HANDLE_VALUE)
+        : m_handle(INVALID_HANDLE_VALUE)
+        , m_id(0)
     {
     }
 
     thread::thread(thread&& other)
-        : m_id(other.m_id)
-        , m_handle(other.m_handle)
+        : m_handle(other.m_handle)
+        , m_id(other.m_id)
     {
       other.m_id     = thread::id(0);
       other.m_handle = INVALID_HANDLE_VALUE;
