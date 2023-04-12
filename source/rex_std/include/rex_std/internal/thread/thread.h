@@ -19,6 +19,7 @@
 //-----------------------------------------------------------------------------
 
 #include "rex_std/bonus/types.h"
+#include "rex_std/format.h"
 #include "rex_std/internal/functional/invoke.h"
 #include "rex_std/internal/memory/unique_ptr.h"
 
@@ -63,8 +64,8 @@ namespace rsl
       {
         template <typename Char, typename Traits>
         friend basic_ostream<Char, Traits>& operator<<(basic_ostream<Char, Traits>& os, id id);
-        friend hash<id>;
-        friend thread;
+        friend struct hash<id>;
+        friend class thread;
 
       public:
         explicit id(ulong id)
@@ -174,7 +175,33 @@ namespace rsl
       id m_id;
     };
 
+    template <typename Char, typename Traits>
+    basic_ostream<Char, Traits>& operator<<(basic_ostream<Char, Traits>& os, thread::id id)
+    {
+      os << id.m_id;
+      return os;
+    }
+
     // swap two thread objects
     void swap(thread& lhs, thread& rhs);
+
+    template <>
+    struct formatter<thread::id>
+    {
+      auto parse(format_parse_context& ctx) const -> decltype(ctx.begin()) // NOLINT(readability-convert-member-functions-to-static)
+      {
+        return ctx.begin();
+      }
+
+      template <typename FormatContext>
+      auto format(const thread::id& id, FormatContext& ctx) -> decltype(ctx.out())
+      {
+        rsl::stringstream ss;
+        ss << id;
+        rsl::string str = ss.str();
+        return format_to(ctx.out(), "{}", str);
+      }
+    };
+
   } // namespace v1
 } // namespace rsl

@@ -197,9 +197,9 @@ namespace rsl
         }
 
         // Given e, produce a suitable value that is not equivalent to eof.
-        constexpr static int_type not_eof(int_type e)
+        constexpr static int_type not_eof(int_type c)
         {
-          return eq_int_type(e, eof()) ? to_char_type(!eof()) : e;
+          return eq_int_type(c, eof()) ? to_char_type(!eof()) : c;
         }
       };
     } // namespace internal

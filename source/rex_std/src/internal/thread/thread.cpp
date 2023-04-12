@@ -13,9 +13,11 @@
 #include "rex_std/internal/thread/thread.h"
 
 #include "rex_std/assert.h"
+#include "rex_std/format.h"
 #include "rex_std/internal/exception/teminate.h"
 #include "rex_std/internal/utility/exchange.h"
 #include "rex_std/internal/utility/swap.h"
+#include "rex_std/sstream.h"
 
 #include <Windows.h>
 
@@ -94,5 +96,7 @@ namespace rsl
     {
       lhs.swap(rhs);
     }
+
+
   } // namespace v1
 } // namespace rsl

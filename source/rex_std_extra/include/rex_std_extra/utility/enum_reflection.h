@@ -654,17 +654,17 @@ namespace rsl
         class enum_entry
         {
         public:
-          enum_entry(E value, rsl::string_view name)
+          constexpr enum_entry(E value, rsl::string_view name)
               : m_value(value)
               , m_name(name)
           {
           }
 
-          E val() const
+          constexpr E val() const
           {
             return m_value;
           }
-          rsl::string_view name() const
+          constexpr rsl::string_view name() const
           {
             return m_name;
           }

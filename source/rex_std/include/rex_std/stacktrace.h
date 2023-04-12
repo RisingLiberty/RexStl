@@ -300,5 +300,20 @@ namespace rsl
       os << to_string(trace);
       return os;
     }
+
+    template <typename Allocator>
+    struct formatter<basic_stacktrace<Allocator>>
+    {
+      auto parse(format_parse_context& ctx) const -> decltype(ctx.begin()) // NOLINT(readability-convert-member-functions-to-static)
+      {
+        return ctx.begin();
+      }
+
+      template <typename FormatContext>
+      auto format(const basic_stacktrace<Allocator>& stacktrace, FormatContext& ctx) -> decltype(ctx.out())
+      {
+        return format_to(ctx.out(), "{}", to_string(stacktrace));
+      }
+    };
   } // namespace v1
 } // namespace rsl
