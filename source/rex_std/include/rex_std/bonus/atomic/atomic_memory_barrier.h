@@ -64,9 +64,9 @@ namespace rsl
       // in cases where the compiler reads from the stack pointer after the lock; addl instruction
       //
       // Accounting for Red Zones or Cachelines doesn't provide extra benefit.
-      __asm__ __volatile__("lock; addl $0, -8(%%rsp)" ::: "memory", "cc");
+      __asm__ __volatile__("lock; addl $0, -8(%%rsp)" ::: "memory", "cc");    // NOLINT(hicpp-no-assembler)
   #elif defined(REX_PLATFORM_ARM64)
-      __asm__ __volatile__("dmb " STRINGIZE(REX_ARM_DMB_ISH) ::: "memory");
+      __asm__ __volatile__("dmb " STRINGIZE(REX_ARM_DMB_ISH) ::: "memory"); // NOLINT(hicpp-no-assembler)
   #endif
 #else
       static_assert("memory barrier not implemented");
@@ -77,7 +77,7 @@ namespace rsl
 #ifdef REX_PLATFORM_X64
       compiler_barrier();
 #else
-      __asm__ __volatile__("dmb " STRINGIZE(REX_ARM_DMB_ISHLD) ::: "memory");
+      __asm__ __volatile__("dmb " STRINGIZE(REX_ARM_DMB_ISHLD) ::: "memory"); // NOLINT(hicpp-no-assembler)
 #endif
     }
     REX_FORCE_INLINE void write_memory_barrier()
@@ -85,7 +85,7 @@ namespace rsl
 #ifdef REX_PLATFORM_X64
       compiler_barrier();
 #else
-      __asm__ __volatile__("dmb " STRINGIZE(REX_ARM_DMB_ISHST) ::: "memory");
+      __asm__ __volatile__("dmb " STRINGIZE(REX_ARM_DMB_ISHST) ::: "memory"); // NOLINT(hicpp-no-assembler)
 #endif
     }
   } // namespace v1

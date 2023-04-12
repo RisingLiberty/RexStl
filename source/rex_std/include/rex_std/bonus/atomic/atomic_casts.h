@@ -20,7 +20,7 @@ namespace rsl
         static_assert(!rsl::is_volatile<volatile T*>::value, "rsl::atomic<T> : pointer must not be volatile, the pointed to type must be volatile!");
         static_assert(rsl::is_volatile<volatile T>::value, "rsl::atomic<T> : the pointed to type must be volatile!");
 
-        return reinterpret_cast<volatile T*>(ptr);
+        return reinterpret_cast<volatile T*>(ptr); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
       }
 
       /**
@@ -50,7 +50,7 @@ namespace rsl
         static_assert(rsl::is_integral<Integral>::value, "rsl::atomic<T> : Integral cast must cast to an Integral type!");
         static_assert(sizeof(Integral) == sizeof(T), "rsl::atomic<T> : Integral and T must be same size for casting!");
 
-        return reinterpret_cast<volatile Integral*>(ptr);
+        return reinterpret_cast<volatile Integral*>(ptr); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
       }
 
       template <typename Integral, typename T>
@@ -59,7 +59,7 @@ namespace rsl
         static_assert(rsl::is_integral<Integral>::value, "rsl::atomic<T> : Integral cast must cast to an Integral type!");
         static_assert(sizeof(Integral) == sizeof(T), "rsl::atomic<T> : Integral and T must be same size for casting!");
 
-        return reinterpret_cast<Integral*>(ptr);
+        return reinterpret_cast<Integral*>(ptr); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
       }
 
       /**
@@ -77,13 +77,13 @@ namespace rsl
         static_assert(!rsl::is_volatile<volatile ToType*>::value, "rsl::atomic<T> : pointer must not be volatile, the pointed to type must be volatile!");
         static_assert(rsl::is_volatile<volatile ToType>::value, "rsl::atomic<T> : the pointed to type must be volatile!");
 
-        return reinterpret_cast<volatile ToType*>(ptr);
+        return reinterpret_cast<volatile ToType*>(ptr); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
       }
 
       template <typename ToType, typename FromType>
       REX_FORCE_INLINE ToType* atomic_type_cast(FromType* ptr)
       {
-        return reinterpret_cast<ToType*>(ptr);
+        return reinterpret_cast<ToType*>(ptr); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
       }
 
       /**
@@ -114,7 +114,7 @@ namespace rsl
          */
         rsl::aligned_storage<sizeof(Pun), alignof(Pun)> ret;
         memcpy(ret.template get<Pun>(), rsl::addressof(fromType), sizeof(Pun));
-        return reinterpret_cast<Pun&>(ret);
+        return reinterpret_cast<Pun&>(ret); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
       }
 
       template <typename Pun, typename T, rsl::enable_if_t<rsl::is_same_v<Pun, T>, int> = 0>

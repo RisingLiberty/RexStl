@@ -273,7 +273,7 @@ namespace rsl
     };
 
     template <typename Allocator>
-    rsl::string to_string(const basic_stacktrace<Allocator>& trace)
+    rsl::string to_string(const basic_stacktrace<Allocator>& trace) // NOLINT(misc-no-recursion)
     {
       rsl::string result;
 
@@ -295,7 +295,7 @@ namespace rsl
     using stacktrace = basic_stacktrace<allocator>;
 
     template <typename Char, typename Traits, typename Allocator>
-    rsl::basic_ostream<Char, Traits>& operator<<(rsl::basic_ostream<Char, Traits>& os, const basic_stacktrace<Allocator>& trace)
+    rsl::basic_ostream<Char, Traits>& operator<<(rsl::basic_ostream<Char, Traits>& os, const basic_stacktrace<Allocator>& trace) // NOLINT(misc-no-recursion)
     {
       os << to_string(trace);
       return os;

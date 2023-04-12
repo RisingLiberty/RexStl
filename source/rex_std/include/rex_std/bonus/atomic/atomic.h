@@ -110,11 +110,12 @@ namespace rsl
       static constexpr bool is_always_lock_free = rsl::internal::is_atomic_lockfree_size_v<T>;
 
       atomic(const atomic&)                     = delete;
+      ~atomic()                                 = default;
       atomic& operator=(const atomic&)          = delete;
       atomic& operator=(const atomic&) volatile = delete;
 
       constexpr atomic() = default;
-      constexpr atomic(T desired)
+      constexpr atomic(T desired) // NOLINT(google-explicit-constructor)
           : Base(desired)
       {
       }
@@ -136,11 +137,11 @@ namespace rsl
       using Base::load;
       using Base::store;
 
-      operator T() const volatile
+      explicit operator T() const volatile
       {
         static_assert(rsl::internal::always_false<T>, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in EASTL/atomic.h! Use the memory orders to access the atomic object!");
       }
-      operator T() const
+      explicit operator T() const
       {
         return load(rsl::memory_order_seq_cst);
       }
@@ -169,12 +170,13 @@ namespace rsl
       static constexpr bool is_always_lock_free = rsl::internal::is_atomic_lockfree_size_v<T>;
 
       constexpr atomic() = default;
-      constexpr atomic(T desired)
+      constexpr atomic(T desired) // NOLINT(google-explicit-constructor)
           : Base(desired)
       {
       }
 
       atomic(const atomic&)                     = delete;
+      ~atomic()                                 = default;
       atomic& operator=(const atomic&)          = delete;
       atomic& operator=(const atomic&) volatile = delete;
 
@@ -195,11 +197,11 @@ namespace rsl
       using Base::load;
       using Base::store;
 
-      operator T() const volatile
+      operator T() const volatile // NOLINT(google-explicit-constructor)
       {
         static_assert(rsl::internal::always_false<T>, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in EASTL/atomic.h! Use the memory orders to access the atomic object!");
       }
-      operator T() const
+      operator T() const // NOLINT(google-explicit-constructor)
       {
         return load(rsl::memory_order_seq_cst);
       }
@@ -246,12 +248,13 @@ namespace rsl
       static constexpr bool is_always_lock_free = rsl::internal::is_atomic_lockfree_size_v<T*>;
 
       constexpr atomic() = default;
-      constexpr atomic(T* desired)
+      constexpr atomic(T* desired) // NOLINT(google-explicit-constructor)
           : Base(desired)
       {
       }
 
       atomic(const atomic&)                     = delete;
+      ~atomic()                                 = default;
       atomic& operator=(const atomic&)          = delete;
       atomic& operator=(const atomic&) volatile = delete;
 
@@ -273,11 +276,11 @@ namespace rsl
       using Base::load;
       using Base::store;
 
-      operator T*() const volatile
+      operator T*() const volatile // NOLINT(google-explicit-constructor)
       {
         static_assert(rsl::internal::always_false<T>, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in EASTL/atomic.h! Use the memory orders to access the atomic object!");
       }
-      operator T*() const
+      operator T*() const // NOLINT(google-explicit-constructor)
       {
         return load(rsl::memory_order_seq_cst);
       }

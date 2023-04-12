@@ -52,7 +52,7 @@ namespace rsl
       struct atomic_size_aligned
       {
       public: /* ctors */
-        constexpr atomic_size_aligned(T desired)
+        constexpr explicit atomic_size_aligned(T desired)
             : m_atomic_storage {desired}
         {
         }
@@ -61,6 +61,8 @@ namespace rsl
             : m_atomic_storage {} /* Value-Initialize which will Zero-Initialize Trivial Constructible types */
         {
         }
+
+        ~atomic_size_aligned() = default;
 
         atomic_size_aligned(const atomic_size_aligned&) = delete;
 
@@ -124,8 +126,8 @@ namespace rsl
       public: /* compare_exchange_strong */
         REX_ATOMIC_SIZE_ALIGNED_STATIC_ASSERT_CMPXCHG_STRONG_IMPL()
 
-      public: /* assignment operator */
-        T operator=(T /*desired*/) volatile
+      public:                               /* assignment operator */
+        T operator=(T /*desired*/) volatile // NOLINT(misc-unconventional-assign-operator)
         {
           REX_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);
         }

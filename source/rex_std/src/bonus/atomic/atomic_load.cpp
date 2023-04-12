@@ -10,19 +10,19 @@
 ////
 //// ============================================
 //
-//#include "rex_std/bonus/atomic/atomic_casts.h"
-//#include "rex_std/bonus/atomic/atomic_compiler_barrier.h"
-//#include "rex_std/bonus/atomic/atomic_fixed_width_type.h"
-//#include "rex_std/bonus/atomic/atomic_memory_order.h"
-//#include "rex_std/bonus/atomic/atomic_xor_fetch.h"
+// #include "rex_std/bonus/atomic/atomic_casts.h"
+// #include "rex_std/bonus/atomic/atomic_compiler_barrier.h"
+// #include "rex_std/bonus/atomic/atomic_fixed_width_type.h"
+// #include "rex_std/bonus/atomic/atomic_memory_order.h"
+// #include "rex_std/bonus/atomic/atomic_xor_fetch.h"
 //
-//#include <intrin.h>
+// #include <intrin.h>
 //
-//namespace rsl
+// namespace rsl
 //{
 //  inline namespace v1
 //  {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //    template <typename T>
 //    atomic_t<T> atomic_load(T* obj)
 //    {
@@ -66,7 +66,7 @@
 //        return 0;
 //      }
 //    }
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //    template <typename T>
 //    atomic_t<T> atomic_load(T* obj, rsl::memory_order order)
 //    {
@@ -88,374 +88,374 @@
 //
 //      return 0;
 //    }
-//#endif
+// #endif
 //
 //    // uint8
 //    uint8 atomic_load_relaxed(uint8* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      return atomic_load(obj);
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return atomic_load(obj, rsl::memory_order::relaxed);
-//#endif
+// #endif
 //    }
 //    uint8 atomic_load_acquire(uint8* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      auto res = atomic_load(obj);
 //      rsl::compiler_barrier();
 //      return res;
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return atomic_load(obj, rsl::memory_order::acquire);
-//#endif
+// #endif
 //    }
 //    uint8 atomic_load_release(uint8* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      return atomic_load(obj);
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return atomic_load(obj, rsl::memory_order::release);
-//#endif
+// #endif
 //    }
 //    uint8 atomic_load_acq_rel(uint8* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      return atomic_load(obj);
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return atomic_load(obj, rsl::memory_order::acq_rel);
-//#endif
+// #endif
 //    }
 //    uint8 atomic_load_seq_cst(uint8* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      auto res = atomic_load(obj);
 //      rsl::compiler_barrier();
 //      return res;
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return atomic_load(obj, rsl::memory_order::seq_cst);
-//#endif
+// #endif
 //    }
 //
 //    // int8
 //    int8 atomic_load_relaxed(int8* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      return atomic_load(obj);
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return static_cast<int8>(atomic_load(obj, rsl::memory_order::relaxed));
-//#endif
+// #endif
 //    }
 //    int8 atomic_load_acquire(int8* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      auto res = atomic_load(obj);
 //      rsl::compiler_barrier();
 //      return res;
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return static_cast<int8>(atomic_load(obj, rsl::memory_order::acquire));
-//#endif
+// #endif
 //    }
 //    int8 atomic_load_release(int8* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      return atomic_load(obj);
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return static_cast<int8>(atomic_load(obj, rsl::memory_order::release));
-//#endif
+// #endif
 //    }
 //    int8 atomic_load_acq_rel(int8* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      return atomic_load(obj);
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return static_cast<int8>(atomic_load(obj, rsl::memory_order::acq_rel));
-//#endif
+// #endif
 //    }
 //    int8 atomic_load_seq_cst(int8* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      auto res = atomic_load(obj);
 //      rsl::compiler_barrier();
 //      return res;
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return static_cast<int8>(atomic_load(obj, rsl::memory_order::seq_cst));
-//#endif
+// #endif
 //    }
 //
 //    // uint16
 //    uint16 atomic_load_relaxed(uint16* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      return atomic_load(obj);
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return atomic_load(obj, rsl::memory_order::relaxed);
-//#endif
+// #endif
 //    }
 //    uint16 atomic_load_acquire(uint16* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      auto res = atomic_load(obj);
 //      rsl::compiler_barrier();
 //      return res;
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return atomic_load(obj, rsl::memory_order::acquire);
-//#endif
+// #endif
 //    }
 //    uint16 atomic_load_release(uint16* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      return atomic_load(obj);
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return atomic_load(obj, rsl::memory_order::release);
-//#endif
+// #endif
 //    }
 //    uint16 atomic_load_acq_rel(uint16* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      return atomic_load(obj);
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return atomic_load(obj, rsl::memory_order::acq_rel);
-//#endif
+// #endif
 //    }
 //    uint16 atomic_load_seq_cst(uint16* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      auto res = atomic_load(obj);
 //      rsl::compiler_barrier();
 //      return res;
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return atomic_load(obj, rsl::memory_order::seq_cst);
-//#endif
+// #endif
 //    }
 //
 //    // int16
 //    int16 atomic_load_relaxed(int16* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      return atomic_load(obj);
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return static_cast<int16>(atomic_load(obj, rsl::memory_order::relaxed));
-//#endif
+// #endif
 //    }
 //    int16 atomic_load_acquire(int16* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      auto res = atomic_load(obj);
 //      rsl::compiler_barrier();
 //      return res;
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return static_cast<int16>(atomic_load(obj, rsl::memory_order::acquire));
-//#endif
+// #endif
 //    }
 //    int16 atomic_load_release(int16* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      return atomic_load(obj);
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return static_cast<int16>(atomic_load(obj, rsl::memory_order::release));
-//#endif
+// #endif
 //    }
 //    int16 atomic_load_acq_rel(int16* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      return atomic_load(obj);
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return static_cast<int16>(atomic_load(obj, rsl::memory_order::acq_rel));
-//#endif
+// #endif
 //    }
 //    int16 atomic_load_seq_cst(int16* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      auto res = atomic_load(obj);
 //      rsl::compiler_barrier();
 //      return res;
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return static_cast<int16>(atomic_load(obj, rsl::memory_order::seq_cst));
-//#endif
+// #endif
 //    }
 //
 //    // uint32
 //    uint32 atomic_load_relaxed(uint32* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      return atomic_load(obj);
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return atomic_load(obj, rsl::memory_order::relaxed);
-//#endif
+// #endif
 //    }
 //    uint32 atomic_load_acquire(uint32* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      auto res = atomic_load(obj);
 //      rsl::compiler_barrier();
 //      return res;
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return atomic_load(obj, rsl::memory_order::acquire);
-//#endif
+// #endif
 //    }
 //    uint32 atomic_load_release(uint32* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      return atomic_load(obj);
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return atomic_load(obj, rsl::memory_order::release);
-//#endif
+// #endif
 //    }
 //    uint32 atomic_load_acq_rel(uint32* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      return atomic_load(obj);
-//#elif defined(REX_COMPILER_GsCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GsCC) || defined(REX_COMPILER_CLANG)
 //      return atomic_load(obj, rsl::memory_order::acq_rel);
-//#endif
+// #endif
 //    }
 //    uint32 atomic_load_seq_cst(uint32* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      auto res = atomic_load(obj);
 //      rsl::compiler_barrier();
 //      return res;
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return atomic_load(obj, rsl::memory_order::seq_cst);
-//#endif
+// #endif
 //    }
 //
 //    // int32
 //    int32 atomic_load_relaxed(int32* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      return atomic_load(obj);
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return static_cast<int32>(atomic_load(obj, rsl::memory_order::relaxed));
-//#endif
+// #endif
 //    }
 //    int32 atomic_load_acquire(int32* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      auto res = atomic_load(obj);
 //      rsl::compiler_barrier();
 //      return res;
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return static_cast<int32>(atomic_load(obj, rsl::memory_order::acquire));
-//#endif
+// #endif
 //    }
 //    int32 atomic_load_release(int32* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      return atomic_load(obj);
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return static_cast<int32>(atomic_load(obj, rsl::memory_order::release));
-//#endif
+// #endif
 //    }
 //    int32 atomic_load_acq_rel(int32* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      return atomic_load(obj);
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return static_cast<int32>(atomic_load(obj, rsl::memory_order::acq_rel));
-//#endif
+// #endif
 //    }
 //    int32 atomic_load_seq_cst(int32* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      auto res = atomic_load(obj);
 //      rsl::compiler_barrier();
 //      return res;
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return static_cast<int32>(atomic_load(obj, rsl::memory_order::seq_cst));
-//#endif
+// #endif
 //    }
 //
 //    // uint64
 //    uint64 atomic_load_relaxed(uint64* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      return atomic_load(obj);
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return atomic_load(obj, rsl::memory_order::relaxed);
-//#endif
+// #endif
 //    }
 //    uint64 atomic_load_acquire(uint64* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      auto res = atomic_load(obj);
 //      rsl::compiler_barrier();
 //      return res;
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return atomic_load(obj, rsl::memory_order::acquire);
-//#endif
+// #endif
 //    }
 //    uint64 atomic_load_release(uint64* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      return atomic_load(obj);
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return atomic_load(obj, rsl::memory_order::release);
-//#endif
+// #endif
 //    }
 //    uint64 atomic_load_acq_rel(uint64* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      return atomic_load(obj);
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return atomic_load(obj, rsl::memory_order::acq_rel);
-//#endif
+// #endif
 //    }
 //    uint64 atomic_load_seq_cst(uint64* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      auto res = atomic_load(obj);
 //      rsl::compiler_barrier();
 //      return res;
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return atomic_load(obj, rsl::memory_order::seq_cst);
-//#endif
+// #endif
 //    }
 //
 //    // int64
 //    int64 atomic_load_relaxed(int64* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      return atomic_load(obj);
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return static_cast<int64>(atomic_load(obj, rsl::memory_order::relaxed));
-//#endif
+// #endif
 //    }
 //    int64 atomic_load_acquire(int64* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      auto res = atomic_load(obj);
 //      rsl::compiler_barrier();
 //      return res;
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return static_cast<int64>(atomic_load(obj, rsl::memory_order::acquire));
-//#endif
+// #endif
 //    }
 //    int64 atomic_load_release(int64* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      return atomic_load(obj);
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return static_cast<int64>(atomic_load(obj, rsl::memory_order::release));
-//#endif
+// #endif
 //    }
 //    int64 atomic_load_acq_rel(int64* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      return atomic_load(obj);
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return static_cast<int64>(atomic_load(obj, rsl::memory_order::acq_rel));
-//#endif
+// #endif
 //    }
 //    int64 atomic_load_seq_cst(int64* obj)
 //    {
-//#if defined(REX_COMPILER_MSVC)
+// #if defined(REX_COMPILER_MSVC)
 //      auto res = atomic_load(obj);
 //      rsl::compiler_barrier();
 //      return res;
-//#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+// #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
 //      return static_cast<int64>(atomic_load(obj, rsl::memory_order::seq_cst));
-//#endif
+// #endif
 //    }
 //  } // namespace v1
 //} // namespace rsl

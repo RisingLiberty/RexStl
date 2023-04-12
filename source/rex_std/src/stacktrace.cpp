@@ -73,7 +73,7 @@ namespace rsl
       {
         const rsl::big_stack_string undecorated_name = get_undecorated_name(symbolName);
 
-        IMAGEHLP_LINE64 line{};
+        IMAGEHLP_LINE64 line {};
         line.SizeOfStruct = sizeof(IMAGEHLP_LINE64);
         if(SymGetLineFromAddr64(process, addr, reinterpret_cast<DWORD*>(displacement), &line) == TRUE) // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast, performance-no-int-to-ptr)
         {
@@ -89,7 +89,7 @@ namespace rsl
 
       rsl::tiny_stack_string get_module_name(HANDLE process, card64 addr)
       {
-        IMAGEHLP_MODULE64 module{};
+        IMAGEHLP_MODULE64 module {};
         module.SizeOfStruct = sizeof(IMAGEHLP_MODULE64);
 
         return SymGetModuleInfo64(process, addr, &module) != 0 ? rsl::tiny_stack_string(module.ModuleName) : ""_tiny;

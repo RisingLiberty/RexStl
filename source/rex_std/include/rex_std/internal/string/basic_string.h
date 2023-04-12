@@ -2364,7 +2364,6 @@ namespace rsl
   } // namespace v1
 } // namespace rsl
 
-
 // NOLINTEND(misc-no-recursion)
 
 #include "rex_std/bonus/string/string_utils_impl.h"

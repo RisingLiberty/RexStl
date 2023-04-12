@@ -284,32 +284,32 @@ namespace rsl
   // void rsl::atomic_thread_fence(Order)
   //
   template <typename Order>
-  REX_FORCE_INLINE void atomic_thread_fence(Order)
+  REX_FORCE_INLINE void atomic_thread_fence(Order /*unused*/)
   {
     REX_ATOMIC_STATIC_ASSERT_INVALID_MEMORY_ORDER(Order);
   }
 
-  REX_FORCE_INLINE void atomic_thread_fence(rsl::internal::memory_order_relaxed_s)
+  REX_FORCE_INLINE void atomic_thread_fence(rsl::internal::memory_order_relaxed_s /*unused*/)
   {
     rsl::atomic_thread_fence(rsl::memory_order::relaxed);
   }
 
-  REX_FORCE_INLINE void atomic_thread_fence(rsl::internal::memory_order_acquire_s)
+  REX_FORCE_INLINE void atomic_thread_fence(rsl::internal::memory_order_acquire_s /*unused*/)
   {
     rsl::atomic_thread_fence(rsl::memory_order::acquire);
   }
 
-  REX_FORCE_INLINE void atomic_thread_fence(rsl::internal::memory_order_release_s)
+  REX_FORCE_INLINE void atomic_thread_fence(rsl::internal::memory_order_release_s /*unused*/)
   {
     rsl::atomic_thread_fence(rsl::memory_order::release);
   }
 
-  REX_FORCE_INLINE void atomic_thread_fence(rsl::internal::memory_order_acq_rel_s)
+  REX_FORCE_INLINE void atomic_thread_fence(rsl::internal::memory_order_acq_rel_s /*unused*/)
   {
     rsl::atomic_thread_fence(rsl::memory_order::acq_rel);
   }
 
-  REX_FORCE_INLINE void atomic_thread_fence(rsl::internal::memory_order_seq_cst_s)
+  REX_FORCE_INLINE void atomic_thread_fence(rsl::internal::memory_order_seq_cst_s /*unused*/)
   {
     rsl::atomic_thread_fence(rsl::memory_order::seq_cst);
   }
@@ -319,32 +319,32 @@ namespace rsl
   // void rsl::atomic_signal_fence(Order)
   //
   template <typename Order>
-  REX_FORCE_INLINE void atomic_signal_fence(Order)
+  REX_FORCE_INLINE void atomic_signal_fence(Order /*unused*/)
   {
     REX_ATOMIC_STATIC_ASSERT_INVALID_MEMORY_ORDER(Order);
   }
 
-  REX_FORCE_INLINE void atomic_signal_fence(rsl::internal::memory_order_relaxed_s)
+  REX_FORCE_INLINE void atomic_signal_fence(rsl::internal::memory_order_relaxed_s /*unused*/)
   {
     rsl::atomic_signal_fence(rsl::memory_order::relaxed);
   }
 
-  REX_FORCE_INLINE void atomic_signal_fence(rsl::internal::memory_order_acquire_s)
+  REX_FORCE_INLINE void atomic_signal_fence(rsl::internal::memory_order_acquire_s /*unused*/)
   {
     rsl::atomic_signal_fence(rsl::memory_order::acquire);
   }
 
-  REX_FORCE_INLINE void atomic_signal_fence(rsl::internal::memory_order_release_s)
+  REX_FORCE_INLINE void atomic_signal_fence(rsl::internal::memory_order_release_s /*unused*/)
   {
     rsl::atomic_signal_fence(rsl::memory_order::release);
   }
 
-  REX_FORCE_INLINE void atomic_signal_fence(rsl::internal::memory_order_acq_rel_s)
+  REX_FORCE_INLINE void atomic_signal_fence(rsl::internal::memory_order_acq_rel_s /*unused*/)
   {
     rsl::atomic_signal_fence(rsl::memory_order::acq_rel);
   }
 
-  REX_FORCE_INLINE void atomic_signal_fence(rsl::internal::memory_order_seq_cst_s)
+  REX_FORCE_INLINE void atomic_signal_fence(rsl::internal::memory_order_seq_cst_s /*unused*/)
   {
     rsl::atomic_signal_fence(rsl::memory_order::seq_cst);
   }

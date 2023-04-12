@@ -12,7 +12,7 @@ namespace rsl
     class atomic_flag
     {
     public: /* ctors */
-      constexpr atomic_flag(bool desired)
+      constexpr explicit atomic_flag(bool desired)
           : m_flag {desired}
       {
       }
@@ -21,6 +21,8 @@ namespace rsl
           : m_flag {false}
       {
       }
+
+      ~atomic_flag() = default;
 
     public: /* deleted ctors && assignment operators */
       atomic_flag(const atomic_flag&) = delete;
@@ -41,17 +43,17 @@ namespace rsl
         REX_ATOMIC_STATIC_ASSERT_INVALID_MEMORY_ORDER(Order);
       }
 
-      void clear(rsl::internal::memory_order_relaxed_s)
+      void clear(rsl::internal::memory_order_relaxed_s /*unused*/)
       {
         m_flag.store(false, rsl::memory_order_relaxed);
       }
 
-      void clear(rsl::internal::memory_order_release_s)
+      void clear(rsl::internal::memory_order_release_s /*unused*/)
       {
         m_flag.store(false, rsl::memory_order_release);
       }
 
-      void clear(rsl::internal::memory_order_seq_cst_s)
+      void clear(rsl::internal::memory_order_seq_cst_s /*unused*/)
       {
         m_flag.store(false, rsl::memory_order_seq_cst);
       }
@@ -76,27 +78,27 @@ namespace rsl
         return false;
       }
 
-      bool test_and_set(rsl::internal::memory_order_relaxed_s)
+      bool test_and_set(rsl::internal::memory_order_relaxed_s /*unused*/)
       {
         return m_flag.exchange(true, rsl::memory_order_relaxed);
       }
 
-      bool test_and_set(rsl::internal::memory_order_acquire_s)
+      bool test_and_set(rsl::internal::memory_order_acquire_s /*unused*/)
       {
         return m_flag.exchange(true, rsl::memory_order_acquire);
       }
 
-      bool test_and_set(rsl::internal::memory_order_release_s)
+      bool test_and_set(rsl::internal::memory_order_release_s /*unused*/)
       {
         return m_flag.exchange(true, rsl::memory_order_release);
       }
 
-      bool test_and_set(rsl::internal::memory_order_acq_rel_s)
+      bool test_and_set(rsl::internal::memory_order_acq_rel_s /*unused*/)
       {
         return m_flag.exchange(true, rsl::memory_order_acq_rel);
       }
 
-      bool test_and_set(rsl::internal::memory_order_seq_cst_s)
+      bool test_and_set(rsl::internal::memory_order_seq_cst_s /*unused*/)
       {
         return m_flag.exchange(true, rsl::memory_order_seq_cst);
       }
@@ -121,17 +123,17 @@ namespace rsl
         return false;
       }
 
-      bool test(rsl::internal::memory_order_relaxed_s) const
+      bool test(rsl::internal::memory_order_relaxed_s /*unused*/) const
       {
         return m_flag.load(rsl::memory_order_relaxed);
       }
 
-      bool test(rsl::internal::memory_order_acquire_s) const
+      bool test(rsl::internal::memory_order_acquire_s /*unused*/) const
       {
         return m_flag.load(rsl::memory_order_acquire);
       }
 
-      bool test(rsl::internal::memory_order_seq_cst_s) const
+      bool test(rsl::internal::memory_order_seq_cst_s /*unused*/) const
       {
         return m_flag.load(rsl::memory_order_seq_cst);
       }
@@ -142,7 +144,7 @@ namespace rsl
       }
 
     private:
-      rsl::atomic<bool> m_flag;
+      rsl::atomic<bool> m_flag {};
     };
   } // namespace v1
 

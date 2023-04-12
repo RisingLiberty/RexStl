@@ -100,10 +100,4 @@
 #include "rex_std/atomic.h"
 #include "rex_std/bonus/atomic/atomic_add_fetch.h"
 
-int main()
-{
-  [[maybe_unused]] rsl::atomic<rsl::uint8> x;
-  x.add_fetch(1);
-  x.store(1);
-  [[maybe_unused]] int y = x.load();
-}
+int main() {}

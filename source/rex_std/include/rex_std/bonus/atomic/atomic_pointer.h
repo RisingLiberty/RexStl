@@ -8,7 +8,7 @@ namespace rsl
     namespace internal
     {
 
-      template <typename T, unsigned width = sizeof(T)>
+      template <typename T, unsigned Width = sizeof(T)>
       struct atomic_pointer_base;
 
 #define REX_ATOMIC_POINTER_STATIC_ASSERT_FUNCS_IMPL(funcName)                                                                                                                                                                                            \
@@ -46,19 +46,20 @@ namespace rsl
     REX_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);                                                                                                                                                                                                         \
   }
 
-      template <typename T, unsigned width>
-      struct atomic_pointer_base<T*, width> : public atomic_base_width<T*, width>
+      template <typename T, unsigned Width>
+      struct atomic_pointer_base<T*, Width> : public atomic_base_width<T*, Width>
       {
       private:
-        using Base = atomic_base_width<T*, width>;
+        using Base = atomic_base_width<T*, Width>;
 
-      public: /* ctors */
-        constexpr atomic_pointer_base(T* desired)
+      public:                                     /* ctors */
+        constexpr atomic_pointer_base(T* desired) // NOLINT(google-explicit-constructor)
             : Base {desired}
         {
         }
 
         constexpr atomic_pointer_base() = default;
+        ~atomic_pointer_base()          = default;
 
         atomic_pointer_base(const atomic_pointer_base&) = delete;
 
@@ -80,10 +81,10 @@ namespace rsl
       public: /* sub_fetch */
         REX_ATOMIC_POINTER_STATIC_ASSERT_FUNCS_IMPL(sub_fetch)
 
-      public: /* operator++ && operator-- */
-        REX_ATOMIC_POINTER_STATIC_ASSERT_INC_DEC_OPERATOR_IMPL(++)
+      public:                                                      /* operator++ && operator-- */
+        REX_ATOMIC_POINTER_STATIC_ASSERT_INC_DEC_OPERATOR_IMPL(++) // NOLINT(bugprone-macro-repeated-side-effects)
 
-        REX_ATOMIC_POINTER_STATIC_ASSERT_INC_DEC_OPERATOR_IMPL(--)
+        REX_ATOMIC_POINTER_STATIC_ASSERT_INC_DEC_OPERATOR_IMPL(--) // NOLINT(bugprone-macro-repeated-side-effects)
 
       public: /* operator+= && operator-= */
         REX_ATOMIC_POINTER_STATIC_ASSERT_ASSIGNMENT_OPERATOR_IMPL(+=)
@@ -91,7 +92,7 @@ namespace rsl
         REX_ATOMIC_POINTER_STATIC_ASSERT_ASSIGNMENT_OPERATOR_IMPL(-=)
       };
 
-      template <typename T, unsigned width = sizeof(T)>
+      template <typename T, unsigned Width = sizeof(T)>
       struct atomic_pointer_width;
 
 #define REX_ATOMIC_POINTER_FUNC_IMPL(op, bits)                                                                                                                                                                                                           \
