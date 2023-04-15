@@ -45,6 +45,10 @@ namespace rsl
           , m_str_buff(mode)
       {
       }
+      basic_istringstream(const basic_istringstream<CharType, Traits, Allocator>& str)
+          : basic_istringstream(str.str(), io::openmode::in | io::openmode::out)
+      {
+      }
 
       explicit basic_istringstream(const basic_string<CharType, Traits, Allocator>& str, io::openmode mode = io::openmode::in | io::openmode::out)
           : base(&m_str_buff)
@@ -62,6 +66,9 @@ namespace rsl
       {
       }
 
+      ~basic_istringstream() = default;
+
+      basic_istringstream& operator=(const basic_istringstream&) = delete;
       basic_istringstream& operator=(basic_istringstream&& other)
       {
         base::operator=(rsl::move(other));
