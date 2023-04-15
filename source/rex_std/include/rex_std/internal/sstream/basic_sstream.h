@@ -46,6 +46,10 @@ namespace rsl
       {
       }
 
+      basic_stringstream(const basic_stringstream<CharType, Traits, Allocator>& str)
+          : basic_stringstream(str.str(), io::openmode::in | io::openmode::out)
+      {
+      }
       explicit basic_stringstream(const basic_string<CharType, Traits, Allocator>& str, io::openmode mode = io::openmode::in | io::openmode::out)
           : base(&m_str_buff)
           , m_str_buff(str, mode)
@@ -61,6 +65,10 @@ namespace rsl
           , m_str_buff(mode, alloc)
       {
       }
+
+      ~basic_stringstream() override = default;
+
+      basic_stringstream& operator=(const basic_stringstream& other) = delete;
 
       basic_stringstream& operator=(basic_stringstream&& other)
       {
