@@ -207,7 +207,7 @@ namespace rsl
       // wait for signal with timeout
       if(!rsl::internal::does_current_thread_own_mtx(lock.mutex()))
       {
-        REX_ASSERT("Trying to wait for a mutex that's not locked or owned by thead");
+        RSL_ASSERT("Trying to wait for a mutex that's not locked or owned by thead");
       }
 
       // Nothing to do to comply with LWG-2135 because std::mutex lock/unlock are nothrow

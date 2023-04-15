@@ -105,7 +105,7 @@ namespace rsl
       basic_string(const basic_string& other, size_type pos, const allocator_type& alloc = allocator_type())
           : basic_string(alloc)
       {
-        REX_ASSERT_X(other.size() - pos >= 0, "invalid pos value given to string ctor");
+        RSL_ASSERT_X(other.size() - pos >= 0, "invalid pos value given to string ctor");
         assign(rsl::iterator_to_pointer(other.begin() + pos), other.size() - pos);
       }
       // Constructs the string with a substring of other. starting at pos and going to count
@@ -162,7 +162,7 @@ namespace rsl
       basic_string(basic_string&& other, const allocator_type& alloc)
           : basic_string(alloc)
       {
-        REX_ASSERT_X(other.get_allocator() == alloc, "different allocators in move constructor, this is not allowed");
+        RSL_ASSERT_X(other.get_allocator() == alloc, "different allocators in move constructor, this is not allowed");
         swap(other);
       }
       // Construct the string from the given initializer_list
@@ -216,8 +216,8 @@ namespace rsl
       // copy assignment. the contents of other are copied into this.
       basic_string& operator=(const basic_string& other)
       {
-        REX_ASSERT_X(this != &other, "Can't copy to yourself");
-        REX_ASSERT_X(get_allocator() == other.get_allocator(), "Different allocators in copy assignment, this is not allowed");
+        RSL_ASSERT_X(this != &other, "Can't copy to yourself");
+        RSL_ASSERT_X(get_allocator() == other.get_allocator(), "Different allocators in copy assignment, this is not allowed");
 
         assign(other.data(), other.length());
         return *this;
@@ -228,8 +228,8 @@ namespace rsl
       // no allocation is performed
       basic_string& operator=(basic_string&& other) noexcept
       {
-        REX_ASSERT_X(this != &other, "Can't move to yourself");
-        REX_ASSERT_X(get_allocator() == other.get_allocator(), "Different allocators in move assignment, this is not allowed");
+        RSL_ASSERT_X(this != &other, "Can't move to yourself");
+        RSL_ASSERT_X(get_allocator() == other.get_allocator(), "Different allocators in move assignment, this is not allowed");
 
         move_assign(rsl::move(other));
         return *this;
@@ -281,8 +281,8 @@ namespace rsl
       // replaces the contents with a copy of str, equivalent to the copy assignment operator
       basic_string& assign(const basic_string& other)
       {
-        REX_ASSERT_X(this != &other, "Can't assign to yourself");
-        REX_ASSERT_X(get_allocator() == other.get_allocator(), "Different allocators in assignment, this is not allowed");
+        RSL_ASSERT_X(this != &other, "Can't assign to yourself");
+        RSL_ASSERT_X(get_allocator() == other.get_allocator(), "Different allocators in assignment, this is not allowed");
 
         assign(other.data(), other.length());
         return *this;
@@ -292,8 +292,8 @@ namespace rsl
       // replaces the contents with a copy of str, starting at pos and going till pos + count
       basic_string& assign(const basic_string& other, size_type pos, size_type count = s_npos)
       {
-        REX_ASSERT_X(this != &other, "Can't assign to yourself");
-        REX_ASSERT_X(get_allocator() == other.get_allocator(), "Different allocators in assignment, this is not allowed");
+        RSL_ASSERT_X(this != &other, "Can't assign to yourself");
+        RSL_ASSERT_X(get_allocator() == other.get_allocator(), "Different allocators in assignment, this is not allowed");
 
         const size_type num_to_copy = obj_length_or_count(other, count, pos);
         assign(other.data() + pos, num_to_copy);
@@ -304,8 +304,8 @@ namespace rsl
       // replaces the contents with the content of str. equivalent to the move assignment operator
       basic_string& assign(basic_string<CharType, Traits, Alloc>&& other)
       {
-        REX_ASSERT_X(this != &other, "Can't assign to yourself");
-        REX_ASSERT_X(get_allocator() == other.get_allocator(), "Different allocators in assignment, this is not allowed");
+        RSL_ASSERT_X(this != &other, "Can't assign to yourself");
+        RSL_ASSERT_X(get_allocator() == other.get_allocator(), "Different allocators in assignment, this is not allowed");
 
         move_assign(rsl::move(other));
         return *this;
@@ -407,14 +407,14 @@ namespace rsl
       // bounds checking is performed
       reference at(size_type pos)
       {
-        REX_ASSERT_X(pos < size(), "string out of range");
+        RSL_ASSERT_X(pos < size(), "string out of range");
         return m_begin[pos];
       }
       // Returns a reference to the character at specified location pos
       // bounds checking is performed
       const_reference at(size_type pos) const
       {
-        REX_ASSERT_X(pos < size(), "string out of range");
+        RSL_ASSERT_X(pos < size(), "string out of range");
         return m_begin[pos];
       }
       // Returns a reference to the character at specified location pos
@@ -1015,7 +1015,7 @@ namespace rsl
       // replaces the part of the string, indicated by [pos, pos + count) with a new string.
       basic_string& replace(size_type pos, size_type count, const basic_string& str)
       {
-        REX_ASSERT_X(pos >= 0 && pos < length(), "pos out of range");
+        RSL_ASSERT_X(pos >= 0 && pos < length(), "pos out of range");
 
         count = (rsl::min)(count, size() - pos);
         return replace(pos, count, str.data(), str.length());
@@ -1026,8 +1026,8 @@ namespace rsl
         const size_type first_idx = rsl::distance(cbegin(), first);
         const size_type last_idx  = rsl::distance(cbegin(), last);
 
-        REX_ASSERT_X(first_idx < size(), "'first' iterator out of range");
-        REX_ASSERT_X(last_idx <= size(), "'last' iterator out of range");
+        RSL_ASSERT_X(first_idx < size(), "'first' iterator out of range");
+        RSL_ASSERT_X(last_idx <= size(), "'last' iterator out of range");
 
         return replace(first_idx, last_idx - first_idx, str.data(), str.length());
       }
@@ -1037,8 +1037,8 @@ namespace rsl
         count1 = (rsl::min)(count1, size() - pos1);
         count2 = (rsl::min)(count2, str.size() - pos2);
 
-        REX_ASSERT_X(pos1 >= 0 && pos1 < length(), "pos1 out of range");
-        REX_ASSERT_X(pos2 >= 0 && pos2 < str.length(), "pos2 out of range");
+        RSL_ASSERT_X(pos1 >= 0 && pos1 < length(), "pos1 out of range");
+        RSL_ASSERT_X(pos2 >= 0 && pos2 < str.length(), "pos2 out of range");
 
         return replace(pos1, count1, str.data() + pos2, count2);
       }
@@ -1049,8 +1049,8 @@ namespace rsl
         const size_type first_idx = rsl::distance(cbegin(), first);
         const size_type last_idx  = rsl::distance(cbegin(), last);
 
-        REX_ASSERT_X(first_idx < size(), "'first' iterator out of range");
-        REX_ASSERT_X(last_idx <= size(), "'last' iterator out of range");
+        RSL_ASSERT_X(first_idx < size(), "'first' iterator out of range");
+        RSL_ASSERT_X(last_idx <= size(), "'last' iterator out of range");
 
         const_pointer s        = rsl::iterator_to_pointer(first2);
         const size_type length = static_cast<size_type>(rsl::distance(first2, last2));
@@ -1062,7 +1062,7 @@ namespace rsl
       template <count_t Size>
       basic_string& replace(size_type pos, size_type count, const value_type (&s)[Size]) // NOLINT(modernize-avoid-c-arrays)
       {
-        REX_ASSERT_X(pos >= 0 && pos < length(), "pos out of range");
+        RSL_ASSERT_X(pos >= 0 && pos < length(), "pos out of range");
 
         count = (rsl::min)(count, size() - pos);
 
@@ -1073,7 +1073,7 @@ namespace rsl
       // basic_string& replace(size_type pos, size_type count, const_pointer s);
       basic_string& replace(size_type pos, size_type count, const_pointer s, size_type count2)
       {
-        REX_ASSERT_X(pos >= 0 && pos < length(), "pos out of range");
+        RSL_ASSERT_X(pos >= 0 && pos < length(), "pos out of range");
 
         const size_type num_chars_to_add = count2 - count;
         const size_type old_size         = size();
@@ -1110,8 +1110,8 @@ namespace rsl
         const size_type first_idx = rsl::distance(cbegin(), first);
         const size_type last_idx  = rsl::distance(cbegin(), last);
 
-        REX_ASSERT_X(first_idx < size(), "'first' iterator out of range");
-        REX_ASSERT_X(last_idx <= size(), "'last' iterator out of range");
+        RSL_ASSERT_X(first_idx < size(), "'first' iterator out of range");
+        RSL_ASSERT_X(last_idx <= size(), "'last' iterator out of range");
 
         return replace(first_idx, last_idx - first_idx, s, Size - 1);
       }
@@ -1123,7 +1123,7 @@ namespace rsl
       // replaces the part of the string, indicated by [pos, pos + count) with count2 copies of ch
       basic_string& replace(size_type pos, size_type count, size_type count2, value_type ch)
       {
-        REX_ASSERT_X(pos >= 0 && pos < length(), "pos out of range");
+        RSL_ASSERT_X(pos >= 0 && pos < length(), "pos out of range");
 
         count = (rsl::min)(count, size() - pos);
         if(count2 > count)
@@ -1141,8 +1141,8 @@ namespace rsl
         const size_type first_idx = rsl::distance(cbegin(), first);
         const size_type last_idx  = rsl::distance(cbegin(), last);
 
-        REX_ASSERT_X(first_idx < size(), "'first' iterator out of range");
-        REX_ASSERT_X(last_idx <= size(), "'last' iterator out of range");
+        RSL_ASSERT_X(first_idx < size(), "'first' iterator out of range");
+        RSL_ASSERT_X(last_idx <= size(), "'last' iterator out of range");
 
         return replace(first_idx, last_idx - first_idx, count2, ch);
       }
@@ -1173,8 +1173,8 @@ namespace rsl
         const size_type first_idx = rsl::distance(cbegin(), first);
         const size_type last_idx  = rsl::distance(cbegin(), last);
 
-        REX_ASSERT_X(first_idx < size(), "'first' iterator out of range");
-        REX_ASSERT_X(last_idx <= size(), "'last' iterator out of range");
+        RSL_ASSERT_X(first_idx < size(), "'first' iterator out of range");
+        RSL_ASSERT_X(last_idx <= size(), "'last' iterator out of range");
 
         return replace(first_idx, last_idx - first_idx, sv.data(), sv.length());
       }
@@ -1547,7 +1547,7 @@ namespace rsl
       // point to its sso buffer
       void reset()
       {
-        REX_ASSERT_X(is_using_big_string(), "Resetting string that's using heap memory, this will cause a memory leak");
+        RSL_ASSERT_X(is_using_big_string(), "Resetting string that's using heap memory, this will cause a memory leak");
 
         reset(m_sso_buffer.data(), 0, m_sso_buffer.max_size());
       }
@@ -1562,7 +1562,7 @@ namespace rsl
       // setting m_begin, m_end and m_last
       void sso_assign(const_pointer str, size_type length)
       {
-        REX_ASSERT_X(is_using_sso_string(), "Not using sso string when using sso assign");
+        RSL_ASSERT_X(is_using_sso_string(), "Not using sso string when using sso assign");
 
         m_sso_buffer.assign(str, length);
         m_end = m_sso_buffer.data() + length;

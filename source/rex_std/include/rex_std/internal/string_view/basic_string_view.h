@@ -161,7 +161,7 @@ namespace rsl
       // bounds checking is performed
       constexpr const_reference at(const size_type pos) const
       {
-        REX_ASSERT_X(pos < m_length, "string view index out of bounds");
+        RSL_ASSERT_X(pos < m_length, "string view index out of bounds");
         return m_data[pos];
       }
       // returns a const reference to the first character in the view

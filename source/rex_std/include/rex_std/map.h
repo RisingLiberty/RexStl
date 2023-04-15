@@ -193,7 +193,7 @@ namespace rsl
       {
         iterator it_lower = base_type::lower_bound(key);
 
-        REX_ASSERT_X(it_lower != base_type::end(), "map key does not exist");
+        RSL_ASSERT_X(it_lower != base_type::end(), "map key does not exist");
 
         return (*it_lower).value;
       }
@@ -203,7 +203,7 @@ namespace rsl
       {
         const_iterator it_lower = base_type::lower_bound(key);
 
-        REX_ASSERT_X(it_lower != base_type::end(), "map key does not exist");
+        RSL_ASSERT_X(it_lower != base_type::end(), "map key does not exist");
 
         return (*it_lower).value;
       }

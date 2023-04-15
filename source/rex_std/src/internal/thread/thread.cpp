@@ -41,7 +41,7 @@ namespace rsl
 
     thread::~thread()
     {
-      if(REX_ASSERT_X(!joinable(), "joinable thread on destruction!"))
+      if(RSL_ASSERT_X(!joinable(), "joinable thread on destruction!"))
       {
         rsl::terminate();
       }
@@ -49,7 +49,7 @@ namespace rsl
 
     thread& thread::operator=(thread&& other)
     {
-      if(REX_ASSERT_X(!joinable(), "joinable thread on move assignment!"))
+      if(RSL_ASSERT_X(!joinable(), "joinable thread on move assignment!"))
       {
         rsl::terminate();
       }
@@ -89,7 +89,7 @@ namespace rsl
     void thread::create(thread_start_func func, void* param)
     {
       m_handle = CreateThread(nullptr, 0, func, param, 0, &m_id.m_id);
-      REX_ASSERT_X(m_handle != INVALID_HANDLE_VALUE, "Failed to create thread with error: {}", GetLastError());
+      RSL_ASSERT_X(m_handle != INVALID_HANDLE_VALUE, "Failed to create thread with error: {}", GetLastError());
     }
 
     void swap(thread& lhs, thread& rhs)

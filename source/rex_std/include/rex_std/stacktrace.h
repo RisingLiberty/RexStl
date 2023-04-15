@@ -233,7 +233,7 @@ namespace rsl
       }
       const_reference at(size_type pos) const
       {
-        REX_ASSERT_X(pos < m_size, "pos out of bounds!");
+        RSL_ASSERT_X(pos < m_size, "pos out of bounds!");
         return m_entries[pos];
       }
 

@@ -37,7 +37,7 @@ namespace rsl
         void lock()
         {
           const DWORD thread_id = GetCurrentThreadId();
-          REX_ASSERT_X(m_thread_id != thread_id, "deadlock! trying to lock the same mutex twice on the same thread");
+          RSL_ASSERT_X(m_thread_id != thread_id, "deadlock! trying to lock the same mutex twice on the same thread");
           m_thread_id = thread_id;
           AcquireSRWLockExclusive(&m_srw_lock);
         }

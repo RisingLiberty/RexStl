@@ -55,17 +55,17 @@ namespace rsl
 
       void lock()
       {
-        REX_ASSERT_X(m_mutex != nullptr, "Trying to lock mutex, but no is provided");
+        RSL_ASSERT_X(m_mutex != nullptr, "Trying to lock mutex, but no is provided");
         m_mutex->lock();
       }
       bool try_lock()
       {
-        REX_ASSERT_X(m_mutex != nullptr, "Trying to lock mutex, but no is provided");
+        RSL_ASSERT_X(m_mutex != nullptr, "Trying to lock mutex, but no is provided");
         return m_mutex->try_lock();
       }
       void unlock()
       {
-        REX_ASSERT_X(m_mutex != nullptr, "Trying to unlock mutex, but no is provided");
+        RSL_ASSERT_X(m_mutex != nullptr, "Trying to unlock mutex, but no is provided");
         m_mutex->unlock();
         m_mutex = nullptr;
       }

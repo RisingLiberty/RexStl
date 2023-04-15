@@ -44,13 +44,13 @@ namespace rsl
 
       constexpr aligned_storage& operator=(const aligned_storage& other) // NOLINT(bugprone-unhandled-self-assignment)
       {
-        REX_ASSERT_X(this != addressof(other), "Can't copy to yourself");
+        RSL_ASSERT_X(this != addressof(other), "Can't copy to yourself");
         memcpy(m_buff, other.m_buff, Size);
         return *this;
       }
       constexpr aligned_storage& operator=(aligned_storage&& other)
       {
-        REX_ASSERT_X(this != addressof(other), "Can't move to yourself");
+        RSL_ASSERT_X(this != addressof(other), "Can't move to yourself");
         memcpy(m_buff, other.m_buff, Size);
         return *this;
       }

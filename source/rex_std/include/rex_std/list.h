@@ -328,7 +328,7 @@ namespace rsl
       }
       list& operator=(list&& other) noexcept
       {
-        REX_ASSERT_X(this != &other, "Can't move assign to yourself!");
+        RSL_ASSERT_X(this != &other, "Can't move assign to yourself!");
         swap(other);
 
         return *this;

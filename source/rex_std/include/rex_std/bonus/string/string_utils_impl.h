@@ -977,7 +977,7 @@ namespace rsl
       template <typename Traits, typename Pointer, typename SizeType>
       constexpr SizeType find(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer toFindStr, SizeType toFindLength, SizeType defaultValue)
       {
-        REX_ASSERT_X(pos < lhsLength, "pos out of bounds");
+        RSL_ASSERT_X(pos < lhsLength, "pos out of bounds");
 
         // substring must be found between [pos, size() - toFindLength)
         // we subtract the length of the string to find for optimization
@@ -1003,7 +1003,7 @@ namespace rsl
       SizeType rfind(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer toFindStr, SizeType toFindLength, SizeType defaultValue)
       {
         pos = (rsl::min)(pos, lhsLength - 1);
-        REX_ASSERT_X(pos < lhsLength, "pos out of bounds");
+        RSL_ASSERT_X(pos < lhsLength, "pos out of bounds");
 
         // the string must be found between [begin, pos]
 

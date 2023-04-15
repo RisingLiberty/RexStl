@@ -881,7 +881,7 @@ namespace rsl
       // swaps all data members except for rdbuf(), and swaps the values of the gcount() counters.
       void swap(basic_istream& other)
       {
-        REX_ASSERT_X(this != addressof(other), "Can't swap to yourself");
+        RSL_ASSERT_X(this != addressof(other), "Can't swap to yourself");
         base::swap(other);
         rsl::swap(m_gcount, other.m_gcount);
       }

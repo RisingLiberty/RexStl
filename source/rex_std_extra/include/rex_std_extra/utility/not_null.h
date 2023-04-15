@@ -26,7 +26,7 @@ namespace rsl
       constexpr NotNull(T* ptr)
           : m_ptr(ptr)
       {
-        REX_ASSERT_X(m_ptr != nullptr, "Can't assign a nullptr to a NotNull class");
+        RSL_ASSERT_X(m_ptr != nullptr, "Can't assign a nullptr to a NotNull class");
       }
 
       constexpr NotNull(rsl::nullptr_t) = delete;

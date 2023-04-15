@@ -28,7 +28,7 @@ namespace rsl
     {
       DWORD mode_to_creation_disposition(io::openmode mode)
       {
-        REX_ASSERT_X(rsl::nand(rsl::has_flag(mode, io::openmode::app), rsl::has_flag(mode, io::openmode::trunc)), "both append and trunc provided as openmode");
+        RSL_ASSERT_X(rsl::nand(rsl::has_flag(mode, io::openmode::app), rsl::has_flag(mode, io::openmode::trunc)), "both append and trunc provided as openmode");
 
         DWORD result = 0;
         if(rsl::has_flag(mode, io::openmode::trunc))
@@ -107,7 +107,7 @@ namespace rsl
         // is not null terminated and would therefore pass in an invalid path
         rsl::array<char8, 256> buff = {};
 
-        REX_ASSERT_X(filename.length() < buff.max_size(), "exceeded max filename length of {} characters", buff.max_size());
+        RSL_ASSERT_X(filename.length() < buff.max_size(), "exceeded max filename length of {} characters", buff.max_size());
         rsl::memcpy(buff.data(), filename.data(), filename.length());
 
         return open(buff.data(), mode);

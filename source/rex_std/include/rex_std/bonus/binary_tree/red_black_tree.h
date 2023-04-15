@@ -130,7 +130,7 @@ namespace rsl
 
         while((node != node_root_ref) && (node->parent_node->color == internal::RedBlackTreeColor::Red))
         {
-          REX_ASSERT_X(node->parent_node != nullptr, "inserting a node without a parent");
+          RSL_ASSERT_X(node->parent_node != nullptr, "inserting a node without a parent");
           RedBlackTreeNodeBase* node_parent_parent = node->parent_node->parent_node;
 
           if(node->parent_node == node_parent_parent->left_node)
@@ -152,7 +152,7 @@ namespace rsl
                 node_root_ref = red_black_tree_rotate_left(node, node_root_ref);
               }
 
-              REX_ASSERT_X(node->parent_node != nullptr, "inserting a node without a parent");
+              RSL_ASSERT_X(node->parent_node != nullptr, "inserting a node without a parent");
             }
           }
           else
@@ -168,7 +168,7 @@ namespace rsl
             }
             else
             {
-              REX_ASSERT_X(node != nullptr && node->parent_node != nullptr, "invalid node");
+              RSL_ASSERT_X(node != nullptr && node->parent_node != nullptr, "invalid node");
 
               if(node == node->parent_node->left_node)
               {
@@ -182,7 +182,7 @@ namespace rsl
             }
           }
 
-          REX_ASSERT_X(node_root_ref != nullptr, "invalid node root");
+          RSL_ASSERT_X(node_root_ref != nullptr, "invalid node root");
           node_root_ref->color = internal::RedBlackTreeColor::Black;
         }
       }
@@ -389,7 +389,7 @@ namespace rsl
           {
             if(node->right_node && child_node)
             {
-              REX_ASSERT_X(child_node != nullptr, "there should always be a child node");
+              RSL_ASSERT_X(child_node != nullptr, "there should always be a child node");
               node_leftmost_ref = red_black_tree_min_child(child_node);
             }
             else
@@ -402,7 +402,7 @@ namespace rsl
           {
             if(node->left_node && child_node)
             {
-              REX_ASSERT_X(child_node != nullptr, "there should always be a child node");
+              RSL_ASSERT_X(child_node != nullptr, "there should always be a child node");
               node_rightmost_ref = red_black_tree_max_child(child_node);
             }
             else
@@ -752,8 +752,8 @@ namespace rsl
 
       RedBlackTree& operator=(const this_type& other)
       {
-        REX_ASSERT_X(this != &other, "Can't copy to yourself");
-        REX_ASSERT_X(get_allocator() == other.get_allocator(), "Different allocators in copy assignment, this is not allowed");
+        RSL_ASSERT_X(this != &other, "Can't copy to yourself");
+        RSL_ASSERT_X(get_allocator() == other.get_allocator(), "Different allocators in copy assignment, this is not allowed");
 
         clear();
         base_type::get_compare() = other.get_compare();
@@ -770,8 +770,8 @@ namespace rsl
       }
       RedBlackTree& operator=(this_type&& other)
       {
-        REX_ASSERT_X(this != &other, "Can't copy to yourself");
-        REX_ASSERT_X(get_allocator() == other.get_allocator(), "Different allocators in move assignment, this is not allowed");
+        RSL_ASSERT_X(this != &other, "Can't copy to yourself");
+        RSL_ASSERT_X(get_allocator() == other.get_allocator(), "Different allocators in move assignment, this is not allowed");
 
         clear();
         swap(other);
@@ -1117,7 +1117,7 @@ namespace rsl
           }
           else
           {
-            REX_ASSERT_X(!compare(x, extract_key(current->value)), "compare function doesn't give the same result when swapping the arguments");
+            RSL_ASSERT_X(!compare(x, extract_key(current->value)), "compare function doesn't give the same result when swapping the arguments");
             current = static_cast<node_type*>(current->right_node);
           }
         }
@@ -1176,7 +1176,7 @@ namespace rsl
           }
           else
           {
-            REX_ASSERT_X(!compare(x, extract_key(current->value)), "compare function doesn't give the same result when swapping the arguments");
+            RSL_ASSERT_X(!compare(x, extract_key(current->value)), "compare function doesn't give the same result when swapping the arguments");
             current = static_cast<node_type*>(current->right_node);
           }
         }
@@ -1211,7 +1211,7 @@ namespace rsl
         {
           if(compare(x, extract_key, current->value))
           {
-            REX_ASSERT_X(!compare(extract_key(current->value, x)));
+            RSL_ASSERT_X(!compare(extract_key(current->value, x)));
             range_end = current;
             current   = static_cast<node_type*>(current->left_node);
           }
@@ -1406,7 +1406,7 @@ namespace rsl
 
       iterator insert_value(node_type* nodeParent, bool forceToLeft, const key_type& key, node_type* newNode)
       {
-        REX_ASSERT_X(newNode != nullptr, "node to insert to the tree must not be null!");
+        RSL_ASSERT_X(newNode != nullptr, "node to insert to the tree must not be null!");
 
         internal::RedBlackTreeSide side;
         extract_key extract_key;
@@ -1464,7 +1464,7 @@ namespace rsl
 
           if(value_less_than_node)
           {
-            REX_ASSERT_X(!compare(extract_key(current->value), key), "compare function doesn't give the same result when swapping the arguments");
+            RSL_ASSERT_X(!compare(extract_key(current->value), key), "compare function doesn't give the same result when swapping the arguments");
             current = static_cast<node_type*>(current->left_node);
           }
           else
@@ -1490,7 +1490,7 @@ namespace rsl
 
         if(compare(extract_key(lower_bound->value), key))
         {
-          REX_ASSERT_X(!compare(key, extract_key(lower_bound->value)), "compare function doesn't give the same result when swapping the arguments");
+          RSL_ASSERT_X(!compare(key, extract_key(lower_bound->value)), "compare function doesn't give the same result when swapping the arguments");
           canInsert = true;
           return parent;
         }
@@ -1512,7 +1512,7 @@ namespace rsl
 
           if(compare(key, extract_key(current->value)))
           {
-            REX_ASSERT_X(!compare(extract_key(current->value), key), "compare function doesn't give the same result when swapping the arguments");
+            RSL_ASSERT_X(!compare(extract_key(current->value), key), "compare function doesn't give the same result when swapping the arguments");
             current = static_cast<node_type*>(current->left_node);
           }
           else
@@ -1537,7 +1537,7 @@ namespace rsl
 
           if(position_less_than_value)
           {
-            REX_ASSERT_X(!compare(key, extract_key(position.node->value)), "compare function doesn't give the same result when swapping the arguments");
+            RSL_ASSERT_X(!compare(key, extract_key(position.node->value)), "compare function doesn't give the same result when swapping the arguments");
 
             const bool value_less_than_next = compare(key, extract_key(it_next.node->value));
 
@@ -1560,7 +1560,7 @@ namespace rsl
 
         if(size() && compare(extract_key(static_cast<node_type*>(m_anchor.right_node)->value), key))
         {
-          REX_ASSERT_X(!compare(key, extract_key(static_cast<node_type*>(m_anchor.right_node)->value)), "compare function doesn't give the same result when swapping the arguments");
+          RSL_ASSERT_X(!compare(key, extract_key(static_cast<node_type*>(m_anchor.right_node)->value)), "compare function doesn't give the same result when swapping the arguments");
           forceToLeft = false;
           return static_cast<node_type*>(m_anchor.right_node);
         }

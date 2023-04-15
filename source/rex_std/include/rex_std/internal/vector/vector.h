@@ -158,8 +158,8 @@ namespace rsl
       // Copy assignment operator. Replaces the contents with a copy of the contents of other.
       vector& operator=(const vector& other)
       {
-        REX_ASSERT_X(this != &other, "Can't copy to yourself");
-        REX_ASSERT_X(get_allocator() == other.get_allocator(), "Different allocators in copy assignment, this is not allowed");
+        RSL_ASSERT_X(this != &other, "Can't copy to yourself");
+        RSL_ASSERT_X(get_allocator() == other.get_allocator(), "Different allocators in copy assignment, this is not allowed");
 
         copy_range(other.cbegin(), other.cend());
         return *this;
@@ -168,8 +168,8 @@ namespace rsl
       // Move assignment operator. Replaces the contents with those of other using move semantic.
       vector& operator=(vector&& other) noexcept
       {
-        REX_ASSERT_X(this != &other, "Can't move to yourself");
-        REX_ASSERT_X(get_allocator() == other.get_allocator(), "Different allocators in move assignment, this is not allowed");
+        RSL_ASSERT_X(this != &other, "Can't move to yourself");
+        RSL_ASSERT_X(get_allocator() == other.get_allocator(), "Different allocators in move assignment, this is not allowed");
 
         clear(); // this is not necessary but makes it standard compliant
         swap(other);
@@ -246,14 +246,14 @@ namespace rsl
       // If pos is not within the range of the container, an assert is raised.
       reference at(size_type idx)
       {
-        REX_ASSERT_X(idx < size(), "vector index out of range");
+        RSL_ASSERT_X(idx < size(), "vector index out of range");
         return m_begin[idx];
       }
       // Returns a reference to the element at specified location pos, with bounds checking.
       // If pos is not within the range of the container, an assert is raised.
       const_reference at(size_type idx) const
       {
-        REX_ASSERT_X(idx < size(), "vector index out of range");
+        RSL_ASSERT_X(idx < size(), "vector index out of range");
         return m_begin[idx];
       }
       // Returns a reference to the element at specified location pos. No bounds checking is performed.
@@ -515,7 +515,7 @@ namespace rsl
         auto dst_idx             = distance_from_begin;
         auto src_idx             = dst_idx + count;
         // make sure the range belongs to the container
-        REX_ASSERT_X(rsl::in_range(dst_idx, 0, size()), "Trying to remove a range of elements not belonging to the container.");
+        RSL_ASSERT_X(rsl::in_range(dst_idx, 0, size()), "Trying to remove a range of elements not belonging to the container.");
 
         for(size_type i = src_idx; i < size(); ++i)
         {
@@ -848,7 +848,7 @@ namespace rsl
       template <typename It>
       void fill(It first, It last)
       {
-        REX_ASSERT_X(m_begin == nullptr, "overwriting data ptr that has memory allocated for it, please use vector::copy_range");
+        RSL_ASSERT_X(m_begin == nullptr, "overwriting data ptr that has memory allocated for it, please use vector::copy_range");
 
         difference_type count           = static_cast<difference_type>(rsl::distance(first, last));
         const size_type new_capacity    = count;
@@ -866,7 +866,7 @@ namespace rsl
       // fills the vector with n elements
       void fill_n(size_type count)
       {
-        REX_ASSERT_X(m_begin == nullptr, "overwriting data ptr that has memory allocated for it, please use vector::resize");
+        RSL_ASSERT_X(m_begin == nullptr, "overwriting data ptr that has memory allocated for it, please use vector::resize");
 
         const size_type new_capacity    = count;
         m_begin                         = static_cast<pointer>(get_mutable_allocator().allocate(calc_bytes_needed(new_capacity)));
@@ -881,7 +881,7 @@ namespace rsl
       // fills the vector with n elements of value val
       void fill_n(size_type count, const value_type& val)
       {
-        REX_ASSERT_X(m_begin == nullptr, "overwriting data ptr that has memory allocated for it, please use vector::resize");
+        RSL_ASSERT_X(m_begin == nullptr, "overwriting data ptr that has memory allocated for it, please use vector::resize");
 
         const size_type new_capacity    = count;
         m_begin                         = static_cast<pointer>(get_mutable_allocator().allocate(calc_bytes_needed(new_capacity)));
@@ -899,7 +899,7 @@ namespace rsl
       // typically only called from constructor taking capacity
       void uninitialized_allocation(size_type count)
       {
-        REX_ASSERT_X(m_begin == nullptr, "overwriting data ptr that has memory allocated for it, please use vector::reallocate");
+        RSL_ASSERT_X(m_begin == nullptr, "overwriting data ptr that has memory allocated for it, please use vector::reallocate");
 
         m_begin                         = static_cast<pointer>(get_mutable_allocator().allocate(calc_bytes_needed(count)));
         m_end                           = m_begin;

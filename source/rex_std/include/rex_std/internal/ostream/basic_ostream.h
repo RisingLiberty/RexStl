@@ -71,7 +71,7 @@ namespace rsl
           basic_ostream<CharT, Traits>* tied_str = m_ostream->tie();
           if(tied_str)
           {
-            REX_ASSERT_X(tied_str->tie() != m_ostream, "circular tied ostreams, this is not allowed!");
+            RSL_ASSERT_X(tied_str->tie() != m_ostream, "circular tied ostreams, this is not allowed!");
             tied_str->flush();
           }
 

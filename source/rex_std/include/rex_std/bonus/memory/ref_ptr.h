@@ -61,7 +61,7 @@ namespace rsl
 
         bool release()
         {
-          REX_ASSERT_X(use_count() > 0, "Invalid ref count for shared ptr");
+          RSL_ASSERT_X(use_count() > 0, "Invalid ref count for shared ptr");
           if(rsl::atomic_decrement(m_ref_count) == 0)
           {
             // you can never delete the last shared_ptr with still having a weak ptr referencing the ptr
@@ -207,7 +207,7 @@ namespace rsl
             : m_ptr(ptr)
             , m_ref_count(nullptr)
         {
-          REX_ASSERT_X(m_ptr != nullptr, "nullptr cannot be provided for this constructor");
+          RSL_ASSERT_X(m_ptr != nullptr, "nullptr cannot be provided for this constructor");
           alloc(ptr, d, allocator());
         }
         /// RSL Comment: Different from ISO C++ Standard at time of writing (04/Aug/2022)
@@ -225,7 +225,7 @@ namespace rsl
             : m_ptr(nullptr)
             , m_ref_count(nullptr)
         {
-          REX_ASSERT_X(m_ptr != nullptr, "nullptr cannot be provided for this constructor");
+          RSL_ASSERT_X(m_ptr != nullptr, "nullptr cannot be provided for this constructor");
           alloc(ptr, d, alloc);
         }
 

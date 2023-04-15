@@ -196,7 +196,7 @@ namespace rsl
           constexpr explicit static_string(rsl::string_view str) noexcept
               : static_string {str, rsl::make_index_sequence<N> {}}
           {
-            // REX_ASSERT_X(str.size() == N, "invalid static_string length");
+            // RSL_ASSERT_X(str.size() == N, "invalid static_string length");
           }
 
           constexpr const char* data() const noexcept

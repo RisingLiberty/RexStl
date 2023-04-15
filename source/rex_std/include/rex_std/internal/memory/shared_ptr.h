@@ -151,7 +151,7 @@ namespace rsl
       explicit shared_ptr(const weak_ptr<U>& weakPtr)
           : internal::ref_ptr<T>(weakPtr)
       {
-        REX_ASSERT_X(weakPtr.use_count() > 0, "cannot create shared ptr from emtpy weak ptr");
+        RSL_ASSERT_X(weakPtr.use_count() > 0, "cannot create shared ptr from emtpy weak ptr");
         internal::ref_ptr<T>::inc_ref();
       }
 
@@ -174,7 +174,7 @@ namespace rsl
       // replaces the managed object with the one managed by r
       shared_ptr& operator=(const shared_ptr& other) // NOLINT(bugprone-unhandled-self-assignment)
       {
-        REX_ASSERT_X(&other != this, "copying shared ptr to itself");
+        RSL_ASSERT_X(&other != this, "copying shared ptr to itself");
 
         shared_ptr<T>(other).swap(*this);
 
@@ -197,7 +197,7 @@ namespace rsl
       // after the assignment other is empty and this holds what r used to hold
       shared_ptr& operator=(shared_ptr&& other)
       {
-        REX_ASSERT_X(&other != this, "copying shared ptr to itself");
+        RSL_ASSERT_X(&other != this, "copying shared ptr to itself");
 
         shared_ptr(rsl::move(other)).swap(*this);
 

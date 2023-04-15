@@ -222,7 +222,7 @@ namespace rsl
 
       basic_streambuf& operator=(const basic_streambuf& other) // NOLINT(bugprone-unhandled-self-assignment)
       {
-        REX_ASSERT_X(this != addressof(other), "Can't assign an streambuffer to itself");
+        RSL_ASSERT_X(this != addressof(other), "Can't assign an streambuffer to itself");
 
         m_read_buf_begin = other.m_read_buf_begin;
         m_read_buf_curr  = other.m_read_buf_curr;
@@ -472,7 +472,7 @@ namespace rsl
       // returns previously pointed to element
       CharT& inc_gptr(card32 amount = 1)
       {
-        REX_ASSERT_X(m_read_buf_curr != nullptr, "Trying to increase read buf pointer, which is nullptr");
+        RSL_ASSERT_X(m_read_buf_curr != nullptr, "Trying to increase read buf pointer, which is nullptr");
         CharT& ch = **m_read_buf_curr;
         *m_read_buf_curr += amount;
         return ch;
@@ -486,7 +486,7 @@ namespace rsl
     private:
       CharT& dec_gptr()
       {
-        REX_ASSERT_X(m_read_buf_curr != nullptr, "Trying to decrease read buf pointer, which is nullptr");
+        RSL_ASSERT_X(m_read_buf_curr != nullptr, "Trying to decrease read buf pointer, which is nullptr");
         --*m_read_buf_curr;
         return **m_read_buf_curr;
       }
@@ -495,7 +495,7 @@ namespace rsl
       // returns previously pointed to element
       CharT& inc_pptr(card32 amount = 1) // NOLINT(misc-no-recursion)
       {
-        REX_ASSERT_X(m_write_buf_curr != nullptr, "Trying to increase read buf pointer, which is nullptr");
+        RSL_ASSERT_X(m_write_buf_curr != nullptr, "Trying to increase read buf pointer, which is nullptr");
         CharT& ch = **m_write_buf_curr;
         *m_write_buf_curr += amount;
         return ch;

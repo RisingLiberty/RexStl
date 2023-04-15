@@ -97,7 +97,7 @@ namespace rsl
 
         if(it == base_type::end())
         {
-          REX_ASSERT("Key k not found in hash_map");
+          RSL_ASSERT("Key k not found in hash_map");
         }
 
         return it->value;
@@ -108,7 +108,7 @@ namespace rsl
 
         if(it == base_type::end())
         {
-          REX_ASSERT("Key k not found in hash_map");
+          RSL_ASSERT("Key k not found in hash_map");
         }
 
         return it->value;
@@ -121,7 +121,7 @@ namespace rsl
 
         if(it == base_type::end())
         {
-          REX_ASSERT("Key k not found in hash_map");
+          RSL_ASSERT("Key k not found in hash_map");
         }
 
         return it->value;
@@ -134,7 +134,7 @@ namespace rsl
 
         if(it == base_type::end())
         {
-          REX_ASSERT("Key k not found in hash_map");
+          RSL_ASSERT("Key k not found in hash_map");
         }
 
         return it->value;

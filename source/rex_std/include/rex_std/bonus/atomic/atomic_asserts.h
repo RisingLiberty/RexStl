@@ -34,8 +34,8 @@
 #define REX_ATOMIC_STATIC_ASSERT_TYPE_IS_OBJECT(type) static_assert(rsl::is_object<type>::value, "rsl::atomic<T> : Template Typename T must be an object type!");
 
 #define REX_ATOMIC_ASSERT_ALIGNED(alignment)                                                                                                                                                                                                             \
-  REX_ASSERT((alignment & (alignment - 1)) == 0);                                                                                                                                                                                                        \
-  REX_ASSERT((reinterpret_cast<uintptr_t>(this) & (alignment - 1)) == 0)
+  RSL_ASSERT((alignment & (alignment - 1)) == 0);                                                                                                                                                                                                        \
+  RSL_ASSERT((reinterpret_cast<uintptr_t>(this) & (alignment - 1)) == 0)
 
 namespace rsl
 {

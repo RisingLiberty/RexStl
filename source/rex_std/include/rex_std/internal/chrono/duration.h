@@ -436,7 +436,7 @@ namespace rsl
         template <typename CharType>
         CharType* get_general_unit_suffix(CharType* rnext, const intmax num, const intmax den)
         {
-          REX_ASSERT_X(num > 0 && den > 0, "num and den must be above 0");
+          RSL_ASSERT_X(num > 0 && den > 0, "num and den must be above 0");
           *--rnext = '\0';
           *--rnext = 's';
           *--rnext = ']';

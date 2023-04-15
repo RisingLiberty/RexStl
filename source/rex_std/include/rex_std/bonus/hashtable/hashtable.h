@@ -101,7 +101,7 @@ namespace rsl
         }
         else
         {
-          REX_ASSERT_X(bucketCount.get() < 10'000'000, "Bucket count too big for hashtable. bucketcount: {}", bucketCount.get());
+          RSL_ASSERT_X(bucketCount.get() < 10'000'000, "Bucket count too big for hashtable. bucketcount: {}", bucketCount.get());
           m_cp_key_hash_and_bucket_count.second() = bucketCount.get();
         }
 
@@ -172,7 +172,7 @@ namespace rsl
 
       this_type& operator=(const this_type& other)
       {
-        REX_ASSERT_X(this != addressof(other), "Can't copy to yourself");
+        RSL_ASSERT_X(this != addressof(other), "Can't copy to yourself");
 
         clear();
         insert(other.begin(), other.end());
@@ -187,7 +187,7 @@ namespace rsl
       }
       this_type& operator=(this_type&& other)
       {
-        REX_ASSERT_X(this != rsl::addressof(other), "Can't move to yourself");
+        RSL_ASSERT_X(this != rsl::addressof(other), "Can't move to yourself");
 
         clear();
         swap(other);

@@ -81,7 +81,7 @@ namespace rsl
       // exchanges the state with another input/output stream object.
       void swap(basic_iostream& other)
       {
-        REX_ASSERT_X(this != addressof(other), "Can't swap with yourself");
+        RSL_ASSERT_X(this != addressof(other), "Can't swap with yourself");
         my_ios::swap(right);
       }
     };

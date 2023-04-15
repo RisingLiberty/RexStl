@@ -37,11 +37,11 @@ namespace rsl
 #ifdef REX_ENABLE_ASSERTS
   // #define assert(cond, ...) rsl::assert(cond, __VA_ARGS__)
 
-  #define REX_ASSERT_X(cond, ...) rsl::rex_assert(cond, __VA_ARGS__)
-  #define REX_ASSERT(...)         rsl::rex_assert(false, __VA_ARGS__)
+  #define RSL_ASSERT_X(cond, ...) rsl::rex_assert(cond, __VA_ARGS__)
+  #define RSL_ASSERT(...)         rsl::rex_assert(false, __VA_ARGS__)
 #else
   // #define assert(cond, ...) // NOLINT(readability-identifier-naming)
 
-  #define REX_ASSERT_X(cond, ...) (cond) && false
-  #define REX_ASSERT(...)         true
+  #define RSL_ASSERT_X(cond, ...) (cond) && false
+  #define RSL_ASSERT(...)         true
 #endif

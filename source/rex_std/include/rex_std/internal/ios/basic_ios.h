@@ -171,7 +171,7 @@ namespace rsl
       // sets the exception mask to except.
       void exceptions(io::iostate /*unused*/)
       {
-        REX_ASSERT("You can't set the exception mask of a stream");
+        RSL_ASSERT("You can't set the exception mask of a stream");
       }
 
       /// RSL Comment: Different from ISO C++ Standard at time of writing (09/Sep/2022)
@@ -251,7 +251,7 @@ namespace rsl
       // replaces the current state with that of other, except for the associated stream buffer
       void move(basic_ios& other)
       {
-        REX_ASSERT_X(this != rsl::addressof(other));
+        RSL_ASSERT_X(this != rsl::addressof(other));
 
         m_stream_buf  = nullptr;
         m_tied_stream = nullptr;
@@ -260,7 +260,7 @@ namespace rsl
       // replaces the current state with that of other, except for the associated stream buffer
       void move(basic_ios&& other)
       {
-        REX_ASSERT_X(this != rsl::addressof(other));
+        RSL_ASSERT_X(this != rsl::addressof(other));
 
         m_stream_buf  = nullptr;
         m_tied_stream = nullptr;

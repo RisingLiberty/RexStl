@@ -81,7 +81,7 @@ namespace rsl
         case rsl::v1::memory_order::consume: return __atomic_load_n(&tmp, __ATOMIC_CONSUME);
         case rsl::v1::memory_order::acquire: return __atomic_load_n(&tmp, __ATOMIC_ACQUIRE);
         case rsl::v1::memory_order::seq_cst: return __atomic_load_n(&tmp, __ATOMIC_SEQ_CST);
-        default: REX_ASSERT("Invalid memory order for atomic load"); break;
+        default: RSL_ASSERT("Invalid memory order for atomic load"); break;
       }
 
       return 0;

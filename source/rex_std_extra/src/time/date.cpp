@@ -43,7 +43,7 @@ rsl::tiny_stack_string rsl::date::week_day() const
     case 6: return "Saturday"_tiny;
   }
 
-  REX_ASSERT("Invalid day");
+  RSL_ASSERT("Invalid day");
   return ""_tiny;
 }
 
@@ -74,7 +74,7 @@ rsl::tiny_stack_string rsl::date::month_name() const
     case 12: return "December"_tiny;
   }
 
-  REX_ASSERT("Invalid month");
+  RSL_ASSERT("Invalid month");
   return ""_tiny;
 }
 card32 rsl::date::year() const

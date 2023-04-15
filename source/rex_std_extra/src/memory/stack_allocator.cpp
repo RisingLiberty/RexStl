@@ -20,7 +20,7 @@ rsl::stack_allocator::stack_allocator(size_type size)
 
 rsl::stack_allocator::pointer rsl::stack_allocator::allocate(const size_type size)
 {
-  REX_ASSERT_X(m_current_marker + size <= m_base_ptr.count(), "Stack allocator out of bounds! \nmax size: ", m_base_ptr.count(), " new size: ", m_current_marker + size);
+  RSL_ASSERT_X(m_current_marker + size <= m_base_ptr.count(), "Stack allocator out of bounds! \nmax size: ", m_base_ptr.count(), " new size: ", m_current_marker + size);
 
   void* mem = &m_base_ptr[m_current_marker];
   m_current_marker += size;

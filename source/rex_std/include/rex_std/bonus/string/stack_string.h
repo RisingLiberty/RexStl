@@ -213,12 +213,12 @@ namespace rsl
 
       auto at(card32 idx)
       {
-        REX_ASSERT_X(idx < m_null_terminator_offset, "Index out of range");
+        RSL_ASSERT_X(idx < m_null_terminator_offset, "Index out of range");
         return m_data.at(idx);
       }
       const auto& at(card32 idx) const
       {
-        REX_ASSERT_X(idx < m_null_terminator_offset, "Index out of range");
+        RSL_ASSERT_X(idx < m_null_terminator_offset, "Index out of range");
         return m_data.at(idx);
       }
 
@@ -614,7 +614,7 @@ namespace rsl
 
       void append(const value_type* str, card32 count)
       {
-        REX_ASSERT_X(length() + count <= max_size(), "copying into a stack string beyond its limit");
+        RSL_ASSERT_X(length() + count <= max_size(), "copying into a stack string beyond its limit");
 
         value_type* dest = data();
         dest += length();

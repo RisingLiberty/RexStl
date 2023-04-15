@@ -51,14 +51,14 @@ namespace rsl
       // if pos is not within range of the container, an assertion is raised
       constexpr reference at(size_type pos)
       {
-        REX_ASSERT_X(pos < size(), "array out of bounds");
+        RSL_ASSERT_X(pos < size(), "array out of bounds");
         return m_data[pos];
       }
       // Returns a reference to the element at specified location pos, with bounds checking.
       // if pos is not within range of the container, an assertion is raised
       constexpr const_reference at(size_type pos) const
       {
-        REX_ASSERT_X(pos < size(), "array out of bounds");
+        RSL_ASSERT_X(pos < size(), "array out of bounds");
         return m_data[pos];
       }
       // Returns a reference to the element at specified location pos. No bounds checking is performed.
@@ -229,63 +229,63 @@ namespace rsl
       // if pos is not within range of the container, an assertion is raised
       constexpr reference at(size_type /*pos*/)
       {
-        REX_ASSERT("access elements of null array is not allowed");
+        RSL_ASSERT("access elements of null array is not allowed");
         return m_data[0];
       }
       // Returns a reference to the element at specified location pos, with bounds checking.
       // if pos is not within range of the container, an assertion is raised
       constexpr const_reference at(size_type /*pos*/) const
       {
-        REX_ASSERT("access elements of null array is not allowed");
+        RSL_ASSERT("access elements of null array is not allowed");
         return m_data[0];
       }
       // Returns a reference to the element at specified location pos. No bounds checking is performed.
       constexpr reference operator[](size_type /*pos*/)
       {
-        REX_ASSERT("access elements of null array is not allowed");
+        RSL_ASSERT("access elements of null array is not allowed");
         return m_data[0];
       }
       // Returns a reference to the element at specified location pos. No bounds checking is performed.
       constexpr const_reference operator[](size_type /*pos*/) const
       {
-        REX_ASSERT("access elements of null array is not allowed");
+        RSL_ASSERT("access elements of null array is not allowed");
         return m_data[0];
       }
 
       // Returns a reference to the first element in the container.
       constexpr reference front()
       {
-        REX_ASSERT("access elements of null array is not allowed");
+        RSL_ASSERT("access elements of null array is not allowed");
         return m_data[0];
       }
       // Returns a reference to the first element in the container.
       constexpr const_reference front() const
       {
-        REX_ASSERT("access elements of null array is not allowed");
+        RSL_ASSERT("access elements of null array is not allowed");
         return m_data[0];
       }
       // Returns a reference to the last element in the container.
       constexpr reference back()
       {
-        REX_ASSERT("access elements of null array is not allowed");
+        RSL_ASSERT("access elements of null array is not allowed");
         return m_data[0];
       }
       // Returns a reference to the last element in the container.
       constexpr const_reference back() const
       {
-        REX_ASSERT("access elements of null array is not allowed");
+        RSL_ASSERT("access elements of null array is not allowed");
         return m_data[0];
       }
       // Returns pointer to the underlying array serving as element storage
       constexpr T* data()
       {
-        REX_ASSERT("access data of null array is not allowed");
+        RSL_ASSERT("access data of null array is not allowed");
         return m_data;
       }
       // Returns pointer to the underlying array serving as element storage
       constexpr const T* data() const
       {
-        REX_ASSERT("access data of null array is not allowed");
+        RSL_ASSERT("access data of null array is not allowed");
         return m_data;
       }
       // Returns an iterator to the first element of the array.

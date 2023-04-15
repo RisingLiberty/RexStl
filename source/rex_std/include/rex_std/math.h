@@ -109,7 +109,7 @@ namespace rsl
       template <typename T>
       constexpr T sqrt(T arg)
       {
-        REX_ASSERT_X(arg >= (T)0, "sqrt called on negative value");
+        RSL_ASSERT_X(arg >= (T)0, "sqrt called on negative value");
 
         float64 s    = 0;
         float64 last = 0;
@@ -185,7 +185,7 @@ namespace rsl
           case rounding_mode::upward: return round_upward(arg);
         }
 
-        REX_ASSERT("Invalid round mode passed in");
+        RSL_ASSERT("Invalid round mode passed in");
         return 0;
       }
     } // namespace internal

@@ -80,7 +80,7 @@ namespace rsl
         case rsl::v1::memory_order::release: failure_order = __ATOMIC_RELEASE;
         case rsl::v1::memory_order::acq_rel: failure_order = __ATOMIC_ACQ_REL;
         case rsl::v1::memory_order::seq_cst: failure_order = __ATOMIC_SEQ_CST;
-        default: REX_ASSERT("Invalid failure memory order for operation"); break;
+        default: RSL_ASSERT("Invalid failure memory order for operation"); break;
       }
 
       switch(successOrder)
@@ -91,7 +91,7 @@ namespace rsl
         case rsl::v1::memory_order::release: return __atomic_compare_exchange_n(obj, &expected, desired, true, __ATOMIC_RELEASE, failure_order);
         case rsl::v1::memory_order::acq_rel: return __atomic_compare_exchange_n(obj, &expected, desired, true, __ATOMIC_ACQ_REL, failure_order);
         case rsl::v1::memory_order::seq_cst: return __atomic_compare_exchange_n(obj, &expected, desired, true, __ATOMIC_SEQ_CST, failure_order);
-        default: REX_ASSERT("Invalid sucess memory order for operation"); break;
+        default: RSL_ASSERT("Invalid sucess memory order for operation"); break;
       }
     }
 #endif

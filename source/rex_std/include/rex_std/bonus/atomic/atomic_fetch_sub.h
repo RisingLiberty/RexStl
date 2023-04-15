@@ -76,7 +76,7 @@ namespace rsl
         case rsl::v1::memory_order::release: return __atomic_fetch_sub(obj, valToSub, __ATOMIC_RELEASE);
         case rsl::v1::memory_order::acq_rel: return __atomic_fetch_sub(obj, valToSub, __ATOMIC_ACQ_REL);
         case rsl::v1::memory_order::seq_cst: return __atomic_fetch_sub(obj, valToSub, __ATOMIC_SEQ_CST);
-        default: REX_ASSERT("Invalid memory order for atomic fetch_sub"); break;
+        default: RSL_ASSERT("Invalid memory order for atomic fetch_sub"); break;
       }
     }
 #endif

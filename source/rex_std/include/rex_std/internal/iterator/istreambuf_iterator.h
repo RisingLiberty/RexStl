@@ -115,7 +115,7 @@ namespace rsl
 
       istreambuf_iterator& operator++()
       {
-        REX_ASSERT_X(m_stream_buf != nullptr, "can't increment a istreambuf iterator without a stream buffer");
+        RSL_ASSERT_X(m_stream_buf != nullptr, "can't increment a istreambuf iterator without a stream buffer");
         inc();
         return *this;
       }

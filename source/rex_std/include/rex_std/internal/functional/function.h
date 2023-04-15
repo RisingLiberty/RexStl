@@ -192,7 +192,7 @@ namespace rsl
             auto allocator = rsl::allocator();
             Functor* func  = static_cast<Functor*>(allocator.allocate(sizeof(Functor), alignof(Functor), 0));
 
-            REX_ASSERT_X(func != nullptr, "Functor allocation failed");
+            RSL_ASSERT_X(func != nullptr, "Functor allocation failed");
 
             new(static_cast<void*>(func)) Functor(rsl::forward<T>(functor));
             get_functor_ptr_ref(storage) = func;
@@ -214,7 +214,7 @@ namespace rsl
             auto allocator = rsl::allocator();
             Functor* func  = static_cast<Functor*>(allocator.allocate(sizeof(Functor), alignof(Functor), 0));
 
-            REX_ASSERT_X(func != nullptr, "Allocation with {} failed", allocator.name());
+            RSL_ASSERT_X(func != nullptr, "Allocation with {} failed", allocator.name());
 
             new(static_cast<void*>(func)) Functor(*get_functor_ptr(from));
             get_functor_ptr_ref(to) = func;
@@ -328,7 +328,7 @@ namespace rsl
 
         function_detail& operator=(const function_detail& other)
         {
-          REX_ASSERT_X(this != rsl::addressof(other), "can't copy assign to yourself");
+          RSL_ASSERT_X(this != rsl::addressof(other), "can't copy assign to yourself");
 
           destroy();
           copy(other);
@@ -337,7 +337,7 @@ namespace rsl
         }
         function_detail& operator=(function_detail&& other)
         {
-          REX_ASSERT_X(this != rsl::addressof(other), "can't move assign to yourself");
+          RSL_ASSERT_X(this != rsl::addressof(other), "can't move assign to yourself");
 
           destroy();
           move(rsl::move(other));
@@ -372,7 +372,7 @@ namespace rsl
 
         void swap(function_detail& other)
         {
-          REX_ASSERT_X(this != rsl::addressof(other), "Can't swap to yourself");
+          RSL_ASSERT_X(this != rsl::addressof(other), "Can't swap to yourself");
 
           functor_storage<SizeInBytes> tmp_storage {};
           if(other.has_manager())
@@ -471,7 +471,7 @@ namespace rsl
         static R invoke_bad_func_call(Args... /*args*/, const typename base::functor_storage_type& /*storage*/)
         {
           // can't assume R is default constructible, so we disable no-return warning instead.
-          REX_ASSERT("Bad function call!");
+          RSL_ASSERT("Bad function call!");
           // if R is not default constructible, we'll get a compiler error here, meaning we did something wrong.
         } // NOLINT(clang-diagnostic-return-type)
 #if defined(REX_COMPILER_MSVC)
