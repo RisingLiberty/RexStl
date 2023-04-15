@@ -7,7 +7,7 @@
 #include <iostream>
 
 // to do: use bit_cast, span if you have C++20
-using fuzz_span = std::basic_string_view<std::uint8>;
+using fuzz_span = std::basic_string_view<std::uint8_t>;
 
 template <typename ToMake>
 std::pair<ToMake, fuzz_span> make_fuzzed_object(fuzz_span input) 
