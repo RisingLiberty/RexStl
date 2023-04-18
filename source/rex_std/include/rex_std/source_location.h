@@ -19,6 +19,7 @@
 #pragma once
 
 #include "rex_std/bonus/types.h"
+#include "rex_std/bonus/string/stack_string.h"
 
 #ifdef REX_ENABLE_WITH_CPP20
   #define REX_CONSTEVAL_WITH_CPP20 consteval
@@ -77,6 +78,8 @@ namespace rsl
       const char8* m_file_name;
       const char8* m_function_name;
     };
+
+    rsl::big_stack_string to_string(const source_location& sourceLoc);
 
   } // namespace v1
 } // namespace rsl

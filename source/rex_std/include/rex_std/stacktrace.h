@@ -76,6 +76,21 @@ namespace rsl
     }
 
     template <>
+    struct formatter<stacktrace_entry>
+    {
+      auto parse(format_parse_context& ctx) const -> decltype(ctx.begin()) // NOLINT(readability-convert-member-functions-to-static)
+      {
+        return ctx.begin();
+      }
+
+      template <typename FormatContext>
+      auto format(const stacktrace_entry& stacktrace, FormatContext& ctx) -> decltype(ctx.out())
+      {
+        return format_to(ctx.out(), "{}", stacktrace.description());
+      }
+    };
+
+    template <>
     struct hash<rsl::stacktrace_entry>
     {
       hash_result operator()(const stacktrace_entry& entry)
