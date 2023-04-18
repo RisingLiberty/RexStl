@@ -97,6 +97,5 @@ namespace rsl
       lhs.swap(rhs);
     }
 
-
   } // namespace v1
 } // namespace rsl

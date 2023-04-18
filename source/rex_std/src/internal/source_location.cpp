@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: source_location.cpp
 // Copyright (c) Nick De Breuck 2022
 //
@@ -28,5 +28,5 @@ namespace rsl
 
       return result;
     }
-  }
-}
+  } // namespace v1
+} // namespace rsl
