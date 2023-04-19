@@ -11,6 +11,7 @@
 // ============================================
 
 #include "rex_std/source_location.h"
+#include "rex_std/assert.h"
 
 namespace rsl
 {
