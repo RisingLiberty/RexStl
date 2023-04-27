@@ -22,7 +22,7 @@ namespace rsl
     template <typename T>
     constexpr T clamp_min(const T& x, const T& min)
     {
-      return rsl::max(x, min);
+      return (rsl::max)(x, min);
     }
 
   } // namespace v1
