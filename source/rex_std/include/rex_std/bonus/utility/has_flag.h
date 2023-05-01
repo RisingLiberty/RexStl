@@ -29,7 +29,7 @@ namespace rsl
     template <typename T, typename U, rsl::enable_if_t<rsl::is_integral_v<T>, bool> = true>
     constexpr bool has_flag(T val, U flag)
     {
-      U u_val = static_cast<T>(val);
+      U u_val = static_cast<U>(val);
       return (u_val & flag) == flag;
     }
   } // namespace v1
