@@ -20,17 +20,16 @@ namespace rsl
 {
   inline namespace v1
   {
-    template <typename T, rsl::enable_if_t<rsl::is_enum_v<T>, bool> = true>
-    constexpr bool has_flag(T val, T flag)
-    {
-      return (val & flag) == flag;
-    }
-
-    template <typename T, typename U, rsl::enable_if_t<rsl::is_integral_v<T>, bool> = true>
+    template <typename T, typename U>
     constexpr bool has_flag(T val, U flag)
     {
-      U u_val = static_cast<U>(val);
-      return (u_val & flag) == flag;
+      static_assert(rsl::is_integral_v<T> || rsl::is_enum_v<T>, "T must be of integral or enum type");
+      static_assert(rsl::is_integral_v<U> || rsl::is_enum_v<U>, "U must be of integral or enum type");
+
+      uint64 val_int = static_cast<uint64>(val);
+      uint64 flag_int = static_cast<uint64>(flag);
+
+      return (val_int & flag_int) == flag_int;
     }
   } // namespace v1
 } // namespace rsl
