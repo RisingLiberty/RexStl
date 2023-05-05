@@ -13,8 +13,8 @@
 #pragma once
 
 #include "rex_std/bonus/defines.h"
-#include "rex_std/internal/type_traits/is_scalar.h"
 #include "rex_std/internal/iterator/iterator_traits.h"
+#include "rex_std/internal/type_traits/is_scalar.h"
 
 namespace rsl
 {

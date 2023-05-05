@@ -26,8 +26,8 @@ namespace rsl
       static_assert(rsl::is_integral_v<T> || rsl::is_enum_v<T>, "T must be of integral or enum type");
       static_assert(rsl::is_integral_v<U> || rsl::is_enum_v<U>, "U must be of integral or enum type");
 
-      uint64 val_int = static_cast<uint64>(val);
-      uint64 flag_int = static_cast<uint64>(flag);
+      const uint64 val_int  = static_cast<uint64>(val);
+      const uint64 flag_int = static_cast<uint64>(flag);
 
       return (val_int & flag_int) == flag_int;
     }

@@ -1615,16 +1615,16 @@ namespace rsl
         }
         else
         {
-          if (is_using_sso_string())
+          if(is_using_sso_string())
           {
             sso_assign(str.data(), str.length());
           }
           else
-        {
-          resize(str.length());
-          traits_type::copy(data(), str.data(), str.length());
+          {
+            resize(str.length());
+            traits_type::copy(data(), str.data(), str.length());
+          }
         }
-      }
       }
       // allocates a new buffer and copies over the data
       // begin_src should point to a null terminated char

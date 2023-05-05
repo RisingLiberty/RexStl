@@ -14,12 +14,12 @@ import subprocess
 import sys
 import time
   
-rexpy_version = "0.1.8"
+rexpy_version = "0.1.24"
 
 def __intsall_regis():
   os.system(f"py -m pip uninstall --yes regis")
-  os.system(f"py -m pip install \"regis=={rexpy_version}\"")
-
+  os.system(f"py -m pip install --user \"regis=={rexpy_version}\"")
+  
 def __main():
   parser = argparse.ArgumentParser()
   args, unknown = parser.parse_known_args()
@@ -39,7 +39,8 @@ def __main():
   for arg in unknown:
     arguments_to_pass_on += f" {arg}"
 
-  os.system(f"py build/scripts/setup.py{arguments_to_pass_on}")
+  return os.system(f"py build/scripts/setup.py{arguments_to_pass_on}")
 
 if __name__ == "__main__":
-  __main()
+  res = __main()
+  exit(res)
