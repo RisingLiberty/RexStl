@@ -743,7 +743,8 @@ namespace rsl
 
       size_type bucket_index(hash_result hr, size_type bucketCount) const
       {
-        return static_cast<size_type>(hr) % bucketCount;
+        hash_result res = hr % bucketCount;
+        return static_cast<size_type>(res);
       }
 
       size_type bucket_index(node_type* node, size_type bucketCount) const
