@@ -16,6 +16,7 @@
 #include "rex_std/internal/string/basic_string.h"
 #include "rex_std/internal/string/memchr.h"
 #include "rex_std/internal/string_view/basic_string_view.h"
+#include "rex_std/internal/sstream/basic_sstream.h"
 #include "rex_std/internal/type_traits/is_class.h"
 #include "rex_std/internal/type_traits/is_constant_evaluated.h"
 #include "rex_std/internal/type_traits/is_convertible.h"
@@ -428,12 +429,24 @@ class basic_format_args;
 template <typename Context>
 class dynamic_format_arg_store;
 
-// A formatter for objects of type T.
+/// RSL Comment: Different from ISO C++ Standard at time of writing (06/May/2023)
+// This is the generic formatter which uses the result of writng T to ostream
+// and uses that as a format
 template <typename T, typename Char = char, typename Enable = void>
 struct formatter
 {
-  // A deleted default constructor indicates a disabled formatter.
-  formatter() = delete;
+  auto parse(format_parse_context& ctx) const -> decltype(ctx.begin()) // NOLINT(readability-convert-member-functions-to-static)
+  {
+    return ctx.begin();
+  }
+
+  template <typename FormatContext>
+  auto format(const T& val, FormatContext& ctx) -> decltype(ctx.out())
+  {
+    rsl::stringstream ss;
+    ss << val;
+    return format_to(ctx.out(), "{}", ss.view());
+  }
 };
 
 // Specifies if T has an enabled formatter specialization. A type can be

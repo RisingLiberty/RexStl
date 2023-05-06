@@ -80,10 +80,10 @@ namespace rsl
       /// RSL Comment: Different from ISO C++ Standard at time of writing (07/Jul/2022)
       // In the Standard, last is a different template type than first.
       // Constructs a view using a continuous iterator
-      template <typename It1, typename It2, enable_if_t<is_base_of_v<input_iterator_tag, typename It2::iterator_category>, bool> = true>
-      constexpr basic_string_view(It1 first, It2 last)
+      template <typename It1, enable_if_t<is_base_of_v<input_iterator_tag, typename iterator_traits<It1>::iterator_category>, bool> = true >
+      constexpr basic_string_view(It1 first, It1 last)
           : m_data(rsl::iterator_to_pointer(first))
-          , m_length(last - first)
+          , m_length(static_cast<size_type>(last - first))
       {
       }
       /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
