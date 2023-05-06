@@ -59,6 +59,11 @@ namespace rsl
         return is_valid();
       }
 
+      handle_t handle::get()
+      {
+        return m_handle;
+      }
+
       handle_t handle::invalid_value()
       {
         return INVALID_HANDLE_VALUE;
