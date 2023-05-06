@@ -385,7 +385,7 @@ namespace rsl
     {
       for(auto lhs_it = lhs.cbegin(), lhs_end = lhs.cend(), rhs_it = rhs.cbegin(); lhs_it != lhs_end; ++lhs_it)
       {
-        if(*lhs_it != rhs_it)
+        if(*lhs_it != *rhs_it)
         {
           return false;
         }
