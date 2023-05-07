@@ -39,12 +39,12 @@ namespace rsl
       class func_wrapper
       {
       public:
-        func_wrapper(Func func) // NOLINT(google-explicit-constructor)
-            : m_func(func)
+        func_wrapper(Func&& func) // NOLINT(google-explicit-constructor)
+            : m_func(rsl::forward<Func>(func))
         {
         }
 
-        Func function()
+        Func& function()
         {
           return m_func;
         }
@@ -120,7 +120,7 @@ namespace rsl
           : m_handle()
           , m_id(0)
       {
-        start(f);
+        start(rsl::forward<Func>(f));
       }
 
       // destroys the thread object, if the thread has an associated thread, an assert is raised after which terminate is called
@@ -154,7 +154,7 @@ namespace rsl
       template <typename Func>
       void start(Func&& func)
       {
-        rsl::unique_ptr<internal::func_wrapper<Func>> func_wrapper = rsl::make_unique<internal::func_wrapper<Func>>(func);
+        rsl::unique_ptr<internal::func_wrapper<Func>> func_wrapper = rsl::make_unique<internal::func_wrapper<Func>>(rsl::forward<Func>(func));
         create(&invoke<Func>, func_wrapper.release());
       }
 
@@ -165,7 +165,7 @@ namespace rsl
         // that lasts for the rest of the program
         // this could lad to "memory leak" which wouldn't really be leaking
         rsl::unique_ptr<internal::func_wrapper<Func>> func(static_cast<internal::func_wrapper<Func>*>(param));
-        auto function_ptr = func->function();
+        auto& function_ptr = func->function();
         rsl::invoke(function_ptr);
         return 0;
       }

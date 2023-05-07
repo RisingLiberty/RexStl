@@ -55,7 +55,7 @@ namespace rsl
       }
 
       m_id     = rsl::exchange(other.m_id, thread::id(0));
-      m_handle = rsl::exchange(other.m_handle, native_handle_type());
+      m_handle = rsl::exchange(other.m_handle, INVALID_HANDLE_VALUE);
 
       return *this;
     }
