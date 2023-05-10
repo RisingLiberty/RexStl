@@ -108,7 +108,11 @@ namespace rsl
         rhs.m_current_write = nullptr;
       }
 
-      ~basic_stringbuf() = default;
+      ~basic_stringbuf()
+      {
+        const auto size = base::epptr() - base::pbase();
+        m_allocator.deallocate(m_buffer, size);
+      }
 
       basic_stringbuf& operator=(const basic_stringbuf&) = delete;
       basic_stringbuf& operator=(basic_stringbuf&&);
