@@ -12,18 +12,24 @@
 
 #pragma once
 
-#include "rex_std/disable_std_checking.h"
-#include "rex_std/std_alias_defines.h"
-
-#include <algorithm>
+#include "rex_std/iterator.h"
 
 namespace rsl
 {
   inline namespace v1
   {
-
-    REX_STD_FUNC_ALIAS(replace);
-
+    template <class It, class T>
+    constexpr void replace(const It first, const It last, const T& oldVal, const T& newVal) {
+      auto first_val = rsl::iterator_to_pointer(first);
+      const auto last_val = rsl::iterator_to_pointer(last);
+      for (; first_val != last_val; ++first_val) 
+      {
+        if (*first_val == oldVal) 
+        {
+          *first_val = newVal;
+        }
+      }
+    }
   } // namespace v1
 } // namespace rsl
 
