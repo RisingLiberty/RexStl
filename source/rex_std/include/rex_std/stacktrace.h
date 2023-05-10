@@ -43,9 +43,7 @@ namespace rsl
       // This is implicit in the standard
       explicit operator bool() const;
 
-      /// RSL Comment: Different from ISO C++ Standard at time of writing (17/Mar/2023)
-      // This returns a std::string in the standard
-      rsl::big_stack_string description() const;
+      rsl::string description() const;
 
       /// RSL Comment: Different from ISO C++ Standard at time of writing (17/Mar/2023)
       // This returns a std::string in the standard
@@ -61,15 +59,13 @@ namespace rsl
 
     bool operator==(const stacktrace_entry& lhs, const stacktrace_entry& rhs);
     bool operator!=(const stacktrace_entry& lhs, const stacktrace_entry& rhs);
-    /// RSL Comment: Different from ISO C++ Standard at time of writing (17/Mar/2023)
-    // This returns a std::string in the standard
-    rsl::big_stack_string to_string(const stacktrace_entry& entry);
+    rsl::string to_string(const stacktrace_entry& entry);
 
     template <typename Char, typename Traits>
     class basic_ostream;
 
     template <typename Char, typename Traits>
-    rsl::basic_ostream<Char, Traits> operator<<(rsl::basic_ostream<Char, Traits>& os, const stacktrace_entry& entry)
+    rsl::basic_ostream<Char, Traits>& operator<<(rsl::basic_ostream<Char, Traits>& os, const stacktrace_entry& entry)
     {
       os << entry.description();
       return os;

@@ -164,9 +164,9 @@ namespace rsl
 
     /// RSL Comment: Different from ISO C++ Standard at time of writing (17/Mar/2023)
     // This returns a std::string in the standard
-    rsl::big_stack_string stacktrace_entry::description() const
+    rsl::string stacktrace_entry::description() const
     {
-      rsl::big_stack_string result = ""_big;
+      rsl::string result;
 
       result += rsl::to_string(m_handle);
       result += " - ";
@@ -199,7 +199,7 @@ namespace rsl
       return lhs.native_handle() != rhs.native_handle();
     }
 
-    rsl::big_stack_string to_string(const stacktrace_entry& entry)
+    rsl::string to_string(const stacktrace_entry& entry)
     {
       return entry.description();
     }

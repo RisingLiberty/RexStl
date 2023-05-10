@@ -163,7 +163,7 @@ namespace rsl
 
       rsl::basic_string_view<CharType, Traits> view() const
       {
-        return rsl::basic_string_view<CharType, Traits>(m_buffer, m_buffer_end);
+        return rsl::basic_string_view<CharType, Traits>(m_buffer, m_current_write);
       }
 
     protected:

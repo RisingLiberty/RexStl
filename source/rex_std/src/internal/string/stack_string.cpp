@@ -46,17 +46,17 @@ rsl::tiny_stack_string rsl::to_stack_string(const void* ptr)
 
 rsl::tiny_stack_string operator"" _tiny(const char* str, size_t length)
 {
-  return rsl::tiny_stack_string(str, static_cast<card32>(length + 1));
+  return rsl::tiny_stack_string(str, static_cast<card32>(length));
 }
 rsl::small_stack_string operator"" _small(const char* str, size_t length)
 {
-  return rsl::small_stack_string(str, static_cast<card32>(length + 1));
+  return rsl::small_stack_string(str, static_cast<card32>(length));
 }
 rsl::medium_stack_string operator"" _med(const char* str, size_t length)
 {
-  return rsl::medium_stack_string(str, static_cast<card32>(length + 1));
+  return rsl::medium_stack_string(str, static_cast<card32>(length));
 }
 rsl::big_stack_string operator"" _big(const char* str, size_t length)
 {
-  return rsl::big_stack_string(str, static_cast<card32>(length + 1));
+  return rsl::big_stack_string(str, static_cast<card32>(length));
 }
