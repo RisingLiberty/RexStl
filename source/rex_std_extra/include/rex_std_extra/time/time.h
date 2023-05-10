@@ -30,6 +30,8 @@ namespace rsl
       card32 minutes() const;
       card32 seconds() const;
 
+      rsl::small_stack_string to_string() const;
+
       bool operator>(const time& time) const;
       bool operator>=(const time& time) const;
       bool operator<(const time& time) const;

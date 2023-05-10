@@ -40,6 +40,17 @@ card32 rsl::time::seconds() const
   return m_seconds;
 }
 
+rsl::small_stack_string rsl::time::to_string() const
+{
+  rsl::small_stack_string str;
+  str += rsl::time_digits(hours()).to_string();
+  str += ':';
+  str += rsl::time_digits(minutes()).to_string();
+  str += ':';
+  str += rsl::time_digits(seconds()).to_string();
+  return str;
+}
+
 bool rsl::time::operator>(const time& time) const
 {
   if(m_hours > time.hours())

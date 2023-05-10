@@ -18,7 +18,7 @@ namespace rsl
   {
     rsl::ostream& operator<<(rsl::ostream& os, time_digits digits)
     {
-      os << digits.high << digits.low;
+      os << digits.to_string();
       return os;
     }
   } // namespace v1

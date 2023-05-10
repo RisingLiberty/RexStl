@@ -30,6 +30,14 @@ namespace rsl
         low += '0';
       }
 
+      rsl::tiny_stack_string to_string() const
+      {
+        rsl::tiny_stack_string str;
+        str += high;
+        str += low;
+        return str;
+      }
+
       char high;
       char low;
     };
@@ -48,7 +56,8 @@ namespace rsl
         return format_to(ctx.out(), "{}{}", digits.high, digits.low);
       }
     };
-  } // namespace v1
+  
+    rsl::ostream& operator<<(rsl::ostream& os, time_digits digits);
 
-  rsl::ostream& operator<<(rsl::ostream& os, time_digits digits);
+  } // namespace v1
 } // namespace rsl
