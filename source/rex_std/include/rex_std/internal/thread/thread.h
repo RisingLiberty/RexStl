@@ -161,7 +161,7 @@ namespace rsl
       template <typename Func>
       static ulong __stdcall invoke(void* param)
       {
-        // the reason why I copy the funciton ptr is so that we don't have a possible heap alloc
+        // the reason why I copy the function ptr is so that we don't have a possible heap alloc
         // that lasts for the rest of the program
         // this could lad to "memory leak" which wouldn't really be leaking
         rsl::unique_ptr<internal::func_wrapper<Func>> func(static_cast<internal::func_wrapper<Func>*>(param));
