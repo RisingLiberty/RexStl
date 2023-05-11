@@ -263,7 +263,7 @@ namespace rsl
       /// RSL Comment: Different from ISO C++ Standard at time of writing (05/Aug/2022)
       // the standard doesn't propagate const, rex does
       // returns a reference to the managed object
-      reference_type operator*() const
+      const element_type& operator*() const
       {
         return *internal::ref_ptr<T>::get();
       }

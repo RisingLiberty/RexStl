@@ -383,7 +383,7 @@ namespace rsl
     template <typename T, count_t Size>
     constexpr bool operator==(const rsl::array<T, Size>& lhs, const rsl::array<T, Size>& rhs)
     {
-      for(auto lhs_it = lhs.cbegin(), lhs_end = lhs.cend(), rhs_it = rhs.cbegin(); lhs_it != lhs_end; ++lhs_it)
+      for(auto lhs_it = lhs.cbegin(), lhs_end = lhs.cend(), rhs_it = rhs.cbegin(); lhs_it != lhs_end; ++lhs_it, ++rhs_it)
       {
         if(*lhs_it != *rhs_it)
         {
