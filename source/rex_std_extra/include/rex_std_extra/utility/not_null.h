@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include <type_traits>
+#include "rex_std/internal/type_traits/enable_if.h"
 
 namespace rsl
 {
@@ -20,20 +20,20 @@ namespace rsl
   {
 
     template <typename T>
-    class NotNull
+    class not_null
     {
     public:
-      constexpr NotNull(T* ptr)
+      constexpr not_null(T* ptr)
           : m_ptr(ptr)
       {
-        RSL_ASSERT_X(m_ptr != nullptr, "Can't assign a nullptr to a NotNull class");
+        RSL_ASSERT_X(m_ptr != nullptr, "Can't assign a nullptr to a not_null class");
       }
 
-      constexpr NotNull(rsl::nullptr_t) = delete;
+      constexpr not_null(rsl::nullptr_t) = delete;
 
-      template <typename U, rsl::EnableIf<rsl::is_convertible_v<U, T>, bool> = true>
-      constexpr NotNull(const NotNull<U>& other)
-          : NotNull(other.get())
+      template <typename U, rsl::enable_if_t<rsl::is_convertible_v<U, T>, bool> = true>
+      constexpr not_null(const not_null<U>& other)
+          : not_null(other.get())
       {
       }
 
