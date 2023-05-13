@@ -75,14 +75,6 @@
       </ArrayItems>
     </Expand>
   </Type>
-  <Type Name="rsl::v1::basic_string_id&lt;*&gt;">
-    <DisplayString>{m_str}</DisplayString>
-    <Expand>
-      <Item Name="[string]">m_str</Item>
-      <Item Name="[hash]">m_hash</Item>
-      <Item Name="[hash table]">g_hash_table</Item>
-    </Expand>
-  </Type>
   <Type Name="rsl::v1::vector&lt;*&gt;">
     <Intrinsic Name="size" Expression="m_end-m_begin" />
     <Intrinsic Name="capacity" Expression="m_cp_last_and_allocator.m_first-m_begin" />
@@ -96,6 +88,32 @@
       </ArrayItems>
     </Expand>
   </Type>
+  <Type Name="rsl::v1::hashtable&lt;*&gt;">
+    <Intrinsic Name="size" Expression="m_cp_bucket_idx_finder_and_element_count.m_second" />
+    <Intrinsic Name="buckets" Expression="m_cp_key_hash_and_bucket_count.m_second" />
+    <Intrinsic Name="bucket_array" Expression="m_cp_key_equal_and_bucket_array.m_second" />
+    <DisplayString>size = {size()}</DisplayString>
+    <Expand>
+      <Item Name="[size]">size()</Item>
+      <Item Name="[buckets]">buckets()</Item>
+      <ArrayItems>
+        <Size>buckets()</Size>
+        <ValuePointer>bucket_array()</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+  <Type Name="rsl::v1::hash_node&lt;*&gt;">
+	<DisplayString Condition="this != 0 &amp;&amp; next != 0"> {value}, {*next}</DisplayString>
+	<DisplayString Condition="this != 0 &amp;&amp; next == 0"> {value}</DisplayString>
+	<DisplayString Condition="this == 0"></DisplayString>
+	<Expand>
+		<LinkedListItems>
+            <HeadPointer>this</HeadPointer>
+            <NextPointer>next</NextPointer>
+            <ValueNode>value</ValueNode>
+        </LinkedListItems>
+	</Expand>
+</Type>
   <Type Name="rsl::v1::array&lt;*&gt;">
     <Intrinsic Name="size" Expression="$T2" />
     <Intrinsic Name="data" Expression="m_data" />
