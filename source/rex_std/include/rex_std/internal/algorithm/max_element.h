@@ -40,7 +40,7 @@ namespace rsl
       auto it      = first;
       while(it != last)
       {
-        if(comp(*it, largest) == false)
+        if(comp(*it, *largest) == false)
         {
           largest = it;
         }
