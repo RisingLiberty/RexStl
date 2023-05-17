@@ -11,10 +11,10 @@ The entire library is written by Nick De Breuck, if you have any questions, plea
 
 ## How to build
 1. Start by cloning with `git clone --recursive https://github.com/RisingLiberty/RexStl`
-2. Run `setup.py` in the root directory
-3. Run `generate.py` to generate the visual studio solution (and Ninja files).
-4. Run `build.py` to build the library
-5. Run `test.py -all` to run all the tests
+2. Run `_setup.py` in the root directory
+3. Run `_generate.py` to generate the visual studio solution (and Ninja files).
+4. Run `_build.py` to build the library
+5. Run `_test.py -all` to run all the tests
 
 ## Usage
 If you're familiar with C++ and with the standard library that comes with every major compiler, the library doesn't come with many new features.
