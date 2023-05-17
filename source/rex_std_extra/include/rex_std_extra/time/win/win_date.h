@@ -12,11 +12,14 @@
 
 #pragma once
 
+#include "rex_std_extra/time/date.h"
+
 namespace rsl
 {
   inline namespace v1
   {
     class date; // IWYU pragma: keep
+
     date current_date();
 
   } // namespace v1

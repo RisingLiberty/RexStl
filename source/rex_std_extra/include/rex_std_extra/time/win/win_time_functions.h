@@ -19,7 +19,6 @@
 
 #define NOMINMAX
 #include <Windows.h>
-#include <minwinbase.h>
 
 namespace rsl
 {
