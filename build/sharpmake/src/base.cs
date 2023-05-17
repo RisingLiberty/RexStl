@@ -217,8 +217,14 @@ public class BasicCPPProject : BaseProject
         QueueCompilerDatabaseGeneration(conf);
         CopyClangToolConfigFiles(compilerDBPath);
       }
-
-      conf.NinjaGenerateCompilerDB = false;
+      else
+      {
+        string clangToolsPath = GetClangToolsOutputFolder(conf);
+        if (Directory.Exists(clangToolsPath))
+        {
+          Directory.Delete(clangToolsPath, recursive: true);
+        }
+      }
 
       string postbuildCommandScriptPath = Path.Combine(Globals.SourceRoot, $"post_build.py");
       string postbuildCommandArguments = "";
@@ -345,12 +351,17 @@ public class BasicCPPProject : BaseProject
 
   private string GetCompilerDBOutputFolder(RexConfiguration config)
   {
-    return $"{Path.Combine(config.ProjectPath, "clang_tools", $"{PerConfigFolderFormat(config)}")}";
+    return $"{Path.Combine(GetClangToolsOutputFolder(config), $"{PerConfigFolderFormat(config)}")}";
   }
 
-  private static string PerConfigFolderFormat(RexConfiguration config)
+  private string GetClangToolsOutputFolder(RexConfiguration config)
   {
-    return System.IO.Path.Combine(config.Target.GetFragment<Compiler>().ToString(), config.Name);
+    return $"{Path.Combine(config.ProjectPath, "clang_tools")}";
+  }
+
+  private static string PerConfigFolderFormat(RexConfiguration conf)
+  {
+    return Path.Combine(conf.Target.GetFragment<Compiler>().ToString(), conf.Name);
   }
 
   private void QueueCompilerDatabaseGeneration(RexConfiguration config)
@@ -385,14 +396,17 @@ public class BasicCPPProject : BaseProject
     string clangTidyFirstPassFilename = ".clang-tidy_first_pass";
     string clangTidySecondPassFilename = ".clang-tidy_second_pass";
     string clangFormatFilename = ".clang-format";
+    string iwyuFilename = "iwyu.imp";
 
     string clangTidyFirstPassSrcPath = Path.Combine(Utils.FindInParent(SourceRootPath, clangTidyFirstPassFilename), clangTidyFirstPassFilename);
     string clangTidySecondPassSrcPath = Path.Combine(Utils.FindInParent(SourceRootPath, clangTidySecondPassFilename), clangTidySecondPassFilename);
     string clangFormatSrcPath = Path.Combine(Utils.FindInParent(SourceRootPath, clangFormatFilename), clangFormatFilename);
+    string iwyuSrcPath = Path.Combine(Utils.FindInParent(SourceRootPath, iwyuFilename), iwyuFilename);
 
     string clangTidyFirstPassDstPath = Path.Combine(compilerDBPath, clangTidyFirstPassFilename);
     string clangTidySecondPassDstPath = Path.Combine(compilerDBPath, clangTidySecondPassFilename);
     string clangFormatDstPath = Path.Combine(compilerDBPath, clangFormatFilename);
+    string iwyuDstPath = Path.Combine(compilerDBPath, iwyuFilename);
 
     if (Directory.Exists(compilerDBPath) == false)
     {
@@ -402,6 +416,7 @@ public class BasicCPPProject : BaseProject
     File.Copy(clangTidyFirstPassSrcPath, clangTidyFirstPassDstPath, true);
     File.Copy(clangTidySecondPassSrcPath, clangTidySecondPassDstPath, true);
     File.Copy(clangFormatSrcPath, clangFormatDstPath, true);
+    File.Copy(iwyuSrcPath, iwyuDstPath, true);
   }
 
   private string GetNinjaFilePath(RexConfiguration config)
