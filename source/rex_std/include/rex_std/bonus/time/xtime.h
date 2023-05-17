@@ -15,6 +15,7 @@
 #include "rex_std/bonus/types.h"
 #include "rex_std/internal/chrono/clock.h"
 #include "rex_std/internal/chrono/duration.h"
+#include "rex_std/ratio.h"
 
 namespace rsl
 {

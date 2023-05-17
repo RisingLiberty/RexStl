@@ -12,6 +12,8 @@
 
 #include "rex_std/internal/memory/memset.h"
 
+// IWYU pragma: no_include <built-in>
+
 #include "rex_std/internal/memory/byte.h"
 
 namespace rsl

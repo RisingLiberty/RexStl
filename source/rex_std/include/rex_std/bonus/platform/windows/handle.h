@@ -17,8 +17,6 @@
 
 #pragma once
 
-#include "rex_std/bonus/defines.h"
-
 namespace rsl
 {
   inline namespace v1

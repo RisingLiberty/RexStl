@@ -16,8 +16,7 @@ namespace rsl
 {
   inline namespace v1
   {
-
-    class time;
+    class time; // IWYU pragma: keep
     time current_time();
 
   } // namespace v1

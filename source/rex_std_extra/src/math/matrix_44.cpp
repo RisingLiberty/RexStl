@@ -12,6 +12,9 @@
 
 #include "rex_std_extra/math/matrix_44.h"
 
+#include <corecrt_math.h>
+#include <cstdlib>
+
 rsl::matrix44::matrix44()
     : m_elements({{{1.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 1.0f}}})
 {

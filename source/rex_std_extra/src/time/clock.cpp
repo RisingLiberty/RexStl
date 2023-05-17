@@ -12,8 +12,8 @@
 
 #include "rex_std_extra/time/clock.h"
 
-#include "rex_std_extra/time/time.h"
 #include "rex_std_extra/time/timepoint.h"
+#include "rex_std_extra/time/win/win_timepoint.h"
 
 rsl::clock::clock()
     : m_start_time(current_timepoint())

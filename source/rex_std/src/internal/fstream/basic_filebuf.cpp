@@ -12,13 +12,15 @@
 
 #include "rex_std/internal/fstream/basic_filebuf.h"
 
-#include "rex_std/assert.h"
-#include "rex_std/bonus/utility/has_flag.h"
-#include "rex_std/bonus/utility/nand.h"
+#include <Windows.h>                         // for FILE_BEGIN, FILE_END
+// IWYU pragma: no_include <built-in>
+
+#include "rex_std/assert.h"                  // for rex_assert, basic_string_view, string_view, memcpy
+#include "rex_std/bonus/utility/has_flag.h"  // for has_flag
+#include "rex_std/bonus/utility/nand.h"      // for nand
 #include "rex_std/internal/array/array.h"
 #include "rex_std/internal/memory/memcpy.h"
-
-#include <Windows.h>
+#include "rex_std/stddef.h"                  // for size_t
 
 namespace rsl
 {

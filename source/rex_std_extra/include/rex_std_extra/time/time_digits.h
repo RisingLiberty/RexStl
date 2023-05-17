@@ -14,7 +14,8 @@
 
 #include "rex_std/bonus/types.h"
 #include "rex_std/format.h"
-#include "rex_std/iostream.h"
+#include "rex_std/bonus/string/stack_string.h"
+#include "rex_std/ostream.h"
 
 namespace rsl
 {

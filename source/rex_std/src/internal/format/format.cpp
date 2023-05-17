@@ -6,6 +6,7 @@
 // For the license information refer to format.h.
 
 #include "rex_std/internal/format/format_inl.h"
+#include "rex_std/format.h"
 
 FMT_BEGIN_NAMESPACE
 namespace detail

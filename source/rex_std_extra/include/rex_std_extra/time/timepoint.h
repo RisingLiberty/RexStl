@@ -14,6 +14,8 @@
 
 #include "rex_std_extra/time/date.h"
 #include "rex_std_extra/time/time.h"
+#include "rex_std/bonus/types.h"
+#include "rex_std/ostream.h"
 
 namespace rsl
 {
@@ -47,7 +49,3 @@ namespace rsl
 
   } // namespace v1
 } // namespace rsl
-
-#ifdef REX_PLATFORM_WINDOWS
-  #include "rex_std_extra/time/win/win_timepoint.h"
-#endif

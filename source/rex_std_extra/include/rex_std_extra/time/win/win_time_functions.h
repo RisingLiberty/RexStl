@@ -13,18 +13,19 @@
 #pragma once
 
 #include "rex_std/bonus/types.h"
+#include "rex_std_extra/time/date.h"
+#include "rex_std_extra/time/time.h"
+#include "rex_std_extra/time/timepoint.h"
 
 #define NOMINMAX
 #include <Windows.h>
+#include <minwinbase.h>
 
 namespace rsl
 {
   inline namespace v1
   {
 
-    class date;
-    class time;
-    class time_point;
 
     namespace win
     {

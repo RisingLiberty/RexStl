@@ -12,6 +12,8 @@
 
 #include "rex_std/internal/string/memchr.h"
 
+// IWYU pragma: no_include <built-in>
+
 namespace rsl
 {
   inline namespace v1

@@ -15,7 +15,7 @@ namespace rsl
 {
   inline namespace v1
   {
-    class time_point;
+    class time_point; // IWYU pragma: keep
     time_point current_timepoint();
 
   } // namespace v1

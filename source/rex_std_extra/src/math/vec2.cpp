@@ -12,6 +12,8 @@
 
 #include "rex_std_extra/math/vec2.h"
 
+#include <corecrt_math.h>
+
 #include "rex_std/format.h"
 #include "rex_std/internal/math/cos.h"
 #include "rex_std/internal/math/sin.h"

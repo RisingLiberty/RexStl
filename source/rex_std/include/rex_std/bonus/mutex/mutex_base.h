@@ -13,6 +13,7 @@
 #pragma once
 
 #include "rex_std/internal/type_traits/aligned_storage.h"
+#include "rex_std/bonus/types.h"
 
 namespace rsl
 {
@@ -30,13 +31,15 @@ namespace rsl
   #error No platform defined
 #endif
 
-      class mutex_base;
+      class mutex_base; // IWYU pragma: keep
+
       bool does_current_thread_own_mtx(mutex_base* mtx);
 
       class mutex_base
       {
       public:
         class internal;
+
         using native_handle_type = internal*;
 
         mutex_base();

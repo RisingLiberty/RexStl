@@ -12,7 +12,7 @@
 
 #include "rex_std/bonus/atomic//atomic_decrement.h"
 
-#include <intrin.h>
+#include <intrin0.inl.h>
 
 /// [06/Aug/2022] RSL Comment: We wrap the functions in internal calls to avoid C28113 on MSVC
 namespace rsl

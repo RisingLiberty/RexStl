@@ -20,6 +20,11 @@
 #include "rex_std/bonus/platform/windows/handle.h"
 #include "rex_std/internal/memory/memcpy.h"
 #include "rex_std/internal/streambuf/basic_streambuf.h"
+#include "rex_std/bonus/types.h"
+#include "rex_std/cstring.h"
+#include "rex_std/internal/algorithm/min.h"
+#include "rex_std/internal/ios/io_types.h"
+#include "rex_std/internal/string/char_traits.h"
 
 namespace rsl
 {

@@ -12,7 +12,8 @@
 
 #include "rex_std/internal/exception/exit.h"
 
-#include <Windows.h>
+#include <Windows.h>  // for ExitProcess
+// IWYU pragma: no_include <built-in>
 
 namespace rsl
 {

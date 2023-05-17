@@ -10,6 +10,8 @@
 //
 // ============================================
 
+// IWYU pragma: no_include <built-in>
+
 #include "rex_std/internal/exception/abort.h"
 #include "rex_std/internal/exception/teminate.h"
 

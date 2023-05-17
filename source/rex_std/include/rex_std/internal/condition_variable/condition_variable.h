@@ -134,7 +134,7 @@ namespace rsl
       impl* internal_impl();
 
       template <typename Predicate>
-      bool wait_until_impl(unique_lock<mutex>& lock, const xtime* absTime, Predicate& pred)
+      bool wait_until_impl(unique_lock<mutex>& lock, const internal::xtime* absTime, Predicate& pred)
       {
         while(!pred())
         {

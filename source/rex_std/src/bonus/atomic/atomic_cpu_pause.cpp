@@ -10,7 +10,7 @@
 //
 // ============================================
 
-#include <Windows.h>
+#include <Windows.h> // IWYU pragma: keep
 
 namespace rsl
 {

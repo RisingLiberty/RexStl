@@ -18,10 +18,12 @@
 
 #include "rex_std/iostream.h"
 
+#include <Windows.h>
+#include <processenv.h>
+
 #include "rex_std/bonus/iostream/console_buf.h"
 #include "rex_std/internal/type_traits/is_same.h"
-
-#include <Windows.h>
+#include "rex_std/streambuf.h"
 
 namespace rsl
 {

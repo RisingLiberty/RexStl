@@ -12,8 +12,6 @@
 
 #include "rex_std/new.h"
 
-#include <cstdlib>
-
 // void* operator new(size_t size)
 //{
 //   return malloc(size);

@@ -19,19 +19,20 @@
 //-----------------------------------------------------------------------------
 
 #include "rex_std/bonus/types.h"
-#include "rex_std/format.h"
 #include "rex_std/internal/functional/invoke.h"
 #include "rex_std/internal/memory/unique_ptr.h"
+#include "rex_std/internal/assert/assert_impl.h"
+#include "rex_std/internal/format/core.h"
+#include "rex_std/internal/functional/hash.h"
+#include "rex_std/internal/ostream/basic_ostream.h"
+#include "rex_std/internal/sstream/basic_sstream.h"
+#include "rex_std/internal/utility/forward.h"
 
 namespace rsl
 {
   inline namespace v1
   {
-    template <typename Char, typename Traits>
-    class basic_ostream;
 
-    template <typename T>
-    struct hash;
 
     namespace internal
     {

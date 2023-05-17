@@ -16,8 +16,7 @@ namespace rsl
 {
   inline namespace v1
   {
-
-    class date;
+    class date; // IWYU pragma: keep
     date current_date();
 
   } // namespace v1

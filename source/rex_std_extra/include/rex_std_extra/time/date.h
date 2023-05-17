@@ -14,7 +14,7 @@
 
 #include "rex_std/bonus/string/stack_string.h"
 #include "rex_std/bonus/types.h"
-#include "rex_std/iostream.h"
+#include "rex_std/ostream.h"
 
 namespace rsl
 {
@@ -55,7 +55,3 @@ namespace rsl
 
   } // namespace v1
 } // namespace rsl
-
-#ifdef REX_PLATFORM_WINDOWS
-  #include "rex_std_extra/time/win/win_date.h"
-#endif

@@ -14,8 +14,6 @@
 
 #include "rex_std/bonus/time/ticks.h"
 
-#include <Windows.h>
-
 namespace rsl
 {
   inline namespace v1

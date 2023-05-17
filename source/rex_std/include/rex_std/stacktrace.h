@@ -20,6 +20,7 @@
 #include "rex_std/internal/memory/allocator.h"
 #include "rex_std/string.h"
 #include "rex_std/vector.h"
+#include "rex_std/format.h"
 
 namespace rsl
 {

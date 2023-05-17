@@ -12,9 +12,8 @@
 
 #include "rex_std/internal/thread/this_thread.h"
 
-#include "rex_std/ratio.h"
-
 #include <Windows.h>
+// IWYU pragma: no_include <built-in>
 
 namespace rsl
 {

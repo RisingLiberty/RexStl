@@ -14,6 +14,8 @@
 
 #include "rex_std/iostream.h"
 #include "rex_std/stacktrace.h"
+#include "rex_std/format.h"
+#include "rex_std/ostream.h"
 
 namespace rsl
 {

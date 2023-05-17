@@ -13,6 +13,7 @@
 #pragma once
 
 #include "rex_std_extra/time/timepoint.h"
+#include "rex_std/bonus/types.h"
 
 namespace rsl
 {

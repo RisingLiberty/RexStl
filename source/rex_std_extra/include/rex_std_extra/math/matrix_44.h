@@ -16,6 +16,7 @@
 #include "rex_std_extra/math/rad_angle.h"
 #include "rex_std_extra/math/vec3.h"
 #include "rex_std_extra/math/vec4.h"
+#include "rex_std/bonus/types.h"
 
 namespace rsl
 {

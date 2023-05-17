@@ -10,7 +10,10 @@
 //
 // ============================================
 
+// IWYU pragma: no_include <built-in>
+
 #include "rex_std/internal/exception/exit.h"
+#include "rex_std/bonus/types.h"
 
 namespace rsl
 {

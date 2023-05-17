@@ -12,6 +12,8 @@
 
 #include "rex_std_extra/time/win/win_date.h"
 
+#include <Windows.h>
+
 #include "rex_std_extra/time/date.h"
 #include "rex_std_extra/time/win/win_time_functions.h"
 

@@ -12,6 +12,8 @@
 
 #pragma once
 
+#include <stddef.h>
+
 #include "rex_std/bonus/algorithm/clamp_max.h"
 #include "rex_std/bonus/types.h"
 #include "rex_std/initializer_list.h"
@@ -22,16 +24,20 @@
 #include "rex_std/internal/memory/memcpy.h"
 #include "rex_std/internal/string/char_traits.h"
 #include "rex_std/internal/string_view/basic_string_view.h"
+#include "rex_std/bonus/functional/hash_result.h"
+#include "rex_std/bonus/string/string_utils_impl.h"
+#include "rex_std/internal/algorithm/max.h"
+#include "rex_std/internal/assert/assert_fwd.h"
+#include "rex_std/internal/memory/nullptr.h"
+#include "rex_std/internal/optional/optional.h"
+#include "rex_std/internal/string/string_forward_declare.h"
+#include "rex_std/iosfwd.h"
 
 namespace rsl
 {
   inline namespace v1
   {
-    template <typename CharType, typename Traits>
-    class basic_string_view;
 
-    template <typename CharT>
-    class char_traits;
 
     template <typename CharType, card32 StrMaxSize>
     class stack_string
@@ -672,8 +678,6 @@ namespace rsl
     tiny_stack_string to_stack_string(float64 value, card32 precision = 4);
     tiny_stack_string to_stack_string(const void* ptr);
 
-    template <typename CharType, typename Traits>
-    class basic_ostream;
 
     template <typename CharType, card32 MaxSize>
     basic_ostream<CharType, char_traits<CharType>>& operator<<(basic_ostream<CharType, char_traits<CharType>>& os, const stack_string<CharType, MaxSize>& str)

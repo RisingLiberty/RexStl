@@ -12,7 +12,7 @@
 
 #include "rex_std/bonus/atomic//atomic_read.h"
 
-#include <Windows.h>
+#include <Windows.h> // IWYU pragma: keep
 
 namespace rsl
 {

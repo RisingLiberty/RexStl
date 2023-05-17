@@ -19,15 +19,24 @@
 
 #include "rex_std/internal/format/fmt_string.h"
 #include "rex_std/internal/utility/forward.h"
+#include "rex_std/bonus/attributes.h"
+#include "rex_std/bonus/defines.h"
+#include "rex_std/bonus/string/stack_string.h"
+#include "rex_std/bonus/types.h"
+#include "rex_std/internal/assert/assert_fwd.h"
+#include "rex_std/internal/memory/allocator.h"
+#include "rex_std/internal/string/basic_string.h"
+#include "rex_std/internal/string/char_traits.h"
+#include "rex_std/internal/string_view/basic_string_view.h"
+#include "rex_std/internal/utility/swap.h"
 
 namespace rsl
 {
   inline namespace v1
   {
-    class allocator;
+    class allocator; // IWYU pragma: keep
     template <typename CharType, typename Traits, typename Allocator>
-    class basic_string;
-
+    class basic_string; // IWYU pragma: keep
     using string = basic_string<char8, char_traits<char8>, allocator>;
 
     using fmt_stack_string = rsl::stack_string<char8, 500>;
@@ -68,4 +77,4 @@ namespace rsl
   } // namespace v1
 } // namespace rsl
 
-#include "rex_std/format.h"
+#include "rex_std/format.h" // IWYU pragma: keep

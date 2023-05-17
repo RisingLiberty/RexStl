@@ -12,8 +12,6 @@
 
 #include "rex_std/internal/memory/delete.h"
 
-#include <cstdlib>
-
 // Can't put this in a namespace
 // adding noexcept to avoid warnings on Windows
 // void operator delete(void* ptr) noexcept // NOLINT(misc-new-delete-overloads)

@@ -12,6 +12,8 @@
 
 #include "rex_std_extra/time/win/win_time_functions.h"
 
+#include <timezoneapi.h>
+
 #include "rex_std_extra/time/date.h"
 #include "rex_std_extra/time/time.h"
 #include "rex_std_extra/time/timepoint.h"

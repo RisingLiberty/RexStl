@@ -12,6 +12,8 @@
 
 #include "rex_std_extra/math/vec4.h"
 
+#include <cmath>
+
 #include "rex_std/format.h"
 #include "rex_std_extra/math/float.h"
 
