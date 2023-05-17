@@ -21,8 +21,8 @@
 #include "rex_std/bonus/time/xtime.h"
 #include "rex_std/internal/chrono/clock.h"
 #include "rex_std/internal/chrono/duration.h"
-#include "rex_std/internal/thread/thread.h"
 #include "rex_std/internal/chrono/time_point.h"
+#include "rex_std/internal/thread/thread.h"
 
 namespace rsl
 {

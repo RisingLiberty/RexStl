@@ -12,12 +12,12 @@
 
 #pragma once
 
-#include <vcruntime_new.h>
-
 #include "rex_std/bonus/attributes.h"
+#include "rex_std/bonus/memory/unique_array.h"
 #include "rex_std/bonus/types.h"
 #include "rex_std/memory.h"
-#include "rex_std/bonus/memory/unique_array.h"
+
+#include <vcruntime_new.h>
 
 namespace rsl
 {

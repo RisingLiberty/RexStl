@@ -25,7 +25,6 @@ namespace rsl
   inline namespace v1
   {
 
-
     namespace win
     {
       using FileHandle = void*;

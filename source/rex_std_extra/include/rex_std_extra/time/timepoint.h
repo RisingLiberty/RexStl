@@ -12,10 +12,10 @@
 
 #pragma once
 
-#include "rex_std_extra/time/date.h"
-#include "rex_std_extra/time/time.h"
 #include "rex_std/bonus/types.h"
 #include "rex_std/ostream.h"
+#include "rex_std_extra/time/date.h"
+#include "rex_std_extra/time/time.h"
 
 namespace rsl
 {

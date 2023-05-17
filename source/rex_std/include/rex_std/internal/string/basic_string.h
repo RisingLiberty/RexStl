@@ -12,50 +12,50 @@
 
 #pragma once
 
+#include "rex_std/bonus/attributes.h"
+#include "rex_std/bonus/functional/hash_result.h"
 #include "rex_std/bonus/string/stack_string.h"
+#include "rex_std/bonus/types.h"
 #include "rex_std/bonus/utility/compressed_pair.h"
 #include "rex_std/bonus/utility/element_literal.h"
+#include "rex_std/cstring.h"
 #include "rex_std/initializer_list.h"
 #include "rex_std/internal/algorithm/memcmp.h"
+#include "rex_std/internal/algorithm/min.h"
 #include "rex_std/internal/algorithm/remove.h"
 #include "rex_std/internal/algorithm/remove_if.h"
 #include "rex_std/internal/assert/assert_fwd.h"
 #include "rex_std/internal/functional/hash.h"
+#include "rex_std/internal/ios/basic_ios.h"
+#include "rex_std/internal/ios/ios_base.h"
+#include "rex_std/internal/istream/basic_istream.h"
 #include "rex_std/internal/iterator/begin.h"
+#include "rex_std/internal/iterator/distance.h"
 #include "rex_std/internal/iterator/end.h"
 #include "rex_std/internal/iterator/iterator_tags.h"
 #include "rex_std/internal/iterator/iterator_traits.h"
+#include "rex_std/internal/iterator/random_access_iterator.h"
+#include "rex_std/internal/iterator/reverse_iterator.h"
+#include "rex_std/internal/limits/numeric_limits.h"
 #include "rex_std/internal/math/abs.h"
+#include "rex_std/internal/memory/addressof.h"
 #include "rex_std/internal/memory/allocator.h"
 #include "rex_std/internal/memory/allocator_traits.h"
 #include "rex_std/internal/memory/byte.h"
 #include "rex_std/internal/memory/memcpy.h"
 #include "rex_std/internal/memory/memmove.h"
 #include "rex_std/internal/memory/memset.h"
+#include "rex_std/internal/optional/optional.h"
+#include "rex_std/internal/stddef/nullptr.h"
 #include "rex_std/internal/string/byte_strings.h"
 #include "rex_std/internal/string/char_traits.h"
 #include "rex_std/internal/string/string_forward_declare.h"
-#include "rex_std/stddef.h"
-#include "rex_std/bonus/attributes.h"
-#include "rex_std/bonus/functional/hash_result.h"
-#include "rex_std/bonus/types.h"
-#include "rex_std/cstring.h"
-#include "rex_std/internal/algorithm/min.h"
-#include "rex_std/internal/ios/ios_base.h"
-#include "rex_std/internal/istream/basic_istream.h"
-#include "rex_std/internal/iterator/distance.h"
-#include "rex_std/internal/iterator/random_access_iterator.h"
-#include "rex_std/internal/iterator/reverse_iterator.h"
-#include "rex_std/internal/limits/numeric_limits.h"
-#include "rex_std/internal/memory/addressof.h"
-#include "rex_std/internal/optional/optional.h"
-#include "rex_std/internal/stddef/nullptr.h"
 #include "rex_std/internal/string_view/basic_string_view.h"
 #include "rex_std/internal/type_traits/enable_if.h"
 #include "rex_std/internal/utility/move.h"
 #include "rex_std/internal/utility/swap.h"
 #include "rex_std/iterator.h"
-#include "rex_std/internal/ios/basic_ios.h"
+#include "rex_std/stddef.h"
 
 // Strings are in theory just fancy vectors.
 // They act like a vector of chars, but have extra functionality,
@@ -71,7 +71,6 @@ namespace rsl
 {
   inline namespace v1
   {
-
 
     template <typename CharType, typename Traits = char_traits<CharType>, typename Alloc = allocator>
     class basic_string
@@ -2182,7 +2181,6 @@ namespace rsl
     using u16string = basic_string<char16_t>;
     using u32string = basic_string<char32_t>;
 
-
     // extracts characters from input and appends them to str until the delim is found or the stream's eof.
     template <typename Char, typename Traits, typename Allocator>
     basic_istream<Char, Traits>& getline(basic_istream<Char, Traits>& input, basic_string<Char, Traits, Allocator>& str, Char delim)
@@ -2351,7 +2349,6 @@ namespace rsl
 #endif
     } // namespace string_literals
 
-
     template <typename CharType, typename Traits, typename Allocator>
     struct hash<basic_string<CharType, Traits, Allocator>>
     {
@@ -2369,7 +2366,6 @@ namespace rsl
 
     template <typename Char, typename Traits, typename Alloc = rsl::allocator>
     explicit basic_string(rsl::basic_string_view<Char, Traits>, typename rsl::basic_string_view<Char, Traits>::size_type, typename rsl::basic_string_view<Char, Traits>::size_type, const Alloc&) -> basic_string<Char, Traits, Alloc>;
-
 
     // stores each characters from the resulting sequence to the output stream
     template <typename Char, typename Traits, typename Allocator>

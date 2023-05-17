@@ -12,10 +12,10 @@
 
 #include "rex_std/chrono.h"
 
+#include "rex_std/bonus/types.h"
+
 #include <Windows.h>
 #include <profileapi.h>
-
-#include "rex_std/bonus/types.h"
 
 namespace rsl
 {

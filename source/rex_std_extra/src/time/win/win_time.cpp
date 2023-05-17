@@ -12,10 +12,10 @@
 
 #include "rex_std_extra/time/win/win_time.h"
 
-#include <Windows.h>
-
 #include "rex_std_extra/time/time.h"
 #include "rex_std_extra/time/win/win_time_functions.h"
+
+#include <Windows.h>
 
 rsl::time rsl::current_time()
 {

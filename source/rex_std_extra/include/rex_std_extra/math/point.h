@@ -12,8 +12,8 @@
 
 #pragma once
 
-#include "rex_std/ostream.h"
 #include "rex_std/bonus/types.h"
+#include "rex_std/ostream.h"
 
 namespace rsl
 {

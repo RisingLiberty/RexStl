@@ -13,8 +13,8 @@
 #pragma once
 
 #include "rex_std/bonus/string/stack_string.h"
-#include "rex_std_extra/math/rad_angle.h"
 #include "rex_std/bonus/types.h"
+#include "rex_std_extra/math/rad_angle.h"
 
 namespace rsl
 {

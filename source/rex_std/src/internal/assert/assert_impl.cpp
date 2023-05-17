@@ -12,10 +12,10 @@
 
 #include "rex_std/internal/assert/assert_impl.h"
 
-#include "rex_std/iostream.h"
-#include "rex_std/stacktrace.h"
 #include "rex_std/format.h"
+#include "rex_std/iostream.h"
 #include "rex_std/ostream.h"
+#include "rex_std/stacktrace.h"
 
 namespace rsl
 {

@@ -426,7 +426,7 @@ namespace rsl
 
         if(value < 0)
         {
-          rnext = unsigned_integral_to_buff(rnext, 0 - unsigned_value);
+          rnext    = unsigned_integral_to_buff(rnext, 0 - unsigned_value);
           *--rnext = '-';
         }
         else

@@ -12,8 +12,8 @@
 
 #pragma once
 
-#include "rex_std/internal/type_traits/aligned_storage.h"
 #include "rex_std/bonus/types.h"
+#include "rex_std/internal/type_traits/aligned_storage.h"
 
 namespace rsl
 {

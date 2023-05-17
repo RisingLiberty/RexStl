@@ -12,11 +12,11 @@
 
 #pragma once
 
-#include "rex_std/istream.h"
-#include "rex_std/ostream.h"
 #include "rex_std/bonus/types.h"
 #include "rex_std/internal/istream/basic_iostream.h"
 #include "rex_std/internal/string/char_traits.h"
+#include "rex_std/istream.h"
+#include "rex_std/ostream.h"
 
 namespace rsl
 {

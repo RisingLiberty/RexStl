@@ -133,7 +133,7 @@ namespace rsl
 
             while(node_source)
             {
-              *node_dest = allocate_node(node_source->value);
+              *node_dest  = allocate_node(node_source->value);
               node_dest   = &(*node_dest)->next;
               node_source = node_source->next;
             }
@@ -451,7 +451,7 @@ namespace rsl
       template <typename K>
       size_type erase(K&& k)
       {
-        const hash_result hr = m_cp_key_hash_and_bucket_count.first()(rsl::forward<K>(k));
+        const hash_result hr                = m_cp_key_hash_and_bucket_count.first()(rsl::forward<K>(k));
         const size_type n                   = static_cast<size_type>(bucket_index(hr, bucket_count()));
         const size_type element_count_saved = size();
 

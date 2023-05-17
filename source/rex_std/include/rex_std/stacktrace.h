@@ -14,13 +14,13 @@
 
 #include "rex_std/array.h"
 #include "rex_std/bonus/string.h"
+#include "rex_std/format.h"
 #include "rex_std/internal/functional/hash.h"
 #include "rex_std/internal/iterator/random_access_iterator.h"
 #include "rex_std/internal/iterator/reverse_iterator.h"
 #include "rex_std/internal/memory/allocator.h"
 #include "rex_std/string.h"
 #include "rex_std/vector.h"
-#include "rex_std/format.h"
 
 namespace rsl
 {

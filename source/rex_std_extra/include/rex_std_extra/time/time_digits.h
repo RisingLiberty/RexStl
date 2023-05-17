@@ -12,9 +12,9 @@
 
 #pragma once
 
+#include "rex_std/bonus/string/stack_string.h"
 #include "rex_std/bonus/types.h"
 #include "rex_std/format.h"
-#include "rex_std/bonus/string/stack_string.h"
 #include "rex_std/ostream.h"
 
 namespace rsl
@@ -57,7 +57,7 @@ namespace rsl
         return format_to(ctx.out(), "{}{}", digits.high, digits.low);
       }
     };
-  
+
     rsl::ostream& operator<<(rsl::ostream& os, time_digits digits);
 
   } // namespace v1

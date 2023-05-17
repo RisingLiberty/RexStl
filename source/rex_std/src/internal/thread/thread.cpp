@@ -12,7 +12,7 @@
 
 #include "rex_std/internal/thread/thread.h"
 
-#include <Windows.h>            // for INFINITE
+#include <Windows.h> // for INFINITE
 // IWYU pragma: no_include <built-in>
 
 #include "rex_std/internal/exception/teminate.h"

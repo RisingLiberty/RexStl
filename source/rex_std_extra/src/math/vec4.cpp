@@ -12,10 +12,10 @@
 
 #include "rex_std_extra/math/vec4.h"
 
-#include <cmath>
-
 #include "rex_std/format.h"
 #include "rex_std_extra/math/float.h"
+
+#include <cmath>
 
 rsl::vec4::vec4()
     : x(0.0f)
