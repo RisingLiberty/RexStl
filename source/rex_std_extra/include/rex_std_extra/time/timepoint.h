@@ -49,3 +49,7 @@ namespace rsl
 
   } // namespace v1
 } // namespace rsl
+
+#ifdef REX_PLATFORM_WINDOWS
+  #include "rex_std_extra/time/win/win_timepoint.h" // IWYU pragma: keep
+#endif
