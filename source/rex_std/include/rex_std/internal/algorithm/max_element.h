@@ -27,8 +27,8 @@ namespace rsl
         if(*it > *largest)
         {
           largest = it;
-          ++it;
         }
+        ++it;
       }
 
       return largest;
@@ -44,8 +44,8 @@ namespace rsl
         if(comp(*it, *largest) == false)
         {
           largest = it;
-          ++it;
         }
+        ++it;
       }
 
       return largest;
