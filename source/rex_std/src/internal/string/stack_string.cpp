@@ -13,6 +13,7 @@
 #include "rex_std/bonus/string/stack_string.h"
 
 #include "rex_std/bonus/string/string_utils_impl.h"
+#include "rex_std/assert.h"
 
 rsl::tiny_stack_string rsl::to_stack_string(const uint32 value)
 {

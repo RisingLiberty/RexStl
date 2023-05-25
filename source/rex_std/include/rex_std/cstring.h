@@ -15,6 +15,7 @@
 #include "rex_std/bonus/type_traits/is_character.h"
 #include "rex_std/bonus/types.h"
 #include "rex_std/internal/type_traits/enable_if.h"
+#include "rex_std/ctype.h"
 
 namespace rsl
 {
