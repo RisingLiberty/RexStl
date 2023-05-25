@@ -156,6 +156,52 @@ namespace rsl
       }
       return count == 0 ? 0 : (*lhs - *rhs);
     }
+    // compares 2 strings lexicographically
+    template <typename Char, typename rsl::v1::enable_if_t<is_character_v<Char>, int> = 0>
+    int32 stricmp(const Char* lhs, const Char* rhs)
+    {
+      while (*lhs && *rhs) // NOLINT
+      {
+        const Char lhs_lower = rsl::to_lower(*lhs);
+        const Char rhs_lower = rsl::to_lower(*rhs);
+
+        if (lhs_lower != rhs_lower)
+        {
+          break;
+        }
+
+        ++lhs;
+        ++rhs;
+      }
+
+      const Char lhs_lower = rsl::to_lower(*lhs);
+      const Char rhs_lower = rsl::to_lower(*rhs);
+      return lhs_lower - *rhs_lower;
+    }
+    // compares at most count characters lexicographically
+    template <typename Char, typename rsl::v1::enable_if_t<is_character_v<Char>, int> = 0>
+    constexpr int32 strincmp(const Char* lhs, const Char* rhs, count_t count)
+    {
+      while (count != 0 && *lhs && *rhs) // NOLINT(readability-implicit-bool-conversion)
+      {
+        const Char lhs_lower = rsl::to_lower(*lhs);
+        const Char rhs_lower = rsl::to_lower(*rhs);
+
+        if (lhs_lower != rhs_lower)
+        {
+          break;
+        }
+
+        lhs++;
+        rhs++;
+        count--;
+      }
+
+      const Char lhs_lower = rsl::to_lower(*lhs);
+      const Char rhs_lower = rsl::to_lower(*rhs);
+
+      return count == 0 ? 0 : lhs_lower - rhs_lower;
+    }
     template <typename Char, typename rsl::v1::enable_if_t<is_character_v<Char>, int> = 0>
     int32 strcoll(const Char* lhs, const Char* rhs);
     // finds the first occurrence of a character
