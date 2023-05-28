@@ -38,8 +38,8 @@ namespace rsl
       REX_CONSTEVAL_WITH_CPP20 source_location()
           : m_line(0)
           , m_column(0)
-          , m_file_name(nullptr)
-          , m_function_name(nullptr)
+          , m_file_name()
+          , m_function_name()
       {
       }
 
@@ -49,8 +49,8 @@ namespace rsl
 
         res.m_line          = line;
         res.m_column        = column;
-        res.m_file_name     = file;
-        res.m_function_name = function;
+        res.m_file_name     = rsl::string_view(file);
+        res.m_function_name = rsl::string_view(function);
 
         return res;
       }
@@ -63,11 +63,11 @@ namespace rsl
       {
         return m_column;
       }
-      const char8* file_name() const
+      rsl::string_view file_name() const
       {
         return m_file_name;
       }
-      const char8* function_name() const
+      rsl::string_view function_name() const
       {
         return m_function_name;
       }
@@ -75,8 +75,8 @@ namespace rsl
     private:
       card32 m_line;
       card32 m_column;
-      const char8* m_file_name;
-      const char8* m_function_name;
+      rsl::string_view m_file_name;
+      rsl::string_view m_function_name;
     };
 
     rsl::big_stack_string to_string(const source_location& sourceLoc);
