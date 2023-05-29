@@ -12,6 +12,7 @@
 
 #pragma once
 
+#include "rex_std/bonus/types.h"
 #include "rex_std/bonus/hashtable/node_iterator_base.h"
 #include "rex_std/bonus/type_traits/type_select.h"
 
@@ -30,7 +31,7 @@ namespace rsl
       using value_type        = Value;
       using pointer           = typename type_select<IsConst, const Value*, Value*>::type;
       using reference         = typename type_select<IsConst, const Value&, Value&>::type;
-      using difference_type   = ptrdiff_t;
+      using difference_type   = ptrdiff;
       using iterator_category = forward_iterator_tag;
 
       explicit node_iterator(node_type* node = nullptr)

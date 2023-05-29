@@ -16,6 +16,8 @@
 #include "rex_std/bonus/hashtable/hashtable_iterator.h"
 #include "rex_std/bonus/hashtable/node_iterator.h"
 #include "rex_std/bonus/hashtable/rehash_base.h"
+#include "rex_std/bonus/type_traits/strip_template.h"
+#include "rex_std/bonus/type_traits/implements.h"
 #include "rex_std/bonus/utility/compressed_pair.h"
 #include "rex_std/bonus/utility/emplace_result.h"
 #include "rex_std/bonus/utility/range.h"
@@ -426,7 +428,7 @@ namespace rsl
       }
       size_type erase(const key_type& k)
       {
-        const hash_result hr                = m_cp_key_hash_and_bucket_count.first()(k);
+        const hash_result hr                = hash_keylike_type(k);
         const size_type n                   = static_cast<size_type>(bucket_index(hr, bucket_count()));
         const size_type element_count_saved = size();
 
@@ -451,7 +453,7 @@ namespace rsl
       template <typename K>
       size_type erase(K&& k)
       {
-        const hash_result hr                = m_cp_key_hash_and_bucket_count.first()(rsl::forward<K>(k));
+        const hash_result hr                = hash_keylike_type(rsl::forward<K>(k));
         const size_type n                   = static_cast<size_type>(bucket_index(hr, bucket_count()));
         const size_type element_count_saved = size();
 
@@ -507,7 +509,7 @@ namespace rsl
 
       iterator find(const key_type& key)
       {
-        const hash_result hr = m_cp_key_hash_and_bucket_count.first()(key);
+        const hash_result hr = hash_keylike_type(key);
         const size_type n    = static_cast<size_type>(bucket_index(hr, bucket_count()));
 
         node_type* node = find_node(bucket_array()[n], key);
@@ -515,7 +517,7 @@ namespace rsl
       }
       const_iterator find(const key_type& key) const
       {
-        const hash_result hr = m_cp_key_hash_and_bucket_count.first()(key);
+        const hash_result hr = hash_keylike_type(key);
         const size_type n    = static_cast<size_type>(bucket_index(hr, bucket_count()));
 
         node_type* node = find_node(bucket_array()[n], key);
@@ -524,7 +526,7 @@ namespace rsl
       template <typename K>
       iterator find(const K& x)
       {
-        const hash_result hr = m_cp_key_hash_and_bucket_count.first()(x);
+        const hash_result hr = hash_keylike_type(x);
         const size_type n    = static_cast<size_type>(bucket_index(hr, bucket_count()));
 
         node_type* node = find_node(bucket_array()[n], x);
@@ -533,7 +535,7 @@ namespace rsl
       template <typename K>
       const_iterator find(const K& x) const
       {
-        const hash_result hr = m_cp_key_hash_and_bucket_count.first()(x);
+        const hash_result hr = hash_keylike_type(x);
         const size_type n    = static_cast<size_type>(bucket_index(hr, bucket_count()));
 
         node_type* node = find_node(bucket_array()[n], x);
@@ -542,7 +544,7 @@ namespace rsl
       template <typename K>
       size_type count(const K& x) const
       {
-        const hash_result hr = m_cp_key_hash_and_bucket_count.first()(x);
+        const hash_result hr = hash_keylike_type(x);
         const size_type n    = static_cast<size_type>(bucket_index(hr, bucket_count()));
 
         node_type* node = find_node(bucket_array()[n], x);
@@ -647,7 +649,7 @@ namespace rsl
       {
         value_type new_val     = value_type {rsl::forward<Args>(args)...};
         const key_type& k      = m_cp_extract_key_and_rehash_policy.first()(new_val);
-        const hash_result hr   = m_cp_key_hash_and_bucket_count.first()(k);
+        const hash_result hr   = hash_keylike_type(k);
         size_type n            = static_cast<size_type>(bucket_index(hr, bucket_count()));
         node_type* node        = nullptr;
         node_type** bucket_arr = bucket_array();
@@ -749,11 +751,12 @@ namespace rsl
 
       size_type bucket_index(node_type* node, size_type bucketCount) const
       {
-        const hash_result hr = m_cp_key_hash_and_bucket_count.first()(m_cp_extract_key_and_rehash_policy.first()(node->value));
+        const hash_result hr = hash_keylike_type(m_cp_extract_key_and_rehash_policy.first()(node->value));
         return bucket_index(hr, bucketCount);
       }
 
-      node_type* find_node(node_type* node, const key_type& k) const
+      template <typename K>
+      node_type* find_node(node_type* node, const K& k) const
       {
         for(; node; node = node->next)
         {
@@ -764,6 +767,28 @@ namespace rsl
         }
 
         return nullptr;
+      }
+
+      template <typename K>
+      hash_result hash_keylike_type(const K& type)
+      {
+        // it's possible the type we pass in to look for something is different than the key type.
+        // eg. it's possible you pass in a string view while the hashtable itself is storing strings as keys
+        // it was not possible look for these keys with a string_view while using the default hash functor (rsl::hash)
+        // as rsl::hash had no overload taking in a string_view (or it's not implicilty convertible) which is so by design.
+        // so instead, we have this function which uses the "change_hash_type" to use rsl::hash<rsl::string_view> when a string view
+        // is passed in. This bypasses the hasher stored in the table, but the same underlying type is still used.
+        // it just uses rsl::hash<rsl::string_view> instead of rsl::hash<rsl::string>, neither of which has side effects.
+        using new_hash_type = rsl::change_template_t<key_hash_type, K>;
+        if constexpr (rsl::is_same_v<new_hash_type, key_hash_type>)
+        {
+          return m_cp_key_hash_and_bucket_count.first()(type)
+        }
+
+        static_assert(rsl::is_constructible_v<key_type, K>, "key_type is not constructible from 'K'");
+
+        new_hash_type hasher{};
+        return hasher(type);
       }
 
     private:

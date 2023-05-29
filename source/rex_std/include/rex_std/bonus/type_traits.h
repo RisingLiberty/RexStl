@@ -23,6 +23,7 @@
 #include "rex_std/bonus/type_traits/remove_reference_wrapper.h"
 #include "rex_std/bonus/type_traits/returns_exactly.h"
 #include "rex_std/bonus/type_traits/sign_of.h"
+#include "rex_std/bonus/type_traits/strip_template.h"
 #include "rex_std/bonus/type_traits/type_and.h"
 #include "rex_std/bonus/type_traits/type_equal.h"
 #include "rex_std/bonus/type_traits/type_not.h"

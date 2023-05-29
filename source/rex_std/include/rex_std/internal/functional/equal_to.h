@@ -29,6 +29,12 @@ namespace rsl
       {
         return lhs == rhs;
       }
+
+      template <typename U>
+      constexpr bool operator()(const U& lhs, const T& rhs) const
+      {
+        return lhs == rhs;
+      }
     };
 
   } // namespace v1
