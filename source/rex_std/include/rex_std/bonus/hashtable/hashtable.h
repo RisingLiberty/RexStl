@@ -17,7 +17,6 @@
 #include "rex_std/bonus/hashtable/node_iterator.h"
 #include "rex_std/bonus/hashtable/rehash_base.h"
 #include "rex_std/bonus/type_traits/strip_template.h"
-#include "rex_std/bonus/type_traits/implements.h"
 #include "rex_std/bonus/utility/compressed_pair.h"
 #include "rex_std/bonus/utility/emplace_result.h"
 #include "rex_std/bonus/utility/range.h"
