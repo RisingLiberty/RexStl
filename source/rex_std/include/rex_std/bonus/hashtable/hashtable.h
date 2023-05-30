@@ -769,7 +769,7 @@ namespace rsl
       }
 
       template <typename K>
-      hash_result hash_keylike_type(const K& type)
+      hash_result hash_keylike_type(const K& type) const
       {
         // it's possible the type we pass in to look for something is different than the key type.
         // eg. it's possible you pass in a string view while the hashtable itself is storing strings as keys
@@ -781,13 +781,15 @@ namespace rsl
         using new_hash_type = rsl::change_template_t<key_hash_type, K>;
         if constexpr (rsl::is_same_v<new_hash_type, key_hash_type>)
         {
-          return m_cp_key_hash_and_bucket_count.first()(type)
+          return m_cp_key_hash_and_bucket_count.first()(type);
         }
+        else
+        {
+          static_assert(rsl::is_constructible_v<key_type, K>, "key_type is not constructible from 'K'");
 
-        static_assert(rsl::is_constructible_v<key_type, K>, "key_type is not constructible from 'K'");
-
-        new_hash_type hasher{};
-        return hasher(type);
+          new_hash_type hasher{};
+          return hasher(type);
+        }
       }
 
     private:

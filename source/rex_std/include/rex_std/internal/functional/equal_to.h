@@ -20,6 +20,11 @@ namespace rsl
     template <typename T = void>
     struct equal_to
     {
+      constexpr bool operator()(const T& lhs, const T& rhs) const
+      {
+        return lhs == rhs;
+      }
+
       /// RSL Comment: Different from ISO C++ Standard at time of writing (22/Aug/2022)
       // the standard doesn't template the second argument.
       // we do so we can, for example, compare a string with a const char*
