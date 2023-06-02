@@ -14,8 +14,7 @@
 
 #include "rex_std/bonus/type_traits/is_character.h"
 #include "rex_std/bonus/types.h"
-#include "rex_std/internal/type_traits/enable_if.h"
-#include "rex_std/ctype.h"
+#include "rex_std/ctype.h"al/type_tr"rex_std/internal/type_traits/enable_if.h"
 
 namespace rsl
 {
@@ -161,12 +160,12 @@ namespace rsl
     template <typename Char, typename rsl::v1::enable_if_t<is_character_v<Char>, int> = 0>
     int32 stricmp(const Char* lhs, const Char* rhs)
     {
-      while (*lhs && *rhs) // NOLINT
+      while(*lhs && *rhs) // NOLINT
       {
         const Char lhs_lower = rsl::to_lower(*lhs);
         const Char rhs_lower = rsl::to_lower(*rhs);
 
-        if (lhs_lower != rhs_lower)
+        if(lhs_lower != rhs_lower)
         {
           break;
         }
@@ -183,12 +182,12 @@ namespace rsl
     template <typename Char, typename rsl::v1::enable_if_t<is_character_v<Char>, int> = 0>
     constexpr int32 strincmp(const Char* lhs, const Char* rhs, count_t count)
     {
-      while (count != 0 && *lhs && *rhs) // NOLINT(readability-implicit-bool-conversion)
+      while(count != 0 && *lhs && *rhs) // NOLINT(readability-implicit-bool-conversion)
       {
         const Char lhs_lower = rsl::to_lower(*lhs);
         const Char rhs_lower = rsl::to_lower(*rhs);
 
-        if (lhs_lower != rhs_lower)
+        if(lhs_lower != rhs_lower)
         {
           break;
         }
