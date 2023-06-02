@@ -779,7 +779,7 @@ namespace rsl
         // is passed in. This bypasses the hasher stored in the table, but the same underlying type is still used.
         // it just uses rsl::hash<rsl::string_view> instead of rsl::hash<rsl::string>, neither of which has side effects.
         using new_hash_type = rsl::change_template_t<key_hash_type, K>;
-        if constexpr (rsl::is_same_v<new_hash_type, key_hash_type>)
+        if constexpr(rsl::is_same_v<new_hash_type, key_hash_type>)
         {
           return m_cp_key_hash_and_bucket_count.first()(type);
         }
@@ -787,7 +787,7 @@ namespace rsl
         {
           static_assert(rsl::is_constructible_v<key_type, K>, "key_type is not constructible from 'K'");
 
-          new_hash_type hasher{};
+          new_hash_type hasher {};
           return hasher(type);
         }
       }

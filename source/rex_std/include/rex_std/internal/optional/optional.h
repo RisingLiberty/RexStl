@@ -936,7 +936,7 @@ namespace rsl
     template <typename T>
     struct hash<optional<T>>
     {
-      hash_result operator()(const optional<T>& opt) const
+      constexpr hash_result operator()(const optional<T>& opt) const
       {
         if(opt.has_value())
         {

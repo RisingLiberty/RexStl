@@ -345,7 +345,7 @@ namespace rsl
     template <typename T>
     struct hash<shared_ptr<T>>
     {
-      hash_result operator()(const shared_ptr<T>& ptr) const
+      constexpr hash_result operator()(const shared_ptr<T>& ptr) const
       {
         hash<T*> new_hash;
         return new_hash(ptr.get());

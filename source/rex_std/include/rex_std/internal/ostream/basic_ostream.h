@@ -22,6 +22,7 @@
 
 #pragma once
 
+#include "rex_std/assert.h"
 #include "rex_std/bonus/string/stack_string.h"
 #include "rex_std/bonus/string/string_utils.h"
 #include "rex_std/internal/ios/basic_ios.h"
@@ -31,7 +32,6 @@
 #include "rex_std/internal/type_traits/is_same.h"
 #include "rex_std/internal/type_traits/void.h"
 #include "rex_std/internal/utility/declval.h"
-#include "rex_std/assert.h"
 
 namespace rsl
 {

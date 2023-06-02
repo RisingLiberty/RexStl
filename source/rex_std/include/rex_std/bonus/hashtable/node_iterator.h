@@ -12,9 +12,9 @@
 
 #pragma once
 
-#include "rex_std/bonus/types.h"
 #include "rex_std/bonus/hashtable/node_iterator_base.h"
 #include "rex_std/bonus/type_traits/type_select.h"
+#include "rex_std/bonus/types.h"
 
 namespace rsl
 {
