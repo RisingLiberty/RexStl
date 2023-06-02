@@ -109,7 +109,7 @@ namespace rsl
     template <typename T>
     struct hash<T*>
     {
-      hash_result operator()(T* p) const
+      constexpr hash_result operator()(T* p) const
       {
         return static_cast<hash_result>(*reinterpret_cast<uintptr*>(&p)); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
       }
@@ -118,7 +118,7 @@ namespace rsl
     template <>
     struct hash<bool>
     {
-      hash_result operator()(bool val) const
+      constexpr ash_result operator()(bool val) const
       {
         return static_cast<hash_result>(val);
       }
@@ -126,7 +126,7 @@ namespace rsl
     template <>
     struct hash<int8>
     {
-      hash_result operator()(int8 val) const
+      constexpr hash_result operator()(int8 val) const
       {
         return static_cast<hash_result>(val);
       }
@@ -134,7 +134,7 @@ namespace rsl
     template <>
     struct hash<int16>
     {
-      hash_result operator()(int16 val) const
+      constexpr hash_result operator()(int16 val) const
       {
         return static_cast<hash_result>(val);
       }
@@ -142,7 +142,7 @@ namespace rsl
     template <>
     struct hash<int32>
     {
-      hash_result operator()(int32 val) const
+      constexpr hash_result operator()(int32 val) const
       {
         return static_cast<hash_result>(val);
       }
@@ -150,7 +150,7 @@ namespace rsl
     template <>
     struct hash<int64>
     {
-      hash_result operator()(int64 val) const
+      constexpr hash_result operator()(int64 val) const
       {
         return static_cast<hash_result>(val);
       }
@@ -158,7 +158,7 @@ namespace rsl
     template <>
     struct hash<uint8>
     {
-      hash_result operator()(uint8 val) const
+      constexpr hash_result operator()(uint8 val) const
       {
         return static_cast<hash_result>(val);
       }
@@ -166,7 +166,7 @@ namespace rsl
     template <>
     struct hash<uint16>
     {
-      hash_result operator()(uint16 val) const
+      constexpr hash_result operator()(uint16 val) const
       {
         return static_cast<hash_result>(val);
       }
@@ -174,7 +174,7 @@ namespace rsl
     template <>
     struct hash<uint32>
     {
-      hash_result operator()(uint32 val) const
+      constexpr hash_result operator()(uint32 val) const
       {
         return static_cast<hash_result>(val);
       }
@@ -182,7 +182,7 @@ namespace rsl
     template <>
     struct hash<uint64>
     {
-      hash_result operator()(uint64 val) const
+      constexpr hash_result operator()(uint64 val) const
       {
         return static_cast<hash_result>(val);
       }
@@ -190,7 +190,7 @@ namespace rsl
     template <>
     struct hash<float32>
     {
-      hash_result operator()(float32 val) const
+      constexpr hash_result operator()(float32 val) const
       {
         return static_cast<hash_result>(val);
       }
@@ -198,7 +198,7 @@ namespace rsl
     template <>
     struct hash<float64>
     {
-      hash_result operator()(float64 val) const
+      constexpr hash_result operator()(float64 val) const
       {
         return static_cast<hash_result>(val);
       }
@@ -206,7 +206,7 @@ namespace rsl
     template <>
     struct hash<lfloat64>
     {
-      hash_result operator()(lfloat64 val) const
+      constexpr hash_result operator()(lfloat64 val) const
       {
         return static_cast<hash_result>(val);
       }
@@ -214,7 +214,7 @@ namespace rsl
     template <>
     struct hash<long>
     {
-      hash_result operator()(long val) const
+      constexpr hash_result operator()(long val) const
       {
         return static_cast<hash_result>(val);
       }
@@ -222,7 +222,7 @@ namespace rsl
     template <>
     struct hash<ulong>
     {
-      hash_result operator()(ulong val) const
+      constexpr hash_result operator()(ulong val) const
       {
         return static_cast<hash_result>(val);
       }
@@ -231,7 +231,7 @@ namespace rsl
     template <>
     struct hash<char8>
     {
-      hash_result operator()(char8 val) const
+      constexpr hash_result operator()(char8 val) const
       {
         return static_cast<hash_result>(val);
       }
@@ -239,7 +239,7 @@ namespace rsl
     template <>
     struct hash<char16>
     {
-      hash_result operator()(char16 val) const
+      constexpr hash_result operator()(char16 val) const
       {
         return static_cast<hash_result>(val);
       }
@@ -247,7 +247,7 @@ namespace rsl
     template <>
     struct hash<char32>
     {
-      hash_result operator()(char32 val) const
+      constexpr hash_result operator()(char32 val) const
       {
         return static_cast<hash_result>(val);
       }
@@ -255,7 +255,7 @@ namespace rsl
     template <>
     struct hash<tchar>
     {
-      hash_result operator()(tchar val) const
+      constexpr hash_result operator()(tchar val) const
       {
         return static_cast<hash_result>(val);
       }
@@ -264,7 +264,7 @@ namespace rsl
     template <>
     struct hash<nullptr_t>
     {
-      hash_result operator()(nullptr_t) const
+      constexpr hash_result operator()(nullptr_t) const
       {
         void* p {};
         return static_cast<hash_result>(reinterpret_cast<uintptr>(p)); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)

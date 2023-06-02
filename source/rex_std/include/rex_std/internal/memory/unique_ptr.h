@@ -383,7 +383,7 @@ namespace rsl
     template <typename T, typename D>
     struct hash<unique_ptr<T, D>>
     {
-      hash_result operator()(const unique_ptr<T, D>& ptr) const
+      constexpr hash_result operator()(const unique_ptr<T, D>& ptr) const
       {
         hash<typename decltype(ptr)::pointer> new_hash;
         return new_hash(ptr.get());

@@ -2352,7 +2352,7 @@ namespace rsl
     template <typename CharType, typename Traits, typename Allocator>
     struct hash<basic_string<CharType, Traits, Allocator>>
     {
-      hash_result operator()(const basic_string<CharType, Traits, Allocator>& str) const
+      constexpr hash_result operator()(const basic_string<CharType, Traits, Allocator>& str) const
       {
         return rsl::internal::hash(str.data());
       }
