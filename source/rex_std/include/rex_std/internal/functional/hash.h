@@ -264,7 +264,7 @@ namespace rsl
     template <>
     struct hash<nullptr_t>
     {
-      constexpr hash_result operator()(nullptr_t) const
+      hash_result operator()(nullptr_t) const
       {
         void* p {};
         return static_cast<hash_result>(reinterpret_cast<uintptr>(p)); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
