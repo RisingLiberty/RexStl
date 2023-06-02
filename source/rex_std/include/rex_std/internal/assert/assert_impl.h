@@ -17,13 +17,17 @@
 
 #pragma once
 
+#include "rex_std/internal/format/fmt_string.h"
+#include "rex_std/internal/utility/forward.h"
 #include "rex_std/bonus/attributes.h"
-         "rex_std/b" rex_std / bonus / defines.h "nus/string" rex_std / bonus / string / stack_string.h "ex_std/bon" rex_std / bonus / types.h "_std/inter" rex_std / internal / assert / assert_fwd.h "x_std/inte" rex_std / internal / format / fmt_string.h "h"
-#includ "rex_std/internal/memory/allocator.h"                                                                                                                                                                                                            \
-        "
-#include "rex_std/internal/string/basic_string.h" g.h "
-#incl "rex_std/internal/string/char_traits.h".h "
-#inclu "rex_std/internal/string_view/basic_string_view.h" string_vie "rex_std/internal/utility/forward.h"
+#include "rex_std/bonus/defines.h"
+#include "rex_std/bonus/string/stack_string.h"
+#include "rex_std/bonus/types.h"
+#include "rex_std/internal/assert/assert_fwd.h"
+#include "rex_std/internal/memory/allocator.h"
+#include "rex_std/internal/string/basic_string.h"
+#include "rex_std/internal/string/char_traits.h"
+#include "rex_std/internal/string_view/basic_string_view.h"
 #include "rex_std/internal/utility/swap.h"
 
 namespace rsl
