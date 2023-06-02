@@ -1,7 +1,0 @@
-{
-	"rtl-diff-std": {
-		"prefix": "rtl_complex_nlogn",
-		"body": [ "// Complexity: O(n log(n))" ],
-		"description": "Linearithmic complexity"
-	}
-}

@@ -1,0 +1,1048 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>REX-STL Documentation</title>
+        <meta name="robots" content="noindex" />
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="documentation/introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="spacer"></li><li class="chapter-item expanded "><div><strong aria-hidden="true">2.</strong> Documentation</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="documentation/building_rsl.html"><strong aria-hidden="true">2.1.</strong> Building RSL</a></li><li class="chapter-item expanded "><a href="documentation/comment_tags.html"><strong aria-hidden="true">2.2.</strong> Comment Tags</a></li><li class="chapter-item expanded "><a href="documentation/glossary.html"><strong aria-hidden="true">2.3.</strong> Glossary</a></li><li class="chapter-item expanded "><a href="documentation/memory.html"><strong aria-hidden="true">2.4.</strong> Memory</a></li><li class="chapter-item expanded "><a href="documentation/rsl_vs_std_notes.html"><strong aria-hidden="true">2.5.</strong> Rsl vs Stl</a></li><li class="chapter-item expanded "><a href="documentation/coding_practices.html"><strong aria-hidden="true">2.6.</strong> Coding Practices</a></li></ol></li><li class="chapter-item expanded "><a href="guidelines/introduction.html"><strong aria-hidden="true">3.</strong> Coding Guidelines</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="guidelines/files.html"><strong aria-hidden="true">3.1.</strong> Files</a></li><li class="chapter-item expanded "><a href="guidelines/scoping.html"><strong aria-hidden="true">3.2.</strong> Scoping</a></li><li class="chapter-item expanded "><a href="guidelines/classes.html"><strong aria-hidden="true">3.3.</strong> Classes</a></li><li class="chapter-item expanded "><a href="guidelines/functions.html"><strong aria-hidden="true">3.4.</strong> Functions</a></li><li class="chapter-item expanded "><a href="guidelines/selections.html"><strong aria-hidden="true">3.5.</strong> Selections</a></li><li class="chapter-item expanded "><a href="guidelines/iterations.html"><strong aria-hidden="true">3.6.</strong> Iterations</a></li><li class="chapter-item expanded "><a href="guidelines/enumerations.html"><strong aria-hidden="true">3.7.</strong> Enumerations</a></li><li class="chapter-item expanded "><a href="guidelines/ownership.html"><strong aria-hidden="true">3.8.</strong> Ownership</a></li><li class="chapter-item expanded "><a href="guidelines/templates.html"><strong aria-hidden="true">3.9.</strong> Templates</a></li><li class="chapter-item expanded "><a href="guidelines/auto.html"><strong aria-hidden="true">3.10.</strong> Auto</a></li><li class="chapter-item expanded "><a href="guidelines/lambdas.html"><strong aria-hidden="true">3.11.</strong> Lambdas</a></li><li class="chapter-item expanded "><a href="guidelines/other_cpp_features.html"><strong aria-hidden="true">3.12.</strong> Other CPP Features</a></li><li class="chapter-item expanded "><a href="guidelines/naming.html"><strong aria-hidden="true">3.13.</strong> Naming</a></li><li class="chapter-item expanded "><a href="guidelines/debug_vs_retail.html"><strong aria-hidden="true">3.14.</strong> Debug VS. Retail</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">REX-STL Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="introduction"><a class="header" href="#introduction">Introduction</a></h2>
+<p>Internal classes, function and types of rsl are defined in the rsl::internal namespace.
+These implementations can possibly change in newer versions of rsl.</p>
+<p>Changes to these classes, functions and types won't be included in the release notes and are therefore not recommended for use as they can cause bugs or compiler errors when changing rsl version when a user expects certain behavior.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="building-rex-standard-library"><a class="header" href="#building-rex-standard-library">Building Rex Standard Library</a></h1>
+<h2 id="build-system"><a class="header" href="#build-system">Build System</a></h2>
+<p>Rex Standard Library uses Sharpmake as a build system. Sharpmake uses C# for its build system instead of a custom made scripting language like CMAKE and PreMake.</p>
+<p>This makes it easier to develop for and also easier to debug as there are debuggers out there for C# and it allows us to use the entire .NET framework as well as any other libraries written in C#.</p>
+<h2 id="how-to-build"><a class="header" href="#how-to-build">How to build</a></h2>
+<p>To build Rex Standard Library you first need to launch the setup script, to make sure all the proper tools are installed. run <strong>setup.py</strong>, this will install the proper tools, including sharpmake.</p>
+<p>After the setup script has finished, run build.py. This will build Rex Standard Library.</p>
+<h2 id="how-to-run-the-tests"><a class="header" href="#how-to-run-the-tests">How to run the tests</a></h2>
+<p>Rex Standard Library consists of a lot of test code as well, making sure the entire library is running correctly.
+To run these tests after manually modifying the code, run test.py.</p>
+<p>This will run include-what-you-use, clang-tidy, unit tests, address sanitizer, undefined behavior sanitizer and fuzzy testing.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="comment-tags"><a class="header" href="#comment-tags">Comment Tags</a></h1>
+<h2 id="rsl-todo-implement"><a class="header" href="#rsl-todo-implement">RSL TODO: implement</a></h2>
+<p>This code is currently not implemented but should be before we ship</p>
+<h2 id="rsl-comment"><a class="header" href="#rsl-comment">RSL Comment:</a></h2>
+<p>this code is either different from the C++ Standard Library or is not in the C++ Standard Library all together.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="dictionary"><a class="header" href="#dictionary">Dictionary</a></h1>
+<h2 id="abbreviations"><a class="header" href="#abbreviations">abbreviations</a></h2>
+<table><thead><tr><th>abbreviation</th><th>full word</th></tr></thead><tbody>
+<tr><td>calc</td><td>calculate</td></tr>
+<tr><td>impl</td><td>implementation</td></tr>
+<tr><td>init</td><td>initialise</td></tr>
+</tbody></table>
+<h2 id="important-differences-between-words"><a class="header" href="#important-differences-between-words">Important differences between words</a></h2>
+<p>In the coding worlds data types and byte size are closely related, but they're not the same.
+a byte is not the same as a char, a word is not the same as a short.
+bytes, words, dwords are different <strong>sizes</strong>, chars, shorts, int, are different <strong>types</strong>.</p>
+<p>therefore be careful which word you use and where you use it.</p>
+<table><thead><tr><th>size</th><th>type</th></tr></thead><tbody>
+<tr><td>byte</td><td>char</td></tr>
+<tr><td>word</td><td>short</td></tr>
+<tr><td>dword</td><td>int</td></tr>
+</tbody></table>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="allocator-traits"><a class="header" href="#allocator-traits">Allocator Traits</a></h1>
+<p>Allocator and Allocator traits has changed quite a bit over the years and it's hard to following which standard to follow now. That's why Rex Standard Library went to google to look up a proper definition of &quot;Traits&quot; and came up with this:
+&quot;a distinguishing quality or characteristic, typically one belonging to a person.&quot;</p>
+<p>Going to one of its synonyms, more precisely Property, we get the following definition: &quot;an attribute, quality, or characteristic of something.&quot;</p>
+<p>With this in mind, allocator traits are defined as structures holding member types used by systems using allocators. You can think of them as a structure combining all member types, however, logic is tied to an allocator. </p>
+<p>the C++20 Standard removed the member functions &quot;address&quot;, &quot;max_size&quot;, &quot;construct&quot; and &quot;destroy&quot; from the allocator class, however, due to the decision made above, we will keep these functions in allocator classes. However, address member function is superseded by addressof global function, which is why this function is not implemented in rsl allocators.</p>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="container-copying-and-moving"><a class="header" href="#container-copying-and-moving">Container copying and moving</a></h2>
+<p>Container copying and moving with different allocators is not allowed in rsl as this would cause huge performance issues which are easily hidden.</p>
+<h2 id="enableif-overload-resolution"><a class="header" href="#enableif-overload-resolution">EnableIf overload resolution</a></h2>
+<p>rsl ignores all &quot;this overload does not participate in overload resolution unless ...&quot; that the standard defines for some of it functions. (eg. swap).</p>
+<p>the reason for this is that the compiler would likely emit an error anyway and we want to keep the code readable.</p>
+<h2 id="calling-rslmove"><a class="header" href="#calling-rslmove">Calling rsl::move</a></h2>
+<p>rsl implements a rsl::move function, just like the C++ Standard does. However, calling this function with a const lvalue will result in a compiler error. The reason for this is that rsl::move should only be called with rvalues or non-const lvalues, otherwise there is no point in doing the move as it'll result in an error. 
+This shouldn't cause any problems, even in templated code as rsl::forward should be called with universal references.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="coding-practices"><a class="header" href="#coding-practices">Coding Practices</a></h1>
+<h2 id="checking-compiler"><a class="header" href="#checking-compiler">Checking Compiler</a></h2>
+<p>if you want to check which compiler you're compiling on, use the rex compiler macros
+eg. REX_COMPILER_MSVC</p>
+<p>or if you want to check the compiler without macros, use RexCompiler constant which holds the compiler that's used to compile the code base
+(this still needs to get added, is this a good idea?)</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="c"><a class="header" href="#c">C++</a></h1>
+<h2 id="foreword"><a class="header" href="#foreword">Foreword</a></h2>
+<p>The goal of this guide is to be consistent throughout the code base with dos and don’ts when writing C++ code. The goal of these guidelines is to provide a codebase with clearly defined rules and structure to make it easier to work with.</p>
+<p>Some of the rules described here won’t be to your liking, and that’s okay, some rules take time to get used to, but with practice, you do get used to them after a while. Code is read way more often than it is written, these guidelines focus heavily on that, readability improves maintainability and productivity.</p>
+<p>If you have any doubts about a certain style or have a suggestion for a new one, contact Nick De Breuck or Dave De Breuck for more info on how to upgrade the coding guidelines.</p>
+<h2 id="introduction-1"><a class="header" href="#introduction-1">Introduction</a></h2>
+<p><strong>REX</strong> is a real-time interactive application and rendering engine created by Dave De Breuck and Nick De Breuck.
+The accompanied <strong>REGINA</strong> tool is the name of the editor which is build on <strong>REX</strong></p>
+<p>Within this documentation you can find specific guidelines on how code within <strong>REX</strong> is structred and styled.
+When contributions are added to <strong>REX</strong> we would like to inform you to maintain this style.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="files"><a class="header" href="#files">Files</a></h1>
+<p>All files use snake_case.</p>
+<pre><code class="language-cpp">    my_header_file.h 
+    my_source_file.cpp 
+</code></pre>
+<p>All header files end with a .h extension, all cpp files end with a .cpp extension.
+Only templated code is allowed to be moved to a separate include file if this would improve readability. 
+A template header file has the same name as the header file, but has the .template.h extension. </p>
+<pre><code class="language-cpp">    my_header_file.template.h
+</code></pre>
+<h2 id="header-files"><a class="header" href="#header-files">Header Files</a></h2>
+<p>Header files always start with a <code>#pragma once</code> statement and don’t use include guards. <code>#pragma once</code> is supported on all modern compilers and they’ll help code readability and has a little performance boost over include guards as well.</p>
+<p>Header files should always compile on their own, this means that you should include all the required dependencies in a header file unless a forward declaration will due.</p>
+<p>Forward declarations are preferred over inclusions as they keep header file size to a minimum, reducing the include graph and compile times.</p>
+<h3 id="inline-functions"><a class="header" href="#inline-functions">Inline functions</a></h3>
+<p>Inline functions aren’t really needed anymore on modern compilers, the compiler is smart enough to mark functions inline when needed.</p>
+<p>However if you do need to specify an additional hint something needs to be inlined, used <code>__forceinline</code> over <code>inline</code> as the former will emit a warning when a function can’t be inlined while the latter will not.</p>
+<h2 id="source-files"><a class="header" href="#source-files">Source Files</a></h2>
+<p>It’s preferred not to use an open namespace in source files. Have your namespace added to your class scope or function. Because we use unity builds (also known as jumbo or combo builds), it’s not allowed to have global scope using-directives, neither in headers nor in source files.</p>
+<p>when defining your class, prefer to use the following syntax:</p>
+<pre><code class="language-cpp">
+// SOURCE FILE
+
+#include &quot;foo.h&quot;
+
+namespace my_namespace // OPEN NAMESPACE
+{
+    foo::foo()
+    {}
+}
+
+my_namespace::foo::foo() // PREFERED WAY OF DOING THINGS
+{}
+
+</code></pre>
+<p>Namespace aliases however, are allowed in global scope in a cpp file as this should not be used elsewhere.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="scoping"><a class="header" href="#scoping">Scoping</a></h1>
+<p>Scoping is very important in a big code base. 
+Have the proper scope for objects improves readability, usability, maintainability and will your make life easier in general.</p>
+<h2 id="global-scope"><a class="header" href="#global-scope">Global Scope</a></h2>
+<p>Nothing is allowed under global scope, always hide your functions, objects under at least 1 namespace.</p>
+<h2 id="namespaces"><a class="header" href="#namespaces">Namespaces</a></h2>
+<p>All code should be under a namespace, they will highly improve code readability and avoid clashing names.</p>
+<p>Don’t use using-directives in headers, they may be allowed in source files only if there is absolutely no confusion.</p>
+<p>Only use inline namespaces after clear review of no better alternative.</p>
+<p>Using-directives are only allowd in local scope, and even in there, keep the scope to a minimum.</p>
+<pre><code class="language-cpp">    namespace my_namespace
+    {
+        void namespace_function()
+        {
+            // Do something
+        }
+    }
+
+    void wrong_function(int x) // WRONG
+    {
+        using namespace my_namespace;
+        if (x == 0)
+        {
+            namespace_function();
+        }   
+    }
+
+    void my_function_1(int x) // OK
+    {
+        if (x == 0)
+        {
+            using namespace my_namespace;
+            namespace_function();
+        }   
+    }
+
+    void my_function_2(int x) // EVEN BETTER
+    {
+        if (x == 0)
+        {
+            my_namespace::namespace_function();
+        }   
+    }
+
+</code></pre>
+<h3 id="anonymous-namespace"><a class="header" href="#anonymous-namespace">Anonymous namespace</a></h3>
+<p>When definitions don’t need to be referenced outside of that file, place them in an unnamed namespace, declaring them static is an old way of doing things, we don’t do that anymore. Don’t use either of these constructs in a header file.</p>
+<p>However, it is preferred to put these definitions in an open namespace of the namespace belonging to this file to improve readability.</p>
+<pre><code class="language-cpp">
+// SOURCE FILE - belonging to rex namespace
+
+namespace // NOT RECOMMENDED
+{
+    int g_my_global_int = 0;
+}
+
+namespace rex // OK
+{
+    float g_my_global_float = 1.0f;
+}
+
+rex::foo()
+{
+    g_my_global_int = 1;
+    g_my_global_float = 2.0f;
+}
+
+</code></pre>
+<h3 id="nonmember-static-member-and-globals-functions"><a class="header" href="#nonmember-static-member-and-globals-functions">Nonmember, static member and globals functions</a></h3>
+<p>Don’t use a class just to group static functions together. Use a namespace instead. The interface is the same and it’s clearer that an instance of it will never exist. When writing utility functions linked to a specific system (eg. file system) put the utility functions in a namespace.</p>
+<pre><code class="language-cpp">
+namespace rex::vfs
+{
+    void some_utility_function();
+}
+
+void rex::foo()
+{
+    rex::vfs::some_utility_function();
+}
+</code></pre>
+<h2 id="static-and-global-variables"><a class="header" href="#static-and-global-variables">Static and Global Variables</a></h2>
+<p>Objects with global static storage duration are forbidden unless they are trivially destructible. This means the destructor does not do anything, even taking member and base destructors into account.</p>
+<p>Static or global variables should be const or constexpr by default, only in rare cases they are not. If your object uses dynamic initialization, wrap them in a function and return a local static instead.</p>
+<pre><code class="language-cpp">MyThing g_my_thing; // WRONG
+
+MyThing&amp; my_thing() // OK
+{
+    static MyThing my_thing;
+
+    return my_thing;
+}
+</code></pre>
+<p>Statics between translation units are initialized in an undefined order, so it’s discouraged to have them depend on each other. Statics are commonly string literals or math constants used in specific parts of the codebase.</p>
+<p>A general rule of thumb: if you can’t mark your static as constexpr, it’s likely it uses dynamic initialization (before C++20) and is therefore not allowed to be a global static variable.</p>
+<h2 id="local-variables"><a class="header" href="#local-variables">Local Variables</a></h2>
+<p>Always initialize variables when they’re declared</p>
+<pre><code class="language-cpp">    void my_function()
+    {
+        int i;
+        i = f(); // WRONG
+        
+        int i = f(); // OK
+        
+        rsl::vector&lt;int&gt; vec;
+        vec.push_back(1);   // WRONG
+        vec.push_back(2);   // WRONG
+        
+        rsl::vector&lt;int&gt; vec = {1, 2}; // OK
+    }
+</code></pre>
+<p>A local variable must be put in the narrowest scope possible.</p>
+<pre><code class="language-cpp">    void my_function()
+    {
+        int i = 0;  // WRONG, NOT USED IN THIS SCOPE
+        
+        // Some code not using 'i'
+        // ...
+        
+        if (condition)
+        {
+            i = do_something();
+            do_something_with(i);
+        }
+        
+        // i not used here
+        // ...
+    }
+
+    void my_function()
+    {
+        // Some code
+        // ...
+        
+        if (condition)
+        {
+            int i = do_something(); // OK, ONLY USED IN THIS SCOPE
+            do_something_with(i);
+        }
+        
+        // Some code
+        // ...
+    }
+</code></pre>
+<p>There’s 1 exception to this rule. When the variable is a class-type and it’s used in a loop, its constructor and destructor will be called every time when entering or leaving the scope. </p>
+<p>It’s okay to declare it right outside of the scope then. Smart compilers moved plain old datatypes out of a loop automatically but this is implementation defined, better to help the compiler instead of hoping it will do it for you.</p>
+<p>Note: be careful this doesn’t change the behavior of the code.</p>
+<pre><code class="language-cpp">    void my_function()
+    {
+        for (int i = 0; i &lt; 10'000; ++i)
+        {
+            Foo foo;    // WRONG, CTOR AND DTOR CALLED 10'000 TIMES
+            foo.do_something();
+        }
+    }
+
+    void my_function()
+    {
+        Foo foo;    // OK, CTOR AND DTOR ONLY CALLED ONCE
+        for (int i = 0; i &lt; 10'000; ++i)
+        {
+            foo.do_something();
+        }
+    }
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="classes"><a class="header" href="#classes">Classes</a></h1>
+<p>Classes are fundamental in a language as C++, we use them a lot and they’re a good language feature to keep code structured and organized. </p>
+<p>Avoid arbitrary initialization on the body of a constructor if you can’t signal an error.</p>
+<pre><code class="language-cpp">    Foo::Foo()
+    {
+        initialize_something_that_can_fail(); // WRONG, NO WAY OF NOTIFYING FAILURE
+    }
+
+    int Foo::initialize() // OK, RETURN ERROR CODE ON FAILURE
+    {
+        int err = initialize_something_that_can_fail();
+        
+        if (!err) 
+        {
+            return err;
+        }
+    }
+</code></pre>
+<p>For readability purposes, the initialize function returns an int. In a real-world example, this should return an enum value instead, more info is discussed bellow.</p>
+<p>Avoid having objects who’s initialization can fail, as it’s easy to forget a call to or capturing the return value of the object’s “initialize” function.</p>
+<p>If you really need to have an initialize function, try to use the following design</p>
+<pre><code class="language-cpp">    class Foo
+    {
+    public:
+        static rsl::optional&lt;Foo&gt; create()
+        {
+            Foo foo;
+            if (!foo.initialize())
+            {
+                REX_ASSERT(&quot;Failed to create Foo&quot;);
+                return rsl::nullopt; // No object on invalid initialization
+            }
+            
+            return foo;
+        }
+        
+    private:
+        Foo()
+        {}
+    }
+</code></pre>
+<p>An alternate way to guarantee an object initializes correctly is to use asserts directly in the constructor.</p>
+<pre><code class="language-cpp">    class Foo
+    {
+    public:
+        Foo()
+        {
+            // do some initialization
+            const bool some_bool_value = some_check();
+            REX_ASSERT_X(some_bool_value, &quot;Failed to initialize Foo&quot;);
+        }
+    }
+</code></pre>
+<h2 id="implicit-conversions"><a class="header" href="#implicit-conversions">Implicit conversions</a></h2>
+<p>Avoid the possibility of implicit conversions. When a constructor of an object only holds a single argument, mark that constructor explicit.</p>
+<pre><code class="language-cpp">    class Foo
+    {
+    public:
+        Foo(int x) // WRONG, THIS ALLOWS IMPLICIT CONVERSIONS
+        {}
+    };
+
+    class Bar
+    {
+    public:
+        explicit Bar(int x) // OK, NO IMPLICIT CONVERSIONS
+        {}
+    };
+</code></pre>
+<h2 id="copy-and-moveable-types"><a class="header" href="#copy-and-moveable-types">Copy and Moveable Types</a></h2>
+<p>We generally follow the rule of 0. This means, don’t define a constructor or destructor when they’re not needed.</p>
+<p>When you do need a constructor or destructor, we follow the rule of 5. A copy constructor and move constructor is defaulted, unless you want custom behavior,
+the same applies for assignment operators.</p>
+<p>This is because it’s easy to forget to add a newly added member to the class’ copy or move constructor, let the compiler do its job and it’ll generate that for you. </p>
+<p>Note: be careful for shallow copies.
+Note: do we need rule of 5 when defining a non-copy and non-move ctor?</p>
+<h2 id="structs-vs-classes"><a class="header" href="#structs-vs-classes">Structs vs Classes</a></h2>
+<p>Use a struct when you only want to carry data, everything else is a class. </p>
+<p>All fields in a struct must be public, no relationship between fields is allowed, constructor, destructor and helper methods may be present but aren’t required. </p>
+<p>If in doubt, use a class.</p>
+<h2 id="structs-vs-pairs-and-tuples"><a class="header" href="#structs-vs-pairs-and-tuples">Structs vs Pairs and Tuples</a></h2>
+<p>Prefer to use a named struct instead of a pair or a tuple to provide meaningful names to your fields. </p>
+<p>With C++17 and its structured binding, pairs and tuples have become more readable, however, you can use structured binding with custom defined structs as well which gives you the benefit of both.</p>
+<h2 id="inheritance"><a class="header" href="#inheritance">Inheritance</a></h2>
+<p>Compositions is often more appropriate than inhertiance. Avoid multiple inheritance as much as possible.</p>
+<p>Don’t use protected data members, data members should always be private. Data methods may be protected.</p>
+<p>Explictely annotate virtual functions with the <code>virtual</code> keyword, overriden functions only with the <code>override</code> keyword and final functions only with the <code>final</code> keyword. </p>
+<p>Prefer marking functions <code>final</code> instead of classes as this helps maintainability and readability as it’s easier to read over a class marked final than it is over a function.</p>
+<p>Try to mark your function <code>final</code> as much as possible as this improves performance when the static type of your object is the class with the function marked final and it'll warn you when you're overwriting behavior which may not be your intend.</p>
+<h2 id="operator-overloading"><a class="header" href="#operator-overloading">Operator overloading</a></h2>
+<p>Only overload the operators if their meaning is obvious and unsurprising.
+Never override the “address of” operator nor the comma operator.</p>
+<h2 id="declaration-order"><a class="header" href="#declaration-order">Declaration Order</a></h2>
+<p>Group definitions together, public comes first, then protected, then private.
+Split methods and data members with another access specifier.
+Debug member functions and fields come last in the class (not always possible for some fields), this is so they can easily be compiled out when grouped together.</p>
+<p><strong>NEVER</strong> delcare members protected or public of a class, create a &quot;setter&quot; or &quot;getter&quot; function when access is required.</p>
+<p>Don't expose virtual member functions in base classes. What this means is, when a member function is protected in the base class, keep it private in the derived class.
+C++ allows you to make member function public, even when they're protected in the base class, this however is not allowed in Rex.</p>
+<p>What is allowed is the other way around, when a function is public in the base class, you are allowed to limit its access (by marking it protected or private) in the derived class.</p>
+<p>When defining constructors, destructors and assignment operators, they’re always declared first.
+The order is goes as followed:</p>
+<pre><code>  Default constructor (if any)          
+  Other constructors   
+
+  Copy constructor (if any)            
+  Move constructor (if any)         
+
+  Destructor                       
+
+  Copy assignment operator (if any)    
+  Move assignment operator (if any)   
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="functions"><a class="header" href="#functions">Functions</a></h1>
+<p>A function can only take input arguments, all output must be performed through the return value, unless the function does not initialize the output variable but only adjusts it.
+This is because of optimization where you don’t want to necessarily copy an object which might be expensive.</p>
+<h2 id="declaration"><a class="header" href="#declaration">Declaration</a></h2>
+<p>Returned variables are preferred because they improve readability and an object’s initialization is better to look for if it’s initialized through a return value than through an output parameter.
+When using an output parameter, use the <code>rex::Out&lt;T&gt;</code> class to make it clear at call site that the object will change in the function.</p>
+<p>When combining input with output parameters, put input parameters first and output parameters last.
+Boolean arguments are forbidden as it’s too easy to pass in a literal for them. Use a yes-no enum instead. Other arithmetic types and pointers can be passed as literals as well, they are allowed but discouraged to use. Declare your function with <code>rex::NoLiteral</code> or call them with <code>rex::NullPtr&lt;T&gt;</code> to improve readability.</p>
+<pre><code class="language-cpp">    DEFINE_YES_NO_ENUM(ShouldDoSomething);
+
+    void foo1(ShouldDoSomething shouldDoSomething)
+    {
+        if (shouldDoSomething)
+        {
+            // do something
+        }
+    }
+
+    void foo2(rex::NoLiteral&lt;int&gt; x)
+    {
+        // do something
+    }
+
+    void foo3(rex::Nullptr&lt;int&gt; p)
+    {
+        // do something
+    }
+
+    void bar()
+    {
+        //foo1(true); // does not compile
+        //foo2(1); // does not compile
+        //foo3(nullptr); // compiles, but is not recommended
+        
+        int x = 0;
+        
+        foo1(ShouldDoSomething::Yes); // OK
+        foo2(x); // OK
+        foo3(rex::Nullptr&lt;int&gt;); // OK
+    }
+</code></pre>
+<h2 id="definition"><a class="header" href="#definition">Definition</a></h2>
+<p>Write short functions that self comment what they do. it's recommended to not make your functions too long (50+ lines).
+Your function should state clearly what’s being done, if you find yourself having to comment different parts of the function, wrap that part into its own function and call that instead.</p>
+<h2 id="overloading"><a class="header" href="#overloading">Overloading</a></h2>
+<p>Prefer overloading over default arguments, but be smart when doing so. Eg. when you want to overload for <code>const char*</code> and <code>rsl::string</code>, overload for <code>rsl::string_view</code> instead.
+Default arguments are discouraged for usage and are <strong>forbidden</strong> when using virtual functions.</p>
+<h2 id="trailing-return-types"><a class="header" href="#trailing-return-types">Trailing return types</a></h2>
+<p>Trailing return types are only allowed when the ordinary syntax is impractical or make the code much less readable.
+There’s only 1 possible case where a trailing return type is required</p>
+<pre><code class="language-cpp">void my_function()
+{
+    auto my_lambda = [](int&amp; x) /* -&gt;int* */
+    {
+        if (x == 0)
+        {
+            return &amp;x;
+        }
+        
+        return nullptr; // Error: Cannot convert rsl::nullptr_t to int*
+    };
+    
+    auto my_lambda_2 = [](int&amp; x)
+    {
+        return x == 0
+        ? &amp;x
+        : nullptr; // OK
+    };
+}
+</code></pre>
+<h2 id="virtual-functions"><a class="header" href="#virtual-functions">Virtual functions</a></h2>
+<p>Virtual functions can only have default behaviour that must be overriden. It's a bad design to call a base virtual function from a derived one. 
+This makes it unclear when the base virtual function should be called and makes debugging harder.
+Instead, make the base's default function call another private function that does what you say it should, and call that one from the derived, making it more clear when that should be called as well.</p>
+<pre><code class="language-cpp">    class Base
+    {
+    public:
+    virtual void do_something()
+    {
+        // do something
+    }
+    };
+
+    class Derived : public Base
+    {
+    public:
+    void do_something() override
+    {
+        // do something else first
+
+        Base::do_something(); // BAD!
+    }
+    };
+
+    class Base2
+    {
+    public:
+    virtual void do_something()
+    {
+        do_something_impl();
+    }
+
+    protected:
+    void do_something_impl()
+    {
+        // do something
+    }
+    };
+
+    class Derived2 : public Base2
+    {
+    void do_something() override
+    {
+        // do something else first
+
+        do_something_impl(); // GOOD!
+    }
+    };
+</code></pre>
+<p>If however, some code always needs to be executed before and/or after the virtual call, use the following design.</p>
+<pre><code class="language-cpp">    class Base
+    {
+    public:
+        void do_something()
+        {
+            pre_do_something();		// makes it easy to call this before every virtual call
+            do_something_impl();
+            post_do_something();	// makes it easy to call this after every virtual call
+        }
+        
+    protected:
+        virtual void do_something_impl() = 0;
+        
+    private:
+        void pre_do_something();
+        void post_do_something();
+    };
+
+    class Derived : public Base
+    {
+    protected:
+        void do_something_impl() override
+        {
+            // Do something
+        }
+        
+    };
+</code></pre>
+<p>With this design, the developer of a derived class is not responsible of calling the base pre and post functions.
+This avoids bugs for not calling such functions and is easy to debug and track down as well, keeping responsibility to the base class.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="selections"><a class="header" href="#selections">Selections</a></h1>
+<p>When writing statements, either if or else, we always write curly brackets ‘{‘, ‘}’ even when there’s only one statement underneath it.
+The exception to this rule is early out statements. When an early out statement is used, you can leave out the curly brackets.
+Always write code so it can exit as soon as possible.</p>
+<p>Curly brackets are always placed on a single line <strong>NEVER</strong> on the same line as the statement.
+Don’t put code in big if statements, the condition of the if statement should be readable throughout the entire body of the if statement.</p>
+<pre><code class="language-cpp">void my_function()
+{
+    if (condition) // EARLY OUT, NO '{' '}' REQUIRED
+        return;
+      
+    if (some_other_condition)
+    {
+        do_something();
+    }
+    else if (some_other_condition)
+    {
+        do_something_else();
+    }   
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="iterations"><a class="header" href="#iterations">Iterations</a></h1>
+<p>When writing iterators, we always write the curly brackets ‘{‘, ‘}’ even when there’s only one line of code underneath the statement.
+Always write code so it can exit as soon as possible.
+Curly brackets are always placed on a single line <strong>NEVER</strong> on the same line as the statement.</p>
+<pre><code class="language-cpp">void my_function()
+{
+    for (int i = 0; i &lt; 10'000; ++i)
+    {
+        if (condition)
+            continue;
+        
+        do_something(i);
+    }
+}
+</code></pre>
+<p>Use range based for loops when iterating over a container, this is equally or more performant than any other for loop 99% of the time and makes it clear you’ll be iterating over all elements.
+When you need an index, use a traditional for loop.</p>
+<pre><code class="language-cpp">for (auto it = my_vec.begin(); it != my_vec.end(); ++it) // WRONG
+{
+    do_something(*it);
+}
+
+for (int i : my_vec) // OK
+{
+    do_something(i);
+}
+
+for (int i = 0; i &lt; string_vec.size(); ++i) // ALSO OK
+{
+    rsl::string&amp; str = string_vec[i];
+    
+    do_something(i, str);
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="enumerations"><a class="header" href="#enumerations">Enumerations</a></h1>
+<h2 id="scoped-vs-unscoped-enum"><a class="header" href="#scoped-vs-unscoped-enum">Scoped vs Unscoped enum</a></h2>
+<p><strong>ALWAYS</strong> use enum classes, unscoped enums are a thing from the past and have a lot of downsides.</p>
+<p>Scoped enums, aka enum classes, are type safe, you know which enum you're working with. </p>
+<p>The only downside from scoped is that you can't use them to index into an array, but this is a good thing and not a bad thing.</p>
+<p>If you use an enum as an int, you depend on their internal order which is very likely to cause bugs (and can be hard to debug as well).</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="ownership-and-smart-pointers"><a class="header" href="#ownership-and-smart-pointers">Ownership and Smart Pointers</a></h1>
+<p>Prefer to have single, fixed owners for dynamically allocated objects and transfer their ownership with smart pointers.
+Rex provies 2 smart pointers to clarify ownership, <code>rsl::UniquePtr</code> and <code>rsl::UniqueArray</code>.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="templates"><a class="header" href="#templates">Templates</a></h1>
+<p>Avoid complicated template meta programming</p>
+<p>Templates, although powerful, can make code quite unreadable if the hiearchy goes too deep.
+Use templates where they’re really needed, eg. containers, utility types, rex::Nullptr.
+Prefer overloading otherwise.</p>
+<p>Always use <code>typename</code> over <code>class</code> when defining a template class or function.</p>
+<pre><code class="language-cpp">template &lt;class T&gt; // WRONG
+void my_func()
+{
+    // ...
+}
+
+template &lt;typename T&gt; // OK
+void my_func()
+{
+    // ...
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="auto"><a class="header" href="#auto">Auto</a></h1>
+<p>Don’t use auto when it’s not required.</p>
+<p>Auto doesn’t references, which is easy to miss when reading or writing code and can hurt performance.
+Auto can make your code unreadable when it’s not clear to the reader what the type actually is. Don’t write something like this:</p>
+<pre><code class="language-cpp">    auto result = do_something_special();
+</code></pre>
+<p>this makes it not clear to the reader what result is. auto is only allowed when the type is too long and when it’s clear.</p>
+<pre><code class="language-cpp">    auto start_time = rsl::high_resolution_clock::now();
+    auto it = my_vec.begin();
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="lambdas"><a class="header" href="#lambdas">Lambdas</a></h1>
+<p>Don’t use lambda’s when they’re not needed. They can be hard to track down where they’re declared when the user is expecting a function instead. 
+Prefer using global functions in an anonymous namespace instead.
+An inline lambda given as a callback to a function is always defined on the next line.</p>
+<pre><code class="language-cpp">    auto it = rsl::find_if(my_vec.cbegin(), my_vec.cend(),
+        [](int x)
+    {
+        return x == 0;
+    });
+</code></pre>
+<p>This keep the lambda definition together with its captures and parameters.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="other-c-features"><a class="header" href="#other-c-features">Other C++ Features</a></h1>
+<h2 id="exceptions"><a class="header" href="#exceptions">Exceptions</a></h2>
+<p>Exceptions are disabled over the entire code base. </p>
+<h2 id="run-time-type-information-rtti"><a class="header" href="#run-time-type-information-rtti">Run-Time Type Information (RTTI)</a></h2>
+<p>RTTI is disabled over the entire code base.</p>
+<h2 id="casting"><a class="header" href="#casting">Casting</a></h2>
+<p>Prefer to use C++ cast over C-casts. Although they are more verbose, it makes them easier to track and the expected behavior is clearer. </p>
+<p>The REX engine also has numeric casts and a safe version of it. numeric cast is just an alias for static cast, the safe version performs checking if there's any loss in value after the cast. In retail builds, the safe overload is replaced by regular static casts for performance reasons.</p>
+<pre><code class="language-cpp">void func()
+{
+    uint32 uint_x = 10;
+    int32 int_x = rex::safe_numeric_cast&lt;int32&gt;(uint_x);
+}
+</code></pre>
+<h2 id="use-of-const"><a class="header" href="#use-of-const">Use of const</a></h2>
+<p>prefer to use for all local variables (where possible), making it clear variables won't change.</p>
+<p>Don’t cast away const through class getters. </p>
+<p>This means if you have a const getter, return a const pointer, const reference or return by value.
+Arguments captured by value don’t require const.</p>
+<pre><code class="language-cpp">class Foo
+{
+public:
+    //int* my_int() const // BAD, CAST AWAY CONST
+    //{
+    //    return m_my_int;
+    //}
+
+    const int* my_int() const // GOOD
+    {
+        return m_my_int;
+    }
+
+private:
+    int* m_my_int;
+}
+</code></pre>
+<p>if you do need to cast away const (eg. when interacting with a C API), wrap the const cast in its own API function.</p>
+<pre><code class="language-cpp">template &lt;typename T&gt;
+T* dx_const_cast(const T* dx_object)
+{
+    return const_cast&lt;T*&gt;(dx_object);
+}
+</code></pre>
+<p>We use west const const in the code base, this means const comes on the left hand side of the type.</p>
+<h2 id="use-of-constexpr"><a class="header" href="#use-of-constexpr">Use of constexpr</a></h2>
+<p>Use constexpr wherever possible, but don’t use constexpr to force inlining.
+mark file scope constexpr variables inline to reduce binary size of the generated file by the compiler
+mark block scope constexpr variables static. </p>
+<h2 id="integer-types"><a class="header" href="#integer-types">Integer Types</a></h2>
+<p>Use signed integer for <strong>ALL</strong> variables that require arithmetic operations. Only use unsigned integer values for masks, bit patterns. Don’t use unsigned integers to represent a number. Don’t use unsigned integers to determine a number will never be negative, use assertions for this.</p>
+<p>When writing large constants, use the ‘ to separate each group of 3 digits.</p>
+<pre><code class="language-cpp">constexpr int my_big_int = 10'000;
+</code></pre>
+<h2 id="floating-points"><a class="header" href="#floating-points">Floating points</a></h2>
+<p>Always write a radix point, with digits on both sides. Readability is improved if all floating-point literals take this familiar form.</p>
+<pre><code class="language-cpp">constexpr float my_float = 1.0f;
+</code></pre>
+<h2 id="preprocessor-macros"><a class="header" href="#preprocessor-macros">Preprocessor Macros</a></h2>
+<p>Avoid defining macros, especially in headers. Prefer functions, enum classes, const or constexpr variables. Macros have global scope, which make them a very good candidate of causing bugs.
+Because we use unity builds, undef macros defined in a cpp file at the bottom of that cpp file, so they don't leak to other files</p>
+<h2 id="0-nullptr-and-null"><a class="header" href="#0-nullptr-and-null">0, nullptr and NULL</a></h2>
+<p>Use nullptr for pointers that are null and ‘\0’ for chars.
+When using WIN32 API functions, it’s allowed to pass in NULL.</p>
+<h2 id="sizeof"><a class="header" href="#sizeof">Sizeof</a></h2>
+<p>Use sizeof(var_name) over sizeof(var_type) where possible.
+This makes sure the sizeof is updated appropriately if someone changes the variable type.</p>
+<h2 id="iterators"><a class="header" href="#iterators">Iterators</a></h2>
+<p>When passing in iterators to algorithms, be very clear which one you use. Iterators may be captured with auto, which in this case would keep their constness as it’s part of the type.
+That’s why the following:</p>
+<pre><code class="language-cpp">auto it = rsl::find_if(my_vec.begin(), my_vec.end(),
+[](int x)
+{
+    return x == 0;
+});
+</code></pre>
+<p>is different from</p>
+<pre><code class="language-cpp">auto it = rsl::find_if(my_vec.cbegin(), my_vec.cend(),
+[](int x)
+{
+    return x == 0;
+});
+</code></pre>
+<p>The first iterator is non-const, so it’s allowed to change the underlying value, with the second iterator, this is not the case.</p>
+<h2 id="initializer-list"><a class="header" href="#initializer-list">Initializer list</a></h2>
+<p>The initializer lists in a constructor starts on a new line with each separation token at the front.</p>
+<pre><code class="language-cpp">Foo::Foo(int first_param, int second_param)
+    : m_first_member(first_param)
+    , m_second_member(second_param)
+{}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="naming"><a class="header" href="#naming">Naming</a></h1>
+<p><strong>NEVER</strong> use single letters as variable names, except in the syntax of a loop such as </p>
+<pre><code class="language-cpp">    for(int i = 0; i &lt; count; ++i)
+    {
+        // Loop body
+    }
+</code></pre>
+<p>Put the &amp; and * next to the type instead of next to the name of the variable, this will avoid warnings when the name of the variable is commented out when it’s an unused function argument</p>
+<h2 id="members"><a class="header" href="#members">Members</a></h2>
+<h3 id="in-a-class"><a class="header" href="#in-a-class">In a class</a></h3>
+<p>Always written with snake case.</p>
+<pre><code>prefix: m_
+int32 m_some_member_variable;
+</code></pre>
+<h3 id="in-a-struct"><a class="header" href="#in-a-struct">In a struct</a></h3>
+<p>Always written with snake case.
+Structs are meant to be used to wrap data and hold limited logic.
+If you need to hide some members from a public interface, use a class.</p>
+<pre><code>prefix: none
+int32 some_member_variable;
+</code></pre>
+<h3 id="member-types"><a class="header" href="#member-types">Member Types</a></h3>
+<p>Always written with snake case.</p>
+<pre><code>prefix: none
+using value_type = T;
+</code></pre>
+<h2 id="locals"><a class="header" href="#locals">Locals</a></h2>
+<p>Always written with snake_case.</p>
+<pre><code>prefix: none
+int32 some_local_variable;
+</code></pre>
+<h2 id="static-variables"><a class="header" href="#static-variables">Static Variables</a></h2>
+<p>Always written with snake_case</p>
+<pre><code>prefix: s_
+int32 s_some_static_variable;
+</code></pre>
+<h2 id="globals"><a class="header" href="#globals">Globals</a></h2>
+<p>Try to avoid globals as much as possible.
+Always defined in snake case</p>
+<pre><code>prefix: g_
+int32 g_my_global;
+</code></pre>
+<h2 id="parameters"><a class="header" href="#parameters">Parameters</a></h2>
+<p>Always written in lowerCamelCase.</p>
+<pre><code>prefix: none
+int32 someParameter;
+</code></pre>
+<h2 id="methods"><a class="header" href="#methods">Methods</a></h2>
+<p>Are always defined in snake case.</p>
+<pre><code class="language-cpp">void some_method();
+</code></pre>
+<h2 id="classes-1"><a class="header" href="#classes-1">Classes</a></h2>
+<p>Are always defined in upper camel case, spaces are defined with an underscore.</p>
+<pre><code class="language-cpp">class SomeClass;
+</code></pre>
+<h2 id="structs"><a class="header" href="#structs">Structs</a></h2>
+<p>Are always defined in upper camel case, spaces are defined with an underscore.</p>
+<pre><code class="language-cpp">struct SomeStruct;
+</code></pre>
+<h2 id="global-or-static-constants"><a class="header" href="#global-or-static-constants">Global or Static Constants</a></h2>
+<p>Are always defined in upper camel case, these take ownership, so prefixes for statics or globals are ignored</p>
+<pre><code>prefix: none
+int32 SomeConstValue;
+</code></pre>
+<h2 id="enumerations-1"><a class="header" href="#enumerations-1">Enumerations</a></h2>
+<p>Are always defined in upper camel case</p>
+<pre><code class="language-cpp">enum class SomeEnum;
+</code></pre>
+<p>Enum elements are upper camel case, to follow cpp core guidelines and avoid all caps names</p>
+<pre><code class="language-cpp">enum class SomeEnum
+{
+  	MyFirst,
+   	MySecond,
+   	MyThird
+}
+</code></pre>
+<h2 id="defines"><a class="header" href="#defines">Defines</a></h2>
+<p>Are always defined in all caps, spaces are defined with an underscore.</p>
+<pre><code>prefix: none
+SOME_DEFINE
+</code></pre>
+<h2 id="getters-and-setters"><a class="header" href="#getters-and-setters">Getters and Setters</a></h2>
+<p>Getters don’t have a prefix, setters use the prefix <code>set_</code>.
+Treat  <code>get_</code> as command argument, when you want something done, perform some calculations to get, receive something from an object.
+A bool getter has the prefix ‘ <code>is_</code> , <code>should_</code> or  <code>has_</code> depending on what sounds grammatically correct.</p>
+<pre><code class="language-cpp">class Foo
+{
+public:
+    int int_member() const;
+    void set_int_member(int newValue);
+    bool is_null() const;
+    bool should_update() const;
+    bool has_elements() const;
+        
+private:
+    int m_int_member;
+};
+</code></pre>
+<h2 id="unused-parameter-or-variable"><a class="header" href="#unused-parameter-or-variable">Unused Parameter or Variable</a></h2>
+<p>Both commenting out the param name or using REX_UNUSED are allowed to mark variables as unused.</p>
+<pre><code class="language-cpp">void my_function(REX_UNUSED(int /*int_param*/))
+{
+    // ...
+}
+
+void my_function()
+{
+    REX_UNUSED(int some_debug_int = 0);
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="debug-vs-retail"><a class="header" href="#debug-vs-retail">Debug vs Retail</a></h1>
+<h2 id="functions-1"><a class="header" href="#functions-1">Functions</a></h2>
+<p>Some functions are only allowed in non retail builds.</p>
+<p>This means they need to be compiled out. It's a common practice to compile out the body of these sort functions, however, this allows them to be called from retail builds which would still initialize the function arguments.</p>
+<p>That's why we don't do this in <strong>REX</strong>, instead we compile out the entire function itself, function declaration and definition.
+There are macros defined to make this a bit more readable, eg. DEBUG_ONLY(func), which strips out its argument in retail builds.</p>
+<h2 id="macro-configuration"><a class="header" href="#macro-configuration">Macro configuration</a></h2>
+<p>Often we use macros to enable/disable specific code paths.
+Most often these code paths will be enabled/disabled using REX_RELEASE, however, it's not allowed to use REX_RELEASE to enable or disable code path directly.</p>
+<p>Instead use a different macro that you do or do not define based if REX_RELEASE or any other macro is defined.
+This makes it possible to override this rule for debugging purposes without affecting other code.</p>
+<pre><code class="language-cpp">void func()
+{
+    #ifdef REX_RELEASE
+        log_to_console(); // BAD
+    #endif
+    }
+
+
+    #ifdef REX_RELEASE
+    #define REX_ENABLE_LOGGING
+    #endif
+
+    void func()
+    {
+    #ifdef REX_ENABLE_LOGGING
+        log_to_console(); // GOOD
+    #endif
+}
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script type="text/javascript">
+            var socket = new WebSocket("ws://localhost:3000/__livereload");
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        <script type="text/javascript">
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+    </body>
+</html>

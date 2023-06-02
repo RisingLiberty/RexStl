@@ -1,7 +1,0 @@
-{
-	"rtl-no-std": {
-		"prefix": "rtl_no_std",
-		"body": [ " /// RTL Comment: Not in ISO C++ Standard at time of writing time of writing ($CURRENT_DATE/$CURRENT_MONTH_NAME_SHORT/$CURRENT_YEAR)" ],
-		"description": "Code not in ISO C++ Standard"
-	}
-}

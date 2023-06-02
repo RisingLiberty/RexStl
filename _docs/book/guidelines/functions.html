@@ -1,0 +1,340 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Functions - REX-STL Documentation</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../documentation/introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="spacer"></li><li class="chapter-item expanded "><div><strong aria-hidden="true">2.</strong> Documentation</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="../documentation/building_rsl.html"><strong aria-hidden="true">2.1.</strong> Building RSL</a></li><li class="chapter-item expanded "><a href="../documentation/comment_tags.html"><strong aria-hidden="true">2.2.</strong> Comment Tags</a></li><li class="chapter-item expanded "><a href="../documentation/glossary.html"><strong aria-hidden="true">2.3.</strong> Glossary</a></li><li class="chapter-item expanded "><a href="../documentation/memory.html"><strong aria-hidden="true">2.4.</strong> Memory</a></li><li class="chapter-item expanded "><a href="../documentation/rsl_vs_std_notes.html"><strong aria-hidden="true">2.5.</strong> Rsl vs Stl</a></li><li class="chapter-item expanded "><a href="../documentation/coding_practices.html"><strong aria-hidden="true">2.6.</strong> Coding Practices</a></li></ol></li><li class="chapter-item expanded "><a href="../guidelines/introduction.html"><strong aria-hidden="true">3.</strong> Coding Guidelines</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../guidelines/files.html"><strong aria-hidden="true">3.1.</strong> Files</a></li><li class="chapter-item expanded "><a href="../guidelines/scoping.html"><strong aria-hidden="true">3.2.</strong> Scoping</a></li><li class="chapter-item expanded "><a href="../guidelines/classes.html"><strong aria-hidden="true">3.3.</strong> Classes</a></li><li class="chapter-item expanded "><a href="../guidelines/functions.html" class="active"><strong aria-hidden="true">3.4.</strong> Functions</a></li><li class="chapter-item expanded "><a href="../guidelines/selections.html"><strong aria-hidden="true">3.5.</strong> Selections</a></li><li class="chapter-item expanded "><a href="../guidelines/iterations.html"><strong aria-hidden="true">3.6.</strong> Iterations</a></li><li class="chapter-item expanded "><a href="../guidelines/enumerations.html"><strong aria-hidden="true">3.7.</strong> Enumerations</a></li><li class="chapter-item expanded "><a href="../guidelines/ownership.html"><strong aria-hidden="true">3.8.</strong> Ownership</a></li><li class="chapter-item expanded "><a href="../guidelines/templates.html"><strong aria-hidden="true">3.9.</strong> Templates</a></li><li class="chapter-item expanded "><a href="../guidelines/auto.html"><strong aria-hidden="true">3.10.</strong> Auto</a></li><li class="chapter-item expanded "><a href="../guidelines/lambdas.html"><strong aria-hidden="true">3.11.</strong> Lambdas</a></li><li class="chapter-item expanded "><a href="../guidelines/other_cpp_features.html"><strong aria-hidden="true">3.12.</strong> Other CPP Features</a></li><li class="chapter-item expanded "><a href="../guidelines/naming.html"><strong aria-hidden="true">3.13.</strong> Naming</a></li><li class="chapter-item expanded "><a href="../guidelines/debug_vs_retail.html"><strong aria-hidden="true">3.14.</strong> Debug VS. Retail</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">REX-STL Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="functions"><a class="header" href="#functions">Functions</a></h1>
+<p>A function can only take input arguments, all output must be performed through the return value, unless the function does not initialize the output variable but only adjusts it.
+This is because of optimization where you don’t want to necessarily copy an object which might be expensive.</p>
+<h2 id="declaration"><a class="header" href="#declaration">Declaration</a></h2>
+<p>Returned variables are preferred because they improve readability and an object’s initialization is better to look for if it’s initialized through a return value than through an output parameter.
+When using an output parameter, use the <code>rex::Out&lt;T&gt;</code> class to make it clear at call site that the object will change in the function.</p>
+<p>When combining input with output parameters, put input parameters first and output parameters last.
+Boolean arguments are forbidden as it’s too easy to pass in a literal for them. Use a yes-no enum instead. Other arithmetic types and pointers can be passed as literals as well, they are allowed but discouraged to use. Declare your function with <code>rex::NoLiteral</code> or call them with <code>rex::NullPtr&lt;T&gt;</code> to improve readability.</p>
+<pre><code class="language-cpp">    DEFINE_YES_NO_ENUM(ShouldDoSomething);
+
+    void foo1(ShouldDoSomething shouldDoSomething)
+    {
+        if (shouldDoSomething)
+        {
+            // do something
+        }
+    }
+
+    void foo2(rex::NoLiteral&lt;int&gt; x)
+    {
+        // do something
+    }
+
+    void foo3(rex::Nullptr&lt;int&gt; p)
+    {
+        // do something
+    }
+
+    void bar()
+    {
+        //foo1(true); // does not compile
+        //foo2(1); // does not compile
+        //foo3(nullptr); // compiles, but is not recommended
+        
+        int x = 0;
+        
+        foo1(ShouldDoSomething::Yes); // OK
+        foo2(x); // OK
+        foo3(rex::Nullptr&lt;int&gt;); // OK
+    }
+</code></pre>
+<h2 id="definition"><a class="header" href="#definition">Definition</a></h2>
+<p>Write short functions that self comment what they do. it's recommended to not make your functions too long (50+ lines).
+Your function should state clearly what’s being done, if you find yourself having to comment different parts of the function, wrap that part into its own function and call that instead.</p>
+<h2 id="overloading"><a class="header" href="#overloading">Overloading</a></h2>
+<p>Prefer overloading over default arguments, but be smart when doing so. Eg. when you want to overload for <code>const char*</code> and <code>rsl::string</code>, overload for <code>rsl::string_view</code> instead.
+Default arguments are discouraged for usage and are <strong>forbidden</strong> when using virtual functions.</p>
+<h2 id="trailing-return-types"><a class="header" href="#trailing-return-types">Trailing return types</a></h2>
+<p>Trailing return types are only allowed when the ordinary syntax is impractical or make the code much less readable.
+There’s only 1 possible case where a trailing return type is required</p>
+<pre><code class="language-cpp">void my_function()
+{
+    auto my_lambda = [](int&amp; x) /* -&gt;int* */
+    {
+        if (x == 0)
+        {
+            return &amp;x;
+        }
+        
+        return nullptr; // Error: Cannot convert rsl::nullptr_t to int*
+    };
+    
+    auto my_lambda_2 = [](int&amp; x)
+    {
+        return x == 0
+        ? &amp;x
+        : nullptr; // OK
+    };
+}
+</code></pre>
+<h2 id="virtual-functions"><a class="header" href="#virtual-functions">Virtual functions</a></h2>
+<p>Virtual functions can only have default behaviour that must be overriden. It's a bad design to call a base virtual function from a derived one. 
+This makes it unclear when the base virtual function should be called and makes debugging harder.
+Instead, make the base's default function call another private function that does what you say it should, and call that one from the derived, making it more clear when that should be called as well.</p>
+<pre><code class="language-cpp">    class Base
+    {
+    public:
+    virtual void do_something()
+    {
+        // do something
+    }
+    };
+
+    class Derived : public Base
+    {
+    public:
+    void do_something() override
+    {
+        // do something else first
+
+        Base::do_something(); // BAD!
+    }
+    };
+
+    class Base2
+    {
+    public:
+    virtual void do_something()
+    {
+        do_something_impl();
+    }
+
+    protected:
+    void do_something_impl()
+    {
+        // do something
+    }
+    };
+
+    class Derived2 : public Base2
+    {
+    void do_something() override
+    {
+        // do something else first
+
+        do_something_impl(); // GOOD!
+    }
+    };
+</code></pre>
+<p>If however, some code always needs to be executed before and/or after the virtual call, use the following design.</p>
+<pre><code class="language-cpp">    class Base
+    {
+    public:
+        void do_something()
+        {
+            pre_do_something();		// makes it easy to call this before every virtual call
+            do_something_impl();
+            post_do_something();	// makes it easy to call this after every virtual call
+        }
+        
+    protected:
+        virtual void do_something_impl() = 0;
+        
+    private:
+        void pre_do_something();
+        void post_do_something();
+    };
+
+    class Derived : public Base
+    {
+    protected:
+        void do_something_impl() override
+        {
+            // Do something
+        }
+        
+    };
+</code></pre>
+<p>With this design, the developer of a derived class is not responsible of calling the base pre and post functions.
+This avoids bugs for not calling such functions and is easy to debug and track down as well, keeping responsibility to the base class.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../guidelines/classes.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="../guidelines/selections.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../guidelines/classes.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="../guidelines/selections.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script type="text/javascript">
+            var socket = new WebSocket("ws://localhost:3000/__livereload");
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>

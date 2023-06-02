@@ -1,0 +1,7 @@
+{
+	"rtl-diff-std": {
+		"prefix": "rtl_complex_1",
+		"body": [ "// Complexity: O(1)" ],
+		"description": "Constant complexity"
+	}
+}
