@@ -674,7 +674,7 @@ namespace rsl
     template <typename CharType, typename Traits>
     struct hash<basic_string_view<CharType, Traits>>
     {
-      hash_result operator()(const basic_string_view<CharType, Traits>& str) const
+      constexpr hash_result operator()(const basic_string_view<CharType, Traits>& str) const
       {
         return rsl::internal::hash(str.data(), str.length());
       }

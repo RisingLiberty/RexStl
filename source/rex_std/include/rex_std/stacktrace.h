@@ -90,7 +90,7 @@ namespace rsl
     template <>
     struct hash<rsl::stacktrace_entry>
     {
-      hash_result operator()(const stacktrace_entry& entry)
+      constexpr hash_result operator()(const stacktrace_entry& entry)
       {
         return hash<stacktrace_entry::native_handle_type> {}(entry.native_handle());
       }

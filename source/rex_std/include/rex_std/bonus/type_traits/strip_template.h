@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: templated_type.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -28,25 +28,26 @@ namespace rsl
       template <typename>
       struct strip_template_impl;
 
-      template <template <typename> class C, typename ... TArgs>
+      template <template <typename> class C, typename... TArgs>
       struct strip_template_impl<C<TArgs...>>
       {
-        template <typename ... UArgs>
+        template <typename... UArgs>
         using type = C<UArgs...>;
       };
-    }
+    } // namespace internal
 
     template <typename C>
     struct strip_template : internal::strip_template_impl<rsl::remove_cvref_t<C>>
-    {};
+    {
+    };
 
     // the following code doesn't make sense as it'd return a stripped down template type
     // which is not allowed in C++
-    //template <typename C>
-    //using strip_template_t = strip_template<C>::type;
+    // template <typename C>
+    // using strip_template_t = strip_template<C>::type;
 
     // this is a utility function to make it easier for the user to switch template types
-    template <typename C, typename ... Args>
+    template <typename C, typename... Args>
     using change_template_t = typename strip_template<C>::template type<Args...>;
-  }
-}
+  } // namespace v1
+} // namespace rsl
