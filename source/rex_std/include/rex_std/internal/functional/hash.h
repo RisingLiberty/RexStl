@@ -118,7 +118,7 @@ namespace rsl
     template <>
     struct hash<bool>
     {
-      constexpr ash_result operator()(bool val) const
+      constexpr hash_result operator()(bool val) const
       {
         return static_cast<hash_result>(val);
       }
