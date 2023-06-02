@@ -124,7 +124,7 @@ namespace rsl
     count_t strxfrm(Char* dest, const Char* src, count_t count);
     // returns the lengths of a string
     template <typename Char, typename rsl::v1::enable_if_t<is_character_v<Char>, int> = 0>
-    count_t strlen(const Char* str)
+    constexpr count_t strlen(const Char* str)
     {
       count_t len = 0;
       while(*str) // NOLINT
