@@ -1761,12 +1761,12 @@ namespace rsl
       // returns the minimum between either the length of sv or count
       size_type obj_length_or_count(const basic_string_view<value_type, traits_type>& sv, size_type count, size_type startPos = 0) const
       {
-        return (count == s_npos || count > sv.length()) ? sv.length() - startPos : count;
+        return (count == s_npos || count > sv.length()) ? rsl::max(0, sv.length() - startPos) : count;
       }
       // returns the minimum between either the length of s or count
       size_type obj_length_or_count(const basic_string& s, size_type count, size_type startPos = 0)
       {
-        return (count == s_npos || count > s.length()) ? s.length() - startPos : count;
+        return (count == s_npos || count > s.length()) ? rsl::max(0, s.length() - startPos) : count;
       }
       // returns the size of a new buffer on reallocation
       size_type new_buffer_capacity(size_type numElementsToAdd) const

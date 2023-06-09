@@ -271,7 +271,7 @@ namespace rsl
       // checks if the string view starts with the given prefix
       REX_NO_DISCARD constexpr bool starts_with(const basic_string_view sv) const
       {
-        return traits_type::compare(data(), sv.data(), sv.length()) == 0;
+        return length() >= sv.length() && traits_type::compare(data(), sv.data(), sv.length()) == 0;
       }
       // checks if the string view starts with the given prefix
       REX_NO_DISCARD constexpr bool starts_with(const value_type c) const
