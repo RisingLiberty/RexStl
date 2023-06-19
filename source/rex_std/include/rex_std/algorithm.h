@@ -32,6 +32,7 @@
 #include "rex_std/internal/algorithm/fill_n.h"
 #include "rex_std/internal/algorithm/find.h"
 #include "rex_std/internal/algorithm/find_end.h"
+#include "rex_std/internal/algorithm/find_first_not_of.h"
 #include "rex_std/internal/algorithm/find_first_of.h"
 #include "rex_std/internal/algorithm/find_if.h"
 #include "rex_std/internal/algorithm/find_if_not.h"

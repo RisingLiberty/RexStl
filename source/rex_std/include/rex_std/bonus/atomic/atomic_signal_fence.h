@@ -6,7 +6,7 @@
 // Twitter: @nick_debreuck
 //
 // File: atomic_signal_fence.h
-// Copyright (c) Nick De Breuck 2022
+// Copyright (c) Nick De Breuck 2023
 //
 // ============================================
 

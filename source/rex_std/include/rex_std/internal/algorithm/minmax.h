@@ -12,6 +12,9 @@
 
 #pragma once
 
+#include "rex_std/initializer_list.h"
+#include "rex_std/internal/algorithm/minmax_element.h"
+
 namespace rsl
 {
   inline namespace v1
@@ -33,6 +36,19 @@ namespace rsl
     min_max_result<T> minmax(const T& lhs, const T& rhs, Compare compare)
     {
       return compare(lhs, rhs) ? min_max_result<T> {lhs, rhs} : min_max_result<T> {rhs, lhs};
+    }
+
+    template <typename T>
+    min_max_result<T> minmax(rsl::initializer_list<T> ilist)
+    {
+      min_max_element_result<T> res = rsl::minmax_element(ilist.begin(), ilist.end());
+      return { *res.min, *res.max };
+    }
+    template <typename T, typename Compare>
+    min_max_result<T> minmax(rsl::initializer_list<T> ilist, Compare compare)
+    {
+      min_max_element_result<T> res = rsl::minmax_element(ilist.begin(), ilist.end(), compare);
+      return { *res.min, *res.max };
     }
 
   } // namespace v1

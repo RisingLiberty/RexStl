@@ -12,18 +12,23 @@
 
 #pragma once
 
-#include "rex_std/internal/algorithm/max.h"
-#include "rex_std/internal/algorithm/min.h"
+#include "rex_std/assert.h"
+#include "rex_std/internal/functional/less.h"
 
 namespace rsl
 {
   inline namespace v1
   {
+    template <typename T, typename Compare>
+    constexpr T clamp(const T& x, const T& min, const T& max, Compare comp)
+    {
+      return comp(x, min) ? min : comp(max, x) ? max : x;
+    }
 
     template <typename T>
     constexpr T clamp(const T& x, const T& min, const T& max)
     {
-      return (rsl::min)((rsl::max)(x, min), max);
+      return clamp(x, min, max, rsl::less<>());
     }
 
   } // namespace v1

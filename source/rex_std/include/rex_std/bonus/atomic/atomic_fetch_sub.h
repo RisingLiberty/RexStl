@@ -6,7 +6,7 @@
 // Twitter: @nick_debreuck
 //
 // File: atomic_fetch_sub.h
-// Copyright (c) Nick De Breuck 2022
+// Copyright (c) Nick De Breuck 2023
 //
 // ============================================
 

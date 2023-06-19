@@ -12,6 +12,8 @@
 
 #pragma once
 
+#include "rex_std/internal/iterator/iterator_traits.h"
+
 namespace rsl
 {
   inline namespace v1
@@ -20,9 +22,9 @@ namespace rsl
     // Note: The non-predicate version of count_if is count and not another variation of count_if.
     // This is because both versions would have three parameters and there could be ambiguity.
     template <typename InputIterator, typename Predicate>
-    typename InputIterator::difference_type count_if(InputIterator first, InputIterator last, Predicate predicate)
+    typename iterator_traits<InputIterator>::difference_type count_if(InputIterator first, InputIterator last, Predicate predicate)
     {
-      typename InputIterator::difference_type result = 0;
+      typename iterator_traits<InputIterator>::difference_type result = 0;
 
       for(; first != last; ++first)
       {
