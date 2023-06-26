@@ -18,7 +18,7 @@ namespace rsl
   {
 
     template <typename InputIterator, typename Size, typename Generator>
-    void generate_n(InputIterator first, InputIterator last, Size n, Generator g)
+    void generate_n(InputIterator first, Size n, Generator g)
     {
       auto it = first;
       for(Size i = 0; i < n; ++i, ++it)

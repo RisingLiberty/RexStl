@@ -12,19 +12,38 @@
 
 #pragma once
 
-#include "rex_std/disable_std_checking.h"
-#include "rex_std/std_alias_defines.h"
-
-#include <algorithm>
+#include "rex_std/assert.h"
+#include "rex_std/internal/iterator/iterator_traits.h"
 
 namespace rsl
 {
   inline namespace v1
   {
+		template <typename ForwardIterator, typename StrictWeakOrdering>
+		bool is_sorted(ForwardIterator first, ForwardIterator last, StrictWeakOrdering compare)
+		{
+			if (first != last)
+			{
+				ForwardIterator current = first;
 
-    REX_STD_FUNC_ALIAS(is_sorted);
+				for (++current; current != last; first = current, ++current)
+				{
+					if (compare(*current, *first))
+					{
+						RSL_ASSERT_X(!compare(*first, *current), "invalid comparison function"); // Validate that the compare function is sane.
+						return false;
+					}
+				}
+			}
+			return true;
+		}
 
+		template <typename ForwardIterator>
+		bool is_sorted(ForwardIterator first, ForwardIterator last)
+		{
+			using Less = rsl::less<typename rsl::iterator_traits<ForwardIterator>::value_type>;
+
+			return rsl::is_sorted<ForwardIterator, Less>(first, last, Less());
+		}
   } // namespace v1
 } // namespace rsl
-
-#include "rex_std/enable_std_checking.h"

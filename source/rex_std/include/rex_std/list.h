@@ -36,12 +36,12 @@ namespace rsl
   inline namespace v1
   {
 
-    struct ListNodeBase
+    struct list_node_base
     {
-      ListNodeBase* next;
-      ListNodeBase* prev;
+      list_node_base* next;
+      list_node_base* prev;
 
-      void insert(ListNodeBase* node)
+      void insert(list_node_base* node)
       {
         next       = node;
         prev       = node->prev;
@@ -55,13 +55,13 @@ namespace rsl
         prev->next = next;
       }
 
-      void splice(ListNodeBase* first, ListNodeBase* last)
+      void splice(list_node_base* first, list_node_base* last)
       {
         last->prev->next  = this;
         first->prev->next = last;
         prev->next        = first;
 
-        ListNodeBase* tmp = prev;
+        list_node_base* tmp = prev;
         prev              = last->prev;
         last->prev        = first->prev;
         first->prev       = tmp;
@@ -69,10 +69,10 @@ namespace rsl
 
       void reverse()
       {
-        ListNodeBase* node = this;
+        list_node_base* node = this;
         do
         {
-          ListNodeBase* tmp = node->next;
+          list_node_base* tmp = node->next;
           node->next        = node->prev;
           node->prev        = tmp;
           node              = node->prev;
@@ -81,7 +81,7 @@ namespace rsl
     };
 
     template <typename T>
-    struct ListNode : public ListNodeBase
+    struct list_node : public list_node_base
     {
       T value;
     };
@@ -89,13 +89,12 @@ namespace rsl
     template <typename T, typename Allocator>
     class list;
 
-    // TODO: Check if we can use the BiDirectional Iterator for this (it's implementation should change though)
     template <typename T>
-    class ListIterator
+    class list_iterator
     {
     public:
-      using this_type         = ListIterator<T>;
-      using node_type         = ListNode<T>;
+      using this_type         = list_iterator<T>;
+      using node_type         = list_node<T>;
       using value_type        = T;
       using pointer           = T*;
       using const_pointer     = const T*;
@@ -106,6 +105,14 @@ namespace rsl
 
       template <typename T, typename Allocator>
       friend class list;
+
+      list_iterator()
+        : m_node(nullptr)
+      {}
+
+      list_iterator(list_node_base* node)
+        : m_node(static_cast<node_type*>(node))
+      {}
 
       reference operator*()
       {
@@ -124,27 +131,42 @@ namespace rsl
         return rsl::addressof(m_node->value);
       }
 
-      ListIterator<T> operator++()
+      list_iterator<T> operator++()
       {
         m_node = static_cast<node_type*>(m_node->next);
         return *this;
       }
-      ListIterator<T> operator++(int)
+      list_iterator<T> operator++(int)
       {
         this_type temp(*this);
         m_node = static_cast<node_type*>(m_node->next);
         return temp;
       }
-      ListIterator<T> operator--()
+      list_iterator<T> operator--()
       {
         m_node = static_cast<node_type*>(m_node->prev);
         return *this;
       }
-      ListIterator operator--(int)
+      list_iterator operator--(int)
       {
         this_type temp(*this);
         m_node = static_cast<node_type*>(m_node->prev);
         return temp;
+      }
+
+      bool operator==(list_iterator other)
+      {
+        return m_node == other.m_node;
+      }
+
+      bool operator!=(list_iterator other)
+      {
+        return !(*this == other);
+      }
+
+      node_type* node()
+      {
+        return m_node;
       }
 
     private:
@@ -152,11 +174,11 @@ namespace rsl
     };
 
     template <typename T>
-    class ConstListIterator
+    class const_list_iterator
     {
     public:
-      using this_type         = ListIterator<T>;
-      using node_type         = ListNode<T>;
+      using this_type         = const_list_iterator<T>;
+      using node_type         = list_node<T>;
       using value_type        = T;
       using pointer           = T*;
       using const_pointer     = const T*;
@@ -168,6 +190,18 @@ namespace rsl
       template <typename T, typename Allocator>
       friend class list;
 
+      const_list_iterator()
+        : m_node(nullptr)
+      {}
+
+      const_list_iterator(list_iterator<T> node)
+        : m_node(node.node())
+      {}
+
+      const_list_iterator(list_node_base* node)
+        : m_node(static_cast<node_type*>(node))
+      {}
+
       const_reference operator*() const
       {
         return m_node->value;
@@ -177,27 +211,37 @@ namespace rsl
         return rsl::addressof(m_node->value);
       }
 
-      ConstListIterator<T> operator++()
+      const_list_iterator<T> operator++()
       {
         m_node = static_cast<node_type*>(m_node->next);
         return *this;
       }
-      ConstListIterator<T> operator++(int)
+      const_list_iterator<T> operator++(int)
       {
         this_type temp(*this);
         m_node = static_cast<node_type*>(m_node->next);
         return temp;
       }
-      ConstListIterator<T> operator--()
+      const_list_iterator<T> operator--()
       {
         m_node = static_cast<node_type*>(m_node->prev);
         return *this;
       }
-      ConstListIterator operator--(int)
+      const_list_iterator operator--(int)
       {
         this_type temp(*this);
         m_node = static_cast<node_type*>(m_node->prev);
         return temp;
+      }
+
+      bool operator==(const_list_iterator other)
+      {
+        return m_node == other.m_node;
+      }
+
+      bool operator!=(const_list_iterator other)
+      {
+        return !(*this == other);
       }
 
     private:
@@ -226,11 +270,11 @@ namespace rsl
       using const_reference        = const value_type&;
       using pointer                = typename allocator_traits<allocator>::pointer;
       using const_pointer          = typename allocator_traits<allocator>::const_pointer;
-      using iterator               = ListIterator<value_type>;
-      using const_iterator         = ListIterator<const value_type>;
+      using iterator               = list_iterator<value_type>;
+      using const_iterator         = const_list_iterator<value_type>;
       using reverse_iterator       = rsl::reverse_iterator<iterator>;
       using const_reverse_iterator = rsl::reverse_iterator<const_iterator>;
-      using node_type              = ListNode<T>;    /// RSL Comment: Not in ISO C++ Standard at time of writing (04/June/2022)
+      using node_type              = list_node<T>;    /// RSL Comment: Not in ISO C++ Standard at time of writing (04/June/2022)
       using this_type              = list<T, Alloc>; /// RSL Comment: Not in ISO C++ Standard at time of writing (04/June/2022)
 
       list()
@@ -306,7 +350,7 @@ namespace rsl
       {
         swap(other);
       }
-      list(rsl::initializer_list<value_type> ilist, const allocator_type& alloc)
+      list(rsl::initializer_list<value_type> ilist, const allocator_type& alloc = allocator_type())
           : m_cp_head_tail_link_and_alloc(alloc)
 #ifdef REX_ENABLE_SIZE_IN_LISTS
           , m_size(0)
@@ -518,8 +562,8 @@ namespace rsl
       iterator insert(const_iterator pos, size_type count, const T& value)
       {
         // break const here, because we're getting the non-const node of a const_iterator
-        node_type* pos_node  = pos.m_node;
-        node_type* prev_node = pos_node->prev;
+        list_node<T>* pos_node  = static_cast<list_node<T>*>(pos.m_node);
+        list_node<T>* prev_node = static_cast<list_node<T>*>(pos_node->prev);
 
         // We can't allocate all nodes in 1 go as this would allocate a buffer
         // which would have to be deallocated using the address of the buffer start
@@ -725,9 +769,9 @@ namespace rsl
           if(!other.empty())
           {
             // Breaking const here, getting non-const node from const iterator
-            ListNodeBase* pos_base   = static_cast<ListNodeBase*>(pos.m_node);
-            ListNodeBase* begin_base = static_cast<ListNodeBase*>(other.cbegin().m_node);
-            ListNodeBase* end_base   = static_cast<ListNodeBase*>(other.cend().m_node);
+            list_node_base* pos_base   = static_cast<list_node_base*>(pos.m_node);
+            list_node_base* begin_base = static_cast<list_node_base*>(other.cbegin().m_node);
+            list_node_base* end_base   = static_cast<list_node_base*>(other.cend().m_node);
             pos_base->splice(begin_base, end_base);
           }
         }
@@ -745,9 +789,9 @@ namespace rsl
           if((pos != it) && (pos != it2))
           {
             // Breaking const here, getting non-const node from const iterator
-            ListNodeBase* pos_base = static_cast<ListNodeBase*>(pos.m_node);
-            ListNodeBase* it_base  = static_cast<ListNodeBase*>(it.m_node);
-            ListNodeBase* it2_base = static_cast<ListNodeBase*>(it2.m_node);
+            list_node_base* pos_base = static_cast<list_node_base*>(pos.m_node);
+            list_node_base* it_base  = static_cast<list_node_base*>(it.m_node);
+            list_node_base* it2_base = static_cast<list_node_base*>(it2.m_node);
             pos_base->splice(it_base, it2_base);
           }
         }
@@ -763,9 +807,9 @@ namespace rsl
           if(first != last)
           {
             // Breaking const here, getting non-const node from const iterator
-            ListNodeBase* pos_base   = static_cast<ListNodeBase*>(pos.m_node);
-            ListNodeBase* first_base = static_cast<ListNodeBase*>(first.m_node);
-            ListNodeBase* last_base  = static_cast<ListNodeBase*>(last.m_node);
+            list_node_base* pos_base   = static_cast<list_node_base*>(pos.m_node);
+            list_node_base* first_base = static_cast<list_node_base*>(first.m_node);
+            list_node_base* last_base  = static_cast<list_node_base*>(last.m_node);
             pos_base->splice(first_base, last_base);
           }
         }
@@ -810,7 +854,7 @@ namespace rsl
       }
       void reverse()
       {
-        static_cast<ListNodeBase*>(head_tail_link())->reverse();
+        static_cast<list_node_base*>(head_tail_link())->reverse();
       }
       size_type unique()
       {
@@ -860,21 +904,21 @@ namespace rsl
     private:
       void init()
       {
-        head_tail_link().next = head_tail_link();
-        head_tail_link().prev = head_tail_link();
+        head_tail_link()->prev = head_tail_link();
+        head_tail_link()->next = head_tail_link();
       }
 
       node_type* head()
       {
-        static_cast<ListNode*>(head_tail_link().next);
+        static_cast<node_type*>(head_tail_link()->next);
       }
       node_type* tail()
       {
-        static_cast<ListNode*>(head_tail_link().prev);
+        static_cast<node_type*>(head_tail_link()->prev);
       }
-      ListNodeBase* head_tail_link()
+      list_node_base* head_tail_link()
       {
-        return m_cp_head_tail_link_and_alloc.first();
+        return &m_cp_head_tail_link_and_alloc.first();
       }
 
       void insert_at(node_type* pos, const T& value, node_type* new_node)
@@ -949,11 +993,11 @@ namespace rsl
           }
 
           // cut out the initial segment of the second list and move it to be in front of the first list
-          ListNodeBase* second_half_cut      = second_half.m_node;
-          ListNodeBase* second_half_cut_last = ix.m_node->prev;
+          list_node_base* second_half_cut      = second_half.m_node;
+          list_node_base* second_half_cut_last = ix.m_node->prev;
           result                             = second_half;
           mid_end = second_half = ix;
-          ListNodeBase::remove_range(second_half_cut, second_half_cut_last);
+          list_node_base::remove_range(second_half_cut, second_half_cut_last);
           first.m_node->insert_range(second_half_cut, second_half_cut_last);
         }
         else
@@ -974,14 +1018,14 @@ namespace rsl
             }
 
             // Cut this section of the second_half sub segment out and merge into the appropriate place in the first_half list.
-            ListNodeBase* second_half_cut      = second_half.m_node;
-            ListNodeBase* second_half_cut_last = ix.m_node->prev;
+            list_node_base* second_half_cut      = second_half.m_node;
+            list_node_base* second_half_cut_last = ix.m_node->prev;
             if(mid_end == second_half)
             {
               mid_end = ix;
             }
             second_half = ix;
-            ListNodeBase::remove_range(second_half_cut, second_half_cut_last);
+            list_node_base::remove_range(second_half_cut, second_half_cut_last);
             first.m_node->insert_range(second_half_cut, second_half_cut_last);
           }
         }
@@ -1011,7 +1055,7 @@ namespace rsl
       /// head_tail_link().next points to the first node in the list
       /// head_tail_link().prev points to the last node in the list
 
-      compressed_pair<ListNodeBase, allocator_type> m_cp_head_tail_link_and_alloc;
+      compressed_pair<list_node_base, allocator_type> m_cp_head_tail_link_and_alloc;
 
       /// as of C++11, all containers size() function complexity must be constant=O(1).
       /// we have to implement a size member for this reason, doing a bit more processing when inserting and erasing
@@ -1022,6 +1066,43 @@ namespace rsl
       size_type m_size;
 #endif
     };
+
+    template <typename T, typename Allocator>
+    bool operator==(const list<T, Allocator>& a, const list<T, Allocator>& b)
+    {
+      typename list<T, Allocator>::const_iterator ia = a.begin();
+      typename list<T, Allocator>::const_iterator ib = b.begin();
+      typename list<T, Allocator>::const_iterator enda = a.end();
+
+#if EASTL_LIST_SIZE_CACHE
+      if (a.size() == b.size())
+      {
+        while ((ia != enda) && (*ia == *ib))
+        {
+          ++ia;
+          ++ib;
+        }
+        return (ia == enda);
+      }
+      return false;
+#else
+      typename list<T, Allocator>::const_iterator endb = b.end();
+
+      while ((ia != enda) && (ib != endb) && (*ia == *ib))
+      {
+        ++ia;
+        ++ib;
+      }
+      return (ia == enda) && (ib == endb);
+#endif
+    }
+
+    template <typename T, typename Allocator>
+    bool operator!=(const list<T, Allocator>& a, const list<T, Allocator>& b)
+    {
+      return !(a == b);
+    }
+
   } // namespace v1
 } // namespace rsl
 

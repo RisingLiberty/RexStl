@@ -18,7 +18,7 @@ namespace rsl
   {
 
     template <typename InputIterator, typename Func>
-    void for_each(InputIterator first, InputIterator last, Func func)
+    Func for_each(InputIterator first, InputIterator last, Func func)
     {
       auto it = first;
       while(it != last)
@@ -26,6 +26,8 @@ namespace rsl
         func(*it);
         ++it;
       }
+
+      return func;
     }
 
   } // namespace v1

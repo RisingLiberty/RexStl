@@ -17,7 +17,9 @@
 #include "rex_std/internal/iterator/distance.h"
 #include "rex_std/internal/iterator/forward_iterator.h"
 #include "rex_std/internal/iterator/iterator_tags.h"
+#include "rex_std/internal/iterator/next.h"
 #include "rex_std/internal/iterator/random_access_iterator.h"
+#include "rex_std/internal/iterator/prev.h"
 #include "rex_std/internal/iterator/reverse_iterator.h"
 
 namespace rsl

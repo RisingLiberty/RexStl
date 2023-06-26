@@ -97,21 +97,16 @@
 // #include "rex_std/wchar.h"
 // #include "rex_std/wctype.h"
 
-#include "rex_std/unordered_map.h"
+#include "rex_std/bonus/type_traits/strip_template.h"
 #include "rex_std/string.h"
 #include "rex_std/string_view.h"
-#include "rex_std/bonus/type_traits/strip_template.h"
 #include "rex_std/type_traits.h"
+#include "rex_std/unordered_map.h"
 
 #include <tuple>
 
-int main() 
+int main()
 {
-  using first_tuple = std::tuple<int, int, int>;
-  using second_tuple = rsl::change_template_t<first_tuple, float, float>;
-
-  static_assert(rsl::is_same_v<second_tuple, std::tuple<float, float>>, "new type");
-
   rsl::hash<rsl::string> str_hash;
   using type = rsl::change_template_t<decltype(str_hash), rsl::string_view>;
 
@@ -119,7 +114,6 @@ int main()
 
   rsl::unordered_map<rsl::string, int> my_map;
   rsl::string_view view = "";
-  
-  my_map.find(view);
 
+  my_map.find(view);
 }

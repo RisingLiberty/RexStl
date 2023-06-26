@@ -37,6 +37,23 @@ namespace rsl
       return (first1 == last1) && (first2 != last2);
     }
 
+    template <typename InputIterator1, typename InputIterator2, typename Compare>
+    bool lexicographical_compare(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, Compare compare)
+    {
+      for (; (first1 != last1) && (first2 != last2); ++first1, ++first2)
+      {
+        if (compare(*first1, *first2))
+        {
+          return true;
+        }
+        if (compare(*first2, *first1))
+        {
+          return false;
+        }
+      }
+      return (first1 == last1) && (first2 != last2);
+    }
+
     // Specialization for const char8*.
     constexpr bool lexicographical_compare(const char8* first1, const char8* last1, const char8* first2, const char8* last2)
     {

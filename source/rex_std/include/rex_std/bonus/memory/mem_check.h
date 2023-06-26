@@ -30,7 +30,7 @@ namespace rsl
 
       return nullptr;
     }
-    constexpr const void* memcheck(const void* p, uint8 value, count_t byteCount)
+    constexpr const void* memcheck(const void* p, uint16 value, count_t byteCount)
     {
       union U16
       {
@@ -51,7 +51,7 @@ namespace rsl
       return nullptr;
 
     }
-    constexpr const void* memcheck(const void* p, uint8 value, count_t byteCount)
+    constexpr const void* memcheck(const void* p, uint32 value, count_t byteCount)
     {
       union U32 
       {
@@ -71,7 +71,7 @@ namespace rsl
 
       return nullptr;
     }
-    constexpr const void* memcheck(const void* p, uint8 value, count_t byteCount)
+    constexpr const void* memcheck(const void* p, uint64 value, count_t byteCount)
     {
       union U64 
       {
@@ -91,6 +91,23 @@ namespace rsl
 
       return nullptr;
 
+    }
+
+    constexpr const void* memcheck(const void* p, int8 value, count_t byteCount)
+    {
+      return memcheck(p, static_cast<uint8>(value), byteCount);
+    }
+    constexpr const void* memcheck(const void* p, int16 value, count_t byteCount)
+    {
+      return memcheck(p, static_cast<uint16>(value), byteCount);
+    }
+    constexpr const void* memcheck(const void* p, int32 value, count_t byteCount)
+    {
+      return memcheck(p, static_cast<uint32>(value), byteCount);
+    }
+    constexpr const void* memcheck(const void* p, int64 value, count_t byteCount)
+    {
+      return memcheck(p, static_cast<uint64>(value), byteCount);
     }
   }
 }

@@ -685,7 +685,7 @@ namespace rsl
 
     constexpr rsl::optional<int32> stoi(string_view view)
     {
-      return rsl::stoi(view.data(), view.length());
+      return rsl::string_utils::stoi(view.data(), view.length());
     }
 
   } // namespace v1

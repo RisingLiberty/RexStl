@@ -22,6 +22,7 @@
 #include "rex_std/list.h"
 #include "rex_std/bonus/memory/mem_check.h"
 #include "rex_std/deque.h"
+#include "rex_std/internal/utility/pair.h"
 
 namespace rsl
 {
@@ -1116,15 +1117,17 @@ int TestAlgorithm()
     // Function for_each(InputIterator first, InputIterator last, Function function)
 
     deque<int> intDeque(1000);
-    SetIncrementalIntegers<int> sii; // We define this class at the top of this file.
+    rsl::test::set_incremental_integers<int> sii; // We define this class at the top of this file.
     card32 i;
 
-    sii = for_each(intDeque.begin(), intDeque.end(), sii);
+    sii = rsl::for_each(intDeque.begin(), intDeque.end(), sii);
     CHECK(sii.x() == 1000);
     for (i = 0; i < 1000; i++)
     {
       if (intDeque[i] != (int)i)
+      {
         break;
+      }
     }
     CHECK(i == 1000);
 
@@ -1137,7 +1140,9 @@ int TestAlgorithm()
     for (i = 0; i < 1000; i++)
     {
       if (intArray[i] != (int)i)
+      {
         break;
+      }
     }
     CHECK(i == 1000);
   }
@@ -1166,15 +1171,17 @@ int TestAlgorithm()
     // void generate(ForwardIterator first, ForwardIterator last, Generator generator)
     // OutputIterator generate_n(OutputIterator first, Size n, Generator generator)
 
-    deque<int> intDeque((card32)rng.rand_range(100, 1000));
-    GenerateIncrementalIntegers<int> gii(0); // We define this class at the top of this file.
+    rsl::deque<int> intDeque((card32)rng.rand_range(100, 1000));
+    rsl::test::generate_incremental_integers<int> gii(0); // We define this class at the top of this file.
     int i, iEnd;
 
-    generate(intDeque.begin(), intDeque.end(), gii);
+    rsl::generate(intDeque.begin(), intDeque.end(), gii);
     for (i = 0, iEnd = (int)intDeque.size(); i < iEnd; i++)
     {
       if (intDeque[(card32)i] != i)
+      {
         break;
+      }
     }
     CHECK(i == iEnd);
 
@@ -1199,21 +1206,27 @@ int TestAlgorithm()
     int i, iEnd;
 
     for (i = 0, iEnd = (int)intDeque.size(); i < iEnd; i++)
+    {
       intDeque[(card32)i] = 1;
-    transform(intDeque.begin(), intDeque.begin(), intDeque.begin(), negate<int>()); // No-op
+    }
+    rsl::transform(intDeque.begin(), intDeque.begin(), intDeque.begin(), negate<int>()); // No-op
     CHECK(intDeque[0] == 1); // Verify nothing happened
-    transform(intDeque.begin(), intDeque.end(), intDeque.begin(), negate<int>());
+    rsl::transform(intDeque.begin(), intDeque.end(), intDeque.begin(), negate<int>());
     for (i = 0, iEnd = (int)intDeque.size(); i < iEnd; i++)
     {
       if (intDeque[(card32)i] != -1)
+      {
         break;
+      }
     }
     CHECK(i == iEnd);
 
 
     forward_list<rsl::test::test_object> sList;
     for (i = 0, iEnd = rng.rand_range(1, 100); i < iEnd; i++)
+    {
       sList.push_front(rsl::test::test_object(1));
+    }
     transform(sList.begin(), sList.begin(), sList.begin(), TestObjectNegate()); // No-op
     CHECK(sList.front() == rsl::test::test_object(1));
     transform(sList.begin(), sList.end(), sList.begin(), TestObjectNegate()); // TestObjectNegate is a custom function we define for this test.
@@ -1221,7 +1234,9 @@ int TestAlgorithm()
     for (; it != sList.end(); it++)
     {
       if (!(*it == rsl::test::test_object(-1)))
+      {
         break;
+      }
     }
     CHECK(it == sList.end());
   }
@@ -1230,18 +1245,18 @@ int TestAlgorithm()
   {
     // OutputIterator transform(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, OutputIterator result, BinaryOperation binaryOperation)
 
-    int intArray1[12] = { 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1 };
-    int intArray2[12] = { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 };
+    rsl::array intArray1 = { 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1 };
+    rsl::array intArray2 = { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 };
 
-    int* pInt = transform(intArray1, intArray1, intArray2, intArray2, plus<int>());
-    CHECK(pInt == intArray2);
-    CHECK(VerifySequence(intArray1, intArray1 + 12, int(), "transform", 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, -1));
-    CHECK(VerifySequence(intArray2, intArray2 + 12, int(), "transform", 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, -1));
+    auto pInt = transform(intArray1.cbegin(), intArray1.cend(), intArray2.cbegin(), intArray2.cend(), plus<int>());
+    CHECK(pInt == intArray2.cbegin());
+    CHECK(intArray1 == rsl::array{ 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1 });
+    CHECK(intArray2 == rsl::array{ 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 });
 
-    pInt = transform(intArray1, intArray1 + 12, intArray2, intArray2, plus<int>());
-    CHECK(pInt == intArray2 + 12);
-    CHECK(VerifySequence(intArray1, intArray1 + 12, int(), "transform", 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, -1));
-    CHECK(VerifySequence(intArray2, intArray2 + 12, int(), "transform", 3, 3, 4, 4, 3, 3, 4, 4, 3, 3, 4, 4, -1));
+    pInt = transform(intArray1.cbegin(), intArray1.cend() + 12, intArray2.cbegin(), intArray2.cend(), plus<int>());
+    CHECK(pInt == intArray2.cbegin() + 12);
+    CHECK(intArray1 == rsl::array { 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1 });
+    CHECK(intArray2 == rsl::array { 3, 3, 4, 4, 3, 3, 4, 4, 3, 3, 4, 4 });
   }
 
 
@@ -1249,7 +1264,7 @@ int TestAlgorithm()
     // bool equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2)
     // bool equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, BinaryPredicate predicate)
 
-    vector<card32> intArray(100);
+    vector<card32> intArray(100_size);
     list<card32>   intList(100);
     generate(intArray.begin(), intArray.end(), rng);
     copy(intArray.begin(), intArray.end(), intList.begin());
@@ -1277,36 +1292,36 @@ int TestAlgorithm()
     // bool identical(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2)
     // bool identical(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, BinaryPredicate predicate)
 
-    vector<card32> intArray(100);
+    vector<card32> intArray(100_size);
     list<card32>   intList(100);
     generate(intArray.begin(), intArray.end(), rng);
     copy(intArray.begin(), intArray.end(), intList.begin());
 
 
-    bool b = identical(intArray.begin(), intArray.begin(), (card32*)NULL, (card32*)NULL);
+    bool b = equal_range(intArray.begin(), intArray.begin(), (card32*)NULL, (card32*)NULL);
     CHECK(b);
-    b = identical(intArray.begin(), intArray.end(), intList.begin(), intList.end());
+    b = equal_range(intArray.begin(), intArray.end(), intList.begin(), intList.end());
     CHECK(b);
-    b = identical(intArray.begin(), intArray.end() - 10, intList.begin(), intList.end());
+    b = equal_range(intArray.begin(), intArray.end() - 10, intList.begin(), intList.end());
     CHECK(!b);
-    b = identical(intList.begin(), intList.end(), intArray.begin() + 10, intArray.end());
+    b = equal_range(intList.begin(), intList.end(), intArray.begin() + 10, intArray.end());
     CHECK(!b);
     intArray[50] += 1;
-    b = identical(intArray.begin(), intArray.end(), intList.begin(), intList.end());
+    b = equal_range(intArray.begin(), intArray.end(), intList.begin(), intList.end());
     CHECK(!b);
 
 
     intArray[50] -= 1; // resulttore its original value so the containers are equal again.
-    b = identical(intArray.begin(), intArray.begin(), (card32*)NULL, (card32*)NULL, equal_to<card32>());
+    b = equal_range(intArray.begin(), intArray.begin(), (card32*)NULL, (card32*)NULL, equal_to<card32>());
     CHECK(b);
-    b = identical(intArray.begin(), intArray.end(), intList.begin(), intList.end(), equal_to<card32>());
+    b = equal_range(intArray.begin(), intArray.end(), intList.begin(), intList.end(), equal_to<card32>());
     CHECK(b);
-    b = identical(intArray.begin(), intArray.end() - 10, intList.begin(), intList.end(), equal_to<card32>());
+    b = equal_range(intArray.begin(), intArray.end() - 10, intList.begin(), intList.end(), equal_to<card32>());
     CHECK(!b);
-    b = identical(intList.begin(), intList.end(), intArray.begin() + 10, intArray.end(), equal_to<card32>());
+    b = equal_range(intList.begin(), intList.end(), intArray.begin() + 10, intArray.end(), equal_to<card32>());
     CHECK(!b);
     intArray[50] += 1;
-    b = identical(intArray.begin(), intArray.end(), intList.begin(), intList.end(), equal_to<card32>());
+    b = equal_range(intArray.begin(), intArray.end(), intList.begin(), intList.end(), equal_to<card32>());
     CHECK(!b);
   }
 
@@ -1348,83 +1363,6 @@ int TestAlgorithm()
     CHECK(!b);
   }
 
-#if defined(EA_COMPILER_HAS_THREE_WAY_COMPARISON)
-  {
-    // <compairison_category> lexicographical_compare_three_way(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, Compare compare)
-
-    int intArray1[6] = { 0, 1, 2, 3, 4, 5 };
-    int intArray2[6] = { 0, 1, 2, 3, 4, 6 };
-    int intArray3[5] = { 0, 1, 2, 3, 4 };
-    int intArray4[5] = { 4, 3, 2, 1, 0 };
-
-    // strong ordering
-    auto compare_strong = [](int first, int second)
-    {
-      return (first < second) ? std::strong_ordering::less :
-        (first > second) ? std::strong_ordering::greater :
-        std::strong_ordering::equal;
-    };
-
-    auto b = lexicographical_compare_three_way(intArray1, intArray1 + 6, intArray2, intArray2 + 6, compare_strong);
-    CHECK(b == std::strong_ordering::less);
-    b = lexicographical_compare_three_way(intArray3, intArray3 + 5, intArray2, intArray2 + 6, compare_strong);
-    CHECK(b == std::strong_ordering::less);
-    b = lexicographical_compare_three_way(intArray3, intArray3 + 5, intArray2, intArray2 + 6, synth_three_way{});
-    CHECK(b == std::strong_ordering::less);
-
-    b = lexicographical_compare_three_way(intArray2, intArray2 + 6, intArray1, intArray1 + 6, compare_strong);
-    CHECK(b == std::strong_ordering::greater);
-    b = lexicographical_compare_three_way(intArray2, intArray2 + 6, intArray1, intArray1 + 6, synth_three_way{});
-    CHECK(b == std::strong_ordering::greater);
-
-    b = lexicographical_compare_three_way(intArray1, intArray1 + 6, intArray3, intArray3 + 5, compare_strong);
-    CHECK(b == std::strong_ordering::greater);
-    b = lexicographical_compare_three_way(intArray1, intArray1 + 6, intArray3, intArray3 + 5, synth_three_way{});
-    CHECK(b == std::strong_ordering::greater);
-
-    b = lexicographical_compare_three_way(intArray1, intArray1, intArray2, intArray2, compare_strong); // Test empty range.
-    CHECK(b == std::strong_ordering::equal);
-    b = lexicographical_compare_three_way(intArray1, intArray1, intArray2, intArray2, synth_three_way{}); // Test empty range.
-    CHECK(b == std::strong_ordering::equal);
-
-    // weak ordering
-    auto compare_weak = [](int first, int second)
-    {
-      return (first < second) ? std::weak_ordering::less :
-        (first > second) ? std::weak_ordering::greater :
-        std::weak_ordering::equivalent;
-    };
-
-    auto c = lexicographical_compare_three_way(intArray3, intArray3 + 5, intArray4, intArray4 + 5, compare_weak);
-    CHECK(c == std::weak_ordering::less);
-    c = lexicographical_compare_three_way(intArray4, intArray4 + 5, intArray3, intArray3 + 5, compare_weak);
-    CHECK(c == std::weak_ordering::greater);
-    c = lexicographical_compare_three_way(intArray3, intArray3 + 5, intArray4, intArray4 + 5, synth_three_way{});
-    CHECK(c == std::weak_ordering::less);
-    c = lexicographical_compare_three_way(intArray4, intArray4 + 5, intArray3, intArray3 + 5, synth_three_way{});
-    CHECK(c == std::weak_ordering::greater);
-  }
-
-  {
-    CHECK(synth_three_way{}(1, 1) == std::strong_ordering::equal);
-    CHECK(synth_three_way{}(2, 1) == std::strong_ordering::greater);
-    CHECK(synth_three_way{}(1, 2) == std::strong_ordering::less);
-
-    struct weak_struct
-    {
-      int val;
-      inline std::weak_ordering operator<=>(const weak_struct& b) const
-      {
-        return val <=> b.val;
-      }
-    };
-
-    CHECK(synth_three_way{}(weak_struct{ 1 }, weak_struct{ 2 }) == std::weak_ordering::less);
-    CHECK(synth_three_way{}(weak_struct{ 2 }, weak_struct{ 1 }) == std::weak_ordering::greater);
-    CHECK(synth_three_way{}(weak_struct{ 1 }, weak_struct{ 1 }) == std::weak_ordering::equivalent);
-  }
-#endif
-
   {
     // ForwardIterator lower_bound(ForwardIterator first, ForwardIterator last, const T& value)
     // ForwardIterator lower_bound(ForwardIterator first, ForwardIterator last, const T& value, Compare compare)
@@ -1434,17 +1372,17 @@ int TestAlgorithm()
     int* pInt = lower_bound((int*)NULL, (int*)NULL, 100);
     CHECK(pInt == NULL);
 
-
-    for (i = 0; i < 20 + (gEASTL_TestLevel * 20); i++)
+    constexpr card32 max_tries = 50;
+    for (i = 0; i < max_tries; i++)
     {
       deque<int> intDeque((card32)rng.rand_range(1, 500));
 
       for (int j = 0, jEnd = (int)intDeque.size(); j < jEnd; j++)
-        intDeque[(card32)j] = (int)rng.RandLimit(jEnd / 2); // This will result in both gaps and duplications.
+        intDeque[(card32)j] = (int)rng.rand_limit(jEnd / 2); // This will result in both gaps and duplications.
 
       for (int k = 0, kEnd = (int)intDeque.size(); k < kEnd; k++)
       {
-        deque<int>::iterator it = lower_bound(intDeque.begin(), intDeque.end(), k);
+        deque<int>::iterator it = rsl::lower_bound(intDeque.begin(), intDeque.end(), k);
 
         if (it != intDeque.begin())
           CHECK(*(it - 1) < k);
@@ -1454,14 +1392,13 @@ int TestAlgorithm()
       }
     }
 
-
-    for (i = 0; i < 20 + (gEASTL_TestLevel * 20); i++)
+    for (i = 0; i < max_tries; i++)
     {
       list<rsl::test::test_object> toList;
       int              nSize = (int)rng.rand_range(1, 500);
 
       for (int j = 0, jEnd = nSize; j < jEnd; j++)
-        toList.push_back(rsl::test::test_object((int)rng.RandLimit(jEnd / 2))); // This will result in both gaps and duplications.
+        toList.push_back(rsl::test::test_object((int)rng.rand_limit(jEnd / 2))); // This will result in both gaps and duplications.
 
       for (int k = 0; k < nSize; k++)
       {
@@ -1491,17 +1428,17 @@ int TestAlgorithm()
     int* pInt = upper_bound((int*)NULL, (int*)NULL, 100);
     CHECK(pInt == NULL);
 
-
-    for (i = 0; i < 20 + (gEASTL_TestLevel * 20); i++)
+    constexpr card32 max_tries = 50;
+    for (i = 0; i < max_tries; i++)
     {
       deque<int> intDeque((card32)rng.rand_range(1, 500));
 
       for (card32 j = 0, jEnd = intDeque.size(); j < jEnd; j++)
-        intDeque[j] = (int)rng.RandLimit((uint32_t)jEnd / 2); // This will result in both gaps and duplications.
+        intDeque[j] = (int)rng.rand_limit((uint32_t)jEnd / 2); // This will result in both gaps and duplications.
 
       for (int k = 0, kEnd = (int)intDeque.size(); k < kEnd; k++)
       {
-        deque<int>::iterator it = upper_bound(intDeque.begin(), intDeque.end(), k);
+        deque<int>::iterator it = rsl::upper_bound(intDeque.begin(), intDeque.end(), k);
 
         if (it != intDeque.begin())
           CHECK((*(it - 1) < k) || !(k < *(it - 1))); // Verify tha *it <= k by using only operator<
@@ -1511,14 +1448,13 @@ int TestAlgorithm()
       }
     }
 
-
-    for (i = 0; i < 20 + (gEASTL_TestLevel * 20); i++)
+    for (i = 0; i < max_tries; i++)
     {
       list<rsl::test::test_object> toList;
       int              nSize = (int)rng.rand_range(1, 500);
 
       for (int j = 0, jEnd = nSize; j < jEnd; j++)
-        toList.push_back(rsl::test::test_object((int)rng.RandLimit(jEnd / 2))); // This will result in both gaps and duplications.
+        toList.push_back(rsl::test::test_object((int)rng.rand_limit(jEnd / 2))); // This will result in both gaps and duplications.
 
       for (int k = 0; k < nSize; k++)
       {
@@ -1545,73 +1481,73 @@ int TestAlgorithm()
 
     int i;
 
-    pair<int*, int*> pInt = equal_range((int*)NULL, (int*)NULL, 100);
-    CHECK(pInt.first == NULL);
-    CHECK(pInt.second == NULL);
+    equal_range_result<int*> pInt = equal_range((int*)NULL, (int*)NULL, 100);
+    CHECK(pInt.first_it == NULL);
+    CHECK(pInt.second_it == NULL);
 
-
-    for (i = 0; i < 20 + (gEASTL_TestLevel * 20); i++)
+    constexpr card32 max_tries = 50;
+    for (i = 0; i < max_tries; i++)
     {
       deque<int> intDeque((card32)rng.rand_range(1, 500));
 
       for (int j = 0, jEnd = (int)intDeque.size(); j < jEnd; j++)
-        intDeque[(card32)j] = (int)rng.RandLimit(jEnd / 2); // This will result in both gaps and duplications.
+        intDeque[(card32)j] = (int)rng.rand_limit(jEnd / 2); // This will result in both gaps and duplications.
 
       for (int k = 0, kEnd = (int)intDeque.size(); k < kEnd; k++)
       {
-        pair<deque<int>::iterator, deque<int>::iterator> it = equal_range(intDeque.begin(), intDeque.end(), k);
+        equal_range_result<deque<int>::iterator> res = rsl::equal_range(intDeque.begin(), intDeque.end(), k);
 
         // Test it.first as lower_bound.
-        if (it.first != intDeque.begin())
-          CHECK(*(it.first - 1) < k);
+        if (res.first_it != intDeque.begin())
+          CHECK(*(res.first_it - 1) < k);
 
-        if (it.first != intDeque.end())
-          CHECK((k < *it.first) || !(*it.first < k)); // Verify tha k <= *it by using only operator<
+        if (res.first_it != intDeque.end())
+          CHECK((k < *res.first_it) || !(*res.first_it < k)); // Verify tha k <= *it by using only operator<
 
         // Test it.second as upper_bound.
-        if (it.second != intDeque.begin())
-          CHECK((*(it.second - 1) < k) || !(k < *(it.second - 1))); // Verify tha *it <= k by using only operator<
+        if (res.second_it != intDeque.begin())
+          CHECK((*(res.second_it - 1) < k) || !(k < *(res.second_it - 1))); // Verify tha *it <= k by using only operator<
 
-        if (it.second != intDeque.end())
-          CHECK(k < *it.second);
+        if (res.second_it != intDeque.end())
+          CHECK(k < *res.second_it);
       }
     }
 
 
-    for (i = 0; i < 20 + (gEASTL_TestLevel * 20); i++)
+    for (i = 0; i < max_tries; i++)
     {
       list<rsl::test::test_object> toList;
       int              nSize = (int)rng.rand_range(1, 500);
 
       for (int j = 0, jEnd = nSize; j < jEnd; j++)
-        toList.push_back(rsl::test::test_object((int)rng.RandLimit(jEnd / 2))); // This will result in both gaps and duplications.
+        toList.push_back(rsl::test::test_object((int)rng.rand_limit(jEnd / 2))); // This will result in both gaps and duplications.
 
       for (int k = 0; k < nSize; k++)
       {
         rsl::test::test_object toK(k);
-        pair<list<rsl::test::test_object>::iterator, list<rsl::test::test_object>::iterator> it = equal_range(toList.begin(), toList.end(), toK);
+        equal_range_result it = equal_range(toList.begin(), toList.end(), toK);
 
         // Test it.first as lower_bound
-        if (it.first != toList.begin())
+        if (it.first_it != toList.begin())
         {
-          --it.first;
-          CHECK(*it.first < toK);
-          ++it.first;
+          --it.first_it;
+          CHECK(*it.first_it < toK);
+          ++it.first_it;
         }
 
-        if (it.first != toList.end())
-          CHECK((toK < *it.first) || !(*it.first < toK)); // Verify tha k <= *it by using only operator<
+        if (it.first_it != toList.end())
+          CHECK((toK < *it.first_it) || !(*it.first_it < toK)); // Verify tha k <= *it by using only operator<
 
         // Test it.second as upper_bound
-        if (it.second != toList.begin())
+        if (it.second_it != toList.begin())
         {
-          --it.second;
-          CHECK((*it.second < toK) || !(toK < *it.second)); // Verify tha *it <= k by using only operator<
-          ++it.second;
+          --it.second_it;
+          CHECK((*it.second_it < toK) || !(toK < *it.second_it)); // Verify tha *it <= k by using only operator<
+          ++it.second_it;
         }
 
-        if (it.second != toList.end())
-          CHECK(toK < *it.second);
+        if (it.second_it != toList.end())
+          CHECK(toK < *it.second_it);
       }
     }
   }
@@ -1681,29 +1617,28 @@ int TestAlgorithm()
     // OutputIterator remove_copy(InputIterator first, InputIterator last, OutputIterator result, const T& value)
     // OutputIterator remove_copy_if(InputIterator first, InputIterator last, OutputIterator result, Predicate predicate)
 
-    int intArray1[12] = { 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1 };
-    int intArray2[12] = { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 };
+    rsl::array intArray1 = { 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1 };
+    rsl::array intArray2 = { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 };
 
-    int* pInt = remove_copy(intArray1, intArray1, intArray2, 1); // No-op
-    CHECK(pInt == intArray2);
-    CHECK(VerifySequence(intArray1, intArray1 + 12, int(), "remove_copy", 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, -1));
-    CHECK(VerifySequence(intArray2, intArray2 + 12, int(), "remove_copy", 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, -1));
+    auto pInt = remove_copy(intArray1.cbegin(), intArray1.cbegin(), intArray2.cbegin(), 1); // No-op
+    CHECK(pInt == intArray2.cbegin());
+    CHECK(intArray1 == rsl::array{ 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1 });
+    CHECK(intArray2 == rsl::array{ 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 });
 
-    pInt = remove_copy(intArray1, intArray1 + 12, intArray2, 1);
-    CHECK(pInt == intArray2 + 6);
-    CHECK(VerifySequence(intArray1, intArray1 + 12, int(), "remove_copy", 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, -1));
-    CHECK(VerifySequence(intArray2, intArray2 + 12, int(), "remove_copy", 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, -1));
+    pInt = remove_copy(intArray1.cbegin(), intArray1.cbegin() + 12, intArray2.cend(), 1);
+    CHECK(pInt == intArray2.cbegin() + 6);
+    CHECK(intArray1 == rsl::array{ 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1 });
+    CHECK(intArray2 == rsl::array{ 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3 });
 
+    pInt = remove_copy_if(intArray1.cbegin(), intArray1.cbegin(), intArray2.cbegin(), [](int i) { return i == 0; }); // No-op
+    CHECK(pInt == intArray2.cbegin());
+    CHECK(intArray1 == rsl::array{ 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1 });
+    CHECK(intArray2 == rsl::array{ 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3 });
 
-    pInt = remove_copy_if(intArray1, intArray1, intArray2, [](int i) { return i == 0; }); // No-op
-    CHECK(pInt == intArray2);
-    CHECK(VerifySequence(intArray1, intArray1 + 12, int(), "remove_copy_if", 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, -1));
-    CHECK(VerifySequence(intArray2, intArray2 + 12, int(), "remove_copy_if", 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, -1));
-
-    pInt = remove_copy_if(intArray1, intArray1 + 12, intArray2, [](int i) { return i == 0; });
-    CHECK(pInt == intArray2 + 6);
-    CHECK(VerifySequence(intArray1, intArray1 + 12, int(), "remove_copy_if", 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, -1));
-    CHECK(VerifySequence(intArray2, intArray2 + 12, int(), "remove_copy_if", 1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, -1));
+    pInt = remove_copy_if(intArray1.cbegin(), intArray1.cbegin() + 12, intArray2.cbegin(), [](int i) { return i == 0; });
+    CHECK(pInt == intArray2.cbegin() + 6);
+    CHECK(intArray1 == rsl::array{0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1 });
+    CHECK(intArray2 == rsl::array{1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3 });
   }
 
 
@@ -1711,198 +1646,40 @@ int TestAlgorithm()
     // ForwardIterator remove(ForwardIterator first, ForwardIterator last, const T& value)
     // ForwardIterator remove_if(ForwardIterator first, ForwardIterator last, Predicate predicate)
 
-    int intArray1[12] = { 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1 };
-    int intArray2[12] = { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 };
+    rsl::array intArray1 = { 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1 };
+    rsl::array intArray2 = { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 };
 
-    int* pInt = remove(intArray1, intArray1, 1);
-    CHECK(pInt == intArray1);
-    CHECK(VerifySequence(intArray1, intArray1 + 12, int(), "remove", 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, -1));
-    pInt = remove(intArray1, intArray1 + 12, 1);
-    CHECK(pInt == intArray1 + 6);
-    CHECK(VerifySequence(intArray1, intArray1 + 12, int(), "remove", 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, -1));
+    auto pInt = remove(intArray1.cbegin(), intArray1.cbegin(), 1);
+    CHECK(pInt == intArray1.cbegin());
+    CHECK(intArray1 == rsl::array{ 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1 });
+    pInt = remove(intArray1.cbegin(), intArray1.cbegin() + 12, 1);
+    CHECK(pInt == intArray1.cbegin() + 6);
+    CHECK(intArray1 == rsl::array{ 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1 });
 
-    pInt = remove(intArray2, intArray2, 1);
-    CHECK(pInt == intArray2);
-    CHECK(VerifySequence(intArray2, intArray2 + 12, int(), "remove", 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, -1));
-    pInt = remove(intArray2, intArray2 + 12, 1);
-    CHECK(pInt == intArray2 + 12);
-    CHECK(VerifySequence(intArray2, intArray2 + 12, int(), "remove", 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, -1));
+    pInt = remove(intArray2.cbegin(), intArray2.cbegin(), 1);
+    CHECK(pInt == intArray2.cbegin());
+    CHECK(intArray2 == rsl::array{ 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 });
+    pInt = remove(intArray2.cbegin(), intArray2.cbegin() + 12, 1);
+    CHECK(pInt == intArray2.cbegin() + 12);
+    CHECK(intArray2 == rsl::array{ 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 });
   }
-
-
-  {
-    // ForwardIterator apply_and_remove(ForwardIterator first, ForwardIterator last, Function function, const T&
-    // value) ForwardIterator apply_and_remove_if(ForwardIterator first, ForwardIterator last, Function function,
-    // Predicate predicate)
-
-    // Test for empty range and full container range
-    {
-      int intArray[12] = { 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1 };
-      vector<int> output;
-      auto func = [&output](int a) { output.push_back(a); };
-      int* pInt = apply_and_remove(intArray, intArray, func, 1);
-      CHECK(pInt == intArray);
-      CHECK(VerifySequence(intArray, intArray + 12, int(), "apply_and_remove", 0, 0, 1, 1, 0, 0, 1, 1, 0,
-        0, 1, 1, -1));
-      CHECK(VerifySequence(output.begin(), output.end(), int(), "apply_and_remove", -1));
-      pInt = apply_and_remove(intArray, intArray + 12, func, 1);
-      CHECK(pInt == intArray + 6);
-      CHECK(VerifySequence(intArray, intArray + 6, int(), "apply_and_remove", 0, 0, 0, 0, 0, 0, -1));
-      CHECK(
-        VerifySequence(output.begin(), output.end(), int(), "apply_and_remove", 1, 1, 1, 1, 1, 1, -1));
-    }
-
-    // Test for no match on empty range and full container range
-    {
-      int intArray[12] = { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 };
-      vector<int> output;
-      auto func = [&output](int a) { output.push_back(a); };
-      int* pInt = apply_and_remove(intArray, intArray, func, 1);
-      CHECK(pInt == intArray);
-      CHECK(VerifySequence(intArray, intArray + 12, int(), "apply_and_remove", 3, 3, 3, 3, 3, 3, 3, 3, 3,
-        3, 3, 3, -1));
-      CHECK(VerifySequence(output.begin(), output.end(), int(), "apply_and_remove", -1));
-      pInt = apply_and_remove(intArray, intArray + 12, func, 1);
-      CHECK(pInt == intArray + 12);
-      CHECK(VerifySequence(intArray, intArray + 12, int(), "apply_and_remove", 3, 3, 3, 3, 3, 3, 3, 3, 3,
-        3, 3, 3, -1));
-      CHECK(VerifySequence(output.begin(), output.end(), int(), "apply_and_remove", -1));
-    }
-
-    // Test for empty range and full container range
-    {
-      int intArray[12] = { 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1 };
-      vector<int> output;
-      auto func = [&output](int a) { output.push_back(a); };
-      int* pInt = apply_and_remove_if(intArray, intArray, func, [](int i) { return i == 1; });
-      CHECK(pInt == intArray);
-      CHECK(VerifySequence(intArray, intArray + 12, int(), "apply_and_remove_if", 0, 0, 1, 1, 0, 0, 1, 1,
-        0, 0, 1, 1, -1));
-      CHECK(VerifySequence(output.begin(), output.end(), int(), "apply_and_remove_if", -1));
-      pInt = apply_and_remove_if(intArray, intArray + 12, func, [](int i) { return i == 1; });
-      CHECK(pInt == intArray + 6);
-      CHECK(VerifySequence(intArray, intArray + 6, int(), "apply_and_remove_if", 0, 0, 0, 0, 0, 0, -1));
-      CHECK(
-        VerifySequence(output.begin(), output.end(), int(), "apply_and_remove_if", 1, 1, 1, 1, 1, 1, -1));
-    }
-
-    // Test for no match on empty range and full container range
-    {
-      int intArray[12] = { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 };
-      vector<int> output;
-      auto func = [&output](int a) { output.push_back(a); };
-      int* pInt = apply_and_remove_if(intArray, intArray, func, [](int i) { return i == 1; });
-      CHECK(pInt == intArray);
-      CHECK(VerifySequence(intArray, intArray + 12, int(), "apply_and_remove_if", 3, 3, 3, 3, 3, 3, 3, 3,
-        3, 3, 3, 3, -1));
-      CHECK(VerifySequence(output.begin(), output.end(), int(), "apply_and_remove_if", -1));
-      pInt = apply_and_remove_if(intArray, intArray + 12, func, [](int i) { return i == 1; });
-      CHECK(pInt == intArray + 12);
-      CHECK(VerifySequence(intArray, intArray + 12, int(), "apply_and_remove_if", 3, 3, 3, 3, 3, 3, 3, 3,
-        3, 3, 3, 3, -1));
-      CHECK(VerifySequence(output.begin(), output.end(), int(), "apply_and_remove_if", -1));
-    }
-
-    auto even = [](int a) { return (a % 2) == 0; };
-    // Test to verify that the remaining element have stable ordering
-    {
-      int intArray[12] = { 7, 8, 2, 3, 4, 5, 6, 0, 1, 9, 10, 11 };
-      vector<int> output;
-      auto func = [&output](int a) { output.push_back(a); };
-      int* pInt = apply_and_remove_if(intArray, intArray + 12, func, even);
-      CHECK(pInt == intArray + 6);
-      CHECK(VerifySequence(intArray, intArray + 6, int(), "apply_and_remove_if", 7, 3, 5, 1, 9, 11, -1));
-      CHECK(
-        VerifySequence(output.begin(), output.end(), int(), "apply_and_remove_if", 8, 2, 4, 6, 0, 10, -1));
-    }
-    {
-      int intArray[12] = { 7, 8, 0, 0, 4, 5, 6, 0, 1, 9, 0, 11 };
-      vector<int> output;
-      auto func = [&output](int a) { output.push_back(a); };
-      int* pInt = apply_and_remove(intArray, intArray + 12, func, 0);
-      CHECK(pInt == intArray + 8);
-      CHECK(
-        VerifySequence(intArray, intArray + 8, int(), "apply_and_remove", 7, 8, 4, 5, 6, 1, 9, 11, -1));
-      CHECK(VerifySequence(output.begin(), output.end(), int(), "apply_and_remove", 0, 0, 0, 0, -1));
-    }
-
-    // Tests on a list (i.e. non-contiguous memory container)
-    {
-      list<int> intList = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
-      vector<int> output;
-      auto func = [&output](int a) { output.push_back(a); };
-      auto listIter = apply_and_remove_if(intList.begin(), intList.begin(), func, even);
-      CHECK(listIter == intList.begin());
-      CHECK(VerifySequence(intList.begin(), intList.end(), int(), "apply_and_remove_if", 0, 1, 2, 3, 4, 5,
-        6, 7, 8, 9, 10, 11, -1));
-      CHECK(VerifySequence(output.begin(), output.end(), int(), "apply_and_remove_if", -1));
-      listIter = apply_and_remove_if(intList.begin(), intList.end(), func, even);
-      CHECK(listIter == next(intList.begin(), 6));
-      CHECK(
-        VerifySequence(intList.begin(), listIter, int(), "apply_and_remove_if", 1, 3, 5, 7, 9, 11, -1));
-      CHECK(
-        VerifySequence(output.begin(), output.end(), int(), "apply_and_remove_if", 0, 2, 4, 6, 8, 10, -1));
-    }
-    {
-      list<int> intList = { 0, 4, 2, 3, 4, 5, 6, 4, 4, 4, 10, 11 };
-      vector<int> output;
-      auto func = [&output](int a) { output.push_back(a); };
-      auto listIter = apply_and_remove(intList.begin(), intList.begin(), func, 4);
-      CHECK(listIter == intList.begin());
-      CHECK(VerifySequence(intList.begin(), intList.end(), int(), "apply_and_remove", 0, 4, 2, 3, 4, 5, 6,
-        4, 4, 4, 10, 11, -1));
-      CHECK(VerifySequence(output.begin(), output.end(), int(), "apply_and_remove", -1));
-      listIter = apply_and_remove(intList.begin(), intList.end(), func, 4);
-      CHECK(listIter == next(intList.begin(), 7));
-      CHECK(
-        VerifySequence(intList.begin(), listIter, int(), "apply_and_remove", 0, 2, 3, 5, 6, 10, 11, -1));
-      CHECK(VerifySequence(output.begin(), output.end(), int(), "apply_and_remove", 4, 4, 4, 4, 4, -1));
-    }
-
-    // Tests on a part of a container
-    {
-      vector<int> intVector = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
-      vector<int> output;
-      auto func = [&output](int a) { output.push_back(a); };
-      auto vectorIter = apply_and_remove_if(next(intVector.begin(), 3), prev(intVector.end(), 2), func, even);
-      CHECK(vectorIter == next(intVector.begin(), 7));
-      CHECK(
-        VerifySequence(intVector.begin(), vectorIter, int(), "apply_and_remove_if", 0, 1, 2, 3, 5, 7, 9, -1));
-      CHECK(
-        VerifySequence(prev(intVector.end(), 2), intVector.end(), int(), "apply_and_remove_if", 10, 11, -1));
-      CHECK(VerifySequence(output.begin(), output.end(), int(), "apply_and_remove_if", 4, 6, 8, -1));
-    }
-    {
-      vector<int> intVector = { 5, 1, 5, 3, 4, 5, 5, 7, 8, 5, 10, 5 };
-      vector<int> output;
-      auto func = [&output](int a) { output.push_back(a); };
-      auto vectorIter = apply_and_remove(next(intVector.begin(), 2), prev(intVector.end(), 3), func, 5);
-      CHECK(vectorIter == next(intVector.begin(), 6));
-      CHECK(
-        VerifySequence(intVector.begin(), vectorIter, int(), "apply_and_remove", 5, 1, 3, 4, 7, 8, -1));
-      CHECK(
-        VerifySequence(prev(intVector.end(), 3), intVector.end(), int(), "apply_and_remove", 5, 10, 5, -1));
-      CHECK(VerifySequence(output.begin(), output.end(), int(), "apply_and_remove", 5, 5, 5, -1));
-    }
-  }
-
 
   {
     // OutputIterator replace_copy(InputIterator first, InputIterator last, OutputIterator result, const T& old_value, const T& new_value)
     // OutputIterator replace_copy_if(InputIterator first, InputIterator last, OutputIterator result, Predicate predicate, const T& new_value)
 
-    int intArray1[12] = { 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1 };
-    int intArray2[12] = { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 };
+    rsl::array intArray1 = { 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1 };
+    rsl::array intArray2 = { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 };
 
-    int* pInt = replace_copy(intArray1, intArray1, intArray2, 1, 4);
-    CHECK(pInt == intArray2);
-    CHECK(VerifySequence(intArray1, intArray1 + 12, int(), "replace_copy", 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, -1));
-    CHECK(VerifySequence(intArray2, intArray2 + 12, int(), "replace_copy", 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, -1));
+    auto pInt = replace_copy(intArray1.cbegin(), intArray1.cbegin(), intArray2.cbegin(), 1, 4);
+    CHECK(pInt == intArray2.cbegin());
+    CHECK(intArray1 == rsl::array{ 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1 });
+    CHECK(intArray2 == rsl::array{ 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 });
 
-    pInt = replace_copy(intArray1, intArray1 + 12, intArray2, 1, 4);
-    CHECK(pInt == intArray2 + 12);
-    CHECK(VerifySequence(intArray1, intArray1 + 12, int(), "replace_copy", 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, -1));
-    CHECK(VerifySequence(intArray2, intArray2 + 12, int(), "replace_copy", 0, 0, 4, 4, 0, 0, 4, 4, 0, 0, 4, 4, -1));
+    pInt = replace_copy(intArray1.cbegin(), intArray1.cbegin() + 12, intArray2.cbegin(), 1, 4);
+    CHECK(pInt == intArray2.cbegin() + 12);
+    CHECK(intArray1 == rsl::array{ 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1 });
+    CHECK(intArray2 == rsl::array{ 0, 0, 4, 4, 0, 0, 4, 4, 0, 0, 4, 4 });
   }
 
 
@@ -1914,15 +1691,17 @@ int TestAlgorithm()
       intArray.push_back(i);
 
     reverse(intArray.begin(), intArray.begin()); // No-op
-    CHECK(VerifySequence(intArray.begin(), intArray.end(), int(), "reverse", 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, -1));
+    CHECK(intArray == rsl::vector{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
 
     reverse(intArray.begin(), intArray.end());
-    CHECK(VerifySequence(intArray.begin(), intArray.end(), int(), "reverse", 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, -1));
+    CHECK(intArray == rsl::vector{ 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 });
 
 
     list<rsl::test::test_object> toList;
     for (int j = 0; j < 10; j++)
+    {
       toList.push_back(rsl::test::test_object(j));
+    }
 
     reverse(toList.begin(), toList.begin()); // No-op
     CHECK(toList.front() == rsl::test::test_object(0));
@@ -1941,18 +1720,18 @@ int TestAlgorithm()
     // reverse_copy(BidirectionalIterator first, BidirectionalIterator last, OutputIterator result)
 
     vector<int> intArray1;
-    int         intArray2[10] = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5 };
+    rsl::array         intArray2 = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5 };
 
     for (int i = 0; i < 10; i++)
       intArray1.push_back(i);
 
-    int* pInt = reverse_copy(intArray1.begin(), intArray1.begin(), intArray2); // No-op
-    CHECK(pInt == intArray2);
-    CHECK(VerifySequence(intArray2, intArray2 + 10, int(), "reverse_copy", 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, -1));
+    auto pInt = reverse_copy(intArray1.cbegin(), intArray1.cbegin(), intArray2.cbegin()); // No-op
+    CHECK(pInt == intArray2.cbegin());
+    CHECK(intArray2 == rsl::array{ 5, 5, 5, 5, 5, 5, 5, 5, 5, 5 });
 
-    pInt = reverse_copy(intArray1.begin(), intArray1.end(), intArray2);
-    CHECK(pInt == intArray2 + intArray1.size());
-    CHECK(VerifySequence(intArray2, intArray2 + 10, int(), "reverse_copy", 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, -1));
+    pInt = reverse_copy(intArray1.cbegin(), intArray1.cend(), intArray2.cbegin());
+    CHECK(pInt == intArray2.cbegin() + intArray1.size());
+    CHECK(intArray2 == rsl::array{ 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 });
 
 
     list<rsl::test::test_object> toList;
@@ -1990,10 +1769,10 @@ int TestAlgorithm()
     CHECK(&*iString == &sTest[7]);
 
     iString = search(sTest.begin(), sTest.end(), pSubstring2, pSubstring2 + strlen(pSubstring2));
-    CHECK(&*iString == sTest.end());
+    CHECK(&*iString == rsl::iterator_to_pointer(sTest.end()));
 
     iString = search(sTest.begin(), sTest.end(), pSubstring2, pSubstring2); // Search with empty search pattern.
-    CHECK(&*iString == sTest.begin());
+    CHECK(&*iString == rsl::iterator_to_pointer(sTest.begin()));
 
     // Test via forward iterator.
     forward_list<char> sListTest;
@@ -2043,20 +1822,22 @@ int TestAlgorithm()
     CHECK(b == true);
 
 
-    vector<int>::iterator it = binary_search_i(intArray.begin(), intArray.begin(), 0);
+    vector<int>::iterator it = binary_search_it(intArray.begin(), intArray.begin(), 0);
     CHECK(it == intArray.begin());
 
-    it = binary_search_i(intArray.begin(), intArray.begin() + 1, 0, less<int>());
+    it = binary_search_it(intArray.begin(), intArray.begin() + 1, 0, less<int>());
     CHECK(it == intArray.begin());
 
-    it = binary_search_i(intArray.begin(), intArray.end(), 733);
+    it = binary_search_it(intArray.begin(), intArray.end(), 733);
     CHECK(it == intArray.begin() + 733);
 
 
     list<rsl::test::test_object> toList;
     list<rsl::test::test_object>::iterator toI;
     for (int j = 0; j < 1000; j++)
+    {
       toList.push_back(rsl::test::test_object(j));
+    }
 
     b = binary_search(toList.begin(), toList.begin(), rsl::test::test_object(0), less<rsl::test::test_object>());
     CHECK(b == false);
@@ -2070,15 +1851,15 @@ int TestAlgorithm()
     CHECK(b == true);
 
 
-    toI = binary_search_i(toList.begin(), toList.begin(), rsl::test::test_object(0), less<rsl::test::test_object>()); // No-op
+    toI = binary_search_it(toList.begin(), toList.begin(), rsl::test::test_object(0), less<rsl::test::test_object>()); // No-op
     CHECK(toI == toList.begin());
 
     toI = toList.begin();
     toI++;
-    toI = binary_search_i(toList.begin(), toI, rsl::test::test_object(0));
+    toI = binary_search_it(toList.begin(), toI, rsl::test::test_object(0));
     CHECK(*toI == rsl::test::test_object(0));
 
-    toI = binary_search_i(toList.begin(), toList.end(), rsl::test::test_object(733));
+    toI = binary_search_it(toList.begin(), toList.end(), rsl::test::test_object(733));
     CHECK(*toI == rsl::test::test_object(733));
   }
 
@@ -2087,15 +1868,15 @@ int TestAlgorithm()
     // ForwardIterator unique(ForwardIterator first, ForwardIterator last)
     // ForwardIterator unique(ForwardIterator first, ForwardIterator last, BinaryPredicate predicate)
 
-    int intArray[] = { 1, 2, 3, 3, 4, 4 };
+    rsl::array intArray = { 1, 2, 3, 3, 4, 4 };
 
-    int* pInt = unique(intArray, intArray + 0);
-    CHECK(pInt == intArray);
-    CHECK(VerifySequence(intArray, intArray + 6, int(), "unique", 1, 2, 3, 3, 4, 4, -1));
+    auto pInt = unique(intArray.begin(), intArray.begin() + 0);
+    CHECK(pInt == intArray.begin());
+    CHECK(intArray == rsl::array{ 1, 2, 3, 3, 4, 4 });
 
-    pInt = unique(intArray, intArray + 6, equal_to<int>());
-    CHECK(pInt == intArray + 4);
-    CHECK(VerifySequence(intArray, intArray + 6, int(), "unique", 1, 2, 3, 4, 4, 4, -1));
+    pInt = unique(intArray.begin(), intArray.begin() + 6, equal_to<int>());
+    CHECK(pInt == intArray.begin() + 4);
+    CHECK(intArray == rsl::array{ 1, 2, 3, 4, 4, 4 });
 
 
     rsl::test::test_object toArray[] = { rsl::test::test_object(1), rsl::test::test_object(2), rsl::test::test_object(3), rsl::test::test_object(3), rsl::test::test_object(4), rsl::test::test_object(4) };
@@ -2154,20 +1935,20 @@ int TestAlgorithm()
     // OutputIterator set_difference(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, OutputIterator result)
     // OutputIterator set_difference(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2,  OutputIterator result, Compare compare)
 
-    int intArray1[] = { 0, 0, 2, 5, 8, 8, 12, 24, 26, 43 };
-    int intArray2[] = { 0, 0, 0, 5, 7, 8, 11, 24, 25, 43 };
-    int intArray3[] = { 9, 9, 9, 9, 9, 9,  9,  9,  9,  9 };
+    rsl::array intArray1 = { 0, 0, 2, 5, 8, 8, 12, 24, 26, 43 };
+    rsl::array intArray2 = { 0, 0, 0, 5, 7, 8, 11, 24, 25, 43 };
+    rsl::array intArray3 = { 9, 9, 9, 9, 9, 9,  9,  9,  9,  9 };
 
-    set_difference(intArray1, intArray1 + 0, intArray2, intArray2 + 0, intArray3);
-    CHECK(VerifySequence(intArray3, intArray3 + 10, int(), "set_difference", 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, -1));
+    set_difference(intArray1.cbegin(), intArray1.cbegin() + 0, intArray2.cbegin(), intArray2.cbegin() + 0, intArray3);
+    CHECK(intArray3 == rsl::array{ 9, 9, 9, 9, 9, 9, 9, 9, 9, 9 });
 
-    set_difference(intArray1, intArray1 + 10, intArray2, intArray2 + 10, intArray3);
-    CHECK(VerifySequence(intArray3, intArray3 + 10, int(), "set_difference", 2, 8, 12, 26, 9, 9, 9, 9, 9, 9, -1));
+    set_difference(intArray1.cbegin(), intArray1.cbegin() + 10, intArray2.cbegin(), intArray2.cbegin() + 10, intArray3.cbegin());
+    CHECK(intArray3 == rsl::array{ 2, 8, 12, 26, 9, 9, 9, 9, 9, 9 });
 
     intArray3[0] = intArray3[1] = intArray3[2] = 9;
 
-    set_difference(intArray1, intArray1 + 10, intArray2, intArray2 + 10, intArray3, less<int>());
-    CHECK(VerifySequence(intArray3, intArray3 + 10, int(), "set_difference", 2, 8, 12, 26, 9, 9, 9, 9, 9, 9, -1));
+    set_difference(intArray1.cbegin(), intArray1.cbegin() + 10, intArray2.cbegin(), intArray2.cbegin() + 10, intArray3.cbegin(), less<int>());
+    CHECK(intArray3 == rsl::array{ 2, 8, 12, 26, 9, 9, 9, 9, 9, 9 });
   }
 
 
@@ -2175,20 +1956,20 @@ int TestAlgorithm()
     // OutputIterator set_symmetric_difference(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, OutputIterator result)
     // OutputIterator set_symmetric_difference(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2,  OutputIterator result, Compare compare)
 
-    int intArray1[] = { 0, 0, 2, 5, 8, 8, 12, 24, 26, 43 };
-    int intArray2[] = { 0, 0, 0, 5, 7, 8, 11, 24, 25, 43 };
-    int intArray3[] = { 9, 9, 9, 9, 9, 9,  9,  9,  9,  9 };
+    rsl::array intArray1 = { 0, 0, 2, 5, 8, 8, 12, 24, 26, 43 };
+    rsl::array intArray2 = { 0, 0, 0, 5, 7, 8, 11, 24, 25, 43 };
+    rsl::array intArray3 = { 9, 9, 9, 9, 9, 9,  9,  9,  9,  9 };
 
-    set_symmetric_difference(intArray1, intArray1 + 0, intArray2, intArray2 + 0, intArray3);
-    CHECK(VerifySequence(intArray3, intArray3 + 10, int(), "set_symmetric_difference", 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, -1));
+    set_symmetric_difference(intArray1.cbegin(), intArray1.cbegin() + 0, intArray2.cbegin(), intArray2.cbegin() + 0, intArray3.cbegin());
+    CHECK(intArray3 == rsl::array{ 9, 9, 9, 9, 9, 9, 9, 9, 9, 9 });
 
-    set_symmetric_difference(intArray1, intArray1 + 10, intArray2, intArray2 + 10, intArray3);
-    CHECK(VerifySequence(intArray3, intArray3 + 10, int(), "set_symmetric_difference", 0, 2, 7, 8, 11, 12, 25, 26, 9, 9, -1));
+    set_symmetric_difference(intArray1.cbegin(), intArray1.cbegin() + 10, intArray2.cbegin(), intArray2.cbegin() + 10, intArray3.cbegin());
+    CHECK(intArray3 == rsl::array{ 0, 2, 7, 8, 11, 12, 25, 26, 9, 9 });
 
     intArray3[0] = intArray3[1] = intArray3[2] = intArray3[4] = intArray3[5] = intArray3[6] = 9;
 
-    set_symmetric_difference(intArray1, intArray1 + 10, intArray2, intArray2 + 10, intArray3, less<int>());
-    CHECK(VerifySequence(intArray3, intArray3 + 10, int(), "set_symmetric_difference", 0, 2, 7, 8, 11, 12, 25, 26, 9, 9, -1));
+    set_symmetric_difference(intArray1.cbegin(), intArray1.cbegin() + 10, intArray2.cbegin(), intArray2.cbegin() + 10, intArray3.cbegin(), less<int>());
+    CHECK(intArray3 == rsl::array{ 0, 2, 7, 8, 11, 12, 25, 26, 9, 9 });
   }
 
 
@@ -2196,20 +1977,20 @@ int TestAlgorithm()
     // OutputIterator set_intersection(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, OutputIterator result)
     // OutputIterator set_intersection(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, OutputIterator result, Compare compare)
 
-    int intArray1[] = { 0, 0, 2, 5, 8, 8, 12, 24, 26, 43 };
-    int intArray2[] = { 0, 0, 0, 5, 7, 8, 11, 24, 25, 43 };
-    int intArray3[] = { 9, 9, 9, 9, 9, 9,  9,  9,  9,  9 };
+    rsl::array intArray1 = { 0, 0, 2, 5, 8, 8, 12, 24, 26, 43 };
+    rsl::array intArray2 = { 0, 0, 0, 5, 7, 8, 11, 24, 25, 43 };
+    rsl::array intArray3 = { 9, 9, 9, 9, 9, 9,  9,  9,  9,  9 };
 
-    set_intersection(intArray1, intArray1 + 0, intArray2, intArray2 + 0, intArray3);
-    CHECK(VerifySequence(intArray3, intArray3 + 10, int(), "set_intersection", 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, -1));
+    set_intersection(intArray1.cbegin(), intArray1.cbegin() + 0, intArray2.cbegin(), intArray2.cbegin() + 0, intArray3.cbegin());
+    CHECK(intArray3 == rsl::array{ 9, 9, 9, 9, 9, 9, 9, 9, 9, 9 });
 
-    set_intersection(intArray1, intArray1 + 10, intArray2, intArray2 + 10, intArray3);
-    CHECK(VerifySequence(intArray3, intArray3 + 10, int(), "set_intersection", 0, 0, 5, 8, 24, 43, 9, 9, 9, 9, -1));
+    set_intersection(intArray1.cbegin(), intArray1.cbegin() + 10, intArray2.cbegin(), intArray2.cbegin() + 10, intArray3.cbegin());
+    CHECK(intArray3 == rsl::array{ 0, 0, 5, 8, 24, 43, 9, 9, 9, 9 });
 
     intArray3[0] = intArray3[1] = intArray3[2] = intArray3[4] = intArray3[5] = intArray3[6] = 9;
 
-    set_intersection(intArray1, intArray1 + 10, intArray2, intArray2 + 10, intArray3, less<int>());
-    CHECK(VerifySequence(intArray3, intArray3 + 10, int(), "set_intersection", 0, 0, 5, 8, 24, 43, 9, 9, 9, 9, -1));
+    set_intersection(intArray1.cbegin(), intArray1.cbegin() + 10, intArray2.cbegin(), intArray2.cbegin() + 10, intArray3.cbegin(), less<int>());
+    CHECK(intArray3 == rsl::array{ 0, 0, 5, 8, 24, 43, 9, 9, 9, 9 });
   }
 
 
@@ -2217,116 +1998,20 @@ int TestAlgorithm()
     // OutputIterator set_union(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, OutputIterator result)
     // OutputIterator set_union(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, OutputIterator result, Compare compare)
 
-    int intArray1[] = { 0, 0, 2, 5, 8, 8, 12, 24, 26, 43 };
-    int intArray2[] = { 0, 0, 0, 5, 7, 8, 11, 24, 25, 43 };
-    int intArray3[] = { 9, 9, 9, 9, 9, 9,  9,  9,  9,  9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9 };
+    rsl::array intArray1 = { 0, 0, 2, 5, 8, 8, 12, 24, 26, 43 };
+    rsl::array intArray2 = { 0, 0, 0, 5, 7, 8, 11, 24, 25, 43 };
+    rsl::array intArray3 = { 9, 9, 9, 9, 9, 9,  9,  9,  9,  9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9 };
 
-    set_union(intArray1, intArray1 + 0, intArray2, intArray2 + 0, intArray3);
-    CHECK(VerifySequence(intArray3, intArray3 + 20, int(), "set_union", 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, -1));
+    set_union(intArray1.cbegin(), intArray1.cbegin() + 0, intArray2.cbegin(), intArray2.cbegin() + 0, intArray3.cbegin());
+    CHECK(intArray3 == rsl::array{ 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9 });
 
-    set_union(intArray1, intArray1 + 10, intArray2, intArray2 + 10, intArray3);
-    CHECK(VerifySequence(intArray3, intArray3 + 20, int(), "set_union", 0, 0, 0, 2, 5, 7, 8, 8, 11, 12, 24, 25, 26, 43, 9, 9, 9, 9, 9, 9, -1));
+    set_union(intArray1.cbegin(), intArray1.cbegin() + 10, intArray2.cbegin(), intArray2.cbegin() + 10, intArray3.cbegin());
+    CHECK(intArray3 == rsl::array{ 0, 0, 0, 2, 5, 7, 8, 8, 11, 12, 24, 25, 26, 43, 9, 9, 9, 9, 9, 9 });
 
     intArray3[0] = intArray3[1] = intArray3[2] = intArray3[3] = intArray3[4] = intArray3[5] = intArray3[6] = intArray3[7] = intArray3[8] = intArray3[9] = intArray3[10] = intArray3[11] = 9;
 
-    set_union(intArray1, intArray1 + 10, intArray2, intArray2 + 10, intArray3, less<int>());
-    CHECK(VerifySequence(intArray3, intArray3 + 20, int(), "set_union", 0, 0, 0, 2, 5, 7, 8, 8, 11, 12, 24, 25, 26, 43, 9, 9, 9, 9, 9, 9, -1));
-  }
-
-
-  // set_difference_2
-  {
-    // template <typename InputIterator1, typename InputIterator2, typename OutputIterator>
-    // void set_difference_2(InputIterator1 first1, InputIterator1 last1,
-    //                       InputIterator2 first2, InputIterator2 last2,
-    //                       OutputIterator result1, OutputIterator result2)
-    {
-      const rsl::vector<int> v1 = { 1, 2, 4, 5,   7, 7, 9 };
-      const rsl::vector<int> v2 = { 2,       6,      9 };
-      rsl::vector<int> only_v1, only_v2;
-
-      rsl::set_difference_2(v1.begin(), v1.end(), v2.begin(), v2.end(),
-        rsl::inserter(only_v1, only_v1.begin()),
-        rsl::inserter(only_v2, only_v2.begin()));
-
-      CHECK((only_v1 == rsl::vector<int>{1, 4, 5, 7, 7}));
-      CHECK((only_v2 == rsl::vector<int>{6}));
-    }
-
-    // template <typename InputIterator1, typename InputIterator2, typename OutputIterator, typename Compare>
-    // void set_difference_2(InputIterator1 first1, InputIterator1 last1,
-    //                       InputIterator2 first2, InputIterator2 last2,
-    //                       OutputIterator result1, OutputIterator result2, Compare compare)
-    {
-      struct local
-      {
-        int data = -1;
-        bool operator==(const local& other) const
-        {
-          return data == other.data;
-        }
-      };
-
-      const rsl::vector<local> v1 = { {1}, {2}, {4}, {5},      {7}, {7}, {9} };
-      const rsl::vector<local> v2 = { {2},           {6},           {9} };
-      rsl::vector<local> only_v1, only_v2;
-
-      rsl::set_difference_2(v1.begin(), v1.end(), v2.begin(), v2.end(),
-        rsl::inserter(only_v1, only_v1.begin()),
-        rsl::inserter(only_v2, only_v2.begin()),
-        [](const local& lhs, const local& rhs) { return lhs.data < rhs.data; });
-
-      CHECK((only_v1 == rsl::vector<local>{ {1}, { 4 }, { 5 }, { 7 }, { 7 }}));
-      CHECK((only_v2 == rsl::vector<local>{ {6}}));
-    }
-  }
-
-
-  // set_decomposition
-  {
-    // OutputIterator3 set_decomposition(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2,
-    //                           OutputIterator1 result1, OutputIterator2 result2, OutputIterator3 result3)
-    {
-      const rsl::vector<int> v1 = { 1, 2, 4, 5,   7, 7, 9 };
-      const rsl::vector<int> v2 = { 2,       6,      9 };
-      rsl::vector<int> only_v1, only_v2, intersection;
-
-      rsl::set_decomposition(v1.begin(), v1.end(), v2.begin(), v2.end(),
-        rsl::inserter(only_v1, only_v1.begin()),
-        rsl::inserter(only_v2, only_v2.begin()),
-        rsl::inserter(intersection, intersection.begin()));
-
-      CHECK((only_v1 == rsl::vector<int>{1, 4, 5, 7, 7}));
-      CHECK((only_v2 == rsl::vector<int>{6}));
-      CHECK((intersection == rsl::vector<int>{2, 9}));
-    }
-
-    // OutputIterator3 set_decomposition(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2,
-    //                           OutputIterator1 result1, OutputIterator2 result2, OutputIterator3 result3, Compare compare)
-    {
-      struct local
-      {
-        int data = -1;
-        bool operator==(const local& other) const
-        {
-          return data == other.data;
-        }
-      };
-
-      const rsl::vector<local> v1 = { {1}, {2}, {4}, {5},      {7}, {7}, {9} };
-      const rsl::vector<local> v2 = { {2},           {6},           {9} };
-      rsl::vector<local> only_v1, only_v2, intersection;
-
-      rsl::set_decomposition(v1.begin(), v1.end(), v2.begin(), v2.end(),
-        rsl::inserter(only_v1, only_v1.begin()),
-        rsl::inserter(only_v2, only_v2.begin()),
-        rsl::inserter(intersection, intersection.begin()),
-        [](const local& lhs, const local& rhs) { return lhs.data < rhs.data; });
-
-      CHECK((only_v1 == rsl::vector<local>{ {1}, { 4 }, { 5 }, { 7 }, { 7 }}));
-      CHECK((only_v2 == rsl::vector<local>{ {6}}));
-      CHECK((intersection == rsl::vector<local>{ {2}, { 9 }}));
-    }
+    set_union(intArray1.cbegin(), intArray1.cbegin() + 10, intArray2.cbegin(), intArray2.cbegin() + 10, intArray3.cbegin(), less<int>());
+    CHECK(intArray3 == rsl::array{ 0, 0, 0, 2, 5, 7, 8, 8, 11, 12, 24, 25, 26, 43, 9, 9, 9, 9, 9, 9 });
   }
 
   {
@@ -2335,104 +2020,67 @@ int TestAlgorithm()
 
     // template<typename ForwardIterator1, typename ForwardIterator2, class BinaryPredicate>
     // bool is_permutation(ForwardIterator1 first1, ForwardIterator1 last1, ForwardIterator2 first2, BinaryPredicate predicate)
-    EASTLTest_Rand eastlRNG(rsl::test::rand_seed());
-
     {
-      int intArray1[] = { 0, 1, 2, 3, 4 };
-      int intArray2[] = { 0, 1, 2, 3, 4 };
+      rsl::array intArray1 = { 0, 1, 2, 3, 4 };
+      rsl::array intArray2 = { 0, 1, 2, 3, 4 };
 
       // Test an empty set.
-      CHECK(rsl::is_permutation(intArray1, intArray1 + 0, intArray2));
+      CHECK(rsl::is_permutation(intArray1.cbegin(), intArray1.cbegin() + 0, intArray2.cbegin()));
 
       // Test two identical sets.
-      CHECK(rsl::is_permutation(intArray1, intArray1 + EAArrayCount(intArray1), intArray2));
-      rsl::random_shuffle(intArray1, intArray1 + EAArrayCount(intArray1), eastlRNG);
+      CHECK(rsl::is_permutation(intArray1.cbegin(), intArray1.cend(), intArray2.cbegin()));
+      rsl::random_shuffle(intArray1.cbegin(), intArray1.cend(), rng);
 
       // Test order randomization.
-      CHECK(rsl::is_permutation(intArray1, intArray1 + EAArrayCount(intArray1), intArray2));
-      rsl::random_shuffle(intArray2, intArray2 + EAArrayCount(intArray2), eastlRNG);
-      CHECK(rsl::is_permutation(intArray1, intArray1 + EAArrayCount(intArray1), intArray2));
+      CHECK(rsl::is_permutation(intArray1.cbegin(), intArray1.cend(), intArray2.cbegin()));
+      rsl::random_shuffle(intArray2.cbegin(), intArray2.cend(), rng);
+      CHECK(rsl::is_permutation(intArray1.cbegin(), intArray1.cend(), intArray2.cbegin()));
 
       // Test the case where there's a difference.
       intArray2[4] = intArray2[3]; // This change guarantees is_permutation will return false.
-      CHECK(!rsl::is_permutation(intArray1, intArray1 + EAArrayCount(intArray1), intArray2));
+      CHECK(!rsl::is_permutation(intArray1.cbegin(), intArray1.cend(), intArray2.cbegin()));
     }
 
     {
-      int intArray1[] = { 0, 0, 0, 1, 1 };
-      int intArray2[] = { 0, 0, 0, 1, 1 };
+      rsl::array intArray1 = { 0, 0, 0, 1, 1 };
+      rsl::array intArray2 = { 0, 0, 0, 1, 1 };
 
       // Test two identical sets.
-      CHECK(rsl::is_permutation(intArray1, intArray1 + EAArrayCount(intArray1), intArray2));
-      rsl::random_shuffle(intArray1, intArray1 + EAArrayCount(intArray1), eastlRNG);
+      CHECK(rsl::is_permutation(intArray1.cbegin(), intArray1.cend(), intArray2.cbegin()));
+      rsl::random_shuffle(intArray1.cbegin(), intArray1.cend(), rng);
 
       // Test order randomization.
-      CHECK(rsl::is_permutation(intArray1, intArray1 + EAArrayCount(intArray1), intArray2));
-      rsl::random_shuffle(intArray2, intArray2 + EAArrayCount(intArray2), eastlRNG);
-      CHECK(rsl::is_permutation(intArray1, intArray1 + EAArrayCount(intArray1), intArray2));
+      CHECK(rsl::is_permutation(intArray1.cbegin(), intArray1.cend(), intArray2.cbegin()));
+      rsl::random_shuffle(intArray2.cbegin(), intArray2.cend(), rng);
+      CHECK(rsl::is_permutation(intArray1.cbegin(), intArray1.cend(), intArray2.cbegin()));
 
       // Test the case where there's a difference.
       intArray2[4] = (intArray2[4] == 0) ? 1 : 0;
-      CHECK(!rsl::is_permutation(intArray1, intArray1 + EAArrayCount(intArray1), intArray2));
+      CHECK(!rsl::is_permutation(intArray1.cbegin(), intArray1.cend(), intArray2.cbegin()));
     }
 
     for (int n = 0; n < 100000; n++)
     {
-      card32 intArray1[6];
-      card32 intArray2[6];
+      rsl::array<card32, 6> intArray1;
+      rsl::array<card32, 6> intArray2;
 
-      for (size_t i = 0; i < EAArrayCount(intArray1); i++)
+      for (count_t i = 0; i < intArray1.size(); i++)
       {
-        intArray1[i] = eastlRNG.RandLimit(6);
-        intArray2[i] = eastlRNG.RandLimit(6);
+        intArray1[i] = rng.rand_limit(6);
+        intArray2[i] = rng.rand_limit(6);
       }
 
-      bool isPermutation = rsl::is_permutation(intArray1, intArray1 + EAArrayCount(intArray1), intArray2);
+      bool isPermutation = rsl::is_permutation(intArray1.cbegin(), intArray1.cend(), intArray2.cbegin());
 
       // If is_permutation returned true, then sorted versions of the two arrays should be identical.
-      rsl::sort(intArray1, intArray1 + EAArrayCount(intArray1));
-      rsl::sort(intArray2, intArray2 + EAArrayCount(intArray2));
+      rsl::sort(intArray1.cbegin(), intArray1.cend());
+      rsl::sort(intArray2.cbegin(), intArray2.cend());
 
-      rsl::pair<card32*, card32*> mismatchResult = rsl::mismatch(intArray1, intArray1 + EAArrayCount(intArray1), intArray2);
-      bool isIdentical = (mismatchResult.first == (intArray1 + EAArrayCount(intArray1)));
+      mismatch_result mismatchResult = rsl::mismatch(intArray1.cbegin(), intArray1.cend(), intArray2.cbegin());
+      bool isIdentical = (mismatchResult.lhs_it == (intArray1.cend()));
 
       CHECK(isPermutation == isIdentical); // With an array size of 6, isPermutation ends up being true about 1 in 400 times here.
     }
-  }
-
-  {
-    // template <class InputIterator, class UnaryPredicate>
-    // bool is_partitioned(InputIterator first, InputIterator last, UnaryPredicate predicate)
-
-    // template <class ForwardIterator, class UnaryPredicate>
-    // ForwardIterator partition_point(ForwardIterator first, ForwardIterator last, UnaryPredicate predicate)
-
-    const auto isEven = [](int i) { return i % 2 == 0; };
-
-    // These are all partitioned, even first and then odd.
-    vector<int> v1 = { 0, 2, 4, 5, 7, 9, 11 };
-    vector<int> v2 = { 1, 3, 5, 7, 9 };
-    vector<int> v3 = { 2, 4, 8, 100, 102 };
-    vector<int> v4 = { 2, 4, 8, 100, 103 };
-    CHECK(is_partitioned(v1.begin(), v1.end(), isEven));
-    CHECK(is_partitioned(v2.begin(), v2.end(), isEven));
-    CHECK(is_partitioned(v3.begin(), v3.end(), isEven));
-    CHECK(is_partitioned(v4.begin(), v4.end(), isEven));
-
-    CHECK(distance(v1.begin(), partition_point(v1.begin(), v1.end(), isEven)) == 3);
-    CHECK(distance(v2.begin(), partition_point(v2.begin(), v2.end(), isEven)) == 0);
-    CHECK(distance(v3.begin(), partition_point(v3.begin(), v3.end(), isEven)) == 5);
-    CHECK(distance(v4.begin(), partition_point(v4.begin(), v4.end(), isEven)) == 4);
-
-    // These are all not partitioned:
-    vector<int> v5 = { 0, 2, 3, 4, 5, 7, 9, 11 };
-    vector<int> v6 = { 1, 3, 5, 7, 9, 2 };
-    vector<int> v7 = { 2, 4, 3, 8, 100, 102 };
-    vector<int> v8 = { 2, 4, 8, 5, 100, 103 };
-    CHECK(!is_partitioned(v5.begin(), v5.end(), isEven));
-    CHECK(!is_partitioned(v6.begin(), v6.end(), isEven));
-    CHECK(!is_partitioned(v7.begin(), v7.end(), isEven));
-    CHECK(!is_partitioned(v8.begin(), v8.end(), isEven));
   }
 
   {
@@ -2445,7 +2093,9 @@ int TestAlgorithm()
     uint64_t    count;
     vector<int> intArray;
     for (int i = 0; i < 8; i++)
+    {
       intArray.push_back(i);
+    }
 
     count = 0;
     do {
@@ -2476,7 +2126,7 @@ int TestAlgorithm()
 
       for (card32 i = 0; i < kRotateArraySize; i++)
       {
-        rsl::generate_n(intArray.begin(), kRotateArraySize, GenerateIncrementalIntegers<int>());
+        rsl::generate_n(intArray.begin(), kRotateArraySize, rsl::test::generate_incremental_integers<int>());
         IntArray::iterator intArrayItMiddle = rsl::next(intArray.begin(), i);
         IntArray::iterator intArrayIt = rsl::rotate(intArray.begin(), intArrayItMiddle, intArray.end());
 
@@ -2498,7 +2148,7 @@ int TestAlgorithm()
 
       for (card32 i = 0; i < s; i++)
       {
-        rsl::generate_n(intVector.begin(), s, GenerateIncrementalIntegers<int>());
+        rsl::generate_n(intVector.begin(), s, rsl::test::generate_incremental_integers<int>());
         IntVector::iterator intVectorItMiddle = rsl::next(intVector.begin(), i);
         IntVector::iterator intVectorIt = rsl::rotate(intVector.begin(), intVectorItMiddle, intVector.end());
 
@@ -2520,7 +2170,7 @@ int TestAlgorithm()
 
       for (card32 i = 0; i < s; i++)
       {
-        rsl::generate_n(intDeque.begin(), s, GenerateIncrementalIntegers<int>());
+        rsl::generate_n(intDeque.begin(), s, rsl::test::generate_incremental_integers<int>());
         IntDeque::iterator intDequeItMiddle = rsl::next(intDeque.begin(), i);
         IntDeque::iterator intDequeIt = rsl::rotate(intDeque.begin(), intDequeItMiddle, intDeque.end());
 
@@ -2542,7 +2192,7 @@ int TestAlgorithm()
 
       for (card32 i = 0; i < s; i++)
       {
-        rsl::generate_n(intList.begin(), s, GenerateIncrementalIntegers<int>());
+        rsl::generate_n(intList.begin(), s, rsl::test::generate_incremental_integers<int>());
         IntList::iterator intListItMiddle = rsl::next(intList.begin(), i);
         IntList::iterator intListIt = rsl::rotate(intList.begin(), intListItMiddle, intList.end());
 
@@ -2564,7 +2214,7 @@ int TestAlgorithm()
 
       for (card32 i = 0; i < s; i++)
       {
-        rsl::generate_n(intSlist.begin(), s, GenerateIncrementalIntegers<int>());
+        rsl::generate_n(intSlist.begin(), s, rsl::test::generate_incremental_integers<int>());
         IntSlist::iterator intSlistItMiddle = rsl::next(intSlist.begin(), i);
         IntSlist::iterator intSlistIt = rsl::rotate(intSlist.begin(), intSlistItMiddle, intSlist.end());
 
@@ -2589,19 +2239,19 @@ int TestAlgorithm()
       rsl::sort(vec.begin(), vec.end());
     }
     {
-      rsl::vector<MissingMoveConstructor> vec;
-      rsl::sort(vec.begin(), vec.end(), [](const MissingMoveConstructor& lhs, const MissingMoveConstructor& rhs) { return lhs < rhs; });
+      rsl::vector<rsl::test::missing_move_constructor> vec;
+      rsl::sort(vec.begin(), vec.end(), [](const rsl::test::missing_move_constructor& lhs, const rsl::test::missing_move_constructor& rhs) { return lhs < rhs; });
     }
     {
-      rsl::vector<MissingMoveConstructor> vec;
+      rsl::vector<rsl::test::missing_move_constructor> vec;
       rsl::sort(vec.begin(), vec.end());
     }
     {
-      rsl::vector<MissingMoveAssignable> vec;
-      rsl::sort(vec.begin(), vec.end(), [](const MissingMoveAssignable& lhs, const MissingMoveAssignable& rhs) { return lhs < rhs; });
+      rsl::vector<rsl::test::missing_move_assignable> vec;
+      rsl::sort(vec.begin(), vec.end(), [](const rsl::test::missing_move_assignable& lhs, const rsl::test::missing_move_assignable& rhs) { return lhs < rhs; });
     }
     {
-      rsl::vector<MissingMoveAssignable> vec;
+      rsl::vector<rsl::test::missing_move_assignable> vec;
       rsl::sort(vec.begin(), vec.end());
     }
     {
@@ -2632,8 +2282,8 @@ int TestAlgorithm()
     }
   }
 
-  CHECK(rsl::test::test_object::IsClear());
-  rsl::test::test_object::Reset();
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 
   return nErrorCount;
 }

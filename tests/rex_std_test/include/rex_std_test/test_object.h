@@ -32,6 +32,7 @@ namespace rsl::test
       card32 x() const;
       operator card32() const; // this is to easily compare with integers
 
+      static bool is_clear();
       static void reset();
       static card32 num_created();
       static card32 num_ctor_calls();

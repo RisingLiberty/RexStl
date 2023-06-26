@@ -16,9 +16,8 @@ namespace rsl
 {
   inline namespace v1
   {
-
     template <typename InputIterator, typename OutputIterator, typename Func, typename Predicate>
-    void transform(InputIterator first, InputIterator last, OutputIterator dstFirst, Func func, Predicate predicate)
+    OutputIterator transform(InputIterator first, InputIterator last, OutputIterator dstFirst, Func func, Predicate predicate)
     {
       auto it = first;
       while(it != last)
@@ -30,6 +29,8 @@ namespace rsl
         }
         ++it;
       }
+
+      return dstFirst;
     }
 
   } // namespace v1

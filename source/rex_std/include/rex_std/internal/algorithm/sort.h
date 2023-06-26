@@ -12,18 +12,23 @@
 
 #pragma once
 
-#include "rex_std/disable_std_checking.h"
-#include "rex_std/std_alias_defines.h"
-
-#include <algorithm>
+#include "rex_std/bonus/algorithm/quick_sort.h"
 
 namespace rsl
 {
   inline namespace v1
   {
+		template <typename RandomAccessIterator>
+		inline void sort(RandomAccessIterator first, RandomAccessIterator last)
+		{
+			rsl::quick_sort<RandomAccessIterator>(first, last);
+		}
 
-    REX_STD_FUNC_ALIAS(sort);
-
+		template <typename RandomAccessIterator, typename Compare>
+		inline void sort(RandomAccessIterator first, RandomAccessIterator last, Compare compare)
+		{
+			rsl::quick_sort<RandomAccessIterator, Compare>(first, last, compare);
+		}
   } // namespace v1
 } // namespace rsl
 

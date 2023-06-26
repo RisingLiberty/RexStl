@@ -12,36 +12,42 @@
 
 #pragma once
 
-template <typename ForwardIt1, typename ForwardIt2>
-ForwardIt1 find_first_not_of(ForwardIt1 first1, ForwardIt2 last1, ForwardIt2 first2, ForwardIt2 last2)
+namespace rsl
 {
-  for (; first1 != last1; ++first1)
+  inline namespace v1
   {
-    for (ForwardIt2 i = first2; i != last2; ++i)
+    template <typename ForwardIt1, typename ForwardIt2>
+    constexpr ForwardIt1 find_first_not_of(ForwardIt1 first1, ForwardIt1 last1, ForwardIt2 first2, ForwardIt2 last2)
     {
-      if (*first1 != *i)
+      for (; first1 != last1; ++first1)
       {
-        return first1;
+        for (ForwardIt2 i = first2; i != last2; ++i)
+        {
+          if (*first1 != *i)
+          {
+            return first1;
+          }
+        }
       }
+
+      return last1;
+    }
+
+    template <typename ForwardIt1, typename ForwardIt2, typename Predicate>
+    constexpr ForwardIt1 find_first_not_of(ForwardIt1 first1, ForwardIt2 last1, ForwardIt2 first2, ForwardIt2 last2, Predicate pred)
+    {
+      for (; first1 != last1; ++first1)
+      {
+        for (ForwardIt2 i = first2; i != last2; ++i)
+        {
+          if (pred(*first1, *i))
+          {
+            return first1;
+          }
+        }
+      }
+
+      return last1;
     }
   }
-
-  return last1;
-}
-
-template <typename ForwardIt1, typename ForwardIt2, typename Predicate>
-ForwardIt1 find_first_not_of(ForwardIt1 first1, ForwardIt2 last1, ForwardIt2 first2, ForwardIt2 last2, Predicate pred)
-{
-  for (; first1 != last1; ++first1)
-  {
-    for (ForwardIt2 i = first2; i != last2; ++i)
-    {
-      if (pred(*first1, *i))
-      {
-        return first1;
-      }
-    }
-  }
-
-  return last1;
 }
