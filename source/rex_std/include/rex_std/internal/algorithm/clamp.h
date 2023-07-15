@@ -12,7 +12,6 @@
 
 #pragma once
 
-#include "rex_std/assert.h"
 #include "rex_std/internal/functional/less.h"
 
 namespace rsl
@@ -28,7 +27,7 @@ namespace rsl
     template <typename T>
     constexpr T clamp(const T& x, const T& min, const T& max)
     {
-      return clamp(x, min, max, rsl::less<>());
+      return clamp(x, min, max, rsl::less<T>());
     }
 
   } // namespace v1

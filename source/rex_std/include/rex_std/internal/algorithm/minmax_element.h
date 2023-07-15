@@ -27,14 +27,14 @@ namespace rsl
     };
 
     template <typename InputIterator>
-    min_max_element_result<InputIterator> minmax_element(InputIterator first, InputIterator last)
+    min_max_element_result<typename iterator_traits<InputIterator>::pointer> minmax_element(InputIterator first, InputIterator last)
     {
-      using value_type = InputIterator::value_type;
+      using value_type = iterator_traits<InputIterator>::value_type;
       return minmax_element(first, last, rsl::less<value_type>());
     }
 
     template <typename InputIterator, typename Compare>
-    min_max_element_result<InputIterator> minmax_element(InputIterator first, InputIterator last, Compare compare)
+    min_max_element_result<typename iterator_traits<InputIterator>::pointer> minmax_element(InputIterator first, InputIterator last, Compare compare)
     {
       auto min = first, max = first;
 

@@ -19,8 +19,37 @@ namespace rsl
 {
   inline namespace v1
   {
+    namespace internal
+    {
+      template <typename T>
+      constexpr size_t deque_default_sub_array_size()
+      {
+        if constexpr (sizeof(T) <= 4)
+        {
+          return 64;
+        }
+
+        if constexpr (sizeof(T) <= 8)
+        {
+          return 32;
+        }
+
+        if constexpr (sizeof(T) <= 16)
+        {
+          return 16;
+        }
+
+        if constexpr (sizeof(T) <= 32)
+        {
+          return 8;
+        }
+
+        return 4;
+      }
+    }
+
     template <typename T, card32 SubArraySize = static_cast<card32>(internal::deque_default_sub_array_size<T>())>
-    class deque_iterator
+    struct deque_iterator
     {
     private:
       using this_type = deque_iterator<T>;
@@ -44,20 +73,81 @@ namespace rsl
 
       deque_iterator(const deque_iterator& it);
 
-      pointer operator->() const;
-      reference operator*() const;
+      pointer operator->() const
+      {
+        return m_current;
+      }
+      reference operator*() const
+      {
+        return *m_current;
+      }
 
-      this_type& operator++();
-      this_type operator++(int);
+      this_type& operator++()
+      {
+        if (++m_current == m_end)
+        {
+          m_begin = *++m_current_array_ptr;
+          m_end = m_begin + internal::deque_default_sub_array_size<T>();
+          m_current = m_begin;
+        }
+        return *this;
+      }
+      this_type operator++(int)
+      {
+        const this_type temp(*this);
+        operator++();
+        return temp;
+      }
 
-      this_type& operator--();
-      this_type operator--(int);
+      this_type& operator--()
+      {
+        if (m_current == m_begin)
+        {
+          m_begin = *--m_current_array_ptr;
+          m_end = m_begin + internal::deque_default_sub_array_size<T>();
+          m_current = m_end; // fall through...
+        }
+        --m_current;
+        return *this;
+      }
+      this_type operator--(int)
+      {
+        const this_type temp(*this);
+        operator--();
+        return temp;
+      }
 
-      this_type& operator+=(difference_type n);
-      this_type& operator-=(difference_type n);
+      this_type& operator+=(difference_type n)
+      {
+        const difference_type subarray_pos = (m_current - m_begin) + n;
 
-      this_type operator+(difference_type n) const;
-      this_type operator-(difference_type n) const;
+        if ((size_t)subarray_pos < (size_t)internal::deque_default_sub_array_size<T>())
+        {
+          m_current += n;
+        }
+        else
+        {
+          RSL_ASSERT_X((internal::deque_default_sub_array_size<T>() & (internal::deque_default_sub_array_size<T>() - 1)) == 0, "subarray size needs to be a power of 2"); // Verify that it is a power of 2.
+          const difference_type subarray_idx = (((16777216 + subarray_pos) / (difference_type)internal::deque_default_sub_array_size<T>())) - (16777216 / (difference_type)internal::deque_default_sub_array_size<T>());
+
+          set_sub_array(m_current_array_ptr + subarray_idx);
+          m_current = m_begin + (subarray_pos - (subarray_idx * (difference_type)internal::deque_default_sub_array_size<T>()));
+        }
+        return *this;
+      }
+      this_type& operator-=(difference_type n)
+      {
+        return (*this).operator+=(-n);
+      }
+
+      this_type operator+(difference_type n) const
+      {
+        return this_type(*this).operator+=(n);
+      }
+      this_type operator-(difference_type n) const
+      {
+        return this_type(*this).operator+=(-n);
+      }
 
       void copy_backward(const iterator& first, const iterator& last)
       {
@@ -71,40 +161,33 @@ namespace rsl
         m_end = m_begin + SubArraySize;
       }
 
-    private:
+      template <typename T, card32 SubArraySize>
+      friend bool operator==(const deque_iterator<T, SubArraySize>& lhs, const deque_iterator<T, SubArraySize>& rhs);
+
+    //private:
       T* m_current;
       T* m_begin;
       T* m_end;
       T** m_current_array_ptr;
     };
 
-    namespace internal
+    template <typename T, card32 SubArraySize>
+    bool operator==(const deque_iterator<T, SubArraySize>& lhs, const deque_iterator<T, SubArraySize>& rhs)
     {
-      template <typename T>
-      constexpr size_t deque_default_sub_array_size()
-      {
-        if (sizeof(T) <= 4)
-        {
-          return 64;
-        }
+      return lhs.m_current == rhs.m_current;
+    }
 
-        if (sizeof(T) <= 8)
-        {
-          return 32;
-        }
+    template <typename T, card32 SubArraySize>
+    bool operator!=(const deque_iterator<T, SubArraySize>& lhs, const deque_iterator<T, SubArraySize>& rhs)
+    {
+      return !(lhs == rhs);
+    }
 
-        if (sizeof(T) <= 16)
-        {
-          return 16;
-        }
-
-        if (sizeof(T) <= 32)
-        {
-          return 8;
-        }
-
-        return 4;
-      }
+    template <typename T, card32 SubArraySize>
+    typename deque_iterator<T, SubArraySize>::difference_type operator-(const deque_iterator<T, SubArraySize>& lhs, const deque_iterator<T, SubArraySize>& rhs)
+    {
+      using difference_type = deque_iterator<T, SubArraySize>::difference_type;
+      return ((difference_type)internal::deque_default_sub_array_size<T>() * ((lhs.m_current_array_ptr - rhs.m_current_array_ptr) - 1)) + (lhs.m_current - lhs.m_begin) + (rhs.m_end - rhs.m_current);
     }
 
     template <typename T, typename Allocator = rsl::allocator, card32 SubArraySize = static_cast<card32>(internal::deque_default_sub_array_size<T>())>
@@ -113,7 +196,7 @@ namespace rsl
     private:
       using this_type = deque<T, Allocator>;
 
-      static_assert(SubArraySize& (SubArraySize - 1) == 0, "SubArraySize is not a multiple of 2");
+      static_assert((SubArraySize & (SubArraySize - 1)) == 0, "SubArraySize is not a multiple of 2");
 
       constexpr static card32 s_min_array_size = 8;
       enum class Side
@@ -135,6 +218,9 @@ namespace rsl
       using size_type = card32;
       using difference_type = int32;
       using allocator_type = Allocator;
+
+      //template<typename T2, card32>
+      //friend class deque_iterator<T2, SubArraySize>;
 
     public:
       deque()
@@ -189,13 +275,13 @@ namespace rsl
 
       deque(rsl::initializer_list<value_type> ilist, const allocator_type& allocator = allocator_type())
       {
-        init(ilist.begin(), ilist.end());
+        init_from_it(ilist.begin(), ilist.end());
       }
 
       template <typename InputIterator>
       deque(InputIterator first, InputIterator last)
       {
-        init(first, last);
+        init_from_it(first, last);
       }
 
       ~deque()
@@ -335,7 +421,7 @@ namespace rsl
         iterator it = m_begin_it;
 
         const difference_type subarray_pos = static_cast<difference_type>(it.m_current - it.m_begin) + static_cast<difference_type>(n);
-        const difference_type subarray_index = ((16777216 + subarray_pos) / static_cast<difference_type>(SubArraySize)) - (16777216 / static_cast<difference_type>(SubArraySize);
+        const difference_type subarray_index = ((16777216 + subarray_pos) / static_cast<difference_type>(SubArraySize)) - (16777216 / static_cast<difference_type>(SubArraySize));
 
         return *(*(it.m_current_array_ptr + subarray_index) + (subarray_pos - (subarray_index * static_cast<difference_type>(SubArraySize))));
       }
@@ -345,7 +431,7 @@ namespace rsl
         iterator it = m_begin_it;
 
         const difference_type subarray_pos = static_cast<difference_type>(it.m_current - it.m_begin) + static_cast<difference_type>(n);
-        const difference_type subarray_index = ((16777216 + subarray_pos) / static_cast<difference_type>(SubArraySize)) - (16777216 / static_cast<difference_type>(SubArraySize);
+        const difference_type subarray_index = ((16777216 + subarray_pos) / static_cast<difference_type>(SubArraySize)) - (16777216 / static_cast<difference_type>(SubArraySize));
 
         return *(*(it.m_current_array_ptr + subarray_index) + (subarray_pos - (subarray_index * static_cast<difference_type>(SubArraySize))));
       }
@@ -568,7 +654,7 @@ namespace rsl
         insert(position, first, last);
       }
 
-      iterator insert(const_iterator position, , rsl::initializer_list<value_type> ilist)
+      iterator insert(const_iterator position, rsl::initializer_list<value_type> ilist)
       {
         const difference_type i(position - m_begin_it);
         insert(position, ilist.begin(), ilist.end());
@@ -715,14 +801,14 @@ namespace rsl
           *ptr_array_current++ = allocate_sub_array();
         }
 
-        m_begin_it.set_subarray(ptr_array_begin);
+        m_begin_it.set_sub_array(ptr_array_begin);
         m_begin_it.m_current = m_begin_it.m_begin;
 
-        m_end_it.set_subarray(ptr_array_end - 1);
+        m_end_it.set_sub_array(ptr_array_end - 1);
         m_end_it.m_current = m_end_it.m_begin + static_cast<difference_type>(n % SubArraySize);
       }
 
-      template <typename Integer = rsl::enable_if_t<rsl::is_integral_v<Integer>, bool> = true>
+      template <typename Integer, rsl::enable_if_t<rsl::is_integral_v<Integer>, bool> = true>
       void init(Integer n, Integer value)
       {
         init(n);
@@ -763,10 +849,22 @@ namespace rsl
       }
 
       template <typename InputIterator>
-      void init(InputIterator first, InputIterator last)
+      void init_from_it(InputIterator first, InputIterator last)
       {
         using IC = typename rsl::iterator_traits<InputIterator>::iterator_category;
         init_from_iterator(first, last, IC());
+      }
+
+      void fill_default()
+      {
+        value_type** ptr_array_current = m_begin_it.m_current_array_ptr;
+
+        while (ptr_array_current < m_end_it.m_current_array_ptr)
+        {
+          rsl::uninitialized_default_construct(*ptr_array_current, *ptr_array_current + SubArraySize);
+          ++ptr_array_current;
+        }
+        rsl::uninitialized_default_construct(m_end_it.m_begin, m_end_it.m_current);
       }
 
       void fill_init(const value_type& val)
@@ -800,7 +898,7 @@ namespace rsl
         assign_values(static_cast<size_type>(n), static_cast<value_type>(value));
       }
 
-      template <typename InputIterator>
+      template <typename InputIterator, rsl::enable_if_t<!rsl::is_integral_v<InputIterator>, bool> = true>
       void assign(InputIterator first, InputIterator last)
       {
         const size_type n = static_cast<size_type>(rsl::distance(first, last));
@@ -997,7 +1095,7 @@ namespace rsl
         }
       }
 
-      void allocate_sub_array()
+      T* allocate_sub_array()
       {
         T* p = static_cast<T*>(m_allocator.allocate(SubArraySize * sizeof(T)));
         rsl::memset(p, 0, SubArraySize * sizeof(T));
@@ -1139,5 +1237,3 @@ namespace rsl
     };
   } // namespace v1
 } // namespace rsl
-
-#include "rex_std/enable_std_checking.h"

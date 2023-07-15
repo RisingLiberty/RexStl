@@ -60,6 +60,7 @@
   #include "rex_std/internal/type_traits/is_same.h"
   #include "rex_std/internal/utility/declval.h"
   #include "rex_std/limits.h"
+  #include "rex_std/internal/string/basic_string.h"
 
   #include <cmath>        // std::signbit
   #include <cstdint>      // uint32

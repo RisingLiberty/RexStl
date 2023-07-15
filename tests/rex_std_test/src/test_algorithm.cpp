@@ -377,18 +377,18 @@ static int TestMinMax()
 
     int intArray[] = { -5, 2, 1, 5, 4, 5 };
     int* pInt = min_element(intArray, intArray + 6);
-    CHECK(pInt && (*pInt == -5));
+    CHECK((pInt && (*pInt == -5)));
 
     pInt = min_element(intArray, intArray + 6, Greater<int>());
-    CHECK(pInt && (*pInt == 5));
+    CHECK((pInt && (*pInt == 5)));
 
 
     rsl::test::test_object toArray[] = { rsl::test::test_object(7), rsl::test::test_object(2), rsl::test::test_object(8), rsl::test::test_object(5), rsl::test::test_object(4), rsl::test::test_object(-12) };
     rsl::test::test_object* pTO = min_element(toArray, toArray + 6);
-    CHECK(pTO && (*pTO == rsl::test::test_object(-12)));
+    CHECK((pTO && (*pTO == rsl::test::test_object(-12))));
 
     pTO = min_element(toArray, toArray + 6, Greater<rsl::test::test_object>());
-    CHECK(pTO && (*pTO == rsl::test::test_object(8)));
+    CHECK((pTO && (*pTO == rsl::test::test_object(8))));
   }
 
 
@@ -398,18 +398,18 @@ static int TestMinMax()
 
     int intArray[] = { -5, 2, 1, 5, 4, 5 };
     int* pInt = max_element(intArray, intArray + 6);
-    CHECK(pInt && (*pInt == 5));
+    CHECK((pInt && (*pInt == 5)));
 
     pInt = max_element(intArray, intArray + 6, less<int>());
-    CHECK(pInt && (*pInt == 5));
+    CHECK((pInt && (*pInt == 5)));
 
 
     rsl::test::test_object toArray[] = { rsl::test::test_object(7), rsl::test::test_object(2), rsl::test::test_object(8), rsl::test::test_object(5), rsl::test::test_object(4), rsl::test::test_object(-12) };
     rsl::test::test_object* pTO = max_element(toArray, toArray + 6);
-    CHECK(pTO && (*pTO == rsl::test::test_object(8)));
+    CHECK((pTO && (*pTO == rsl::test::test_object(8))));
 
     pTO = max_element(toArray, toArray + 6, less<rsl::test::test_object>());
-    CHECK(pTO && (*pTO == rsl::test::test_object(8)));
+    CHECK((pTO && (*pTO == rsl::test::test_object(8))));
   }
 
   {
@@ -424,38 +424,7 @@ static int TestMinMax()
     int intArray[] = { 5, -2, 1, 5, 6, 5 };
 
     min_max_element_result<int*> result = rsl::minmax_element(intArray, intArray + 6);
-    CHECK((*result.min == -2) && (*result.max == 6));
-
-
-    // template <typename T>
-    // rsl::pair<const T&, const T&>
-    // minmax(const T& a, const T& b)
-    //
-    // template <typename T, typename Compare>
-    // rsl::pair<const T&, const T&>
-    // minmax(const T& a, const T& b, Compare comp)
-
-    // The VC++ compiler is broken in such a way that it can't compile the following without generating a warning:
-    //     warning C4413: 'rsl::pair<T1,T2>::first' : reference member is initialized to a temporary that doesn't persist after the constructor exits.
-    // The Microsoft standard library definition of minmax doesn't generate this warning... because that minmax is broken and non-conforming. I think they
-    // made it the way they did because of the aforementioned compiler bug.
-    // Recent versions of clang seem to generate a warning of its own. To do: we need to address this.
-    // GCC 4.8 for x86 has a compiler bug in optimized builds for this code, so we currently enable this for non-optimized builds only.
-#if defined(EA_COMPILER_CPP11_ENABLED) && ((defined(EA_COMPILER_CLANG) && EA_COMPILER_VERSION < 302) || (defined(EA_COMPILER_GNUC) && (EA_COMPILER_VERSION >= 4007)) && !defined(__OPTIMIZE__))
-
-    int i3(3), i2(2);
-    rsl::pair<const int&, const int&> resulti = rsl::minmax(i3, i2);
-    EATEST_VERIFY_F((resulti.first == 2) && (resulti.second == 3), "minmax failure. %d %d", resulti.first, resulti.second);
-
-    char c3(3), c2(2);
-    rsl::pair<const char&, const char&> resultc = rsl::minmax(c3, c2);
-    EATEST_VERIFY_F((resultc.first == 2) && (resultc.second == 3), "minmax failure. %d %d", (int)resultc.first, (int)resultc.second);
-
-    float f3(3), f2(2);
-    rsl::pair<const float&, const float&> resultf = rsl::minmax(f3, f2);
-    EATEST_VERIFY_F((resultf.first == 2) && (resultf.second == 3), "minmax failure. %f %f", resultf.first, resultf.second);
-#endif
-
+    CHECK(((*result.min == -2) && (*result.max == 6)));
 
     // template <typename T>
     // rsl::pair<T, T>
@@ -464,10 +433,10 @@ static int TestMinMax()
     // template <typename T, class Compare>
     // rsl::pair<T, T>
     // minmax(std::initializer_list<T> ilist, Compare compare)
-#if !defined(EA_COMPILER_NO_INITIALIZER_LISTS)
-    min_max_result<int> result3 = rsl::minmax({ 3, 2 });
-    CHECK((result3.min == 2) && (result3.max == 3));
-#endif
+
+    min_max_result<const int*> result3 = rsl::minmax({ 3, 2 });
+    CHECK(((*result3.min == 2) && (*result3.max == 3)));
+
   }
 
 
@@ -653,10 +622,10 @@ int TestAlgorithm()
     rsl::array intArray1 = { 3, 2, 6, 5, 4, 1 };
     rsl::array intArray2 = { 0, 0, 0, 0, 0, 0 };
 
-    move(intArray1.begin(), intArray1.begin() + 0, intArray2);
+    move(intArray1.begin(), intArray1.begin() + 0, intArray2.begin());
     CHECK(intArray2 == rsl::array{ 0, 0, 0, 0, 0, 0 });
 
-    move(intArray1.begin(), intArray1.begin() + 6, intArray2);
+    move(intArray1.begin(), intArray1.begin() + 6, intArray2.begin());
     CHECK(intArray2 == rsl::array{ 3, 2, 6, 5, 4, 1 });
 
     move(intArray1.begin() + 1, intArray1.begin() + 6, intArray1.begin() + 0); // Copy over self.

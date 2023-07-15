@@ -146,30 +146,54 @@ namespace rsl
       template <typename Iterator>
       REX_NO_DISCARD constexpr rsl::optional<bool> stob(const Iterator* str, card32 length);
 
-      template <typename SizeType, typename Iterator>
-      constexpr SizeType find(Iterator srcBegin, Iterator srcEnd, Iterator toFindBegin, SizeType toFindLength, SizeType defaultValue);
-      template <typename SizeType, typename Iterator>
-      constexpr SizeType find(Iterator srcBegin, Iterator srcEnd, Iterator toFindBegin, SizeType defaultValue);
-      template <typename SizeType, typename Iterator>
-      constexpr SizeType rfind(Iterator srcBegin, Iterator srcEnd, Iterator toFindBegin, SizeType toFindLength, SizeType defaultValue);
-      template <typename SizeType, typename Iterator>
-      constexpr SizeType rfind(Iterator srcBegin, Iterator srcEnd, Iterator toFindBegin, SizeType defaultValue);
+      template <typename SizeType, typename Iterator1, typename Iterator2>
+      constexpr SizeType find(Iterator1 srcBegin, Iterator1 srcEnd, Iterator2 toFindBegin, SizeType toFindLength, SizeType defaultValue);
+      template <typename SizeType, typename Iterator1, typename Iterator2>
+      constexpr SizeType find(Iterator1 srcBegin, Iterator1 srcEnd, Iterator2 toFindBegin, SizeType defaultValue);
+      template <typename SizeType, typename Iterator1, typename Iterator2>
+      constexpr SizeType find(Iterator1 srcBegin, SizeType srcLength, SizeType startPos, Iterator2 toFindBegin, SizeType toFindLength, SizeType defaultValue);
+      template <typename SizeType, typename Iterator1, typename Iterator2>
+      constexpr SizeType find(Iterator1 srcBegin, SizeType srcLength, SizeType startPos, Iterator2 toFindBegin, SizeType defaultValue);
+      template <typename SizeType, typename Iterator1, typename Iterator2>
+      constexpr SizeType rfind(Iterator1 srcBegin, Iterator1 srcEnd, Iterator2 toFindBegin, SizeType toFindLength, SizeType defaultValue);
+      template <typename SizeType, typename Iterator1, typename Iterator2>
+      constexpr SizeType rfind(Iterator1 srcBegin, Iterator1 srcEnd, Iterator2 toFindBegin, SizeType defaultValue);
+      template <typename SizeType, typename Iterator1, typename Iterator2>
+      constexpr SizeType rfind(Iterator1 srcBegin, SizeType srcLength, SizeType startPos, Iterator2 toFindBegin, SizeType toFindLength, SizeType defaultValue);
+      template <typename SizeType, typename Iterator1, typename Iterator2>
+      constexpr SizeType rfind(Iterator1 srcBegin, SizeType srcLength, SizeType startPos, Iterator2 toFindBegin, SizeType defaultValue);
       template <typename SizeType, typename Iterator1, typename Iterator2>
       constexpr SizeType find_first_of(Iterator1 srcBegin, SizeType numCharsToCheck, Iterator2 toFindBegin, SizeType toFindLength, SizeType defaultValue);
       template <typename SizeType, typename Iterator1, typename Iterator2>
       constexpr SizeType find_first_of(Iterator1 srcBegin, SizeType numCharsToCheck, Iterator2 toFindBegin, SizeType defaultValue);
-      template <typename SizeType, typename Iterator>
-      constexpr SizeType find_first_not_of(Iterator srcBegin, SizeType numCharsToCheck, Iterator toFindBegin, SizeType toFindLength, SizeType defaultValue);
-      template <typename SizeType, typename Iterator>
-      constexpr SizeType find_first_not_of(Iterator srcBegin, SizeType numCharsToCheck, Iterator toFindBegin, SizeType defaultValue);
-      template <typename SizeType, typename Iterator>
-      constexpr SizeType find_last_of(Iterator srcBegin, SizeType numCharsToCheck, Iterator toFindBegin, SizeType toFindLength, SizeType defaultValue);
-      template <typename SizeType, typename Iterator>
-      constexpr SizeType find_last_of(Iterator srcBegin, SizeType numCharsToCheck, Iterator toFindBegin, SizeType defaultValue);
-      template <typename SizeType, typename Iterator>
-      constexpr SizeType find_last_not_of(Iterator srcBegin, SizeType numCharsToCheck, Iterator toFindBegin, SizeType toFindLength, SizeType defaultValue);
-      template <typename SizeType, typename Iterator>
-      constexpr SizeType find_last_not_of(Iterator srcBegin, SizeType numCharsToCheck, Iterator toFindBegin, SizeType defaultValue);
+      template <typename SizeType, typename Iterator1, typename Iterator2>
+      constexpr SizeType find_first_of(Iterator1 srcBegin, SizeType numCharsToCheck, SizeType startPos, Iterator2 toFindBegin, SizeType toFindLength, SizeType defaultValue);
+      template <typename SizeType, typename Iterator1, typename Iterator2>
+      constexpr SizeType find_first_of(Iterator1 srcBegin, SizeType numCharsToCheck, SizeType startPos, Iterator2 toFindBegin, SizeType defaultValue);
+      template <typename SizeType, typename Iterator1, typename Iterator2>
+      constexpr SizeType find_first_not_of(Iterator1 srcBegin, SizeType numCharsToCheck, Iterator2 toFindBegin, SizeType toFindLength, SizeType defaultValue);
+      template <typename SizeType, typename Iterator1, typename Iterator2>
+      constexpr SizeType find_first_not_of(Iterator1 srcBegin, SizeType numCharsToCheck, Iterator2 toFindBegin, SizeType defaultValue);
+      template <typename SizeType, typename Iterator1, typename Iterator2>
+      constexpr SizeType find_first_not_of(Iterator1 srcBegin, SizeType numCharsToCheck, SizeType startPos, Iterator2 toFindBegin, SizeType defaultValue);
+      template <typename SizeType, typename Iterator1, typename Iterator2>
+      constexpr SizeType find_first_not_of(Iterator1 srcBegin, SizeType numCharsToCheck, SizeType startPos, Iterator2 toFindBegin, SizeType toFindLength, SizeType defaultValue);
+      template <typename SizeType, typename Iterator1, typename Iterator2>
+      constexpr SizeType find_last_of(Iterator1 srcBegin, SizeType numCharsToCheck, Iterator2 toFindBegin, SizeType toFindLength, SizeType defaultValue);
+      template <typename SizeType, typename Iterator1, typename Iterator2>
+      constexpr SizeType find_last_of(Iterator1 srcBegin, SizeType numCharsToCheck, Iterator2 toFindBegin, SizeType defaultValue);
+      template <typename SizeType, typename Iterator1, typename Iterator2>
+      constexpr SizeType find_last_of(Iterator1 srcBegin, SizeType numCharsToCheck, SizeType startPos, Iterator2 toFindBegin, SizeType defaultValue);
+      template <typename SizeType, typename Iterator1, typename Iterator2>
+      constexpr SizeType find_last_of(Iterator1 srcBegin, SizeType numCharsToCheck, SizeType startPos, Iterator2 toFindBegin, SizeType toFindLength, SizeType defaultValue);
+      template <typename SizeType, typename Iterator1, typename Iterator2>
+      constexpr SizeType find_last_not_of(Iterator1 srcBegin, SizeType numCharsToCheck, Iterator2 toFindBegin, SizeType toFindLength, SizeType defaultValue);
+      template <typename SizeType, typename Iterator1, typename Iterator2>
+      constexpr SizeType find_last_not_of(Iterator1 srcBegin, SizeType numCharsToCheck, Iterator2 toFindBegin, SizeType defaultValue);
+      template <typename SizeType, typename Iterator1, typename Iterator2>
+      constexpr SizeType find_last_not_of(Iterator1 srcBegin, SizeType numCharsToCheck, SizeType startPos, Iterator2 toFindBegin, SizeType defaultValue);
+      template <typename SizeType, typename Iterator1, typename Iterator2>
+      constexpr SizeType find_last_not_of(Iterator1 srcBegin, SizeType numCharsToCheck, SizeType startPos, Iterator2 toFindBegin, SizeType toFindLength, SizeType defaultValue);
 
       namespace internal
       {
@@ -248,30 +272,27 @@ namespace rsl
 
       } // namespace internal
 
-      namespace string_utils
-      {
-        // compares 2 strings lexicographically
-        template <typename Traits, typename Pointer, typename SizeType>
-        int32 compare(Pointer lhs, Pointer rhs, SizeType lhsLength, SizeType rhsLength);
-        // finds the first substring [str, str + toFindLength) within [lhsStr, lhsStr + lhsLength), starting from pos
-        template <typename Traits, typename Pointer, typename SizeType>
-        constexpr SizeType find(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer toFindStr, SizeType toFindLength, SizeType defaultValue);
-        // finds the last substring [str, str + toFindLength) within [lhsStr, lhsStr + lhsLength), starting from pos
-        template <typename Traits, typename Pointer, typename SizeType>
-        SizeType rfind(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer toFindStr, SizeType toFindLength, SizeType defaultValue);
-        // finds the first occurrence of a char in the substring [lhsStr, lhsStr + lhsLength) within [rhsStr, rhsStr + rhsLength), starting from pos
-        template <typename Traits, typename Pointer, typename SizeType>
-        SizeType find_first_of(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer rhsStr, SizeType rhsLength, SizeType defaultValue);
-        // finds the last occurrence of a char in the substring [lhsStr, lhsStr + lhsLength) within [rhsStr, rhsStr + rhsLength), starting from pos
-        template <typename Traits, typename Pointer, typename SizeType>
-        SizeType find_last_of(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer rhsStr, SizeType rhsLength, SizeType defaultValue);
-        // finds the first occurrence of a char not in the substring [lhsStr, lhsStr + lhsLength) within [rhsStr, rhsStr + rhsLength), starting from pos
-        template <typename Traits, typename Pointer, typename SizeType>
-        SizeType find_first_not_of(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer rhsStr, SizeType rhsLength, SizeType defaultValue);
-        // finds the last occurrence of a char not in the substring [lhsStr, lhsStr + lhsLength) within [rhsStr, rhsStr + rhsLength), starting from pos
-        template <typename Traits, typename Pointer, typename SizeType>
-        SizeType find_last_not_of(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer rhsStr, SizeType rhsLength, SizeType defaultValue);
-      } // namespace string_utils
+      // compares 2 strings lexicographically
+      template <typename Traits, typename Pointer, typename SizeType>
+      int32 compare(Pointer lhs, Pointer rhs, SizeType lhsLength, SizeType rhsLength);
+      // finds the first substring [str, str + toFindLength) within [lhsStr, lhsStr + lhsLength), starting from pos
+      //template <typename Traits, typename Pointer, typename SizeType>
+      //constexpr SizeType find(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer toFindStr, SizeType toFindLength, SizeType defaultValue);
+      //// finds the last substring [str, str + toFindLength) within [lhsStr, lhsStr + lhsLength), starting from pos
+      //template <typename Traits, typename Pointer, typename SizeType>
+      //SizeType rfind(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer toFindStr, SizeType toFindLength, SizeType defaultValue);
+      //// finds the first occurrence of a char in the substring [lhsStr, lhsStr + lhsLength) within [rhsStr, rhsStr + rhsLength), starting from pos
+      //template <typename Traits, typename Pointer, typename SizeType>
+      //SizeType find_first_of(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer rhsStr, SizeType rhsLength, SizeType defaultValue);
+      //// finds the last occurrence of a char in the substring [lhsStr, lhsStr + lhsLength) within [rhsStr, rhsStr + rhsLength), starting from pos
+      //template <typename Traits, typename Pointer, typename SizeType>
+      //SizeType find_last_of(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer rhsStr, SizeType rhsLength, SizeType defaultValue);
+      //// finds the first occurrence of a char not in the substring [lhsStr, lhsStr + lhsLength) within [rhsStr, rhsStr + rhsLength), starting from pos
+      //template <typename Traits, typename Pointer, typename SizeType>
+      //SizeType find_first_not_of(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer rhsStr, SizeType rhsLength, SizeType defaultValue);
+      //// finds the last occurrence of a char not in the substring [lhsStr, lhsStr + lhsLength) within [rhsStr, rhsStr + rhsLength), starting from pos
+      //template <typename Traits, typename Pointer, typename SizeType>
+      //SizeType find_last_not_of(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer rhsStr, SizeType rhsLength, SizeType defaultValue);
 
       /// RSL Comment: Different from ISO C++ Standard at time of writing (17/Jul/2022)
       // returns an rsl::optional instead of a basic type

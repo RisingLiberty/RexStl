@@ -23,7 +23,6 @@
 #include "rex_std/streambuf.h"
 
 #include <Windows.h>
-#include <processenv.h>
 
 namespace rsl
 {

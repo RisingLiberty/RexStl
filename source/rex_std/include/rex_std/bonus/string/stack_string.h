@@ -29,14 +29,16 @@
 #include "rex_std/internal/string/char_traits.h"
 #include "rex_std/internal/string/string_forward_declare.h"
 #include "rex_std/internal/string_view/basic_string_view.h"
+#include "rex_std/internal/type_traits/is_integral.h"
 #include "rex_std/iosfwd.h"
-
-#include <stddef.h>
+#include "rex_std/stddef.h"
 
 namespace rsl
 {
   inline namespace v1
   {
+    template <typename CharType, typename Traits>
+    class basic_string_view;
 
     template <typename CharType, card32 StrMaxSize>
     class stack_string
@@ -74,7 +76,7 @@ namespace rsl
       explicit stack_string(const value_type* str)
           : stack_string()
       {
-        const card32 string_length = rsl::string_length(str);
+        const card32 string_length = rsl::string_utils::string_length(str);
         const card32 copy_size     = rsl::clamp_max(string_length, StrMaxSize);
         rsl::memcpy(m_data.data(), str, copy_size);
         m_null_terminator_offset = copy_size;

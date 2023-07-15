@@ -224,13 +224,7 @@
 #endif
 
 // libc++ supports string_view in pre-c++17.
-#if FMT_HAS_INCLUDE(<string_view>) && (FMT_CPLUSPLUS >= 201703L || defined(_LIBCPP_VERSION))
-  #include <string_view>
-  #define FMT_USE_STRING_VIEW
-#elif FMT_HAS_INCLUDE("experimental/string_view") && FMT_CPLUSPLUS >= 201402L
-  #include <experimental/string_view>
-  #define FMT_USE_EXPERIMENTAL_STRING_VIEW
-#endif
+#include "rex_std/string_view.h"
 
 #ifndef FMT_UNICODE
   #define FMT_UNICODE !FMT_MSC_VERSION

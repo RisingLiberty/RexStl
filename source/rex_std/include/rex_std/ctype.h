@@ -96,24 +96,24 @@ namespace rsl
       return is_lower(ch) || is_upper(ch);
     }
 
-    template <typename Character>
-    REX_NO_DISCARD constexpr bool is_upper(Character letter)
+    template <typename CharType>
+    REX_NO_DISCARD constexpr bool is_upper(CharType letter)
     {
       return letter >= 'A' && letter <= 'Z';
     }
-    template <typename Character>
-    REX_NO_DISCARD constexpr bool is_lower(Character letter)
+    template <typename CharType>
+    REX_NO_DISCARD constexpr bool is_lower(CharType letter)
     {
       return letter >= 'a' && letter <= 'z';
     }
 
-    template <typename Iterator>
-    REX_NO_DISCARD constexpr bool is_digit(Iterator digit)
+    template <typename CharType>
+    REX_NO_DISCARD constexpr bool is_digit(CharType digit)
     {
       return digit >= '0' && digit <= '9';
     }
-    template <typename Iterator>
-    REX_NO_DISCARD constexpr bool is_digitf(Iterator digit)
+    template <typename CharType>
+    REX_NO_DISCARD constexpr bool is_digitf(CharType digit)
     {
       return is_digit(digit) || digit == '.';
     }

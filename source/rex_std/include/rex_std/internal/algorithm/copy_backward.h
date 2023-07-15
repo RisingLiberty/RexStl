@@ -102,10 +102,10 @@ namespace rsl
     template <typename InputIterator, typename OutputIterator>
     OutputIterator copy_backward(InputIterator first, InputIterator last, OutputIterator dstFirst)
     {
-      using IIC               = typename InputIterator::iterator_category;
-      using OIC               = typename OutputIterator::iterator_category;
-      using value_type_input  = typename InputIterator::value_type;
-      using value_type_output = typename OutputIterator::value_type;
+      using IIC               = typename iterator_traits<InputIterator>::iterator_category;
+      using OIC               = typename iterator_traits<OutputIterator>::iterator_category;
+      using value_type_input  = typename iterator_traits<InputIterator>::value_type;
+      using value_type_output = typename iterator_traits<OutputIterator>::value_type;
 
       REX_UNUSED(static constexpr bool IsMove)        = rsl::is_move_iterator_v<InputIterator>;
       REX_UNUSED(static constexpr bool CanBeMemmoved) = rsl::is_trivially_copyable_v<value_type_output>::value && rsl::is_same_v<value_type_input, value_type_output> &&

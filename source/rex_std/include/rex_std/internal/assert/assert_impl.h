@@ -39,6 +39,9 @@ namespace rsl
     class basic_string; // IWYU pragma: keep
     using string = basic_string<char8, char_traits<char8>, allocator>;
 
+    template <typename CharType, card32 StrMaxSize>
+    class stack_string;
+
     using fmt_stack_string = rsl::stack_string<char8, 500>;
 
     namespace internal
