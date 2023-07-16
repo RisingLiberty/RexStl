@@ -1,0 +1,34 @@
+{
+  "header": "<typeinfo>",
+  "classes": [
+    {
+      "name": "type_info",
+      "description": "Provides information about a type during runtime.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/types/type_info",
+      "functions": [
+        {
+          "name": "name",
+          "description": "Returns a null-terminated character string containing the mangled name of the type.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/types/type_info/name"
+        },
+        {
+          "name": "before",
+          "description": "Compares two type_info objects for ordering.",
+          "parameters": [
+            {
+              "type": "const std::type_info&",
+              "name": "rhs",
+              "description": "The type_info object to compare with."
+            }
+          ],
+          "cppreference_link": "https://en.cppreference.com/w/cpp/types/type_info/before"
+        },
+        {
+          "name": "hash_code",
+          "description": "Returns a hash code for the type.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/types/type_info/hash_code"
+        }
+      ]
+    }
+  ]
+}

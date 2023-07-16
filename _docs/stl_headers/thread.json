@@ -1,0 +1,72 @@
+{
+  "header": "<thread>",
+  "namespaces": [
+    {
+      "name": "std::this_thread",
+      "description": "Contains functions and types related to the current thread."
+    }
+  ],
+  "classes": [
+    {
+      "name": "thread",
+      "description": "Represents a single thread of execution.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/thread/thread",
+      "functions": [
+        {
+          "name": "get_id",
+          "description": "Returns the unique identifier of the thread.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/thread/get_id"
+        },
+        {
+          "name": "join",
+          "description": "Blocks the calling thread until the thread represented by *this has finished execution.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/thread/join"
+        },
+        {
+          "name": "detach",
+          "description": "Marks the thread represented by *this as detached.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/thread/detach"
+        },
+        {
+          "name": "swap",
+          "description": "Swaps the state of *this with the state of other.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/thread/swap"
+        }
+      ]
+    },
+    {
+      "name": "thread::id",
+      "description": "Represents a unique identifier of a thread.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/thread/thread/id",
+      "functions": [
+        {
+          "name": "hash",
+          "description": "Provides a hash value for a thread::id object.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/thread/id/hash"
+        }
+      ]
+    },
+    {
+      "name": "hardware_concurrency",
+      "description": "Returns the number of concurrent threads supported by the implementation.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/thread/thread/hardware_concurrency"
+    }
+  ],
+  "functions": [
+    {
+      "name": "thread::yield",
+      "description": "Offers a hint to the implementation to reschedule the execution of threads.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/thread/thread/yield"
+    },
+    {
+      "name": "this_thread::sleep_for",
+      "description": "Blocks the execution of the calling thread for at least the specified sleep_duration.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/thread/sleep_for"
+    },
+    {
+      "name": "this_thread::sleep_until",
+      "description": "Blocks the execution of the calling thread until specified time_point has been reached.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/thread/sleep_until"
+    }
+  ]
+}

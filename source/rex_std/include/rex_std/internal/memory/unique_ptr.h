@@ -268,10 +268,7 @@ namespace rsl
     template <typename T1, typename D1, typename T2, typename D2>
     bool operator<(const unique_ptr<T1, D1>& lhs, const unique_ptr<T2, D2>& rhs)
     {
-      using ptr1   = typename unique_ptr<T1, D1>::pointer;
-      using ptr2   = typename unique_ptr<T2, D2>::pointer;
-      using common = common_type_t<ptr1, ptr2>;
-      return less<common> {}(lhs.get(), rhs.get());
+      return lhs.get() < rhs.get();
     }
     template <typename T1, typename D1, typename T2, typename D2>
     bool operator>=(const unique_ptr<T1, D1>& lhs, const unique_ptr<T2, D2>& rhs)

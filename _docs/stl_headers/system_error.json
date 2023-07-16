@@ -1,0 +1,83 @@
+{
+  "header": "<system_error>",
+  "functions": [
+    {
+      "name": "make_error_code",
+      "description": "Creates an error_code object for a given error condition from a specific category.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/error/make_error_code"
+    },
+    {
+      "name": "make_error_condition",
+      "description": "Creates an error_condition object for a given error condition from a specific category.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/error/make_error_condition"
+    }
+  ],
+  "classes": [
+    {
+      "name": "error_code",
+      "description": "Represents an error code, which is a platform-specific error value.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/error/error_code",
+      "functions": [
+        {
+          "name": "default_error_condition",
+          "description": "Returns the default error condition object associated with the error code.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/error/error_code/default_error_condition"
+        },
+        {
+          "name": "message",
+          "description": "Returns a string representation of the error code.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/error/error_code/message"
+        },
+        {
+          "name": "category",
+          "description": "Returns a reference to the error category associated with the error code.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/error/error_code/category"
+        }
+      ]
+    },
+    {
+      "name": "error_condition",
+      "description": "Represents a portable error condition, which is an error value from a platform-independent enumeration.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/error/error_condition",
+      "functions": [
+        {
+          "name": "default_error_condition",
+          "description": "Returns the default error condition object associated with the error condition.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/error/error_condition/default_error_condition"
+        },
+        {
+          "name": "message",
+          "description": "Returns a string representation of the error condition.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/error/error_condition/message"
+        },
+        {
+          "name": "category",
+          "description": "Returns a reference to the error category associated with the error condition.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/error/error_condition/category"
+        }
+      ]
+    },
+    {
+      "name": "error_category",
+      "description": "Defines the interface for error category objects.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/error/error_category",
+      "functions": [
+        {
+          "name": "default_error_condition",
+          "description": "Returns the default error condition object associated with the error category.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/error/error_category/default_error_condition"
+        },
+        {
+          "name": "equivalent",
+          "description": "Checks if two error codes or error conditions are equivalent.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/error/error_category/equivalent"
+        },
+        {
+          "name": "message",
+          "description": "Returns the error message associated with a specific error code or error condition.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/error/error_category/message"
+        }
+      ]
+    }
+  ]
+}

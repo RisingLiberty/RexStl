@@ -1,0 +1,93 @@
+{
+  "header": "cfenv",
+  "functions": [
+    {
+      "name": "feclearexcept",
+      "parameters": [],
+      "description": "Clears the floating-point exception state.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/fenv/feclearexcept"
+    },
+    {
+      "name": "fegetexceptflag",
+      "parameters": [
+        { "name": "flagp", "type": "fexcept_t*", "default": "nullptr" },
+        { "name": "excepts", "type": "int" }
+      ],
+      "description": "Gets the floating-point exception flags.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/fenv/fegetexceptflag"
+    },
+    {
+      "name": "feraiseexcept",
+      "parameters": [
+        { "name": "excepts", "type": "int" }
+      ],
+      "description": "Raises floating-point exceptions.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/fenv/feraiseexcept"
+    },
+    {
+      "name": "fesetexceptflag",
+      "parameters": [
+        { "name": "flagp", "type": "const fexcept_t*" },
+        { "name": "excepts", "type": "int" }
+      ],
+      "description": "Sets the floating-point exception flags.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/fenv/fesetexceptflag"
+    },
+    {
+      "name": "fetestexcept",
+      "parameters": [
+        { "name": "excepts", "type": "int" }
+      ],
+      "description": "Tests for floating-point exceptions.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/fenv/fetestexcept"
+    },
+    {
+      "name": "fegetround",
+      "parameters": [],
+      "description": "Gets the current rounding direction mode.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/fenv/fegetround"
+    },
+    {
+      "name": "fesetround",
+      "parameters": [
+        { "name": "round_mode", "type": "int" }
+      ],
+      "description": "Sets the rounding direction mode.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/fenv/fesetround"
+    },
+    {
+      "name": "fegetenv",
+      "parameters": [
+        { "name": "envp", "type": "fenv_t*" }
+      ],
+      "description": "Gets the current floating-point environment.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/fenv/fegetenv"
+    },
+    {
+      "name": "feholdexcept",
+      "parameters": [
+        { "name": "envp", "type": "fenv_t*" }
+      ],
+      "description": "Saves the current floating-point environment and clears exception flags.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/fenv/feholdexcept"
+    },
+    {
+      "name": "fesetenv",
+      "parameters": [
+        { "name": "envp", "type": "const fenv_t*" }
+      ],
+      "description": "Sets the current floating-point environment.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/fenv/fesetenv"
+    },
+    {
+      "name": "feupdateenv",
+      "parameters": [
+        { "name": "envp", "type": "const fenv_t*" }
+      ],
+      "description": "Updates the current floating-point environment.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/fenv/feupdateenv"
+    }
+  ],
+  "classes": [],
+  "type_aliases": []
+}

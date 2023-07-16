@@ -1,0 +1,176 @@
+{
+  "header": "cstring",
+  "functions": [
+    {
+      "name": "strlen",
+      "parameters": [
+        { "name": "str", "type": "const char*" }
+      ],
+      "description": "Calculates the length of a null-terminated byte string.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/byte/strlen"
+    },
+    {
+      "name": "strcpy",
+      "parameters": [
+        { "name": "dest", "type": "char*" },
+        { "name": "src", "type": "const char*" }
+      ],
+      "description": "Copies a null-terminated byte string.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/byte/strcpy"
+    },
+    {
+      "name": "strncpy",
+      "parameters": [
+        { "name": "dest", "type": "char*" },
+        { "name": "src", "type": "const char*" },
+        { "name": "count", "type": "size_t" }
+      ],
+      "description": "Copies a specified number of characters from a null-terminated byte string.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/byte/strncpy"
+    },
+    {
+      "name": "strcat",
+      "parameters": [
+        { "name": "dest", "type": "char*" },
+        { "name": "src", "type": "const char*" }
+      ],
+      "description": "Appends a copy of the null-terminated byte string to the end of another.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/byte/strcat"
+    },
+    {
+      "name": "strncat",
+      "parameters": [
+        { "name": "dest", "type": "char*" },
+        { "name": "src", "type": "const char*" },
+        { "name": "count", "type": "size_t" }
+      ],
+      "description": "Appends a specified number of characters from a null-terminated byte string to the end of another.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/byte/strncat"
+    },
+    {
+      "name": "strcmp",
+      "parameters": [
+        { "name": "lhs", "type": "const char*" },
+        { "name": "rhs", "type": "const char*" }
+      ],
+      "description": "Compares two null-terminated byte strings.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/byte/strcmp"
+    },
+    {
+      "name": "strncmp",
+      "parameters": [
+        { "name": "lhs", "type": "const char*" },
+        { "name": "rhs", "type": "const char*" },
+        { "name": "count", "type": "size_t" }
+      ],
+      "description": "Compares a specified number of characters of two null-terminated byte strings.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/byte/strncmp"
+    },
+    {
+      "name": "memset",
+      "parameters": [
+        { "name": "str", "type": "void*" },
+        { "name": "value", "type": "int" },
+        { "name": "num", "type": "size_t" }
+      ],
+      "description": "Fills a block of memory with a specified value.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/byte/memset"
+    },
+    {
+      "name": "memcmp",
+      "parameters": [
+        { "name": "lhs", "type": "const void*" },
+        { "name": "rhs", "type": "const void*" },
+        { "name": "count", "type": "size_t" }
+      ],
+      "description": "Compares a specified number of bytes of two memory areas.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/byte/memcmp"
+    },
+    {
+      "name": "memchr",
+      "parameters": [
+        { "name": "str", "type": "const void*" },
+        { "name": "value", "type": "int" },
+        { "name": "num", "type": "size_t" }
+      ],
+      "description": "Searches for the first occurrence of a byte value within a specified memory area.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/byte/memchr"
+    },
+    {
+      "name": "memcpy",
+      "parameters": [
+        { "name": "dest", "type": "void*" },
+        { "name": "src", "type": "const void*" },
+        { "name": "count", "type": "size_t" }
+      ],
+      "description": "Copies a specified number of bytes from one memory area to another.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/byte/memcpy"
+    },
+    {
+      "name": "memmove",
+      "parameters": [
+        { "name": "dest", "type": "void*" },
+        { "name": "src", "type": "const void*" },
+        { "name": "count", "type": "size_t" }
+      ],
+      "description": "Copies a specified number of bytes from one memory area to another, handling overlapping memory regions correctly.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/byte/memmove"
+    },
+    {
+      "name": "strchr",
+      "parameters": [
+        { "name": "str", "type": "const char*" },
+        { "name": "ch", "type": "int" }
+      ],
+      "description": "Finds the first occurrence of a character in a null-terminated byte string.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/byte/strchr"
+    },
+    {
+      "name": "strrchr",
+      "parameters": [
+        { "name": "str", "type": "const char*" },
+        { "name": "ch", "type": "int" }
+      ],
+      "description": "Finds the last occurrence of a character in a null-terminated byte string.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/byte/strrchr"
+    },
+    {
+      "name": "strstr",
+      "parameters": [
+        { "name": "str", "type": "const char*" },
+        { "name": "substr", "type": "const char*" }
+      ],
+      "description": "Finds the first occurrence of a substring in a null-terminated byte string.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/byte/strstr"
+    },
+    {
+      "name": "strtok",
+      "parameters": [
+        { "name": "str", "type": "char*" },
+        { "name": "delim", "type": "const char*" }
+      ],
+      "description": "Splits a null-terminated byte string into tokens.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/byte/strtok"
+    }
+  ],
+  "classes": [
+    {
+      "name": "memcpy",
+      "functions": [
+        {
+          "name": "memcpy",
+          "parameters": [
+            { "name": "dest", "type": "void*" },
+            { "name": "src", "type": "const void*" },
+            { "name": "count", "type": "size_t" }
+          ],
+          "description": "Copies a specified number of bytes from one memory area to another.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/string/byte/memcpy"
+        }
+      ]
+    }
+  ],
+  "type_aliases": [
+    { "name": "size_t", "destination": "size_t" }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "header": "any",
+  "classes": [
+    {
+      "name": "any",
+      "constructors": [
+        {
+          "name": "any"
+        },
+        {
+          "name": "any",
+          "parameters": [
+            { "type": "const any&", "name": "other" }
+          ]
+        },
+        {
+          "name": "any",
+          "parameters": [
+            { "type": "any&&", "name": "other" }
+          ]
+        },
+        {
+          "name": "any",
+          "parameters": [
+            { "type": "T&&", "name": "value" }
+          ]
+        }
+      ],
+      "member_functions": [
+        {
+          "name": "operator=",
+          "parameters": [
+            { "type": "const any&", "name": "other" }
+          ],
+          "description": "Assigns another `any` object",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/utility/any/operator="
+        },
+        {
+          "name": "operator=",
+          "parameters": [
+            { "type": "any&&", "name": "other" }
+          ],
+          "description": "Assigns another `any` object (move)",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/utility/any/operator="
+        },
+        {
+          "name": "has_value",
+          "parameters": [],
+          "description": "Checks if the `any` object has a value",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/utility/any/has_value"
+        },
+        {
+          "name": "type",
+          "parameters": [],
+          "description": "Returns the `std::type_info` of the stored value",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/utility/any/type"
+        },
+        {
+          "name": "swap",
+          "parameters": [
+            { "type": "any&", "name": "other" }
+          ],
+          "description": "Swaps the content with another `any` object",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/utility/any/swap"
+        }
+      ],
+      "type_aliases": [
+        {
+          "name": "value_type",
+          "type": "typename std::decay<T>::type"
+        }
+      ]
+    }
+  ]
+}

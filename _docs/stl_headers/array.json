@@ -1,0 +1,57 @@
+{
+  "header": "array",
+  "functions": [
+    {
+      "name": "array",
+      "parameters": [
+        { "name": "T", "type": "T" },
+        { "name": "N", "type": "std::size_t" }
+      ],
+      "description": "Creates an array object.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/container/array/array"
+    },
+    {
+      "name": "get",
+      "parameters": [
+        { "name": "arr", "type": "const std::array<T, N>&" },
+        { "name": "idx", "type": "std::size_t" }
+      ],
+      "description": "Accesses the element at the specified index in an array.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/utility/tuple/get"
+    },
+    {
+      "name": "size",
+      "parameters": [
+        { "name": "arr", "type": "const std::array<T, N>&" }
+      ],
+      "description": "Returns the number of elements in an array.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/container/array/size"
+    },
+    {
+      "name": "empty",
+      "parameters": [
+        { "name": "arr", "type": "const std::array<T, N>&" }
+      ],
+      "description": "Checks if an array is empty.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/container/array/empty"
+    },
+    {
+      "name": "fill",
+      "parameters": [
+        { "name": "arr", "type": "std::array<T, N>&" },
+        { "name": "value", "type": "const T&" }
+      ],
+      "description": "Fills an array with a given value.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/container/array/fill"
+    },
+    {
+      "name": "swap",
+      "parameters": [
+        { "name": "lhs", "type": "std::array<T, N>&" },
+        { "name": "rhs", "type": "std::array<T, N>&" }
+      ],
+      "description": "Swaps the contents of two arrays.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/container/array/swap"
+    }
+  ]
+}

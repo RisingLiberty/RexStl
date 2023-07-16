@@ -1,0 +1,166 @@
+{
+  "header": "<unordered_set>",
+  "classes": [
+    {
+      "name": "unordered_set",
+      "description": "Unordered associative container that stores unique elements.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/container/unordered_set",
+      "constructors": [
+        {
+          "name": "unordered_set",
+          "description": "Constructs an unordered_set.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/unordered_set/unordered_set"
+        },
+        {
+          "name": "unordered_set",
+          "description": "Constructs an unordered_set with the specified allocator.",
+          "parameters": [
+            {
+              "type": "const Allocator&",
+              "name": "alloc",
+              "description": "The allocator to use."
+            }
+          ],
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/unordered_set/unordered_set"
+        },
+        {
+          "name": "unordered_set",
+          "description": "Constructs an unordered_set with the specified initial size.",
+          "parameters": [
+            {
+              "type": "size_type",
+              "name": "bucket_count",
+              "description": "The initial number of buckets."
+            }
+          ],
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/unordered_set/unordered_set"
+        },
+        {
+          "name": "unordered_set",
+          "description": "Constructs an unordered_set with the specified initial size and allocator.",
+          "parameters": [
+            {
+              "type": "size_type",
+              "name": "bucket_count",
+              "description": "The initial number of buckets."
+            },
+            {
+              "type": "const Allocator&",
+              "name": "alloc",
+              "description": "The allocator to use."
+            }
+          ],
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/unordered_set/unordered_set"
+        },
+        {
+          "name": "unordered_set",
+          "description": "Constructs an unordered_set with elements from the specified range.",
+          "parameters": [
+            {
+              "type": "InputIt",
+              "name": "first",
+              "description": "Iterator to the beginning of the range."
+            },
+            {
+              "type": "InputIt",
+              "name": "last",
+              "description": "Iterator to the end of the range."
+            }
+          ],
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/unordered_set/unordered_set"
+        },
+        {
+          "name": "unordered_set",
+          "description": "Constructs an unordered_set with elements from the specified range and allocator.",
+          "parameters": [
+            {
+              "type": "InputIt",
+              "name": "first",
+              "description": "Iterator to the beginning of the range."
+            },
+            {
+              "type": "InputIt",
+              "name": "last",
+              "description": "Iterator to the end of the range."
+            },
+            {
+              "type": "const Allocator&",
+              "name": "alloc",
+              "description": "The allocator to use."
+            }
+          ],
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/unordered_set/unordered_set"
+        }
+      ],
+      "functions": [
+        {
+          "name": "begin",
+          "description": "Returns an iterator to the beginning of the unordered_set.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/unordered_set/begin"
+        },
+        {
+          "name": "end",
+          "description": "Returns an iterator to the end of the unordered_set.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/unordered_set/end"
+        },
+        {
+          "name": "insert",
+          "description": "Inserts elements into the unordered_set.",
+          "parameters": [
+            {
+              "type": "const value_type&",
+              "name": "value",
+              "description": "The value to insert."
+            }
+          ],
+          "return_type": "std::pair<iterator, bool>",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/unordered_set/insert"
+        },
+        {
+          "name": "erase",
+          "description": "Removes elements from the unordered_set.",
+          "parameters": [
+            {
+              "type": "const_iterator",
+              "name": "pos",
+              "description": "Iterator to the element to erase."
+            }
+          ],
+          "return_type": "iterator",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/unordered_set/erase"
+        },
+        {
+          "name": "clear",
+          "description": "Removes all elements from the unordered_set.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/unordered_set/clear"
+        },
+        {
+          "name": "find",
+          "description": "Finds an element in the unordered_set.",
+          "parameters": [
+            {
+              "type": "const Key&",
+              "name": "key",
+              "description": "The key to search for."
+            }
+          ],
+          "return_type": "iterator",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/unordered_set/find"
+        },
+        {
+          "name": "count",
+          "description": "Counts the number of elements with a specific key in the unordered_set.",
+          "parameters": [
+            {
+              "type": "const Key&",
+              "name": "key",
+              "description": "The key to count."
+            }
+          ],
+          "return_type": "size_type",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/unordered_set/count"
+        }
+      ]
+    }
+  ]
+}

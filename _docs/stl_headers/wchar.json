@@ -1,0 +1,191 @@
+{
+  "name": "wchar.h",
+  "description": "The `<wchar.h>` header provides functions and types for wide character operations and string handling.",
+  "functions": [
+    {
+      "name": "btowc",
+      "description": "Converts a single-byte character to a wide character.",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "c",
+          "description": "The single-byte character to convert."
+        }
+      ],
+      "return_type": "wint_t"
+    },
+    {
+      "name": "wctob",
+      "description": "Converts a wide character to a single-byte character.",
+      "parameters": [
+        {
+          "type": "wint_t",
+          "name": "wc",
+          "description": "The wide character to convert."
+        }
+      ],
+      "return_type": "int"
+    },
+    {
+      "name": "mbrlen",
+      "description": "Determines the length of the next multibyte character in a wide character string.",
+      "parameters": [
+        {
+          "type": "const char *",
+          "name": "s",
+          "description": "The wide character string."
+        },
+        {
+          "type": "size_t",
+          "name": "n",
+          "description": "The maximum number of bytes to examine."
+        },
+        {
+          "type": "mbstate_t *",
+          "name": "ps",
+          "description": "The conversion state."
+        }
+      ],
+      "return_type": "size_t"
+    },
+    {
+      "name": "mbrtowc",
+      "description": "Converts a multibyte character to a wide character.",
+      "parameters": [
+        {
+          "type": "wchar_t *",
+          "name": "pwc",
+          "description": "A pointer to the wide character where the result is stored."
+        },
+        {
+          "type": "const char *",
+          "name": "s",
+          "description": "A pointer to the multibyte character."
+        },
+        {
+          "type": "size_t",
+          "name": "n",
+          "description": "The maximum number of bytes to examine."
+        },
+        {
+          "type": "mbstate_t *",
+          "name": "ps",
+          "description": "The conversion state."
+        }
+      ],
+      "return_type": "size_t"
+    },
+    {
+      "name": "mbsinit",
+      "description": "Checks if a multibyte conversion state is initial.",
+      "parameters": [
+        {
+          "type": "const mbstate_t *",
+          "name": "ps",
+          "description": "The conversion state to check."
+        }
+      ],
+      "return_type": "int"
+    },
+    {
+      "name": "wmemcmp",
+      "description": "Compares two wide character strings.",
+      "parameters": [
+        {
+          "type": "const wchar_t *",
+          "name": "s1",
+          "description": "The first wide character string."
+        },
+        {
+          "type": "const wchar_t *",
+          "name": "s2",
+          "description": "The second wide character string."
+        },
+        {
+          "type": "size_t",
+          "name": "n",
+          "description": "The maximum number of wide characters to compare."
+        }
+      ],
+      "return_type": "int"
+    },
+    {
+      "name": "wmemcpy",
+      "description": "Copies wide characters from one buffer to another.",
+      "parameters": [
+        {
+          "type": "wchar_t *",
+          "name": "dest",
+          "description": "A pointer to the destination buffer."
+        },
+        {
+          "type": "const wchar_t *",
+          "name": "src",
+          "description": "A pointer to the source buffer."
+        },
+        {
+          "type": "size_t",
+          "name": "n",
+          "description": "The number of wide characters to copy."
+        }
+      ],
+      "return_type": "wchar_t *"
+    },
+    {
+      "name": "wmemmove",
+      "description": "Moves wide characters from one buffer to another, handling overlaps correctly.",
+      "parameters": [
+        {
+          "type": "wchar_t *",
+          "name": "dest",
+          "description": "A pointer to the destination buffer."
+        },
+        {
+          "type": "const wchar_t *",
+          "name": "src",
+          "description": "A pointer to the source buffer."
+        },
+        {
+          "type": "size_t",
+          "name": "n",
+          "description": "The number of wide characters to move."
+        }
+      ],
+      "return_type": "wchar_t *"
+    },
+    {
+      "name": "wmemset",
+      "description": "Fills a buffer with a wide character value.",
+      "parameters": [
+        {
+          "type": "wchar_t *",
+          "name": "s",
+          "description": "A pointer to the buffer to fill."
+        },
+        {
+          "type": "wchar_t",
+          "name": "c",
+          "description": "The wide character value to fill the buffer with."
+        },
+        {
+          "type": "size_t",
+          "name": "n",
+          "description": "The number of wide characters to fill."
+        }
+      ],
+      "return_type": "wchar_t *"
+    },
+    {
+      "name": "wcslen",
+      "description": "Determines the length of a wide character string.",
+      "parameters": [
+        {
+          "type": "const wchar_t *",
+          "name": "s",
+          "description": "The wide character string."
+        }
+      ],
+      "return_type": "size_t"
+    }
+  ]
+}

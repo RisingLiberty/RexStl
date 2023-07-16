@@ -1,0 +1,130 @@
+{
+  "header": "random",
+  "functions": [
+    {
+      "name": "default_random_engine",
+      "description": "Creates a default random engine object",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/random/default_random_engine"
+    },
+    {
+      "name": "random_device",
+      "description": "Creates a random device object",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/random/random_device"
+    },
+    {
+      "name": "seed_seq",
+      "description": "Seeds the random number generator engine",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/random/seed_seq"
+    },
+    {
+      "name": "knuth_b",
+      "description": "Creates a random engine using Knuth-B generator algorithm",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/random/knuth_b"
+    },
+    {
+      "name": "minstd_rand0",
+      "description": "Creates a random engine using a simple multiplicative congruential algorithm",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/random/minstd_rand0"
+    },
+    {
+      "name": "minstd_rand",
+      "description": "Creates a random engine using a multiplicative congruential algorithm",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/random/minstd_rand"
+    },
+    {
+      "name": "mt19937",
+      "description": "Creates a random engine using the Mersenne Twister algorithm",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/random/mt19937"
+    },
+    {
+      "name": "mt19937_64",
+      "description": "Creates a random engine using the 64-bit Mersenne Twister algorithm",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/random/mt19937_64"
+    },
+    {
+      "name": "ranlux24_base",
+      "description": "Creates a random engine using a subtractive random number generator",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/random/ranlux24_base"
+    },
+    {
+      "name": "ranlux48_base",
+      "description": "Creates a random engine using a subtractive random number generator",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/random/ranlux48_base"
+    },
+    {
+      "name": "ranlux24",
+      "description": "Creates a random engine using a subtractive random number generator",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/random/ranlux24"
+    },
+    {
+      "name": "ranlux48",
+      "description": "Creates a random engine using a subtractive random number generator",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/random/ranlux48"
+    },
+    {
+      "name": "discard_block_engine",
+      "description": "Creates a random engine by discarding random numbers from a base engine",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/random/discard_block_engine"
+    },
+    {
+      "name": "independent_bits_engine",
+      "description": "Creates a random engine by extracting independent bits from a base engine",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/random/independent_bits_engine"
+    },
+    {
+      "name": "shuffle_order_engine",
+      "description": "Creates a random engine by shuffling the order of numbers from a base engine",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/random/shuffle_order_engine"
+    },
+    {
+      "name": "unique_ptr",
+      "description": "Generates a unique pointer with a custom deleter",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/random/unique_ptr"
+    }
+  ],
+  "classes": [
+    {
+      "name": "random_device",
+      "member_functions": [
+        {
+          "name": "operator()",
+          "returns": "result_type",
+          "description": "Generates a random value",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/random/random_device/operator()"
+        }
+      ]
+    },
+    {
+      "name": "seed_seq",
+      "constructors": [
+        {
+          "name": "seed_seq"
+        },
+        {
+          "name": "seed_seq",
+          "parameters": [
+            { "type": "InputIt", "name": "first" },
+            { "type": "InputIt", "name": "last" }
+          ]
+        },
+        {
+          "name": "seed_seq",
+          "parameters": [
+            { "type": "initializer_list<result_type>", "name": "init" }
+          ]
+        }
+      ],
+      "member_functions": [
+        {
+          "name": "generate",
+          "parameters": [
+            { "type": "OutputIt", "name": "first" },
+            { "type": "OutputIt", "name": "last" }
+          ],
+          "description": "Fills a range with random values",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/random/seed_seq/generate"
+        }
+      ]
+    }
+  ]
+}

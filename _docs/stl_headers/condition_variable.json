@@ -1,0 +1,43 @@
+{
+  "header": "condition_variable",
+  "functions": [
+    {
+      "name": "notify_all",
+      "parameters": [],
+      "description": "Notifies all waiting threads.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/thread/condition_variable/notify_all"
+    },
+    {
+      "name": "notify_one",
+      "parameters": [],
+      "description": "Notifies one waiting thread.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/thread/condition_variable/notify_one"
+    },
+    {
+      "name": "wait",
+      "parameters": [
+        { "name": "lock", "type": "unique_lock<mutex>&" }
+      ],
+      "description": "Waits on the condition variable, releasing the lock.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/thread/condition_variable/wait"
+    },
+    {
+      "name": "wait_for",
+      "parameters": [
+        { "name": "lock", "type": "unique_lock<mutex>&" },
+        { "name": "duration", "type": "const chrono::duration<Rep, Period>&" }
+      ],
+      "description": "Waits on the condition variable for a specified duration, releasing the lock.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/thread/condition_variable/wait_for"
+    },
+    {
+      "name": "wait_until",
+      "parameters": [
+        { "name": "lock", "type": "unique_lock<mutex>&" },
+        { "name": "timeout_time", "type": "const chrono::time_point<Clock, Duration>&" }
+      ],
+      "description": "Waits on the condition variable until a specified time point, releasing the lock.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/thread/condition_variable/wait_until"
+    }
+  ]
+}

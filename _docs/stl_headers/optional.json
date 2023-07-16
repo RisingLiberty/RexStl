@@ -1,0 +1,158 @@
+{
+  "header": "optional",
+  "functions": [
+    {
+      "name": "make_optional",
+      "parameters": [
+        { "type": "Args&&...", "name": "args" }
+      ]
+    },
+    {
+      "name": "operator==",
+      "parameters": [
+        { "type": "const optional&", "name": "lhs" },
+        { "type": "const optional&", "name": "rhs" }
+      ]
+    },
+    {
+      "name": "operator!=",
+      "parameters": [
+        { "type": "const optional&", "name": "lhs" },
+        { "type": "const optional&", "name": "rhs" }
+      ]
+    },
+    {
+      "name": "operator<",
+      "parameters": [
+        { "type": "const optional&", "name": "lhs" },
+        { "type": "const optional&", "name": "rhs" }
+      ]
+    },
+    {
+      "name": "operator<=",
+      "parameters": [
+        { "type": "const optional&", "name": "lhs" },
+        { "type": "const optional&", "name": "rhs" }
+      ]
+    },
+    {
+      "name": "operator>",
+      "parameters": [
+        { "type": "const optional&", "name": "lhs" },
+        { "type": "const optional&", "name": "rhs" }
+      ]
+    },
+    {
+      "name": "operator>=",
+      "parameters": [
+        { "type": "const optional&", "name": "lhs" },
+        { "type": "const optional&", "name": "rhs" }
+      ]
+    }
+  ],
+  "classes": [
+    {
+      "name": "optional",
+      "constructors": [
+        {
+          "name": "optional"
+        },
+        {
+          "name": "optional",
+          "parameters": [
+            { "type": "none_t", "name": "none" }
+          ]
+        },
+        {
+          "name": "optional",
+          "parameters": [
+            { "type": "const optional&", "name": "other" }
+          ]
+        },
+        {
+          "name": "optional",
+          "parameters": [
+            { "type": "optional&&", "name": "other" }
+          ]
+        },
+        {
+          "name": "optional",
+          "parameters": [
+            { "type": "T&&", "name": "value" }
+          ]
+        }
+      ],
+      "member_functions": [
+        {
+          "name": "operator=",
+          "parameters": [
+            { "type": "const optional&", "name": "other" }
+          ],
+          "description": "Assigns another optional object",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/utility/optional/operator="
+        },
+        {
+          "name": "operator=",
+          "parameters": [
+            { "type": "optional&&", "name": "other" }
+          ],
+          "description": "Assigns another optional object (move)",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/utility/optional/operator="
+        },
+        {
+          "name": "operator=",
+          "parameters": [
+            { "type": "nullopt_t", "name": "none" }
+          ],
+          "description": "Assigns a nullopt value",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/utility/optional/operator="
+        },
+        {
+          "name": "reset",
+          "parameters": [],
+          "description": "Resets the optional object",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/utility/optional/reset"
+        },
+        {
+          "name": "has_value",
+          "parameters": [],
+          "description": "Checks if the optional object has a value",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/utility/optional/has_value"
+        },
+        {
+          "name": "operator*",
+          "parameters": [],
+          "description": "Dereferences the value",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/utility/optional/operator*"
+        },
+        {
+          "name": "operator->",
+          "parameters": [],
+          "description": "Accesses the value using a pointer-like syntax",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/utility/optional/operator_arrow"
+        },
+        {
+          "name": "value",
+          "parameters": [],
+          "description": "Returns a reference to the value",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/utility/optional/value"
+        },
+        {
+          "name": "operator<<",
+          "parameters": [
+            { "type": "std::ostream&", "name": "os" },
+            { "type": "const optional<T>&", "name": "opt" }
+          ],
+          "description": "Outputs the optional object to an output stream",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/utility/optional/operator_ltlt"
+        }
+      ],
+      "type_aliases": [
+        {
+          "name": "value_type",
+          "type": "T"
+        }
+      ]
+    }
+  ]
+}

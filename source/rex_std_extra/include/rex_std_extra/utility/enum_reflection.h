@@ -59,6 +59,7 @@
   #include "rex_std/string_view.h"
   #include "rex_std/type_traits.h"
   #include "rex_std/utility.h"
+  #include "rex_std/internal/math/log2.h"
 
   #if defined(MAGIC_ENUM_CONFIG_FILE)
     #include MAGIC_ENUM_CONFIG_FILE
@@ -373,19 +374,6 @@ namespace rsl
             // If 'left' is negative, then result is 'true', otherwise cast & compare.
             return lhs < 0 || static_cast<rsl::make_unsigned_t<L>>(lhs) < rhs;
           }
-        }
-
-        template <typename I>
-        constexpr I log2(I value) noexcept
-        {
-          static_assert(rsl::is_integral_v<I>, "enum_refl::detail::log2 requires integral type.");
-
-          auto ret = I {0};
-          for(; value > I {1}; value >>= I {1}, ++ret)
-          {
-          }
-
-          return ret;
         }
 
         template <typename I>
@@ -1134,7 +1122,7 @@ namespace rsl
           }
           else
           {
-            constexpr auto min = detail::log2(detail::min_v<D, true>);
+            constexpr auto min = log2(detail::min_v<D, true>);
 
             return assert((index < detail::count_v<D, true>)), detail::value<D, min, true>(index);
           }

@@ -1,0 +1,84 @@
+{
+  "header": "streambuf",
+  "classes": [
+    {
+      "name": "basic_streambuf",
+      "functions": [
+        {
+          "signature": "virtual ~basic_streambuf()",
+          "description": "Destructs the streambuf object."
+        },
+        {
+          "signature": "basic_streambuf* pubsetbuf(char_type* s, std::streamsize n)",
+          "description": "Sets the internal buffer and initializes the input and output sequences.",
+          "parameters": [
+            {
+              "name": "s",
+              "type": "char_type*",
+              "description": "Pointer to the external buffer."
+            },
+            {
+              "name": "n",
+              "type": "std::streamsize",
+              "description": "Size of the external buffer."
+            }
+          ],
+          "cppreference_link": "https://en.cppreference.com/w/cpp/io/basic_streambuf/pubsetbuf"
+        },
+        {
+          "signature": "std::streambuf* setbuf(char_type* s, std::streamsize n)",
+          "description": "Sets the internal buffer and initializes the input and output sequences.",
+          "parameters": [
+            {
+              "name": "s",
+              "type": "char_type*",
+              "description": "Pointer to the external buffer."
+            },
+            {
+              "name": "n",
+              "type": "std::streamsize",
+              "description": "Size of the external buffer."
+            }
+          ],
+          "cppreference_link": "https://en.cppreference.com/w/cpp/io/basic_streambuf/setbuf"
+        },
+        {
+          "signature": "int_type sputc(char_type c)",
+          "description": "Puts a character into the output sequence.",
+          "parameters": [
+            {
+              "name": "c",
+              "type": "char_type",
+              "description": "The character to be put."
+            }
+          ],
+          "cppreference_link": "https://en.cppreference.com/w/cpp/io/basic_streambuf/sputc"
+        },
+        {
+          "signature": "int_type sgetc()",
+          "description": "Gets a character from the input sequence.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/io/basic_streambuf/sgetc"
+        },
+        {
+          "signature": "virtual int_type overflow(int_type c = traits_type::eof())",
+          "description": "Flushes the output sequence and optionally inserts an additional character.",
+          "parameters": [
+            {
+              "name": "c",
+              "type": "int_type",
+              "description": "The character to be inserted."
+            }
+          ],
+          "cppreference_link": "https://en.cppreference.com/w/cpp/io/basic_streambuf/overflow",
+          "pure_virtual": true
+        },
+        {
+          "signature": "virtual int_type underflow()",
+          "description": "Gets a character from the input sequence and optionally prepares additional characters.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/io/basic_streambuf/underflow",
+          "pure_virtual": true
+        }
+      ]
+    }
+  ]
+}

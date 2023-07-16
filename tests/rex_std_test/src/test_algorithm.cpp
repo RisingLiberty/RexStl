@@ -882,12 +882,12 @@ int TestAlgorithm()
     // uint16_t* fill_n(uint16_t* first, Size n, uint16_t c);
     //  int16_t* fill_n( int16_t* first, Size n,  int16_t c);
     const card32 kMaxSize = 17;
-    rsl::vector<uint64_t> vU64(kMaxSize, 0);
-    rsl::vector< int64_t> vI64(kMaxSize, 0);
-    rsl::vector<uint32_t> vU32(kMaxSize, 0);
-    rsl::vector< int32_t> vI32(kMaxSize, 0);
-    rsl::vector<uint16_t> vU16(kMaxSize, 0);
-    rsl::vector< int16_t> vI16(kMaxSize, 0);
+    rsl::vector<uint64_t> vU64(rsl::Size(kMaxSize), 0);
+    rsl::vector< int64_t> vI64(rsl::Size(kMaxSize), 0);
+    rsl::vector<uint32_t> vU32(rsl::Size(kMaxSize), 0);
+    rsl::vector< int32_t> vI32(rsl::Size(kMaxSize), 0);
+    rsl::vector<uint16_t> vU16(rsl::Size(kMaxSize), 0);
+    rsl::vector< int16_t> vI16(rsl::Size(kMaxSize), 0);
 
     rsl::vector<uint64_t>::iterator itU64 = rsl::fill_n(vU64.begin(), kMaxSize, UINT64_C(0x0123456789abcdef));
     CHECK(rsl::memcheck(&vU64[0], UINT64_C(0x0123456789abcdef), kMaxSize) == NULL);
@@ -1998,11 +1998,11 @@ int TestAlgorithm()
 
       // Test two identical sets.
       CHECK(rsl::is_permutation(intArray1.cbegin(), intArray1.cend(), intArray2.cbegin()));
-      rsl::random_shuffle(intArray1.cbegin(), intArray1.cend(), rng);
+      rsl::random_shuffle(intArray1.begin(), intArray1.end(), rng);
 
       // Test order randomization.
       CHECK(rsl::is_permutation(intArray1.cbegin(), intArray1.cend(), intArray2.cbegin()));
-      rsl::random_shuffle(intArray2.cbegin(), intArray2.cend(), rng);
+      rsl::random_shuffle(intArray2.begin(), intArray2.end(), rng);
       CHECK(rsl::is_permutation(intArray1.cbegin(), intArray1.cend(), intArray2.cbegin()));
 
       // Test the case where there's a difference.
@@ -2016,11 +2016,11 @@ int TestAlgorithm()
 
       // Test two identical sets.
       CHECK(rsl::is_permutation(intArray1.cbegin(), intArray1.cend(), intArray2.cbegin()));
-      rsl::random_shuffle(intArray1.cbegin(), intArray1.cend(), rng);
+      rsl::random_shuffle(intArray1.begin(), intArray1.end(), rng);
 
       // Test order randomization.
       CHECK(rsl::is_permutation(intArray1.cbegin(), intArray1.cend(), intArray2.cbegin()));
-      rsl::random_shuffle(intArray2.cbegin(), intArray2.cend(), rng);
+      rsl::random_shuffle(intArray2.begin(), intArray2.end(), rng);
       CHECK(rsl::is_permutation(intArray1.cbegin(), intArray1.cend(), intArray2.cbegin()));
 
       // Test the case where there's a difference.
@@ -2042,8 +2042,8 @@ int TestAlgorithm()
       bool isPermutation = rsl::is_permutation(intArray1.cbegin(), intArray1.cend(), intArray2.cbegin());
 
       // If is_permutation returned true, then sorted versions of the two arrays should be identical.
-      rsl::sort(intArray1.cbegin(), intArray1.cend());
-      rsl::sort(intArray2.cbegin(), intArray2.cend());
+      rsl::sort(intArray1.begin(), intArray1.end());
+      rsl::sort(intArray2.begin(), intArray2.end());
 
       mismatch_result mismatchResult = rsl::mismatch(intArray1.cbegin(), intArray1.cend(), intArray2.cbegin());
       bool isIdentical = (mismatchResult.lhs_it == (intArray1.cend()));
@@ -2113,7 +2113,7 @@ int TestAlgorithm()
 
     for (card32 s = 10; s < 500; s += (card32)rng.rand_range(50, 100))
     {
-      IntVector intVector(s, 0);
+      IntVector intVector(rsl::Size(s), 0);
 
       for (card32 i = 0; i < s; i++)
       {

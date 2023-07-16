@@ -1,0 +1,166 @@
+{
+  "header": "<unordered_map>",
+  "classes": [
+    {
+      "name": "unordered_map",
+      "description": "Unordered associative container that stores elements as key-value pairs.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/container/unordered_map",
+      "constructors": [
+        {
+          "name": "unordered_map",
+          "description": "Constructs an unordered_map.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/unordered_map/unordered_map"
+        },
+        {
+          "name": "unordered_map",
+          "description": "Constructs an unordered_map with the specified allocator.",
+          "parameters": [
+            {
+              "type": "const Allocator&",
+              "name": "alloc",
+              "description": "The allocator to use."
+            }
+          ],
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/unordered_map/unordered_map"
+        },
+        {
+          "name": "unordered_map",
+          "description": "Constructs an unordered_map with the specified initial size.",
+          "parameters": [
+            {
+              "type": "size_type",
+              "name": "bucket_count",
+              "description": "The initial number of buckets."
+            }
+          ],
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/unordered_map/unordered_map"
+        },
+        {
+          "name": "unordered_map",
+          "description": "Constructs an unordered_map with the specified initial size and allocator.",
+          "parameters": [
+            {
+              "type": "size_type",
+              "name": "bucket_count",
+              "description": "The initial number of buckets."
+            },
+            {
+              "type": "const Allocator&",
+              "name": "alloc",
+              "description": "The allocator to use."
+            }
+          ],
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/unordered_map/unordered_map"
+        },
+        {
+          "name": "unordered_map",
+          "description": "Constructs an unordered_map with elements from the specified range.",
+          "parameters": [
+            {
+              "type": "InputIt",
+              "name": "first",
+              "description": "Iterator to the beginning of the range."
+            },
+            {
+              "type": "InputIt",
+              "name": "last",
+              "description": "Iterator to the end of the range."
+            }
+          ],
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/unordered_map/unordered_map"
+        },
+        {
+          "name": "unordered_map",
+          "description": "Constructs an unordered_map with elements from the specified range and allocator.",
+          "parameters": [
+            {
+              "type": "InputIt",
+              "name": "first",
+              "description": "Iterator to the beginning of the range."
+            },
+            {
+              "type": "InputIt",
+              "name": "last",
+              "description": "Iterator to the end of the range."
+            },
+            {
+              "type": "const Allocator&",
+              "name": "alloc",
+              "description": "The allocator to use."
+            }
+          ],
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/unordered_map/unordered_map"
+        }
+      ],
+      "functions": [
+        {
+          "name": "begin",
+          "description": "Returns an iterator to the beginning of the unordered_map.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/unordered_map/begin"
+        },
+        {
+          "name": "end",
+          "description": "Returns an iterator to the end of the unordered_map.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/unordered_map/end"
+        },
+        {
+          "name": "insert",
+          "description": "Inserts elements into the unordered_map.",
+          "parameters": [
+            {
+              "type": "const value_type&",
+              "name": "value",
+              "description": "The value to insert."
+            }
+          ],
+          "return_type": "std::pair<iterator, bool>",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/unordered_map/insert"
+        },
+        {
+          "name": "erase",
+          "description": "Removes elements from the unordered_map.",
+          "parameters": [
+            {
+              "type": "const_iterator",
+              "name": "pos",
+              "description": "Iterator to the element to erase."
+            }
+          ],
+          "return_type": "iterator",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/unordered_map/erase"
+        },
+        {
+          "name": "clear",
+          "description": "Removes all elements from the unordered_map.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/unordered_map/clear"
+        },
+        {
+          "name": "find",
+          "description": "Finds an element in the unordered_map.",
+          "parameters": [
+            {
+              "type": "const Key&",
+              "name": "key",
+              "description": "The key to search for."
+            }
+          ],
+          "return_type": "iterator",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/unordered_map/find"
+        },
+        {
+          "name": "count",
+          "description": "Counts the number of elements with a specific key in the unordered_map.",
+          "parameters": [
+            {
+              "type": "const Key&",
+              "name": "key",
+              "description": "The key to count."
+            }
+          ],
+          "return_type": "size_type",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/unordered_map/count"
+        }
+      ]
+    }
+  ]
+}

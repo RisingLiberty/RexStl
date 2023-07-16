@@ -154,15 +154,11 @@ namespace rsl
         return temp;
       }
 
-      bool operator==(list_iterator other)
-      {
-        return m_node == other.m_node;
-      }
+      template <typename U>
+      friend bool operator==(list_iterator<U> lhs, list_iterator<U> rhs);
 
-      bool operator!=(list_iterator other)
-      {
-        return !(*this == other);
-      }
+      template <typename U>
+      friend bool operator!=(list_iterator<U> lhs, list_iterator<U> rhs);
 
       node_type* node()
       {
@@ -172,6 +168,18 @@ namespace rsl
     private:
       node_type* m_node;
     };
+
+    template <typename T>
+    bool operator==(list_iterator<T> lhs, list_iterator<T> rhs)
+    {
+      return lhs.m_node == rhs.m_node;
+    }
+
+    template <typename T>
+    bool operator!=(list_iterator<T> lhs, list_iterator<T> rhs)
+    {
+      return !(lhs == rhs);
+    }
 
     template <typename T>
     class const_list_iterator
@@ -247,6 +255,19 @@ namespace rsl
     private:
       node_type* m_node;
     };
+
+    template <typename U>
+    bool operator==(const_list_iterator<U> lhs, const_list_iterator<U> rhs)
+    {
+      return lhs.m_node == rhs.m_node;
+
+    }
+
+    template <typename U>
+    bool operator!=(const_list_iterator<U> lhs, const_list_iterator<U> rhs)
+    {
+      return !(lhs == rhs);
+    }
 
     /// Some libraries (eg. EASTL and GCC) use a base class for some of its containers because it makes it easier to handle exceptions
     /// as the base classes of the containers handle memory allocation.
@@ -464,7 +485,8 @@ namespace rsl
       }
       const_iterator begin() const
       {
-        return const_iterator(head());
+        node_type* node = const_cast<node_type*>(head());
+        return const_iterator(node);
       }
       const_iterator cbegin() const
       {
@@ -477,7 +499,8 @@ namespace rsl
       }
       const_iterator end() const
       {
-        return const_iterator(head_tail_link());
+        list_node_base* node = const_cast<list_node_base*>(head_tail_link());
+        return const_iterator(static_cast<list_node<T>*>(node));
       }
       const_iterator cend() const
       {
@@ -910,13 +933,22 @@ namespace rsl
 
       node_type* head()
       {
-        static_cast<node_type*>(head_tail_link()->next);
+        return static_cast<node_type*>(head_tail_link()->next);
+      }
+      const node_type* head() const
+      {
+        return static_cast<node_type*>(head_tail_link()->next);
       }
       node_type* tail()
       {
-        static_cast<node_type*>(head_tail_link()->prev);
+        return static_cast<node_type*>(head_tail_link()->prev);
       }
       list_node_base* head_tail_link()
+      {
+        return &m_cp_head_tail_link_and_alloc.first();
+      }
+
+      const list_node_base* head_tail_link() const
       {
         return &m_cp_head_tail_link_and_alloc.first();
       }

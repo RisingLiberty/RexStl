@@ -17,10 +17,10 @@ namespace rsl
   inline namespace v1
   {
 
-    template <typename T = void>
+    template <typename TypeToCompare = void>
     struct equal_to
     {
-      constexpr bool operator()(const T& lhs, const T& rhs) const
+      constexpr bool operator()(const TypeToCompare& lhs, const TypeToCompare& rhs) const
       {
         return lhs == rhs;
       }
@@ -29,14 +29,14 @@ namespace rsl
       // the standard doesn't template the second argument.
       // we do so we can, for example, compare a string with a const char*
       // without the second getting promoted to a string
-      template <typename U>
-      constexpr bool operator()(const T& lhs, const U& rhs) const
+      template <typename TypeToCompare2>
+      constexpr bool operator()(const TypeToCompare& lhs, const TypeToCompare2& rhs) const
       {
         return lhs == rhs;
       }
 
-      template <typename U>
-      constexpr bool operator()(const U& lhs, const T& rhs) const
+      template <typename TypeToCompare2>
+      constexpr bool operator()(const TypeToCompare2& lhs, const TypeToCompare& rhs) const
       {
         return lhs == rhs;
       }

@@ -1,0 +1,26 @@
+{
+  "header_name": "istream",
+  "functions": [
+    {
+      "name": "getline",
+      "parameters": [
+        { "name": "str", "type": "char*", "description": "Pointer to the character array to store the extracted line." },
+        { "name": "count", "type": "std::streamsize", "description": "Maximum number of characters to extract." },
+        { "name": "delim", "type": "char", "description": "Delimiter character to stop extracting at (default newline)." }
+      ],
+      "description": "Extracts characters from the stream and stores them into a string until a delimiter is encountered.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/io/basic_istream/getline"
+    }
+  ],
+  "classes": [
+    {
+      "name": "istream",
+      "functions": [
+        { "name": "operator>>", "parameters": [ { "name": "val", "type": "T&", "description": "Value to extract from the stream." } ], "description": "Extracts a value from the stream." },
+        { "name": "getline", "parameters": [ { "name": "str", "type": "std::string&", "description": "String to store the extracted line." } ], "description": "Extracts characters from the stream and stores them into a string until a newline is encountered." },
+        { "name": "get", "parameters": [], "description": "Gets the next character from the stream without extracting it." },
+        { "name": "ignore", "parameters": [ { "name": "count", "type": "std::streamsize", "description": "Maximum number of characters to ignore." }, { "name": "delim", "type": "int", "description": "Delimiter character to stop ignoring at (default EOF)." } ], "description": "Extracts and discards characters from the stream." }
+      ]
+    }
+  ]
+}

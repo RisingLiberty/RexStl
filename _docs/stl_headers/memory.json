@@ -1,0 +1,134 @@
+{
+  "header_name": "memory",
+  "functions": [
+    {
+      "name": "addressof",
+      "parameters": [
+        {
+          "name": "arg",
+          "type": "T&",
+          "description": "The object whose address is returned."
+        }
+      ],
+      "description": "Returns the address of the given object.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/memory/addressof"
+    }
+  ],
+  "classes": [
+    {
+      "name": "allocator",
+      "functions": [
+        {
+          "name": "allocate",
+          "parameters": [
+            {
+              "name": "n",
+              "type": "std::size_t",
+              "description": "The number of objects to allocate."
+            }
+          ],
+          "description": "Allocates storage for objects.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/memory/allocator/allocate"
+        },
+        {
+          "name": "deallocate",
+          "parameters": [
+            {
+              "name": "p",
+              "type": "T*",
+              "description": "The pointer to the memory block to deallocate."
+            },
+            {
+              "name": "n",
+              "type": "std::size_t",
+              "description": "The number of objects to deallocate."
+            }
+          ],
+          "description": "Deallocates storage previously allocated with allocate.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/memory/allocator/deallocate"
+        }
+      ],
+      "type_aliases": [
+        {
+          "name": "value_type",
+          "type": "T"
+        }
+      ],
+      "cppreference_link": "https://en.cppreference.com/w/cpp/memory/allocator"
+    },
+    {
+      "name": "allocator_traits",
+      "functions": [],
+      "type_aliases": [],
+      "cppreference_link": "https://en.cppreference.com/w/cpp/memory/allocator_traits"
+    },
+    {
+      "name": "shared_ptr",
+      "functions": [
+        {
+          "name": "reset",
+          "parameters": [
+            {
+              "name": "ptr",
+              "type": "T*",
+              "description": "The pointer to assign to the shared_ptr."
+            }
+          ],
+          "description": "Resets the shared_ptr to point to a new object.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/memory/shared_ptr/reset"
+        }
+      ],
+      "type_aliases": [],
+      "cppreference_link": "https://en.cppreference.com/w/cpp/memory/shared_ptr"
+    },
+    {
+      "name": "unique_ptr",
+      "functions": [
+        {
+          "name": "reset",
+          "parameters": [
+            {
+              "name": "ptr",
+              "type": "T*",
+              "description": "The pointer to assign to the unique_ptr."
+            }
+          ],
+          "description": "Resets the unique_ptr to point to a new object.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/memory/unique_ptr/reset"
+        }
+      ],
+      "type_aliases": [],
+      "cppreference_link": "https://en.cppreference.com/w/cpp/memory/unique_ptr"
+    },
+    {
+      "name": "weak_ptr",
+      "functions": [],
+      "type_aliases": [],
+      "cppreference_link": "https://en.cppreference.com/w/cpp/memory/weak_ptr"
+    },
+    {
+      "name": "default_delete",
+      "functions": [],
+      "type_aliases": [],
+      "cppreference_link": "https://en.cppreference.com/w/cpp/memory/default_delete"
+    },
+    {
+      "name": "owner_less",
+      "functions": [],
+      "type_aliases": [],
+      "cppreference_link": "https://en.cppreference.com/w/cpp/memory/owner_less"
+    },
+    {
+      "name": "shared_ptr_weak_type",
+      "functions": [],
+      "type_aliases": [],
+      "cppreference_link": "https://en.cppreference.com/w/cpp/memory/shared_ptr/weak_type"
+    },
+    {
+      "name": "weak_ptr_owner",
+      "functions": [],
+      "type_aliases": [],
+      "cppreference_link": "https://en.cppreference.com/w/cpp/memory/weak_ptr/owner"
+    }
+  ]
+}

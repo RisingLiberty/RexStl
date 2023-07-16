@@ -25,7 +25,6 @@ namespace rsl
 {
   inline namespace v1
   {
-
     namespace internal
     {
       struct forward_list_node_base
@@ -63,6 +62,11 @@ namespace rsl
       template <typename T>
       struct forward_list_node : public forward_list_node_base
       {
+        template <typename ... Args>
+        forward_list_node(Args&& ... args)
+          : value(rsl::forward<Args>(args)...)
+        {}
+
         T value;
       };
     } // namespace internal
@@ -77,7 +81,6 @@ namespace rsl
     {
     private:
       using this_type = forward_list_iterator<T, Pointer, Reference>;
-      using node_storage_type = rsl::type_select_t<rsl::is_const_v<Reference>, const internal::forward_list_node_base, internal::forward_list_node_base>;
 
     public:
       template <typename T, typename Allocator>
@@ -88,7 +91,7 @@ namespace rsl
       using reference = Reference;
       using const_reference = const T&;
       using difference_type = int32;
-      using node_type = rsl::type_select_t<rsl::is_const_v<Reference>, const internal::forward_list_node<T>, internal::forward_list_node<T>>;
+      using node_type = internal::forward_list_node<T>;
       using iterator_category = forward_iterator_tag;
       using value_type = T;
 
@@ -96,7 +99,7 @@ namespace rsl
           : m_node(nullptr)
       {
       }
-      forward_list_iterator(node_storage_type* node)
+      forward_list_iterator(node_type* node)
           : m_node(static_cast<node_type*>(node))
       {
       }
@@ -191,7 +194,7 @@ namespace rsl
           , m_size(count)
 #endif
       {
-        emplace_after_impl(end(), count, value);
+        emplace_n_after_impl(end(), count, value);
       }
       explicit forward_list(size_type count, const allocator_type& alloc = allocator_type())
           : m_cp_pre_head_node_and_allocator(alloc)
@@ -249,7 +252,7 @@ namespace rsl
 #endif
       {
         size_t num = ilist.size();
-        emplace_n_after_impl(end(), static_cast<size_type>(num), ilist.begin());
+        emplace_n_after_impl_from_it(end(), static_cast<size_type>(num), ilist.begin());
       }
 
       ~forward_list()
@@ -344,8 +347,8 @@ namespace rsl
       }
       const_iterator cbefore_begin() const
       {
-        const internal::forward_list_node_base* node = &pre_head_node();
-        return const_iterator(node);
+        internal::forward_list_node_base* node = const_cast<internal::forward_list_node_base*>(&pre_head_node());
+        return const_iterator(static_cast<internal::forward_list_node<T>*>(node));
       }
       iterator begin()
       {
@@ -353,7 +356,8 @@ namespace rsl
       }
       const_iterator begin() const
       {
-        return const_iterator(head());
+        node_type* node = const_cast<node_type*>(head());
+        return const_iterator(node);
       }
       const_iterator cbegin() const
       {
@@ -553,13 +557,19 @@ namespace rsl
       }
 
       template <typename Iterator>
-      void emplace_n_after_impl(iterator node, size_type count, Iterator it)
+      void emplace_n_after_impl_from_it(iterator node, size_type count, Iterator it)
+      {
+        emplace_n_after_impl(node, count, *it);
+      }
+
+      template <typename Iterator>
+      void emplace_n_after_impl(Iterator node, size_type count, const_reference value)
       {
         node_type* node_block = static_cast<node_type*>(get_allocator().allocate(sizeof(node_type) * count));
         node_type* new_node = node_block;
         while (count--)
         {
-          get_allocator().construct(new_node, *it);
+          get_allocator().construct(new_node, value);
           new_node->insert_after(node.m_node);
           ++new_node;
         }
@@ -588,7 +598,11 @@ namespace rsl
 
       node_type* head()
       {
-        pre_head_node().next;
+        return static_cast<node_type*>(pre_head_node().next);
+      }
+      const node_type* head() const
+      {
+        return static_cast<const node_type*>(pre_head_node().next);
       }
 
       // Find's the nth node or end if n > size
@@ -619,7 +633,7 @@ namespace rsl
       // losing const here
       const internal::forward_list_node_base& pre_head_node() const
       {
-      return m_cp_pre_head_node_and_allocator.first();
+        return m_cp_pre_head_node_and_allocator.first();
       }
 
     private:

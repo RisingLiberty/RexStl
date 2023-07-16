@@ -1,0 +1,48 @@
+{
+  "header": "charconv",
+  "functions": [
+    {
+      "name": "to_chars",
+      "parameters": [
+        { "name": "first", "type": "char*" },
+        { "name": "last", "type": "char*" },
+        { "name": "value", "type": "Integral" }
+      ],
+      "description": "Converts an integral value to a character string representation.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/utility/to_chars"
+    },
+    {
+      "name": "to_chars",
+      "parameters": [
+        { "name": "first", "type": "char*" },
+        { "name": "last", "type": "char*" },
+        { "name": "value", "type": "FloatingPoint" },
+        { "name": "fmt", "type": "chars_format" },
+        { "name": "precision", "type": "int" }
+      ],
+      "description": "Converts a floating-point value to a character string representation.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/utility/to_chars"
+    },
+    {
+      "name": "from_chars",
+      "parameters": [
+        { "name": "first", "type": "const char*" },
+        { "name": "last", "type": "const char*" },
+        { "name": "value", "type": "Integral" }
+      ],
+      "description": "Parses a character string representation into an integral value.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/utility/from_chars"
+    },
+    {
+      "name": "from_chars",
+      "parameters": [
+        { "name": "first", "type": "const char*" },
+        { "name": "last", "type": "const char*" },
+        { "name": "value", "type": "FloatingPoint" },
+        { "name": "fmt", "type": "chars_format" }
+      ],
+      "description": "Parses a character string representation into a floating-point value.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/utility/from_chars"
+    }
+  ]
+}

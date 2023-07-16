@@ -1,0 +1,327 @@
+{
+  "name": "basic_string",
+  "description": "Class template representing a sequence of characters.",
+  "functions": [
+    {
+      "name": "assign",
+      "params": [
+        {
+          "name": "str",
+          "type": "const basic_string&"
+        }
+      ],
+      "description": "Assigns a new value to the string, replacing its current contents.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string/assign"
+    },
+    {
+      "name": "at",
+      "params": [
+        {
+          "name": "pos",
+          "type": "size_type"
+        }
+      ],
+      "description": "Accesses the character at the specified position in the string, with bounds checking.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string/at"
+    },
+    {
+      "name": "back",
+      "params": [],
+      "description": "Returns a reference to the last character of the string.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string/back"
+    },
+    {
+      "name": "begin",
+      "params": [],
+      "description": "Returns an iterator to the beginning of the string.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string/begin"
+    },
+    {
+      "name": "cbegin",
+      "params": [],
+      "description": "Returns a const iterator to the beginning of the string.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string/cbegin"
+    },
+    {
+      "name": "cend",
+      "params": [],
+      "description": "Returns a const iterator to the end of the string.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string/cend"
+    },
+    {
+      "name": "clear",
+      "params": [],
+      "description": "Erases all characters from the string.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string/clear"
+    },
+    {
+      "name": "compare",
+      "params": [
+        {
+          "name": "str",
+          "type": "const basic_string&"
+        }
+      ],
+      "description": "Compares the string with another string.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string/compare"
+    },
+    {
+      "name": "copy",
+      "params": [
+        {
+          "name": "s",
+          "type": "charT*"
+        },
+        {
+          "name": "count",
+          "type": "size_type"
+        },
+        {
+          "name": "pos",
+          "type": "size_type"
+        }
+      ],
+      "description": "Copies a substring of the string to a character array.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string/copy"
+    },
+    {
+      "name": "crbegin",
+      "params": [],
+      "description": "Returns a const reverse iterator to the beginning of the reversed string.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string/crbegin"
+    },
+    {
+      "name": "crend",
+      "params": [],
+      "description": "Returns a const reverse iterator to the end of the reversed string.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string/crend"
+    },
+    {
+      "name": "data",
+      "params": [],
+      "description": "Returns a pointer to the underlying character array.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string/data"
+    },
+    {
+      "name": "empty",
+      "params": [],
+      "description": "Checks if the string is empty.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string/empty"
+    },
+    {
+      "name": "end",
+      "params": [],
+      "description": "Returns an iterator to the end of the string.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string/end"
+    },
+    {
+      "name": "erase",
+      "params": [
+        {
+          "name": "pos",
+          "type": "iterator"
+        }
+      ],
+      "description": "Erases a character from the string at the specified position.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string/erase"
+    },
+    {
+      "name": "find",
+      "params": [
+        {
+          "name": "str",
+          "type": "const basic_string&"
+        },
+        {
+          "name": "pos",
+          "type": "size_type"
+        }
+      ],
+      "description": "Finds the first occurrence of a substring in the string.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string/find"
+    },
+    {
+      "name": "front",
+      "params": [],
+      "description": "Returns a reference to the first character of the string.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string/front"
+    },
+    {
+      "name": "insert",
+      "params": [
+        {
+          "name": "pos",
+          "type": "iterator"
+        },
+        {
+          "name": "count",
+          "type": "size_type"
+        },
+        {
+          "name": "ch",
+          "type": "charT"
+        }
+      ],
+      "description": "Inserts one or multiple copies of a character into the string at the specified position.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string/insert"
+    },
+    {
+      "name": "length",
+      "params": [],
+      "description": "Returns the number of characters in the string.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string/length"
+    },
+    {
+      "name": "operator+=",
+      "params": [
+        {
+          "name": "str",
+          "type": "const basic_string&"
+        }
+      ],
+      "description": "Appends another string to the current string.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string/operator%2B%3D"
+    },
+    {
+      "name": "operator+=",
+      "params": [
+        {
+          "name": "ch",
+          "type": "charT"
+        }
+      ],
+      "description": "Appends a character to the current string.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string/operator%2B%3D"
+    },
+    {
+      "name": "operator=",
+      "params": [
+        {
+          "name": "str",
+          "type": "const basic_string&"
+        }
+      ],
+      "description": "Assigns a new value to the string, replacing its current contents.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string/operator%3D"
+    },
+    {
+      "name": "operator[]",
+      "params": [
+        {
+          "name": "pos",
+          "type": "size_type"
+        }
+      ],
+      "description": "Accesses the character at the specified position in the string.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string/operator%5B%5D"
+    },
+    {
+      "name": "pop_back",
+      "params": [],
+      "description": "Removes the last character of the string.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string/pop_back"
+    },
+    {
+      "name": "push_back",
+      "params": [
+        {
+          "name": "ch",
+          "type": "charT"
+        }
+      ],
+      "description": "Appends a character to the end of the string.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string/push_back"
+    },
+    {
+      "name": "replace",
+      "params": [
+        {
+          "name": "pos",
+          "type": "size_type"
+        },
+        {
+          "name": "count",
+          "type": "size_type"
+        },
+        {
+          "name": "str",
+          "type": "const basic_string&"
+        }
+      ],
+      "description": "Replaces a substring of the string with another string.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string/replace"
+    },
+    {
+      "name": "resize",
+      "params": [
+        {
+          "name": "count",
+          "type": "size_type"
+        }
+      ],
+      "description": "Resizes the string to contain a specified number of characters.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string/resize"
+    },
+    {
+      "name": "rbegin",
+      "params": [],
+      "description": "Returns a reverse iterator to the beginning of the reversed string.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string/rbegin"
+    },
+    {
+      "name": "rend",
+      "params": [],
+      "description": "Returns a reverse iterator to the end of the reversed string.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string/rend"
+    },
+    {
+      "name": "reserve",
+      "params": [
+        {
+          "name": "new_cap",
+          "type": "size_type"
+        }
+      ],
+      "description": "Reserves space for a specified number of characters in the string.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string/reserve"
+    },
+    {
+      "name": "shrink_to_fit",
+      "params": [],
+      "description": "Reduces the capacity of the string to fit its size.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string/shrink_to_fit"
+    },
+    {
+      "name": "size",
+      "params": [],
+      "description": "Returns the number of characters in the string.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string/size"
+    },
+    {
+      "name": "substr",
+      "params": [
+        {
+          "name": "pos",
+          "type": "size_type"
+        },
+        {
+          "name": "count",
+          "type": "size_type"
+        }
+      ],
+      "description": "Extracts a substring from the string.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string/substr"
+    },
+    {
+      "name": "swap",
+      "params": [
+        {
+          "name": "str",
+          "type": "basic_string&"
+        }
+      ],
+      "description": "Swaps the contents of two strings.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string/swap"
+    }
+  ]
+}

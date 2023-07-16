@@ -48,10 +48,10 @@ namespace rsl
 			{
 				BidirectionalIterator1 it1(last1);
 
-				while ((--it1 != first1) && (rsl::find_if(first2, last2, predicate) != last2))
+				while ((--it1 != first1) && (rsl::find_if(first2, last2, [&](const value_type& val) { return predicate(*it1, val); }) != last2))
 					; // Do nothing
 
-				if ((it1 != first1) || (rsl::find_if(first2, last2, predicate)) != last2)
+				if ((it1 != first1) || (rsl::find_if(first2, last2, [&](const value_type& val) { return predicate(*it1, val); })) != last2)
 				{
 					return it1;
 				}

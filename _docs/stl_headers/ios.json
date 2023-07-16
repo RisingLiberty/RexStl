@@ -1,0 +1,79 @@
+{
+  "header_name": "ios",
+  "functions": [
+    {
+      "name": "boolalpha",
+      "parameters": [],
+      "description": "Sets the boolalpha format flag for the stream.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/io/ios_base/boolalpha"
+    },
+    {
+      "name": "noboolalpha",
+      "parameters": [],
+      "description": "Resets the boolalpha format flag for the stream.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/io/ios_base/noboolalpha"
+    },
+    {
+      "name": "fill",
+      "parameters": [
+        { "name": "ch", "type": "char" }
+      ],
+      "description": "Sets the fill character for the stream.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/io/ios_base/fill"
+    },
+    {
+      "name": "precision",
+      "parameters": [
+        { "name": "prec", "type": "int" }
+      ],
+      "description": "Sets the decimal precision for floating-point values in the stream.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/io/ios_base/precision"
+    },
+    {
+      "name": "setf",
+      "parameters": [
+        { "name": "fmtflags", "type": "ios_base::fmtflags" }
+      ],
+      "description": "Sets specific format flags for the stream.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/io/ios_base/setf"
+    },
+    {
+      "name": "unsetf",
+      "parameters": [
+        { "name": "fmtflags", "type": "ios_base::fmtflags" }
+      ],
+      "description": "Unsets specific format flags for the stream.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/io/ios_base/unsetf"
+    },
+    {
+      "name": "width",
+      "parameters": [
+        { "name": "width", "type": "int" }
+      ],
+      "description": "Sets the field width for the stream.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/io/ios_base/width"
+    }
+  ],
+  "classes": [
+    {
+      "name": "fmtflags",
+      "functions": [
+        { "name": "boolalpha", "parameters": [], "description": "The boolalpha format flag." },
+        { "name": "dec", "parameters": [], "description": "The dec format flag." },
+        { "name": "fixed", "parameters": [], "description": "The fixed format flag." },
+        { "name": "hex", "parameters": [], "description": "The hex format flag." },
+        { "name": "internal", "parameters": [], "description": "The internal format flag." },
+        { "name": "left", "parameters": [], "description": "The left format flag." },
+        { "name": "oct", "parameters": [], "description": "The oct format flag." },
+        { "name": "right", "parameters": [], "description": "The right format flag." },
+        { "name": "scientific", "parameters": [], "description": "The scientific format flag." },
+        { "name": "showbase", "parameters": [], "description": "The showbase format flag." },
+        { "name": "showpoint", "parameters": [], "description": "The showpoint format flag." },
+        { "name": "showpos", "parameters": [], "description": "The showpos format flag." },
+        { "name": "skipws", "parameters": [], "description": "The skipws format flag." },
+        { "name": "unitbuf", "parameters": [], "description": "The unitbuf format flag." },
+        { "name": "uppercase", "parameters": [], "description": "The uppercase format flag." }
+      ]
+    }
+  ]
+}

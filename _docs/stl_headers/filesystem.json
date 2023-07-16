@@ -1,0 +1,95 @@
+{
+  "header": "filesystem",
+  "functions": [
+    {
+      "name": "path",
+      "parameters": [
+        { "name": "str", "type": "const std::string&" }
+      ],
+      "description": "Constructs a `path` object from a string.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/filesystem/path/path"
+    },
+    {
+      "name": "operator/",
+      "parameters": [
+        { "name": "lhs", "type": "const path&" },
+        { "name": "rhs", "type": "const path&" }
+      ],
+      "description": "Appends one `path` to another using the path separator.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/filesystem/path/operator_slash"
+    }
+  ],
+  "classes": [
+    {
+      "name": "path",
+      "functions": [
+        {
+          "name": "filename",
+          "parameters": [],
+          "description": "Returns the file name component of the path.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/filesystem/path/filename"
+        },
+        {
+          "name": "extension",
+          "parameters": [],
+          "description": "Returns the extension component of the path.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/filesystem/path/extension"
+        },
+        {
+          "name": "stem",
+          "parameters": [],
+          "description": "Returns the stem (filename without extension) component of the path.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/filesystem/path/stem"
+        },
+        {
+          "name": "parent_path",
+          "parameters": [],
+          "description": "Returns the parent path of the path.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/filesystem/path/parent_path"
+        },
+        {
+          "name": "is_absolute",
+          "parameters": [],
+          "description": "Checks if the path is absolute.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/filesystem/path/is_absolute"
+        },
+        {
+          "name": "is_relative",
+          "parameters": [],
+          "description": "Checks if the path is relative.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/filesystem/path/is_relative"
+        },
+        {
+          "name": "string",
+          "parameters": [],
+          "description": "Returns the path as a string.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/filesystem/path/string"
+        },
+        {
+          "name": "c_str",
+          "parameters": [],
+          "description": "Returns a pointer to a null-terminated character string representing the path.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/filesystem/path/c_str"
+        },
+        {
+          "name": "operator/",
+          "parameters": [
+            { "name": "rhs", "type": "const path&" }
+          ],
+          "description": "Appends one `path` to another using the path separator.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/filesystem/path/operator_slash"
+        },
+        {
+          "name": "operator+=",
+          "parameters": [
+            { "name": "rhs", "type": "const path&" }
+          ],
+          "description": "Appends one `path` to another using the path separator.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/filesystem/path/operator_plus_eq"
+        }
+      ],
+      "type_aliases": []
+    }
+  ],
+  "type_aliases": []
+}

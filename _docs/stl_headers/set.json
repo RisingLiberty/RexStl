@@ -1,0 +1,153 @@
+{
+  "name": "set",
+  "classes": [
+    {
+      "name": "set",
+      "constructors": [
+        {
+          "signature": "set()",
+          "description": "Constructs an empty set."
+        },
+        {
+          "signature": "explicit set(const Compare& comp)",
+          "description": "Constructs an empty set with the specified comparison function."
+        },
+        {
+          "signature": "template <class InputIt> set(InputIt first, InputIt last)",
+          "description": "Constructs a set with the elements from the range `[first, last)`."
+        },
+        {
+          "signature": "template <class InputIt> set(InputIt first, InputIt last, const Compare& comp)",
+          "description": "Constructs a set with the elements from the range `[first, last)` using the specified comparison function."
+        },
+        {
+          "signature": "set(const set& other)",
+          "description": "Constructs a set as a copy of another set."
+        },
+        {
+          "signature": "set(set&& other)",
+          "description": "Constructs a set by moving from another set."
+        }
+      ],
+      "member_functions": [
+        {
+          "signature": "iterator begin()",
+          "returns": "iterator",
+          "description": "Returns an iterator to the beginning of the set."
+        },
+        {
+          "signature": "iterator end()",
+          "returns": "iterator",
+          "description": "Returns an iterator to the end of the set."
+        },
+        {
+          "signature": "bool empty() const",
+          "returns": "bool",
+          "description": "Checks if the set is empty."
+        },
+        {
+          "signature": "size_type size() const",
+          "returns": "size_type",
+          "description": "Returns the number of elements in the set."
+        },
+        {
+          "signature": "size_type max_size() const",
+          "returns": "size_type",
+          "description": "Returns the maximum possible number of elements the set can hold."
+        },
+        {
+          "signature": "void clear()",
+          "description": "Clears the contents of the set."
+        },
+        {
+          "signature": "iterator find(const key_type& key)",
+          "parameters": [
+            {
+              "type": "const key_type&",
+              "name": "key"
+            }
+          ],
+          "returns": "iterator",
+          "description": "Finds an element with a specific key."
+        },
+        {
+          "signature": "size_type count(const key_type& key) const",
+          "parameters": [
+            {
+              "type": "const key_type&",
+              "name": "key"
+            }
+          ],
+          "returns": "size_type",
+          "description": "Counts the number of elements with a specific key."
+        },
+        {
+          "signature": "iterator lower_bound(const key_type& key)",
+          "parameters": [
+            {
+              "type": "const key_type&",
+              "name": "key"
+            }
+          ],
+          "returns": "iterator",
+          "description": "Finds the first element not less than a specific key."
+        },
+        {
+          "signature": "iterator upper_bound(const key_type& key)",
+          "parameters": [
+            {
+              "type": "const key_type&",
+              "name": "key"
+            }
+          ],
+          "returns": "iterator",
+          "description": "Finds the first element greater than a specific key."
+        },
+        {
+          "signature": "std::pair<iterator, iterator> equal_range(const key_type& key)",
+          "parameters": [
+            {
+              "type": "const key_type&",
+              "name": "key"
+            }
+          ],
+          "returns": "std::pair<iterator, iterator>",
+          "description": "Finds the range of elements with a specific key."
+        },
+        {
+          "signature": "iterator erase(iterator pos)",
+          "parameters": [
+            {
+              "type": "iterator",
+              "name": "pos"
+            }
+          ],
+          "returns": "iterator",
+          "description": "Removes the element at the specified position."
+        },
+        {
+          "signature": "size_type erase(const key_type& key)",
+          "parameters": [
+            {
+              "type": "const key_type&",
+              "name": "key"
+            }
+          ],
+          "returns": "size_type",
+          "description": "Removes all elements with a specific key."
+        },
+        {
+          "signature": "void swap(set& other)",
+          "parameters": [
+            {
+              "type": "set&",
+              "name": "other"
+            }
+          ],
+          "description": "Swaps the contents with another set."
+        }
+      ],
+      "cppreference_link": "https://en.cppreference.com/w/cpp/container/set"
+    }
+  ]
+}

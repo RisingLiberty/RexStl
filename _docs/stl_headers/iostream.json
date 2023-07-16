@@ -1,0 +1,30 @@
+{
+  "header_name": "iostream",
+  "functions": [
+    {
+      "name": "cin",
+      "parameters": [],
+      "description": "The standard input stream object.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/io/basic_istream"
+    },
+    {
+      "name": "cout",
+      "parameters": [],
+      "description": "The standard output stream object.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/io/basic_ostream"
+    },
+    {
+      "name": "cerr",
+      "parameters": [],
+      "description": "The standard error stream object.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/io/basic_ostream"
+    },
+    {
+      "name": "clog",
+      "parameters": [],
+      "description": "The standard logging stream object.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/io/basic_ostream"
+    }
+  ],
+  "classes": []
+}

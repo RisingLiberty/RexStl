@@ -1,0 +1,39 @@
+{
+  "header": "stack",
+  "functions": [
+    {
+      "signature": "bool empty() const",
+      "returns": "bool",
+      "description": "Checks if the stack is empty.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/container/stack/empty"
+    },
+    {
+      "signature": "size_type size() const",
+      "returns": "size_type",
+      "description": "Returns the number of elements in the stack.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/container/stack/size"
+    },
+    {
+      "signature": "reference top()",
+      "returns": "reference",
+      "description": "Accesses the top element of the stack.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/container/stack/top"
+    },
+    {
+      "signature": "const_reference top() const",
+      "returns": "const_reference",
+      "description": "Accesses the top element of the stack (const version).",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/container/stack/top"
+    },
+    {
+      "signature": "void push(const T& value)",
+      "description": "Inserts a new element at the top of the stack.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/container/stack/push"
+    },
+    {
+      "signature": "void pop()",
+      "description": "Removes the top element from the stack.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/container/stack/pop"
+    }
+  ]
+}

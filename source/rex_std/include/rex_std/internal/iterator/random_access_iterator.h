@@ -123,6 +123,7 @@ namespace rsl
       constexpr random_access_iterator operator+=(card32 index)
       {
         m_value += index;
+        return *this;
       }
 
       constexpr random_access_iterator operator-(card32 index) const
@@ -136,6 +137,7 @@ namespace rsl
       constexpr random_access_iterator operator-=(card32 index)
       {
         m_value -= index;
+        return *this;
       }
 
     private:

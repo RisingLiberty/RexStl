@@ -1,0 +1,84 @@
+{
+  "header": "functional",
+  "functions": [
+    {
+      "name": "plus",
+      "parameters": [],
+      "description": "Function object for addition.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/utility/functional/plus"
+    },
+    {
+      "name": "minus",
+      "parameters": [],
+      "description": "Function object for subtraction.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/utility/functional/minus"
+    },
+    {
+      "name": "multiplies",
+      "parameters": [],
+      "description": "Function object for multiplication.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/utility/functional/multiplies"
+    },
+    {
+      "name": "divides",
+      "parameters": [],
+      "description": "Function object for division.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/utility/functional/divides"
+    },
+    {
+      "name": "modulus",
+      "parameters": [],
+      "description": "Function object for modulus (remainder).",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/utility/functional/modulus"
+    },
+    {
+      "name": "negate",
+      "parameters": [],
+      "description": "Function object for negation.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/utility/functional/negate"
+    }
+  ],
+  "classes": [
+    {
+      "name": "function",
+      "functions": [
+        {
+          "name": "operator()",
+          "parameters": [],
+          "description": "Invokes the stored callable object.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/utility/functional/function/operator()"
+        },
+        {
+          "name": "target",
+          "parameters": [],
+          "description": "Returns the type of the stored callable object.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/utility/functional/function/target"
+        },
+        {
+          "name": "swap",
+          "parameters": [
+            { "name": "other", "type": "function&" }
+          ],
+          "description": "Swaps the stored callable objects.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/utility/functional/function/swap"
+        }
+      ],
+      "type_aliases": []
+    },
+    {
+      "name": "hash",
+      "functions": [
+        {
+          "name": "operator()",
+          "parameters": [
+            { "name": "key", "type": "const Key&" }
+          ],
+          "description": "Invokes the hash function for the specified key.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/utility/hash"
+        }
+      ],
+      "type_aliases": []
+    }
+  ],
+  "type_aliases": []
+}

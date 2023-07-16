@@ -1,0 +1,62 @@
+{
+  "header": "exception",
+  "functions": [
+    {
+      "name": "uncaught_exceptions",
+      "parameters": [],
+      "description": "Returns the number of uncaught exceptions in the current thread.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/error/exception/uncaught_exceptions"
+    },
+    {
+      "name": "current_exception",
+      "parameters": [],
+      "description": "Obtains an exception_ptr that refers to the currently captured exception (if any).",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/error/exception/current_exception"
+    },
+    {
+      "name": "rethrow_exception",
+      "parameters": [
+        { "name": "p", "type": "exception_ptr" }
+      ],
+      "description": "Re-throws the exception object referred to by the given exception_ptr.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/error/exception/rethrow_exception"
+    }
+  ],
+  "classes": [
+    {
+      "name": "exception",
+      "functions": [
+        {
+          "name": "exception",
+          "parameters": [],
+          "description": "Constructs the exception object.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/error/exception/exception"
+        },
+        {
+          "name": "what",
+          "parameters": [],
+          "description": "Returns a C-style string describing the exception.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/error/exception/what"
+        }
+      ]
+    },
+    {
+      "name": "exception_ptr",
+      "functions": [
+        {
+          "name": "exception_ptr",
+          "parameters": [],
+          "description": "Constructs an exception_ptr object.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/error/exception_ptr/exception_ptr"
+        },
+        {
+          "name": "operator bool",
+          "parameters": [],
+          "description": "Checks whether the exception_ptr object refers to a captured exception.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/error/exception_ptr/operator_bool"
+        }
+      ]
+    }
+  ],
+  "type_aliases": []
+}

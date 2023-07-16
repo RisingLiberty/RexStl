@@ -1,0 +1,55 @@
+{
+  "header": "ostream",
+  "classes": [
+    {
+      "name": "ostream",
+      "constructors": [
+        {
+          "name": "ostream"
+        }
+      ],
+      "member_functions": [
+        {
+          "name": "operator<<",
+          "parameters": [
+            { "type": "const void*", "name": "ptr" }
+          ],
+          "description": "Outputs a `void*` pointer to the output stream",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/io/basic_ostream/operator_ltlt"
+        },
+        {
+          "name": "operator<<",
+          "parameters": [
+            { "type": "std::ostream& (*)(std::ostream&)", "name": "func" }
+          ],
+          "description": "Outputs a manipulator function to the output stream",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/io/basic_ostream/operator_ltlt"
+        },
+        {
+          "name": "operator<<",
+          "parameters": [
+            { "type": "bool", "name": "val" }
+          ],
+          "description": "Outputs a boolean value to the output stream",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/io/basic_ostream/operator_ltlt"
+        },
+        {
+          "name": "operator<<",
+          "parameters": [
+            { "type": "short", "name": "val" }
+          ],
+          "description": "Outputs a short integer value to the output stream",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/io/basic_ostream/operator_ltlt"
+        },
+        {
+          "name": "operator<<",
+          "parameters": [
+            { "type": "unsigned short", "name": "val" }
+          ],
+          "description": "Outputs an unsigned short integer value to the output stream",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/io/basic_ostream/operator_ltlt"
+        }
+      ]
+    }
+  ]
+}

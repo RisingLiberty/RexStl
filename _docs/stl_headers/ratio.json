@@ -1,0 +1,224 @@
+{
+  "header": "ratio",
+  "functions": [],
+  "classes": [
+    {
+      "name": "ratio",
+      "constructors": [
+        { "name": "ratio", "parameters": [ { "type": "intmax_t", "name": "num" }, { "type": "intmax_t", "name": "den" } ] }
+      ],
+      "member_functions": [
+        {
+          "name": "numerator",
+          "returns": "constexpr intmax_t",
+          "description": "Returns the numerator of the ratio",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/ratio/ratio/numerator"
+        },
+        {
+          "name": "denominator",
+          "returns": "constexpr intmax_t",
+          "description": "Returns the denominator of the ratio",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/ratio/ratio/denominator"
+        }
+      ]
+    },
+    {
+      "name": "ratio_add",
+      "type_parameters": [
+        { "name": "R1" },
+        { "name": "R2" }
+      ],
+      "member_functions": [
+        {
+          "name": "numerator",
+          "returns": "constexpr intmax_t",
+          "description": "Returns the numerator of the sum of two ratios",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/ratio/ratio_add/numerator"
+        },
+        {
+          "name": "denominator",
+          "returns": "constexpr intmax_t",
+          "description": "Returns the denominator of the sum of two ratios",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/ratio/ratio_add/denominator"
+        }
+      ]
+    },
+    {
+      "name": "ratio_subtract",
+      "type_parameters": [
+        { "name": "R1" },
+        { "name": "R2" }
+      ],
+      "member_functions": [
+        {
+          "name": "numerator",
+          "returns": "constexpr intmax_t",
+          "description": "Returns the numerator of the difference between two ratios",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/ratio/ratio_subtract/numerator"
+        },
+        {
+          "name": "denominator",
+          "returns": "constexpr intmax_t",
+          "description": "Returns the denominator of the difference between two ratios",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/ratio/ratio_subtract/denominator"
+        }
+      ]
+    },
+    {
+      "name": "ratio_multiply",
+      "type_parameters": [
+        { "name": "R1" },
+        { "name": "R2" }
+      ],
+      "member_functions": [
+        {
+          "name": "numerator",
+          "returns": "constexpr intmax_t",
+          "description": "Returns the numerator of the product of two ratios",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/ratio/ratio_multiply/numerator"
+        },
+        {
+          "name": "denominator",
+          "returns": "constexpr intmax_t",
+          "description": "Returns the denominator of the product of two ratios",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/ratio/ratio_multiply/denominator"
+        }
+      ]
+    },
+    {
+      "name": "ratio_divide",
+      "type_parameters": [
+        { "name": "R1" },
+        { "name": "R2" }
+      ],
+      "member_functions": [
+        {
+          "name": "numerator",
+          "returns": "constexpr intmax_t",
+          "description": "Returns the numerator of the division between two ratios",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/ratio/ratio_divide/numerator"
+        },
+        {
+          "name": "denominator",
+          "returns": "constexpr intmax_t",
+          "description": "Returns the denominator of the division between two ratios",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/ratio/ratio_divide/denominator"
+        }
+      ]
+    },
+    {
+      "name": "ratio_equal",
+      "type_parameters": [
+        { "name": "R1" },
+        { "name": "R2" }
+      ],
+      "functions": [
+        {
+          "name": "operator()",
+          "parameters": [
+            { "type": "const R1&", "name": "r1" },
+            { "type": "const R2&", "name": "r2" }
+          ],
+          "returns": "constexpr bool",
+          "description": "Checks if two ratios are equal",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/ratio/ratio_equal/operator()"
+        }
+      ]
+    },
+    {
+      "name": "ratio_not_equal",
+      "type_parameters": [
+        { "name": "R1" },
+        { "name": "R2" }
+      ],
+      "functions": [
+        {
+          "name": "operator()",
+          "parameters": [
+            { "type": "const R1&", "name": "r1" },
+            { "type": "const R2&", "name": "r2" }
+          ],
+          "returns": "constexpr bool",
+          "description": "Checks if two ratios are not equal",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/ratio/ratio_not_equal/operator()"
+        }
+      ]
+    },
+    {
+      "name": "ratio_less",
+      "type_parameters": [
+        { "name": "R1" },
+        { "name": "R2" }
+      ],
+      "functions": [
+        {
+          "name": "operator()",
+          "parameters": [
+            { "type": "const R1&", "name": "r1" },
+            { "type": "const R2&", "name": "r2" }
+          ],
+          "returns": "constexpr bool",
+          "description": "Checks if the first ratio is less than the second ratio",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/ratio/ratio_less/operator()"
+        }
+      ]
+    },
+    {
+      "name": "ratio_less_equal",
+      "type_parameters": [
+        { "name": "R1" },
+        { "name": "R2" }
+      ],
+      "functions": [
+        {
+          "name": "operator()",
+          "parameters": [
+            { "type": "const R1&", "name": "r1" },
+            { "type": "const R2&", "name": "r2" }
+          ],
+          "returns": "constexpr bool",
+          "description": "Checks if the first ratio is less than or equal to the second ratio",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/ratio/ratio_less_equal/operator()"
+        }
+      ]
+    },
+    {
+      "name": "ratio_greater",
+      "type_parameters": [
+        { "name": "R1" },
+        { "name": "R2" }
+      ],
+      "functions": [
+        {
+          "name": "operator()",
+          "parameters": [
+            { "type": "const R1&", "name": "r1" },
+            { "type": "const R2&", "name": "r2" }
+          ],
+          "returns": "constexpr bool",
+          "description": "Checks if the first ratio is greater than the second ratio",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/ratio/ratio_greater/operator()"
+        }
+      ]
+    },
+    {
+      "name": "ratio_greater_equal",
+      "type_parameters": [
+        { "name": "R1" },
+        { "name": "R2" }
+      ],
+      "functions": [
+        {
+          "name": "operator()",
+          "parameters": [
+            { "type": "const R1&", "name": "r1" },
+            { "type": "const R2&", "name": "r2" }
+          ],
+          "returns": "constexpr bool",
+          "description": "Checks if the first ratio is greater than or equal to the second ratio",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/ratio/ratio_greater_equal/operator()"
+        }
+      ]
+    }
+  ]
+}

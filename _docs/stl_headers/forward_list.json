@@ -1,0 +1,81 @@
+{
+  "header": "forward_list",
+  "functions": [
+    {
+      "name": "forward_list",
+      "parameters": [],
+      "description": "Constructs an empty forward list.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/container/forward_list/forward_list"
+    }
+  ],
+  "classes": [
+    {
+      "name": "forward_list",
+      "functions": [
+        {
+          "name": "begin",
+          "parameters": [],
+          "description": "Returns an iterator to the beginning of the forward list.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/forward_list/begin"
+        },
+        {
+          "name": "end",
+          "parameters": [],
+          "description": "Returns an iterator to the end of the forward list.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/forward_list/end"
+        },
+        {
+          "name": "empty",
+          "parameters": [],
+          "description": "Checks if the forward list is empty.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/forward_list/empty"
+        },
+        {
+          "name": "push_front",
+          "parameters": [
+            { "name": "value", "type": "const T&" }
+          ],
+          "description": "Inserts a new element at the beginning of the forward list.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/forward_list/push_front"
+        },
+        {
+          "name": "pop_front",
+          "parameters": [],
+          "description": "Removes the first element of the forward list.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/forward_list/pop_front"
+        },
+        {
+          "name": "size",
+          "parameters": [],
+          "description": "Returns the number of elements in the forward list.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/forward_list/size"
+        },
+        {
+          "name": "insert_after",
+          "parameters": [
+            { "name": "pos", "type": "const_iterator" },
+            { "name": "value", "type": "const T&" }
+          ],
+          "description": "Inserts a new element after a specific position in the forward list.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/forward_list/insert_after"
+        },
+        {
+          "name": "erase_after",
+          "parameters": [
+            { "name": "pos", "type": "const_iterator" }
+          ],
+          "description": "Removes the element after a specific position in the forward list.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/forward_list/erase_after"
+        },
+        {
+          "name": "clear",
+          "parameters": [],
+          "description": "Removes all elements from the forward list.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/forward_list/clear"
+        }
+      ],
+      "type_aliases": []
+    }
+  ],
+  "type_aliases": []
+}

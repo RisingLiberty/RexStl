@@ -1,0 +1,126 @@
+{
+  "name": "<new>",
+  "functions": [
+    {
+      "name": "operator new",
+      "parameters": [
+        {
+          "type": "std::size_t",
+          "name": "size"
+        }
+      ],
+      "description": "Allocates memory",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/memory/new/operator_new"
+    },
+    {
+      "name": "operator delete",
+      "parameters": [
+        {
+          "type": "void*",
+          "name": "ptr"
+        }
+      ],
+      "description": "Deallocates memory",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/memory/new/operator_delete"
+    },
+    {
+      "name": "operator new[]",
+      "parameters": [
+        {
+          "type": "std::size_t",
+          "name": "size"
+        }
+      ],
+      "description": "Allocates array of objects",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/memory/new/operator_new"
+    },
+    {
+      "name": "operator delete[]",
+      "parameters": [
+        {
+          "type": "void*",
+          "name": "ptr"
+        }
+      ],
+      "description": "Deallocates array of objects",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/memory/new/operator_delete"
+    },
+    {
+      "name": "operator new",
+      "parameters": [
+        {
+          "type": "std::size_t",
+          "name": "size",
+          "default": "throw std::bad_alloc()"
+        },
+        {
+          "type": "std::nothrow_t",
+          "name": "nothrow"
+        }
+      ],
+      "description": "Allocates memory (nothrow version)",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/memory/new/operator_new"
+    },
+    {
+      "name": "operator delete",
+      "parameters": [
+        {
+          "type": "void*",
+          "name": "ptr",
+          "default": "do nothing"
+        },
+        {
+          "type": "std::nothrow_t",
+          "name": "nothrow"
+        }
+      ],
+      "description": "Deallocates memory (nothrow version)",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/memory/new/operator_delete"
+    },
+    {
+      "name": "operator new[]",
+      "parameters": [
+        {
+          "type": "std::size_t",
+          "name": "size",
+          "default": "throw std::bad_alloc()"
+        },
+        {
+          "type": "std::nothrow_t",
+          "name": "nothrow"
+        }
+      ],
+      "description": "Allocates array of objects (nothrow version)",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/memory/new/operator_new"
+    },
+    {
+      "name": "operator delete[]",
+      "parameters": [
+        {
+          "type": "void*",
+          "name": "ptr",
+          "default": "do nothing"
+        },
+        {
+          "type": "std::nothrow_t",
+          "name": "nothrow"
+        }
+      ],
+      "description": "Deallocates array of objects (nothrow version)",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/memory/new/operator_delete"
+    }
+  ],
+  "classes": [],
+  "constants": [
+    {
+      "name": "hardware_destructive_interference_size",
+      "description": "Alignment value representing the assumed cache line size for destructive interference",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/memory/new/hardware_destructive_interference_size"
+    },
+    {
+      "name": "hardware_constructive_interference_size",
+      "description": "Alignment value representing the assumed cache line size for constructive interference",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/memory/new/hardware_constructive_interference_size"
+    }
+  ]
+}

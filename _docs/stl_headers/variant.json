@@ -1,0 +1,106 @@
+{
+  "name": "variant",
+  "description": "The `<variant>` header provides the [`std::variant`](https://en.cppreference.com/w/cpp/utility/variant) class template for representing a type-safe union of types.",
+  "classes": [
+    {
+      "name": "variant",
+      "description": "A class template that represents a type-safe union of types.",
+      "constructors": [
+        {
+          "name": "variant",
+          "description": "Constructs an empty variant."
+        },
+        {
+          "name": "variant",
+          "description": "Constructs a variant with a specified value.",
+          "parameters": [
+            {
+              "type": "const T&",
+              "name": "value",
+              "description": "The value to initialize the variant with."
+            }
+          ]
+        },
+        {
+          "name": "variant",
+          "description": "Constructs a variant with a specified index and value.",
+          "parameters": [
+            {
+              "type": "size_t",
+              "name": "index",
+              "description": "The index of the type to construct."
+            },
+            {
+              "type": "Args&&...",
+              "name": "args",
+              "description": "Arguments to forward to the constructor of the specified type."
+            }
+          ]
+        },
+        {
+          "name": "variant",
+          "description": "Copy constructs a variant from another variant.",
+          "parameters": [
+            {
+              "type": "const variant&",
+              "name": "other",
+              "description": "The variant to copy."
+            }
+          ]
+        },
+        {
+          "name": "variant",
+          "description": "Move constructs a variant from another variant.",
+          "parameters": [
+            {
+              "type": "variant&&",
+              "name": "other",
+              "description": "The variant to move."
+            }
+          ]
+        }
+      ],
+      "member_functions": [
+        {
+          "name": "index",
+          "description": "Returns the index of the currently active alternative.",
+          "return_type": "size_t",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/utility/variant/index"
+        },
+        {
+          "name": "valueless_by_exception",
+          "description": "Checks if the variant is in a valueless state due to an exception.",
+          "return_type": "bool",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/utility/variant/valueless_by_exception"
+        },
+        {
+          "name": "emplace",
+          "description": "Emplaces a value of the specified type into the variant.",
+          "parameters": [
+            {
+              "type": "size_t",
+              "name": "index",
+              "description": "The index of the type to construct."
+            },
+            {
+              "type": "Args&&...",
+              "name": "args",
+              "description": "Arguments to forward to the constructor of the specified type."
+            }
+          ],
+          "return_type": "T&",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/utility/variant/emplace"
+        },
+        {
+          "name": "emplace_index",
+          "description": "Emplaces a value of the specified type into the variant using its index.",
+          "parameters": [
+            {
+              "type": "size_t",
+              "name": "index",
+              "description": "The index of the type to construct."
+            },
+            {
+              "type": "Args&&...",
+              "name": "args",
+             

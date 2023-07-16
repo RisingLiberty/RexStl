@@ -1,0 +1,204 @@
+{
+  "name": "<numeric>",
+  "functions": [
+    {
+      "name": "accumulate",
+      "parameters": [
+        { "type": "InputIt", "name": "first" },
+        { "type": "InputIt", "name": "last" },
+        { "type": "T", "name": "init" }
+      ],
+      "description": "Computes the sum of a range of values",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/accumulate"
+    },
+    {
+      "name": "inner_product",
+      "parameters": [
+        { "type": "InputIt1", "name": "first1" },
+        { "type": "InputIt1", "name": "last1" },
+        { "type": "InputIt2", "name": "first2" },
+        { "type": "T", "name": "init" }
+      ],
+      "description": "Computes the inner product of two ranges of values",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/inner_product"
+    },
+    {
+      "name": "iota",
+      "parameters": [
+        { "type": "ForwardIt", "name": "first" },
+        { "type": "ForwardIt", "name": "last" },
+        { "type": "T", "name": "value" }
+      ],
+      "description": "Assigns consecutive values to a range",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/iota"
+    },
+    {
+      "name": "partial_sum",
+      "parameters": [
+        { "type": "InputIt", "name": "first" },
+        { "type": "InputIt", "name": "last" },
+        { "type": "OutputIt", "name": "d_first" }
+      ],
+      "description": "Computes the partial sums of a range of values",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/partial_sum"
+    },
+    {
+      "name": "gcd",
+      "parameters": [
+        { "type": "M", "name": "m" },
+        { "type": "N", "name": "n" }
+      ],
+      "description": "Computes the greatest common divisor of two values",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/gcd"
+    },
+    {
+      "name": "lcm",
+      "parameters": [
+        { "type": "M", "name": "m" },
+        { "type": "N", "name": "n" }
+      ],
+      "description": "Computes the least common multiple of two values",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/lcm"
+    },
+    {
+      "name": "adjacent_difference",
+      "parameters": [
+        { "type": "InputIt", "name": "first" },
+        { "type": "InputIt", "name": "last" },
+        { "type": "OutputIt", "name": "d_first" }
+      ],
+      "description": "Computes the differences between adjacent elements in a range",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/adjacent_difference"
+    },
+    {
+      "name": "partial_sort",
+      "parameters": [
+        { "type": "RandomIt", "name": "first" },
+        { "type": "RandomIt", "name": "middle" },
+        { "type": "RandomIt", "name": "last" }
+      ],
+      "description": "Partially sorts a range such that the sorted elements are in the beginning",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/partial_sort"
+    },
+    {
+      "name": "partial_sort_copy",
+      "parameters": [
+        { "type": "InputIt", "name": "first" },
+        { "type": "InputIt", "name": "last" },
+        { "type": "RandomIt", "name": "d_first" },
+        { "type": "RandomIt", "name": "d_last" }
+      ],
+      "description": "Copies and partially sorts a range into another range",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/partial_sort_copy"
+    },
+    {
+      "name": "is_permutation",
+      "parameters": [
+        { "type": "ForwardIt1", "name": "first1" },
+        { "type": "ForwardIt1", "name": "last1" },
+        { "type": "ForwardIt2", "name": "first2" }
+      ],
+      "description": "Checks if a range is a permutation of another range",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/is_permutation"
+    },
+    {
+      "name": "next_permutation",
+      "parameters": [
+        { "type": "BidirIt", "name": "first" },
+        { "type": "BidirIt", "name": "last" }
+      ],
+      "description": "Generates the next lexicographically greater permutation of a range",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/next_permutation"
+    },
+    {
+      "name": "prev_permutation",
+      "parameters": [
+        { "type": "BidirIt", "name": "first" },
+        { "type": "BidirIt", "name": "last" }
+      ],
+      "description": "Generates the next lexicographically smaller permutation of a range",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/prev_permutation"
+    },
+    {
+      "name": "transform_exclusive_scan",
+      "parameters": [
+        { "type": "InputIt", "name": "first" },
+        { "type": "InputIt", "name": "last" },
+        { "type": "OutputIt", "name": "d_first" },
+        { "type": "T", "name": "init" },
+        { "type": "BinaryOp", "name": "binary_op" },
+        { "type": "UnaryOp", "name": "unary_op" }
+      ],
+      "description": "Computes an exclusive prefix scan with a binary and unary operation",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/transform_exclusive_scan"
+    },
+    {
+      "name": "transform_inclusive_scan",
+      "parameters": [
+        { "type": "InputIt", "name": "first" },
+        { "type": "InputIt", "name": "last" },
+        { "type": "OutputIt", "name": "d_first" },
+        { "type": "BinaryOp", "name": "binary_op" },
+        { "type": "UnaryOp", "name": "unary_op" }
+      ],
+      "description": "Computes an inclusive prefix scan with a binary and unary operation",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/transform_inclusive_scan"
+    },
+    {
+      "name": "exclusive_scan",
+      "parameters": [
+        { "type": "InputIt", "name": "first" },
+        { "type": "InputIt", "name": "last" },
+        { "type": "OutputIt", "name": "d_first" },
+        { "type": "T", "name": "init" },
+        { "type": "BinaryOp", "name": "binary_op" }
+      ],
+      "description": "Computes an exclusive prefix sum",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/exclusive_scan"
+    },
+    {
+      "name": "inclusive_scan",
+      "parameters": [
+        { "type": "InputIt", "name": "first" },
+        { "type": "InputIt", "name": "last" },
+        { "type": "OutputIt", "name": "d_first" },
+        { "type": "BinaryOp", "name": "binary_op" }
+      ],
+      "description": "Computes an inclusive prefix sum",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/inclusive_scan"
+    },
+    {
+      "name": "transform_reduce",
+      "parameters": [
+        { "type": "InputIt1", "name": "first1" },
+        { "type": "InputIt1", "name": "last1" },
+        { "type": "InputIt2", "name": "first2" },
+        { "type": "T", "name": "init" },
+        { "type": "BinaryOp1", "name": "binary_op1" },
+        { "type": "BinaryOp2", "name": "binary_op2" }
+      ],
+      "description": "Computes a transformation and reduction of two ranges of values",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/transform_reduce"
+    },
+    {
+      "name": "reduce",
+      "parameters": [
+        { "type": "InputIt", "name": "first" },
+        { "type": "InputIt", "name": "last" },
+        { "type": "T", "name": "init" },
+        { "type": "BinaryOp", "name": "binary_op" }
+      ],
+      "description": "Computes a reduction of a range of values",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/reduce"
+    },
+    {
+      "name": "midpoint",
+      "parameters": [
+        { "type": "T", "name": "a" },
+        { "type": "U", "name": "b" }
+      ],
+      "description": "Computes the midpoint of two values",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/midpoint"
+    }
+  ]
+}

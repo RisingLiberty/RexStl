@@ -1,0 +1,1189 @@
+{
+  "name": "algorithm",
+  "functions": [
+    {
+      "name": "all_of",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "InputIt"
+        },
+        {
+          "name": "last",
+          "type": "InputIt"
+        },
+        {
+          "name": "pred",
+          "type": "UnaryPredicate"
+        }
+      ],
+      "description": "Checks if all elements in the range satisfy a predicate.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/all_of"
+    },
+    {
+      "name": "any_of",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "InputIt"
+        },
+        {
+          "name": "last",
+          "type": "InputIt"
+        },
+        {
+          "name": "pred",
+          "type": "UnaryPredicate"
+        }
+      ],
+      "description": "Checks if any element in the range satisfies a predicate.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/any_of"
+    },
+    {
+      "name": "none_of",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "InputIt"
+        },
+        {
+          "name": "last",
+          "type": "InputIt"
+        },
+        {
+          "name": "pred",
+          "type": "UnaryPredicate"
+        }
+      ],
+      "description": "Checks if no elements in the range satisfy a predicate.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/none_of"
+    },
+    {
+      "name": "for_each",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "InputIt"
+        },
+        {
+          "name": "last",
+          "type": "InputIt"
+        },
+        {
+          "name": "f",
+          "type": "UnaryFunction"
+        }
+      ],
+      "description": "Applies a function to each element in the range.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/for_each"
+    },
+    {
+      "name": "find",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "InputIt"
+        },
+        {
+          "name": "last",
+          "type": "InputIt"
+        },
+        {
+          "name": "value",
+          "type": "T"
+        }
+      ],
+      "description": "Finds the first occurrence of a value in the range.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/find"
+    },
+    {
+      "name": "find_if",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "InputIt"
+        },
+        {
+          "name": "last",
+          "type": "InputIt"
+        },
+        {
+          "name": "pred",
+          "type": "UnaryPredicate"
+        }
+      ],
+      "description": "Finds the first element in the range that satisfies a predicate.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/find_if"
+    },
+    {
+      "name": "find_if_not",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "InputIt"
+        },
+        {
+          "name": "last",
+          "type": "InputIt"
+        },
+        {
+          "name": "pred",
+          "type": "UnaryPredicate"
+        }
+      ],
+      "description": "Finds the first element in the range that does not satisfy a predicate.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/find_if_not"
+    },
+    {
+      "name": "find_end",
+      "parameters": [
+        {
+          "name": "first1",
+          "type": "ForwardIt1"
+        },
+        {
+          "name": "last1",
+          "type": "ForwardIt1"
+        },
+        {
+          "name": "first2",
+          "type": "ForwardIt2"
+        },
+        {
+          "name": "last2",
+          "type": "ForwardIt2"
+        }
+      ],
+      "description": "Searches for the last subsequence of elements in a range.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/find_end"
+    },
+    {
+      "name": "find_first_of",
+      "parameters": [
+        {
+          "name": "first1",
+          "type": "InputIt1"
+        },
+        {
+          "name": "last1",
+          "type": "InputIt1"
+        },
+        {
+          "name": "first2",
+          "type": "InputIt2"
+        },
+        {
+          "name": "last2",
+          "type": "InputIt2"
+        }
+      ],
+      "description": "Finds the first occurrence of any of the elements in a second range.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/find_first_of"
+    },
+    {
+      "name": "adjacent_find",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "last",
+          "type": "ForwardIt"
+        }
+      ],
+      "description": "Finds the first occurrence of two consecutive equal elements.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/adjacent_find"
+    },
+    {
+      "name": "count",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "InputIt"
+        },
+        {
+          "name": "last",
+          "type": "InputIt"
+        },
+        {
+          "name": "value",
+          "type": "T"
+        }
+      ],
+      "description": "Counts the occurrences of a value in the range.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/count"
+    },
+    {
+      "name": "count_if",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "InputIt"
+        },
+        {
+          "name": "last",
+          "type": "InputIt"
+        },
+        {
+          "name": "pred",
+          "type": "UnaryPredicate"
+        }
+      ],
+      "description": "Counts the elements in the range that satisfy a predicate.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/count_if"
+    },
+    {
+      "name": "mismatch",
+      "parameters": [
+        {
+          "name": "first1",
+          "type": "InputIt1"
+        },
+        {
+          "name": "last1",
+          "type": "InputIt1"
+        },
+        {
+          "name": "first2",
+          "type": "InputIt2"
+        }
+      ],
+      "description": "Finds the first position where two ranges differ.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/mismatch"
+    },
+    {
+      "name": "equal",
+      "parameters": [
+        {
+          "name": "first1",
+          "type": "InputIt1"
+        },
+        {
+          "name": "last1",
+          "type": "InputIt1"
+        },
+        {
+          "name": "first2",
+          "type": "InputIt2"
+        }
+      ],
+      "description": "Checks if two ranges are equal.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/equal"
+    },
+    {
+      "name": "is_permutation",
+      "parameters": [
+        {
+          "name": "first1",
+          "type": "ForwardIt1"
+        },
+        {
+          "name": "last1",
+          "type": "ForwardIt1"
+        },
+        {
+          "name": "first2",
+          "type": "ForwardIt2"
+        }
+      ],
+      "description": "Checks if a range is a permutation of another range.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/is_permutation"
+    },
+    {
+      "name": "search",
+      "parameters": [
+        {
+          "name": "first1",
+          "type": "ForwardIt1"
+        },
+        {
+          "name": "last1",
+          "type": "ForwardIt1"
+        },
+        {
+          "name": "first2",
+          "type": "ForwardIt2"
+        },
+        {
+          "name": "last2",
+          "type": "ForwardIt2"
+        }
+      ],
+      "description": "Searches for the first occurrence of a sequence in a range.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/search"
+    },
+    {
+      "name": "search_n",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "last",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "count",
+          "type": "Size"
+        },
+        {
+          "name": "value",
+          "type": "T"
+        }
+      ],
+      "description": "Searches for a subsequence of a specific element repeated a number of times.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/search_n"
+    },
+    {
+      "name": "copy",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "InputIt"
+        },
+        {
+          "name": "last",
+          "type": "InputIt"
+        },
+        {
+          "name": "result",
+          "type": "OutputIt"
+        }
+      ],
+      "description": "Copies a range of elements to a new location.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/copy"
+    },
+    {
+      "name": "copy_if",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "InputIt"
+        },
+        {
+          "name": "last",
+          "type": "InputIt"
+        },
+        {
+          "name": "result",
+          "type": "OutputIt"
+        },
+        {
+          "name": "pred",
+          "type": "UnaryPredicate"
+        }
+      ],
+      "description": "Copies elements from a range to a new location based on a predicate.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/copy_if"
+    },
+    {
+      "name": "copy_n",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "InputIt"
+        },
+        {
+          "name": "count",
+          "type": "Size"
+        },
+        {
+          "name": "result",
+          "type": "OutputIt"
+        }
+      ],
+      "description": "Copies a specific number of elements to a new location.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/copy_n"
+    },
+    {
+      "name": "copy_backward",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "BidirIt"
+        },
+        {
+          "name": "last",
+          "type": "BidirIt"
+        },
+        {
+          "name": "result",
+          "type": "BidirIt"
+        }
+      ],
+      "description": "Copies a range of elements in reverse order to a new location.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/copy_backward"
+    },
+    {
+      "name": "move",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "InputIt"
+        },
+        {
+          "name": "last",
+          "type": "InputIt"
+        },
+        {
+          "name": "result",
+          "type": "OutputIt"
+        }
+      ],
+      "description": "Moves a range of elements to a new location.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/move"
+    },
+    {
+      "name": "move_backward",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "BidirIt"
+        },
+        {
+          "name": "last",
+          "type": "BidirIt"
+        },
+        {
+          "name": "result",
+          "type": "BidirIt"
+        }
+      ],
+      "description": "Moves a range of elements in reverse order to a new location.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/move_backward"
+    },
+    {
+      "name": "swap_ranges",
+      "parameters": [
+        {
+          "name": "first1",
+          "type": "ForwardIt1"
+        },
+        {
+          "name": "last1",
+          "type": "ForwardIt1"
+        },
+        {
+          "name": "first2",
+          "type": "ForwardIt2"
+        }
+      ],
+      "description": "Swaps the elements between two ranges.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/swap_ranges"
+    },
+    {
+      "name": "transform",
+      "parameters": [
+        {
+          "name": "first1",
+          "type": "InputIt1"
+        },
+        {
+          "name": "last1",
+          "type": "InputIt1"
+        },
+        {
+          "name": "first2",
+          "type": "InputIt2"
+        },
+        {
+          "name": "result",
+          "type": "OutputIt"
+        },
+        {
+          "name": "op",
+          "type": "UnaryOperation"
+        }
+      ],
+      "description": "Applies a given function to a range and stores the result in another range.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/transform"
+    },
+    {
+      "name": "replace",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "last",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "old_value",
+          "type": "T"
+        },
+        {
+          "name": "new_value",
+          "type": "T"
+        }
+      ],
+      "description": "Replaces all occurrences of a value with another value.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/replace"
+    },
+    {
+      "name": "replace_if",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "last",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "pred",
+          "type": "UnaryPredicate"
+        },
+        {
+          "name": "new_value",
+          "type": "T"
+        }
+      ],
+      "description": "Replaces elements in a range based on a predicate with a new value.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/replace_if"
+    },
+    {
+      "name": "replace_copy",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "InputIt"
+        },
+        {
+          "name": "last",
+          "type": "InputIt"
+        },
+        {
+          "name": "result",
+          "type": "OutputIt"
+        },
+        {
+          "name": "old_value",
+          "type": "T"
+        },
+        {
+          "name": "new_value",
+          "type": "T"
+        }
+      ],
+      "description": "Copies a range, replacing all occurrences of a value with another value.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/replace_copy"
+    },
+    {
+      "name": "replace_copy_if",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "InputIt"
+        },
+        {
+          "name": "last",
+          "type": "InputIt"
+        },
+        {
+          "name": "result",
+          "type": "OutputIt"
+        },
+        {
+          "name": "pred",
+          "type": "UnaryPredicate"
+        },
+        {
+          "name": "new_value",
+          "type": "T"
+        }
+      ],
+      "description": "Copies a range, replacing elements based on a predicate with a new value.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/replace_copy_if"
+    },
+    {
+      "name": "fill",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "last",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "value",
+          "type": "T"
+        }
+      ],
+      "description": "Assigns the given value to a range.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/fill"
+    },
+    {
+      "name": "fill_n",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "OutputIt"
+        },
+        {
+          "name": "count",
+          "type": "Size"
+        },
+        {
+          "name": "value",
+          "type": "T"
+        }
+      ],
+      "description": "Assigns the given value to a specific number of elements.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/fill_n"
+    },
+    {
+      "name": "generate",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "last",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "gen",
+          "type": "Generator"
+        }
+      ],
+      "description": "Generates values and assigns them to a range.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/generate"
+    },
+    {
+      "name": "generate_n",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "OutputIt"
+        },
+        {
+          "name": "count",
+          "type": "Size"
+        },
+        {
+          "name": "gen",
+          "type": "Generator"
+        }
+      ],
+      "description": "Generates values and assigns them to a specific number of elements.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/generate_n"
+    },
+    {
+      "name": "remove",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "last",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "value",
+          "type": "T"
+        }
+      ],
+      "description": "Removes all occurrences of a value from a range.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/remove"
+    },
+    {
+      "name": "remove_if",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "last",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "pred",
+          "type": "UnaryPredicate"
+        }
+      ],
+      "description": "Removes elements from a range based on a predicate.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/remove_if"
+    },
+    {
+      "name": "remove_copy",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "InputIt"
+        },
+        {
+          "name": "last",
+          "type": "InputIt"
+        },
+        {
+          "name": "result",
+          "type": "OutputIt"
+        },
+        {
+          "name": "value",
+          "type": "T"
+        }
+      ],
+      "description": "Copies a range, removing all occurrences of a value.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/remove_copy"
+    },
+    {
+      "name": "remove_copy_if",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "InputIt"
+        },
+        {
+          "name": "last",
+          "type": "InputIt"
+        },
+        {
+          "name": "result",
+          "type": "OutputIt"
+        },
+        {
+          "name": "pred",
+          "type": "UnaryPredicate"
+        }
+      ],
+      "description": "Copies a range, removing elements based on a predicate.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/remove_copy_if"
+    },
+    {
+      "name": "unique",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "last",
+          "type": "ForwardIt"
+        }
+      ],
+      "description": "Removes consecutive duplicate elements from a range.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/unique"
+    },
+    {
+      "name": "unique_copy",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "InputIt"
+        },
+        {
+          "name": "last",
+          "type": "InputIt"
+        },
+        {
+          "name": "result",
+          "type": "OutputIt"
+        }
+      ],
+      "description": "Copies a range, removing consecutive duplicate elements.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/unique_copy"
+    },
+    {
+      "name": "reverse",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "BidirIt"
+        },
+        {
+          "name": "last",
+          "type": "BidirIt"
+        }
+      ],
+      "description": "Reverses the order of elements in a range.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/reverse"
+    },
+    {
+      "name": "reverse_copy",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "BidirIt"
+        },
+        {
+          "name": "last",
+          "type": "BidirIt"
+        },
+        {
+          "name": "result",
+          "type": "OutputIt"
+        }
+      ],
+      "description": "Copies a range, reversing the order of elements.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/reverse_copy"
+    },
+    {
+      "name": "rotate",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "n_first",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "last",
+          "type": "ForwardIt"
+        }
+      ],
+      "description": "Rotates the order of elements in a range.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/rotate"
+    },
+    {
+      "name": "rotate_copy",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "n_first",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "last",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "result",
+          "type": "OutputIt"
+        }
+      ],
+      "description": "Copies a range, rotating the order of elements.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/rotate_copy"
+    },
+    {
+      "name": "shuffle",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "RandomIt"
+        },
+        {
+          "name": "last",
+          "type": "RandomIt"
+        },
+        {
+          "name": "g",
+          "type": "RandomFunc"
+        }
+      ],
+      "description": "Randomly reorders elements in a range.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/shuffle"
+    },
+    {
+      "name": "random_shuffle",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "RandomIt"
+        },
+        {
+          "name": "last",
+          "type": "RandomIt"
+        }
+      ],
+      "description": "Randomly reorders elements in a range using the default random number generator.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/random_shuffle"
+    },
+    {
+      "name": "is_partitioned",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "last",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "pred",
+          "type": "UnaryPredicate"
+        }
+      ],
+      "description": "Checks if a range is partitioned by a predicate.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/is_partitioned"
+    },
+    {
+      "name": "partition",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "last",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "pred",
+          "type": "UnaryPredicate"
+        }
+      ],
+      "description": "Partitions a range based on a predicate.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/partition"
+    },
+    {
+      "name": "stable_partition",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "last",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "pred",
+          "type": "UnaryPredicate"
+        }
+      ],
+      "description": "Partitions a range while preserving the relative order of elements.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/stable_partition"
+    },
+    {
+      "name": "partition_copy",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "InputIt"
+        },
+        {
+          "name": "last",
+          "type": "InputIt"
+        },
+        {
+          "name": "true_result",
+          "type": "OutputIt1"
+        },
+        {
+          "name": "false_result",
+          "type": "OutputIt2"
+        },
+        {
+          "name": "pred",
+          "type": "UnaryPredicate"
+        }
+      ],
+      "description": "Copies elements from a range into two different output ranges based on a predicate.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/partition_copy"
+    },
+    {
+      "name": "sort",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "RandomIt"
+        },
+        {
+          "name": "last",
+          "type": "RandomIt"
+        }
+      ],
+      "description": "Sorts a range in ascending order.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/sort"
+    },
+    {
+      "name": "stable_sort",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "RandomIt"
+        },
+        {
+          "name": "last",
+          "type": "RandomIt"
+        }
+      ],
+      "description": "Sorts a range while preserving the relative order of equal elements.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/stable_sort"
+    },
+    {
+      "name": "partial_sort",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "RandomIt"
+        },
+        {
+          "name": "middle",
+          "type": "RandomIt"
+        },
+        {
+          "name": "last",
+          "type": "RandomIt"
+        }
+      ],
+      "description": "Partially sorts a range in ascending order.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/partial_sort"
+    },
+    {
+      "name": "partial_sort_copy",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "InputIt"
+        },
+        {
+          "name": "last",
+          "type": "InputIt"
+        },
+        {
+          "name": "result_first",
+          "type": "RandomIt"
+        },
+        {
+          "name": "result_last",
+          "type": "RandomIt"
+        }
+      ],
+      "description": "Copies and partially sorts a range in ascending order.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/partial_sort_copy"
+    },
+    {
+      "name": "is_sorted",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "last",
+          "type": "ForwardIt"
+        }
+      ],
+      "description": "Checks if a range is sorted in ascending order.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/is_sorted"
+    },
+    {
+      "name": "is_sorted_until",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "last",
+          "type": "ForwardIt"
+        }
+      ],
+      "description": "Finds the largest sorted subrange in a range.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/is_sorted_until"
+    },
+    {
+      "name": "nth_element",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "RandomIt"
+        },
+        {
+          "name": "nth",
+          "type": "RandomIt"
+        },
+        {
+          "name": "last",
+          "type": "RandomIt"
+        }
+      ],
+      "description": "Partially sorts a range such that the element at the nth position is in its sorted position.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/nth_element"
+    },
+    {
+      "name": "lower_bound",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "last",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "value",
+          "type": "T"
+        }
+      ],
+      "description": "Finds the lower bound of a value in a sorted range.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/lower_bound"
+    },
+    {
+      "name": "upper_bound",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "last",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "value",
+          "type": "T"
+        }
+      ],
+      "description": "Finds the upper bound of a value in a sorted range.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/upper_bound"
+    },
+    {
+      "name": "binary_search",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "last",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "value",
+          "type": "T"
+        }
+      ],
+      "description": "Checks if a value exists in a sorted range.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/binary_search"
+    },
+    {
+      "name": "equal_range",
+      "parameters": [
+        {
+          "name": "first",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "last",
+          "type": "ForwardIt"
+        },
+        {
+          "name": "value",
+          "type": "T"
+        }
+      ],
+      "description": "Finds the range of elements matching a value in a sorted range.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/algorithm/equal_range"
+    }
+  ]
+}

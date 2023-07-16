@@ -1,0 +1,165 @@
+{
+  "header": "deque",
+  "functions": [
+    {
+      "name": "operator==",
+      "parameters": [
+        {
+          "name": "lhs",
+          "type": "const deque&"
+        },
+        {
+          "name": "rhs",
+          "type": "const deque&"
+        }
+      ],
+      "description": "Compares two deques for equality.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/container/deque/operator_cmp"
+    },
+    {
+      "name": "operator!=",
+      "parameters": [
+        {
+          "name": "lhs",
+          "type": "const deque&"
+        },
+        {
+          "name": "rhs",
+          "type": "const deque&"
+        }
+      ],
+      "description": "Compares two deques for inequality.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/container/deque/operator_cmp"
+    }
+  ],
+  "classes": [
+    {
+      "name": "deque",
+      "type_aliases": [
+        {
+          "name": "allocator_type"
+        },
+        {
+          "name": "value_type"
+        },
+        {
+          "name": "pointer"
+        },
+        {
+          "name": "const_pointer"
+        },
+        {
+          "name": "reference"
+        },
+        {
+          "name": "const_reference"
+        },
+        {
+          "name": "iterator"
+        },
+        {
+          "name": "const_iterator"
+        },
+        {
+          "name": "reverse_iterator"
+        },
+        {
+          "name": "const_reverse_iterator"
+        },
+        {
+          "name": "difference_type"
+        },
+        {
+          "name": "size_type"
+        }
+      ],
+      "functions": [
+        {
+          "name": "deque",
+          "parameters": [],
+          "description": "Constructs an empty deque.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/deque/deque"
+        },
+        {
+          "name": "deque",
+          "parameters": [
+            {
+              "name": "count",
+              "type": "size_type"
+            },
+            {
+              "name": "value",
+              "type": "const T&"
+            }
+          ],
+          "description": "Constructs a deque with count copies of value.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/deque/deque"
+        },
+        {
+          "name": "push_back",
+          "parameters": [
+            {
+              "name": "value",
+              "type": "const T&"
+            }
+          ],
+          "description": "Adds an element to the end of the deque.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/deque/push_back"
+        },
+        {
+          "name": "push_front",
+          "parameters": [
+            {
+              "name": "value",
+              "type": "const T&"
+            }
+          ],
+          "description": "Adds an element to the front of the deque.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/deque/push_front"
+        },
+        {
+          "name": "pop_back",
+          "parameters": [],
+          "description": "Removes the last element from the deque.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/deque/pop_back"
+        },
+        {
+          "name": "pop_front",
+          "parameters": [],
+          "description": "Removes the first element from the deque.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/deque/pop_front"
+        },
+        {
+          "name": "front",
+          "parameters": [],
+          "description": "Accesses the first element of the deque.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/deque/front"
+        },
+        {
+          "name": "back",
+          "parameters": [],
+          "description": "Accesses the last element of the deque.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/deque/back"
+        },
+        {
+          "name": "size",
+          "parameters": [],
+          "description": "Returns the number of elements in the deque.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/deque/size"
+        },
+        {
+          "name": "empty",
+          "parameters": [],
+          "description": "Checks whether the deque is empty.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/deque/empty"
+        },
+        {
+          "name": "clear",
+          "parameters": [],
+          "description": "Removes all elements from the deque.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/deque/clear"
+        }
+      ]
+    }
+  ]
+}

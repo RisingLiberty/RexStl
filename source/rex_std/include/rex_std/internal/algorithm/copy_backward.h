@@ -111,7 +111,7 @@ namespace rsl
       REX_UNUSED(static constexpr bool CanBeMemmoved) = rsl::is_trivially_copyable_v<value_type_output> && rsl::is_same_v<value_type_input, value_type_output> &&
                                                         (rsl::is_pointer_v<InputIterator> || rsl::is_same_v<IIC, rsl::continuous_iterator_tag>)&&(rsl::is_pointer_v<OutputIterator> || rsl::is_same_v<OIC, rsl::continuous_iterator_tag>);
 
-      internal::move_and_copy_backward_helper<InputIterator, IsMove, CanBeMemmoved>::move_or_copy_backward(first, last, dstFirst);
+      return internal::move_and_copy_backward_helper<InputIterator, IsMove, CanBeMemmoved>::move_or_copy_backward(first, last, dstFirst);
     }
 
   } // namespace v1

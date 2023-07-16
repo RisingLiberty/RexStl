@@ -1,0 +1,126 @@
+{
+  "header_name": "iomanip",
+  "functions": [
+    {
+      "name": "boolalpha",
+      "parameters": [],
+      "description": "Sets the boolalpha format flag for the output stream.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/io/manip/boolalpha"
+    },
+    {
+      "name": "noboolalpha",
+      "parameters": [],
+      "description": "Resets the boolalpha format flag for the output stream.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/io/manip/noboolalpha"
+    },
+    {
+      "name": "showbase",
+      "parameters": [],
+      "description": "Sets the showbase format flag for the output stream.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/io/manip/showbase"
+    },
+    {
+      "name": "noshowbase",
+      "parameters": [],
+      "description": "Resets the showbase format flag for the output stream.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/io/manip/noshowbase"
+    },
+    {
+      "name": "showpoint",
+      "parameters": [],
+      "description": "Sets the showpoint format flag for the output stream.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/io/manip/showpoint"
+    },
+    {
+      "name": "noshowpoint",
+      "parameters": [],
+      "description": "Resets the showpoint format flag for the output stream.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/io/manip/noshowpoint"
+    },
+    {
+      "name": "showpos",
+      "parameters": [],
+      "description": "Sets the showpos format flag for the output stream.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/io/manip/showpos"
+    },
+    {
+      "name": "noshowpos",
+      "parameters": [],
+      "description": "Resets the showpos format flag for the output stream.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/io/manip/noshowpos"
+    },
+    {
+      "name": "skipws",
+      "parameters": [],
+      "description": "Sets the skipws format flag for the input stream.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/io/manip/skipws"
+    },
+    {
+      "name": "noskipws",
+      "parameters": [],
+      "description": "Resets the skipws format flag for the input stream.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/io/manip/noskipws"
+    },
+    {
+      "name": "uppercase",
+      "parameters": [],
+      "description": "Sets the uppercase format flag for the output stream.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/io/manip/uppercase"
+    },
+    {
+      "name": "nouppercase",
+      "parameters": [],
+      "description": "Resets the uppercase format flag for the output stream.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/io/manip/nouppercase"
+    },
+    {
+      "name": "resetiosflags",
+      "parameters": [
+        { "name": "mask", "type": "ios_base::fmtflags" }
+      ],
+      "description": "Resets specific format flags of the output stream.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/io/manip/resetiosflags"
+    },
+    {
+      "name": "setiosflags",
+      "parameters": [
+        { "name": "mask", "type": "ios_base::fmtflags" }
+      ],
+      "description": "Sets specific format flags of the output stream.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/io/manip/setiosflags"
+    },
+    {
+      "name": "setbase",
+      "parameters": [
+        { "name": "base", "type": "int" }
+      ],
+      "description": "Sets the numeric base of the output stream.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/io/manip/setbase"
+    },
+    {
+      "name": "setfill",
+      "parameters": [
+        { "name": "ch", "type": "char" }
+      ],
+      "description": "Sets the fill character for the output stream.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/io/manip/setfill"
+    },
+    {
+      "name": "setprecision",
+      "parameters": [
+        { "name": "precision", "type": "int" }
+      ],
+      "description": "Sets the precision of floating-point values in the output stream.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/io/manip/setprecision"
+    },
+    {
+      "name": "setw",
+      "parameters": [
+        { "name": "width", "type": "int" }
+      ],
+      "description": "Sets the field width of the output stream.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/io/manip/setw"
+    }
+  ],
+  "classes": []
+}

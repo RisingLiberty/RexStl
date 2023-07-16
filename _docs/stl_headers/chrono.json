@@ -1,0 +1,76 @@
+{
+  "header": "chrono",
+  "functions": [
+    {
+      "name": "duration",
+      "parameters": [
+        { "name": "rep", "type": "T" },
+        { "name": "period", "type": "Ratio" }
+      ],
+      "description": "Constructs a duration object with a specified duration value and period.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/chrono/duration/duration"
+    },
+    {
+      "name": "time_point",
+      "parameters": [
+        { "name": "clock", "type": "Clock" },
+        { "name": "duration", "type": "Duration" }
+      ],
+      "description": "Constructs a time_point object with a specified clock and duration.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/chrono/time_point/time_point"
+    },
+    {
+      "name": "duration_cast",
+      "parameters": [
+        { "name": "ToDuration", "type": "ToDuration" },
+        { "name": "d", "type": "Duration" }
+      ],
+      "description": "Converts a duration from one representation to another.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/chrono/duration/duration_cast"
+    },
+    {
+      "name": "time_point_cast",
+      "parameters": [
+        { "name": "ToDuration", "type": "ToDuration" },
+        { "name": "t", "type": "TimePoint" }
+      ],
+      "description": "Converts a time_point from one representation to another.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/chrono/time_point/time_point_cast"
+    }
+  ],
+  "classes": [
+    {
+      "name": "system_clock",
+      "functions": [
+        {
+          "name": "now",
+          "parameters": [],
+          "description": "Obtains the current time_point of the system clock.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/chrono/system_clock/now"
+        }
+      ]
+    },
+    {
+      "name": "steady_clock",
+      "functions": [
+        {
+          "name": "now",
+          "parameters": [],
+          "description": "Obtains the current time_point of the steady clock.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/chrono/steady_clock/now"
+        }
+      ]
+    },
+    {
+      "name": "high_resolution_clock",
+      "functions": [
+        {
+          "name": "now",
+          "parameters": [],
+          "description": "Obtains the current time_point of the high-resolution clock.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/chrono/high_resolution_clock/now"
+        }
+      ]
+    }
+  ]
+}

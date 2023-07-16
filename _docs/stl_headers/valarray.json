@@ -1,0 +1,116 @@
+{
+  "name": "valarray",
+  "description": "The `<valarray>` header provides the `std::valarray` class and related functions for array-like operations on numeric values.",
+  "classes": [
+    {
+      "name": "valarray",
+      "description": "A class template that represents a fixed-size array of values.",
+      "constructors": [
+        {
+          "name": "valarray",
+          "description": "Constructs an empty valarray."
+        },
+        {
+          "name": "valarray",
+          "description": "Constructs a valarray with a specified size.",
+          "parameters": [
+            {
+              "type": "size_t",
+              "name": "count",
+              "description": "The size of the valarray."
+            }
+          ]
+        },
+        {
+          "name": "valarray",
+          "description": "Constructs a valarray with a specified value and size.",
+          "parameters": [
+            {
+              "type": "const T&",
+              "name": "value",
+              "description": "The value to initialize the elements with."
+            },
+            {
+              "type": "size_t",
+              "name": "count",
+              "description": "The size of the valarray."
+            }
+          ]
+        },
+        {
+          "name": "valarray",
+          "description": "Constructs a valarray from a sequence of values.",
+          "parameters": [
+            {
+              "type": "InputIt",
+              "name": "first",
+              "description": "Iterator to the beginning of the sequence."
+            },
+            {
+              "type": "InputIt",
+              "name": "last",
+              "description": "Iterator to the end of the sequence."
+            }
+          ]
+        },
+        {
+          "name": "valarray",
+          "description": "Constructs a valarray from an initializer list.",
+          "parameters": [
+            {
+              "type": "std::initializer_list<T>",
+              "name": "initList",
+              "description": "Initializer list containing the values."
+            }
+          ]
+        }
+      ],
+      "member_functions": [
+        {
+          "name": "size",
+          "description": "Returns the number of elements in the valarray.",
+          "return_type": "size_t"
+        },
+        {
+          "name": "operator[]",
+          "description": "Accesses the element at the specified index.",
+          "parameters": [
+            {
+              "type": "size_t",
+              "name": "index",
+              "description": "The index of the element to access."
+            }
+          ],
+          "return_type": "T&"
+        },
+        {
+          "name": "sum",
+          "description": "Calculates the sum of the elements in the valarray.",
+          "return_type": "T"
+        },
+        {
+          "name": "min",
+          "description": "Finds the minimum element in the valarray.",
+          "return_type": "T"
+        },
+        {
+          "name": "max",
+          "description": "Finds the maximum element in the valarray.",
+          "return_type": "T"
+        },
+        {
+          "name": "apply",
+          "description": "Applies a given function to each element in the valarray.",
+          "parameters": [
+            {
+              "type": "F",
+              "name": "func",
+              "description": "The function to apply."
+            }
+          ],
+          "return_type": "valarray<T>"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "header": "<wctype>",
+  "functions": [
+    {
+      "name": "iswalnum",
+      "description": "Check if wide character is alphanumeric",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/wide/iswalnum"
+    },
+    {
+      "name": "iswalpha",
+      "description": "Check if wide character is alphabetic",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/wide/iswalpha"
+    },
+    {
+      "name": "iswblank",
+      "description": "Check if wide character is blank",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/wide/iswblank"
+    },
+    {
+      "name": "iswcntrl",
+      "description": "Check if wide character is control character",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/wide/iswcntrl"
+    },
+    {
+      "name": "iswdigit",
+      "description": "Check if wide character is decimal digit",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/wide/iswdigit"
+    },
+    {
+      "name": "iswgraph",
+      "description": "Check if wide character has graphical representation",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/wide/iswgraph"
+    },
+    {
+      "name": "iswlower",
+      "description": "Check if wide character is lowercase letter",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/wide/iswlower"
+    },
+    {
+      "name": "iswprint",
+      "description": "Check if wide character is printable",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/wide/iswprint"
+    },
+    {
+      "name": "iswpunct",
+      "description": "Check if wide character is punctuation character",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/wide/iswpunct"
+    },
+    {
+      "name": "iswspace",
+      "description": "Check if wide character is whitespace",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/wide/iswspace"
+    },
+    {
+      "name": "iswupper",
+      "description": "Check if wide character is uppercase letter",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/wide/iswupper"
+    },
+    {
+      "name": "iswxdigit",
+      "description": "Check if wide character is hexadecimal digit",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/wide/iswxdigit"
+    },
+    {
+      "name": "towctrans",
+      "description": "Wide character mapping using a wide character translation table",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/wide/towctrans"
+    },
+    {
+      "name": "towlower",
+      "description": "Convert wide character to lowercase",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/wide/towlower"
+    },
+    {
+      "name": "towupper",
+      "description": "Convert wide character to uppercase",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/wide/towupper"
+    },
+    {
+      "name": "wctrans",
+      "description": "Get wide character translation using its name",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/wide/wctrans"
+    },
+    {
+      "name": "wctype",
+      "description": "Get wide character category using its name",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/wide/wctype"
+    }
+  ]
+}

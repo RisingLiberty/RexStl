@@ -1,0 +1,235 @@
+{
+  "header": "<utility>",
+  "functions": [
+    {
+      "name": "exchange",
+      "description": "Swaps the value of an object with a new value and returns the old value.",
+      "parameters": [
+        {
+          "type": "T&",
+          "name": "obj",
+          "description": "The object whose value will be swapped."
+        },
+        {
+          "type": "U&&",
+          "name": "new_value",
+          "description": "The new value to assign to the object."
+        }
+      ],
+      "return_type": "T",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/utility/exchange"
+    },
+    {
+      "name": "forward",
+      "description": "Performs perfect forwarding of an argument, preserving its value category.",
+      "parameters": [
+        {
+          "type": "T&&",
+          "name": "arg",
+          "description": "The argument to forward."
+        }
+      ],
+      "return_type": "T&&",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/utility/forward"
+    },
+    {
+      "name": "move",
+      "description": "Converts a value to an rvalue.",
+      "parameters": [
+        {
+          "type": "T&&",
+          "name": "arg",
+          "description": "The value to move."
+        }
+      ],
+      "return_type": "remove_reference_t<T>&&",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/utility/move"
+    },
+    {
+      "name": "pair",
+      "description": "Pair of values.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/utility/pair",
+      "constructors": [
+        {
+          "name": "pair",
+          "description": "Constructs a pair with default-initialized values.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/utility/pair/pair"
+        },
+        {
+          "name": "pair",
+          "description": "Constructs a pair with the specified values.",
+          "parameters": [
+            {
+              "type": "const T1&",
+              "name": "first",
+              "description": "The value for the first element of the pair."
+            },
+            {
+              "type": "const T2&",
+              "name": "second",
+              "description": "The value for the second element of the pair."
+            }
+          ],
+          "cppreference_link": "https://en.cppreference.com/w/cpp/utility/pair/pair"
+        },
+        {
+          "name": "pair",
+          "description": "Constructs a pair with move-initialized values.",
+          "parameters": [
+            {
+              "type": "T1&&",
+              "name": "first",
+              "description": "The value for the first element of the pair."
+            },
+            {
+              "type": "T2&&",
+              "name": "second",
+              "description": "The value for the second element of the pair."
+            }
+          ],
+          "cppreference_link": "https://en.cppreference.com/w/cpp/utility/pair/pair"
+        },
+        {
+          "name": "pair",
+          "description": "Constructs a pair with a copy of another pair.",
+          "parameters": [
+            {
+              "type": "const pair&",
+              "name": "other",
+              "description": "The other pair to copy from."
+            }
+          ],
+          "cppreference_link": "https://en.cppreference.com/w/cpp/utility/pair/pair"
+        },
+        {
+          "name": "pair",
+          "description": "Constructs a pair with a move of another pair.",
+          "parameters": [
+            {
+              "type": "pair&&",
+              "name": "other",
+              "description": "The other pair to move from."
+            }
+          ],
+          "cppreference_link": "https://en.cppreference.com/w/cpp/utility/pair/pair"
+        }
+      ],
+      "member_functions": [
+        {
+          "name": "operator=",
+          "description": "Assigns the values of another pair to this pair.",
+          "parameters": [
+            {
+              "type": "const pair&",
+              "name": "other",
+              "description": "The other pair to assign from."
+            }
+          ],
+          "return_type": "pair&",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/utility/pair/operator="
+        },
+        {
+          "name": "swap",
+          "description": "Swaps the contents of two pairs.",
+          "parameters": [
+            {
+              "type": "pair&",
+              "name": "other",
+              "description": "The other pair to swap with."
+            }
+          ],
+          "return_type": "void",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/utility/pair/swap"
+        }
+      ]
+    },
+    {
+      "name": "make_pair",
+      "description": "Creates a pair from two values.",
+      "parameters": [
+        {
+          "type": "T1&&",
+          "name": "first",
+          "description": "The value for the first element of the pair."
+        },
+        {
+          "type": "T2&&",
+          "name": "second",
+          "description": "The value for the second element of the pair."
+        }
+      ],
+      "return_type": "pair<V1, V2>",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/utility/make_pair"
+    },
+    {
+      "name": "swap",
+      "description": "Swaps the values of two objects.",
+      "parameters": [
+        {
+          "type": "T&",
+          "name": "a",
+          "description": "The first object."
+        },
+        {
+          "type": "T&",
+          "name": "b",
+          "description": "The second object."
+        }
+      ],
+      "return_type": "void",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/utility/swap"
+    }
+  ],
+  "namespaces": [
+    {
+      "name": "std",
+      "description": "The standard namespace.",
+      "members": [
+        {
+          "name": "this_thread",
+          "description": "Provides utilities related to the current thread.",
+          "functions": [
+            {
+              "name": "get_id",
+              "description": "Gets the unique identifier of the current thread.",
+              "return_type": "thread::id",
+              "cppreference_link": "https://en.cppreference.com/w/cpp/thread/this_thread/get_id"
+            },
+            {
+              "name": "sleep_for",
+              "description": "Suspends the execution of the current thread for a specified duration.",
+              "parameters": [
+                {
+                  "type": "const duration&",
+                  "name": "rel_time",
+                  "description": "The duration to sleep for."
+                }
+              ],
+              "return_type": "void",
+              "cppreference_link": "https://en.cppreference.com/w/cpp/thread/this_thread/sleep_for"
+            },
+            {
+              "name": "sleep_until",
+              "description": "Suspends the execution of the current thread until a specified time point.",
+              "parameters": [
+                {
+                  "type": "const time_point&",
+                  "name": "abs_time",
+                  "description": "The time point to sleep until."
+                }
+              ],
+              "return_type": "void",
+              "cppreference_link": "https://en.cppreference.com/w/cpp/thread/this_thread/sleep_until"
+            },
+            {
+              "name": "yield",
+              "description": "Hints to the implementation to reschedule the execution of threads, allowing other threads to run.",
+              "return_type": "void",
+              "cppreference_link": "https://en.cppreference.com/w/cpp/thread/this_thread/yield"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,174 @@
+{
+  "name": "vector",
+  "description": "The `<vector>` header provides the `std::vector` container class for dynamic arrays.",
+  "classes": [
+    {
+      "name": "std::vector",
+      "description": "The `std::vector` class is a container that encapsulates dynamic arrays.",
+      "constructors": [
+        {
+          "signature": "vector()",
+          "description": "Constructs an empty vector."
+        },
+        {
+          "signature": "vector(size_t count)",
+          "description": "Constructs a vector with a specified number of default-initialized elements."
+        },
+        {
+          "signature": "vector(size_t count, const T& value)",
+          "description": "Constructs a vector with a specified number of elements, each initialized to the specified value."
+        },
+        {
+          "signature": "vector(InputIt first, InputIt last)",
+          "description": "Constructs a vector with elements from the range `[first, last)`."
+        },
+        {
+          "signature": "vector(const vector& other)",
+          "description": "Constructs a vector as a copy of another vector."
+        },
+        {
+          "signature": "vector(vector&& other)",
+          "description": "Constructs a vector by moving the contents of another vector."
+        }
+      ],
+      "member_functions": [
+        {
+          "signature": "operator=(const vector& other)",
+          "description": "Assigns another vector to this vector."
+        },
+        {
+          "signature": "operator=(vector&& other)",
+          "description": "Assigns another vector to this vector by moving the contents."
+        },
+        {
+          "signature": "assign(size_t count, const T& value)",
+          "description": "Assigns a specified number of elements, each initialized to the specified value."
+        },
+        {
+          "signature": "assign(InputIt first, InputIt last)",
+          "description": "Assigns elements from the range `[first, last)`."
+        },
+        {
+          "signature": "get_allocator() const",
+          "description": "Returns the allocator associated with the vector."
+        },
+        {
+          "signature": "at(size_t pos)",
+          "description": "Accesses the element at the specified position with bounds checking."
+        },
+        {
+          "signature": "operator[](size_t pos)",
+          "description": "Accesses the element at the specified position without bounds checking."
+        },
+        {
+          "signature": "front()",
+          "description": "Accesses the first element of the vector."
+        },
+        {
+          "signature": "back()",
+          "description": "Accesses the last element of the vector."
+        },
+        {
+          "signature": "data()",
+          "description": "Returns a pointer to the underlying array."
+        },
+        {
+          "signature": "begin()",
+          "description": "Returns an iterator to the beginning of the vector."
+        },
+        {
+          "signature": "end()",
+          "description": "Returns an iterator to the end of the vector."
+        },
+        {
+          "signature": "rbegin()",
+          "description": "Returns a reverse iterator to the beginning of the vector."
+        },
+        {
+          "signature": "rend()",
+          "description": "Returns a reverse iterator to the end of the vector."
+        },
+        {
+          "signature": "empty() const",
+          "description": "Checks if the vector is empty."
+        },
+        {
+          "signature": "size() const",
+          "description": "Returns the number of elements in the vector."
+        },
+        {
+          "signature": "max_size() const",
+          "description": "Returns the maximum possible number of elements the vector can hold."
+        },
+        {
+          "signature": "reserve(size_t new_cap)",
+          "description": "Reserves storage to contain at least the specified number of elements."
+        },
+        {
+          "signature": "capacity() const",
+          "description": "Returns the number of elements that the vector can hold without reallocation."
+        },
+        {
+          "signature": "shrink_to_fit()",
+          "description": "Reduces the capacity to fit the number of elements in the vector."
+        },
+        {
+          "signature": "clear()",
+          "description": "Removes all elements from the vector."
+        },
+        {
+          "signature": "insert(const_iterator pos, const T& value)",
+          "description": "Inserts a value at the specified position."
+        },
+        {
+          "signature": "insert(const_iterator pos, size_t count, const T& value)",
+          "description": "Inserts a specified number of copies of a value at the specified position."
+        },
+        {
+          "signature": "insert(const_iterator pos, InputIt first, InputIt last)",
+          "description": "Inserts elements from the range `[first, last)` at the specified position."
+        },
+        {
+          "signature": "emplace(const_iterator pos, Args&&... args)",
+          "description": "Constructs and inserts an element at the specified position."
+        },
+        {
+          "signature": "erase(const_iterator pos)",
+          "description": "Removes the element at the specified position."
+        },
+        {
+          "signature": "erase(const_iterator first, const_iterator last)",
+          "description": "Removes elements in the range `[first, last)`."
+        },
+        {
+          "signature": "push_back(const T& value)",
+          "description": "Appends a value to the end of the vector."
+        },
+        {
+          "signature": "push_back(T&& value)",
+          "description": "Appends a moved value to the end of the vector."
+        },
+        {
+          "signature": "emplace_back(Args&&... args)",
+          "description": "Constructs and appends an element at the end of the vector."
+        },
+        {
+          "signature": "pop_back()",
+          "description": "Removes the last element from the vector."
+        },
+        {
+          "signature": "resize(size_t count)",
+          "description": "Resizes the vector to contain the specified number of elements."
+        },
+        {
+          "signature": "resize(size_t count, const T& value)",
+          "description": "Resizes the vector to contain the specified number of elements, each initialized to the specified value."
+        },
+        {
+          "signature": "swap(vector& other)",
+          "description": "Swaps the contents of the vector with another vector."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,220 @@
+{
+  "header": "math",
+  "functions": [
+    {
+      "name": "abs",
+      "parameters": [
+        { "name": "x", "type": "Arithmetic" }
+      ],
+      "description": "Computes the absolute value of a number.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/math/abs"
+    },
+    {
+      "name": "acos",
+      "parameters": [
+        { "name": "x", "type": "FloatingPoint" }
+      ],
+      "description": "Computes the arc cosine of a number.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/math/acos"
+    },
+    {
+      "name": "asin",
+      "parameters": [
+        { "name": "x", "type": "FloatingPoint" }
+      ],
+      "description": "Computes the arc sine of a number.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/math/asin"
+    },
+    {
+      "name": "atan",
+      "parameters": [
+        { "name": "x", "type": "FloatingPoint" }
+      ],
+      "description": "Computes the arc tangent of a number.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/math/atan"
+    },
+    {
+      "name": "atan2",
+      "parameters": [
+        { "name": "y", "type": "FloatingPoint" },
+        { "name": "x", "type": "FloatingPoint" }
+      ],
+      "description": "Computes the arc tangent of y/x in the range [-pi, pi].",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/math/atan2"
+    },
+    {
+      "name": "ceil",
+      "parameters": [
+        { "name": "x", "type": "FloatingPoint" }
+      ],
+      "description": "Rounds a number up to the nearest integer greater than or equal to it.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/math/ceil"
+    },
+    {
+      "name": "cos",
+      "parameters": [
+        { "name": "x", "type": "FloatingPoint" }
+      ],
+      "description": "Computes the cosine of a number.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/math/cos"
+    },
+    {
+      "name": "cosh",
+      "parameters": [
+        { "name": "x", "type": "FloatingPoint" }
+      ],
+      "description": "Computes the hyperbolic cosine of a number.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/math/cosh"
+    },
+    {
+      "name": "exp",
+      "parameters": [
+        { "name": "x", "type": "FloatingPoint" }
+      ],
+      "description": "Computes the base-e exponential function of a number.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/math/exp"
+    },
+    {
+      "name": "fabs",
+      "parameters": [
+        { "name": "x", "type": "FloatingPoint" }
+      ],
+      "description": "Computes the absolute value of a number.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/math/fabs"
+    },
+    {
+      "name": "floor",
+      "parameters": [
+        { "name": "x", "type": "FloatingPoint" }
+      ],
+      "description": "Rounds a number down to the nearest integer less than or equal to it.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/math/floor"
+    },
+    {
+      "name": "fmod",
+      "parameters": [
+        { "name": "x", "type": "FloatingPoint" },
+        { "name": "y", "type": "FloatingPoint" }
+      ],
+      "description": "Computes the floating-point remainder of x/y.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/math/fmod"
+    },
+    {
+      "name": "frexp",
+      "parameters": [
+        { "name": "x", "type": "FloatingPoint" },
+        { "name": "exp", "type": "int*" }
+      ],
+      "description": "Breaks a floating-point number into its normalized fraction and exponent.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/math/frexp"
+    },
+    {
+      "name": "hypot",
+      "parameters": [
+        { "name": "x", "type": "FloatingPoint" },
+        { "name": "y", "type": "FloatingPoint" }
+      ],
+      "description": "Computes the square root of the sum of the squares of x and y.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/math/hypot"
+    },
+    {
+      "name": "ldexp",
+      "parameters": [
+        { "name": "x", "type": "FloatingPoint" },
+        { "name": "exp", "type": "int" }
+      ],
+      "description": "Multiplies a floating-point number by 2 raised to the given exponent.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/math/ldexp"
+    },
+    {
+      "name": "log",
+      "parameters": [
+        { "name": "x", "type": "FloatingPoint" }
+      ],
+      "description": "Computes the natural logarithm of a number.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/math/log"
+    },
+    {
+      "name": "log10",
+      "parameters": [
+        { "name": "x", "type": "FloatingPoint" }
+      ],
+      "description": "Computes the common (base-10) logarithm of a number.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/math/log10"
+    },
+    {
+      "name": "modf",
+      "parameters": [
+        { "name": "x", "type": "FloatingPoint" },
+        { "name": "iptr", "type": "FloatingPoint*" }
+      ],
+      "description": "Breaks a floating-point number into its integral and fractional parts.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/math/modf"
+    },
+    {
+      "name": "pow",
+      "parameters": [
+        { "name": "base", "type": "FloatingPoint" },
+        { "name": "exponent", "type": "FloatingPoint" }
+      ],
+      "description": "Computes base raised to the power of exponent.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/math/pow"
+    },
+    {
+      "name": "round",
+      "parameters": [
+        { "name": "x", "type": "FloatingPoint" }
+      ],
+      "description": "Rounds a number to the nearest integer.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/math/round"
+    },
+    {
+      "name": "sin",
+      "parameters": [
+        { "name": "x", "type": "FloatingPoint" }
+      ],
+      "description": "Computes the sine of a number.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/math/sin"
+    },
+    {
+      "name": "sinh",
+      "parameters": [
+        { "name": "x", "type": "FloatingPoint" }
+      ],
+      "description": "Computes the hyperbolic sine of a number.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/math/sinh"
+    },
+    {
+      "name": "sqrt",
+      "parameters": [
+        { "name": "x", "type": "Arithmetic" }
+      ],
+      "description": "Computes the square root of a number.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/math/sqrt"
+    },
+    {
+      "name": "tan",
+      "parameters": [
+        { "name": "x", "type": "FloatingPoint" }
+      ],
+      "description": "Computes the tangent of a number.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/math/tan"
+    },
+    {
+      "name": "tanh",
+      "parameters": [
+        { "name": "x", "type": "FloatingPoint" }
+      ],
+      "description": "Computes the hyperbolic tangent of a number.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/math/tanh"
+    },
+    {
+      "name": "trunc",
+      "parameters": [
+        { "name": "x", "type": "FloatingPoint" }
+      ],
+      "description": "Truncates a number to its integral part.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/numeric/math/trunc"
+    }
+  ]
+}

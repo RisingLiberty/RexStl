@@ -1,0 +1,21 @@
+{
+  "header": "shared_mutex",
+  "functions": [
+    {
+      "signature": "void lock()",
+      "description": "Locks the mutex for exclusive ownership.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/thread/shared_mutex/lock"
+    },
+    {
+      "signature": "bool try_lock()",
+      "returns": "bool",
+      "description": "Tries to lock the mutex for exclusive ownership, returns immediately.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/thread/shared_mutex/try_lock"
+    },
+    {
+      "signature": "void unlock()",
+      "description": "Unlocks the mutex, releasing the ownership.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/thread/shared_mutex/unlock"
+    }
+  ]
+}

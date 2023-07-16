@@ -1,0 +1,82 @@
+{
+  "header_name": "iterator",
+  "functions": [],
+  "classes": [
+    {
+      "name": "iterator",
+      "functions": [
+        {
+          "name": "operator*",
+          "parameters": [],
+          "description": "Dereferences the iterator, returning a reference to the element it points to.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/iterator/iterator/operator*"
+        },
+        {
+          "name": "operator->",
+          "parameters": [],
+          "description": "Returns a pointer to the element the iterator points to.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/iterator/iterator/operator->"
+        },
+        {
+          "name": "operator++",
+          "parameters": [],
+          "description": "Advances the iterator to the next element.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/iterator/iterator/operator++"
+        },
+        {
+          "name": "operator--",
+          "parameters": [],
+          "description": "Moves the iterator to the previous element.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/iterator/iterator/operator--"
+        },
+        {
+          "name": "operator==",
+          "parameters": [
+            {
+              "name": "other",
+              "type": "iterator",
+              "description": "Another iterator to compare with."
+            }
+          ],
+          "description": "Checks if two iterators are equal.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/iterator/iterator/operator=="
+        },
+        {
+          "name": "operator!=",
+          "parameters": [
+            {
+              "name": "other",
+              "type": "iterator",
+              "description": "Another iterator to compare with."
+            }
+          ],
+          "description": "Checks if two iterators are not equal.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/iterator/iterator/operator!="
+        }
+      ]
+    },
+    {
+      "name": "reverse_iterator",
+      "functions": [
+        {
+          "name": "base",
+          "parameters": [],
+          "description": "Returns the underlying iterator.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/iterator/reverse_iterator/base"
+        },
+        {
+          "name": "operator++",
+          "parameters": [],
+          "description": "Advances the iterator to the previous element.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/iterator/reverse_iterator/operator++"
+        },
+        {
+          "name": "operator--",
+          "parameters": [],
+          "description": "Moves the iterator to the next element.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/iterator/reverse_iterator/operator--"
+        }
+      ]
+    }
+  ]
+}

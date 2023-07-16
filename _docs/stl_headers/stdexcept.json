@@ -1,0 +1,106 @@
+{
+  "header": "stdexcept",
+  "classes": [
+    {
+      "name": "exception",
+      "functions": [
+        {
+          "signature": "virtual const char* what() const noexcept",
+          "returns": "const char*",
+          "description": "Returns a C-style string describing the exception.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/error/exception/what"
+        }
+      ]
+    },
+    {
+      "name": "logic_error",
+      "functions": [
+        {
+          "signature": "explicit logic_error(const std::string& what_arg)",
+          "description": "Constructs a logic_error object with a specific `what` message.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/error/logic_error/logic_error"
+        },
+        {
+          "signature": "explicit logic_error(const char* what_arg)",
+          "description": "Constructs a logic_error object with a specific `what` message.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/error/logic_error/logic_error"
+        }
+      ]
+    },
+    {
+      "name": "domain_error",
+      "functions": [
+        {
+          "signature": "explicit domain_error(const std::string& what_arg)",
+          "description": "Constructs a domain_error object with a specific `what` message.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/error/domain_error/domain_error"
+        },
+        {
+          "signature": "explicit domain_error(const char* what_arg)",
+          "description": "Constructs a domain_error object with a specific `what` message.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/error/domain_error/domain_error"
+        }
+      ]
+    },
+    {
+      "name": "invalid_argument",
+      "functions": [
+        {
+          "signature": "explicit invalid_argument(const std::string& what_arg)",
+          "description": "Constructs an invalid_argument object with a specific `what` message.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/error/invalid_argument/invalid_argument"
+        },
+        {
+          "signature": "explicit invalid_argument(const char* what_arg)",
+          "description": "Constructs an invalid_argument object with a specific `what` message.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/error/invalid_argument/invalid_argument"
+        }
+      ]
+    },
+    {
+      "name": "length_error",
+      "functions": [
+        {
+          "signature": "explicit length_error(const std::string& what_arg)",
+          "description": "Constructs a length_error object with a specific `what` message.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/error/length_error/length_error"
+        },
+        {
+          "signature": "explicit length_error(const char* what_arg)",
+          "description": "Constructs a length_error object with a specific `what` message.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/error/length_error/length_error"
+        }
+      ]
+    },
+    {
+      "name": "out_of_range",
+      "functions": [
+        {
+          "signature": "explicit out_of_range(const std::string& what_arg)",
+          "description": "Constructs an out_of_range object with a specific `what` message.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/error/out_of_range/out_of_range"
+        },
+        {
+          "signature": "explicit out_of_range(const char* what_arg)",
+          "description": "Constructs an out_of_range object with a specific `what` message.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/error/out_of_range/out_of_range"
+        }
+      ]
+    },
+    {
+      "name": "runtime_error",
+      "functions": [
+        {
+          "signature": "explicit runtime_error(const std::string& what_arg)",
+          "description": "Constructs a runtime_error object with a specific `what` message.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/error/runtime_error/runtime_error"
+        },
+        {
+          "signature": "explicit runtime_error(const char* what_arg)",
+          "description": "Constructs a runtime_error object with a specific `what` message.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/error/runtime_error/runtime_error"
+        }
+      ]
+    }
+  ]
+}

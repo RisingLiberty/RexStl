@@ -30,6 +30,8 @@ namespace rsl
         ++src;
         ++dst;
       }
+
+      return dst;
     }
 
   } // namespace v1

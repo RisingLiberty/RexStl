@@ -1,0 +1,245 @@
+{
+  "header_name": "mutex",
+  "functions": [
+    {
+      "name": "lock",
+      "parameters": [],
+      "description": "Locks the mutex.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/thread/mutex/lock"
+    },
+    {
+      "name": "try_lock",
+      "parameters": [],
+      "description": "Attempts to lock the mutex, returns immediately.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/thread/mutex/try_lock"
+    },
+    {
+      "name": "unlock",
+      "parameters": [],
+      "description": "Unlocks the mutex.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/thread/mutex/unlock"
+    }
+  ],
+  "classes": [
+    {
+      "name": "mutex",
+      "functions": [
+        {
+          "name": "lock",
+          "parameters": [],
+          "description": "Locks the mutex.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/mutex/lock"
+        },
+        {
+          "name": "try_lock",
+          "parameters": [],
+          "description": "Attempts to lock the mutex, returns immediately.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/mutex/try_lock"
+        },
+        {
+          "name": "unlock",
+          "parameters": [],
+          "description": "Unlocks the mutex.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/mutex/unlock"
+        }
+      ],
+      "type_aliases": [],
+      "cppreference_link": "https://en.cppreference.com/w/cpp/thread/mutex"
+    },
+    {
+      "name": "timed_mutex",
+      "functions": [
+        {
+          "name": "lock",
+          "parameters": [],
+          "description": "Locks the mutex.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/mutex/lock"
+        },
+        {
+          "name": "try_lock",
+          "parameters": [],
+          "description": "Attempts to lock the mutex, returns immediately.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/mutex/try_lock"
+        },
+        {
+          "name": "unlock",
+          "parameters": [],
+          "description": "Unlocks the mutex.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/mutex/unlock"
+        },
+        {
+          "name": "try_lock_for",
+          "parameters": [
+            {
+              "type": "std::chrono::duration",
+              "name": "rel_time"
+            }
+          ],
+          "description": "Attempts to lock the mutex, waits for at most the specified duration.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/timed_mutex/try_lock_for"
+        },
+        {
+          "name": "try_lock_until",
+          "parameters": [
+            {
+              "type": "std::chrono::time_point",
+              "name": "abs_time"
+            }
+          ],
+          "description": "Attempts to lock the mutex, waits until the specified time point.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/timed_mutex/try_lock_until"
+        }
+      ],
+      "type_aliases": [],
+      "cppreference_link": "https://en.cppreference.com/w/cpp/thread/timed_mutex"
+    },
+    {
+      "name": "recursive_mutex",
+      "functions": [
+        {
+          "name": "lock",
+          "parameters": [],
+          "description": "Locks the mutex.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/mutex/lock"
+        },
+        {
+          "name": "try_lock",
+          "parameters": [],
+          "description": "Attempts to lock the mutex, returns immediately.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/mutex/try_lock"
+        },
+        {
+          "name": "unlock",
+          "parameters": [],
+          "description": "Unlocks the mutex.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/mutex/unlock"
+        }
+      ],
+      "type_aliases": [],
+      "cppreference_link": "https://en.cppreference.com/w/cpp/thread/recursive_mutex"
+    },
+    {
+      "name": "recursive_timed_mutex",
+      "functions": [
+        {
+          "name": "lock",
+          "parameters": [],
+          "description": "Locks the mutex.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/mutex/lock"
+        },
+        {
+          "name": "try_lock",
+          "parameters": [],
+          "description": "Attempts to lock the mutex, returns immediately.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/mutex/try_lock"
+        },
+        {
+          "name": "unlock",
+          "parameters": [],
+          "description": "Unlocks the mutex.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/mutex/unlock"
+        },
+        {
+          "name": "try_lock_for",
+          "parameters": [
+            {
+              "type": "std::chrono::duration",
+              "name": "rel_time"
+            }
+          ],
+          "description": "Attempts to lock the mutex, waits for at most the specified duration.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/timed_mutex/try_lock_for"
+        },
+        {
+          "name": "try_lock_until",
+          "parameters": [
+            {
+              "type": "std::chrono::time_point",
+              "name": "abs_time"
+            }
+          ],
+          "description": "Attempts to lock the mutex, waits until the specified time point.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/timed_mutex/try_lock_until"
+        }
+      ],
+      "type_aliases": [],
+      "cppreference_link": "https://en.cppreference.com/w/cpp/thread/recursive_timed_mutex"
+    },
+    {
+      "name": "shared_mutex",
+      "functions": [
+        {
+          "name": "lock",
+          "parameters": [],
+          "description": "Locks the mutex exclusively.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/mutex/lock"
+        },
+        {
+          "name": "try_lock",
+          "parameters": [],
+          "description": "Attempts to lock the mutex exclusively, returns immediately.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/mutex/try_lock"
+        },
+        {
+          "name": "unlock",
+          "parameters": [],
+          "description": "Unlocks the mutex.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/mutex/unlock"
+        },
+        {
+          "name": "lock_shared",
+          "parameters": [],
+          "description": "Locks the mutex non-exclusively (shared).",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/shared_mutex/lock_shared"
+        },
+        {
+          "name": "try_lock_shared",
+          "parameters": [],
+          "description": "Attempts to lock the mutex non-exclusively (shared), returns immediately.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/shared_mutex/try_lock_shared"
+        },
+        {
+          "name": "unlock_shared",
+          "parameters": [],
+          "description": "Unlocks the mutex (shared).",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/shared_mutex/unlock_shared"
+        },
+        {
+          "name": "try_lock",
+          "parameters": [
+            {
+              "type": "std::defer_lock_t",
+              "name": "defer_lock"
+            }
+          ],
+          "description": "Constructs the mutex without locking it.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/shared_mutex/try_lock"
+        },
+        {
+          "name": "try_lock_until",
+          "parameters": [
+            {
+              "type": "std::chrono::time_point",
+              "name": "abs_time"
+            }
+          ],
+          "description": "Attempts to lock the mutex exclusively until the specified time point.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/shared_mutex/try_lock_until"
+        },
+        {
+          "name": "try_lock_for",
+          "parameters": [
+            {
+              "type": "std::chrono::duration",
+              "name": "rel_time"
+            }
+          ],
+          "description": "Attempts to lock the mutex exclusively for at most the specified duration.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/shared_mutex/try_lock_for"
+        }
+      ],
+      "type_aliases": [],
+      "cppreference_link": "https://en.cppreference.com/w/cpp/thread/shared_mutex"
+    }
+  ]
+}

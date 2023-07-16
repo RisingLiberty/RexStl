@@ -1,0 +1,111 @@
+{
+  "header": "bitset",
+  "functions": [
+    {
+      "name": "bitset",
+      "parameters": [
+        { "name": "bits", "type": "size_t" },
+        { "name": "value", "type": "unsigned long long" }
+      ],
+      "description": "Constructs a bitset with a specified number of bits and initial value.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/utility/bitset/bitset"
+    },
+    {
+      "name": "bitset",
+      "parameters": [
+        { "name": "str", "type": "const std::string&" },
+        { "name": "pos", "type": "size_t" },
+        { "name": "n", "type": "size_t" }
+      ],
+      "description": "Constructs a bitset from a string representation.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/utility/bitset/bitset"
+    },
+    {
+      "name": "operator[]",
+      "parameters": [
+        { "name": "pos", "type": "size_t" }
+      ],
+      "description": "Accesses the bit at the specified position.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/utility/bitset/operator_at"
+    },
+    {
+      "name": "size",
+      "parameters": [],
+      "description": "Returns the number of bits in the bitset.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/utility/bitset/size"
+    },
+    {
+      "name": "test",
+      "parameters": [
+        { "name": "pos", "type": "size_t" }
+      ],
+      "description": "Checks if the bit at the specified position is set.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/utility/bitset/test"
+    },
+    {
+      "name": "set",
+      "parameters": [
+        { "name": "pos", "type": "size_t" },
+        { "name": "value", "type": "bool" }
+      ],
+      "description": "Sets or resets the bit at the specified position.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/utility/bitset/set"
+    },
+    {
+      "name": "reset",
+      "parameters": [
+        { "name": "pos", "type": "size_t" }
+      ],
+      "description": "Resets the bit at the specified position.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/utility/bitset/reset"
+    },
+    {
+      "name": "flip",
+      "parameters": [
+        { "name": "pos", "type": "size_t" }
+      ],
+      "description": "Flips the bit at the specified position.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/utility/bitset/flip"
+    },
+    {
+      "name": "to_string",
+      "parameters": [],
+      "description": "Returns a string representation of the bitset.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/utility/bitset/to_string"
+    },
+    {
+      "name": "operator==",
+      "parameters": [
+        { "name": "rhs", "type": "const bitset<N>&" }
+      ],
+      "description": "Compares two bitsets for equality.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/utility/bitset/operator_cmp"
+    },
+    {
+      "name": "operator!=",
+      "parameters": [
+        { "name": "rhs", "type": "const bitset<N>&" }
+      ],
+      "description": "Compares two bitsets for inequality.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/utility/bitset/operator_cmp"
+    },
+    {
+      "name": "operator<<",
+      "parameters": [
+        { "name": "os", "type": "std::ostream&" },
+        { "name": "rhs", "type": "const bitset<N>&" }
+      ],
+      "description": "Writes the bitset to an output stream.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/utility/bitset/operator_io"
+    },
+    {
+      "name": "operator>>",
+      "parameters": [
+        { "name": "is", "type": "std::istream&" },
+        { "name": "rhs", "type": "bitset<N>&" }
+      ],
+      "description": "Reads the bitset from an input stream.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/utility/bitset/operator_io"
+    }
+  ]
+}

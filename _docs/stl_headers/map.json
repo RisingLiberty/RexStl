@@ -1,0 +1,147 @@
+{
+  "header_name": "map",
+  "functions": [],
+  "classes": [
+    {
+      "name": "map",
+      "functions": [
+        {
+          "name": "map",
+          "parameters": [],
+          "description": "Constructs an empty map.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/map/map"
+        },
+        {
+          "name": "map",
+          "parameters": [
+            {
+              "name": "comp",
+              "type": "Compare",
+              "description": "The comparison function object to use for element comparisons. Default: `std::less<Key>`."
+            }
+          ],
+          "description": "Constructs an empty map with the given comparison function.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/map/map"
+        },
+        {
+          "name": "map",
+          "parameters": [
+            {
+              "name": "first",
+              "type": "InputIt",
+              "description": "Iterator to the first element in the range."
+            },
+            {
+              "name": "last",
+              "type": "InputIt",
+              "description": "Iterator to the element after the last element in the range."
+            },
+            {
+              "name": "comp",
+              "type": "Compare",
+              "description": "The comparison function object to use for element comparisons. Default: `std::less<Key>`."
+            }
+          ],
+          "description": "Constructs the map with the elements from the range [`first`, `last`).",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/map/map"
+        },
+        {
+          "name": "map",
+          "parameters": [
+            {
+              "name": "other",
+              "type": "const map&",
+              "description": "Another map to be used as a source to initialize this map."
+            }
+          ],
+          "description": "Copy constructor. Constructs the map as a copy of `other`.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/map/map"
+        },
+        {
+          "name": "map",
+          "parameters": [
+            {
+              "name": "other",
+              "type": "map&&",
+              "description": "Another map to be used as a source to initialize this map."
+            }
+          ],
+          "description": "Move constructor. Constructs the map by moving the contents of `other`.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/map/map"
+        },
+        {
+          "name": "insert",
+          "parameters": [
+            {
+              "name": "value",
+              "type": "const value_type&",
+              "description": "The key-value pair to be inserted."
+            }
+          ],
+          "description": "Inserts the given key-value pair into the map.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/map/insert"
+        },
+        {
+          "name": "erase",
+          "parameters": [
+            {
+              "name": "position",
+              "type": "const_iterator",
+              "description": "Iterator to the element to be removed."
+            }
+          ],
+          "description": "Removes the element pointed to by the given iterator from the map.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/map/erase"
+        },
+        {
+          "name": "find",
+          "parameters": [
+            {
+              "name": "key",
+              "type": "const Key&",
+              "description": "The key to be searched for."
+            }
+          ],
+          "description": "Finds an element with the given key.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/map/find"
+        },
+        {
+          "name": "operator[]",
+          "parameters": [
+            {
+              "name": "key",
+              "type": "const Key&",
+              "description": "The key of the element to access."
+            }
+          ],
+          "description": "Accesses the element with the given key.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/map/operator_at"
+        },
+        {
+          "name": "begin",
+          "parameters": [],
+          "description": "Returns an iterator to the first element of the map.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/map/begin"
+        },
+        {
+          "name": "end",
+          "parameters": [],
+          "description": "Returns an iterator to the element following the last element of the map.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/map/end"
+        },
+        {
+          "name": "size",
+          "parameters": [],
+          "description": "Returns the number of elements in the map.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/map/size"
+        },
+        {
+          "name": "empty",
+          "parameters": [],
+          "description": "Checks if the map has no elements.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/map/empty"
+        }
+      ]
+    }
+  ]
+}

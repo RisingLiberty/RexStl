@@ -1,0 +1,134 @@
+{
+  "header": "ctype",
+  "functions": [
+    {
+      "name": "isalnum",
+      "parameters": [
+        { "name": "ch", "type": "int" }
+      ],
+      "description": "Checks if a character is alphanumeric.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/byte/isalnum"
+    },
+    {
+      "name": "isalpha",
+      "parameters": [
+        { "name": "ch", "type": "int" }
+      ],
+      "description": "Checks if a character is alphabetic.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/byte/isalpha"
+    },
+    {
+      "name": "isdigit",
+      "parameters": [
+        { "name": "ch", "type": "int" }
+      ],
+      "description": "Checks if a character is decimal digit.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/byte/isdigit"
+    },
+    {
+      "name": "isxdigit",
+      "parameters": [
+        { "name": "ch", "type": "int" }
+      ],
+      "description": "Checks if a character is hexadecimal digit.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/byte/isxdigit"
+    },
+    {
+      "name": "islower",
+      "parameters": [
+        { "name": "ch", "type": "int" }
+      ],
+      "description": "Checks if a character is lowercase.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/byte/islower"
+    },
+    {
+      "name": "isupper",
+      "parameters": [
+        { "name": "ch", "type": "int" }
+      ],
+      "description": "Checks if a character is uppercase.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/byte/isupper"
+    },
+    {
+      "name": "isspace",
+      "parameters": [
+        { "name": "ch", "type": "int" }
+      ],
+      "description": "Checks if a character is whitespace.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/byte/isspace"
+    },
+    {
+      "name": "isprint",
+      "parameters": [
+        { "name": "ch", "type": "int" }
+      ],
+      "description": "Checks if a character is printable.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/byte/isprint"
+    },
+    {
+      "name": "ispunct",
+      "parameters": [
+        { "name": "ch", "type": "int" }
+      ],
+      "description": "Checks if a character is punctuation.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/byte/ispunct"
+    },
+    {
+      "name": "iscntrl",
+      "parameters": [
+        { "name": "ch", "type": "int" }
+      ],
+      "description": "Checks if a character is control character.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/byte/iscntrl"
+    },
+    {
+      "name": "tolower",
+      "parameters": [
+        { "name": "ch", "type": "int" }
+      ],
+      "description": "Converts a character to lowercase.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/byte/tolower"
+    },
+    {
+      "name": "toupper",
+      "parameters": [
+        { "name": "ch", "type": "int" }
+      ],
+      "description": "Converts a character to uppercase.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/string/byte/toupper"
+    }
+  ],
+  "classes": [
+    {
+      "name": "ctype",
+      "functions": [
+        {
+          "name": "is",
+          "parameters": [
+            { "name": "ch", "type": "int" }
+          ],
+          "description": "Checks if a character satisfies a specific condition.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/string/byte/ctype"
+        },
+        {
+          "name": "narrow",
+          "parameters": [
+            { "name": "ch", "type": "char", "default": "0" },
+            { "name": "def", "type": "char" }
+          ],
+          "description": "Converts a character to narrow form.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/string/byte/ctype/narrow"
+        },
+        {
+          "name": "widen",
+          "parameters": [
+            { "name": "ch", "type": "char", "default": "0" }
+          ],
+          "description": "Converts a character to wide form.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/string/byte/ctype/widen"
+        }
+      ]
+    }
+  ],
+  "type_aliases": []
+}

@@ -1,0 +1,222 @@
+{
+  "name": "std::string_view",
+  "functions": [
+    {
+      "name": "operator==",
+      "params": [
+        {
+          "name": "lhs",
+          "type": "const string_view&"
+        },
+        {
+          "name": "rhs",
+          "type": "const string_view&"
+        }
+      ],
+      "description": "Compares two string views for equality.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string_view/operator_cmp"
+    },
+    {
+      "name": "operator!=",
+      "params": [
+        {
+          "name": "lhs",
+          "type": "const string_view&"
+        },
+        {
+          "name": "rhs",
+          "type": "const string_view&"
+        }
+      ],
+      "description": "Compares two string views for inequality.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string_view/operator_cmp"
+    },
+    {
+      "name": "operator<",
+      "params": [
+        {
+          "name": "lhs",
+          "type": "const string_view&"
+        },
+        {
+          "name": "rhs",
+          "type": "const string_view&"
+        }
+      ],
+      "description": "Compares two string views lexicographically.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string_view/operator_cmp"
+    },
+    {
+      "name": "operator>",
+      "params": [
+        {
+          "name": "lhs",
+          "type": "const string_view&"
+        },
+        {
+          "name": "rhs",
+          "type": "const string_view&"
+        }
+      ],
+      "description": "Compares two string views lexicographically.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string_view/operator_cmp"
+    },
+    {
+      "name": "operator<=",
+      "params": [
+        {
+          "name": "lhs",
+          "type": "const string_view&"
+        },
+        {
+          "name": "rhs",
+          "type": "const string_view&"
+        }
+      ],
+      "description": "Compares two string views lexicographically.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string_view/operator_cmp"
+    },
+    {
+      "name": "operator>=",
+      "params": [
+        {
+          "name": "lhs",
+          "type": "const string_view&"
+        },
+        {
+          "name": "rhs",
+          "type": "const string_view&"
+        }
+      ],
+      "description": "Compares two string views lexicographically.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string_view/operator_cmp"
+    },
+    {
+      "name": "compare",
+      "params": [
+        {
+          "name": "other",
+          "type": "const string_view&"
+        }
+      ],
+      "description": "Compares the string view to another string view.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string_view/compare"
+    },
+    {
+      "name": "find",
+      "params": [
+        {
+          "name": "str",
+          "type": "const string_view&"
+        },
+        {
+          "name": "pos",
+          "type": "size_type"
+        }
+      ],
+      "description": "Searches the string view for the first occurrence of a substring.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string_view/find"
+    },
+    {
+      "name": "rfind",
+      "params": [
+        {
+          "name": "str",
+          "type": "const string_view&"
+        },
+        {
+          "name": "pos",
+          "type": "size_type"
+        }
+      ],
+      "description": "Searches the string view for the last occurrence of a substring.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string_view/rfind"
+    },
+    {
+      "name": "find_first_of",
+      "params": [
+        {
+          "name": "str",
+          "type": "const string_view&"
+        },
+        {
+          "name": "pos",
+          "type": "size_type"
+        }
+      ],
+      "description": "Searches the string view for the first occurrence of any of the specified characters.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string_view/find_first_of"
+    },
+    {
+      "name": "find_last_of",
+      "params": [
+        {
+          "name": "str",
+          "type": "const string_view&"
+        },
+        {
+          "name": "pos",
+          "type": "size_type"
+        }
+      ],
+      "description": "Searches the string view for the last occurrence of any of the specified characters.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string_view/find_last_of"
+    },
+    {
+      "name": "find_first_not_of",
+      "params": [
+        {
+          "name": "str",
+          "type": "const string_view&"
+        },
+        {
+          "name": "pos",
+          "type": "size_type"
+        }
+      ],
+      "description": "Searches the string view for the first occurrence of any character not in the specified string.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string_view/find_first_not_of"
+    },
+    {
+      "name": "find_last_not_of",
+      "params": [
+        {
+          "name": "str",
+          "type": "const string_view&"
+        },
+        {
+          "name": "pos",
+          "type": "size_type"
+        }
+      ],
+      "description": "Searches the string view for the last occurrence of any character not in the specified string.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string_view/find_last_not_of"
+    },
+    {
+      "name": "substr",
+      "params": [
+        {
+          "name": "pos",
+          "type": "size_type"
+        },
+        {
+          "name": "count",
+          "type": "size_type"
+        }
+      ],
+      "description": "Creates a new string view that is a substring of the original string view.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string_view/substr"
+    },
+    {
+      "name": "swap",
+      "params": [
+        {
+          "name": "other",
+          "type": "string_view&"
+        }
+      ],
+      "description": "Swaps the contents of two string views.",
+      "cppreference": "https://en.cppreference.com/w/cpp/string/basic_string_view/swap"
+    }
+  ]
+}

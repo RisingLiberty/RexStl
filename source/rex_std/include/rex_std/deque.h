@@ -24,27 +24,28 @@ namespace rsl
       template <typename T>
       constexpr size_t deque_default_sub_array_size()
       {
+        size_t res = 4;
         if constexpr (sizeof(T) <= 4)
         {
-          return 64;
+          res = 64;
         }
 
         if constexpr (sizeof(T) <= 8)
         {
-          return 32;
+          res = 32;
         }
 
         if constexpr (sizeof(T) <= 16)
         {
-          return 16;
+          res = 16;
         }
 
         if constexpr (sizeof(T) <= 32)
         {
-          return 8;
+          res = 8;
         }
 
-        return 4;
+        return res;
       }
     }
 
@@ -247,7 +248,7 @@ namespace rsl
         init(n);
         fill_default();
       }
-      deque(size_type n, const value_type& value, const allocator_type& allocator)
+      deque(size_type n, const value_type& value, const allocator_type& allocator = allocator_type())
         : m_ptr_array(nullptr)
         , m_ptr_array_size(0)
         , m_begin_it()
@@ -873,10 +874,10 @@ namespace rsl
 
         while (ptr_array_current < m_end_it.m_current_array_ptr)
         {
-          rsl::uninitialized_fill(*ptr_array_current, *ptr_array_current + SubArraySize, value);
+          rsl::uninitialized_fill(*ptr_array_current, *ptr_array_current + SubArraySize, val);
           ++ptr_array_current;
         }
-        rsl::uninitialized_fill(m_end_it.m_begin, m_end_it.m_current, value);
+        rsl::uninitialized_fill(m_end_it.m_begin, m_end_it.m_current, val);
       }
 
       void set_capacity(size_type n)

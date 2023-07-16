@@ -26,7 +26,8 @@ namespace rsl
       template <typename Iterator, typename Distance>
       void random_access_advance(Iterator& it, Distance distance)
       {
-        it += distance;
+        using difference_type = typename iterator_traits<Iterator>::difference_type;
+        it += static_cast<difference_type>(distance);
       }
 
       template <typename Iterator, typename Distance>

@@ -1,0 +1,64 @@
+{
+  "header_name": "cinttypes",
+  "functions": [
+    {
+      "name": "imaxabs",
+      "parameters": [
+        { "name": "n", "type": "intmax_t" }
+      ],
+      "description": "Computes the absolute value of an intmax_t integer.",
+      "cppreference_link": "https://en.cppreference.com/w/c/types/imaxabs"
+    },
+    {
+      "name": "imaxdiv",
+      "parameters": [
+        { "name": "numer", "type": "intmax_t" },
+        { "name": "denom", "type": "intmax_t" }
+      ],
+      "description": "Computes the quotient and remainder of the division of two intmax_t integers.",
+      "cppreference_link": "https://en.cppreference.com/w/c/types/imaxdiv"
+    },
+    {
+      "name": "strtoimax",
+      "parameters": [
+        { "name": "str", "type": "const char*", "description": "The string representation of the integer" },
+        { "name": "endptr", "type": "char**", "description": "Address of a pointer to the first invalid character" },
+        { "name": "base", "type": "int" }
+      ],
+      "description": "Converts a string to an intmax_t integer.",
+      "cppreference_link": "https://en.cppreference.com/w/c/types/strtoimax"
+    },
+    {
+      "name": "strtoumax",
+      "parameters": [
+        { "name": "str", "type": "const char*", "description": "The string representation of the integer" },
+        { "name": "endptr", "type": "char**", "description": "Address of a pointer to the first invalid character" },
+        { "name": "base", "type": "int" }
+      ],
+      "description": "Converts a string to an uintmax_t integer.",
+      "cppreference_link": "https://en.cppreference.com/w/c/types/strtoumax"
+    },
+    {
+      "name": "wcstoimax",
+      "parameters": [
+        { "name": "str", "type": "const wchar_t*", "description": "The wide string representation of the integer" },
+        { "name": "endptr", "type": "wchar_t**", "description": "Address of a pointer to the first invalid wide character" },
+        { "name": "base", "type": "int" }
+      ],
+      "description": "Converts a wide string to an intmax_t integer.",
+      "cppreference_link": "https://en.cppreference.com/w/c/types/wcstoimax"
+    },
+    {
+      "name": "wcstoumax",
+      "parameters": [
+        { "name": "str", "type": "const wchar_t*", "description": "The wide string representation of the integer" },
+        { "name": "endptr", "type": "wchar_t**", "description": "Address of a pointer to the first invalid wide character" },
+        { "name": "base", "type": "int" }
+      ],
+      "description": "Converts a wide string to an uintmax_t integer.",
+      "cppreference_link": "https://en.cppreference.com/w/c/types/wcstoumax"
+    }
+  ],
+  "classes": [],
+  "type_aliases": []
+}

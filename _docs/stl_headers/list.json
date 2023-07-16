@@ -1,0 +1,135 @@
+{
+  "header_name": "list",
+  "functions": [],
+  "classes": [
+    {
+      "name": "list",
+      "functions": [
+        {
+          "name": "list",
+          "parameters": [],
+          "description": "Constructs an empty list.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/list/list"
+        },
+        {
+          "name": "list",
+          "parameters": [
+            {
+              "name": "count",
+              "type": "size_type",
+              "description": "The number of elements to initialize the list with."
+            },
+            {
+              "name": "value",
+              "type": "const T&",
+              "description": "The value to initialize the elements with."
+            }
+          ],
+          "description": "Constructs the list with `count` copies of `value`.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/list/list"
+        },
+        {
+          "name": "list",
+          "parameters": [
+            {
+              "name": "first",
+              "type": "InputIt",
+              "description": "Iterator to the first element in the range."
+            },
+            {
+              "name": "last",
+              "type": "InputIt",
+              "description": "Iterator to the element after the last element in the range."
+            }
+          ],
+          "description": "Constructs the list with the elements from the range [`first`, `last`).",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/list/list"
+        },
+        {
+          "name": "list",
+          "parameters": [
+            {
+              "name": "other",
+              "type": "const list&",
+              "description": "Another list to be used as a source to initialize this list."
+            }
+          ],
+          "description": "Copy constructor. Constructs the list as a copy of `other`.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/list/list"
+        },
+        {
+          "name": "list",
+          "parameters": [
+            {
+              "name": "other",
+              "type": "list&&",
+              "description": "Another list to be used as a source to initialize this list."
+            }
+          ],
+          "description": "Move constructor. Constructs the list by moving the contents of `other`.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/list/list"
+        },
+        {
+          "name": "push_back",
+          "parameters": [
+            {
+              "name": "value",
+              "type": "T",
+              "description": "The value to be added to the back of the list."
+            }
+          ],
+          "description": "Adds a new element at the end of the list, after its current last element.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/list/push_back"
+        },
+        {
+          "name": "push_front",
+          "parameters": [
+            {
+              "name": "value",
+              "type": "T",
+              "description": "The value to be added to the front of the list."
+            }
+          ],
+          "description": "Adds a new element at the beginning of the list, before its current first element.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/list/push_front"
+        },
+        {
+          "name": "pop_back",
+          "parameters": [],
+          "description": "Removes the last element of the list.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/list/pop_back"
+        },
+        {
+          "name": "pop_front",
+          "parameters": [],
+          "description": "Removes the first element of the list.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/list/pop_front"
+        },
+        {
+          "name": "begin",
+          "parameters": [],
+          "description": "Returns an iterator to the first element of the list.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/list/begin"
+        },
+        {
+          "name": "end",
+          "parameters": [],
+          "description": "Returns an iterator to the element following the last element of the list.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/list/end"
+        },
+        {
+          "name": "size",
+          "parameters": [],
+          "description": "Returns the number of elements in the list.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/list/size"
+        },
+        {
+          "name": "empty",
+          "parameters": [],
+          "description": "Checks if the list has no elements.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/list/empty"
+        }
+      ]
+    }
+  ]
+}

@@ -50,10 +50,7 @@ namespace rsl
 			using reverse_iterator1 = rsl::reverse_iterator<BidirectionalIterator1>;
 			using reverse_iterator2 = rsl::reverse_iterator<BidirectionalIterator2>;
 
-			reverse_iterator1 rresult(rsl::search<reverse_iterator1, reverse_iterator2, Predicate>
-				(reverse_iterator1(last1), reverse_iterator1(first1),
-					reverse_iterator2(last2), reverse_iterator2(first2),
-					predicate));
+			reverse_iterator1 rresult(rsl::search(reverse_iterator1(last1), reverse_iterator1(first1), reverse_iterator2(last2), reverse_iterator2(first2), predicate));
 			if (rresult.base() != first1) // If we found something...
 			{
 				BidirectionalIterator1 result(rresult.base());
@@ -69,7 +66,7 @@ namespace rsl
 			using IC1 = typename rsl::iterator_traits<ForwardIterator1>::iterator_category;
 			using IC2 = typename rsl::iterator_traits<ForwardIterator2>::iterator_category;
 
-			return rsl::find_end_impl(first1, last1, first2, last2, rsl::equal_to<ForwardIterator1>(), IC1(), IC2());
+			return rsl::find_end_impl(first1, last1, first2, last2, rsl::equal_to<iterator_traits<ForwardIterator1>::value_type>(), IC1(), IC2());
 		}
 
 		template <typename ForwardIterator1, typename ForwardIterator2, typename Predicate>

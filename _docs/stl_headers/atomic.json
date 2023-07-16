@@ -1,0 +1,104 @@
+{
+  "header": "atomic",
+  "functions": [
+    {
+      "name": "atomic_is_lock_free",
+      "parameters": [
+        { "name": "obj", "type": "const volatile A*" }
+      ],
+      "description": "Checks if a type is lock-free for atomic operations.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/atomic/atomic_is_lock_free"
+    },
+    {
+      "name": "atomic_store",
+      "parameters": [
+        { "name": "obj", "type": "A*" },
+        { "name": "val", "type": "T" }
+      ],
+      "description": "Stores a value into an atomic object.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/atomic/atomic_store"
+    },
+    {
+      "name": "atomic_load",
+      "parameters": [
+        { "name": "obj", "type": "const A*" }
+      ],
+      "description": "Loads a value from an atomic object.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/atomic/atomic_load"
+    },
+    {
+      "name": "atomic_exchange",
+      "parameters": [
+        { "name": "obj", "type": "A*" },
+        { "name": "val", "type": "T" }
+      ],
+      "description": "Exchanges the value of an atomic object.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/atomic/atomic_exchange"
+    },
+    {
+      "name": "atomic_compare_exchange_weak",
+      "parameters": [
+        { "name": "obj", "type": "A*" },
+        { "name": "expected", "type": "T" },
+        { "name": "desired", "type": "T" }
+      ],
+      "description": "Compares and exchanges the value of an atomic object (weak version).",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/atomic/atomic_compare_exchange"
+    },
+    {
+      "name": "atomic_compare_exchange_strong",
+      "parameters": [
+        { "name": "obj", "type": "A*" },
+        { "name": "expected", "type": "T" },
+        { "name": "desired", "type": "T" }
+      ],
+      "description": "Compares and exchanges the value of an atomic object (strong version).",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/atomic/atomic_compare_exchange"
+    },
+    {
+      "name": "atomic_fetch_add",
+      "parameters": [
+        { "name": "obj", "type": "A*" },
+        { "name": "operand", "type": "M" }
+      ],
+      "description": "Adds a value to the atomic object and returns the previous value (fetch-and-add).",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/atomic/atomic_fetch_add"
+    },
+    {
+      "name": "atomic_fetch_sub",
+      "parameters": [
+        { "name": "obj", "type": "A*" },
+        { "name": "operand", "type": "M" }
+      ],
+      "description": "Subtracts a value from the atomic object and returns the previous value (fetch-and-subtract).",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/atomic/atomic_fetch_sub"
+    },
+    {
+      "name": "atomic_fetch_and",
+      "parameters": [
+        { "name": "obj", "type": "A*" },
+        { "name": "operand", "type": "M" }
+      ],
+      "description": "Performs a bitwise AND operation on the atomic object and returns the previous value (fetch-and-AND).",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/atomic/atomic_fetch_and"
+    },
+    {
+      "name": "atomic_fetch_or",
+      "parameters": [
+        { "name": "obj", "type": "A*" },
+        { "name": "operand", "type": "M" }
+      ],
+      "description": "Performs a bitwise OR operation on the atomic object and returns the previous value (fetch-and-OR).",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/atomic/atomic_fetch_or"
+    },
+    {
+      "name": "atomic_fetch_xor",
+      "parameters": [
+        { "name": "obj", "type": "A*" },
+        { "name": "operand", "type": "M" }
+      ],
+      "description": "Performs a bitwise XOR operation on the atomic object and returns the previous value (fetch-and-XOR).",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/atomic/atomic_fetch_xor"
+    }
+  ]
+}

@@ -1,0 +1,213 @@
+{
+  "header": "future",
+  "functions": [
+    {
+      "name": "async",
+      "parameters": [
+        { "name": "policy", "type": "launch", "default": "launch::async" },
+        { "name": "fn", "type": "Function", "modifiers": ["&&"] },
+        { "name": "args", "type": "Args&&...", "modifiers": ["&&"] }
+      ],
+      "description": "Runs a function asynchronously and returns a future representing the result.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/thread/async"
+    },
+    {
+      "name": "future_status",
+      "parameters": [],
+      "description": "Enumeration type that describes the status of a future.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/thread/future_status"
+    },
+    {
+      "name": "launch",
+      "parameters": [],
+      "description": "Bitmask type that specifies the launch policy for a task.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/thread/launch"
+    },
+    {
+      "name": "make_ready_future",
+      "parameters": [
+        { "name": "args", "type": "Args&&...", "modifiers": ["&&"] }
+      ],
+      "description": "Creates a future that is immediately ready with the specified result value.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/thread/make_ready_future"
+    },
+    {
+      "name": "make_exceptional_future",
+      "parameters": [
+        { "name": "ex", "type": "Exception" }
+      ],
+      "description": "Creates a future that is immediately ready with the specified exception.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/thread/make_exceptional_future"
+    },
+    {
+      "name": "promise",
+      "parameters": [],
+      "description": "Class template for an object that can store a value or an exception that will be provided asynchronously at a later time.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/thread/promise"
+    },
+    {
+      "name": "shared_future",
+      "parameters": [],
+      "description": "Class template that represents a shared future object.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/thread/shared_future"
+    },
+    {
+      "name": "swap",
+      "parameters": [
+        { "name": "a", "type": "future<>&" },
+        { "name": "b", "type": "future<>&" }
+      ],
+      "description": "Swaps the state of two future objects.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/thread/future/swap"
+    },
+    {
+      "name": "swap",
+      "parameters": [
+        { "name": "a", "type": "shared_future<>&" },
+        { "name": "b", "type": "shared_future<>&" }
+      ],
+      "description": "Swaps the state of two shared_future objects.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/thread/shared_future/swap"
+    }
+  ],
+  "classes": [
+    {
+      "name": "future",
+      "functions": [
+        {
+          "name": "valid",
+          "parameters": [],
+          "description": "Checks if the future object refers to a shared state.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/future/valid"
+        },
+        {
+          "name": "get",
+          "parameters": [],
+          "description": "Blocks until the result becomes available and retrieves it.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/future/get"
+        },
+        {
+          "name": "share",
+          "parameters": [],
+          "description": "Returns a shared_future object that shares ownership of the shared state.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/future/share"
+        },
+        {
+          "name": "wait",
+          "parameters": [],
+          "description": "Blocks until the future has a valid result or an exception.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/future/wait"
+        },
+        {
+          "name": "wait_for",
+          "parameters": [
+            { "name": "rel_time", "type": "const duration<Rep, Period>&" }
+          ],
+          "description": "Blocks until the future has a valid result, an exception, or the specified timeout duration has elapsed.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/future/wait_for"
+        },
+        {
+          "name": "wait_until",
+          "parameters": [
+            { "name": "abs_time", "type": "const time_point<Clock, Duration>&" }
+          ],
+          "description": "Blocks until the future has a valid result, an exception, or the specified absolute timeout time has been reached.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/future/wait_until"
+        },
+        {
+          "name": "operator=",
+          "parameters": [
+            { "name": "other", "type": "future<>&&" }
+          ],
+          "description": "Move-assigns the state from another future object.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/future/operator%3D"
+        }
+      ],
+      "type_aliases": []
+    },
+    {
+      "name": "promise",
+      "functions": [
+        {
+          "name": "set_value",
+          "parameters": [
+            { "name": "value", "type": "T&&" }
+          ],
+          "description": "Stores the value in the shared state and makes it available to the associated future object.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/promise/set_value"
+        },
+        {
+          "name": "set_exception",
+          "parameters": [
+            { "name": "ex", "type": "Exception&&" }
+          ],
+          "description": "Stores the exception in the shared state and makes it available to the associated future object.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/promise/set_exception"
+        },
+        {
+          "name": "get_future",
+          "parameters": [],
+          "description": "Returns a future object associated with the same shared state.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/promise/get_future"
+        },
+        {
+          "name": "swap",
+          "parameters": [
+            { "name": "other", "type": "promise&" }
+          ],
+          "description": "Swaps the state of two promise objects.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/promise/swap"
+        }
+      ],
+      "type_aliases": []
+    },
+    {
+      "name": "shared_future",
+      "functions": [
+        {
+          "name": "valid",
+          "parameters": [],
+          "description": "Checks if the shared_future object refers to a shared state.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/shared_future/valid"
+        },
+        {
+          "name": "get",
+          "parameters": [],
+          "description": "Blocks until the result becomes available and retrieves it.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/shared_future/get"
+        },
+        {
+          "name": "wait",
+          "parameters": [],
+          "description": "Blocks until the shared_future has a valid result or an exception.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/shared_future/wait"
+        },
+        {
+          "name": "wait_for",
+          "parameters": [
+            { "name": "rel_time", "type": "const duration<Rep, Period>&" }
+          ],
+          "description": "Blocks until the shared_future has a valid result, an exception, or the specified timeout duration has elapsed.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/shared_future/wait_for"
+        },
+        {
+          "name": "wait_until",
+          "parameters": [
+            { "name": "abs_time", "type": "const time_point<Clock, Duration>&" }
+          ],
+          "description": "Blocks until the shared_future has a valid result, an exception, or the specified absolute timeout time has been reached.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/shared_future/wait_until"
+        },
+        {
+          "name": "operator=",
+          "parameters": [
+            { "name": "other", "type": "shared_future<>&&" }
+          ],
+          "description": "Move-assigns the state from another shared_future object.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/thread/shared_future/operator%3D"
+        }
+      ],
+      "type_aliases": []
+    }
+  ]
+}

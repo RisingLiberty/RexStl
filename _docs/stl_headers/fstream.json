@@ -1,0 +1,98 @@
+{
+  "header": "fstream",
+  "functions": [
+    {
+      "name": "ofstream",
+      "parameters": [
+        { "name": "filename", "type": "const char*" },
+        { "name": "mode", "type": "ios_base::openmode = ios_base::out" }
+      ],
+      "description": "Constructs an output file stream and opens the file.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/io/basic_ofstream/basic_ofstream"
+    },
+    {
+      "name": "ifstream",
+      "parameters": [
+        { "name": "filename", "type": "const char*" },
+        { "name": "mode", "type": "ios_base::openmode = ios_base::in" }
+      ],
+      "description": "Constructs an input file stream and opens the file.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/io/basic_ifstream/basic_ifstream"
+    },
+    {
+      "name": "fstream",
+      "parameters": [
+        { "name": "filename", "type": "const char*" },
+        { "name": "mode", "type": "ios_base::openmode = ios_base::in | ios_base::out" }
+      ],
+      "description": "Constructs a file stream and opens the file.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/io/basic_fstream/basic_fstream"
+    }
+  ],
+  "classes": [
+    {
+      "name": "ofstream",
+      "functions": [
+        {
+          "name": "open",
+          "parameters": [
+            { "name": "filename", "type": "const char*" },
+            { "name": "mode", "type": "ios_base::openmode = ios_base::out" }
+          ],
+          "description": "Opens the file for output.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/io/basic_ofstream/open"
+        },
+        {
+          "name": "close",
+          "parameters": [],
+          "description": "Closes the file.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/io/basic_ofstream/close"
+        }
+      ],
+      "type_aliases": []
+    },
+    {
+      "name": "ifstream",
+      "functions": [
+        {
+          "name": "open",
+          "parameters": [
+            { "name": "filename", "type": "const char*" },
+            { "name": "mode", "type": "ios_base::openmode = ios_base::in" }
+          ],
+          "description": "Opens the file for input.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/io/basic_ifstream/open"
+        },
+        {
+          "name": "close",
+          "parameters": [],
+          "description": "Closes the file.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/io/basic_ifstream/close"
+        }
+      ],
+      "type_aliases": []
+    },
+    {
+      "name": "fstream",
+      "functions": [
+        {
+          "name": "open",
+          "parameters": [
+            { "name": "filename", "type": "const char*" },
+            { "name": "mode", "type": "ios_base::openmode = ios_base::in | ios_base::out" }
+          ],
+          "description": "Opens the file.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/io/basic_fstream/open"
+        },
+        {
+          "name": "close",
+          "parameters": [],
+          "description": "Closes the file.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/io/basic_fstream/close"
+        }
+      ],
+      "type_aliases": []
+    }
+  ],
+  "type_aliases": []
+}

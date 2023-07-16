@@ -1,0 +1,74 @@
+{
+  "header": "queue",
+  "classes": [
+    {
+      "name": "queue",
+      "constructors": [
+        {
+          "name": "queue"
+        },
+        {
+          "name": "queue",
+          "parameters": [
+            { "type": "Container", "name": "container" }
+          ]
+        }
+      ],
+      "member_functions": [
+        {
+          "name": "empty",
+          "returns": "bool",
+          "description": "Checks if the queue is empty",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/queue/empty"
+        },
+        {
+          "name": "size",
+          "returns": "size_type",
+          "description": "Returns the number of elements in the queue",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/queue/size"
+        },
+        {
+          "name": "front",
+          "returns": "reference",
+          "description": "Accesses the front element of the queue",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/queue/front"
+        },
+        {
+          "name": "back",
+          "returns": "reference",
+          "description": "Accesses the back element of the queue",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/queue/back"
+        },
+        {
+          "name": "push",
+          "parameters": [
+            { "type": "const value_type&", "name": "value" }
+          ],
+          "description": "Adds an element to the back of the queue",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/queue/push"
+        },
+        {
+          "name": "emplace",
+          "parameters": [
+            { "type": "Args&&...", "name": "args" }
+          ],
+          "description": "Constructs an element in-place at the back of the queue",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/queue/emplace"
+        },
+        {
+          "name": "pop",
+          "description": "Removes the front element from the queue",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/queue/pop"
+        },
+        {
+          "name": "swap",
+          "parameters": [
+            { "type": "queue&", "name": "other" }
+          ],
+          "description": "Swaps the contents of two queues",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/container/queue/swap"
+        }
+      ]
+    }
+  ]
+}

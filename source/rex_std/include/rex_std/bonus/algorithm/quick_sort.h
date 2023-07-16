@@ -12,7 +12,9 @@
 
 #pragma once
 
+#include "rex_std/internal/algorithm/insertion_sort.h"
 #include "rex_std/internal/iterator/iterator_traits.h"
+#include "rex_std/internal/math/log2.h"
 #include "rex_std/bonus/algorithm/get_partition.h"
 #include "rex_std/bonus/algorithm/median.h"
 
@@ -28,7 +30,7 @@ namespace rsl
 			inline constexpr card32 g_quicksort_limit = 16; // It seems that on other processors lower limits are more beneficial, as they result in fewer compares.
 #endif
 			template <typename RandomAccessIterator, typename Size, typename PivotValueType>
-			inline void quick_sort_impl_helper(RandomAccessIterator first, RandomAccessIterator last, Size kRecursionCount)
+			void quick_sort_impl_helper(RandomAccessIterator first, RandomAccessIterator last, Size kRecursionCount)
 			{
 				using value_type = typename iterator_traits<RandomAccessIterator>::value_type;
 
@@ -42,11 +44,13 @@ namespace rsl
 				}
 
 				if (kRecursionCount == 0)
+				{
 					rsl::partial_sort<RandomAccessIterator>(first, last, last);
+				}
 			}
 
 			template <typename RandomAccessIterator, typename Size, typename Compare, typename PivotValueType>
-			inline void quick_sort_impl_helper(RandomAccessIterator first, RandomAccessIterator last, Size kRecursionCount, Compare compare)
+			void quick_sort_impl_helper(RandomAccessIterator first, RandomAccessIterator last, Size kRecursionCount, Compare compare)
 			{
 				using value_type = typename iterator_traits<RandomAccessIterator>::value_type;
 
@@ -64,7 +68,7 @@ namespace rsl
 			}
 
 			template <typename RandomAccessIterator, typename Size>
-			inline void quick_sort_impl(RandomAccessIterator first, RandomAccessIterator last, Size kRecursionCount,
+			void quick_sort_impl(RandomAccessIterator first, RandomAccessIterator last, Size kRecursionCount,
 				typename rsl::enable_if<rsl::is_copy_constructible<typename iterator_traits<RandomAccessIterator>::value_type>::value>::type* = 0)
 			{
 				using value_type = typename iterator_traits<RandomAccessIterator>::value_type;
@@ -74,7 +78,7 @@ namespace rsl
 			}
 
 			template <typename RandomAccessIterator, typename Size>
-			inline void quick_sort_impl(RandomAccessIterator first, RandomAccessIterator last, Size kRecursionCount,
+			void quick_sort_impl(RandomAccessIterator first, RandomAccessIterator last, Size kRecursionCount,
 				typename rsl::enable_if<rsl::is_move_constructible<typename iterator_traits<RandomAccessIterator>::value_type>::value
 				&& !rsl::is_copy_constructible<typename iterator_traits<RandomAccessIterator>::value_type>::value>::type* = 0)
 			{
@@ -85,7 +89,7 @@ namespace rsl
 			}
 
 			template <typename RandomAccessIterator, typename Size, typename Compare>
-			inline void quick_sort_impl(RandomAccessIterator first, RandomAccessIterator last, Size kRecursionCount, Compare compare,
+			void quick_sort_impl(RandomAccessIterator first, RandomAccessIterator last, Size kRecursionCount, Compare compare,
 				typename rsl::enable_if<rsl::is_copy_constructible<typename iterator_traits<RandomAccessIterator>::value_type>::value>::type* = 0)
 			{
 				using value_type = typename iterator_traits<RandomAccessIterator>::value_type;
@@ -95,7 +99,7 @@ namespace rsl
 			}
 
 			template <typename RandomAccessIterator, typename Size, typename Compare>
-			inline void quick_sort_impl(RandomAccessIterator first, RandomAccessIterator last, Size kRecursionCount, Compare compare,
+			void quick_sort_impl(RandomAccessIterator first, RandomAccessIterator last, Size kRecursionCount, Compare compare,
 				typename rsl::enable_if<rsl::is_move_constructible<typename iterator_traits<RandomAccessIterator>::value_type>::value
 				&& !rsl::is_copy_constructible<typename iterator_traits<RandomAccessIterator>::value_type>::value>::type* = 0)
 			{
@@ -113,12 +117,12 @@ namespace rsl
 
 			if (first != last)
 			{
-				quick_sort_impl<RandomAccessIterator, difference_type>(first, last, 2 * Internal::Log2(last - first));
+				internal::quick_sort_impl<RandomAccessIterator, difference_type>(first, last, 2 * log2(last - first));
 
-				if ((last - first) > (difference_type)g_quicksort_limit)
+				if ((last - first) > (difference_type)internal::g_quicksort_limit)
 				{
-					rsl::insertion_sort<RandomAccessIterator>(first, first + g_quicksort_limit);
-					insertion_sort_simple<RandomAccessIterator>(first + g_quicksort_limit, last);
+					rsl::insertion_sort<RandomAccessIterator>(first, first + internal::g_quicksort_limit);
+					internal::insertion_sort_simple<RandomAccessIterator>(first + internal::g_quicksort_limit, last);
 				}
 				else
 					rsl::insertion_sort<RandomAccessIterator>(first, last);
@@ -133,12 +137,12 @@ namespace rsl
 
 			if (first != last)
 			{
-				quick_sort_impl<RandomAccessIterator, difference_type, Compare>(first, last, 2 * Internal::Log2(last - first), compare);
+				internal::quick_sort_impl<RandomAccessIterator, difference_type, Compare>(first, last, 2 * log2(last - first), compare);
 
-				if ((last - first) > (difference_type)g_quicksort_limit)
+				if ((last - first) > (difference_type)internal::g_quicksort_limit)
 				{
-					rsl::insertion_sort<RandomAccessIterator, Compare>(first, first + g_quicksort_limit, compare);
-					insertion_sort_simple<RandomAccessIterator, Compare>(first + g_quicksort_limit, last, compare);
+					rsl::insertion_sort<RandomAccessIterator, Compare>(first, first + internal::g_quicksort_limit, compare);
+					internal::insertion_sort_simple<RandomAccessIterator, Compare>(first + internal::g_quicksort_limit, last, compare);
 				}
 				else
 					rsl::insertion_sort<RandomAccessIterator, Compare>(first, last, compare);

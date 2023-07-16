@@ -1,0 +1,65 @@
+{
+  "header": "<typeindex>",
+  "classes": [
+    {
+      "name": "type_index",
+      "description": "Wraps a type for use in a standard library container or other context requiring comparison or hashing.",
+      "cppreference_link": "https://en.cppreference.com/w/cpp/types/type_index",
+      "constructors": [
+        {
+          "name": "type_index",
+          "description": "Constructs a type_index object.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/types/type_index/type_index"
+        },
+        {
+          "name": "type_index",
+          "description": "Constructs a type_index object from a type.",
+          "parameters": [
+            {
+              "type": "const std::type_info&",
+              "name": "rhs",
+              "description": "The type to wrap."
+            }
+          ],
+          "cppreference_link": "https://en.cppreference.com/w/cpp/types/type_index/type_index"
+        }
+      ],
+      "functions": [
+        {
+          "name": "operator=",
+          "description": "Assigns a new type to the type_index object.",
+          "parameters": [
+            {
+              "type": "const std::type_info&",
+              "name": "rhs",
+              "description": "The type to assign."
+            }
+          ],
+          "cppreference_link": "https://en.cppreference.com/w/cpp/types/type_index/operator%3D"
+        },
+        {
+          "name": "hash_code",
+          "description": "Returns the hash code of the wrapped type.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/types/type_index/hash_code"
+        },
+        {
+          "name": "before",
+          "description": "Compares two type_index objects for ordering.",
+          "parameters": [
+            {
+              "type": "const std::type_index&",
+              "name": "rhs",
+              "description": "The type_index object to compare with."
+            }
+          ],
+          "cppreference_link": "https://en.cppreference.com/w/cpp/types/type_index/before"
+        },
+        {
+          "name": "name",
+          "description": "Returns the mangled name of the wrapped type.",
+          "cppreference_link": "https://en.cppreference.com/w/cpp/types/type_index/name"
+        }
+      ]
+    }
+  ]
+}
