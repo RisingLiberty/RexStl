@@ -588,7 +588,7 @@ namespace rsl
       {
         // break const here, because we're getting the non-const node of a const_iterator
         node_type* pos_node  = pos.m_node;
-        node_type* prev_node = pos_node->prev;
+        node_type* prev_node = static_cast<node_type*>(pos_node->prev);
 
         // We can't allocate all nodes in 1 go as this would allocate a buffer
         // which would have to be deallocated using the address of the buffer start
@@ -599,7 +599,7 @@ namespace rsl
         while(first != last)
         {
           node_type* new_node = static_cast<node_type*>(get_allocator().allocate(1)); // TODO: use 1_elem here instead of literal 1 to make it clear we're using element count instead of number of bytes
-          insert_at(pos, *first, new_node);
+          insert_at(pos_node, *first, new_node);
           ++first;
 #ifdef REX_ENABLE_SIZE_IN_LISTS
           ++m_size;
@@ -617,7 +617,7 @@ namespace rsl
       {
         node_type* new_node = static_cast<node_type*>(get_allocator().allocate(1)); // TODO: use 1_elem here instead of literal 1 to make it clear we're using element count instead of number of bytes
         new(rsl::addressof(new_node->value)) value_type(rsl::forward<Args>(args)...);
-        new_node->insert(pos);
+        new_node->insert(pos.m_node);
         return iterator(new_node);
       }
       iterator erase(const_iterator pos)

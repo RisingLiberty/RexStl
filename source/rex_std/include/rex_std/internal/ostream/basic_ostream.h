@@ -134,7 +134,7 @@ namespace rsl
 
         if(sentry)
         {
-          tiny_stack_string str = internal::to_string<tiny_stack_string>(value);
+          tiny_stack_string str = string_utils::internal::to_string<tiny_stack_string>(value);
           base::rdbuf()->sputn(str.data(), str.length());
         }
 
@@ -147,7 +147,7 @@ namespace rsl
 
         if(sentry)
         {
-          tiny_stack_string str = internal::to_string<tiny_stack_string>(value);
+          tiny_stack_string str = string_utils::internal::to_string<tiny_stack_string>(value);
           base::rdbuf()->sputn(str.data(), str.length());
         }
 
@@ -160,7 +160,7 @@ namespace rsl
 
         if(sentry)
         {
-          tiny_stack_string str = internal::to_string<tiny_stack_string>(value);
+          tiny_stack_string str = string_utils::internal::to_string<tiny_stack_string>(value);
           base::rdbuf()->sputn(str.data(), str.length());
         }
 
@@ -173,7 +173,7 @@ namespace rsl
 
         if(sentry)
         {
-          tiny_stack_string str = internal::to_string<tiny_stack_string>(value);
+          tiny_stack_string str = string_utils::internal::to_string<tiny_stack_string>(value);
           base::rdbuf()->sputn(str.data(), str.length());
         }
 
@@ -186,7 +186,7 @@ namespace rsl
 
         if(sentry)
         {
-          tiny_stack_string str = internal::to_string<tiny_stack_string>(value);
+          tiny_stack_string str = string_utils::internal::to_string<tiny_stack_string>(value);
           base::rdbuf()->sputn(str.data(), str.length());
         }
 
@@ -199,7 +199,7 @@ namespace rsl
 
         if(sentry)
         {
-          tiny_stack_string str = internal::to_string<tiny_stack_string>(value);
+          tiny_stack_string str = string_utils::internal::to_string<tiny_stack_string>(value);
           base::rdbuf()->sputn(str.data(), str.length());
         }
 
@@ -212,7 +212,7 @@ namespace rsl
 
         if(sentry)
         {
-          tiny_stack_string str = internal::to_string<tiny_stack_string>(value);
+          tiny_stack_string str = string_utils::internal::to_string<tiny_stack_string>(value);
           base::rdbuf()->sputn(str.data(), str.length());
         }
 
@@ -225,7 +225,7 @@ namespace rsl
 
         if(sentry)
         {
-          tiny_stack_string str = internal::to_string<tiny_stack_string>(value);
+          tiny_stack_string str = string_utils::internal::to_string<tiny_stack_string>(value);
           base::rdbuf()->sputn(str.data(), str.length());
         }
 
@@ -239,7 +239,7 @@ namespace rsl
 
         if(sentry)
         {
-          tiny_stack_string str = internal::to_string<tiny_stack_string>(value);
+          tiny_stack_string str = string_utils::internal::to_string<tiny_stack_string>(value);
           base::rdbuf()->sputn(str.data(), str.length());
         }
 
@@ -252,7 +252,7 @@ namespace rsl
 
         if(sentry)
         {
-          tiny_stack_string str = internal::to_string<tiny_stack_string>(value);
+          tiny_stack_string str = string_utils::internal::to_string<tiny_stack_string>(value);
           base::rdbuf()->sputn(str.data(), str.length());
         }
 
@@ -265,7 +265,7 @@ namespace rsl
 
         if(sentry)
         {
-          tiny_stack_string str = internal::to_string<tiny_stack_string>(value);
+          tiny_stack_string str = string_utils::internal::to_string<tiny_stack_string>(value);
           base::rdbuf()->sputn(str.data(), str.length());
         }
 
@@ -279,7 +279,7 @@ namespace rsl
 
         if(sentry)
         {
-          tiny_stack_string str = internal::to_string<tiny_stack_string>(value);
+          tiny_stack_string str = string_utils::internal::to_string<tiny_stack_string>(value);
           base::rdbuf()->sputn(str.data(), str.length());
         }
 
@@ -293,7 +293,7 @@ namespace rsl
 
         if(sentry)
         {
-          tiny_stack_string str = internal::to_string<tiny_stack_string>(value);
+          tiny_stack_string str = string_utils::internal::to_string<tiny_stack_string>(value);
           base::rdbuf()->sputn(str.data(), str.length());
         }
 

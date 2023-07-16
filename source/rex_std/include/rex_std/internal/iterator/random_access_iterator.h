@@ -14,6 +14,7 @@
 
 #include "rex_std/bonus/types.h"
 #include "rex_std/internal/iterator/iterator_tags.h"
+#include "rex_std/iterator.h"
 
 /// [21/Aug/2022] RSL Comment: deprecate this file
 
@@ -21,7 +22,6 @@ namespace rsl
 {
   inline namespace v1
   {
-
     template <typename T>
     class random_access_iterator
     {
@@ -146,21 +146,21 @@ namespace rsl
     class const_random_access_iterator
     {
     public:
-      using value_type        = T;
-      using pointer           = const T*;
-      using const_pointer     = const T*;
-      using reference         = const T&;
-      using const_reference   = const T&;
+      using value_type = T;
+      using pointer = const T*;
+      using const_pointer = const T*;
+      using reference = const T&;
+      using const_reference = const T&;
       using iterator_category = rsl::random_access_iterator_tag;
-      using difference_type   = int32;
+      using difference_type = int32;
 
       constexpr explicit const_random_access_iterator(pointer value = nullptr)
-          : m_value(value)
+        : m_value(value)
       {
       }
 
       constexpr const_random_access_iterator(random_access_iterator<T> it) // NOLINT(google-explicit-constructor)
-          : m_value(it.operator->())
+        : m_value(it.operator->())
       {
       }
 
@@ -258,6 +258,28 @@ namespace rsl
     private:
       pointer m_value;
     };
+
+    template <typename T>
+    bool operator==(random_access_iterator<T> lhs, const_random_access_iterator<T> rhs)
+    {
+      return iterator_to_pointer(lhs) == iterator_to_pointer(rhs);
+    }
+    template <typename T>
+    bool operator==(const_random_access_iterator<T> lhs, random_access_iterator<T> rhs)
+    {
+      return iterator_to_pointer(lhs) == iterator_to_pointer(rhs);
+    }
+
+    template <typename T>
+    bool operator!=(random_access_iterator<T> lhs, const_random_access_iterator<T> rhs)
+    {
+      return !(lhs == rhs);
+    }
+    template <typename T>
+    bool operator!=(const_random_access_iterator<T> lhs, random_access_iterator<T> rhs)
+    {
+      return !(lhs == rhs);
+    }
 
   } // namespace v1
 } // namespace rsl

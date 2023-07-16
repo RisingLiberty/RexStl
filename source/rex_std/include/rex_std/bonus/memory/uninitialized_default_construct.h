@@ -25,9 +25,9 @@ namespace rsl
     }
 
     template <typename Iterator>
-    void uninitialized_default_construct(Iterator* begin, Iterator* end)
+    void uninitialized_default_construct(Iterator begin, Iterator end)
     {
-      value_type = iterator_traits<Iterator>::value_type;
+      using value_type = iterator_traits<Iterator>::value_type;
 
       for (auto it = begin; it != end; ++it)
       {

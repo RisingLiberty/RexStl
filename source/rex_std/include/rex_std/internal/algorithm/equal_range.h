@@ -33,7 +33,7 @@ namespace rsl
     equal_range_result<Iterator> equal_range(Iterator first, Iterator last, const T& value)
     {
       using ResultType      = equal_range_result<Iterator>;
-      using difference_type = typename Iterator::difference_type;
+      using difference_type = typename iterator_traits<Iterator>::difference_type;
 
       difference_type d = rsl::distance(first, last);
 
@@ -58,10 +58,10 @@ namespace rsl
         {
           Iterator j(i);
 
-          return ResultType(rsl::lower_bound(first, i, value), rsl::upper_bound(++j, last, value));
+          return ResultType{ rsl::lower_bound(first, i, value), rsl::upper_bound(++j, last, value) };
         }
       }
-      return ResultType(first, first);
+      return ResultType{ first, first };
     }
 
     template <typename Iterator, typename T, typename Compare>
@@ -93,10 +93,10 @@ namespace rsl
         {
           Iterator j(i);
 
-          return ResultType(rsl::lower_bound(first, i, value, compare), rsl::upper_bound(++j, last, value, compare));
+          return ResultType{ rsl::lower_bound(first, i, value, compare), rsl::upper_bound(++j, last, value, compare) };
         }
       }
-      return ResultType(first, first);
+      return ResultType{ first, first };
     }
 
   } // namespace v1

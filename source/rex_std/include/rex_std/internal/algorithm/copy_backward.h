@@ -60,7 +60,7 @@ namespace rsl
         template <typename InputIterator, typename OutputIterator>
         static OutputIterator move_or_copy_backward(InputIterator first, InputIterator last, OutputIterator dstLast)
         {
-          using difference_type = InputIterator::difference_type;
+          using difference_type = typename iterator_traits<InputIterator>::difference_type;
 
           for(difference_type n = (last - first); n > 0; --n)
             *--dstLast = rsl::move(*--last);
@@ -77,7 +77,7 @@ namespace rsl
         template <typename InputIterator, typename OutputIterator>
         static OutputIterator move_or_copy_backward(InputIterator first, InputIterator last, OutputIterator dstLast)
         {
-          using difference_type = InputIterator::difference_type;
+          using difference_type = typename iterator_traits<InputIterator>::difference_type;
 
           for(difference_type n = (last - first); n > 0; --n)
             *--dstLast = *--last;
@@ -108,10 +108,10 @@ namespace rsl
       using value_type_output = typename iterator_traits<OutputIterator>::value_type;
 
       REX_UNUSED(static constexpr bool IsMove)        = rsl::is_move_iterator_v<InputIterator>;
-      REX_UNUSED(static constexpr bool CanBeMemmoved) = rsl::is_trivially_copyable_v<value_type_output>::value && rsl::is_same_v<value_type_input, value_type_output> &&
+      REX_UNUSED(static constexpr bool CanBeMemmoved) = rsl::is_trivially_copyable_v<value_type_output> && rsl::is_same_v<value_type_input, value_type_output> &&
                                                         (rsl::is_pointer_v<InputIterator> || rsl::is_same_v<IIC, rsl::continuous_iterator_tag>)&&(rsl::is_pointer_v<OutputIterator> || rsl::is_same_v<OIC, rsl::continuous_iterator_tag>);
 
-      internal::move_and_copy_backward_helper::move_or_copy_backward(first, last, dst_first);
+      internal::move_and_copy_backward_helper<InputIterator, IsMove, CanBeMemmoved>::move_or_copy_backward(first, last, dstFirst);
     }
 
   } // namespace v1

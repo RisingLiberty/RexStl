@@ -14,20 +14,12 @@
 
 #include "rex_std/internal/iterator/iterator_traits.h"
 #include "rex_std/internal/algorithm/search.h"
+#include "rex_std/internal/functional/equal_to.h"
 
 namespace rsl
 {
   inline namespace v1
   {
-
-		template <typename ForwardIterator1, typename ForwardIterator2>
-		ForwardIterator1 find_end(ForwardIterator1 first1, ForwardIterator1 last1, ForwardIterator2 first2, ForwardIterator2 last2)
-		{
-			using IC1 = typename rsl::iterator_traits<ForwardIterator1>::iterator_category;
-			using IC2 = typename rsl::iterator_traits<ForwardIterator2>::iterator_category;
-
-			return rsl::find_end_impl(first1, last1, first2, last2, IC1(), IC2());
-		}
 
 		template <typename ForwardIterator1, typename ForwardIterator2, typename Predicate>
 		ForwardIterator1 find_end_impl(ForwardIterator1 first1, ForwardIterator1 last1, ForwardIterator2 first2, ForwardIterator2 last2, Predicate predicate, forward_iterator_tag, forward_iterator_tag)
@@ -69,6 +61,15 @@ namespace rsl
 				return result;
 			}
 			return last1;
+		}
+
+		template <typename ForwardIterator1, typename ForwardIterator2>
+		ForwardIterator1 find_end(ForwardIterator1 first1, ForwardIterator1 last1, ForwardIterator2 first2, ForwardIterator2 last2)
+		{
+			using IC1 = typename rsl::iterator_traits<ForwardIterator1>::iterator_category;
+			using IC2 = typename rsl::iterator_traits<ForwardIterator2>::iterator_category;
+
+			return rsl::find_end_impl(first1, last1, first2, last2, rsl::equal_to<ForwardIterator1>(), IC1(), IC2());
 		}
 
 		template <typename ForwardIterator1, typename ForwardIterator2, typename Predicate>
