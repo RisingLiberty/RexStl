@@ -69,7 +69,7 @@ namespace rsl
           : stack_string()
       {
         const card32 copy_size = rsl::clamp_max(static_cast<card32>(str.size()), StrMaxSize);
-        rsl::memcpy(m_data.data(), str.begin(), copy_size);
+        rsl::memcpy(m_data.data(), str.begin(), copy_size * sizeof(value_type));
         m_null_terminator_offset = copy_size;
       }
 
@@ -86,7 +86,7 @@ namespace rsl
           : stack_string()
       {
         const card32 copy_size = rsl::clamp_max(size, StrMaxSize);
-        rsl::memcpy(m_data.data(), str, copy_size);
+        rsl::memcpy(m_data.data(), str, copy_size * sizeof(value_type));
         m_null_terminator_offset = copy_size;
       }
 
@@ -94,7 +94,7 @@ namespace rsl
           : stack_string()
       {
         const card32 copy_size = rsl::clamp_max(view.length(), StrMaxSize);
-        rsl::memcpy(m_data.data(), view.data(), copy_size);
+        rsl::memcpy(m_data.data(), view.data(), copy_size * sizeof(value_type));
         m_null_terminator_offset = copy_size;
       }
 
@@ -112,7 +112,7 @@ namespace rsl
       stack_string& operator=(basic_string_view<CharType, char_traits<CharType>> view)
       {
         const card32 new_length = rsl::clamp_max(view.length(), StrMaxSize);
-        rsl::memcpy(m_data.data(), view.data(), new_length);
+        rsl::memcpy(m_data.data(), view.data(), new_length * sizeof(value_type));
         m_null_terminator_offset = new_length;
         return *this;
       }
@@ -129,14 +129,14 @@ namespace rsl
       {
         const card32 length    = static_cast<card32>(last - first);
         const card32 copy_size = clamp_max(length, StrMaxSize);
-        rsl::memcpy(data(), first, copy_size);
+        rsl::memcpy(data(), first, copy_size * sizeof(value_type));
         m_null_terminator_offset         = copy_size;
         m_data[m_null_terminator_offset] = value_type();
       }
       void assign(const value_type* newData, card32 length)
       {
         const card32 copy_size = clamp_max(length, StrMaxSize);
-        rsl::memcpy(data(), newData, copy_size);
+        rsl::memcpy(data(), newData, copy_size * sizeof(value_type));
         m_null_terminator_offset         = copy_size;
         m_data[m_null_terminator_offset] = value_type();
       }

@@ -72,9 +72,9 @@ namespace rsl::test
       return m_x;
     }
     
-    bool test_object::is_clear() // Returns true if there are no existing TestObjects and the sanity checks related to that test OK.
+    bool test_object::is_clear()
     {
-      return (s_num_ctor_calls == s_num_dtor_calls);
+      return (s_num_created == s_num_dtor_calls);
     }
 
     void test_object::reset()

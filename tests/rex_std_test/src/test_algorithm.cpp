@@ -437,6 +437,9 @@ TEST_CASE("TestMinMax")
     CHECK(result3.max == 3);
 
   }
+
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 }
 
 
@@ -467,12 +470,12 @@ TEST_CASE("TestClamp")
   CHECK(rsl::clamp(A(420), A(1), A(100), LessStruct()).a == A(100).a);
   CHECK(rsl::clamp(A(1), A(1), A(100), LessStruct()).a == A(1).a);
   CHECK(rsl::clamp(A(100), A(1), A(100), LessStruct()).a == A(100).a);
+
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 }
 
 
-///////////////////////////////////////////////////////////////////////////////
-// TestAlgorithm
-//
 TEST_CASE("TestAllAnyNoneOf")
 {
   rsl::test::test_object::reset();
@@ -492,6 +495,9 @@ TEST_CASE("TestAllAnyNoneOf")
     CHECK(rsl::any_of(v.begin(), v.end(), DivisibleBy(3)));
     CHECK(rsl::none_of(v.begin(), v.end(), DivisibleBy(5)));
   }
+
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 }
 
 TEST_CASE("TestMismatch")
@@ -527,6 +533,9 @@ TEST_CASE("TestMismatch")
   pairInt = rsl::mismatch(intArray2, intArray2 + 6, intArray3, rsl::equal_to<int>());
   CHECK(pairInt.lhs_it == intArray2 + 6);
   CHECK(pairInt.rhs_it == intArray3 + 6);
+
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 }
 
 TEST_CASE("TestSwap")
@@ -534,42 +543,47 @@ TEST_CASE("TestSwap")
   // void swap(T& a, T& b)
   // void iter_swap(ForwardIterator1 a, ForwardIterator2 b)
 
-  rsl::array intArray = { -5, 2, 1, 5, 4, 5 };
+  {
+    rsl::array intArray = { -5, 2, 1, 5, 4, 5 };
 
-  rsl::swap(intArray[0], intArray[4]);
-  CHECK(intArray == rsl::array{ 4, 2, 1, 5, -5, 5 });
+    rsl::swap(intArray[0], intArray[4]);
+    CHECK(intArray == rsl::array{ 4, 2, 1, 5, -5, 5 });
 
-  iter_swap(intArray.begin() + 2, intArray.begin() + 3);
-  CHECK(intArray == rsl::array{ 4, 2, 5, 1, -5, 5 });
+    iter_swap(intArray.begin() + 2, intArray.begin() + 3);
+    CHECK(intArray == rsl::array{ 4, 2, 5, 1, -5, 5 });
 
-  rsl::test::test_object toArray[] = { rsl::test::test_object(-5), rsl::test::test_object(2), rsl::test::test_object(1), rsl::test::test_object(5), rsl::test::test_object(4), rsl::test::test_object(5) };
+    rsl::test::test_object toArray[] = { rsl::test::test_object(-5), rsl::test::test_object(2), rsl::test::test_object(1), rsl::test::test_object(5), rsl::test::test_object(4), rsl::test::test_object(5) };
 
-  rsl::swap(toArray[0], toArray[4]);
-  CHECK(toArray[0] == rsl::test::test_object(4));
-  CHECK(toArray[4] == rsl::test::test_object(-5));
+    rsl::swap(toArray[0], toArray[4]);
+    CHECK(toArray[0] == rsl::test::test_object(4));
+    CHECK(toArray[4] == rsl::test::test_object(-5));
 
-  rsl::iter_swap(toArray + 2, toArray + 3);
-  CHECK(toArray[2] == rsl::test::test_object(5));
-  CHECK(toArray[3] == rsl::test::test_object(1));
+    rsl::iter_swap(toArray + 2, toArray + 3);
+    CHECK(toArray[2] == rsl::test::test_object(5));
+    CHECK(toArray[3] == rsl::test::test_object(1));
 
-  // ForwardIterator2 swap_ranges(ForwardIterator1 first1, ForwardIterator1 last1, ForwardIterator2 first2)
+    // ForwardIterator2 swap_ranges(ForwardIterator1 first1, ForwardIterator1 last1, ForwardIterator2 first2)
 
-  rsl::array intArray1 = { 3, 2, 6, 5, 4, 1 };
-  rsl::array intArray2 = { 0, 0, 0, 0, 0, 0 };
+    rsl::array intArray1 = { 3, 2, 6, 5, 4, 1 };
+    rsl::array intArray2 = { 0, 0, 0, 0, 0, 0 };
 
-  swap_ranges(intArray1.begin(), intArray1.begin() + 6, intArray2.begin());
-  CHECK(intArray1 == rsl::array{ 0, 0, 0, 0, 0, 0 });
-  CHECK(intArray2 == rsl::array{ 3, 2, 6, 5, 4, 1 });
+    swap_ranges(intArray1.begin(), intArray1.begin() + 6, intArray2.begin());
+    CHECK(intArray1 == rsl::array{ 0, 0, 0, 0, 0, 0 });
+    CHECK(intArray2 == rsl::array{ 3, 2, 6, 5, 4, 1 });
 
 
-  rsl::test::test_object toArray1[] = { rsl::test::test_object(3), rsl::test::test_object(2), rsl::test::test_object(6), rsl::test::test_object(5), rsl::test::test_object(4), rsl::test::test_object(1) };
-  rsl::test::test_object toArray2[] = { rsl::test::test_object(0), rsl::test::test_object(0), rsl::test::test_object(0), rsl::test::test_object(0), rsl::test::test_object(0), rsl::test::test_object(0) };
+    rsl::test::test_object toArray1[] = { rsl::test::test_object(3), rsl::test::test_object(2), rsl::test::test_object(6), rsl::test::test_object(5), rsl::test::test_object(4), rsl::test::test_object(1) };
+    rsl::test::test_object toArray2[] = { rsl::test::test_object(0), rsl::test::test_object(0), rsl::test::test_object(0), rsl::test::test_object(0), rsl::test::test_object(0), rsl::test::test_object(0) };
 
-  rsl::swap_ranges(toArray1, toArray1 + 6, toArray2);
-  CHECK(toArray1[0] == rsl::test::test_object(0));
-  CHECK(toArray1[5] == rsl::test::test_object(0));
-  CHECK(toArray2[0] == rsl::test::test_object(3));
-  CHECK(toArray2[5] == rsl::test::test_object(1));
+    rsl::swap_ranges(toArray1, toArray1 + 6, toArray2);
+    CHECK(toArray1[0] == rsl::test::test_object(0));
+    CHECK(toArray1[5] == rsl::test::test_object(0));
+    CHECK(toArray2[0] == rsl::test::test_object(3));
+    CHECK(toArray2[5] == rsl::test::test_object(1));
+  }
+
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 }
 
 
@@ -578,53 +592,58 @@ TEST_CASE("TestAdjacentFind")
   // ForwardIterator adjacent_find(ForwardIterator first, ForwardIterator last)
   // ForwardIterator adjacent_find(ForwardIterator first, ForwardIterator last, BinaryPredicate predicate)
 
-  int intArray[] = { 3, 2, 5, 5, 4, 1 };
+  {
+    int intArray[] = { 3, 2, 5, 5, 4, 1 };
 
-  int* pInt = rsl::adjacent_find(intArray + 0, intArray + 6);
-  CHECK(pInt == (intArray + 2));
+    int* pInt = rsl::adjacent_find(intArray + 0, intArray + 6);
+    CHECK(pInt == (intArray + 2));
 
-  pInt = rsl::adjacent_find(intArray + 3, intArray + 6);
-  CHECK(pInt == (intArray + 6)); // Verify not found
+    pInt = rsl::adjacent_find(intArray + 3, intArray + 6);
+    CHECK(pInt == (intArray + 6)); // Verify not found
 
 
-  rsl::test::test_object toArray[] = { rsl::test::test_object(3), rsl::test::test_object(2), rsl::test::test_object(5), rsl::test::test_object(5), rsl::test::test_object(4), rsl::test::test_object(1) };
+    rsl::test::test_object toArray[] = { rsl::test::test_object(3), rsl::test::test_object(2), rsl::test::test_object(5), rsl::test::test_object(5), rsl::test::test_object(4), rsl::test::test_object(1) };
 
-  rsl::test::test_object* pTO = rsl::adjacent_find(toArray + 0, toArray + 6);
-  CHECK(pTO == (toArray + 2));
+    rsl::test::test_object* pTO = rsl::adjacent_find(toArray + 0, toArray + 6);
+    CHECK(pTO == (toArray + 2));
 
-  pTO = rsl::adjacent_find(toArray + 3, toArray + 6);
-  CHECK(pTO == (toArray + 6)); // Verify not found
+    pTO = rsl::adjacent_find(toArray + 3, toArray + 6);
+    CHECK(pTO == (toArray + 6)); // Verify not found
+  }
+
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 }
 
 
 TEST_CASE("TestMove")
 {
-  // OutputIterator move(InputIterator first, InputIterator last, OutputIterator result)
-
-  rsl::array intArray1 = { 3, 2, 6, 5, 4, 1 };
-  rsl::array intArray2 = { 0, 0, 0, 0, 0, 0 };
-
-  move(intArray1.begin(), intArray1.begin() + 0, intArray2.begin());
-  CHECK(intArray2 == rsl::array{ 0, 0, 0, 0, 0, 0 });
-
-  move(intArray1.begin(), intArray1.begin() + 6, intArray2.begin());
-  CHECK(intArray2 == rsl::array{ 3, 2, 6, 5, 4, 1 });
-
-  move(intArray1.begin() + 1, intArray1.begin() + 6, intArray1.begin() + 0); // Copy over self.
-  CHECK(intArray1 == rsl::array{ 2, 6, 5, 4, 1, 1 });
-
-  // OutputIterator move(InputIterator first, InputIterator last, OutputIterator result)
   {
+    // OutputIterator move(InputIterator first, InputIterator last, OutputIterator result)
+    rsl::array intArray1 = { 3, 2, 6, 5, 4, 1 };
+    rsl::array intArray2 = { 0, 0, 0, 0, 0, 0 };
+
+    move(intArray1.begin(), intArray1.begin() + 0, intArray2.begin());
+    CHECK(intArray2 == rsl::array{ 0, 0, 0, 0, 0, 0 });
+
+    move(intArray1.begin(), intArray1.begin() + 6, intArray2.begin());
+    CHECK(intArray2 == rsl::array{ 3, 2, 6, 5, 4, 1 });
+
+    move(intArray1.begin() + 1, intArray1.begin() + 6, intArray1.begin() + 0); // Copy over self.
+    CHECK(intArray1 == rsl::array{ 2, 6, 5, 4, 1, 1 });
+  }
+
+  {
+    // OutputIterator move(InputIterator first, InputIterator last, OutputIterator result)
     rsl::vector<rsl::string> src;
     for (card32 i = 0; i < 4; i++)
     {
-      src.push_back(rsl::string(1, (char8)('0' + i)));
+       src.push_back(rsl::string(1, (char8)('0' + i)));
     }
     rsl::vector<rsl::string> dest(rsl::Size(src.size()));
 
     rsl::move(src.begin(), src.end(), dest.begin());
     CHECK(((dest[0] == "0") && (dest[3] == "3")));
-    CHECK((src[0].empty() && src[3].empty()));
   }
 
   {
@@ -638,8 +657,10 @@ TEST_CASE("TestMove")
 
     rsl::move_backward(src.begin(), src.end(), dest.end());
     CHECK(((dest[0] == "0") && (dest[3] == "3")));
-    CHECK((src[0].empty() && src[3].empty()));
   }
+
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 }
 
 TEST_CASE("TestCopy")
@@ -702,6 +723,9 @@ TEST_CASE("TestCopy")
     copy_backward(intArray1.begin(), intArray1.begin() + 5, intArray1.begin() + 6); // Copy over self.
     CHECK(intArray1 == rsl::array{ 3, 3, 2, 6, 5, 4 });
   }
+
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 }
 
 TEST_CASE("TestCount")
@@ -756,6 +780,9 @@ TEST_CASE("TestCount")
     n = count_if(intList.begin(), intList.end(), less_than_3);
     CHECK(n == 3);
   }
+
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 }
 
 TEST_CASE("TestFill")
@@ -868,35 +895,38 @@ TEST_CASE("TestFill")
     rsl::vector< int16_t> vI16(rsl::Size(kMaxSize), 0);
 
     rsl::vector<uint64_t>::iterator itU64 = rsl::fill_n(vU64.begin(), kMaxSize, UINT64_C(0x0123456789abcdef));
-    CHECK(rsl::memcheck(&vU64[0], UINT64_C(0x0123456789abcdef), kMaxSize) == NULL);
+    CHECK(rsl::memcheck(&vU64[0], 0x0123456789abcdefui64, kMaxSize) == NULL);
     CHECK(itU64 == (vU64.begin() + kMaxSize));
     rsl::memset(&vU64[0], 0, kMaxSize);
 
     rsl::vector<int64_t>::iterator itI64 = rsl::fill_n(vI64.begin(), kMaxSize, UINT64_C(0x0123456789abcdef));
-    CHECK(rsl::memcheck(&vI64[0], UINT64_C(0x0123456789abcdef), kMaxSize) == NULL);
+    CHECK(rsl::memcheck(&vI64[0], 0x0123456789abcdefui64, kMaxSize) == NULL);
     CHECK(itI64 == (vI64.begin() + kMaxSize));
     rsl::memset(&vI64[0], 0, kMaxSize);
 
     rsl::vector<uint32_t>::iterator itU32 = rsl::fill_n(vU32.begin(), kMaxSize, UINT32_C(0x01234567));
-    CHECK(rsl::memcheck(&vU32[0], UINT32_C(0x01234567), kMaxSize) == NULL);
+    CHECK(rsl::memcheck(&vU32[0], 0x01234567u, kMaxSize) == NULL);
     CHECK(itU32 == (vU32.begin() + kMaxSize));
     rsl::memset(&vU32[0], 0, kMaxSize);
 
     rsl::vector<int32_t>::iterator itI32 = rsl::fill_n(vI32.begin(), kMaxSize, UINT32_C(0x01234567));
-    CHECK(rsl::memcheck(&vI32[0], UINT32_C(0x01234567), kMaxSize) == NULL);
+    CHECK(rsl::memcheck(&vI32[0], 0x01234567u, kMaxSize) == NULL);
     CHECK(itI32 == (vI32.begin() + kMaxSize));
     rsl::memset(&vI32[0], 0, kMaxSize);
 
     rsl::vector<uint16_t>::iterator itU16 = rsl::fill_n(vU16.begin(), kMaxSize, UINT16_C(0x0123));
-    CHECK(rsl::memcheck(&vU16[0], UINT16_C(0x0123), kMaxSize) == NULL);
+    CHECK(rsl::memcheck(&vU16[0], 0x0123ui16, kMaxSize) == NULL);
     CHECK(itU16 == (vU16.begin() + kMaxSize));
     rsl::memset(&vU16[0], 0, kMaxSize);
 
     rsl::vector<int16_t>::iterator itI16 = rsl::fill_n(vI16.begin(), kMaxSize, UINT16_C(0x0123));
-    CHECK(rsl::memcheck(&vI16[0], UINT16_C(0x0123), kMaxSize) == NULL);
+    CHECK(rsl::memcheck(&vI16[0], 0x0123ui16, kMaxSize) == NULL);
     CHECK(itI16 == (vI16.begin() + kMaxSize));
     rsl::memset(&vI16[0], 0, kMaxSize);
   }
+
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 }
 
 TEST_CASE("TestFind")
@@ -1003,7 +1033,7 @@ TEST_CASE("TestFind")
     int* pInt = rsl::find_first_not_of(intArray1, intArray1, intArray2, intArray2 + 3);
     CHECK(pInt == intArray1);
     pInt = rsl::find_first_not_of(intArray1, intArray1 + 10, intArray2, intArray2);
-    CHECK(pInt == intArray1 + 0);
+    CHECK(pInt == intArray1);
     pInt = rsl::find_first_not_of(intArray1, intArray1 + 10, intArray2, intArray2 + 3);
     CHECK(pInt == intArray1 + 3);
 
@@ -1060,6 +1090,9 @@ TEST_CASE("TestFind")
     pInt = rsl::find_last_not_of(intArray1, intArray1 + 10, intArray2, intArray2 + 3, rsl::equal_to<int>());
     CHECK(pInt == intArray1 + 6);
   }
+
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 }
 
 TEST_CASE("TestForEach")
@@ -1117,39 +1150,47 @@ TEST_CASE("TestForEach")
       CHECK(v == expected);
     }
   }
+
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 }
 
 TEST_CASE("TestGenerate")
 {
-  // void generate(ForwardIterator first, ForwardIterator last, Generator generator)
-  // OutputIterator generate_n(OutputIterator first, Size n, Generator generator)
-  rsl::test::rand rng(rsl::test::rand_seed());
-
-  rsl::deque<int> intDeque((card32)rng.rand_range(100, 1000));
-  rsl::test::generate_incremental_integers<int> gii(0); // We define this class at the top of this file.
-  int i, iEnd;
-
-  rsl::generate(intDeque.begin(), intDeque.end(), gii);
-  for (i = 0, iEnd = (int)intDeque.size(); i < iEnd; i++)
   {
-    if (intDeque[(card32)i] != i)
+    // void generate(ForwardIterator first, ForwardIterator last, Generator generator)
+    // OutputIterator generate_n(OutputIterator first, Size n, Generator generator)
+    rsl::test::rand rng(rsl::test::rand_seed());
+
+    rsl::deque<int> intDeque((card32)rng.rand_range(100, 1000));
+    rsl::test::generate_incremental_integers<int> gii(0); // We define this class at the top of this file.
+    int i, iEnd;
+
+    rsl::generate(intDeque.begin(), intDeque.end(), gii);
+    for (i = 0, iEnd = (int)intDeque.size(); i < iEnd; i++)
     {
-      break;
+      if (intDeque[(card32)i] != i)
+      {
+        break;
+      }
     }
+    CHECK(i == iEnd);
+
+
+    rsl::array<int, 1000> intArray;
+    gii.reset(0);
+
+    rsl::generate(intArray.begin(), intArray.end(), gii);
+    for (i = 0; i < 1000; i++)
+    {
+      if (intArray[(card32)i] != i)
+        break;
+    }
+    CHECK(i == 1000);
   }
-  CHECK(i == iEnd);
 
-
-  rsl::array<int, 1000> intArray;
-  gii.reset(0);
-
-  rsl::generate(intArray.begin(), intArray.end(), gii);
-  for (i = 0; i < 1000; i++)
-  {
-    if (intArray[(card32)i] != i)
-      break;
-  }
-  CHECK(i == 1000);
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 }
 
 
@@ -1198,14 +1239,13 @@ TEST_CASE("TestTransform")
     CHECK(it == sList.end());
   }
 
-
   {
     // OutputIterator transform(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, OutputIterator result, BinaryOperation binaryOperation)
 
     rsl::array intArray1 = { 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1 };
     rsl::array intArray2 = { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 };
 
-    auto pInt = transform(intArray1.cbegin(), intArray1.cend(), intArray2.cbegin(), intArray2.begin(), rsl::plus<int>());
+    auto pInt = transform(intArray1.cbegin(), intArray1.cbegin(), intArray2.cbegin(), intArray2.begin(), rsl::plus<int>());
     CHECK(pInt == intArray2.cbegin());
     CHECK(intArray1 == rsl::array{ 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1 });
     CHECK(intArray2 == rsl::array{ 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 });
@@ -1215,6 +1255,9 @@ TEST_CASE("TestTransform")
     CHECK(intArray1 == rsl::array{ 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1 });
     CHECK(intArray2 == rsl::array{ 3, 3, 4, 4, 3, 3, 4, 4, 3, 3, 4, 4 });
   }
+
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 }
 
 TEST_CASE("TestEqual")
@@ -1244,6 +1287,9 @@ TEST_CASE("TestEqual")
   intArray[50] += 1;
   b = equal(intArray.begin(), intArray.end(), intList.begin(), rsl::equal_to<card32>());
   CHECK(!b);
+
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 }
 
 
@@ -1284,6 +1330,9 @@ TEST_CASE("TestIdentical")
   intArray[50] += 1;
   b = equal_range(intArray.begin(), intArray.end(), intList.begin(), intList.end(), rsl::equal_to<card32>());
   CHECK(!b);
+
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 }
 
 
@@ -1325,6 +1374,9 @@ TEST_CASE("TestLexicographicalCompare")
     bool b = rsl::lexicographical_compare(cstr, cstr, cstr, cstr);
     CHECK(!b);
   }
+
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 }
 
 TEST_CASE("TestLowerBound")
@@ -1382,6 +1434,9 @@ TEST_CASE("TestLowerBound")
         CHECK(((toK < *it) || !(*it < toK))); // Verify tha k <= *it by using only operator<
     }
   }
+
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 }
 
 
@@ -1440,6 +1495,9 @@ TEST_CASE("TestUpperBound")
         CHECK(toK < *it);
     }
   }
+
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 }
 
 
@@ -1522,6 +1580,9 @@ TEST_CASE("TestEqualRange")
       }
     }
   }
+
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 }
 
 TEST_CASE("TestReplace")
@@ -1529,89 +1590,99 @@ TEST_CASE("TestReplace")
   // void replace(ForwardIterator first, ForwardIterator last, const T& old_value, const T& new_value)
   // void replace_if(ForwardIterator first, ForwardIterator last, Predicate predicate, const T& new_value)
 
-  int intArray[8] = { 0, 3, 2, 7, 5, 4, 5, 3, };
+  {
+    int intArray[8] = { 0, 3, 2, 7, 5, 4, 5, 3, };
 
-  // Convert 3s to 99s.
-  rsl::replace(intArray, intArray, 3, 99); // No-op
-  CHECK(((intArray[1] == 3) && (intArray[7] == 3)));
-  rsl::replace(intArray, intArray + 8, 3, 99); // No-op
-  CHECK(((intArray[1] == 99) && (intArray[7] == 99)));
+    // Convert 3s to 99s.
+    rsl::replace(intArray, intArray, 3, 99); // No-op
+    CHECK(((intArray[1] == 3) && (intArray[7] == 3)));
+    rsl::replace(intArray, intArray + 8, 3, 99); // No-op
+    CHECK(((intArray[1] == 99) && (intArray[7] == 99)));
 
-  // Convert 99s to 88s.
-  rsl::replace_if(intArray, intArray, [](int i) { return i == 99; }, 88); // No-op
-  CHECK(((intArray[1] == 99) && (intArray[7] == 99)));
-  rsl::replace_if(intArray, intArray + 8, [](int i) { return i == 99; }, 88);
-  CHECK(((intArray[1] == 88) && (intArray[7] == 88)));
+    // Convert 99s to 88s.
+    rsl::replace_if(intArray, intArray, [](int i) { return i == 99; }, 88); // No-op
+    CHECK(((intArray[1] == 99) && (intArray[7] == 99)));
+    rsl::replace_if(intArray, intArray + 8, [](int i) { return i == 99; }, 88);
+    CHECK(((intArray[1] == 88) && (intArray[7] == 88)));
 
 
-  rsl::forward_list<rsl::test::test_object> toList;
-  rsl::forward_list<rsl::test::test_object>::iterator it;
-  toList.push_front(rsl::test::test_object(3));
-  toList.push_front(rsl::test::test_object(5));
-  toList.push_front(rsl::test::test_object(4));
-  toList.push_front(rsl::test::test_object(5));
-  toList.push_front(rsl::test::test_object(7));
-  toList.push_front(rsl::test::test_object(2));
-  toList.push_front(rsl::test::test_object(3));
-  toList.push_front(rsl::test::test_object(0));
+    rsl::forward_list<rsl::test::test_object> toList;
+    rsl::forward_list<rsl::test::test_object>::iterator it;
+    toList.push_front(rsl::test::test_object(3));
+    toList.push_front(rsl::test::test_object(5));
+    toList.push_front(rsl::test::test_object(4));
+    toList.push_front(rsl::test::test_object(5));
+    toList.push_front(rsl::test::test_object(7));
+    toList.push_front(rsl::test::test_object(2));
+    toList.push_front(rsl::test::test_object(3));
+    toList.push_front(rsl::test::test_object(0));
 
-  // Convert 3s to 99s.
-  replace(toList.begin(), toList.begin(), rsl::test::test_object(3), rsl::test::test_object(99)); // No-op
-  it = toList.begin();
-  advance(it, 1);
-  CHECK(*it == rsl::test::test_object(3));
-  advance(it, 6);
-  CHECK(*it == rsl::test::test_object(3));
-  replace(toList.begin(), toList.end(), rsl::test::test_object(3), rsl::test::test_object(99));
-  it = toList.begin();
-  advance(it, 1);
-  CHECK(*it == rsl::test::test_object(99));
-  advance(it, 6);
-  CHECK(*it == rsl::test::test_object(99));
+    // Convert 3s to 99s.
+    replace(toList.begin(), toList.begin(), rsl::test::test_object(3), rsl::test::test_object(99)); // No-op
+    it = toList.begin();
+    advance(it, 1);
+    CHECK(*it == rsl::test::test_object(3));
+    advance(it, 6);
+    CHECK(*it == rsl::test::test_object(3));
+    replace(toList.begin(), toList.end(), rsl::test::test_object(3), rsl::test::test_object(99));
+    it = toList.begin();
+    advance(it, 1);
+    CHECK(*it == rsl::test::test_object(99));
+    advance(it, 6);
+    CHECK(*it == rsl::test::test_object(99));
 
-  // Convert 99s to 88s.
-  replace_if(toList.begin(), toList.begin(), [](const rsl::test::test_object& lhs) { return lhs == rsl::test::test_object(99); }, rsl::test::test_object(88)); // No-op
-  it = toList.begin();
-  advance(it, 1);
-  CHECK(*it == rsl::test::test_object(99));
-  advance(it, 6);
-  CHECK(*it == rsl::test::test_object(99));
-  replace_if(toList.begin(), toList.end(), [](const rsl::test::test_object& lhs) { return lhs == rsl::test::test_object(99); }, rsl::test::test_object(88));
-  it = toList.begin();
-  advance(it, 1);
-  CHECK(*it == rsl::test::test_object(88));
-  advance(it, 6);
-  CHECK(*it == rsl::test::test_object(88));
+    // Convert 99s to 88s.
+    replace_if(toList.begin(), toList.begin(), [](const rsl::test::test_object& lhs) { return lhs == rsl::test::test_object(99); }, rsl::test::test_object(88)); // No-op
+    it = toList.begin();
+    advance(it, 1);
+    CHECK(*it == rsl::test::test_object(99));
+    advance(it, 6);
+    CHECK(*it == rsl::test::test_object(99));
+    replace_if(toList.begin(), toList.end(), [](const rsl::test::test_object& lhs) { return lhs == rsl::test::test_object(99); }, rsl::test::test_object(88));
+    it = toList.begin();
+    advance(it, 1);
+    CHECK(*it == rsl::test::test_object(88));
+    advance(it, 6);
+    CHECK(*it == rsl::test::test_object(88));
+  }
+
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 }
 
 
 TEST_CASE("TestRemoveCopy")
 {
-  // OutputIterator remove_copy(InputIterator first, InputIterator last, OutputIterator result, const T& value)
-  // OutputIterator remove_copy_if(InputIterator first, InputIterator last, OutputIterator result, Predicate predicate)
+  {
+    // OutputIterator remove_copy(InputIterator first, InputIterator last, OutputIterator result, const T& value)
+    // OutputIterator remove_copy_if(InputIterator first, InputIterator last, OutputIterator result, Predicate predicate)
 
-  rsl::array intArray1 = { 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1 };
-  rsl::array intArray2 = { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 };
+    rsl::array intArray1 = { 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1 };
+    rsl::array intArray2 = { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 };
 
-  auto pInt = remove_copy(intArray1.cbegin(), intArray1.cbegin(), intArray2.begin(), 1); // No-op
-  CHECK(pInt == intArray2.cbegin());
-  CHECK(intArray1 == rsl::array{ 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1 });
-  CHECK(intArray2 == rsl::array{ 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 });
+    auto pInt = remove_copy(intArray1.cbegin(), intArray1.cbegin(), intArray2.begin(), 1); // No-op
+    CHECK(pInt == intArray2.cbegin());
+    CHECK(intArray1 == rsl::array{ 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1 });
+    CHECK(intArray2 == rsl::array{ 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 });
 
-  pInt = remove_copy(intArray1.cbegin(), intArray1.cbegin() + 12, intArray2.begin(), 1);
-  CHECK(pInt == intArray2.cbegin() + 6);
-  CHECK(intArray1 == rsl::array{ 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1 });
-  CHECK(intArray2 == rsl::array{ 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3 });
+    pInt = remove_copy(intArray1.cbegin(), intArray1.cbegin() + 12, intArray2.begin(), 1);
+    CHECK(pInt == intArray2.cbegin() + 6);
+    CHECK(intArray1 == rsl::array{ 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1 });
+    CHECK(intArray2 == rsl::array{ 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3 });
 
-  pInt = remove_copy_if(intArray1.cbegin(), intArray1.cbegin(), intArray2.begin(), [](int i) { return i == 0; }); // No-op
-  CHECK(pInt == intArray2.cbegin());
-  CHECK(intArray1 == rsl::array{ 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1 });
-  CHECK(intArray2 == rsl::array{ 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3 });
+    pInt = remove_copy_if(intArray1.cbegin(), intArray1.cbegin(), intArray2.begin(), [](int i) { return i == 0; }); // No-op
+    CHECK(pInt == intArray2.cbegin());
+    CHECK(intArray1 == rsl::array{ 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1 });
+    CHECK(intArray2 == rsl::array{ 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3 });
 
-  pInt = remove_copy_if(intArray1.cbegin(), intArray1.cbegin() + 12, intArray2.begin(), [](int i) { return i == 0; });
-  CHECK(pInt == intArray2.cbegin() + 6);
-  CHECK(intArray1 == rsl::array{ 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1 });
-  CHECK(intArray2 == rsl::array{ 1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3 });
+    pInt = remove_copy_if(intArray1.cbegin(), intArray1.cbegin() + 12, intArray2.begin(), [](int i) { return i == 0; });
+    CHECK(pInt == intArray2.cbegin() + 6);
+    CHECK(intArray1 == rsl::array{ 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1 });
+    CHECK(intArray2 == rsl::array{ 1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3 });
+  }
+
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 }
 
 
@@ -1636,6 +1707,9 @@ TEST_CASE("TestRemove")
   pInt = remove(intArray2.begin(), intArray2.begin() + 12, 1);
   CHECK(pInt == intArray2.begin() + 12);
   CHECK(intArray2 == rsl::array{ 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 });
+
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 }
 
 TEST_CASE("TestReplaceCopy")
@@ -1655,6 +1729,9 @@ TEST_CASE("TestReplaceCopy")
   CHECK(pInt == intArray2.cbegin() + 12);
   CHECK(intArray1 == rsl::array{ 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1 });
   CHECK(intArray2 == rsl::array{ 0, 0, 4, 4, 0, 0, 4, 4, 0, 0, 4, 4 });
+
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 }
 
 
@@ -1728,6 +1805,9 @@ TEST_CASE("TestReverse")
     pTO = reverse_copy(toList.begin(), toList.end(), toArray2);
     CHECK(pTO == toArray2 + 10);
   }
+
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 }
 
 TEST_CASE("TestSearch")
@@ -1778,138 +1858,156 @@ TEST_CASE("TestSearch")
     const char* presultult = rsl::search_n(pString1, pString1 + strlen(pString1), 1, 'w');
     CHECK(presultult == pString1 + 6);
   }
+
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 }
 
 TEST_CASE("TestBinarySearch")
 {
-  // bool binary_search(ForwardIterator first, ForwardIterator last, const T& value)
-  // bool binary_search(ForwardIterator first, ForwardIterator last, const T& value, Compare compare)
-
-  // ForwardIterator binary_search_i(ForwardIterator first, ForwardIterator last, const T& value)
-  // ForwardIterator binary_search_i(ForwardIterator first, ForwardIterator last, const T& value, Compare compare)
-
-  rsl::vector<int> intArray;
-  for (int i = 0; i < 1000; i++)
-    intArray.push_back(i);
-
-  bool b = binary_search(intArray.begin(), intArray.begin(), 0);
-  CHECK(b == false);
-
-  b = binary_search(intArray.begin(), intArray.begin() + 1, 0);
-  CHECK(b == true);
-
-  b = binary_search(intArray.begin(), intArray.end(), 733, rsl::less<int>());
-  CHECK(b == true);
-
-
-  rsl::vector<int>::iterator it = binary_search_it(intArray.begin(), intArray.begin(), 0);
-  CHECK(it == intArray.begin());
-
-  it = binary_search_it(intArray.begin(), intArray.begin() + 1, 0, rsl::less<int>());
-  CHECK(it == intArray.begin());
-
-  it = binary_search_it(intArray.begin(), intArray.end(), 733);
-  CHECK(it == intArray.begin() + 733);
-
-
-  rsl::list<rsl::test::test_object> toList;
-  rsl::list<rsl::test::test_object>::iterator toI;
-  for (int j = 0; j < 1000; j++)
   {
-    toList.push_back(rsl::test::test_object(j));
+    // bool binary_search(ForwardIterator first, ForwardIterator last, const T& value)
+    // bool binary_search(ForwardIterator first, ForwardIterator last, const T& value, Compare compare)
+
+    // ForwardIterator binary_search_i(ForwardIterator first, ForwardIterator last, const T& value)
+    // ForwardIterator binary_search_i(ForwardIterator first, ForwardIterator last, const T& value, Compare compare)
+
+    rsl::vector<int> intArray;
+    for (int i = 0; i < 1000; i++)
+      intArray.push_back(i);
+
+    bool b = binary_search(intArray.begin(), intArray.begin(), 0);
+    CHECK(b == false);
+
+    b = binary_search(intArray.begin(), intArray.begin() + 1, 0);
+    CHECK(b == true);
+
+    b = binary_search(intArray.begin(), intArray.end(), 733, rsl::less<int>());
+    CHECK(b == true);
+
+
+    rsl::vector<int>::iterator it = binary_search_it(intArray.begin(), intArray.begin(), 0);
+    CHECK(it == intArray.begin());
+
+    it = binary_search_it(intArray.begin(), intArray.begin() + 1, 0, rsl::less<int>());
+    CHECK(it == intArray.begin());
+
+    it = binary_search_it(intArray.begin(), intArray.end(), 733);
+    CHECK(it == intArray.begin() + 733);
+
+
+    rsl::list<rsl::test::test_object> toList;
+    rsl::list<rsl::test::test_object>::iterator toI;
+    for (int j = 0; j < 1000; j++)
+    {
+      toList.push_back(rsl::test::test_object(j));
+    }
+
+    b = rsl::binary_search(toList.begin(), toList.begin(), rsl::test::test_object(0), rsl::less<rsl::test::test_object>());
+    CHECK(b == false);
+
+    toI = toList.begin();
+    toI++;
+    b = binary_search(toList.begin(), toI, rsl::test::test_object(0));
+    CHECK(b == true);
+
+    b = binary_search(toList.begin(), toList.end(), rsl::test::test_object(733));
+    CHECK(b == true);
+
+
+    toI = binary_search_it(toList.begin(), toList.begin(), rsl::test::test_object(0), rsl::less<rsl::test::test_object>()); // No-op
+    CHECK(toI == toList.begin());
+
+    toI = toList.begin();
+    toI++;
+    toI = binary_search_it(toList.begin(), toI, rsl::test::test_object(0));
+    CHECK(*toI == rsl::test::test_object(0));
+
+    toI = binary_search_it(toList.begin(), toList.end(), rsl::test::test_object(733));
+    CHECK(*toI == rsl::test::test_object(733));
   }
 
-  b = rsl::binary_search(toList.begin(), toList.begin(), rsl::test::test_object(0), rsl::less<rsl::test::test_object>());
-  CHECK(b == false);
-
-  toI = toList.begin();
-  toI++;
-  b = binary_search(toList.begin(), toI, rsl::test::test_object(0));
-  CHECK(b == true);
-
-  b = binary_search(toList.begin(), toList.end(), rsl::test::test_object(733));
-  CHECK(b == true);
-
-
-  toI = binary_search_it(toList.begin(), toList.begin(), rsl::test::test_object(0), rsl::less<rsl::test::test_object>()); // No-op
-  CHECK(toI == toList.begin());
-
-  toI = toList.begin();
-  toI++;
-  toI = binary_search_it(toList.begin(), toI, rsl::test::test_object(0));
-  CHECK(*toI == rsl::test::test_object(0));
-
-  toI = binary_search_it(toList.begin(), toList.end(), rsl::test::test_object(733));
-  CHECK(*toI == rsl::test::test_object(733));
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 }
 
 
 TEST_CASE("TestUnique")
 {
-  // ForwardIterator unique(ForwardIterator first, ForwardIterator last)
-  // ForwardIterator unique(ForwardIterator first, ForwardIterator last, BinaryPredicate predicate)
+  {
+    // ForwardIterator unique(ForwardIterator first, ForwardIterator last)
+    // ForwardIterator unique(ForwardIterator first, ForwardIterator last, BinaryPredicate predicate)
 
-  rsl::array intArray = { 1, 2, 3, 3, 4, 4 };
+    rsl::array intArray = { 1, 2, 3, 3, 4, 4 };
 
-  auto pInt = unique(intArray.begin(), intArray.begin() + 0);
-  CHECK(pInt == intArray.begin());
-  CHECK(intArray == rsl::array{ 1, 2, 3, 3, 4, 4 });
+    auto pInt = unique(intArray.begin(), intArray.begin() + 0);
+    CHECK(pInt == intArray.begin());
+    CHECK(intArray == rsl::array{ 1, 2, 3, 3, 4, 4 });
 
-  pInt = unique(intArray.begin(), intArray.begin() + 6, rsl::equal_to<int>());
-  CHECK(pInt == intArray.begin() + 4);
-  CHECK(intArray == rsl::array{ 1, 2, 3, 4, 4, 4 });
+    pInt = unique(intArray.begin(), intArray.begin() + 6, rsl::equal_to<int>());
+    CHECK(pInt == intArray.begin() + 4);
+    CHECK(intArray == rsl::array{ 1, 2, 3, 4, 4, 4 });
 
 
-  rsl::test::test_object toArray[] = { rsl::test::test_object(1), rsl::test::test_object(2), rsl::test::test_object(3), rsl::test::test_object(3), rsl::test::test_object(4), rsl::test::test_object(4) };
+    rsl::test::test_object toArray[] = { rsl::test::test_object(1), rsl::test::test_object(2), rsl::test::test_object(3), rsl::test::test_object(3), rsl::test::test_object(4), rsl::test::test_object(4) };
 
-  rsl::test::test_object* pTO = rsl::unique(toArray, toArray + 6);
-  CHECK(pTO == toArray + 4);
-  CHECK(toArray[3] == rsl::test::test_object(4));
+    rsl::test::test_object* pTO = rsl::unique(toArray, toArray + 6);
+    CHECK(pTO == toArray + 4);
+    CHECK(toArray[3] == rsl::test::test_object(4));
+  }
+
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 }
 
 
 TEST_CASE("TestFindEnd")
 {
-  // ForwardIterator1 find_end(ForwardIterator1 first1, ForwardIterator1 last1, ForwardIterator2 first2, ForwardIterator2 last2)
-  // ForwardIterator1 find_end(ForwardIterator1 first1, ForwardIterator1 last1, ForwardIterator2 first2, ForwardIterator2 last2, BinaryPredicate predicate)
+  {
+    // ForwardIterator1 find_end(ForwardIterator1 first1, ForwardIterator1 last1, ForwardIterator2 first2, ForwardIterator2 last2)
+    // ForwardIterator1 find_end(ForwardIterator1 first1, ForwardIterator1 last1, ForwardIterator2 first2, ForwardIterator2 last2, BinaryPredicate predicate)
 
-  // Test via bidirectional/random_access iterator.
-  rsl::basic_string<char> sTest("abcdefg abcdefg abcdefg");
-  const char* pSubstring1 = "abcd";
-  const char* pSubstring2 = "1234";
+    // Test via bidirectional/random_access iterator.
+    rsl::basic_string<char> sTest("abcdefg abcdefg abcdefg");
+    const char* pSubstring1 = "abcd";
+    const char* pSubstring2 = "1234";
 
-  rsl::basic_string<char>::iterator iString = find_end(sTest.begin(), sTest.end(), pSubstring1, pSubstring1 + 4);
-  CHECK(&*iString == &sTest[16]);
+    rsl::basic_string<char>::iterator iString = find_end(sTest.begin(), sTest.end(), pSubstring1, pSubstring1 + 4);
+    CHECK(&*iString == &sTest[16]);
 
-  iString = find_end(sTest.begin(), sTest.end(), pSubstring1, pSubstring1 + 4, rsl::equal_to<char>());
-  CHECK(&*iString == &sTest[16]);
+    iString = find_end(sTest.begin(), sTest.end(), pSubstring1, pSubstring1 + 4, rsl::equal_to<char>());
+    CHECK(&*iString == &sTest[16]);
 
-  iString = find_end(sTest.begin(), sTest.end(), pSubstring2, pSubstring2 + strlen(pSubstring2));
-  CHECK(iString == sTest.end());
+    iString = find_end(sTest.begin(), sTest.end(), pSubstring2, pSubstring2 + strlen(pSubstring2));
+    CHECK(iString == sTest.end());
 
-  iString = find_end(sTest.begin(), sTest.end(), pSubstring2, pSubstring2 + strlen(pSubstring2), rsl::equal_to<char>());
-  CHECK(iString == sTest.end());
+    iString = find_end(sTest.begin(), sTest.end(), pSubstring2, pSubstring2 + strlen(pSubstring2), rsl::equal_to<char>());
+    CHECK(iString == sTest.end());
 
-  // Test via forward iterator.
-  rsl::forward_list<char> sListTest;
-  for (rsl::forward_list<char>::size_type i = sTest.size(); i > 0; --i)
-    sListTest.push_front(sTest[i - 1]);
+    // Test via forward iterator.
+    rsl::forward_list<char> sListTest;
+    for (rsl::forward_list<char>::size_type i = sTest.size(); i > 0; --i)
+      sListTest.push_front(sTest[i - 1]);
 
-  rsl::forward_list<char>::iterator iSlist = find_end(sListTest.begin(), sListTest.end(), pSubstring1, pSubstring1 + strlen(pSubstring1));
-  rsl::forward_list<char>::iterator i16 = sListTest.begin();
-  advance(i16, 16);
-  CHECK(iSlist == i16);
+    rsl::forward_list<char>::iterator iSlist = find_end(sListTest.begin(), sListTest.end(), pSubstring1, pSubstring1 + strlen(pSubstring1));
+    rsl::forward_list<char>::iterator i16 = sListTest.begin();
+    advance(i16, 16);
+    CHECK(iSlist == i16);
 
-  iSlist = find_end(sListTest.begin(), sListTest.end(), pSubstring1, pSubstring1 + strlen(pSubstring1), rsl::equal_to<char>());
-  i16 = sListTest.begin();
-  advance(i16, 16);
-  CHECK(iSlist == i16);
+    iSlist = find_end(sListTest.begin(), sListTest.end(), pSubstring1, pSubstring1 + strlen(pSubstring1), rsl::equal_to<char>());
+    i16 = sListTest.begin();
+    advance(i16, 16);
+    CHECK(iSlist == i16);
 
-  iSlist = find_end(sListTest.begin(), sListTest.end(), pSubstring2, pSubstring2 + strlen(pSubstring2));
-  CHECK(iSlist == sListTest.end());
+    iSlist = find_end(sListTest.begin(), sListTest.end(), pSubstring2, pSubstring2 + strlen(pSubstring2));
+    CHECK(iSlist == sListTest.end());
 
-  iSlist = find_end(sListTest.begin(), sListTest.end(), pSubstring2, pSubstring2 + strlen(pSubstring2), rsl::equal_to<char>());
-  CHECK(iSlist == sListTest.end());
+    iSlist = find_end(sListTest.begin(), sListTest.end(), pSubstring2, pSubstring2 + strlen(pSubstring2), rsl::equal_to<char>());
+    CHECK(iSlist == sListTest.end());
+  }
+ 
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 }
 
 
@@ -1932,6 +2030,9 @@ TEST_CASE("TestSetDifference")
 
   set_difference(intArray1.cbegin(), intArray1.cbegin() + 10, intArray2.cbegin(), intArray2.cbegin() + 10, intArray3.begin(), rsl::less<int>());
   CHECK(intArray3 == rsl::array{ 2, 8, 12, 26, 9, 9, 9, 9, 9, 9 });
+
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 }
 
 
@@ -1954,6 +2055,9 @@ TEST_CASE("TestSetSymmetricDifference")
 
   set_symmetric_difference(intArray1.cbegin(), intArray1.cbegin() + 10, intArray2.cbegin(), intArray2.cbegin() + 10, intArray3.begin(), rsl::less<int>());
   CHECK(intArray3 == rsl::array{ 0, 2, 7, 8, 11, 12, 25, 26, 9, 9 });
+
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 }
 
 
@@ -1976,6 +2080,9 @@ TEST_CASE("TestSetIntersection")
 
   set_intersection(intArray1.cbegin(), intArray1.cbegin() + 10, intArray2.cbegin(), intArray2.cbegin() + 10, intArray3.begin(), rsl::less<int>());
   CHECK(intArray3 == rsl::array{ 0, 0, 5, 8, 24, 43, 9, 9, 9, 9 });
+
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 }
 
 
@@ -1998,6 +2105,9 @@ TEST_CASE("TestSetUnion")
 
   set_union(intArray1.cbegin(), intArray1.cbegin() + 10, intArray2.cbegin(), intArray2.cbegin() + 10, intArray3.begin(), rsl::less<int>());
   CHECK(intArray3 == rsl::array{ 0, 0, 0, 2, 5, 7, 8, 8, 11, 12, 24, 25, 26, 43, 9, 9, 9, 9, 9, 9 });
+
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 }
 
 TEST_CASE("TestIsPermutation")
@@ -2072,6 +2182,9 @@ TEST_CASE("TestIsPermutation")
 
     CHECK(isPermutation == isIdentical); // With an array size of 6, isPermutation ends up being true about 1 in 400 times here.
   }
+
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 }
 
 TEST_CASE("TestNextPermutation")
@@ -2102,6 +2215,9 @@ TEST_CASE("TestNextPermutation")
   } while (next_permutation(intArray.begin(), intArray.end(), rsl::less<int>()));
   CHECK(count == 40320); // count = n!
   CHECK(is_sorted(intArray.begin(), intArray.end()));
+
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 }
 
 
@@ -2220,6 +2336,9 @@ TEST_CASE("TestRotate")
       }
     }
   }
+
+  CHECK(rsl::test::test_object::is_clear());
+  rsl::test::test_object::reset();
 }
 
 TEST_CASE("TestSort")
@@ -2278,11 +2397,7 @@ TEST_CASE("TestSort")
     }
   }
 
-
-}
-
-TEST_CASE("ResetTestObject")
-{
   CHECK(rsl::test::test_object::is_clear());
   rsl::test::test_object::reset();
 }
+

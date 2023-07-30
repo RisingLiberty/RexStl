@@ -48,10 +48,11 @@ namespace rsl
 
       void insert(list_node_base* node)
       {
-        next       = node;
-        prev       = node->prev;
-        prev->next = this;
-        node->prev = this;
+        node->next = this;
+        node->prev = prev;
+
+        prev->next = node;
+        prev = node;
       }
 
       void remove()
@@ -630,8 +631,7 @@ namespace rsl
         // that can be 'split'.
         while(first != last)
         {
-          node_type* new_node = static_cast<node_type*>(get_allocator().allocate(sizeof(node_type)));
-          insert_at(pos_node, *first, new_node);
+          emplace(pos, *first);
           ++first;
 #ifdef REX_ENABLE_SIZE_IN_LISTS
           ++m_size;
@@ -658,8 +658,8 @@ namespace rsl
       iterator emplace(const_iterator pos, Args&&... args)
       {
         node_type* new_node = static_cast<node_type*>(get_allocator().allocate(sizeof(node_type)));
-        new(rsl::addressof(new_node->value)) value_type(rsl::forward<Args>(args)...);
-        new_node->insert(pos.m_node);
+        get_allocator().construct(new_node, rsl::forward<Args>(args)...);
+        pos.m_node->insert(new_node);
         return iterator(new_node);
       }
       iterator erase(const_iterator pos)
@@ -733,7 +733,7 @@ namespace rsl
         {
           node_type* new_node = static_cast<node_type*>(get_allocator().allocate(sizeof(node_type))); 
           rsl::uninitialized_default_construct(new_node);                             // kind of annoying we can't do this in the allocator
-          new_node->insert(head_tail_link());
+          head_tail_link()->insert(new_node);
           --num_new_elements;
         }
       }
@@ -747,7 +747,7 @@ namespace rsl
         {
           node_type* new_node = static_cast<node_type*>(get_allocator().allocate(sizeof(node_type))); 
           get_allocator().construct(new_node, value);
-          new_node->insert(head_tail_link());
+          head_tail_link()->insert(new_node);
           --num_new_elements;
         }
       }
@@ -970,7 +970,7 @@ namespace rsl
       void insert_at(node_type* pos, const T& value, node_type* new_node)
       {
         new_node->value = value;
-        new_node->insert(pos);
+        pos->insert(new_node);
       }
 
       template <typename Compare>
@@ -984,7 +984,7 @@ namespace rsl
             if(compare(*--last, *first))
             {
               last.m_node->remove();
-              last.m_node->insert(first.m_node);
+              first.m_node->insert(last.m_node);
             }
             return first;
           case 3:
@@ -1006,13 +1006,13 @@ namespace rsl
             else
             {
               lowest.m_node->remove();
-              lowest.m_node->insert(first.m_node);
+              first.m_node->insert(lowest.m_node);
             }
 
             if(compare(*--last, *first))
             {
               last.m_node->remove();
-              last.m_node->insert(first.m_node);
+              first.m_node->insert(last.m_node);
             }
 
             return lowest;

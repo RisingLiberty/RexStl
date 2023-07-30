@@ -12,6 +12,8 @@
 
 #pragma once
 
+#include "rex_std/internal/algorithm/find.h"
+
 namespace rsl
 {
   inline namespace v1
@@ -21,12 +23,11 @@ namespace rsl
     {
       for (; first1 != last1; ++first1)
       {
-        for (ForwardIt2 i = first2; i != last2; ++i)
+        auto it = rsl::find(first2, last2, *first1);
+
+        if (it == last2)
         {
-          if (*first1 != *i)
-          {
-            return first1;
-          }
+          return first1;
         }
       }
 
@@ -36,14 +37,15 @@ namespace rsl
     template <typename ForwardIt1, typename ForwardIt2, typename Predicate>
     constexpr ForwardIt1 find_first_not_of(ForwardIt1 first1, ForwardIt2 last1, ForwardIt2 first2, ForwardIt2 last2, Predicate pred)
     {
+      using value_type = rsl::iterator_traits<ForwardIt1>::value_type;
+
       for (; first1 != last1; ++first1)
       {
-        for (ForwardIt2 i = first2; i != last2; ++i)
+        auto it = rsl::find_if(first2, last2, [&](const value_type& val) { return pred(*first1, val); });
+
+        if (it == last2)
         {
-          if (pred(*first1, *i))
-          {
-            return first1;
-          }
+          return first1;
         }
       }
 

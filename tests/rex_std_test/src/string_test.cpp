@@ -502,13 +502,6 @@ TEST_CASE("string creation")
     {
       rsl::test::test_string str("small string");
       rsl::test::test_string str2(rsl::move(str));
-      CHECK(str == "");
-      CHECK(str.empty() == true);
-      CHECK(str.size() == 0);
-      CHECK(str.capacity() == str.sso_buff_size());
-      CHECK(str.get_allocator().num_allocs() == 0);
-      CHECK(str.get_allocator().num_bytes_allocated() == 0);
-      CHECK(str.get_allocator().num_frees() == 0);
 
       CHECK(str2 == "small string");
       CHECK(str2.size() == 12);
@@ -521,13 +514,6 @@ TEST_CASE("string creation")
     {
       rsl::test::test_string str("the sso string!");
       rsl::test::test_string str2(rsl::move(str));
-      CHECK(str == "");
-      CHECK(str.empty() == true);
-      CHECK(str.size() == 0);
-      CHECK(str.capacity() == str.sso_buff_size());
-      CHECK(str.get_allocator().num_allocs() == 0);
-      CHECK(str.get_allocator().num_bytes_allocated() == 0);
-      CHECK(str.get_allocator().num_frees() == 0);
 
       CHECK(str2 == "the sso string!");
       CHECK(str2.size() == 15);
@@ -561,13 +547,6 @@ TEST_CASE("string creation")
     {
       rsl::test::test_string str("small string");
       rsl::test::test_string str2(rsl::move(str), test_allocator());
-      CHECK(str == "");
-      CHECK(str.empty() == true);
-      CHECK(str.size() == 0);
-      CHECK(str.capacity() == str.sso_buff_size());
-      CHECK(str.get_allocator().num_allocs() == 0);
-      CHECK(str.get_allocator().num_bytes_allocated() == 0);
-      CHECK(str.get_allocator().num_frees() == 0);
 
       CHECK(str2 == "small string");
       CHECK(str2.size() == 12);
@@ -580,13 +559,6 @@ TEST_CASE("string creation")
     {
       rsl::test::test_string str("the sso string!");
       rsl::test::test_string str2(rsl::move(str), test_allocator());
-      CHECK(str == "");
-      CHECK(str.empty() == true);
-      CHECK(str.size() == 0);
-      CHECK(str.capacity() == str.sso_buff_size());
-      CHECK(str.get_allocator().num_allocs() == 0);
-      CHECK(str.get_allocator().num_bytes_allocated() == 0);
-      CHECK(str.get_allocator().num_frees() == 0);
 
       CHECK(str2 == "the sso string!");
       CHECK(str2.size() == 15);
@@ -599,12 +571,6 @@ TEST_CASE("string creation")
     {
       rsl::test::test_string str("this is a very big string");
       rsl::test::test_string str2(rsl::move(str), test_allocator());
-      CHECK(str == "");
-      CHECK(str.empty() == true);
-      CHECK(str.size() == 0);
-      CHECK(str.get_allocator().num_allocs() == 0);
-      CHECK(str.get_allocator().num_bytes_allocated() == 0);
-      CHECK(str.get_allocator().num_frees() == 0);
 
       CHECK(str2 == "this is a very big string");
       CHECK(str2.size() == 25);

@@ -413,6 +413,7 @@ namespace rsl
         {
           node_type* tmp_node = node;
           node                = static_cast<node_type*>(node->next);
+          get_allocator().destroy(tmp_node);
           get_allocator().deallocate(tmp_node, sizeof(node_type));
         }
 
@@ -570,7 +571,11 @@ namespace rsl
       template <typename Iterator>
       void emplace_n_after_impl_from_it(iterator node, size_type count, Iterator it)
       {
-        emplace_n_after_impl(node, count, *it);
+        while (count-- > 0)
+        {
+          emplace_after_impl(node, *it);
+          ++it;
+        }
       }
 
       template <typename ... Args>
