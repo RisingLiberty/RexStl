@@ -29,7 +29,7 @@ namespace rsl
     template <typename InputIterator>
     min_max_element_result<typename iterator_traits<InputIterator>::pointer> minmax_element(InputIterator first, InputIterator last)
     {
-      using value_type = iterator_traits<InputIterator>::value_type;
+      using value_type = typename iterator_traits<InputIterator>::value_type;
       return minmax_element(first, last, rsl::less<value_type>());
     }
 

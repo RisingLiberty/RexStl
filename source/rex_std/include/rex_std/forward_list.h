@@ -93,7 +93,7 @@ namespace rsl
       using this_type = forward_list_iterator<T, Pointer, Reference>;
 
     public:
-      template <typename T, typename Allocator>
+      template <typename U, typename Allocator>
       friend class forward_list;
 
       using pointer   = Pointer;
@@ -678,6 +678,10 @@ namespace rsl
     {
       return !(a == b);
     }
+
+    template <typename T, typename Alloc = rsl::allocator>
+    forward_list(T...)->forward_list<T, Alloc>;
+
 
   } // namespace v1
 } // namespace rsl

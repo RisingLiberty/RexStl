@@ -32,6 +32,9 @@ namespace rsl
 {
   inline namespace v1
   {
+    template <typename T>
+    class optional;
+
     namespace string_utils
     {
 
@@ -133,9 +136,6 @@ namespace rsl
 
       template <typename Iterator, card32 Size>
       constexpr void to_upper(const Iterator* str, Iterator(&buf)[Size]); // NOLINT(modernize-avoid-c-arrays)
-
-      template <typename T>
-      class rsl::optional;
 
       template <typename Iterator>
       REX_NO_DISCARD constexpr rsl::optional<float32> stof(const Iterator* str, card32 length);

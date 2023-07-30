@@ -13,6 +13,7 @@
 #pragma once
 
 #include "rex_std/internal/algorithm/find.h"
+#include "rex_std/internal/algorithm/find_if.h"
 
 namespace rsl
 {
@@ -37,7 +38,7 @@ namespace rsl
     template <typename ForwardIt1, typename ForwardIt2, typename Predicate>
     constexpr ForwardIt1 find_first_not_of(ForwardIt1 first1, ForwardIt2 last1, ForwardIt2 first2, ForwardIt2 last2, Predicate pred)
     {
-      using value_type = rsl::iterator_traits<ForwardIt1>::value_type;
+      using value_type = typename rsl::iterator_traits<ForwardIt1>::value_type;
 
       for (; first1 != last1; ++first1)
       {

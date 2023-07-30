@@ -115,7 +115,7 @@ namespace rsl
       using iterator_category = rsl::bidirectional_iterator_tag;
       using difference_type   = int32;
 
-      template <typename T, typename Allocator>
+      template <typename U, typename Allocator>
       friend class list;
 
       list_iterator()
@@ -207,7 +207,7 @@ namespace rsl
       using iterator_category = rsl::bidirectional_iterator_tag;
       using difference_type   = int32;
 
-      template <typename T, typename Allocator>
+      template <typename U, typename Allocator>
       friend class list;
 
       const_list_iterator()
@@ -1148,6 +1148,9 @@ namespace rsl
     {
       return !(a == b);
     }
+
+    template <typename T, typename Alloc = rsl::allocator>
+    list(T...)->list<T, Alloc>;
 
   } // namespace v1
 } // namespace rsl

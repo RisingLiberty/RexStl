@@ -162,13 +162,8 @@ TEST_CASE("TestMinMax")
     pd1 = min(pd2, pd3);
     CHECK((uintptr_t)pd1 == min((uintptr_t)pd2, (uintptr_t)pd3));
 
-
-    // initializer_list tests
-#if !defined(EA_COMPILER_NO_INITIALIZER_LISTS)
-    CHECK(min({ 3, 1, 2 }) == 1);
-    CHECK(max({ 3, 1, 2 }) == 3);
-#endif
-
+    CHECK(min<int>({ 3, 1, 2 }) == 1);
+    CHECK(max<int>({ 3, 1, 2 }) == 3);
 
     // Test scalar specializations
     CHECK(min((char)1, (char)1) == 1);
@@ -432,7 +427,7 @@ TEST_CASE("TestMinMax")
     // rsl::pair<T, T>
     // minmax(std::initializer_list<T> ilist, Compare compare)
 
-    min_max_result<int> result3 = rsl::minmax({ 3, 2 });
+    min_max_result<int> result3 = rsl::minmax<int>({ 3, 2 });
     CHECK(result3.min == 2);
     CHECK(result3.max == 3);
 

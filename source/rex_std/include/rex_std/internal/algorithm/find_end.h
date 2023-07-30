@@ -66,7 +66,7 @@ namespace rsl
 			using IC1 = typename rsl::iterator_traits<ForwardIterator1>::iterator_category;
 			using IC2 = typename rsl::iterator_traits<ForwardIterator2>::iterator_category;
 
-			return rsl::find_end_impl(first1, last1, first2, last2, rsl::equal_to<iterator_traits<ForwardIterator1>::value_type>(), IC1(), IC2());
+			return rsl::find_end_impl(first1, last1, first2, last2, rsl::equal_to<typename iterator_traits<ForwardIterator1>::value_type>(), IC1(), IC2());
 		}
 
 		template <typename ForwardIterator1, typename ForwardIterator2, typename Predicate>

@@ -1054,5 +1054,8 @@ namespace rsl
     template <typename InputIt, typename Alloc = rsl::allocator>
     vector(InputIt, InputIt, Alloc = Alloc()) -> vector<typename rsl::iterator_traits<InputIt>::value_type, Alloc>;
 
+    template <typename T, typename Alloc = rsl::allocator>
+    vector(T...) -> vector<T, Alloc>;
+
   } // namespace v1
 } // namespace rsl

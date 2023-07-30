@@ -18,7 +18,7 @@
 
 namespace rsl
 {
-  namespace v1
+  inline namespace v1
   {
     template <typename RandomAccessIterator>
     void pop_heap(RandomAccessIterator first, RandomAccessIterator last)

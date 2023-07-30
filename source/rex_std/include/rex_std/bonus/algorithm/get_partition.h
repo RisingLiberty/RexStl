@@ -20,7 +20,7 @@
 
 namespace rsl
 {
-  namespace v1
+  inline namespace v1
   {
 		namespace internal
 		{
@@ -82,8 +82,7 @@ namespace rsl
 		template <typename RandomAccessIterator, typename T>
 		RandomAccessIterator get_partition(RandomAccessIterator first, RandomAccessIterator last, const T& pivotValue)
 		{
-			const T pivotCopy(pivotValue); // Need to make a temporary because the sequence below is mutating.
-			return internal::get_partition_impl<RandomAccessIterator, const T&>(first, last, pivotCopy);
+			return internal::get_partition_impl<RandomAccessIterator, const T&>(first, last, pivotValue);
 		}
 
 		template <typename RandomAccessIterator, typename T>
@@ -96,8 +95,7 @@ namespace rsl
 		template <typename RandomAccessIterator, typename T, typename Compare>
 		RandomAccessIterator get_partition(RandomAccessIterator first, RandomAccessIterator last, const T& pivotValue, Compare compare)
 		{
-			const T pivotCopy(pivotValue); // Need to make a temporary because the sequence below is mutating.
-			return internal::get_partition_impl<RandomAccessIterator, const T&, Compare>(first, last, pivotCopy, compare);
+			return internal::get_partition_impl<RandomAccessIterator, const T&, Compare>(first, last, pivotValue, compare);
 		}
 
 		template <typename RandomAccessIterator, typename T, typename Compare>

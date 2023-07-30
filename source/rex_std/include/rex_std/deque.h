@@ -160,8 +160,8 @@ namespace rsl
         m_end = m_begin + SubArraySize;
       }
 
-      template <typename T, card32 SubArraySize>
-      friend bool operator==(const deque_iterator<T, SubArraySize>& lhs, const deque_iterator<T, SubArraySize>& rhs);
+      template <typename U, card32 SubArraySize2>
+      friend bool operator==(const deque_iterator<U, SubArraySize2>& lhs, const deque_iterator<U, SubArraySize2>& rhs);
 
     //private:
       T* m_current;
@@ -185,7 +185,7 @@ namespace rsl
     template <typename T, card32 SubArraySize>
     typename deque_iterator<T, SubArraySize>::difference_type operator-(const deque_iterator<T, SubArraySize>& lhs, const deque_iterator<T, SubArraySize>& rhs)
     {
-      using difference_type = deque_iterator<T, SubArraySize>::difference_type;
+      using difference_type = typename deque_iterator<T, SubArraySize>::difference_type;
       return ((difference_type)internal::deque_default_sub_array_size<T>() * ((lhs.m_current_array_ptr - rhs.m_current_array_ptr) - 1)) + (lhs.m_current - lhs.m_begin) + (rhs.m_end - rhs.m_current);
     }
 

@@ -29,6 +29,10 @@ namespace rsl
 #else
 			inline constexpr card32 g_quicksort_limit = 16; // It seems that on other processors lower limits are more beneficial, as they result in fewer compares.
 #endif
+
+#pragma warning(push)
+#pragma warning(disable : 4702) // unreachable code
+
 			template <typename RandomAccessIterator, typename Size, typename PivotValueType>
 			void quick_sort_impl_helper(RandomAccessIterator first, RandomAccessIterator last, Size kRecursionCount)
 			{
@@ -36,8 +40,12 @@ namespace rsl
 
 				while (((last - first) > g_quicksort_limit) && (kRecursionCount > 0))
 				{
-					const RandomAccessIterator position(rsl::get_partition<RandomAccessIterator, value_type>(first, last,
-						rsl::forward<PivotValueType>(rsl::median<value_type>(rsl::forward<value_type>(*first), rsl::forward<value_type>(*(first + (last - first) / 2)), rsl::forward<value_type>(*(last - 1))))));
+					const auto& a = (*first);
+					const auto& b = (*(first + (last - first) / 2));
+					const auto& c = (*(last - 1));
+					const auto& pivot_value = rsl::median<value_type>(a, b, c);
+
+					const RandomAccessIterator position = rsl::get_partition<RandomAccessIterator, value_type>(first, last, pivot_value);
 
 					quick_sort_impl_helper<RandomAccessIterator, Size, PivotValueType>(position, last, --kRecursionCount);
 					last = position;
@@ -56,16 +64,23 @@ namespace rsl
 
 				while (((last - first) > g_quicksort_limit) && (kRecursionCount > 0))
 				{
-					const RandomAccessIterator position(rsl::get_partition<RandomAccessIterator, value_type, Compare>(first, last,
-						rsl::forward<PivotValueType>(rsl::median<value_type, Compare>(rsl::forward<value_type>(*first), rsl::forward<value_type>(*(first + (last - first) / 2)), rsl::forward<value_type>(*(last - 1)), compare)), compare));
+					const auto& a = (*first);
+					const auto& b = (*(first + (last - first) / 2));
+					const auto& c = (*(last - 1));
+					const auto& pivot_value = rsl::median<value_type, Compare>(a, b, c, compare);
+
+					const RandomAccessIterator position = rsl::get_partition<RandomAccessIterator, value_type, Compare>(first, last, pivot_value, compare);
 
 					quick_sort_impl_helper<RandomAccessIterator, Size, Compare, PivotValueType>(position, last, --kRecursionCount, compare);
 					last = position;
 				}
 
 				if (kRecursionCount == 0)
+				{
 					rsl::partial_sort<RandomAccessIterator, Compare>(first, last, last, compare);
+				}
 			}
+#pragma warning(pop)
 
 			template <typename RandomAccessIterator, typename Size>
 			void quick_sort_impl(RandomAccessIterator first, RandomAccessIterator last, Size kRecursionCount,
