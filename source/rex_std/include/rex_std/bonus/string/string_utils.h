@@ -183,17 +183,9 @@ namespace rsl
       template <typename SizeType, typename Iterator1, typename Iterator2>
       constexpr SizeType find_last_of(Iterator1 srcBegin, SizeType numCharsToCheck, Iterator2 toFindBegin, SizeType defaultValue);
       template <typename SizeType, typename Iterator1, typename Iterator2>
-      constexpr SizeType find_last_of(Iterator1 srcBegin, SizeType numCharsToCheck, SizeType startPos, Iterator2 toFindBegin, SizeType defaultValue);
-      template <typename SizeType, typename Iterator1, typename Iterator2>
-      constexpr SizeType find_last_of(Iterator1 srcBegin, SizeType numCharsToCheck, SizeType startPos, Iterator2 toFindBegin, SizeType toFindLength, SizeType defaultValue);
-      template <typename SizeType, typename Iterator1, typename Iterator2>
       constexpr SizeType find_last_not_of(Iterator1 srcBegin, SizeType numCharsToCheck, Iterator2 toFindBegin, SizeType toFindLength, SizeType defaultValue);
       template <typename SizeType, typename Iterator1, typename Iterator2>
       constexpr SizeType find_last_not_of(Iterator1 srcBegin, SizeType numCharsToCheck, Iterator2 toFindBegin, SizeType defaultValue);
-      template <typename SizeType, typename Iterator1, typename Iterator2>
-      constexpr SizeType find_last_not_of(Iterator1 srcBegin, SizeType numCharsToCheck, SizeType startPos, Iterator2 toFindBegin, SizeType defaultValue);
-      template <typename SizeType, typename Iterator1, typename Iterator2>
-      constexpr SizeType find_last_not_of(Iterator1 srcBegin, SizeType numCharsToCheck, SizeType startPos, Iterator2 toFindBegin, SizeType toFindLength, SizeType defaultValue);
 
       namespace internal
       {

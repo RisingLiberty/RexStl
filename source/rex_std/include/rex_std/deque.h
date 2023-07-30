@@ -72,8 +72,6 @@ namespace rsl
         , m_current_array_ptr(nullptr)
       {}
 
-      deque_iterator(const deque_iterator& it);
-
       pointer operator->() const
       {
         return m_current;

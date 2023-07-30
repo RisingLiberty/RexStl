@@ -16,6 +16,7 @@
 #include "rex_std/bonus/string/string_utils.h"
 #include "rex_std/bonus/types.h"
 #include "rex_std/internal/algorithm/reverse.h"
+#include "rex_std/internal/algorithm/reverse_search.h"
 #include "rex_std/internal/algorithm/search.h"
 #include "rex_std/internal/iterator/distance.h"
 #include "rex_std/internal/iterator/end.h"
@@ -475,13 +476,13 @@ namespace rsl
       template <typename SizeType, typename Iterator1, typename Iterator2>
       constexpr SizeType find(Iterator1 srcBegin, SizeType srcLength, SizeType startPos, Iterator2 toFindBegin, SizeType toFindLength, SizeType defaultValue)
       {
-        return find<SizeType>(srcBegin + startPos, srcBegin + srcLength, toFindBegin, toFindLength, defaultValue);
+        return find<SizeType>(srcBegin + startPos, srcBegin + srcLength, toFindBegin, toFindLength, defaultValue) + startPos;
       }
       template <typename SizeType, typename Iterator1, typename Iterator2>
       constexpr SizeType find(Iterator1 srcBegin, SizeType srcLength, SizeType startPos, Iterator2 toFindBegin, SizeType defaultValue)
       {
         SizeType to_find_length = string_length(toFindBegin);
-        return find<SizeType>(srcBegin + startPos, srcBegin + srcLength, toFindBegin, to_find_length, defaultValue);
+        return find<SizeType>(srcBegin + startPos, srcBegin + srcLength, toFindBegin, to_find_length, defaultValue) + startPos;
       }
       template <typename SizeType, typename Iterator1, typename Iterator2>
       constexpr SizeType rfind(Iterator1 srcBegin, Iterator1 srcEnd, Iterator2 toFindBegin, SizeType toFindLength, SizeType defaultValue)
@@ -501,7 +502,8 @@ namespace rsl
       {
         Iterator1 src_end = srcBegin + srcLength;
         Iterator2 to_find_str_end = toFindBegin + toFindLength;
-        auto it = rsl::search(srcBegin + startPos, srcBegin + srcLength, toFindBegin, to_find_str_end);
+
+        auto it = rsl::reverse_search(srcBegin, srcBegin + startPos, toFindBegin, to_find_str_end);
         return it != src_end ? static_cast<SizeType>(rsl::distance(srcBegin, it)) : defaultValue;
       }
       template <typename SizeType, typename Iterator1, typename Iterator2>
@@ -598,17 +600,7 @@ namespace rsl
         SizeType to_find_length = string_length(toFindBegin);
         return find_last_of<SizeType>(srcBegin, numCharsToCheck, toFindBegin, to_find_length, defaultValue);
       }
-      template <typename SizeType, typename Iterator1, typename Iterator2>
-      constexpr SizeType find_last_of(Iterator1 srcBegin, SizeType numCharsToCheck, SizeType startPos, Iterator2 toFindBegin, SizeType toFindLength, SizeType defaultValue)
-      {
-        return find_last_of<SizeType>(srcBegin + startPos, numCharsToCheck, toFindBegin, toFindLength, defaultValue);
-      }
-      template <typename SizeType, typename Iterator1, typename Iterator2>
-      constexpr SizeType find_last_of(Iterator1 srcBegin, SizeType numCharsToCheck, SizeType startPos, Iterator2 toFindBegin, SizeType defaultValue)
-      {
-        SizeType to_find_length = string_length(toFindBegin);
-        return find_last_of<SizeType>(srcBegin + startPos, numCharsToCheck, toFindBegin, to_find_length, defaultValue);
-      }
+
       template <typename SizeType, typename Iterator1, typename Iterator2>
       constexpr SizeType find_last_not_of(Iterator1 srcBegin, SizeType numCharsToCheck, Iterator2 toFindBegin, SizeType toFindLength, SizeType defaultValue)
       {
@@ -630,17 +622,6 @@ namespace rsl
       {
         SizeType to_find_length = string_length(toFindBegin);
         return find_last_not_of<SizeType>(srcBegin, numCharsToCheck, toFindBegin, to_find_length, defaultValue);
-      }
-      template <typename SizeType, typename Iterator1, typename Iterator2>
-      constexpr SizeType find_last_not_of(Iterator1 srcBegin, SizeType numCharsToCheck, SizeType startPos, Iterator2 toFindBegin, SizeType defaultValue)
-      {
-        SizeType to_find_length = string_length(toFindBegin);
-        return find_last_not_of<SizeType>(srcBegin + startPos, numCharsToCheck, toFindBegin, to_find_length, defaultValue);
-      }
-      template <typename SizeType, typename Iterator1, typename Iterator2>
-      constexpr SizeType find_last_not_of(Iterator1 srcBegin, SizeType numCharsToCheck, SizeType startPos, Iterator2 toFindBegin, SizeType toFindLength, SizeType defaultValue)
-      {
-        return find_last_not_of<SizeType>(srcBegin + startPos, numCharsToCheck, toFindBegin, toFindLength, defaultValue);
       }
 
       namespace internal
@@ -1025,149 +1006,146 @@ namespace rsl
         }
       } // namespace internal
 
-      namespace string_utils
+      // compares 2 strings lexicographically
+      template <typename Traits, typename Pointer, typename SizeType>
+      int32 compare(Pointer lhs, Pointer rhs, SizeType lhsLength, SizeType rhsLength)
       {
-        // compares 2 strings lexicographically
-        template <typename Traits, typename Pointer, typename SizeType>
-        int32 compare(Pointer lhs, Pointer rhs, SizeType lhsLength, SizeType rhsLength)
-        {
-          const int32 result = Traits::compare(lhs, rhs, (rsl::min)(lhsLength, rhsLength));
+        const int32 result = Traits::compare(lhs, rhs, (rsl::min)(lhsLength, rhsLength));
 
-          if (result != 0)
-          {
-            return result;
-          }
-          if (lhsLength < rhsLength)
-          {
-            return -1;
-          }
-          if (lhsLength > rhsLength)
-          {
-            return 1;
-          }
-          return 0;
+        if (result != 0)
+        {
+          return result;
         }
-        // finds the first substring [str, str + toFindLength) within [lhsStr, lhsStr + lhsLength), starting from pos
-        template <typename Traits, typename Pointer, typename SizeType>
-        constexpr SizeType find(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer toFindStr, SizeType toFindLength, SizeType defaultValue)
+        if (lhsLength < rhsLength)
         {
-          RSL_ASSERT_X(pos < lhsLength, "pos out of bounds");
-
-          // substring must be found between [pos, size() - toFindLength)
-          // we subtract the length of the string to find for optimization
-          Pointer start = lhsStr + pos;
-          const Pointer lhs_end = lhsStr + lhsLength;
-
-          const Pointer end = lhs_end - toFindLength + 1;
-          start = Traits::find(start, static_cast<count_t>(end - start), *toFindStr);
-
-          while (start != nullptr && start != end)
-          {
-            if (Traits::compare(start + 1, toFindStr + 1, toFindLength - 1) == 0)
-            {
-              return static_cast<SizeType>(start - lhsStr);
-            }
-            ++start;
-            start = Traits::find(start, static_cast<count_t>(lhs_end - start), *toFindStr);
-          }
-          return defaultValue;
+          return -1;
         }
-        // finds the last substring [str, str + toFindLength) within [lhsStr, lhsStr + lhsLength), starting from pos
-        template <typename Traits, typename Pointer, typename SizeType>
-        SizeType rfind(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer toFindStr, SizeType toFindLength, SizeType defaultValue)
+        if (lhsLength > rhsLength)
         {
-          pos = (rsl::min)(pos, lhsLength - 1);
-          RSL_ASSERT_X(pos < lhsLength, "pos out of bounds");
+          return 1;
+        }
+        return 0;
+      }
+      // finds the first substring [str, str + toFindLength) within [lhsStr, lhsStr + lhsLength), starting from pos
+      template <typename Traits, typename Pointer, typename SizeType>
+      constexpr SizeType find(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer toFindStr, SizeType toFindLength, SizeType defaultValue)
+      {
+        RSL_ASSERT_X(pos < lhsLength, "pos out of bounds");
 
-          // the string must be found between [begin, pos]
+        // substring must be found between [pos, size() - toFindLength)
+        // we subtract the length of the string to find for optimization
+        Pointer start = lhsStr + pos;
+        const Pointer lhs_end = lhsStr + lhsLength;
 
-          // we'll first check where the last char in the substring is found in the string
-          Pointer start = lhsStr + pos;
-          const Pointer end = (lhsStr - 1) + toFindLength - 1;
-          const Pointer to_find_last = toFindStr + toFindLength - 1;
+        const Pointer end = lhs_end - toFindLength + 1;
+        start = Traits::find(start, static_cast<count_t>(end - start), *toFindStr);
+
+        while (start != nullptr && start != end)
+        {
+          if (Traits::compare(start + 1, toFindStr + 1, toFindLength - 1) == 0)
+          {
+            return static_cast<SizeType>(start - lhsStr);
+          }
+          ++start;
+          start = Traits::find(start, static_cast<count_t>(lhs_end - start), *toFindStr);
+        }
+        return defaultValue;
+      }
+      // finds the last substring [str, str + toFindLength) within [lhsStr, lhsStr + lhsLength), starting from pos
+      template <typename Traits, typename Pointer, typename SizeType>
+      SizeType rfind(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer toFindStr, SizeType toFindLength, SizeType defaultValue)
+      {
+        pos = (rsl::min)(pos, lhsLength - 1);
+        RSL_ASSERT_X(pos < lhsLength, "pos out of bounds");
+
+        // the string must be found between [begin, pos]
+
+        // we'll first check where the last char in the substring is found in the string
+        Pointer start = lhsStr + pos;
+        const Pointer end = (lhsStr - 1) + toFindLength - 1;
+        const Pointer to_find_last = toFindStr + toFindLength - 1;
+        start = Traits::rfind(start, static_cast<count_t>(start - end), *to_find_last);
+
+        while (start != nullptr && start != end)
+        {
+          const Pointer new_start = start - (toFindLength - 1);
+          if (Traits::compare(new_start, toFindStr, toFindLength - 1) == 0)
+          {
+            return static_cast<SizeType>(new_start - lhsStr);
+          }
+          --start;
           start = Traits::rfind(start, static_cast<count_t>(start - end), *to_find_last);
-
-          while (start != nullptr && start != end)
-          {
-            const Pointer new_start = start - (toFindLength - 1);
-            if (Traits::compare(new_start, toFindStr, toFindLength - 1) == 0)
-            {
-              return static_cast<SizeType>(new_start - lhsStr);
-            }
-            --start;
-            start = Traits::rfind(start, static_cast<count_t>(start - end), *to_find_last);
-          }
-          return defaultValue;
         }
-        // finds the first occurrence of a char in the substring [lhsStr, lhsStr + lhsLength) within [rhsStr, rhsStr + rhsLength), starting from pos
-        template <typename Traits, typename Pointer, typename SizeType>
-        SizeType find_first_of(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer rhsStr, SizeType rhsLength, SizeType defaultValue)
+        return defaultValue;
+      }
+      // finds the first occurrence of a char in the substring [lhsStr, lhsStr + lhsLength) within [rhsStr, rhsStr + rhsLength), starting from pos
+      template <typename Traits, typename Pointer, typename SizeType>
+      SizeType find_first_of(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer rhsStr, SizeType rhsLength, SizeType defaultValue)
+      {
+        const character_lookup<typename Traits::char_type> lookup(rhsStr, rhsLength);
+
+        for (SizeType i = pos; i < lhsLength; ++i)
         {
-          const character_lookup<typename Traits::char_type> lookup(rhsStr, rhsLength);
-
-          for (SizeType i = pos; i < lhsLength; ++i)
+          auto c = lhsStr[i];
+          if (lookup.exists(c))
           {
-            auto c = lhsStr[i];
-            if (lookup.exists(c))
-            {
-              return i;
-            }
+            return i;
           }
-
-          return defaultValue;
         }
-        // finds the last occurrence of a char in the substring [lhsStr, lhsStr + lhsLength) within [rhsStr, rhsStr + rhsLength), starting from pos
-        template <typename Traits, typename Pointer, typename SizeType>
-        SizeType find_last_of(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer rhsStr, SizeType rhsLength, SizeType defaultValue)
+
+        return defaultValue;
+      }
+      // finds the last occurrence of a char in the substring [lhsStr, lhsStr + lhsLength) within [rhsStr, rhsStr + rhsLength), starting from pos
+      template <typename Traits, typename Pointer, typename SizeType>
+      SizeType find_last_of(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer rhsStr, SizeType rhsLength, SizeType defaultValue)
+      {
+        const character_lookup<typename Traits::char_type> lookup(rhsStr, rhsLength);
+
+        for (SizeType i = lhsLength; i > pos; --i)
         {
-          const character_lookup<typename Traits::char_type> lookup(rhsStr, rhsLength);
-
-          for (SizeType i = lhsLength; i > pos; --i)
+          auto c = lhsStr[i];
+          if (lookup.exists(c))
           {
-            auto c = lhsStr[i];
-            if (lookup.exists(c))
-            {
-              return i;
-            }
+            return i;
           }
-
-          return defaultValue;
         }
-        // finds the first occurrence of a char not in the substring [lhsStr, lhsStr + lhsLength) within [rhsStr, rhsStr + rhsLength), starting from pos
-        template <typename Traits, typename Pointer, typename SizeType>
-        SizeType find_first_not_of(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer rhsStr, SizeType rhsLength, SizeType defaultValue)
+
+        return defaultValue;
+      }
+      // finds the first occurrence of a char not in the substring [lhsStr, lhsStr + lhsLength) within [rhsStr, rhsStr + rhsLength), starting from pos
+      template <typename Traits, typename Pointer, typename SizeType>
+      SizeType find_first_not_of(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer rhsStr, SizeType rhsLength, SizeType defaultValue)
+      {
+        const character_lookup<typename Traits::char_type> lookup(rhsStr, rhsLength);
+
+        for (SizeType i = pos; i < lhsLength; ++i)
         {
-          const character_lookup<typename Traits::char_type> lookup(rhsStr, rhsLength);
-
-          for (SizeType i = pos; i < lhsLength; ++i)
+          auto c = lhsStr[i];
+          if (!lookup.exists(c))
           {
-            auto c = lhsStr[i];
-            if (!lookup.exists(c))
-            {
-              return i;
-            }
+            return i;
           }
-
-          return defaultValue;
         }
-        // finds the last occurrence of a char not in the substring [lhsStr, lhsStr + lhsLength) within [rhsStr, rhsStr + rhsLength), starting from pos
-        template <typename Traits, typename Pointer, typename SizeType>
-        SizeType find_last_not_of(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer rhsStr, SizeType rhsLength, SizeType defaultValue)
+
+        return defaultValue;
+      }
+      // finds the last occurrence of a char not in the substring [lhsStr, lhsStr + lhsLength) within [rhsStr, rhsStr + rhsLength), starting from pos
+      template <typename Traits, typename Pointer, typename SizeType>
+      SizeType find_last_not_of(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer rhsStr, SizeType rhsLength, SizeType defaultValue)
+      {
+        const character_lookup<typename Traits::char_type> lookup(rhsStr, rhsLength);
+
+        for (SizeType i = lhsLength; i > pos; --i)
         {
-          const character_lookup<typename Traits::char_type> lookup(rhsStr, rhsLength);
-
-          for (SizeType i = lhsLength; i > pos; --i)
+          auto c = lhsStr[i];
+          if (!lookup.exists(c))
           {
-            auto c = lhsStr[i];
-            if (!lookup.exists(c))
-            {
-              return i;
-            }
+            return i;
           }
-
-          return defaultValue;
         }
-      } // namespace string_utils
+
+        return defaultValue;
+      }
 
       /// RSL Comment: Different from ISO C++ Standard at time of writing (17/Jul/2022)
       // returns an rsl::optional instead of a basic type

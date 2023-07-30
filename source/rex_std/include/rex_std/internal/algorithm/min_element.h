@@ -28,6 +28,7 @@ namespace rsl
         {
           smallest = it;
         }
+        ++it;
       }
 
       return smallest;
@@ -43,6 +44,7 @@ namespace rsl
         {
           smallest = it;
         }
+        ++it;
       }
 
       return smallest;

@@ -36,10 +36,12 @@ namespace rsl
         while(distance > 0)
         {
           ++it;
+          --distance;
         }
         while(distance < 0)
         {
           --it;
+          ++distance;
         }
       }
 
@@ -49,6 +51,7 @@ namespace rsl
         while(distance > 0)
         {
           ++it;
+          --distance;
         }
       }
     } // namespace internal

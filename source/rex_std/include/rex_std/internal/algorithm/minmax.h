@@ -39,16 +39,16 @@ namespace rsl
     }
 
     template <typename T>
-    min_max_result<const T*> minmax(rsl::initializer_list<T> ilist)
+    min_max_result<T> minmax(rsl::initializer_list<T> ilist)
     {
       min_max_element_result<const T*> res = rsl::minmax_element(ilist.begin(), ilist.end());
-      return min_max_result<const T*>{ res.min, res.max };
+      return min_max_result<T>{ *res.min, *res.max };
     }
     template <typename T, typename Compare>
-    min_max_result<const T*> minmax(rsl::initializer_list<T> ilist, Compare compare)
+    min_max_result<T> minmax(rsl::initializer_list<T> ilist, Compare compare)
     {
       min_max_element_result<const T*> res = rsl::minmax_element(ilist.begin(), ilist.end(), compare);
-      return min_max_result<const T*>{ res.min, res.max };
+      return min_max_result<T>{ *res.min, *res.max };
     }
 
   } // namespace v1

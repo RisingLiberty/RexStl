@@ -24,7 +24,7 @@ namespace rsl
     {
       auto src = first;
       auto dst = dstFirst;
-      while(first != last)
+      while(src != last)
       {
         *dst = rsl::move(*src);
         ++src;

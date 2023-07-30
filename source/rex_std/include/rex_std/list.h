@@ -41,6 +41,11 @@ namespace rsl
       list_node_base* next;
       list_node_base* prev;
 
+      list_node_base()
+        : next(this)
+        , prev(this)
+      {}
+
       void insert(list_node_base* node)
       {
         next       = node;
@@ -83,6 +88,12 @@ namespace rsl
     template <typename T>
     struct list_node : public list_node_base
     {
+      template <typename ... Args>
+      list_node(Args&& ... args)
+        : list_node_base()
+        , value(rsl::forward<Args>(args)...)
+      {}
+
       T value;
     };
 
@@ -304,7 +315,6 @@ namespace rsl
           , m_size(0)
 #endif
       {
-        init();
       }
       explicit list(const allocator_type& alloc)
           : m_cp_head_tail_link_and_alloc(alloc)
@@ -312,7 +322,6 @@ namespace rsl
           , m_size(0)
 #endif
       {
-        init();
       }
       list(size_type count, const_reference value, const allocator_type& alloc = allocator_type())
           : m_cp_head_tail_link_and_alloc(alloc)
@@ -328,7 +337,7 @@ namespace rsl
           , m_size(count)
 #endif
       {
-        insert(end(), count);
+        emplace_n(end(), count);
       }
       template <typename InputIt>
       list(InputIt first, InputIt last, const allocator_type& alloc = allocator_type())
@@ -596,7 +605,7 @@ namespace rsl
         // that can be 'split'.
         while(count > 0)
         {
-          node_type* new_node = static_cast<node_type*>(get_allocator().allocate(1)); // TODO: use 1_elem here instead of literal 1 to make it clear we're using element count instead of number of bytes
+          node_type* new_node = static_cast<node_type*>(get_allocator().allocate(sizeof(node_type)));
           insert_at(pos_node, value, new_node);
           --count;
 #ifdef REX_ENABLE_SIZE_IN_LISTS
@@ -621,7 +630,7 @@ namespace rsl
         // that can be 'split'.
         while(first != last)
         {
-          node_type* new_node = static_cast<node_type*>(get_allocator().allocate(1)); // TODO: use 1_elem here instead of literal 1 to make it clear we're using element count instead of number of bytes
+          node_type* new_node = static_cast<node_type*>(get_allocator().allocate(sizeof(node_type)));
           insert_at(pos_node, *first, new_node);
           ++first;
 #ifdef REX_ENABLE_SIZE_IN_LISTS
@@ -636,9 +645,19 @@ namespace rsl
         return insert(pos, ilist.begin(), ilist.end());
       }
       template <typename... Args>
+      iterator emplace_n(const_iterator pos, size_type count, Args&&... args)
+      {
+        auto it = iterator(pos.m_node);
+        while (count-- > 0)
+        {
+          it = emplace(pos, rsl::forward<Args>(args)...);
+        }
+        return it;
+      }
+      template <typename... Args>
       iterator emplace(const_iterator pos, Args&&... args)
       {
-        node_type* new_node = static_cast<node_type*>(get_allocator().allocate(1)); // TODO: use 1_elem here instead of literal 1 to make it clear we're using element count instead of number of bytes
+        node_type* new_node = static_cast<node_type*>(get_allocator().allocate(sizeof(node_type)));
         new(rsl::addressof(new_node->value)) value_type(rsl::forward<Args>(args)...);
         new_node->insert(pos.m_node);
         return iterator(new_node);
@@ -679,8 +698,8 @@ namespace rsl
       template <typename... Args>
       void emplace_back(Args&&... args)
       {
-        node_type* new_node = static_cast<node_type*>(get_allocator().allocate(1)); // TODO: use 1_elem here instead of literal 1 to make it clear we're using element count instead of number of bytes
-        new(rsl::addressof(new_node->value)) value_type(rsl::forward<Args>(args)...);
+        node_type* new_node = static_cast<node_type*>(get_allocator().allocate(sizeof(node_type)));
+        get_allocator().construct(new_node, rsl::forward<Args>(args)...);
         head_tail_link()->insert(new_node);
       }
       void pop_back()
@@ -712,7 +731,7 @@ namespace rsl
 #endif
         while(num_new_elements > 0)
         {
-          node_type* new_node = static_cast<node_type*>(get_allocator().allocate(1)); // TODO: use 1_elem here instead of literal 1 to make it clear we're using element count instead of number of bytes
+          node_type* new_node = static_cast<node_type*>(get_allocator().allocate(sizeof(node_type))); 
           rsl::uninitialized_default_construct(new_node);                             // kind of annoying we can't do this in the allocator
           new_node->insert(head_tail_link());
           --num_new_elements;
@@ -726,7 +745,7 @@ namespace rsl
 #endif
         while(num_new_elements > 0)
         {
-          node_type* new_node = static_cast<node_type*>(get_allocator().allocate(1)); // TODO: use 1_elem here instead of literal 1 to make it clear we're using element count instead of number of bytes
+          node_type* new_node = static_cast<node_type*>(get_allocator().allocate(sizeof(node_type))); 
           get_allocator().construct(new_node, value);
           new_node->insert(head_tail_link());
           --num_new_elements;
@@ -925,11 +944,6 @@ namespace rsl
       }
 
     private:
-      void init()
-      {
-        head_tail_link()->prev = head_tail_link();
-        head_tail_link()->next = head_tail_link();
-      }
 
       node_type* head()
       {

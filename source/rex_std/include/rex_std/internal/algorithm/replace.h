@@ -19,15 +19,13 @@ namespace rsl
   inline namespace v1
   {
     template <class It, class T>
-    constexpr void replace(const It first, const It last, const T& oldVal, const T& newVal)
+    constexpr void replace(It first, const It last, const T& oldVal, const T& newVal)
     {
-      auto first_val      = rsl::iterator_to_pointer(first);
-      const auto last_val = rsl::iterator_to_pointer(last);
-      for(; first_val != last_val; ++first_val)
+      for(; first != last; ++first)
       {
-        if(*first_val == oldVal)
+        if(*first == oldVal)
         {
-          *first_val = newVal;
+          *first = newVal;
         }
       }
     }
