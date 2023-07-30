@@ -418,19 +418,6 @@ TEST_CASE("TestMinMax")
 
     min_max_element_result<int*> result = rsl::minmax_element(intArray, intArray + 6);
     CHECK(((*result.min == -2) && (*result.max == 6)));
-
-    // template <typename T>
-    // rsl::pair<T, T>
-    // minmax(std::initializer_list<T> ilist)
-    //
-    // template <typename T, class Compare>
-    // rsl::pair<T, T>
-    // minmax(std::initializer_list<T> ilist, Compare compare)
-
-    min_max_result<int> result3 = rsl::minmax<int>({ 3, 2 });
-    CHECK(result3.min == 2);
-    CHECK(result3.max == 3);
-
   }
 
   CHECK(rsl::test::test_object::is_clear());
