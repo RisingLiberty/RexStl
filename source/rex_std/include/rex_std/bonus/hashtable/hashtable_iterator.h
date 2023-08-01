@@ -139,7 +139,7 @@ namespace rsl
           , m_bucket(bucket)
       {
       }
-      const_hashtable_iterator(hashtable_iterator<KeyValPair> it)
+      const_hashtable_iterator(hashtable_iterator<KeyValPair> it) // NOLINT(google-explicit-constructor)
           : m_node(it.hash_node())
           , m_bucket(it.bucket())
       {

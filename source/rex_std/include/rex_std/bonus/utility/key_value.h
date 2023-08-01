@@ -33,13 +33,13 @@ namespace rsl
 
       key_value() = default;
       template <typename... Args>
-      key_value(const Key& k, Args&&... args)
+      explicit key_value(const Key& k, Args&&... args)
           : key(k)
           , value(rsl::forward<Args>(args)...)
       {
       }
       template <typename... Args>
-      key_value(Key&& k, Args&&... args)
+      explicit key_value(Key&& k, Args&&... args)
           : key(rsl::move(k))
           , value(rsl::forward<Args>(args)...)
       {

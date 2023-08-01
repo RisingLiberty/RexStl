@@ -12,8 +12,8 @@
 
 #pragma once
 
-#include "rex_std/memory.h"
 #include "rex_std/algorithm.h"
+#include "rex_std/memory.h"
 
 namespace rsl
 {
@@ -25,29 +25,29 @@ namespace rsl
       constexpr size_t deque_default_sub_array_size()
       {
         size_t res = 4;
-        if constexpr (sizeof(T) <= 4)
+        if constexpr(sizeof(T) <= 4)
         {
           res = 64;
         }
 
-        if constexpr (sizeof(T) <= 8)
+        if constexpr(sizeof(T) <= 8)
         {
           res = 32;
         }
 
-        if constexpr (sizeof(T) <= 16)
+        if constexpr(sizeof(T) <= 16)
         {
           res = 16;
         }
 
-        if constexpr (sizeof(T) <= 32)
+        if constexpr(sizeof(T) <= 32)
         {
           res = 8;
         }
 
         return res;
       }
-    }
+    } // namespace internal
 
     template <typename T, card32 SubArraySize = static_cast<card32>(internal::deque_default_sub_array_size<T>())>
     struct deque_iterator
@@ -56,21 +56,22 @@ namespace rsl
       using this_type = deque_iterator<T>;
 
     public:
-      using iterator = deque_iterator<T>;
-      using const_iterator = deque_iterator<T>;
-      using difference_type = ptrdiff;
+      using iterator          = deque_iterator<T>;
+      using const_iterator    = deque_iterator<T>;
+      using difference_type   = ptrdiff;
       using iterator_category = random_access_iterator_tag;
-      using value_type = T;
-      using pointer = T*;
-      using reference = T&;
+      using value_type        = T;
+      using pointer           = T*;
+      using reference         = T&;
 
     public:
       deque_iterator()
-        : m_current(nullptr)
-        , m_begin(nullptr)
-        , m_end(nullptr)
-        , m_current_array_ptr(nullptr)
-      {}
+          : m_current(nullptr)
+          , m_begin(nullptr)
+          , m_end(nullptr)
+          , m_current_array_ptr(nullptr)
+      {
+      }
 
       pointer operator->() const
       {
@@ -83,10 +84,10 @@ namespace rsl
 
       this_type& operator++()
       {
-        if (++m_current == m_end)
+        if(++m_current == m_end)
         {
-          m_begin = *++m_current_array_ptr;
-          m_end = m_begin + internal::deque_default_sub_array_size<T>();
+          m_begin   = *++m_current_array_ptr;
+          m_end     = m_begin + internal::deque_default_sub_array_size<T>();
           m_current = m_begin;
         }
         return *this;
@@ -100,10 +101,10 @@ namespace rsl
 
       this_type& operator--()
       {
-        if (m_current == m_begin)
+        if(m_current == m_begin)
         {
-          m_begin = *--m_current_array_ptr;
-          m_end = m_begin + internal::deque_default_sub_array_size<T>();
+          m_begin   = *--m_current_array_ptr;
+          m_end     = m_begin + internal::deque_default_sub_array_size<T>();
           m_current = m_end; // fall through...
         }
         --m_current;
@@ -120,7 +121,7 @@ namespace rsl
       {
         const difference_type subarray_pos = (m_current - m_begin) + n;
 
-        if ((size_t)subarray_pos < (size_t)internal::deque_default_sub_array_size<T>())
+        if((size_t)subarray_pos < (size_t)internal::deque_default_sub_array_size<T>())
         {
           m_current += n;
         }
@@ -156,14 +157,14 @@ namespace rsl
       void set_sub_array(T** currentArrayPtr)
       {
         m_current_array_ptr = currentArrayPtr;
-        m_begin = *currentArrayPtr;
-        m_end = m_begin + SubArraySize;
+        m_begin             = *currentArrayPtr;
+        m_end               = m_begin + SubArraySize;
       }
 
       template <typename U, card32 SubArraySize2>
       friend bool operator==(const deque_iterator<U, SubArraySize2>& lhs, const deque_iterator<U, SubArraySize2>& rhs);
 
-    //private:
+      // private:
       T* m_current;
       T* m_begin;
       T* m_end;
@@ -205,64 +206,66 @@ namespace rsl
       };
 
     public:
-      using value_type = T;
-      using pointer = T*;
-      using const_pointer = const T*;
-      using reference = T&;
-      using const_reference = const T&;
-      using iterator = deque_iterator<T, SubArraySize>;
-      using const_iterator = deque_iterator<T, SubArraySize>;
-      using reverse_iterator = rsl::reverse_iterator<iterator>;
+      using value_type             = T;
+      using pointer                = T*;
+      using const_pointer          = const T*;
+      using reference              = T&;
+      using const_reference        = const T&;
+      using iterator               = deque_iterator<T, SubArraySize>;
+      using const_iterator         = deque_iterator<T, SubArraySize>;
+      using reverse_iterator       = rsl::reverse_iterator<iterator>;
       using const_reverse_iterator = rsl::reverse_iterator<const_iterator>;
-      using size_type = card32;
-      using difference_type = int32;
-      using allocator_type = Allocator;
+      using size_type              = card32;
+      using difference_type        = int32;
+      using allocator_type         = Allocator;
 
-      //template<typename T2, card32>
-      //friend class deque_iterator<T2, SubArraySize>;
+      // template<typename T2, card32>
+      // friend class deque_iterator<T2, SubArraySize>;
 
     public:
       deque()
-        : m_ptr_array(nullptr)
-        , m_ptr_array_size(0)
-        , m_begin_it()
-        , m_end_it()
-        , m_allocator()
-      {}
+          : m_ptr_array(nullptr)
+          , m_ptr_array_size(0)
+          , m_begin_it()
+          , m_end_it()
+          , m_allocator()
+      {
+      }
       explicit deque(const allocator_type& allocator)
-        : m_ptr_array(nullptr)
-        , m_ptr_array_size(0)
-        , m_begin_it()
-        , m_end_it()
-        , m_allocator(allocator)
-      {}
+          : m_ptr_array(nullptr)
+          , m_ptr_array_size(0)
+          , m_begin_it()
+          , m_end_it()
+          , m_allocator(allocator)
+      {
+      }
       explicit deque(size_type n, const allocator_type& allocator = allocator_type())
-        : m_ptr_array(nullptr)
-        , m_ptr_array_size(0)
-        , m_begin_it()
-        , m_end_it()
-        , m_allocator(allocator)
+          : m_ptr_array(nullptr)
+          , m_ptr_array_size(0)
+          , m_begin_it()
+          , m_end_it()
+          , m_allocator(allocator)
       {
         init(n);
         fill_default();
       }
       deque(size_type n, const value_type& value, const allocator_type& allocator = allocator_type())
-        : m_ptr_array(nullptr)
-        , m_ptr_array_size(0)
-        , m_begin_it()
-        , m_end_it()
-        , m_allocator(allocator)
+          : m_ptr_array(nullptr)
+          , m_ptr_array_size(0)
+          , m_begin_it()
+          , m_end_it()
+          , m_allocator(allocator)
       {
         init(n);
         fill_init(value);
       }
 
       deque(const this_type& other)
-        : m_ptr_array(nullptr)
-        , m_ptr_array_size(0)
-        , m_begin_it()
-        , m_end_it()
-        , m_allocator(allocator)
+          : m_ptr_array(nullptr)
+          , m_ptr_array_size(0)
+          , m_begin_it()
+          , m_end_it()
+          , m_allocator(allocator)
       {
         init(other.size());
         rsl::uninitialized_copy(other.m_begin_it, other.m_end_it, m_begin_it);
@@ -285,7 +288,7 @@ namespace rsl
 
       ~deque()
       {
-        for (iterator current = m_begin_it; current != m_end_it; ++current)
+        for(iterator current = m_begin_it; current != m_end_it; ++current)
         {
           current.m_current->~value_type();
         }
@@ -394,7 +397,7 @@ namespace rsl
       {
         const size_type current_size = size();
 
-        if (n > current_size)
+        if(n > current_size)
         {
           insert(m_end_it, n - current_size, value);
         }
@@ -419,7 +422,7 @@ namespace rsl
       {
         iterator it = m_begin_it;
 
-        const difference_type subarray_pos = static_cast<difference_type>(it.m_current - it.m_begin) + static_cast<difference_type>(n);
+        const difference_type subarray_pos   = static_cast<difference_type>(it.m_current - it.m_begin) + static_cast<difference_type>(n);
         const difference_type subarray_index = ((16777216 + subarray_pos) / static_cast<difference_type>(SubArraySize)) - (16777216 / static_cast<difference_type>(SubArraySize));
 
         return *(*(it.m_current_array_ptr + subarray_index) + (subarray_pos - (subarray_index * static_cast<difference_type>(SubArraySize))));
@@ -429,7 +432,7 @@ namespace rsl
       {
         iterator it = m_begin_it;
 
-        const difference_type subarray_pos = static_cast<difference_type>(it.m_current - it.m_begin) + static_cast<difference_type>(n);
+        const difference_type subarray_pos   = static_cast<difference_type>(it.m_current - it.m_begin) + static_cast<difference_type>(n);
         const difference_type subarray_index = ((16777216 + subarray_pos) / static_cast<difference_type>(SubArraySize)) - (16777216 / static_cast<difference_type>(SubArraySize));
 
         return *(*(it.m_current_array_ptr + subarray_index) + (subarray_pos - (subarray_index * static_cast<difference_type>(SubArraySize))));
@@ -502,7 +505,7 @@ namespace rsl
       void pop_front()
       {
         RSL_ASSERT_X(!empty(), "deque pop front on empty deque");
-        if ((m_begin_it.m_current + 1) != m_begin_it.m_end)
+        if((m_begin_it.m_current + 1) != m_begin_it.m_end)
         {
           (m_begin_it.m_current++)->~value_type();
         }
@@ -521,7 +524,7 @@ namespace rsl
       {
         RSL_ASSERT_X(!empty(), "deque pop front on empty deque");
 
-        if (m_end_it.m_current != m_end_it.m_begin)
+        if(m_end_it.m_current != m_end_it.m_begin)
         {
           (--m_end_it.m_current)->~value_type();
         }
@@ -536,15 +539,15 @@ namespace rsl
         }
       }
 
-      template <typename ... Args>
-      iterator emplace(const_iterator position, Args&& ... args)
+      template <typename... Args>
+      iterator emplace(const_iterator position, Args&&... args)
       {
-        if (position.m_current == m_end_it.m_current)
+        if(position.m_current == m_end_it.m_current)
         {
           emplace_back(rsl::forward<Args>(args)...);
           return --end();
         }
-        else if (position.m_current == m_begin_it.m_current)
+        else if(position.m_current == m_begin_it.m_current)
         {
           emplace_front(rsl::forward<Args>(args)...);
           return m_begin_it;
@@ -556,7 +559,7 @@ namespace rsl
 
         RSL_ASSERT_X(!empty(), "non empty deque when an empty is expected");
 
-        if (i < static_cast<difference_type>(size() / 2)) // should we insert at the front or the back?
+        if(i < static_cast<difference_type>(size() / 2)) // should we insert at the front or the back?
         {
           emplace_front(rsl::move(*m_begin_it));
 
@@ -585,18 +588,18 @@ namespace rsl
         return it_pos;
       }
 
-      template <typename ... Args>
-      void emplace_front(Args&& ... args)
+      template <typename... Args>
+      void emplace_front(Args&&... args)
       {
-        if (m_begin_it.m_current != m_begin_it.m_begin)
+        if(m_begin_it.m_current != m_begin_it.m_begin)
         {
-          new (--m_begin_it.m_current) value_type(rsl::forward<Args>(args)...);
+          new(--m_begin_it.m_current) value_type(rsl::forward<Args>(args)...);
         }
         else
         {
           value_type value_saved(rsl::forward<Args>(args)...);
 
-          if (m_begin_it.m_current_array_ptr == m_ptr_array)
+          if(m_begin_it.m_current_array_ptr == m_ptr_array)
           {
             reallocate_ptr_array(1, Side::Front);
           }
@@ -605,28 +608,28 @@ namespace rsl
 
           m_begin_it.set_sub_array(m_begin_it.m_current_array_ptr - 1);
           m_begin_it.m_current = m_begin_it.m_end - 1;
-          new (m_begin_it.m_current) value_type(rsl::move(value_saved));
+          new(m_begin_it.m_current) value_type(rsl::move(value_saved));
         }
       }
 
-      template <typename ... Args>
-      void emplace_back(Args&& ... args)
+      template <typename... Args>
+      void emplace_back(Args&&... args)
       {
-        if ((m_end_it.m_current + 1) != m_end_it.m_end)
+        if((m_end_it.m_current + 1) != m_end_it.m_end)
         {
-          new (m_end_it.m_current++) value_type(rsl::forward<Args>(args)...);
+          new(m_end_it.m_current++) value_type(rsl::forward<Args>(args)...);
         }
         else
         {
           value_type value_saved(rsl::forward<Args>(args)...);
-          if (((m_end_it.m_current_array_ptr - m_ptr_array) + 1) >= static_cast<difference_type>(m_ptr_array_size))
+          if(((m_end_it.m_current_array_ptr - m_ptr_array) + 1) >= static_cast<difference_type>(m_ptr_array_size))
           {
             reallocate_ptr_array(1, Side::Back);
           }
 
           m_end_it.m_current_array_ptr[1] = allocate_sub_array();
 
-          new (m_end_it.m_current) value_type(rsl::move(value_saved));
+          new(m_end_it.m_current) value_type(rsl::move(value_saved));
           m_end_it.set_sub_array(m_end_it.m_current_array_ptr + 1);
           m_end_it.m_current = m_end_it.m_begin;
         }
@@ -669,7 +672,7 @@ namespace rsl
 
         const difference_type i(it_pos - m_begin_it);
 
-        if (i < static_cast<difference_type>(size() / 2))
+        if(i < static_cast<difference_type>(size() / 2))
         {
           it_next.copy_backward(m_begin_it, it_pos);
           pop_front();
@@ -688,14 +691,14 @@ namespace rsl
         iterator it_first(first);
         iterator it_last(last);
 
-        if (it_first != m_begin_it || (it_last != m_end_it))
+        if(it_first != m_begin_it || (it_last != m_end_it))
         {
           const iterator it_new_begin(m_begin_it + n);
           value_type** const ptr_array_begin = m_begin_it.m_current_array_ptr;
 
           it_last.copy_backward(m_begin_it, it_first);
 
-          for (; m_begin_it != it_new_begin; it_new_begin)
+          for(; m_begin_it != it_new_begin; it_new_begin)
           {
             m_begin_it.m_current->~value_type();
           }
@@ -709,7 +712,7 @@ namespace rsl
 
           it_first.copy(it_last, m_end_it);
 
-          for (iterator it_temp(it_new_end); it_temp != m_end_it; ++it_temp)
+          for(iterator it_temp(it_new_end); it_temp != m_end_it; ++it_temp)
           {
             it_temp.m_current->~value_type();
           }
@@ -735,13 +738,13 @@ namespace rsl
 
       void clear()
       {
-        if (m_begin_it.m_current_array_ptr != m_end_it.m_current_array_ptr)
+        if(m_begin_it.m_current_array_ptr != m_end_it.m_current_array_ptr)
         {
-          for (value_type* p1 = m_begin_it.m_current; p1 < m_begin_it.m_end; ++p1)
+          for(value_type* p1 = m_begin_it.m_current; p1 < m_begin_it.m_end; ++p1)
           {
             p1->~value_type();
           }
-          for (value_type* p2 = m_end_it.m_begin; p2 < m_end_it.m_current; ++p2)
+          for(value_type* p2 = m_end_it.m_begin; p2 < m_end_it.m_current; ++p2)
           {
             p2->~value_type();
           }
@@ -749,15 +752,15 @@ namespace rsl
         }
         else
         {
-          for (value_type* p = m_begin_it.m_current; p < m_end_it.m_current; ++p)
+          for(value_type* p = m_begin_it.m_current; p < m_end_it.m_current; ++p)
           {
             p->~value_type();
           }
         }
 
-        for (value_type** ptr_array = m_begin_it.m_current_array_ptr + 1; ptr_array < m_end_it.m_current_array_ptr; ++ptr_array)
+        for(value_type** ptr_array = m_begin_it.m_current_array_ptr + 1; ptr_array < m_end_it.m_current_array_ptr; ++ptr_array)
         {
-          for (value_type* p = *ptr_array, *end = *ptr_array + SubArraySize; p < end; ++p)
+          for(value_type *p = *ptr_array, *end = *ptr_array + SubArraySize; p < end; ++p)
           {
             p->~value_type();
           }
@@ -789,13 +792,13 @@ namespace rsl
         const size_type min_ptr_array_size = s_min_array_size;
 
         m_ptr_array_size = rsl::max(min_ptr_array_size, (new_ptr_array_size + 2));
-        m_ptr_array = allocate_ptr_array(m_ptr_array_size);
+        m_ptr_array      = allocate_ptr_array(m_ptr_array_size);
 
         value_type** const ptr_array_begin = m_ptr_array + ((m_ptr_array_size - new_ptr_array_size) / 2);
-        value_type** const ptr_array_end = ptr_array_begin + new_ptr_array_size;
-        value_type** ptr_array_current = ptr_array_begin;
+        value_type** const ptr_array_end   = ptr_array_begin + new_ptr_array_size;
+        value_type** ptr_array_current     = ptr_array_begin;
 
-        while (ptr_array_current < ptr_array_end)
+        while(ptr_array_current < ptr_array_end)
         {
           *ptr_array_current++ = allocate_sub_array();
         }
@@ -819,7 +822,7 @@ namespace rsl
       {
         init(0);
 
-        for (; first != last; ++first)
+        for(; first != last; ++first)
         {
           push_back(*first);
         }
@@ -829,13 +832,13 @@ namespace rsl
       void init_from_iterator(ForwardIterator first, ForwardIterator last, rsl::forward_iterator_tag)
       {
         using non_const_iterator_type = typename rsl::remove_const_t<ForwardIterator>;
-        using non_const_value_type = typename rsl::remove_const_t<value_type>;
+        using non_const_value_type    = typename rsl::remove_const_t<value_type>;
 
         const size_type n = static_cast<size_type>(rsl::distance(first, last));
 
         init(n);
 
-        for (value_type** ptr_array_current = m_begin_it.m_current_array_ptr; ptr_array_current < m_end_it.m_current_array_ptr; ++ptr_array_current)
+        for(value_type** ptr_array_current = m_begin_it.m_current_array_ptr; ptr_array_current < m_end_it.m_current_array_ptr; ++ptr_array_current)
         {
           ForwardIterator current(first);
 
@@ -858,7 +861,7 @@ namespace rsl
       {
         value_type** ptr_array_current = m_begin_it.m_current_array_ptr;
 
-        while (ptr_array_current < m_end_it.m_current_array_ptr)
+        while(ptr_array_current < m_end_it.m_current_array_ptr)
         {
           rsl::uninitialized_default_construct(*ptr_array_current, *ptr_array_current + SubArraySize);
           ++ptr_array_current;
@@ -870,7 +873,7 @@ namespace rsl
       {
         value_type** ptr_array_current = m_begin_it.m_current_array_ptr;
 
-        while (ptr_array_current < m_end_it.m_current_array_ptr)
+        while(ptr_array_current < m_end_it.m_current_array_ptr)
         {
           rsl::uninitialized_fill(*ptr_array_current, *ptr_array_current + SubArraySize, val);
           ++ptr_array_current;
@@ -880,12 +883,12 @@ namespace rsl
 
       void set_capacity(size_type n)
       {
-        if (n == 0)
+        if(n == 0)
         {
           this_type tmp(get_allocator());
           swap(tmp);
         }
-        else if (n < size())
+        else if(n < size())
         {
           resize(n);
         }
@@ -900,10 +903,10 @@ namespace rsl
       template <typename InputIterator, rsl::enable_if_t<!rsl::is_integral_v<InputIterator>, bool> = true>
       void assign(InputIterator first, InputIterator last)
       {
-        const size_type n = static_cast<size_type>(rsl::distance(first, last));
+        const size_type n    = static_cast<size_type>(rsl::distance(first, last));
         const size_type size = size();
 
-        if (n > size)
+        if(n > size)
         {
           InputIterator at_end(first);
 
@@ -915,7 +918,7 @@ namespace rsl
         {
           iterator it_end(rsl::copy(first, last, m_begin_it));
 
-          if (n < size)
+          if(n < size)
           {
             erase(it_end, m_end_it);
           }
@@ -926,7 +929,7 @@ namespace rsl
       {
         const size_type size = size();
 
-        if (n > size)
+        if(n > size)
         {
           rsl::fill(m_begin_it, m_end_it, value);
           insert(m_end_it, n - size, value);
@@ -954,14 +957,14 @@ namespace rsl
       template <typename InputIterator>
       void insert_from_iterator(const_iterator position, const InputIterator& first, const InputIterator& last, rsl::forward_iterator_tag)
       {
-        if (position.m_current == m_begin_it.m_current)
+        if(position.m_current == m_begin_it.m_current)
         {
           iterator it_new_begin(reallocate_sub_array(n, Side::Front));
 
           rsl::uninitialized_copy(first, last, it_new_begin);
           m_begin_it = it_new_begin;
         }
-        else if (position.m_current == m_end_it.m_current)
+        else if(position.m_current == m_end_it.m_current)
         {
           const iterator it_new_end(reallocate_sub_array(n, Side::Back));
 
@@ -971,15 +974,15 @@ namespace rsl
         else
         {
           const difference_type insertion_index = position - m_begin_it;
-          const size_type size = size();
+          const size_type size                  = size();
 
-          if (insertion_index < static_cast<difference_type>(size / 2))
+          if(insertion_index < static_cast<difference_type>(size / 2))
           {
             const iterator it_new_begin(reallocate_sub_array(n, Side::Front));
             const iterator it_old_begin(m_begin_it);
             const iterator it_pos(m_begin_it + insertion_index);
 
-            if (insertion_index > static_cast<difference_type>(n))
+            if(insertion_index > static_cast<difference_type>(n))
             {
               iterator it_u_copy_end(m_begin_it + static_cast<difference_type>(n));
 
@@ -1005,7 +1008,7 @@ namespace rsl
             const difference_type pushed_count = static_cast<difference_type>(size) - insertion_index;
             const iterator it_pos(m_end_it - pushed_count);
 
-            if (pushed_count > static_cast<difference_type>(n))
+            if(pushed_count > static_cast<difference_type>(n))
             {
               const iterator it_u_copy_end(m_end_it - static_cast<difference_type>(n));
 
@@ -1028,14 +1031,14 @@ namespace rsl
 
       void insert_values(const_iterator position, size_type n, const value_type& value)
       {
-        if (position.m_current == m_begin_it.m_current)
+        if(position.m_current == m_begin_it.m_current)
         {
           const iterator it_new_begin(reallocate_sub_array(n, Side::Front));
 
           rsl::uninitialized_fill(it_new_begin, m_begin_it, value);
           m_begin_it = it_new_begin;
         }
-        else if (position.m_current == m_end_it.m_current)
+        else if(position.m_current == m_end_it.m_current)
         {
           const iterator it_new_end(reallocate_sub_array(n, Side::Back));
 
@@ -1045,16 +1048,16 @@ namespace rsl
         else
         {
           const difference_type insertion_index = position - m_begin_it;
-          const size_type size = size();
+          const size_type size                  = size();
           const value_type value_saved(value);
 
-          if (insertion_index < static_cast<difference_type>(size / 2))
+          if(insertion_index < static_cast<difference_type>(size / 2))
           {
             const iterator it_new_begin(reallocate_sub_array(n, Side::Front));
             const iterator it_old_begin(m_begin_it);
             const iterator it_position(m_begin_it + insertion_index);
 
-            if (insertion_index >= static_cast<difference_type>(n))
+            if(insertion_index >= static_cast<difference_type>(n))
             {
               iterator it_u_copy_end(m_begin_it + static_cast<difference_type>(n));
 
@@ -1076,7 +1079,7 @@ namespace rsl
             const difference_type pushed_count = static_cast<difference_type>(size) - insertion_index;
             const iterator it_pos(m_end_it - pushed_count);
 
-            if (pushed_count > static_cast<difference_type>(n))
+            if(pushed_count > static_cast<difference_type>(n))
             {
               iterator it_u_copy_end(m_end_it - static_cast<difference_type>(n));
 
@@ -1109,7 +1112,7 @@ namespace rsl
 
       void free_sub_arrays(T** begin, T** end)
       {
-        while (begin < end)
+        while(begin < end)
         {
           free_sub_array(*begin++);
         }
@@ -1131,20 +1134,20 @@ namespace rsl
 
       void reallocate_sub_array(size_type additionalCapacity, Side allocationSide)
       {
-        if (allocationSide == Side::Front)
+        if(allocationSide == Side::Front)
         {
           const size_type current_additional_capacity = static_cast<size_type>(m_begin_it.m_current - m_begin_it.m_begin);
 
-          if (current_additional_capacity < additionalCapacity)
+          if(current_additional_capacity < additionalCapacity)
           {
             const difference_type sub_array_inc = static_cast<difference_type>(((additionalCapacity - current_additional_capacity) + SubArraySize - 1) / SubArraySize);
 
-            if (sub_array_inc > (m_begin_it.m_current_array_ptr - m_ptr_array))
+            if(sub_array_inc > (m_begin_it.m_current_array_ptr - m_ptr_array))
             {
               reallocate_ptr_array(static_cast<size_type>(sub_array_inc - (m_begin_it.m_current_array_ptr - m_ptr_array)), Side::Front);
             }
 
-            for (difference_type i = 1; i < sub_array_inc; ++i)
+            for(difference_type i = 1; i < sub_array_inc; ++i)
             {
               m_begin_it.m_current_array_ptr[-i] = allocate_sub_array();
             }
@@ -1156,16 +1159,16 @@ namespace rsl
         {
           const size_type current_additional_capacity = static_cast<size_type>((m_end_it.m_end - 1) - m_end_it.m_current);
 
-          if (current_additional_capacity < additionalCapacity)
+          if(current_additional_capacity < additionalCapacity)
           {
             const difference_type sub_array_inc = static_cast<difference_type>(((additionalCapacity - current_additional_capacity) + SubArraySize - 1) / SubArraySize);
 
-            if (sub_array_inc > ((m_ptr_array + m_ptr_array_size) - m_end_it.m_current_array_ptr) - 1)
+            if(sub_array_inc > ((m_ptr_array + m_ptr_array_size) - m_end_it.m_current_array_ptr) - 1)
             {
               reallocate_ptr_array(static_cast<size_type>(sub_array_inc - (((m_ptr_array + m_ptr_array_size) - m_end_it.m_current_array_ptr) - 1)), Side::Back);
             }
 
-            for (difference_type i = 1; i < sub_array_inc; ++i)
+            for(difference_type i = 1; i < sub_array_inc; ++i)
             {
               m_end_it.m_current_array_ptr[i] = allocate_sub_array();
             }
@@ -1178,14 +1181,14 @@ namespace rsl
       void reallocate_ptr_array(size_type additionalCapacity, Side allocationSide)
       {
         const size_type unused_ptr_count_at_front = static_cast<size_type>(m_begin_it.m_current_array_ptr - m_ptr_array);
-        const size_type used_ptr_count = static_cast<size_type>(m_end_it.m_current_array_ptr - m_begin_it.m_current_array_ptr) + 1;
-        const size_type used_ptr_space = used_ptr_count * sizeof(void*);
-        const size_type unused_ptr_count_at_back = (m_ptr_array_size - unused_ptr_count_at_front) - used_ptr_count;
-        value_type** ptr_array_begin = nullptr;
+        const size_type used_ptr_count            = static_cast<size_type>(m_end_it.m_current_array_ptr - m_begin_it.m_current_array_ptr) + 1;
+        const size_type used_ptr_space            = used_ptr_count * sizeof(void*);
+        const size_type unused_ptr_count_at_back  = (m_ptr_array_size - unused_ptr_count_at_front) - used_ptr_count;
+        value_type** ptr_array_begin              = nullptr;
 
-        if ((allocationSide == Side::Back) && (additionalCapacity <= unused_ptr_count_at_front))
+        if((allocationSide == Side::Back) && (additionalCapacity <= unused_ptr_count_at_front))
         {
-          if (additionalCapacity < (unused_ptr_count_at_front / 2))
+          if(additionalCapacity < (unused_ptr_count_at_front / 2))
           {
             additionalCapacity = (unused_ptr_count_at_front / 2);
           }
@@ -1194,9 +1197,9 @@ namespace rsl
           rsl::memmove(ptr_array_begin, m_begin_it.m_current_array_ptr, used_ptr_space);
           rsl::memset(ptr_array_begin + used_ptr_count, 0, static_cast<card64>(m_ptr_array + m_ptr_array_size) - static_cast<card64>(ptr_array_begin + used_ptr_count));
         }
-        else if ((allocationSide == Side::Front) && (additionalCapacity <= unused_ptr_count_at_back))
+        else if((allocationSide == Side::Front) && (additionalCapacity <= unused_ptr_count_at_back))
         {
-          if (additionalCapacity < (unused_ptr_count_at_back / 2))
+          if(additionalCapacity < (unused_ptr_count_at_back / 2))
           {
             additionalCapacity = (unused_ptr_count_at_back / 2);
           }
@@ -1208,18 +1211,18 @@ namespace rsl
         else
         {
           const size_type new_ptr_array_size = m_ptr_array_size + rsl::max(m_ptr_array_size, additionalCapacity) + 2;
-          value_type** new_ptr_array = allocate_ptr_array(new_ptr_array_size);
+          value_type** new_ptr_array         = allocate_ptr_array(new_ptr_array_size);
 
           ptr_array_begin = new_ptr_array + (m_begin_it.m_current_array_ptr - m_ptr_array) + ((allocationSide == Side::Front) ? additionalCapacity : 0);
 
-          if (m_ptr_array)
+          if(m_ptr_array)
           {
             rsl::memcpy(ptr_array_begin, m_begin_it.m_current_array_ptr, used_ptr_space);
           }
 
           free_ptr_array(m_ptr_array, m_ptr_array_size);
 
-          m_ptr_array = new_ptr_array;
+          m_ptr_array      = new_ptr_array;
           m_ptr_array_size = new_ptr_array_size;
         }
 

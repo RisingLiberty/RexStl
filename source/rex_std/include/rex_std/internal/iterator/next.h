@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: next.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -19,11 +19,11 @@ namespace rsl
 {
   inline namespace v1
   {
-		template<typename InputIterator>
-		InputIterator prev(InputIterator it, typename rsl::iterator_traits<InputIterator>::difference_type n = 1)
-		{
-			rsl::advance(it, -n);
-			return it;
-		}
-  }
-}
+    template <typename InputIterator>
+    InputIterator prev(InputIterator it, typename rsl::iterator_traits<InputIterator>::difference_type n = 1)
+    {
+      rsl::advance(it, -n);
+      return it;
+    }
+  } // namespace v1
+} // namespace rsl

@@ -684,7 +684,7 @@ namespace rsl
       {
         return m_cp_key_equal_and_bucket_array.second();
       }
-      node_type** const bucket_array() const
+      node_type** bucket_array() const
       {
         return m_cp_key_equal_and_bucket_array.second();
       }
@@ -744,7 +744,7 @@ namespace rsl
 
       size_type bucket_index(hash_result hr, size_type bucketCount) const
       {
-        hash_result res = hr % bucketCount;
+        const hash_result res = hr % bucketCount;
         return static_cast<size_type>(res);
       }
 
@@ -787,7 +787,7 @@ namespace rsl
         {
           static_assert(rsl::is_constructible_v<key_type, K>, "key_type is not constructible from 'K'");
 
-          new_hash_type hasher {};
+          const new_hash_type hasher {};
           return hasher(type);
         }
       }

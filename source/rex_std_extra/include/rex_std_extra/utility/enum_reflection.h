@@ -53,13 +53,13 @@
   #include "rex_std/array.h"
   #include "rex_std/assert.h"
   #include "rex_std/bonus/types.h"
+  #include "rex_std/internal/math/log2.h"
   #include "rex_std/iostream.h"
   #include "rex_std/limits.h"
   #include "rex_std/string.h"
   #include "rex_std/string_view.h"
   #include "rex_std/type_traits.h"
   #include "rex_std/utility.h"
-  #include "rex_std/internal/math/log2.h"
 
   #if defined(MAGIC_ENUM_CONFIG_FILE)
     #include MAGIC_ENUM_CONFIG_FILE

@@ -14,8 +14,8 @@
 
 // based on https://en.cppreference.com/w/cpp/algorithm/min
 
-#include "rex_std/internal/algorithm/min_element.h"
 #include "rex_std/initializer_list.h"
+#include "rex_std/internal/algorithm/min_element.h"
 
 namespace rsl
 {
@@ -33,12 +33,14 @@ namespace rsl
       return comp(lhs, rhs) ? lhs : rhs;
     }
     template <typename T>
-    T (min) (rsl::initializer_list<T> ilist)
+    T(min)
+    (rsl::initializer_list<T> ilist)
     {
       return *rsl::min_element(ilist.begin(), ilist.end());
     }
     template <typename T, typename Compare>
-    T (min) (rsl::initializer_list<T> ilist, Compare compare)
+    T(min)
+    (rsl::initializer_list<T> ilist, Compare compare)
     {
       return *rsl::min_element(ilist.begin(), ilist.end());
     }

@@ -40,13 +40,13 @@ namespace rsl
     template <typename InputIterator1, typename InputIterator2, typename Compare>
     bool lexicographical_compare(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, Compare compare)
     {
-      for (; (first1 != last1) && (first2 != last2); ++first1, ++first2)
+      for(; (first1 != last1) && (first2 != last2); ++first1, ++first2)
       {
-        if (compare(*first1, *first2))
+        if(compare(*first1, *first2))
         {
           return true;
         }
-        if (compare(*first2, *first1))
+        if(compare(*first2, *first1))
         {
           return false;
         }

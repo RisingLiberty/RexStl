@@ -12,10 +12,10 @@
 
 #pragma once
 
+#include "rex_std/bonus/type_traits/type_select.h"
 #include "rex_std/bonus/types.h"
 #include "rex_std/bonus/utility/compressed_pair.h"
 #include "rex_std/bonus/utility/element_literal.h"
-#include "rex_std/bonus/type_traits/type_select.h"
 #include "rex_std/compare.h"
 #include "rex_std/initializer_list.h"
 #include "rex_std/internal/memory/allocator.h"
@@ -35,8 +35,9 @@ namespace rsl
         forward_list_node_base* next;
 
         forward_list_node_base()
-          : next(nullptr)
-        {}
+            : next(nullptr)
+        {
+        }
 
         void insert_after(forward_list_node_base* node)
         {
@@ -54,13 +55,13 @@ namespace rsl
       {
         forward_list_node_base* head = node;
         forward_list_node_base* next = head->next;
-        head->next                = nullptr;
+        head->next                   = nullptr;
         while(next)
         {
           forward_list_node_base* tmp = next;
-          next                     = head;
-          head                     = node;
-          node                     = tmp;
+          next                        = head;
+          head                        = node;
+          node                        = tmp;
         }
 
         return head;
@@ -71,11 +72,12 @@ namespace rsl
       {
         using size_type = typename forward_list_node_base::size_type;
 
-        template <typename ... Args>
-        forward_list_node(Args&& ... args)
-          : forward_list_node_base()
-          , value(rsl::forward<Args>(args)...)
-        {}
+        template <typename... Args>
+        forward_list_node(Args&&... args)
+            : forward_list_node_base()
+            , value(rsl::forward<Args>(args)...)
+        {
+        }
 
         T value;
       };
@@ -83,7 +85,6 @@ namespace rsl
 
     template <typename T, typename Allocator>
     class forward_list;
-
 
     // TODO: Check if we can use the ForwardIterator for this (it's implementation should change though)
     template <typename T, typename Pointer, typename Reference>
@@ -96,14 +97,14 @@ namespace rsl
       template <typename U, typename Allocator>
       friend class forward_list;
 
-      using pointer   = Pointer;
-      using const_pointer   = const T*;
-      using reference = Reference;
-      using const_reference = const T&;
-      using difference_type = int32;
-      using node_type = internal::forward_list_node<T>;
+      using pointer           = Pointer;
+      using const_pointer     = const T*;
+      using reference         = Reference;
+      using const_reference   = const T&;
+      using difference_type   = int32;
+      using node_type         = internal::forward_list_node<T>;
       using iterator_category = forward_iterator_tag;
-      using value_type = T;
+      using value_type        = T;
 
       forward_list_iterator()
           : m_node(nullptr)
@@ -220,18 +221,12 @@ namespace rsl
 #ifdef REX_ENABLE_SIZE_IN_LISTS
           , m_size(0)
 #endif
-      {
-        insert_after(end(), other.cbegin(), other.cend())
-      }
-      forward_list(const forward_list& other)
+                {insert_after(end(), other.cbegin(), other.cend())} forward_list(const forward_list& other)
           : m_cp_pre_head_node_and_allocator(other.get_allocator())
 #ifdef REX_ENABLE_SIZE_IN_LISTS
           , m_size(other.m_size)
 #endif
-      {
-        insert_after(end(), other.cbegin(), other.cend())
-      }
-      forward_list(const forward_list& other, const allocator_type& alloc)
+                {insert_after(end(), other.cbegin(), other.cend())} forward_list(const forward_list& other, const allocator_type& alloc)
           : m_cp_pre_head_node_and_allocator(alloc)
 #ifdef REX_ENABLE_SIZE_IN_LISTS
           , m_size(other.m_size)
@@ -288,7 +283,7 @@ namespace rsl
       void assign(size_type count, const T& value)
       {
         internal::forward_list_node_base* prev_node = &pre_head_node();
-        node_type* node                          = head();
+        node_type* node                             = head();
         while(node && count > 0)
         {
           node->value = value;
@@ -310,7 +305,7 @@ namespace rsl
       void assign(InputIterator first, InputIterator last)
       {
         internal::forward_list_node_base* prev_node = &pre_head_node();
-        node_type* node                          = head();
+        node_type* node                             = head();
         while(node && first != last)
         {
           node->value = *first;
@@ -421,9 +416,7 @@ namespace rsl
         m_size = 0;
 #endif
       }
-      void insert_after(const_iterator pos, size_type count)
-      {
-      }
+      void insert_after(const_iterator pos, size_type count) {}
       void insert_after(const_iterator pos, const_reference value)
       {
         emplace_after(pos, value);
@@ -571,17 +564,17 @@ namespace rsl
       template <typename Iterator>
       void emplace_n_after_impl_from_it(iterator node, size_type count, Iterator it)
       {
-        while (count-- > 0)
+        while(count-- > 0)
         {
           emplace_after_impl(node, *it);
           ++it;
         }
       }
 
-      template <typename ... Args>
-      void emplace_n_after_impl(iterator node, size_type count, Args&& ... args)
+      template <typename... Args>
+      void emplace_n_after_impl(iterator node, size_type count, Args&&... args)
       {
-        while (count--)
+        while(count--)
         {
           // with a good allocator, all these allocation can be continious
           node_type* new_node = static_cast<node_type*>(get_allocator().allocate(sizeof(node_type)));
@@ -628,7 +621,7 @@ namespace rsl
         return m_cp_pre_head_node_and_allocator.second();
       }
 
-      private:
+    private:
       // losing const here
       const internal::forward_list_node_base& pre_head_node() const
       {
@@ -646,14 +639,14 @@ namespace rsl
     template <typename T, typename Allocator>
     bool operator==(const forward_list<T, Allocator>& a, const forward_list<T, Allocator>& b)
     {
-      typename forward_list<T, Allocator>::const_iterator ia = a.begin();
-      typename forward_list<T, Allocator>::const_iterator ib = b.begin();
+      typename forward_list<T, Allocator>::const_iterator ia   = a.begin();
+      typename forward_list<T, Allocator>::const_iterator ib   = b.begin();
       typename forward_list<T, Allocator>::const_iterator enda = a.end();
 
 #if EASTL_SLIST_SIZE_CACHE
-      if (a.size() == b.size())
+      if(a.size() == b.size())
       {
-        while ((ia != enda) && (*ia == *ib))
+        while((ia != enda) && (*ia == *ib))
         {
           ++ia;
           ++ib;
@@ -664,7 +657,7 @@ namespace rsl
 #else
       typename forward_list<T, Allocator>::const_iterator endb = b.end();
 
-      while ((ia != enda) && (ib != endb) && (*ia == *ib))
+      while((ia != enda) && (ib != endb) && (*ia == *ib))
       {
         ++ia;
         ++ib;
@@ -680,8 +673,7 @@ namespace rsl
     }
 
     template <typename T, typename Alloc = rsl::allocator>
-    forward_list(T...)->forward_list<T, Alloc>;
-
+    forward_list(T...) -> forward_list<T, Alloc>;
 
   } // namespace v1
 } // namespace rsl

@@ -29,9 +29,9 @@ namespace rsl
     {
       using value_type = typename iterator_traits<Iterator>::value_type;
 
-      for (auto it = begin; it != end; ++it)
+      for(auto it = begin; it != end; ++it)
       {
-        new (iterator_to_pointer(it)) value_type();
+        new(iterator_to_pointer(it)) value_type();
       }
     }
 

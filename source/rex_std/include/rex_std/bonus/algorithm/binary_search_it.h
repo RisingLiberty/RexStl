@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: binary_search_it.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -23,7 +23,7 @@ namespace rsl
     {
       // To do: This can be made slightly faster by not using lower_bound.
       ForwardIterator i(rsl::lower_bound<ForwardIterator, T>(first, last, value));
-      if ((i != last) && !(value < *i)) // Note that we always express value comparisons in terms of < or ==.
+      if((i != last) && !(value < *i)) // Note that we always express value comparisons in terms of < or ==.
       {
         return i;
       }
@@ -35,11 +35,11 @@ namespace rsl
     {
       // To do: This can be made slightly faster by not using lower_bound.
       ForwardIterator i(rsl::lower_bound<ForwardIterator, T, Compare>(first, last, value, compare));
-      if ((i != last) && !compare(value, *i))
+      if((i != last) && !compare(value, *i))
       {
         return i;
       }
       return last;
     }
-  }
-}
+  } // namespace v1
+} // namespace rsl

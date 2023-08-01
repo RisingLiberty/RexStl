@@ -42,9 +42,10 @@ namespace rsl
       list_node_base* prev;
 
       list_node_base()
-        : next(this)
-        , prev(this)
-      {}
+          : next(this)
+          , prev(this)
+      {
+      }
 
       void insert(list_node_base* node)
       {
@@ -52,7 +53,7 @@ namespace rsl
         node->prev = prev;
 
         prev->next = node;
-        prev = node;
+        prev       = node;
       }
 
       void remove()
@@ -68,9 +69,9 @@ namespace rsl
         prev->next        = first;
 
         list_node_base* tmp = prev;
-        prev              = last->prev;
-        last->prev        = first->prev;
-        first->prev       = tmp;
+        prev                = last->prev;
+        last->prev          = first->prev;
+        first->prev         = tmp;
       }
 
       void reverse()
@@ -79,9 +80,9 @@ namespace rsl
         do
         {
           list_node_base* tmp = node->next;
-          node->next        = node->prev;
-          node->prev        = tmp;
-          node              = node->prev;
+          node->next          = node->prev;
+          node->prev          = tmp;
+          node                = node->prev;
         } while(node != this);
       }
     };
@@ -89,11 +90,12 @@ namespace rsl
     template <typename T>
     struct list_node : public list_node_base
     {
-      template <typename ... Args>
-      list_node(Args&& ... args)
-        : list_node_base()
-        , value(rsl::forward<Args>(args)...)
-      {}
+      template <typename... Args>
+      list_node(Args&&... args)
+          : list_node_base()
+          , value(rsl::forward<Args>(args)...)
+      {
+      }
 
       T value;
     };
@@ -119,12 +121,14 @@ namespace rsl
       friend class list;
 
       list_iterator()
-        : m_node(nullptr)
-      {}
+          : m_node(nullptr)
+      {
+      }
 
       list_iterator(list_node_base* node)
-        : m_node(static_cast<node_type*>(node))
-      {}
+          : m_node(static_cast<node_type*>(node))
+      {
+      }
 
       reference operator*()
       {
@@ -211,16 +215,19 @@ namespace rsl
       friend class list;
 
       const_list_iterator()
-        : m_node(nullptr)
-      {}
+          : m_node(nullptr)
+      {
+      }
 
       const_list_iterator(list_iterator<T> node)
-        : m_node(node.node())
-      {}
+          : m_node(node.node())
+      {
+      }
 
       const_list_iterator(list_node_base* node)
-        : m_node(static_cast<node_type*>(node))
-      {}
+          : m_node(static_cast<node_type*>(node))
+      {
+      }
 
       const_reference operator*() const
       {
@@ -272,7 +279,6 @@ namespace rsl
     bool operator==(const_list_iterator<U> lhs, const_list_iterator<U> rhs)
     {
       return lhs.m_node == rhs.m_node;
-
     }
 
     template <typename U>
@@ -307,7 +313,7 @@ namespace rsl
       using const_iterator         = const_list_iterator<value_type>;
       using reverse_iterator       = rsl::reverse_iterator<iterator>;
       using const_reverse_iterator = rsl::reverse_iterator<const_iterator>;
-      using node_type              = list_node<T>;    /// RSL Comment: Not in ISO C++ Standard at time of writing (04/June/2022)
+      using node_type              = list_node<T>;   /// RSL Comment: Not in ISO C++ Standard at time of writing (04/June/2022)
       using this_type              = list<T, Alloc>; /// RSL Comment: Not in ISO C++ Standard at time of writing (04/June/2022)
 
       list()
@@ -648,7 +654,7 @@ namespace rsl
       iterator emplace_n(const_iterator pos, size_type count, Args&&... args)
       {
         auto it = iterator(pos.m_node);
-        while (count-- > 0)
+        while(count-- > 0)
         {
           it = emplace(pos, rsl::forward<Args>(args)...);
         }
@@ -731,8 +737,8 @@ namespace rsl
 #endif
         while(num_new_elements > 0)
         {
-          node_type* new_node = static_cast<node_type*>(get_allocator().allocate(sizeof(node_type))); 
-          rsl::uninitialized_default_construct(new_node);                             // kind of annoying we can't do this in the allocator
+          node_type* new_node = static_cast<node_type*>(get_allocator().allocate(sizeof(node_type)));
+          rsl::uninitialized_default_construct(new_node); // kind of annoying we can't do this in the allocator
           head_tail_link()->insert(new_node);
           --num_new_elements;
         }
@@ -745,7 +751,7 @@ namespace rsl
 #endif
         while(num_new_elements > 0)
         {
-          node_type* new_node = static_cast<node_type*>(get_allocator().allocate(sizeof(node_type))); 
+          node_type* new_node = static_cast<node_type*>(get_allocator().allocate(sizeof(node_type)));
           get_allocator().construct(new_node, value);
           head_tail_link()->insert(new_node);
           --num_new_elements;
@@ -944,7 +950,6 @@ namespace rsl
       }
 
     private:
-
       node_type* head()
       {
         return static_cast<node_type*>(head_tail_link()->next);
@@ -1041,7 +1046,7 @@ namespace rsl
           // cut out the initial segment of the second list and move it to be in front of the first list
           list_node_base* second_half_cut      = second_half.m_node;
           list_node_base* second_half_cut_last = ix.m_node->prev;
-          result                             = second_half;
+          result                               = second_half;
           mid_end = second_half = ix;
           list_node_base::remove_range(second_half_cut, second_half_cut_last);
           first.m_node->insert_range(second_half_cut, second_half_cut_last);
@@ -1116,14 +1121,14 @@ namespace rsl
     template <typename T, typename Allocator>
     bool operator==(const list<T, Allocator>& a, const list<T, Allocator>& b)
     {
-      typename list<T, Allocator>::const_iterator ia = a.begin();
-      typename list<T, Allocator>::const_iterator ib = b.begin();
+      typename list<T, Allocator>::const_iterator ia   = a.begin();
+      typename list<T, Allocator>::const_iterator ib   = b.begin();
       typename list<T, Allocator>::const_iterator enda = a.end();
 
 #if EASTL_LIST_SIZE_CACHE
-      if (a.size() == b.size())
+      if(a.size() == b.size())
       {
-        while ((ia != enda) && (*ia == *ib))
+        while((ia != enda) && (*ia == *ib))
         {
           ++ia;
           ++ib;
@@ -1134,7 +1139,7 @@ namespace rsl
 #else
       typename list<T, Allocator>::const_iterator endb = b.end();
 
-      while ((ia != enda) && (ib != endb) && (*ia == *ib))
+      while((ia != enda) && (ib != endb) && (*ia == *ib))
       {
         ++ia;
         ++ib;
@@ -1150,7 +1155,7 @@ namespace rsl
     }
 
     template <typename T, typename Alloc = rsl::allocator>
-    list(T...)->list<T, Alloc>;
+    list(T...) -> list<T, Alloc>;
 
   } // namespace v1
 } // namespace rsl

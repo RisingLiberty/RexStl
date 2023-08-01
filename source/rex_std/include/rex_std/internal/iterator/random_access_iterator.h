@@ -148,21 +148,21 @@ namespace rsl
     class const_random_access_iterator
     {
     public:
-      using value_type = T;
-      using pointer = const T*;
-      using const_pointer = const T*;
-      using reference = const T&;
-      using const_reference = const T&;
+      using value_type        = T;
+      using pointer           = const T*;
+      using const_pointer     = const T*;
+      using reference         = const T&;
+      using const_reference   = const T&;
       using iterator_category = rsl::random_access_iterator_tag;
-      using difference_type = int32;
+      using difference_type   = int32;
 
       constexpr explicit const_random_access_iterator(pointer value = nullptr)
-        : m_value(value)
+          : m_value(value)
       {
       }
 
       constexpr const_random_access_iterator(random_access_iterator<T> it) // NOLINT(google-explicit-constructor)
-        : m_value(it.operator->())
+          : m_value(it.operator->())
       {
       }
 

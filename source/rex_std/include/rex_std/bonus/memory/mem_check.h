@@ -27,5 +27,5 @@ namespace rsl
     const void* memcheck(const void* p, int16 value, count_t byteCount);
     const void* memcheck(const void* p, int32 value, count_t byteCount);
     const void* memcheck(const void* p, int64 value, count_t byteCount);
-  }
-}
+  } // namespace v1
+} // namespace rsl

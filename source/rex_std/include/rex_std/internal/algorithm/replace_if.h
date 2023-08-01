@@ -16,17 +16,16 @@ namespace rsl
 {
   inline namespace v1
   {
-		template <typename ForwardIterator, typename Predicate, typename T>
-		void replace_if(ForwardIterator first, ForwardIterator last, Predicate predicate, const T& new_value)
-		{
-			for (; first != last; ++first)
-			{
-				if (predicate(*first))
-				{
-					*first = new_value;
-				}
-			}
-		}
+    template <typename ForwardIterator, typename Predicate, typename T>
+    void replace_if(ForwardIterator first, ForwardIterator last, Predicate predicate, const T& new_value)
+    {
+      for(; first != last; ++first)
+      {
+        if(predicate(*first))
+        {
+          *first = new_value;
+        }
+      }
+    }
   } // namespace v1
 } // namespace rsl
-

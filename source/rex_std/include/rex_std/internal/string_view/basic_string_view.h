@@ -413,7 +413,7 @@ namespace rsl
       // finds the last character equal to any of the characters in the given character sequence in this view.
       constexpr size_type find_last_of(value_type c) const
       {
-        return rsl::string_utils::find_last_of(m_data, length() , rsl::addressof(c), 1_elem, s_npos);
+        return rsl::string_utils::find_last_of(m_data, length(), rsl::addressof(c), 1_elem, s_npos);
       }
       // finds the last character equal to any of the characters in the given character sequence in this view.
       constexpr size_type find_last_of(value_type c, card32 pos) const

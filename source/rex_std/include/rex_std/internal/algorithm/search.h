@@ -45,15 +45,15 @@ namespace rsl
         ForwardIterator1 it = first;
         for(ForwardIterator2 s_it = secondFirst;; ++it, ++s_it)
         {
-          if (s_it == secondLast)
+          if(s_it == secondLast)
           {
             return first;
           }
-          if (it == last)
+          if(it == last)
           {
             return last;
           }
-          if (!p(*it, *s_it))
+          if(!p(*it, *s_it))
           {
             break;
           }

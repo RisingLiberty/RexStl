@@ -14,8 +14,8 @@
 
 #include "rex_std/bonus/attributes.h"
 #include "rex_std/bonus/functional/hash_result.h"
-#include "rex_std/bonus/string/string_fwd.h"
 #include "rex_std/bonus/string/stack_string.h"
+#include "rex_std/bonus/string/string_fwd.h"
 #include "rex_std/bonus/types.h"
 #include "rex_std/bonus/utility/compressed_pair.h"
 #include "rex_std/bonus/utility/element_literal.h"
@@ -1260,7 +1260,7 @@ namespace rsl
         if(is_using_sso_string() && other.is_using_sso_string())
         {
           rsl::swap(m_sso_buffer, other.m_sso_buffer);
-          size_type my_length = length(); // need to cache this as it'll change the next line
+          const size_type my_length = length(); // need to cache this as it'll change the next line
 
           this->reset(m_sso_buffer.data(), other.length(), m_sso_buffer.max_size());
           other.reset(other.m_sso_buffer.data(), my_length, other.m_sso_buffer.max_size());
@@ -2424,5 +2424,5 @@ namespace rsl
 
 // NOLINTEND(misc-no-recursion)
 
-#include "rex_std/internal/string_view/basic_string_view.h"
 #include "rex_std/bonus/string/string_utils_impl.h"
+#include "rex_std/internal/string_view/basic_string_view.h"

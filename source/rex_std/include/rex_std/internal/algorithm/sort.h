@@ -18,17 +18,17 @@ namespace rsl
 {
   inline namespace v1
   {
-		template <typename RandomAccessIterator>
-		inline void sort(RandomAccessIterator first, RandomAccessIterator last)
-		{
-			rsl::quick_sort<RandomAccessIterator>(first, last);
-		}
+    template <typename RandomAccessIterator>
+    inline void sort(RandomAccessIterator first, RandomAccessIterator last)
+    {
+      rsl::quick_sort<RandomAccessIterator>(first, last);
+    }
 
-		template <typename RandomAccessIterator, typename Compare>
-		inline void sort(RandomAccessIterator first, RandomAccessIterator last, Compare compare)
-		{
-			rsl::quick_sort<RandomAccessIterator, Compare>(first, last, compare);
-		}
+    template <typename RandomAccessIterator, typename Compare>
+    inline void sort(RandomAccessIterator first, RandomAccessIterator last, Compare compare)
+    {
+      rsl::quick_sort<RandomAccessIterator, Compare>(first, last, compare);
+    }
   } // namespace v1
 } // namespace rsl
 

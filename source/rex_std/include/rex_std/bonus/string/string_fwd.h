@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: string_fwd.h
 // Copyright (c) Nick De Breuck 2023
 //
@@ -26,9 +26,9 @@ namespace rsl
     template <typename CharType, typename Traits, typename Alloc>
     class basic_string;
 
-    using string = basic_string<char8, char_traits<char8>, allocator>;
-    using wstring = basic_string<tchar, char_traits<tchar>, allocator>;
+    using string    = basic_string<char8, char_traits<char8>, allocator>;
+    using wstring   = basic_string<tchar, char_traits<tchar>, allocator>;
     using u16string = basic_string<char16_t, char_traits<char16_t>, allocator>;
     using u32string = basic_string<char32_t, char_traits<char32_t>, allocator>;
-  }
-}
+  } // namespace v1
+} // namespace rsl

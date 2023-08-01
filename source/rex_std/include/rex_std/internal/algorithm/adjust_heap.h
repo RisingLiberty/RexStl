@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: adjust_heap.h
 // Copyright (c) Nick De Breuck 2022
 //
@@ -14,8 +14,8 @@
 
 #include "rex_std/internal/algorithm/promote_heap.h"
 #include "rex_std/internal/functional/less.h"
-#include "rex_std/internal/utility/forward.h"
 #include "rex_std/internal/iterator/iterator_traits.h"
+#include "rex_std/internal/utility/forward.h"
 
 namespace rsl
 {
@@ -26,24 +26,24 @@ namespace rsl
       template <typename RandomAccessIterator, typename Distance, typename T, typename ValueType>
       void adjust_heap_impl(RandomAccessIterator first, Distance topPosition, Distance heapSize, Distance position, T value)
       {
-        // We do the conventional approach of moving the position down to the 
+        // We do the conventional approach of moving the position down to the
         // bottom then inserting the value at the back and moving it up.
         Distance child_pos = (2 * position) + 2;
 
-        for (; child_pos < heapSize; child_pos = (2 * child_pos) + 2)
+        for(; child_pos < heapSize; child_pos = (2 * child_pos) + 2)
         {
-          if (rsl::less<ValueType>()(*(first + child_pos), *(first + (child_pos - 1)))) // Choose the larger of the two children.
+          if(rsl::less<ValueType>()(*(first + child_pos), *(first + (child_pos - 1)))) // Choose the larger of the two children.
           {
             --child_pos;
           }
           *(first + position) = rsl::forward<ValueType>(*(first + child_pos)); // Swap positions with this child.
-          position = child_pos;
+          position            = child_pos;
         }
 
-        if (child_pos == heapSize) // If we are at the very last index of the bottom...
+        if(child_pos == heapSize) // If we are at the very last index of the bottom...
         {
           *(first + position) = rsl::forward<ValueType>(*(first + (child_pos - 1)));
-          position = child_pos - 1;
+          position            = child_pos - 1;
         }
 
         rsl::promote_heap<RandomAccessIterator, Distance, T>(first, topPosition, position, rsl::forward<ValueType>(value));
@@ -52,29 +52,29 @@ namespace rsl
       template <typename RandomAccessIterator, typename Distance, typename T, typename Compare, typename ValueType>
       void adjust_heap_impl(RandomAccessIterator first, Distance topPosition, Distance heapSize, Distance position, T value, Compare compare)
       {
-        // We do the conventional approach of moving the position down to the 
+        // We do the conventional approach of moving the position down to the
         // bottom then inserting the value at the back and moving it up.
         Distance child_pos = (2 * position) + 2;
 
-        for (; child_pos < heapSize; child_pos = (2 * child_pos) + 2)
+        for(; child_pos < heapSize; child_pos = (2 * child_pos) + 2)
         {
-          if (compare(*(first + child_pos), *(first + (child_pos - 1)))) // Choose the larger of the two children.
+          if(compare(*(first + child_pos), *(first + (child_pos - 1)))) // Choose the larger of the two children.
           {
             --child_pos;
           }
           *(first + position) = rsl::forward<ValueType>(*(first + child_pos)); // Swap positions with this child.
-          position = child_pos;
+          position            = child_pos;
         }
 
-        if (child_pos == heapSize) // If we are at the bottom...
+        if(child_pos == heapSize) // If we are at the bottom...
         {
           *(first + position) = rsl::forward<ValueType>(*(first + (child_pos - 1)));
-          position = child_pos - 1;
+          position            = child_pos - 1;
         }
 
         rsl::promote_heap<RandomAccessIterator, Distance, T, Compare>(first, topPosition, position, rsl::forward<ValueType>(value), compare);
       }
-    }
+    } // namespace internal
 
     template <typename RandomAccessIterator, typename Distance, typename T>
     void adjust_heap(RandomAccessIterator first, Distance topPosition, Distance heapSize, Distance position, const T& value)
@@ -103,5 +103,5 @@ namespace rsl
       using value_type = typename iterator_traits<RandomAccessIterator>::value_type;
       internal::adjust_heap_impl<RandomAccessIterator, Distance, T&&, Compare, value_type>(first, topPosition, heapSize, position, rsl::forward<T>(value), compare);
     }
-  }
-}
+  } // namespace v1
+} // namespace rsl

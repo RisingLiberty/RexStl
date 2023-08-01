@@ -58,10 +58,10 @@ namespace rsl
         {
           Iterator j(i);
 
-          return ResultType{ rsl::lower_bound(first, i, value), rsl::upper_bound(++j, last, value) };
+          return ResultType {rsl::lower_bound(first, i, value), rsl::upper_bound(++j, last, value)};
         }
       }
-      return ResultType{ first, first };
+      return ResultType {first, first};
     }
 
     template <typename Iterator, typename T, typename Compare>
@@ -93,10 +93,10 @@ namespace rsl
         {
           Iterator j(i);
 
-          return ResultType{ rsl::lower_bound(first, i, value, compare), rsl::upper_bound(++j, last, value, compare) };
+          return ResultType {rsl::lower_bound(first, i, value, compare), rsl::upper_bound(++j, last, value, compare)};
         }
       }
-      return ResultType{ first, first };
+      return ResultType {first, first};
     }
 
   } // namespace v1

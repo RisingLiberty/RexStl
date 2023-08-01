@@ -18,6 +18,6 @@
 #include "rex_std/bonus/algorithm/count.h"
 #include "rex_std/bonus/algorithm/equal_range.h"
 #include "rex_std/bonus/algorithm/in_range.h"
-#include "rex_std/bonus/algorithm/quick_sort.h"
 #include "rex_std/bonus/algorithm/median.h"
+#include "rex_std/bonus/algorithm/quick_sort.h"
 #include "rex_std/bonus/algorithm/transform_if.h"

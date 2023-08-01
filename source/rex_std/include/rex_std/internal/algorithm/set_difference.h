@@ -19,57 +19,56 @@ namespace rsl
 {
   inline namespace v1
   {
-		template <typename InputIterator1, typename InputIterator2, typename OutputIterator>
-		OutputIterator set_difference(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, OutputIterator result)
-		{
-			while ((first1 != last1) && (first2 != last2))
-			{
-				if (*first1 < *first2)
-				{
-					*result = *first1;
-					++first1;
-					++result;
-				}
-				else if (*first2 < *first1)
-				{
-					++first2;
-				}
-				else
-				{
-					++first1;
-					++first2;
-				}
-			}
+    template <typename InputIterator1, typename InputIterator2, typename OutputIterator>
+    OutputIterator set_difference(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, OutputIterator result)
+    {
+      while((first1 != last1) && (first2 != last2))
+      {
+        if(*first1 < *first2)
+        {
+          *result = *first1;
+          ++first1;
+          ++result;
+        }
+        else if(*first2 < *first1)
+        {
+          ++first2;
+        }
+        else
+        {
+          ++first1;
+          ++first2;
+        }
+      }
 
-			return rsl::copy(first1, last1, result);
-		}
+      return rsl::copy(first1, last1, result);
+    }
 
+    template <typename InputIterator1, typename InputIterator2, typename OutputIterator, typename Compare>
+    OutputIterator set_difference(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, OutputIterator result, Compare compare)
+    {
+      while((first1 != last1) && (first2 != last2))
+      {
+        if(compare(*first1, *first2))
+        {
+          RSL_ASSERT_X(!compare(*first2, *first1), "invalid comparison function");
+          *result = *first1;
+          ++first1;
+          ++result;
+        }
+        else if(compare(*first2, *first1))
+        {
+          RSL_ASSERT_X(!compare(*first1, *first2), "invalid comparison function");
+          ++first2;
+        }
+        else
+        {
+          ++first1;
+          ++first2;
+        }
+      }
 
-		template <typename InputIterator1, typename InputIterator2, typename OutputIterator, typename Compare>
-		OutputIterator set_difference(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, OutputIterator result, Compare compare)
-		{
-			while ((first1 != last1) && (first2 != last2))
-			{
-				if (compare(*first1, *first2))
-				{
-					RSL_ASSERT_X(!compare(*first2, *first1), "invalid comparison function");
-					*result = *first1;
-					++first1;
-					++result;
-				}
-				else if (compare(*first2, *first1))
-				{
-					RSL_ASSERT_X(!compare(*first1, *first2), "invalid comparison function");
-					++first2;
-				}
-				else
-				{
-					++first1;
-					++first2;
-				}
-			}
-
-			return rsl::copy(first1, last1, result);
-		}
+      return rsl::copy(first1, last1, result);
+    }
   } // namespace v1
 } // namespace rsl

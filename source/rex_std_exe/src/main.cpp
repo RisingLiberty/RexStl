@@ -107,13 +107,5 @@
 
 int main()
 {
-  rsl::hash<rsl::string> str_hash;
-  using type = rsl::change_template_t<decltype(str_hash), rsl::string_view>;
-
-  static_assert(rsl::is_same_v<type, rsl::hash<rsl::string_view>>, "new type");
-
-  rsl::unordered_map<rsl::string, int> my_map;
-  rsl::string_view view = "";
-
-  my_map.find(view);
+  return 0;
 }

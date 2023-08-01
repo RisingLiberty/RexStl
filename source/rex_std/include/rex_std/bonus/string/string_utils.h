@@ -130,12 +130,12 @@ namespace rsl
       constexpr void to_lower(const Iterator* str, Iterator* buf, card32 length);
 
       template <typename Iterator, card32 Size>
-      constexpr void to_lower(const Iterator* str, Iterator(&buf)[Size]); // NOLINT(modernize-avoid-c-arrays)
+      constexpr void to_lower(const Iterator* str, Iterator (&buf)[Size]); // NOLINT(modernize-avoid-c-arrays)
       template <typename Iterator>
       constexpr void to_upper(const Iterator* str, Iterator* buf, card32 length);
 
       template <typename Iterator, card32 Size>
-      constexpr void to_upper(const Iterator* str, Iterator(&buf)[Size]); // NOLINT(modernize-avoid-c-arrays)
+      constexpr void to_upper(const Iterator* str, Iterator (&buf)[Size]); // NOLINT(modernize-avoid-c-arrays)
 
       template <typename Iterator>
       REX_NO_DISCARD constexpr rsl::optional<float32> stof(const Iterator* str, card32 length);
@@ -268,23 +268,23 @@ namespace rsl
       template <typename Traits, typename Pointer, typename SizeType>
       int32 compare(Pointer lhs, Pointer rhs, SizeType lhsLength, SizeType rhsLength);
       // finds the first substring [str, str + toFindLength) within [lhsStr, lhsStr + lhsLength), starting from pos
-      //template <typename Traits, typename Pointer, typename SizeType>
-      //constexpr SizeType find(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer toFindStr, SizeType toFindLength, SizeType defaultValue);
+      // template <typename Traits, typename Pointer, typename SizeType>
+      // constexpr SizeType find(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer toFindStr, SizeType toFindLength, SizeType defaultValue);
       //// finds the last substring [str, str + toFindLength) within [lhsStr, lhsStr + lhsLength), starting from pos
-      //template <typename Traits, typename Pointer, typename SizeType>
-      //SizeType rfind(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer toFindStr, SizeType toFindLength, SizeType defaultValue);
+      // template <typename Traits, typename Pointer, typename SizeType>
+      // SizeType rfind(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer toFindStr, SizeType toFindLength, SizeType defaultValue);
       //// finds the first occurrence of a char in the substring [lhsStr, lhsStr + lhsLength) within [rhsStr, rhsStr + rhsLength), starting from pos
-      //template <typename Traits, typename Pointer, typename SizeType>
-      //SizeType find_first_of(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer rhsStr, SizeType rhsLength, SizeType defaultValue);
+      // template <typename Traits, typename Pointer, typename SizeType>
+      // SizeType find_first_of(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer rhsStr, SizeType rhsLength, SizeType defaultValue);
       //// finds the last occurrence of a char in the substring [lhsStr, lhsStr + lhsLength) within [rhsStr, rhsStr + rhsLength), starting from pos
-      //template <typename Traits, typename Pointer, typename SizeType>
-      //SizeType find_last_of(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer rhsStr, SizeType rhsLength, SizeType defaultValue);
+      // template <typename Traits, typename Pointer, typename SizeType>
+      // SizeType find_last_of(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer rhsStr, SizeType rhsLength, SizeType defaultValue);
       //// finds the first occurrence of a char not in the substring [lhsStr, lhsStr + lhsLength) within [rhsStr, rhsStr + rhsLength), starting from pos
-      //template <typename Traits, typename Pointer, typename SizeType>
-      //SizeType find_first_not_of(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer rhsStr, SizeType rhsLength, SizeType defaultValue);
+      // template <typename Traits, typename Pointer, typename SizeType>
+      // SizeType find_first_not_of(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer rhsStr, SizeType rhsLength, SizeType defaultValue);
       //// finds the last occurrence of a char not in the substring [lhsStr, lhsStr + lhsLength) within [rhsStr, rhsStr + rhsLength), starting from pos
-      //template <typename Traits, typename Pointer, typename SizeType>
-      //SizeType find_last_not_of(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer rhsStr, SizeType rhsLength, SizeType defaultValue);
+      // template <typename Traits, typename Pointer, typename SizeType>
+      // SizeType find_last_not_of(Pointer lhsStr, SizeType lhsLength, SizeType pos, Pointer rhsStr, SizeType rhsLength, SizeType defaultValue);
 
       /// RSL Comment: Different from ISO C++ Standard at time of writing (17/Jul/2022)
       // returns an rsl::optional instead of a basic type
@@ -350,7 +350,7 @@ namespace rsl
 
       // returns a text version of a given error code
       // REX_NO_DISCARD const char8* strerror(int32 errnum);
-    }
+    } // namespace string_utils
 
   } // namespace v1
 } // namespace rsl

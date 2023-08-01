@@ -22,11 +22,11 @@ namespace rsl
     template <typename ForwardIt1, typename ForwardIt2>
     constexpr ForwardIt1 find_first_not_of(ForwardIt1 first1, ForwardIt1 last1, ForwardIt2 first2, ForwardIt2 last2)
     {
-      for (; first1 != last1; ++first1)
+      for(; first1 != last1; ++first1)
       {
         auto it = rsl::find(first2, last2, *first1);
 
-        if (it == last2)
+        if(it == last2)
         {
           return first1;
         }
@@ -40,11 +40,11 @@ namespace rsl
     {
       using value_type = typename rsl::iterator_traits<ForwardIt1>::value_type;
 
-      for (; first1 != last1; ++first1)
+      for(; first1 != last1; ++first1)
       {
         auto it = rsl::find_if(first2, last2, [&](const value_type& val) { return pred(*first1, val); });
 
-        if (it == last2)
+        if(it == last2)
         {
           return first1;
         }
@@ -52,5 +52,5 @@ namespace rsl
 
       return last1;
     }
-  }
-}
+  } // namespace v1
+} // namespace rsl

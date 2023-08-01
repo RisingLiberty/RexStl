@@ -19,8 +19,8 @@
 #include "rex_std/internal/iterator/iterator_tags.h"
 #include "rex_std/internal/iterator/iterator_traits.h"
 #include "rex_std/internal/iterator/next.h"
-#include "rex_std/internal/iterator/random_access_iterator.h"
 #include "rex_std/internal/iterator/prev.h"
+#include "rex_std/internal/iterator/random_access_iterator.h"
 #include "rex_std/internal/iterator/reverse_iterator.h"
 
 namespace rsl
@@ -52,53 +52,53 @@ namespace rsl
   } // namespace v1
 } // namespace rsl
 
-//#include "rex_std/disable_std_checking.h"
-//#include "rex_std/std_alias_defines.h"
+// #include "rex_std/disable_std_checking.h"
+// #include "rex_std/std_alias_defines.h"
 //
-//#include <iterator>
+// #include <iterator>
 //
-//namespace rsl
+// namespace rsl
 //{
-//  inline namespace v1
-//  {
-//    // No C++20 symbols added here
+//   inline namespace v1
+//   {
+//     // No C++20 symbols added here
 //
-//    template <typename CharT>
-//    class char_traits;
+//     template <typename CharT>
+//     class char_traits;
 //
-//    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename T, typename CharT = char8, typename Traits = rsl::char_traits<CharT>, typename Distance = ptrdiff>, istream_iterator, T, CharT, Traits, Distance);
+//     REX_STD_TEMPLATED_CLASS_ALIAS(template <typename T, typename CharT = char8, typename Traits = rsl::char_traits<CharT>, typename Distance = ptrdiff>, istream_iterator, T, CharT, Traits, Distance);
 //
-//    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename T, typename CharT = char8, typename Traits = rsl::char_traits<CharT>>, ostream_iterator, T, CharT, Traits);
+//     REX_STD_TEMPLATED_CLASS_ALIAS(template <typename T, typename CharT = char8, typename Traits = rsl::char_traits<CharT>>, ostream_iterator, T, CharT, Traits);
 //
-//    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename CharT, typename Traits = char_traits<CharT>>, ostreambuf_iterator, CharT, Traits);
+//     REX_STD_TEMPLATED_CLASS_ALIAS(template <typename CharT, typename Traits = char_traits<CharT>>, ostreambuf_iterator, CharT, Traits);
 //
-//    REX_STD_FUNC_ALIAS(front_inserter);
-//    REX_STD_FUNC_ALIAS(back_inserter);
-//    REX_STD_FUNC_ALIAS(inserter);
+//     REX_STD_FUNC_ALIAS(front_inserter);
+//     REX_STD_FUNC_ALIAS(back_inserter);
+//     REX_STD_FUNC_ALIAS(inserter);
 //
-//    REX_STD_FUNC_ALIAS(operator==);
-//    REX_STD_FUNC_ALIAS(operator!=);
-//    REX_STD_FUNC_ALIAS(operator<);
-//    REX_STD_FUNC_ALIAS(operator<=);
-//    REX_STD_FUNC_ALIAS(operator>);
-//    REX_STD_FUNC_ALIAS(operator>=);
-//    REX_STD_FUNC_ALIAS(operator+);
-//    REX_STD_FUNC_ALIAS(operator-);
+//     REX_STD_FUNC_ALIAS(operator==);
+//     REX_STD_FUNC_ALIAS(operator!=);
+//     REX_STD_FUNC_ALIAS(operator<);
+//     REX_STD_FUNC_ALIAS(operator<=);
+//     REX_STD_FUNC_ALIAS(operator>);
+//     REX_STD_FUNC_ALIAS(operator>=);
+//     REX_STD_FUNC_ALIAS(operator+);
+//     REX_STD_FUNC_ALIAS(operator-);
 //
-//    REX_STD_FUNC_ALIAS(advance);
-//    REX_STD_FUNC_ALIAS(next);
-//    REX_STD_FUNC_ALIAS(prev);
-//    REX_STD_FUNC_ALIAS(cbegin);
-//    REX_STD_FUNC_ALIAS(cend);
-//    REX_STD_FUNC_ALIAS(rbegin);
-//    REX_STD_FUNC_ALIAS(crbegin);
-//    REX_STD_FUNC_ALIAS(rend);
-//    REX_STD_FUNC_ALIAS(crend);
-//    REX_STD_FUNC_ALIAS(size);
-//    REX_STD_FUNC_ALIAS(ssize);
-//    REX_STD_FUNC_ALIAS(data);
+//     REX_STD_FUNC_ALIAS(advance);
+//     REX_STD_FUNC_ALIAS(next);
+//     REX_STD_FUNC_ALIAS(prev);
+//     REX_STD_FUNC_ALIAS(cbegin);
+//     REX_STD_FUNC_ALIAS(cend);
+//     REX_STD_FUNC_ALIAS(rbegin);
+//     REX_STD_FUNC_ALIAS(crbegin);
+//     REX_STD_FUNC_ALIAS(rend);
+//     REX_STD_FUNC_ALIAS(crend);
+//     REX_STD_FUNC_ALIAS(size);
+//     REX_STD_FUNC_ALIAS(ssize);
+//     REX_STD_FUNC_ALIAS(data);
 //
-//  } // namespace v1
-//} // namespace rsl
+//   } // namespace v1
+// } // namespace rsl
 //
-//#include "rex_std/enable_std_checking.h"
+// #include "rex_std/enable_std_checking.h"

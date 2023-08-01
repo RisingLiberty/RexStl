@@ -14,8 +14,8 @@
 
 // based on https://en.cppreference.com/w/cpp/algorithm/max
 
-#include "rex_std/internal/algorithm/max_element.h"
 #include "rex_std/initializer_list.h"
+#include "rex_std/internal/algorithm/max_element.h"
 
 namespace rsl
 {
@@ -32,12 +32,14 @@ namespace rsl
       return comp(lhs, rhs) ? rhs : lhs;
     }
     template <typename T>
-    T (max)(rsl::initializer_list<T> ilist)
+    T(max)
+    (rsl::initializer_list<T> ilist)
     {
       return *rsl::max_element(ilist.begin(), ilist.end());
     }
     template <typename T, typename Compare>
-    T(max)(rsl::initializer_list<T> ilist, Compare compare)
+    T(max)
+    (rsl::initializer_list<T> ilist, Compare compare)
     {
       return *rsl::max_element(ilist.begin(), ilist.end());
     }

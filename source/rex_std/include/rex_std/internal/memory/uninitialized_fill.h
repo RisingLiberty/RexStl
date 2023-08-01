@@ -18,34 +18,33 @@ namespace rsl
 {
   inline namespace v1
   {
-		namespace internal
-		{
-			template <typename ForwardIterator, typename T>
-			inline void uninitialized_fill_impl(ForwardIterator first, ForwardIterator last, const T& value, true_type)
-			{
-				rsl::fill(first, last, value);
-			}
+    namespace internal
+    {
+      template <typename ForwardIterator, typename T>
+      inline void uninitialized_fill_impl(ForwardIterator first, ForwardIterator last, const T& value, true_type /*unused*/)
+      {
+        rsl::fill(first, last, value);
+      }
 
-			template <typename ForwardIterator, typename T>
-			void uninitialized_fill_impl(ForwardIterator first, ForwardIterator last, const T& value, false_type)
-			{
-				using value_type = typename rsl::iterator_traits<ForwardIterator>::value_type;
-				ForwardIterator currentDest(first);
+      template <typename ForwardIterator, typename T>
+      void uninitialized_fill_impl(ForwardIterator first, ForwardIterator last, const T& value, false_type /*unused*/)
+      {
+        using value_type = typename rsl::iterator_traits<ForwardIterator>::value_type;
+        ForwardIterator currentDest(first);
 
-				for (; currentDest != last; ++currentDest)
-				{
-					::new((void*)rsl::addressof(*currentDest)) value_type(value);
-				}
-			}
-		}
+        for(; currentDest != last; ++currentDest)
+        {
+          ::new((void*)rsl::addressof(*currentDest)) value_type(value);
+        }
+      }
+    } // namespace internal
 
-		template <typename ForwardIterator, typename T>
-		inline void uninitialized_fill(ForwardIterator first, ForwardIterator last, const T& value)
-		{
-			using value_type = typename rsl::iterator_traits<ForwardIterator>::value_type;
-			internal::uninitialized_fill_impl(first, last, value, rsl::is_trivially_copy_assignable<value_type>());
-		}
+    template <typename ForwardIterator, typename T>
+    inline void uninitialized_fill(ForwardIterator first, ForwardIterator last, const T& value)
+    {
+      using value_type = typename rsl::iterator_traits<ForwardIterator>::value_type;
+      internal::uninitialized_fill_impl(first, last, value, rsl::is_trivially_copy_assignable<value_type>());
+    }
 
   } // namespace v1
 } // namespace rsl
-
