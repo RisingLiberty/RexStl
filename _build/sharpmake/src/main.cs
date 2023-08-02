@@ -95,7 +95,7 @@ public class MainSolution : Solution
   public MainSolution() : base(typeof(RexTarget))
   {
     // The name of the solution.
-    Name = GenerateName("rex");
+    Name = GenerateName("rex-standard-library");
     GenerateTargets();
   }
 
