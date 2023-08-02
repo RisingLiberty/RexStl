@@ -5,7 +5,7 @@
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
 //
-// File: chrono_test.cpp
+// File: test_chrono.cpp
 // Copyright (c) Nick De Breuck 2023
 //
 // ============================================

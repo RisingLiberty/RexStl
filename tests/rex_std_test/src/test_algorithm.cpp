@@ -26,7 +26,7 @@
 
 // NOLINTBEGIN
 
-namespace rsl
+namespace rsl::test
 {
   struct A {
     A(int n) : a(n) {}
@@ -88,255 +88,255 @@ struct TestObjectNegate
 
 TEST_CASE("TestMinMax")
 {
-  using namespace rsl;
+  using namespace rsl::test;
 
   {
-    // const T& min(const T& a, const T& b);
-    // const T& min(const T& a, const T& b, Compare compare)
-    // const T& max(const T& a, const T& b);
-    // const T& max(const T& a, const T& b, Compare compare)
+    // const T& rsl::min(const T& a, const T& b);
+    // const T& rsl::min(const T& a, const T& b, Compare compare)
+    // const T& rsl::max(const T& a, const T& b);
+    // const T& rsl::max(const T& a, const T& b, Compare compare)
 
     A a1(1), a2(2), a3(3);
-    a3 = min(a1, a2, LessStruct());
+    a3 = rsl::min(a1, a2, LessStruct());
     CHECK(a3.a == 1);
-    a3 = max(a1, a2, LessStruct());
+    a3 = rsl::max(a1, a2, LessStruct());
     CHECK(a3.a == 2);
 
     B b1(1), b2(2), b3(3);
-    b3 = min(b2, b1, LessFunction);
+    b3 = rsl::min(b2, b1, LessFunction);
     CHECK(b3.b == 1);
-    b3 = max(b2, b1, LessFunction);
+    b3 = rsl::max(b2, b1, LessFunction);
     CHECK(b3.b == 2);
 
 
     rsl::test::test_object t1(1), t2(2), t3(3);
-    t3 = min(t2, t1);
+    t3 = rsl::min(t2, t1);
     CHECK(t3.x() == 1);
-    t3 = max(t2, t1);
+    t3 = rsl::max(t2, t1);
     CHECK(t3.x() == 2);
 
 
     int i1, i2(-1), i3(1);
-    i1 = min(i2, i3);
+    i1 = rsl::min(i2, i3);
     CHECK(i1 == -1);
-    i1 = min(i3, i2);
+    i1 = rsl::min(i3, i2);
     CHECK(i1 == -1);
-    i1 = max(i2, i3);
+    i1 = rsl::max(i2, i3);
     CHECK(i1 == 1);
-    i1 = max(i3, i2);
+    i1 = rsl::max(i3, i2);
     CHECK(i1 == 1);
 
     const volatile int i2cv(-1), i3cv(1);
-    i1 = min(i2cv, i3cv);
+    i1 = rsl::min(i2cv, i3cv);
     CHECK(i1 == -1);
-    i1 = min(i3cv, i2cv);
+    i1 = rsl::min(i3cv, i2cv);
     CHECK(i1 == -1);
-    i1 = max(i2cv, i3cv);
+    i1 = rsl::max(i2cv, i3cv);
     CHECK(i1 == 1);
-    i1 = max(i3cv, i2cv);
+    i1 = rsl::max(i3cv, i2cv);
     CHECK(i1 == 1);
 
     float f1, f2(-1), f3(1);
-    f1 = min(f2, f3);
+    f1 = rsl::min(f2, f3);
     CHECK(f1 == -1);
-    f1 = min(f3, f2);
+    f1 = rsl::min(f3, f2);
     CHECK(f1 == -1);
-    f1 = max(f2, f3);
+    f1 = rsl::max(f2, f3);
     CHECK(f1 == 1);
-    f1 = max(f3, f2);
+    f1 = rsl::max(f3, f2);
     CHECK(f1 == 1);
 
     double d1, d2(-1), d3(1);
-    d1 = min(d2, d3);
+    d1 = rsl::min(d2, d3);
     CHECK(d1 == -1);
-    d1 = min(d3, d2);
+    d1 = rsl::min(d3, d2);
     CHECK(d1 == -1);
-    d1 = max(d2, d3);
+    d1 = rsl::max(d2, d3);
     CHECK(d1 == 1);
-    d1 = max(d3, d2);
+    d1 = rsl::max(d3, d2);
     CHECK(d1 == 1);
 
     void* p1, * p2 = &d2, * p3 = &d3;
-    p1 = min(p2, p3);
-    CHECK((uintptr_t)p1 == min((uintptr_t)p2, (uintptr_t)p3));
+    p1 = rsl::min(p2, p3);
+    CHECK((uintptr_t)p1 == rsl::min((uintptr_t)p2, (uintptr_t)p3));
 
     double* pd1, * pd2 = &d2, * pd3 = &d3;
-    pd1 = min(pd2, pd3);
-    CHECK((uintptr_t)pd1 == min((uintptr_t)pd2, (uintptr_t)pd3));
+    pd1 = rsl::min(pd2, pd3);
+    CHECK((uintptr_t)pd1 == rsl::min((uintptr_t)pd2, (uintptr_t)pd3));
 
-    CHECK(min<int>({ 3, 1, 2 }) == 1);
-    CHECK(max<int>({ 3, 1, 2 }) == 3);
+    CHECK(rsl::min<int>({ 3, 1, 2 }) == 1);
+    CHECK(rsl::max<int>({ 3, 1, 2 }) == 3);
 
     // Test scalar specializations
-    CHECK(min((char)1, (char)1) == 1);
-    CHECK(min((char)1, (char)2) == 1);
-    CHECK(min((char)2, (char)1) == 1);
+    CHECK(rsl::min((char)1, (char)1) == 1);
+    CHECK(rsl::min((char)1, (char)2) == 1);
+    CHECK(rsl::min((char)2, (char)1) == 1);
 
-    CHECK(min((signed char)1, (signed char)1) == 1);
-    CHECK(min((signed char)1, (signed char)2) == 1);
-    CHECK(min((signed char)2, (signed char)1) == 1);
+    CHECK(rsl::min((signed char)1, (signed char)1) == 1);
+    CHECK(rsl::min((signed char)1, (signed char)2) == 1);
+    CHECK(rsl::min((signed char)2, (signed char)1) == 1);
 
-    CHECK(min((unsigned char)1, (unsigned char)1) == 1);
-    CHECK(min((unsigned char)1, (unsigned char)2) == 1);
-    CHECK(min((unsigned char)2, (unsigned char)1) == 1);
+    CHECK(rsl::min((unsigned char)1, (unsigned char)1) == 1);
+    CHECK(rsl::min((unsigned char)1, (unsigned char)2) == 1);
+    CHECK(rsl::min((unsigned char)2, (unsigned char)1) == 1);
 
-    CHECK(min((signed short)1, (signed short)1) == 1);
-    CHECK(min((signed short)1, (signed short)2) == 1);
-    CHECK(min((signed short)2, (signed short)1) == 1);
+    CHECK(rsl::min((signed short)1, (signed short)1) == 1);
+    CHECK(rsl::min((signed short)1, (signed short)2) == 1);
+    CHECK(rsl::min((signed short)2, (signed short)1) == 1);
 
-    CHECK(min((unsigned short)1, (unsigned short)1) == 1);
-    CHECK(min((unsigned short)1, (unsigned short)2) == 1);
-    CHECK(min((unsigned short)2, (unsigned short)1) == 1);
+    CHECK(rsl::min((unsigned short)1, (unsigned short)1) == 1);
+    CHECK(rsl::min((unsigned short)1, (unsigned short)2) == 1);
+    CHECK(rsl::min((unsigned short)2, (unsigned short)1) == 1);
 
-    CHECK(min((signed int)1, (signed int)1) == 1);
-    CHECK(min((signed int)1, (signed int)2) == 1);
-    CHECK(min((signed int)2, (signed int)1) == 1);
+    CHECK(rsl::min((signed int)1, (signed int)1) == 1);
+    CHECK(rsl::min((signed int)1, (signed int)2) == 1);
+    CHECK(rsl::min((signed int)2, (signed int)1) == 1);
 
-    CHECK(min((unsigned int)1, (unsigned int)1) == 1);
-    CHECK(min((unsigned int)1, (unsigned int)2) == 1);
-    CHECK(min((unsigned int)2, (unsigned int)1) == 1);
+    CHECK(rsl::min((unsigned int)1, (unsigned int)1) == 1);
+    CHECK(rsl::min((unsigned int)1, (unsigned int)2) == 1);
+    CHECK(rsl::min((unsigned int)2, (unsigned int)1) == 1);
 
-    CHECK(min((signed long)1, (signed long)1) == 1);
-    CHECK(min((signed long)1, (signed long)2) == 1);
-    CHECK(min((signed long)2, (signed long)1) == 1);
+    CHECK(rsl::min((signed long)1, (signed long)1) == 1);
+    CHECK(rsl::min((signed long)1, (signed long)2) == 1);
+    CHECK(rsl::min((signed long)2, (signed long)1) == 1);
 
-    CHECK(min((unsigned long)1, (unsigned long)1) == 1);
-    CHECK(min((unsigned long)1, (unsigned long)2) == 1);
-    CHECK(min((unsigned long)2, (unsigned long)1) == 1);
+    CHECK(rsl::min((unsigned long)1, (unsigned long)1) == 1);
+    CHECK(rsl::min((unsigned long)1, (unsigned long)2) == 1);
+    CHECK(rsl::min((unsigned long)2, (unsigned long)1) == 1);
 
-    CHECK(min((signed long long)1, (signed long long)1) == 1);
-    CHECK(min((signed long long)1, (signed long long)2) == 1);
-    CHECK(min((signed long long)2, (signed long long)1) == 1);
+    CHECK(rsl::min((signed long long)1, (signed long long)1) == 1);
+    CHECK(rsl::min((signed long long)1, (signed long long)2) == 1);
+    CHECK(rsl::min((signed long long)2, (signed long long)1) == 1);
 
-    CHECK(min((unsigned long long)1, (unsigned long long)1) == 1);
-    CHECK(min((unsigned long long)1, (unsigned long long)2) == 1);
-    CHECK(min((unsigned long long)2, (unsigned long long)1) == 1);
+    CHECK(rsl::min((unsigned long long)1, (unsigned long long)1) == 1);
+    CHECK(rsl::min((unsigned long long)1, (unsigned long long)2) == 1);
+    CHECK(rsl::min((unsigned long long)2, (unsigned long long)1) == 1);
 
-    CHECK(min((float)1, (float)1) == 1);
-    CHECK(min((float)1, (float)2) == 1);
-    CHECK(min((float)2, (float)1) == 1);
+    CHECK(rsl::min((float)1, (float)1) == 1);
+    CHECK(rsl::min((float)1, (float)2) == 1);
+    CHECK(rsl::min((float)2, (float)1) == 1);
 
-    CHECK(min((double)1, (double)1) == 1);
-    CHECK(min((double)1, (double)2) == 1);
-    CHECK(min((double)2, (double)1) == 1);
+    CHECK(rsl::min((double)1, (double)1) == 1);
+    CHECK(rsl::min((double)1, (double)2) == 1);
+    CHECK(rsl::min((double)2, (double)1) == 1);
 
-    CHECK(min((long double)1, (long double)1) == 1);
-    CHECK(min((long double)1, (long double)2) == 1);
-    CHECK(min((long double)2, (long double)1) == 1);
+    CHECK(rsl::min((long double)1, (long double)1) == 1);
+    CHECK(rsl::min((long double)1, (long double)2) == 1);
+    CHECK(rsl::min((long double)2, (long double)1) == 1);
 
 
     // Test max specializations
-    CHECK(max((char)1, (char)1) == 1);
-    CHECK(max((char)1, (char)2) == 2);
-    CHECK(max((char)2, (char)1) == 2);
+    CHECK(rsl::max((char)1, (char)1) == 1);
+    CHECK(rsl::max((char)1, (char)2) == 2);
+    CHECK(rsl::max((char)2, (char)1) == 2);
 
-    CHECK(max((signed char)1, (signed char)1) == 1);
-    CHECK(max((signed char)1, (signed char)2) == 2);
-    CHECK(max((signed char)2, (signed char)1) == 2);
+    CHECK(rsl::max((signed char)1, (signed char)1) == 1);
+    CHECK(rsl::max((signed char)1, (signed char)2) == 2);
+    CHECK(rsl::max((signed char)2, (signed char)1) == 2);
 
-    CHECK(max((unsigned char)1, (unsigned char)1) == 1);
-    CHECK(max((unsigned char)1, (unsigned char)2) == 2);
-    CHECK(max((unsigned char)2, (unsigned char)1) == 2);
+    CHECK(rsl::max((unsigned char)1, (unsigned char)1) == 1);
+    CHECK(rsl::max((unsigned char)1, (unsigned char)2) == 2);
+    CHECK(rsl::max((unsigned char)2, (unsigned char)1) == 2);
 
-    CHECK(max((signed short)1, (signed short)1) == 1);
-    CHECK(max((signed short)1, (signed short)2) == 2);
-    CHECK(max((signed short)2, (signed short)1) == 2);
+    CHECK(rsl::max((signed short)1, (signed short)1) == 1);
+    CHECK(rsl::max((signed short)1, (signed short)2) == 2);
+    CHECK(rsl::max((signed short)2, (signed short)1) == 2);
 
-    CHECK(max((unsigned short)1, (unsigned short)1) == 1);
-    CHECK(max((unsigned short)1, (unsigned short)2) == 2);
-    CHECK(max((unsigned short)2, (unsigned short)1) == 2);
+    CHECK(rsl::max((unsigned short)1, (unsigned short)1) == 1);
+    CHECK(rsl::max((unsigned short)1, (unsigned short)2) == 2);
+    CHECK(rsl::max((unsigned short)2, (unsigned short)1) == 2);
 
-    CHECK(max((signed int)1, (signed int)1) == 1);
-    CHECK(max((signed int)1, (signed int)2) == 2);
-    CHECK(max((signed int)2, (signed int)1) == 2);
+    CHECK(rsl::max((signed int)1, (signed int)1) == 1);
+    CHECK(rsl::max((signed int)1, (signed int)2) == 2);
+    CHECK(rsl::max((signed int)2, (signed int)1) == 2);
 
-    CHECK(max((unsigned int)1, (unsigned int)1) == 1);
-    CHECK(max((unsigned int)1, (unsigned int)2) == 2);
-    CHECK(max((unsigned int)2, (unsigned int)1) == 2);
+    CHECK(rsl::max((unsigned int)1, (unsigned int)1) == 1);
+    CHECK(rsl::max((unsigned int)1, (unsigned int)2) == 2);
+    CHECK(rsl::max((unsigned int)2, (unsigned int)1) == 2);
 
-    CHECK(max((signed long)1, (signed long)1) == 1);
-    CHECK(max((signed long)1, (signed long)2) == 2);
-    CHECK(max((signed long)2, (signed long)1) == 2);
+    CHECK(rsl::max((signed long)1, (signed long)1) == 1);
+    CHECK(rsl::max((signed long)1, (signed long)2) == 2);
+    CHECK(rsl::max((signed long)2, (signed long)1) == 2);
 
-    CHECK(max((unsigned long)1, (unsigned long)1) == 1);
-    CHECK(max((unsigned long)1, (unsigned long)2) == 2);
-    CHECK(max((unsigned long)2, (unsigned long)1) == 2);
+    CHECK(rsl::max((unsigned long)1, (unsigned long)1) == 1);
+    CHECK(rsl::max((unsigned long)1, (unsigned long)2) == 2);
+    CHECK(rsl::max((unsigned long)2, (unsigned long)1) == 2);
 
-    CHECK(max((signed long long)1, (signed long long)1) == 1);
-    CHECK(max((signed long long)1, (signed long long)2) == 2);
-    CHECK(max((signed long long)2, (signed long long)1) == 2);
+    CHECK(rsl::max((signed long long)1, (signed long long)1) == 1);
+    CHECK(rsl::max((signed long long)1, (signed long long)2) == 2);
+    CHECK(rsl::max((signed long long)2, (signed long long)1) == 2);
 
-    CHECK(max((unsigned long long)1, (unsigned long long)1) == 1);
-    CHECK(max((unsigned long long)1, (unsigned long long)2) == 2);
-    CHECK(max((unsigned long long)2, (unsigned long long)1) == 2);
+    CHECK(rsl::max((unsigned long long)1, (unsigned long long)1) == 1);
+    CHECK(rsl::max((unsigned long long)1, (unsigned long long)2) == 2);
+    CHECK(rsl::max((unsigned long long)2, (unsigned long long)1) == 2);
 
-    CHECK(max((float)1, (float)1) == 1);
-    CHECK(max((float)1, (float)2) == 2);
-    CHECK(max((float)2, (float)1) == 2);
+    CHECK(rsl::max((float)1, (float)1) == 1);
+    CHECK(rsl::max((float)1, (float)2) == 2);
+    CHECK(rsl::max((float)2, (float)1) == 2);
 
-    CHECK(max((double)1, (double)1) == 1);
-    CHECK(max((double)1, (double)2) == 2);
-    CHECK(max((double)2, (double)1) == 2);
+    CHECK(rsl::max((double)1, (double)1) == 1);
+    CHECK(rsl::max((double)1, (double)2) == 2);
+    CHECK(rsl::max((double)2, (double)1) == 2);
 
-    CHECK(max((long double)1, (long double)1) == 1);
-    CHECK(max((long double)1, (long double)2) == 2);
-    CHECK(max((long double)2, (long double)1) == 2);
+    CHECK(rsl::max((long double)1, (long double)1) == 1);
+    CHECK(rsl::max((long double)1, (long double)2) == 2);
+    CHECK(rsl::max((long double)2, (long double)1) == 2);
   }
 
   {
-    // const T& min(const T& a, const T& b);
-    // const T& min(const T& a, const T& b, Compare compare)
-    // const T& max(const T& a, const T& b);
-    // const T& max(const T& a, const T& b, Compare compare)
+    // const T& rsl::min(const T& a, const T& b);
+    // const T& rsl::min(const T& a, const T& b, Compare compare)
+    // const T& rsl::max(const T& a, const T& b);
+    // const T& rsl::max(const T& a, const T& b, Compare compare)
 
     A a1(1), a2(2), a3(3);
-    a3 = min(a1, a2, LessStruct());
+    a3 = rsl::min(a1, a2, LessStruct());
     CHECK(a3.a == 1);
-    a3 = max(a1, a2, LessStruct());
+    a3 = rsl::max(a1, a2, LessStruct());
     CHECK(a3.a == 2);
 
     B b1(1), b2(2), b3(3);
-    b3 = min(b2, b1, LessFunction);
+    b3 = rsl::min(b2, b1, LessFunction);
     CHECK(b3.b == 1);
-    b3 = max(b2, b1, LessFunction);
+    b3 = rsl::max(b2, b1, LessFunction);
     CHECK(b3.b == 2);
 
 
     rsl::test::test_object t1(1), t2(2), t3(3);
-    t3 = min(t2, t1);
+    t3 = rsl::min(t2, t1);
     CHECK(t3.x() == 1);
-    t3 = max(t2, t1);
+    t3 = rsl::max(t2, t1);
     CHECK(t3.x() == 2);
 
 
     int i1, i2(-1), i3(1);
-    i1 = min(i2, i3);
+    i1 = rsl::min(i2, i3);
     CHECK(i1 == -1);
-    i1 = min(i3, i2);
+    i1 = rsl::min(i3, i2);
     CHECK(i1 == -1);
-    i1 = max(i2, i3);
+    i1 = rsl::max(i2, i3);
     CHECK(i1 == 1);
-    i1 = max(i3, i2);
+    i1 = rsl::max(i3, i2);
     CHECK(i1 == 1);
 
     float f1, f2(-1), f3(1);
-    f1 = min(f2, f3);
+    f1 = rsl::min(f2, f3);
     CHECK(f1 == -1);
-    f1 = min(f3, f2);
+    f1 = rsl::min(f3, f2);
     CHECK(f1 == -1);
-    f1 = max(f2, f3);
+    f1 = rsl::max(f2, f3);
     CHECK(f1 == 1);
-    f1 = max(f3, f2);
+    f1 = rsl::max(f3, f2);
     CHECK(f1 == 1);
 
     double d1, d2(-1), d3(1);
-    d1 = min(d2, d3);
+    d1 = rsl::min(d2, d3);
     CHECK(d1 == -1);
-    d1 = min(d3, d2);
+    d1 = rsl::min(d3, d2);
     CHECK(d1 == -1);
-    d1 = max(d2, d3);
+    d1 = rsl::max(d2, d3);
     CHECK(d1 == 1);
-    d1 = max(d3, d2);
+    d1 = rsl::max(d3, d2);
     CHECK(d1 == 1);
 
     // Make sure enums work
@@ -367,58 +367,58 @@ TEST_CASE("TestMinMax")
 
 
   {
-    // ForwardIterator min_element(ForwardIterator first, ForwardIterator last)
-    // ForwardIterator min_element(ForwardIterator first, ForwardIterator last, Compare compare)
+    // ForwardIterator rsl::min_element(ForwardIterator first, ForwardIterator last)
+    // ForwardIterator rsl::min_element(ForwardIterator first, ForwardIterator last, Compare compare)
 
     int intArray[] = { -5, 2, 1, 5, 4, 5 };
-    int* pInt = min_element(intArray, intArray + 6);
+    int* pInt = rsl::min_element(intArray, intArray + 6);
     CHECK((pInt && (*pInt == -5)));
 
-    pInt = min_element(intArray, intArray + 6, Greater<int>());
+    pInt = rsl::min_element(intArray, intArray + 6, Greater<int>());
     CHECK((pInt && (*pInt == 5)));
 
 
     rsl::test::test_object toArray[] = { rsl::test::test_object(7), rsl::test::test_object(2), rsl::test::test_object(8), rsl::test::test_object(5), rsl::test::test_object(4), rsl::test::test_object(-12) };
-    rsl::test::test_object* pTO = min_element(toArray, toArray + 6);
+    rsl::test::test_object* pTO = rsl::min_element(toArray, toArray + 6);
     CHECK((pTO && (*pTO == rsl::test::test_object(-12))));
 
-    pTO = min_element(toArray, toArray + 6, Greater<rsl::test::test_object>());
+    pTO = rsl::min_element(toArray, toArray + 6, Greater<rsl::test::test_object>());
     CHECK((pTO && (*pTO == rsl::test::test_object(8))));
   }
 
 
   {
-    // ForwardIterator max_element(ForwardIterator first, ForwardIterator last)
-    // ForwardIterator max_element(ForwardIterator first, ForwardIterator last, Compare compare)
+    // ForwardIterator rsl::max_element(ForwardIterator first, ForwardIterator last)
+    // ForwardIterator rsl::max_element(ForwardIterator first, ForwardIterator last, Compare compare)
 
     int intArray[] = { -5, 2, 1, 5, 4, 5 };
-    int* pInt = max_element(intArray, intArray + 6);
+    int* pInt = rsl::max_element(intArray, intArray + 6);
     CHECK((pInt && (*pInt == 5)));
 
-    pInt = max_element(intArray, intArray + 6, less<int>());
+    pInt = rsl::max_element(intArray, intArray + 6, rsl::less<int>());
     CHECK((pInt && (*pInt == 5)));
 
 
     rsl::test::test_object toArray[] = { rsl::test::test_object(7), rsl::test::test_object(2), rsl::test::test_object(8), rsl::test::test_object(5), rsl::test::test_object(4), rsl::test::test_object(-12) };
-    rsl::test::test_object* pTO = max_element(toArray, toArray + 6);
+    rsl::test::test_object* pTO = rsl::max_element(toArray, toArray + 6);
     CHECK((pTO && (*pTO == rsl::test::test_object(8))));
 
-    pTO = max_element(toArray, toArray + 6, less<rsl::test::test_object>());
+    pTO = rsl::max_element(toArray, toArray + 6, rsl::less<rsl::test::test_object>());
     CHECK((pTO && (*pTO == rsl::test::test_object(8))));
   }
 
   {
     // template <class ForwardIterator, class Compare>
     // rsl::pair<ForwardIterator, ForwardIterator>
-    // minmax_element(ForwardIterator first, ForwardIterator last)
+    // minrsl::max_element(ForwardIterator first, ForwardIterator last)
     //
     // template <class ForwardIterator, class Compare>
     // rsl::pair<ForwardIterator, ForwardIterator>
-    // minmax_element(ForwardIterator first, ForwardIterator last, Compare compare)
+    // minrsl::max_element(ForwardIterator first, ForwardIterator last, Compare compare)
 
     int intArray[] = { 5, -2, 1, 5, 6, 5 };
 
-    min_max_element_result<int*> result = rsl::minmax_element(intArray, intArray + 6);
+    rsl::min_max_element_result<int*> result = rsl::minmax_element(intArray, intArray + 6);
     CHECK(((*result.min == -2) && (*result.max == 6)));
   }
 
@@ -429,7 +429,7 @@ TEST_CASE("TestMinMax")
 
 TEST_CASE("TestClamp")
 {
-  using namespace rsl;
+  using namespace rsl::test;
 
   CHECK(rsl::clamp(42, 1, 100) == 42);
   CHECK(rsl::clamp(-42, 1, 100) == 1);
@@ -437,17 +437,17 @@ TEST_CASE("TestClamp")
   CHECK(rsl::clamp(1, 1, 100) == 1);
   CHECK(rsl::clamp(100, 1, 100) == 100);
 
-  CHECK(rsl::clamp(42.0f, 1.0f, 100.0f, less<float>()) == 42.0f);
-  CHECK(rsl::clamp(-42.0f, 1.0f, 100.0f, less<float>()) == 1.0f);
-  CHECK(rsl::clamp(420.0f, 1.0f, 100.0f, less<float>()) == 100.0f);
-  CHECK(rsl::clamp(1.0f, 1.0f, 100.0f, less<float>()) == 1.0f);
-  CHECK(rsl::clamp(100.0f, 1.0f, 100.0f, less<float>()) == 100.0f);
+  CHECK(rsl::clamp(42.0f, 1.0f, 100.0f, rsl::less<float>()) == 42.0f);
+  CHECK(rsl::clamp(-42.0f, 1.0f, 100.0f, rsl::less<float>()) == 1.0f);
+  CHECK(rsl::clamp(420.0f, 1.0f, 100.0f, rsl::less<float>()) == 100.0f);
+  CHECK(rsl::clamp(1.0f, 1.0f, 100.0f, rsl::less<float>()) == 1.0f);
+  CHECK(rsl::clamp(100.0f, 1.0f, 100.0f, rsl::less<float>()) == 100.0f);
 
-  CHECK(rsl::clamp(42., 1., 100., less<double>()) == 42.0);
-  CHECK(rsl::clamp(-42., 1., 100., less<double>()) == 1.0);
-  CHECK(rsl::clamp(420., 1., 100., less<double>()) == 100.0);
-  CHECK(rsl::clamp(1., 1., 100., less<double>()) == 1.0);
-  CHECK(rsl::clamp(100., 1., 100., less<double>()) == 100.0);
+  CHECK(rsl::clamp(42., 1., 100., rsl::less<double>()) == 42.0);
+  CHECK(rsl::clamp(-42., 1., 100., rsl::less<double>()) == 1.0);
+  CHECK(rsl::clamp(420., 1., 100., rsl::less<double>()) == 100.0);
+  CHECK(rsl::clamp(1., 1., 100., rsl::less<double>()) == 1.0);
+  CHECK(rsl::clamp(100., 1., 100., rsl::less<double>()) == 100.0);
 
   CHECK(rsl::clamp(A(42), A(1), A(100), LessStruct()).a == A(42).a);
   CHECK(rsl::clamp(A(-42), A(1), A(100), LessStruct()).a == A(1).a);

@@ -5,14 +5,12 @@
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
 //
-// File: vector_test.cpp
+// File: test_vector.cpp
 // Copyright (c) Nick De Breuck 2023
 //
 // ============================================
 
 #include "rex_std_test/catch2/catch.hpp"
-
-
 
 #include "rex_std/vector.h"
 #include "rex_std/bonus/utility/scopeguard.h"

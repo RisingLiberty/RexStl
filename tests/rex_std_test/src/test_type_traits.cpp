@@ -5,7 +5,7 @@
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
 //
-// File: type_traits_test.cpp
+// File: test_type_traits.cpp
 // Copyright (c) Nick De Breuck 2023
 //
 // ============================================

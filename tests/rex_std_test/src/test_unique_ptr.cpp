@@ -3,7 +3,7 @@
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
 // 
-// File: unique_ptr_test.cpp
+// File: test_unique_ptr.cpp
 // Copyright (c) Nick De Breuck 2023
 //
 // ============================================
