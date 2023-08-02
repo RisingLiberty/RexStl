@@ -24,6 +24,8 @@
 #include "rex_std/deque.h"
 #include "rex_std/internal/utility/pair.h"
 
+// NOLINTBEGIN
+
 namespace rsl
 {
   struct A {
@@ -2383,3 +2385,4 @@ TEST_CASE("TestSort")
   rsl::test::test_object::reset();
 }
 
+// NOLINTEND
