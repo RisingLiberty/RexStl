@@ -54,19 +54,19 @@ namespace rsl
 
       public:                                     /* ctors */
         constexpr atomic_pointer_base(T* desired) // NOLINT(google-explicit-constructor)
-            : Base {desired}
+          : Base{ desired }
         {
         }
 
         constexpr atomic_pointer_base() = default;
-        ~atomic_pointer_base()          = default;
+        ~atomic_pointer_base() = default;
 
         atomic_pointer_base(const atomic_pointer_base&) = delete;
 
       public: /* assignment operators */
         using Base::operator=;
 
-        atomic_pointer_base& operator=(const atomic_pointer_base&)          = delete;
+        atomic_pointer_base& operator=(const atomic_pointer_base&) = delete;
         atomic_pointer_base& operator=(const atomic_pointer_base&) volatile = delete;
 
       public: /* fetch_add */
@@ -84,12 +84,12 @@ namespace rsl
       public:                                                      /* operator++ && operator-- */
         REX_ATOMIC_POINTER_STATIC_ASSERT_INC_DEC_OPERATOR_IMPL(++) // NOLINT(bugprone-macro-repeated-side-effects)
 
-        REX_ATOMIC_POINTER_STATIC_ASSERT_INC_DEC_OPERATOR_IMPL(--) // NOLINT(bugprone-macro-repeated-side-effects)
+          REX_ATOMIC_POINTER_STATIC_ASSERT_INC_DEC_OPERATOR_IMPL(--) // NOLINT(bugprone-macro-repeated-side-effects)
 
       public: /* operator+= && operator-= */
-        REX_ATOMIC_POINTER_STATIC_ASSERT_ASSIGNMENT_OPERATOR_IMPL(+=)
+        REX_ATOMIC_POINTER_STATIC_ASSERT_ASSIGNMENT_OPERATOR_IMPL(+= )
 
-        REX_ATOMIC_POINTER_STATIC_ASSERT_ASSIGNMENT_OPERATOR_IMPL(-=)
+          REX_ATOMIC_POINTER_STATIC_ASSERT_ASSIGNMENT_OPERATOR_IMPL(-= )
       };
 
       template <typename T, unsigned Width = sizeof(T)>
@@ -159,60 +159,681 @@ namespace rsl
     return funcName(arg, rsl::memory_order_seq_cst);                                                                                                                                                                                                     \
   }
 
-  template <typename T>                                                                       
-  struct atomic_pointer_width<T*, 8> : public atomic_pointer_base<T*, 8>              
-  {                                                                                           
-  private:                                                                                    
-    using Base                = atomic_pointer_base<T*, 8>;                               
-    using u_ptr_integral_type = MERGE(MERGE(uint, 64), _t);                                 
-    using ptr_integral_type   = MERGE(MERGE(int, 64), _t);                                  
-                                                                                              
-  public: /* ctors */                                                                         
-    constexpr atomic_pointer_width(T* desired)                                                
-        : Base {desired}                                                                      
-    {                                                                                         
-    }                                                                                         
-                                                                                              
-    constexpr atomic_pointer_width() = default;                                               
-                                                                                              
-    atomic_pointer_width(const atomic_pointer_width&) = delete;                               
-                                                                                              
-  public: /* assignment operators */                                                          
-    using Base::operator=;                                                                    
-                                                                                              
-    atomic_pointer_width& operator=(const atomic_pointer_width&)          = delete;           
-    atomic_pointer_width& operator=(const atomic_pointer_width&) volatile = delete;           
-                                                                                              
-  public: /* fetch_add */                                                                     
-    REX_ATOMIC_POINTER_FETCH_FUNCS_IMPL(fetch_add, FETCH_ADD, 64)                           
-                                                                                              
-  public: /* add_fetch */                                                                     
-    REX_ATOMIC_POINTER_FETCH_FUNCS_IMPL(add_fetch, ADD_FETCH, 64)                           
-                                                                                              
-  public: /* fetch_sub */                                                                     
-    REX_ATOMIC_POINTER_FETCH_FUNCS_IMPL(fetch_sub, FETCH_SUB, 64)                           
-                                                                                              
-  public: /* sub_fetch */                                                                     
-    REX_ATOMIC_POINTER_FETCH_FUNCS_IMPL(sub_fetch, SUB_FETCH, 64)                           
-                                                                                              
-  public: /* operator++ && operator-- */                                                      
-    REX_ATOMIC_POINTER_FETCH_INC_DEC_OPERATOR_IMPL(++, add_fetch, fetch_add)                  
-                                                                                              
-    REX_ATOMIC_POINTER_FETCH_INC_DEC_OPERATOR_IMPL(--, sub_fetch, fetch_sub)                  
-                                                                                              
-  public: /* operator+= && operator-= */                                                      
-    REX_ATOMIC_POINTER_FETCH_ASSIGNMENT_OPERATOR_IMPL(+=, add_fetch)                          
-                                                                                              
-    REX_ATOMIC_POINTER_FETCH_ASSIGNMENT_OPERATOR_IMPL(-=, sub_fetch)                          
-                                                                                              
-  public:                                                                                     
-    using Base::load;
+      template <typename T>
+      struct atomic_pointer_width<T*, 8> : public atomic_pointer_base<T*, 8>
+      {
+      private:
+        using Base = atomic_pointer_base<T*, 8>;
+        using u_ptr_integral_type = uint64_t;
+        using ptr_integral_type = int64_t;
 
-    T* load(rsl::internal::memory_order_read_depends_s)
-    {
-      return (*rsl::internal::atomic_volatile_cast(this->atomic_address()));
-    }
-  };
+      public:
+        constexpr atomic_pointer_width(T* desired) noexcept
+          : Base{ desired }
+        {
+        }
+
+        constexpr atomic_pointer_width() noexcept = default;
+        atomic_pointer_width(const atomic_pointer_width&) noexcept = delete;
+
+      public:
+        using Base::operator=;
+        atomic_pointer_width& operator=(const atomic_pointer_width&) noexcept = delete;
+        atomic_pointer_width& operator=(const atomic_pointer_width&) volatile noexcept = delete;
+
+      public:
+        using Base::fetch_add;
+
+        T* fetch_add(ptrdiff_t arg) noexcept
+        {
+          static_assert(rsl::is_object<T>::value, "rsl::atomic<T> : Template Typename T must be an object type!");
+          ;
+          T* retVal;
+
+          {
+            ptr_integral_type retType;
+            ptr_integral_type addend = static_cast<ptr_integral_type>(arg) * static_cast<ptr_integral_type>(sizeof(T));
+
+            {
+              __int64 retIntegral;
+              ptr_integral_type valCompute;
+              valCompute = ((addend));
+              const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
+              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
+              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              ;
+            }
+            ;
+            retVal = reinterpret_cast<T*>(retType);
+          }
+          return retVal;
+          ;
+        }
+        T* fetch_add(ptrdiff_t arg, rsl::internal::memory_order_relaxed_s) noexcept
+        {
+          static_assert(rsl::is_object<T>::value, "rsl::atomic<T> : Template Typename T must be an object type!");
+          ;
+          T* retVal;
+
+          {
+            ptr_integral_type retType;
+            ptr_integral_type addend = static_cast<ptr_integral_type>(arg) * static_cast<ptr_integral_type>(sizeof(T));
+
+            {
+              __int64 retIntegral;
+              ptr_integral_type valCompute;
+              valCompute = ((addend));
+              const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
+              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
+              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              ;
+            }
+            ;
+            retVal = reinterpret_cast<T*>(retType);
+          }
+          return retVal;
+          ;
+        }
+        T* fetch_add(ptrdiff_t arg, rsl::internal::memory_order_acquire_s) noexcept
+        {
+          static_assert(rsl::is_object<T>::value, "rsl::atomic<T> : Template Typename T must be an object type!");
+          ;
+          T* retVal;
+
+          {
+            ptr_integral_type retType;
+            ptr_integral_type addend = static_cast<ptr_integral_type>(arg) * static_cast<ptr_integral_type>(sizeof(T));
+
+            {
+              __int64 retIntegral;
+              ptr_integral_type valCompute;
+              valCompute = ((addend));
+              const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
+              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
+              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              ;
+            }
+            ;
+            retVal = reinterpret_cast<T*>(retType);
+          }
+          return retVal;
+          ;
+        }
+        T* fetch_add(ptrdiff_t arg, rsl::internal::memory_order_release_s) noexcept
+        {
+          static_assert(rsl::is_object<T>::value, "rsl::atomic<T> : Template Typename T must be an object type!");
+          ;
+          T* retVal;
+
+          {
+            ptr_integral_type retType;
+            ptr_integral_type addend = static_cast<ptr_integral_type>(arg) * static_cast<ptr_integral_type>(sizeof(T));
+
+            {
+              __int64 retIntegral;
+              ptr_integral_type valCompute;
+              valCompute = ((addend));
+              const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
+              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
+              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              ;
+            }
+            ;
+            retVal = reinterpret_cast<T*>(retType);
+          }
+          return retVal;
+          ;
+        }
+        T* fetch_add(ptrdiff_t arg, rsl::internal::memory_order_acq_rel_s) noexcept
+        {
+          static_assert(rsl::is_object<T>::value, "rsl::atomic<T> : Template Typename T must be an object type!");
+          ;
+          T* retVal;
+
+          {
+            ptr_integral_type retType;
+            ptr_integral_type addend = static_cast<ptr_integral_type>(arg) * static_cast<ptr_integral_type>(sizeof(T));
+
+            {
+              __int64 retIntegral;
+              ptr_integral_type valCompute;
+              valCompute = ((addend));
+              const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
+              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
+              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              ;
+            }
+            ;
+            retVal = reinterpret_cast<T*>(retType);
+          }
+          return retVal;
+          ;
+        }
+        T* fetch_add(ptrdiff_t arg, rsl::internal::memory_order_seq_cst_s) noexcept
+        {
+          static_assert(rsl::is_object<T>::value, "rsl::atomic<T> : Template Typename T must be an object type!");
+          ;
+          T* retVal;
+
+          {
+            ptr_integral_type retType;
+            ptr_integral_type addend = static_cast<ptr_integral_type>(arg) * static_cast<ptr_integral_type>(sizeof(T));
+
+            {
+              __int64 retIntegral;
+              ptr_integral_type valCompute;
+              valCompute = ((addend));
+              const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
+              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
+              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              ;
+            }
+            ;
+            retVal = reinterpret_cast<T*>(retType);
+          }
+          return retVal;
+          ;
+        }
+
+      public:
+        using Base::add_fetch;
+        T* add_fetch(ptrdiff_t arg) noexcept
+        {
+          static_assert(rsl::is_object<T>::value, "rsl::atomic<T> : Template Typename T must be an object type!");
+          ;
+          T* retVal;
+
+          {
+            ptr_integral_type retType;
+            ptr_integral_type addend = static_cast<ptr_integral_type>(arg) * static_cast<ptr_integral_type>(sizeof(T));
+
+            {
+              __int64 retIntegral;
+              ptr_integral_type valCompute;
+              valCompute = ((addend));
+              const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
+              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
+              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              retType = (retType)+((addend));
+            }
+            ;
+            retVal = reinterpret_cast<T*>(retType);
+          }
+          return retVal;
+          ;
+        }
+        T* add_fetch(ptrdiff_t arg, rsl::internal::memory_order_relaxed_s) noexcept
+        {
+          static_assert(rsl::is_object<T>::value, "rsl::atomic<T> : Template Typename T must be an object type!");
+          ;
+          T* retVal;
+
+          {
+            ptr_integral_type retType;
+            ptr_integral_type addend = static_cast<ptr_integral_type>(arg) * static_cast<ptr_integral_type>(sizeof(T));
+
+            {
+              __int64 retIntegral;
+              ptr_integral_type valCompute;
+              valCompute = ((addend));
+              const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
+              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
+              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              retType = (retType)+((addend));
+            }
+            ;
+            retVal = reinterpret_cast<T*>(retType);
+          }
+          return retVal;
+          ;
+        }
+        T* add_fetch(ptrdiff_t arg, rsl::internal::memory_order_acquire_s) noexcept
+        {
+          static_assert(rsl::is_object<T>::value, "rsl::atomic<T> : Template Typename T must be an object type!");
+          ;
+          T* retVal;
+
+          {
+            ptr_integral_type retType;
+            ptr_integral_type addend = static_cast<ptr_integral_type>(arg) * static_cast<ptr_integral_type>(sizeof(T));
+
+            {
+              __int64 retIntegral;
+              ptr_integral_type valCompute;
+              valCompute = ((addend));
+              const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
+              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
+              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              retType = (retType)+((addend));
+            }
+            ;
+            retVal = reinterpret_cast<T*>(retType);
+          }
+          return retVal;
+          ;
+        }
+        T* add_fetch(ptrdiff_t arg, rsl::internal::memory_order_release_s) noexcept
+        {
+          static_assert(rsl::is_object<T>::value, "rsl::atomic<T> : Template Typename T must be an object type!");
+          ;
+          T* retVal;
+
+          {
+            ptr_integral_type retType;
+            ptr_integral_type addend = static_cast<ptr_integral_type>(arg) * static_cast<ptr_integral_type>(sizeof(T));
+
+            {
+              __int64 retIntegral;
+              ptr_integral_type valCompute;
+              valCompute = ((addend));
+              const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
+              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
+              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              retType = (retType)+((addend));
+            }
+            ;
+            retVal = reinterpret_cast<T*>(retType);
+          }
+          return retVal;
+          ;
+        }
+        T* add_fetch(ptrdiff_t arg, rsl::internal::memory_order_acq_rel_s) noexcept
+        {
+          static_assert(rsl::is_object<T>::value, "rsl::atomic<T> : Template Typename T must be an object type!");
+          ;
+          T* retVal;
+
+          {
+            ptr_integral_type retType;
+            ptr_integral_type addend = static_cast<ptr_integral_type>(arg) * static_cast<ptr_integral_type>(sizeof(T));
+
+            {
+              __int64 retIntegral;
+              ptr_integral_type valCompute;
+              valCompute = ((addend));
+              const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
+              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
+              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              retType = (retType)+((addend));
+            }
+            ;
+            retVal = reinterpret_cast<T*>(retType);
+          }
+          return retVal;
+          ;
+        }
+        T* add_fetch(ptrdiff_t arg, rsl::internal::memory_order_seq_cst_s) noexcept
+        {
+          static_assert(rsl::is_object<T>::value, "rsl::atomic<T> : Template Typename T must be an object type!");
+          ;
+          T* retVal;
+
+          {
+            ptr_integral_type retType;
+            ptr_integral_type addend = static_cast<ptr_integral_type>(arg) * static_cast<ptr_integral_type>(sizeof(T));
+
+            {
+              __int64 retIntegral;
+              ptr_integral_type valCompute;
+              valCompute = ((addend));
+              const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
+              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
+              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              retType = (retType)+((addend));
+            }
+            ;
+            retVal = reinterpret_cast<T*>(retType);
+          }
+          return retVal;
+          ;
+        }
+      public:
+        using Base::fetch_sub;
+        T* fetch_sub(ptrdiff_t arg) noexcept
+        {
+          static_assert(rsl::is_object<T>::value, "rsl::atomic<T> : Template Typename T must be an object type!");
+          ;
+          T* retVal;
+
+          {
+            ptr_integral_type retType;
+            ptr_integral_type addend = static_cast<ptr_integral_type>(arg) * static_cast<ptr_integral_type>(sizeof(T));
+
+            {
+              __int64 retIntegral;
+              ptr_integral_type valCompute;
+              valCompute = rsl::internal::atomic_negate_operand((((addend))));
+              const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
+              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
+              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              ;
+            }
+            ;
+            retVal = reinterpret_cast<T*>(retType);
+          }
+          return retVal;
+          ;
+        }
+        T* fetch_sub(ptrdiff_t arg, rsl::internal::memory_order_relaxed_s) noexcept
+        {
+          static_assert(rsl::is_object<T>::value, "rsl::atomic<T> : Template Typename T must be an object type!");
+          ;
+          T* retVal;
+
+          {
+            ptr_integral_type retType;
+            ptr_integral_type addend = static_cast<ptr_integral_type>(arg) * static_cast<ptr_integral_type>(sizeof(T));
+
+            {
+              __int64 retIntegral;
+              ptr_integral_type valCompute;
+              valCompute = rsl::internal::atomic_negate_operand((((addend))));
+              const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
+              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
+              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              ;
+            }
+            ;
+            retVal = reinterpret_cast<T*>(retType);
+          }
+          return retVal;
+          ;
+        }
+        T* fetch_sub(ptrdiff_t arg, rsl::internal::memory_order_acquire_s) noexcept
+        {
+          static_assert(rsl::is_object<T>::value, "rsl::atomic<T> : Template Typename T must be an object type!");
+          ;
+          T* retVal;
+
+          {
+            ptr_integral_type retType;
+            ptr_integral_type addend = static_cast<ptr_integral_type>(arg) * static_cast<ptr_integral_type>(sizeof(T));
+
+            {
+              __int64 retIntegral;
+              ptr_integral_type valCompute;
+              valCompute = rsl::internal::atomic_negate_operand((((addend))));
+              const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
+              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
+              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              ;
+            }
+            ;
+            retVal = reinterpret_cast<T*>(retType);
+          }
+          return retVal;
+          ;
+        }
+        T* fetch_sub(ptrdiff_t arg, rsl::internal::memory_order_release_s) noexcept
+        {
+          static_assert(rsl::is_object<T>::value, "rsl::atomic<T> : Template Typename T must be an object type!");
+          ;
+          T* retVal;
+
+          {
+            ptr_integral_type retType;
+            ptr_integral_type addend = static_cast<ptr_integral_type>(arg) * static_cast<ptr_integral_type>(sizeof(T));
+
+            {
+              __int64 retIntegral;
+              ptr_integral_type valCompute;
+              valCompute = rsl::internal::atomic_negate_operand((((addend))));
+              const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
+              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
+              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              ;
+            }
+            ;
+            retVal = reinterpret_cast<T*>(retType);
+          }
+          return retVal;
+          ;
+        }
+        T* fetch_sub(ptrdiff_t arg, rsl::internal::memory_order_acq_rel_s) noexcept
+        {
+          static_assert(rsl::is_object<T>::value, "rsl::atomic<T> : Template Typename T must be an object type!");
+          ;
+          T* retVal;
+
+          {
+            ptr_integral_type retType;
+            ptr_integral_type addend = static_cast<ptr_integral_type>(arg) * static_cast<ptr_integral_type>(sizeof(T));
+
+            {
+              __int64 retIntegral;
+              ptr_integral_type valCompute;
+              valCompute = rsl::internal::atomic_negate_operand((((addend))));
+              const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
+              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
+              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              ;
+            }
+            ;
+            retVal = reinterpret_cast<T*>(retType);
+          }
+          return retVal;
+          ;
+        }
+        T* fetch_sub(ptrdiff_t arg, rsl::internal::memory_order_seq_cst_s) noexcept
+        {
+          static_assert(rsl::is_object<T>::value, "rsl::atomic<T> : Template Typename T must be an object type!");
+          ;
+          T* retVal;
+
+          {
+            ptr_integral_type retType;
+            ptr_integral_type addend = static_cast<ptr_integral_type>(arg) * static_cast<ptr_integral_type>(sizeof(T));
+
+            {
+              __int64 retIntegral;
+              ptr_integral_type valCompute;
+              valCompute = rsl::internal::atomic_negate_operand((((addend))));
+              const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
+              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
+              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              ;
+            }
+            ;
+            retVal = reinterpret_cast<T*>(retType);
+          }
+          return retVal;
+          ;
+        }
+      public:
+        using Base::sub_fetch;
+        T* sub_fetch(ptrdiff_t arg) noexcept
+        {
+          static_assert(rsl::is_object<T>::value, "rsl::atomic<T> : Template Typename T must be an object type!");
+          ;
+          T* retVal;
+
+          {
+            ptr_integral_type retType;
+            ptr_integral_type addend = static_cast<ptr_integral_type>(arg) * static_cast<ptr_integral_type>(sizeof(T));
+
+            {
+              __int64 retIntegral;
+              ptr_integral_type valCompute;
+              valCompute = rsl::internal::atomic_negate_operand((((addend))));
+              const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
+              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
+              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              retType = (retType)-((addend));
+            }
+            ;
+            retVal = reinterpret_cast<T*>(retType);
+          }
+          return retVal;
+          ;
+        }
+        T* sub_fetch(ptrdiff_t arg, rsl::internal::memory_order_relaxed_s) noexcept
+        {
+          static_assert(rsl::is_object<T>::value, "rsl::atomic<T> : Template Typename T must be an object type!");
+          ;
+          T* retVal;
+
+          {
+            ptr_integral_type retType;
+            ptr_integral_type addend = static_cast<ptr_integral_type>(arg) * static_cast<ptr_integral_type>(sizeof(T));
+
+            {
+              __int64 retIntegral;
+              ptr_integral_type valCompute;
+              valCompute = rsl::internal::atomic_negate_operand((((addend))));
+              const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
+              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
+              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              retType = (retType)-((addend));
+            }
+            ;
+            retVal = reinterpret_cast<T*>(retType);
+          }
+          return retVal;
+          ;
+        }
+        T* sub_fetch(ptrdiff_t arg, rsl::internal::memory_order_acquire_s) noexcept
+        {
+          static_assert(rsl::is_object<T>::value, "rsl::atomic<T> : Template Typename T must be an object type!");
+          ;
+          T* retVal;
+
+          {
+            ptr_integral_type retType;
+            ptr_integral_type addend = static_cast<ptr_integral_type>(arg) * static_cast<ptr_integral_type>(sizeof(T));
+
+            {
+              __int64 retIntegral;
+              ptr_integral_type valCompute;
+              valCompute = rsl::internal::atomic_negate_operand((((addend))));
+              const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
+              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
+              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              retType = (retType)-((addend));
+            }
+            ;
+            retVal = reinterpret_cast<T*>(retType);
+          }
+          return retVal;
+          ;
+        }
+        T* sub_fetch(ptrdiff_t arg, rsl::internal::memory_order_release_s) noexcept
+        {
+          static_assert(rsl::is_object<T>::value, "rsl::atomic<T> : Template Typename T must be an object type!");
+          ;
+          T* retVal;
+
+          {
+            ptr_integral_type retType;
+            ptr_integral_type addend = static_cast<ptr_integral_type>(arg) * static_cast<ptr_integral_type>(sizeof(T));
+
+            {
+              __int64 retIntegral;
+              ptr_integral_type valCompute;
+              valCompute = rsl::internal::atomic_negate_operand((((addend))));
+              const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
+              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
+              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              retType = (retType)-((addend));
+            }
+            ;
+            retVal = reinterpret_cast<T*>(retType);
+          }
+          return retVal;
+          ;
+        }
+        T* sub_fetch(ptrdiff_t arg, rsl::internal::memory_order_acq_rel_s) noexcept
+        {
+          static_assert(rsl::is_object<T>::value, "rsl::atomic<T> : Template Typename T must be an object type!");
+          ;
+          T* retVal;
+
+          {
+            ptr_integral_type retType;
+            ptr_integral_type addend = static_cast<ptr_integral_type>(arg) * static_cast<ptr_integral_type>(sizeof(T));
+
+            {
+              __int64 retIntegral;
+              ptr_integral_type valCompute;
+              valCompute = rsl::internal::atomic_negate_operand((((addend))));
+              const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
+              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
+              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              retType = (retType)-((addend));
+            }
+            ;
+            retVal = reinterpret_cast<T*>(retType);
+          }
+          return retVal;
+          ;
+        }
+        T* sub_fetch(ptrdiff_t arg, rsl::internal::memory_order_seq_cst_s) noexcept
+        {
+          static_assert(rsl::is_object<T>::value, "rsl::atomic<T> : Template Typename T must be an object type!");
+          ;
+          T* retVal;
+
+          {
+            ptr_integral_type retType;
+            ptr_integral_type addend = static_cast<ptr_integral_type>(arg) * static_cast<ptr_integral_type>(sizeof(T));
+
+            {
+              __int64 retIntegral;
+              ptr_integral_type valCompute;
+              valCompute = rsl::internal::atomic_negate_operand((((addend))));
+              const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
+              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
+              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              retType = (retType)-((addend));
+            }
+            ;
+            retVal = reinterpret_cast<T*>(retType);
+          }
+          return retVal;
+          ;
+        }
+      public:
+        using Base::operator ++;
+        T* operator ++() noexcept
+        {
+          return add_fetch(1, rsl::memory_order_seq_cst);
+        }
+        T* operator ++(int) noexcept
+        {
+          return fetch_add(1, rsl::memory_order_seq_cst);
+        }
+        using Base::operator --;
+        T* operator --() noexcept
+        {
+          return sub_fetch(1, rsl::memory_order_seq_cst);
+        }
+        T* operator --(int) noexcept
+        {
+          return fetch_sub(1, rsl::memory_order_seq_cst);
+        }
+      public:
+        using Base::operator +=;
+        T* operator +=(ptrdiff_t arg) noexcept
+        {
+          return add_fetch(arg, rsl::memory_order_seq_cst);
+        }
+        using Base::operator -=;
+        T* operator -=(ptrdiff_t arg) noexcept
+        {
+          return sub_fetch(arg, rsl::memory_order_seq_cst);
+        }
+      public:
+        using Base::load;
+        T* load(rsl::internal::memory_order_read_depends_s) noexcept
+        {
+            static_assert(rsl::is_pointer_v<T*>, "rsl::atomic<T> : Read Depends Type must be a Pointer Type!");
+            static_assert(rsl::is_pointer_v<rsl::remove_pointer_t<decltype(atomic_address())>>, "rsl::atomic<T> : Read Depends Ptr must be a Pointer to a Pointer!");
+            
+            return (*rsl::internal::atomic_volatile_cast((atomic_address())));
+        }
+      };
+
+
+
 
     } // namespace internal
   }   // namespace v1

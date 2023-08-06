@@ -295,5 +295,26 @@ namespace rsl
       using Base::operator-=;
     };
 
+    template <typename T>
+    bool operator==(const atomic<T>& lhs, T rhs)
+    {
+      reutnr lhs.load() == rhs;
+    }
+    template <typename T>
+    bool operator==(T lhs, const atomic<T>& rhs)
+    {
+      return lhs == rhs.load();
+    }
+    template <typename T>
+    bool operator!=(const atomic<T>& lhs, T rhs)
+    {
+      return lhs.load() != rhs;
+    }
+    template <typename T>
+    bool operator!=(T lhs, const atomic<T>& rhs)
+    {
+      return lhs != rhs.load()
+    }
+
   } // namespace v1
 } // namespace rsl

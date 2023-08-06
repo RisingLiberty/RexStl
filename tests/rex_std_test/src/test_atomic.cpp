@@ -21,7 +21,7 @@ namespace rsl::test
 		static rsl::atomic<int> sAtomicInt{ 4 };
 		static rsl::atomic<void*> sAtomicPtr{ nullptr };
 
-		static int TestAtomicConstantInitialization()
+		void TestAtomicConstantInitialization()
 		{
 			CHECK(sAtomicInt.load() == 4);
 			CHECK(sAtomicPtr == nullptr);
@@ -3746,7 +3746,7 @@ namespace rsl::test
 			{
 				AtomicType atomic;
 
-				IntegralType ret = atomic_load_cond(&atomic, [](IntegralType val) { return true; });
+				IntegralType ret = atomic_load_cond(&atomic, [](IntegralType /*val*/) { return true; });
 
 				CHECK(ret == 0);
 			}
@@ -3754,7 +3754,7 @@ namespace rsl::test
 			{
 				AtomicType atomic;
 
-				IntegralType ret = atomic_load_cond_explicit(&atomic, [](IntegralType val) { return true; }, rsl::memory_order_relaxed);
+				IntegralType ret = atomic_load_cond_explicit(&atomic, [](IntegralType /*val*/) { return true; }, rsl::memory_order_relaxed);
 
 				CHECK(ret == 0);
 			}
@@ -3797,8 +3797,6 @@ namespace rsl::test
 			uint8_t a;
 		};
 
-#if defined(EASTL_ATOMIC_HAS_8BIT)
-
 		int TestAtomicNonDefaultConstructible()
 		{
 			int nErrorCount = 0;
@@ -3832,8 +3830,6 @@ namespace rsl::test
 			return nErrorCount;
 		}
 
-#endif
-
 		struct Atomic128LoadType
 		{
 			friend bool operator==(const Atomic128LoadType& a, const Atomic128LoadType& b)
@@ -3844,112 +3840,86 @@ namespace rsl::test
 			uint32_t a, b, c, d;
 		};
 
-#if defined(EASTL_ATOMIC_HAS_128BIT)
+  }
 
-		int TestAtomic128Loads()
+	TEST_CASE("Test Atomic")
+	{
 		{
-			int nErrorCount = 0;
+			AtomicIntegralBasicTest<uint8_t> u8AtomicTest;
 
-			{
-				rsl::atomic<Atomic128LoadType> atomic{ Atomic128LoadType{1, 1, 0, 0} };
-
-				CHECK((atomic.load() == Atomic128LoadType{ 1, 1, 0, 0 }));
-			}
-
-			{
-				rsl::atomic<Atomic128LoadType> atomic{ Atomic128LoadType{0, 0, 1, 1} };
-
-				CHECK((atomic.load() == Atomic128LoadType{ 0, 0, 1, 1 }));
-			}
-
-			{
-				rsl::atomic<Atomic128LoadType> atomic{ Atomic128LoadType{0, 1, 0, 1} };
-
-				CHECK((atomic.load() == Atomic128LoadType{ 0, 1, 0, 1 }));
-			}
-
-			{
-				rsl::atomic<Atomic128LoadType> atomic{ Atomic128LoadType{1, 0, 1, 0} };
-
-				CHECK((atomic.load() == Atomic128LoadType{ 1, 0, 1, 0 }));
-			}
-
-			{
-				rsl::atomic<Atomic128LoadType> atomic{ Atomic128LoadType{1, 1, 0, 0} };
-
-				Atomic128LoadType expected{ 0, 0, 0, 0 };
-				atomic.compare_exchange_strong(expected, Atomic128LoadType{ 1, 1, 0, 0 });
-
-				CHECK((expected == Atomic128LoadType{ 1, 1, 0, 0 }));
-			}
-
-			{
-				rsl::atomic<Atomic128LoadType> atomic{ Atomic128LoadType{0, 0, 1, 1} };
-
-				Atomic128LoadType expected{ 0, 0, 0, 0 };
-				atomic.compare_exchange_strong(expected, Atomic128LoadType{ 0, 0, 1, 1 });
-
-				CHECK((expected == Atomic128LoadType{ 0, 0, 1, 1 }));
-			}
-
-			{
-				rsl::atomic<Atomic128LoadType> atomic{ Atomic128LoadType{0, 1, 0, 1} };
-
-				Atomic128LoadType expected{ 0, 0, 0, 0 };
-				atomic.compare_exchange_strong(expected, Atomic128LoadType{ 0, 1, 0, 1 });
-
-				CHECK((expected == Atomic128LoadType{ 0, 1, 0, 1 }));
-			}
-
-			{
-				rsl::atomic<Atomic128LoadType> atomic{ Atomic128LoadType{1, 0, 1, 0} };
-
-				Atomic128LoadType expected{ 0, 0, 0, 0 };
-				atomic.compare_exchange_strong(expected, Atomic128LoadType{ 1, 0, 1, 0 });
-
-				CHECK((expected == Atomic128LoadType{ 1, 0, 1, 0 }));
-			}
-
-			{
-				rsl::atomic<Atomic128LoadType> atomic{ Atomic128LoadType{0, 0, 0, 0} };
-
-				Atomic128LoadType expected{ 0, 0, 0, 0 };
-				atomic.compare_exchange_strong(expected, Atomic128LoadType{ 1, 1, 0, 0 });
-
-				CHECK((atomic.load() == Atomic128LoadType{ 1, 1, 0, 0 }));
-			}
-
-			{
-				rsl::atomic<Atomic128LoadType> atomic{ Atomic128LoadType{0, 0, 0, 0} };
-
-				Atomic128LoadType expected{ 0, 0, 0, 0 };
-				atomic.compare_exchange_strong(expected, Atomic128LoadType{ 0, 0, 1, 1 });
-
-				CHECK((atomic.load() == Atomic128LoadType{ 0, 0, 1, 1 }));
-			}
-
-			{
-				rsl::atomic<Atomic128LoadType> atomic{ Atomic128LoadType{0, 0, 0, 0} };
-
-				Atomic128LoadType expected{ 0, 0, 0, 0 };
-				atomic.compare_exchange_strong(expected, Atomic128LoadType{ 0, 1, 0, 1 });
-
-				CHECK((atomic.load() == Atomic128LoadType{ 0, 1, 0, 1 }));
-			}
-
-			{
-				rsl::atomic<Atomic128LoadType> atomic{ Atomic128LoadType{0, 0, 0, 0} };
-
-				Atomic128LoadType expected{ 0, 0, 0, 0 };
-				atomic.compare_exchange_strong(expected, Atomic128LoadType{ 1, 0, 1, 0 });
-
-				CHECK((atomic.load() == Atomic128LoadType{ 1, 0, 1, 0 }));
-			}
-
-			return nErrorCount;
+			u8AtomicTest.RunTest();
 		}
 
-#endif
+		{
+			AtomicIntegralBasicTest<uint16_t> u16AtomicTest;
 
-  }
+			u16AtomicTest.RunTest();
+		}
+
+		{
+			AtomicIntegralBasicTest<uint32_t> u32AtomicTest;
+
+			u32AtomicTest.RunTest();
+		}
+
+		{
+			AtomicIntegralBasicTest<uint64_t> u64AtomicTest;
+
+			u64AtomicTest.RunTest();
+		}
+
+		{
+			AtomicBoolBasicTest boolAtomicTest;
+
+			boolAtomicTest.RunTest();
+		}
+
+		{
+			AtomicUserTypeBasicTest<AtomicUserType16> userTypeAtomicTest;
+
+			userTypeAtomicTest.RunTest();
+		}
+
+		{
+			AtomicUserTypeBasicTest<AtomicNonTriviallyConstructible> userTypeAtomicTest;
+
+			userTypeAtomicTest.RunTest();
+		}
+
+		{
+			AtomicUserTypeBasicTest<AtomicNonTriviallyConstructibleNoExcept> userTypeAtomicTest;
+
+			userTypeAtomicTest.RunTest();
+		}
+
+		{
+			AtomicPointerBasicTest ptrAtomicTest;
+
+			ptrAtomicTest.RunTest();
+		}
+
+		{
+			AtomicVoidPointerBasicTest voidPtrAtomicTest;
+
+			voidPtrAtomicTest.RunTest();
+		}
+
+		{
+			AtomicFlagBasicTest atomicFlagBasicTest;
+
+			atomicFlagBasicTest.RunTest();
+		}
+
+		{
+			AtomicStandaloneBasicTest atomicStandaloneBasicTest;
+
+			atomicStandaloneBasicTest.RunTest();
+		}
+
+
+		TestAtomicNonDefaultConstructible();
+
+
+		TestAtomicConstantInitialization();
+	}
 }

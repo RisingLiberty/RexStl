@@ -25,6 +25,30 @@ namespace rsl
 {
   inline namespace v1
   {
+    namespace internal
+    {
+      template <typename T>
+      auto interlocked_exchange(volatile atomic8_t* volatileObject, atomic_t<T> expectedValue, atomic_t<T> desiredValue)
+      {
+        return _InterlockedCompareExchange8(volatileObject, expectedValue, desiredValue);
+      }
+      template <typename T>
+      auto interlocked_exchange(volatile atomic16_t* volatileObject, atomic_t<T> expectedValue, atomic_t<T> desiredValue)
+      {
+        return _InterlockedCompareExchange16_np(volatileObject, expectedValue, desiredValue);
+      }
+      template <typename T>
+      auto interlocked_exchange(volatile atomic32_t* volatileObject, atomic_t<T> expectedValue, atomic_t<T> desiredValue)
+      {
+        return _InterlockedCompareExchange_np(volatileObject, expectedValue, desiredValue);
+      }
+      template <typename T>
+      auto interlocked_exchange(volatile atomic64_t* volatileObject, atomic_t<T> expectedValue, atomic_t<T> desiredValue)
+      {
+        return _InterlockedCompareExchange64_np(volatileObject, expectedValue, desiredValue);
+      }
+    }
+
 #if defined(REX_COMPILER_MSVC)
     template <typename T>
     atomic_t<T> atomic_cmpxchg_strong(T* obj, T expected, T desired, rsl::memory_order successOrder, rsl::memory_order failureOrder)
@@ -32,31 +56,11 @@ namespace rsl
       (void)successOrder;
       (void)failureOrder;
 
-      atomic_t<T> atom_expected_value    = expected;
-      atomic_t<T> atom_desired_value     = desired;
-      volatile atomic_t<T>* volatile_obj = rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>(obj);
+      const atomic_t<T> atom_expected_value   = *rsl::internal::atomic_integral_cast<const atomic_t<T>>(&expected);
+      const atomic_t<T> atom_desired_value    = *rsl::internal::atomic_integral_cast<const atomic_t<T>>(&desired);
+      volatile atomic_t<T>* volatile_obj      = rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>(obj);
 
-      if constexpr(sizeof(T) == 1)
-      {
-        return _InterlockedCompareExchange8(volatile_obj, atom_expected_value, atom_desired_value);
-      }
-      else if constexpr(sizeof(T) == 2)
-      {
-        return _InterlockedCompareExchange16_np(volatile_obj, atom_expected_value, atom_desired_value);
-      }
-      else if constexpr(sizeof(T) == 4)
-      {
-        return _InterlockedCompareExchange_np(volatile_obj, atom_expected_value, atom_desired_value);
-      }
-      else if constexpr(sizeof(T) == 8)
-      {
-        return _InterlockedCompareExchange64_np(volatile_obj, atom_expected_value, atom_desired_value);
-      }
-      else
-      {
-        static_assert(rsl::internal::always_false<T>, "Invalid type used for atomic add fetch");
-        return 0;
-      }
+      return internal::interlocked_exchange<T>(volatile_obj, atom_expected_value, atom_desired_value);
     }
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
     template <typename T>

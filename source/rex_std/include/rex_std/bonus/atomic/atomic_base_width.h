@@ -7,20 +7,20 @@ namespace rsl
 
     namespace internal
     {
-      template <typename T, unsigned Width = sizeof(T)>
+      template <typename Type, unsigned Width = sizeof(Type)>
       struct atomic_base_width;
 
-      template <typename T>
-      struct atomic_base_width<T, 1> : public atomic_size_aligned<T>
+      template <typename Type>
+      struct atomic_base_width<Type, 1> : public atomic_size_aligned<Type>
       {
       private:
-        static_assert(alignof(atomic_size_aligned<T>) == 1, "rsl::atomic<T> must be sizeof(T) aligned!");
-        static_assert(alignof(atomic_size_aligned<T>) == sizeof(T), "rsl::atomic<T> must be sizeof(T) aligned!");
-        using Base                     = atomic_size_aligned<T>;
-        static const size_t s_num_bits = sizeof(T) * 8;
+        static_assert(alignof(atomic_size_aligned<Type>) == 1, "rsl::atomic<Type> must be sizeof(Type) aligned!");
+        static_assert(alignof(atomic_size_aligned<Type>) == sizeof(Type), "rsl::atomic<Type> must be sizeof(Type) aligned!");
+        using Base                     = atomic_size_aligned<Type>;
+        static const size_t s_num_bits = sizeof(Type) * 8;
 
       public:
-        constexpr explicit atomic_base_width(T desired)
+        constexpr explicit atomic_base_width(Type desired)
             : Base(desired)
         {
         }
@@ -33,48 +33,48 @@ namespace rsl
       public:
         using Base::store;
 
-        void store(T desired)
+        void store(Type desired)
         {
           store(desired, memory_order_seq_cst);
         }
 
-        void store(T desired, rsl::internal::memory_order_relaxed_s /*unused*/)
+        void store(Type desired, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_store(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::relaxed);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          rsl::atomic_store(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::relaxed);
         }
 
-        void store(T desired, rsl::internal::memory_order_release_s /*unused*/)
+        void store(Type desired, rsl::internal::memory_order_release_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_store(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::release);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          rsl::atomic_store(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::release);
         }
 
-        void store(T desired, rsl::internal::memory_order_seq_cst_s /*unused*/)
+        void store(Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_store(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          rsl::atomic_store(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst);
         }
 
       public:
         using Base::load;
 
-        T load() const
+        Type load() const
         {
           return load(memory_order_seq_cst);
         }
 
-        T load(rsl::internal::memory_order_relaxed_s /*unused*/) const
+        Type load(rsl::internal::memory_order_relaxed_s /*unused*/) const
         {
           return rsl::atomic_load(reinterpret_cast<unsigned char*>(this->atomic_address()), rsl::memory_order::relaxed); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
         }
 
-        T load(rsl::internal::memory_order_acquire_s /*unused*/) const
+        Type load(rsl::internal::memory_order_acquire_s /*unused*/) const
         {
           return rsl::atomic_load(reinterpret_cast<unsigned char*>(this->atomic_address()), rsl::memory_order::acquire); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
         }
 
-        T load(rsl::internal::memory_order_seq_cst_s /*unused*/) const
+        Type load(rsl::internal::memory_order_seq_cst_s /*unused*/) const
         {
           return rsl::atomic_load(reinterpret_cast<unsigned char*>(this->atomic_address()), rsl::memory_order::seq_cst); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
         }
@@ -82,255 +82,255 @@ namespace rsl
       public:
         using Base::exchange;
 
-        T exchange(T desired)
+        Type exchange(Type desired)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst);
         }
 
-        T exchange(T desired, rsl::internal::memory_order_relaxed_s /*unused*/)
+        Type exchange(Type desired, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::relaxed);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::relaxed);
         }
 
-        T exchange(T desired, rsl::internal::memory_order_acquire_s /*unused*/)
+        Type exchange(Type desired, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::acquire);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::acquire);
         }
 
-        T exchange(T desired, rsl::internal::memory_order_release_s /*unused*/)
+        Type exchange(Type desired, rsl::internal::memory_order_release_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::release);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::release);
         }
 
-        T exchange(T desired, rsl::internal::memory_order_acq_rel_s /*unused*/)
+        Type exchange(Type desired, rsl::internal::memory_order_acq_rel_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::acq_rel);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::acq_rel);
         }
 
-        T exchange(T desired, rsl::internal::memory_order_seq_cst_s /*unused*/)
+        Type exchange(Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst);
         }
 
       public:
         using Base::compare_exchange_weak;
 
-        bool compare_exchange_weak(T& expected, T desired)
+        bool compare_exchange_weak(Type& expected, Type desired)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed, rsl::memory_order::relaxed);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed, rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_acquire_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::acquire);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_release_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_release_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::release,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::release,
                                                   rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_acq_rel_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_acq_rel_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::acquire);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_seq_cst_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_relaxed_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_relaxed_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed,
                                                   rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_acquire_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_acquire_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::relaxed);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_acquire_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_acquire_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acquire,
                                                   rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_release_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_release_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::release,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::release,
                                                   rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_acq_rel_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_acq_rel_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::relaxed);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_acq_rel_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_acq_rel_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak_acq_rel_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel,
                                                           rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
                                                   rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak_seq_cst_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
                                                           rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_seq_cst_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_seq_cst_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
                                                   rsl::memory_order::seq_cst);
         }
 
       public:
         using Base::compare_exchange_strong;
 
-        bool compare_exchange_strong(T& expected, T desired)
+        bool compare_exchange_strong(Type& expected, Type desired)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
                                             rsl::memory_order::seq_cst);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed,
                                             rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_acquire_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acquire,
                                                     rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_release_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_release_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::release,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::release,
                                                     rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_acq_rel_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_acq_rel_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_acq_rel(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel,
                                                     rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_seq_cst_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
                                             rsl::memory_order::seq_cst);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_relaxed_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_relaxed_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed,
                                                     rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_acquire_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_acquire_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acquire,
                                                     rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_acquire_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_acquire_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_acquire_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acquire,
                                                             rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_release_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_release_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::release,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::release,
                                                     rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_acq_rel_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_acq_rel_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_acq_rel(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel,
                                                     rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_acq_rel_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_acq_rel_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_acq_rel_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel,
                                                             rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
                                                     rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_seq_cst_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
                                                             rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_seq_cst_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_seq_cst_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
                                                     rsl::memory_order::seq_cst);
         }
 
       public:
         using Base::operator=;
 
-        T operator=(T desired) // NOLINT(misc-unconventional-assign-operator)
+        Type operator=(Type desired) // NOLINT(misc-unconventional-assign-operator)
         {
           store(desired, rsl::memory_order_seq_cst);
           return desired;
@@ -340,17 +340,17 @@ namespace rsl
         atomic_base_width& operator=(const atomic_base_width&) volatile = delete;
       };
 
-      template <typename T>
-      struct atomic_base_width<T, 2> : public atomic_size_aligned<T>
+      template <typename Type>
+      struct atomic_base_width<Type, 2> : public atomic_size_aligned<Type>
       {
       private:
-        static_assert(alignof(atomic_size_aligned<T>) == 2, "rsl::atomic<T> must be sizeof(T) aligned!");
-        static_assert(alignof(atomic_size_aligned<T>) == sizeof(T), "rsl::atomic<T> must be sizeof(T) aligned!");
-        using Base                     = atomic_size_aligned<T>;
-        static const size_t s_num_bits = sizeof(T) * 8;
+        static_assert(alignof(atomic_size_aligned<Type>) == 2, "rsl::atomic<Type> must be sizeof(Type) aligned!");
+        static_assert(alignof(atomic_size_aligned<Type>) == sizeof(Type), "rsl::atomic<Type> must be sizeof(Type) aligned!");
+        using Base                     = atomic_size_aligned<Type>;
+        static const size_t s_num_bits = sizeof(Type) * 8;
 
       public:
-        constexpr explicit atomic_base_width(T desired)
+        constexpr explicit atomic_base_width(Type desired)
             : Base(desired)
         {
         }
@@ -363,304 +363,304 @@ namespace rsl
       public:
         using Base::store;
 
-        void store(T desired)
+        void store(Type desired)
         {
           store(desired, memory_order_seq_cst);
         }
 
-        void store(T desired, rsl::internal::memory_order_relaxed_s /*unused*/)
+        void store(Type desired, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_store(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::relaxed);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          rsl::atomic_store(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::relaxed);
         }
 
-        void store(T desired, rsl::internal::memory_order_release_s /*unused*/)
+        void store(Type desired, rsl::internal::memory_order_release_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_store(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::release);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          rsl::atomic_store(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::release);
         }
 
-        void store(T desired, rsl::internal::memory_order_seq_cst_s /*unused*/)
+        void store(Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_store(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          rsl::atomic_store(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst);
         }
 
       public:
         using Base::load;
 
-        T load() const
+        Type load() const
         {
           return load(memory_order_seq_cst);
         }
 
-        T load(rsl::internal::memory_order_relaxed_s /*unused*/) const
+        Type load(rsl::internal::memory_order_relaxed_s /*unused*/) const
         {
-          return rsl::atomic_load(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::memory_order::relaxed);
+          return rsl::internal::atomic_type_pun_cast<Type>(rsl::atomic_load(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), rsl::memory_order::relaxed));
         }
 
-        T load(rsl::internal::memory_order_acquire_s /*unused*/) const
+        Type load(rsl::internal::memory_order_acquire_s /*unused*/) const
         {
-          return rsl::atomic_load(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::memory_order::acquire);
+          return rsl::internal::atomic_type_pun_cast<Type>(rsl::atomic_load(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), rsl::memory_order::acquire));
         }
 
-        T load(rsl::internal::memory_order_seq_cst_s /*unused*/) const
+        Type load(rsl::internal::memory_order_seq_cst_s /*unused*/) const
         {
-          return rsl::atomic_load(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::memory_order::seq_cst);
+          return rsl::internal::atomic_type_pun_cast<Type>(rsl::atomic_load(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), rsl::memory_order::seq_cst));
         }
 
       public:
         using Base::exchange;
 
-        T exchange(T desired)
+        Type exchange(Type desired)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::internal::atomic_type_pun_cast<Type>(rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst));
         }
 
-        T exchange(T desired, rsl::internal::memory_order_relaxed_s /*unused*/)
+        Type exchange(Type desired, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::relaxed);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::internal::atomic_type_pun_cast<Type>(rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::relaxed));
         }
 
-        T exchange(T desired, rsl::internal::memory_order_acquire_s /*unused*/)
+        Type exchange(Type desired, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::acquire);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::internal::atomic_type_pun_cast<Type>(rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::acquire));
         }
 
-        T exchange(T desired, rsl::internal::memory_order_release_s /*unused*/)
+        Type exchange(Type desired, rsl::internal::memory_order_release_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::release);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::internal::atomic_type_pun_cast<Type>(rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::release));
         }
 
-        T exchange(T desired, rsl::internal::memory_order_acq_rel_s /*unused*/)
+        Type exchange(Type desired, rsl::internal::memory_order_acq_rel_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::acq_rel);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::internal::atomic_type_pun_cast<Type>(rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::acq_rel));
         }
 
-        T exchange(T desired, rsl::internal::memory_order_seq_cst_s /*unused*/)
+        Type exchange(Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::internal::atomic_type_pun_cast<Type>(rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst));
         }
 
       public:
         using Base::compare_exchange_weak;
 
-        bool compare_exchange_weak(T& expected, T desired)
+        bool compare_exchange_weak(Type& expected, Type desired)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed, rsl::memory_order::relaxed);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed, rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_acquire_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::acquire);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_release_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_release_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::release,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::release,
                                                   rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_acq_rel_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_acq_rel_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::acquire);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_seq_cst_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_relaxed_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_relaxed_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed,
                                                   rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_acquire_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_acquire_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::relaxed);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_acquire_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_acquire_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acquire,
                                                   rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_release_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_release_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::release,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::release,
                                                   rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_acq_rel_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_acq_rel_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::relaxed);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_acq_rel_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_acq_rel_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak_acq_rel_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel,
                                                           rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
                                                   rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak_seq_cst_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
                                                           rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_seq_cst_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_seq_cst_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
                                                   rsl::memory_order::seq_cst);
         }
 
       public:
         using Base::compare_exchange_strong;
 
-        bool compare_exchange_strong(T& expected, T desired)
+        bool compare_exchange_strong(Type& expected, Type desired)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
                                             rsl::memory_order::seq_cst);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed,
                                             rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_acquire_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acquire,
                                                     rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_release_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_release_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::release,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::release,
                                                     rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_acq_rel_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_acq_rel_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_acq_rel(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel,
                                                     rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_seq_cst_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
                                             rsl::memory_order::seq_cst);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_relaxed_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_relaxed_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed,
                                                     rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_acquire_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_acquire_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acquire,
                                                     rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_acquire_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_acquire_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_acquire_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acquire,
                                                             rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_release_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_release_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::release,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::release,
                                                     rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_acq_rel_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_acq_rel_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_acq_rel(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel,
                                                     rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_acq_rel_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_acq_rel_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_acq_rel_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel,
                                                             rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
                                                     rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_seq_cst_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
                                                             rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_seq_cst_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_seq_cst_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
                                                     rsl::memory_order::seq_cst);
         }
 
       public:
         using Base::operator=;
 
-        T operator=(T desired) // NOLINT(misc-unconventional-assign-operator)
+        Type operator=(Type desired) // NOLINT(misc-unconventional-assign-operator)
         {
           store(desired, rsl::memory_order_seq_cst);
           return desired;
@@ -670,17 +670,17 @@ namespace rsl
         atomic_base_width& operator=(const atomic_base_width&) volatile = delete;
       };
 
-      template <typename T>
-      struct atomic_base_width<T, 4> : public atomic_size_aligned<T>
+      template <typename Type>
+      struct atomic_base_width<Type, 4> : public atomic_size_aligned<Type>
       {
       private:
-        static_assert(alignof(atomic_size_aligned<T>) == 4, "rsl::atomic<T> must be sizeof(T) aligned!");
-        static_assert(alignof(atomic_size_aligned<T>) == sizeof(T), "rsl::atomic<T> must be sizeof(T) aligned!");
-        using Base                     = atomic_size_aligned<T>;
-        static const size_t s_num_bits = sizeof(T) * 8;
+        static_assert(alignof(atomic_size_aligned<Type>) == 4, "rsl::atomic<Type> must be sizeof(Type) aligned!");
+        static_assert(alignof(atomic_size_aligned<Type>) == sizeof(Type), "rsl::atomic<Type> must be sizeof(Type) aligned!");
+        using Base                     = atomic_size_aligned<Type>;
+        static const size_t s_num_bits = sizeof(Type) * 8;
 
       public:
-        constexpr explicit atomic_base_width(T desired)
+        constexpr explicit atomic_base_width(Type desired)
             : Base(desired)
         {
         }
@@ -693,304 +693,304 @@ namespace rsl
       public:
         using Base::store;
 
-        void store(T desired)
+        void store(Type desired)
         {
           store(desired, memory_order_seq_cst);
         }
 
-        void store(T desired, rsl::internal::memory_order_relaxed_s /*unused*/)
+        void store(Type desired, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_store(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::relaxed);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          rsl::atomic_store(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::relaxed);
         }
 
-        void store(T desired, rsl::internal::memory_order_release_s /*unused*/)
+        void store(Type desired, rsl::internal::memory_order_release_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_store(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::release);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          rsl::atomic_store(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::release);
         }
 
-        void store(T desired, rsl::internal::memory_order_seq_cst_s /*unused*/)
+        void store(Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_store(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          rsl::atomic_store(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst);
         }
 
       public:
         using Base::load;
 
-        T load() const
+        Type load() const
         {
           return load(memory_order_seq_cst);
         }
 
-        T load(rsl::internal::memory_order_relaxed_s /*unused*/) const
+        Type load(rsl::internal::memory_order_relaxed_s /*unused*/) const
         {
-          return rsl::atomic_load(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::memory_order::relaxed);
+          return rsl::internal::atomic_type_pun_cast<Type>(rsl::atomic_load(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), rsl::memory_order::relaxed));
         }
 
-        T load(rsl::internal::memory_order_acquire_s /*unused*/) const
+        Type load(rsl::internal::memory_order_acquire_s /*unused*/) const
         {
-          return rsl::atomic_load(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::memory_order::acquire);
+          return rsl::internal::atomic_type_pun_cast<Type>(rsl::atomic_load(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), rsl::memory_order::acquire));
         }
 
-        T load(rsl::internal::memory_order_seq_cst_s /*unused*/) const
+        Type load(rsl::internal::memory_order_seq_cst_s /*unused*/) const
         {
-          return rsl::atomic_load(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::memory_order::seq_cst);
+          return rsl::internal::atomic_type_pun_cast<Type>(rsl::atomic_load(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), rsl::memory_order::seq_cst));
         }
 
       public:
         using Base::exchange;
 
-        T exchange(T desired)
+        Type exchange(Type desired)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::internal::atomic_type_pun_cast<Type>(rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst));
         }
 
-        T exchange(T desired, rsl::internal::memory_order_relaxed_s /*unused*/)
+        Type exchange(Type desired, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::relaxed);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::internal::atomic_type_pun_cast<Type>(rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::relaxed));
         }
 
-        T exchange(T desired, rsl::internal::memory_order_acquire_s /*unused*/)
+        Type exchange(Type desired, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::acquire);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::internal::atomic_type_pun_cast<Type>(rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::acquire));
         }
 
-        T exchange(T desired, rsl::internal::memory_order_release_s /*unused*/)
+        Type exchange(Type desired, rsl::internal::memory_order_release_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::release);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::internal::atomic_type_pun_cast<Type>(rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::release));
         }
 
-        T exchange(T desired, rsl::internal::memory_order_acq_rel_s /*unused*/)
+        Type exchange(Type desired, rsl::internal::memory_order_acq_rel_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::acq_rel);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::internal::atomic_type_pun_cast<Type>(rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::acq_rel));
         }
 
-        T exchange(T desired, rsl::internal::memory_order_seq_cst_s /*unused*/)
+        Type exchange(Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::internal::atomic_type_pun_cast<Type>(rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst));
         }
 
       public:
         using Base::compare_exchange_weak;
 
-        bool compare_exchange_weak(T& expected, T desired)
+        bool compare_exchange_weak(Type& expected, Type desired)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed, rsl::memory_order::relaxed);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed, rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_acquire_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::acquire);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_release_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_release_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::release,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::release,
                                                   rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_acq_rel_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_acq_rel_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::acquire);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_seq_cst_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_relaxed_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_relaxed_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed,
                                                   rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_acquire_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_acquire_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::relaxed);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_acquire_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_acquire_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acquire,
                                                   rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_release_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_release_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::release,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::release,
                                                   rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_acq_rel_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_acq_rel_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::relaxed);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_acq_rel_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_acq_rel_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak_acq_rel_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel,
                                                           rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
                                                   rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak_seq_cst_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
                                                           rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_seq_cst_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_seq_cst_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
                                                   rsl::memory_order::seq_cst);
         }
 
       public:
         using Base::compare_exchange_strong;
 
-        bool compare_exchange_strong(T& expected, T desired)
+        bool compare_exchange_strong(Type& expected, Type desired)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
                                             rsl::memory_order::seq_cst);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed,
                                             rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_acquire_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acquire,
                                                     rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_release_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_release_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::release,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::release,
                                                     rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_acq_rel_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_acq_rel_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_acq_rel(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel,
                                                     rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_seq_cst_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
                                             rsl::memory_order::seq_cst);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_relaxed_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_relaxed_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed,
                                                     rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_acquire_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_acquire_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acquire,
                                                     rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_acquire_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_acquire_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_acquire_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acquire,
                                                             rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_release_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_release_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::release,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::release,
                                                     rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_acq_rel_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_acq_rel_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_acq_rel(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel,
                                                     rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_acq_rel_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_acq_rel_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_acq_rel_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel,
                                                             rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
                                                     rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_seq_cst_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
                                                             rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_seq_cst_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_seq_cst_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
                                                     rsl::memory_order::seq_cst);
         }
 
       public:
         using Base::operator=;
 
-        T operator=(T desired) // NOLINT(misc-unconventional-assign-operator)
+        Type operator=(Type desired) // NOLINT(misc-unconventional-assign-operator)
         {
           store(desired, rsl::memory_order_seq_cst);
           return desired;
@@ -1000,17 +1000,17 @@ namespace rsl
         atomic_base_width& operator=(const atomic_base_width&) volatile = delete;
       };
 
-      template <typename T>
-      struct atomic_base_width<T, 8> : public atomic_size_aligned<T>
+      template <typename Type>
+      struct atomic_base_width<Type, 8> : public atomic_size_aligned<Type>
       {
       private:
-        static_assert(alignof(atomic_size_aligned<T>) == 8, "rsl::atomic<T> must be sizeof(T) aligned!");
-        static_assert(alignof(atomic_size_aligned<T>) == sizeof(T), "rsl::atomic<T> must be sizeof(T) aligned!");
-        using Base                     = atomic_size_aligned<T>;
-        static const size_t s_num_bits = sizeof(T) * 8;
+        static_assert(alignof(atomic_size_aligned<Type>) == 8, "rsl::atomic<Type> must be sizeof(Type) aligned!");
+        static_assert(alignof(atomic_size_aligned<Type>) == sizeof(Type), "rsl::atomic<Type> must be sizeof(Type) aligned!");
+        using Base                     = atomic_size_aligned<Type>;
+        static const size_t s_num_bits = sizeof(Type) * 8;
 
       public:
-        constexpr explicit atomic_base_width(T desired)
+        constexpr explicit atomic_base_width(Type desired)
             : Base(desired)
         {
         }
@@ -1023,304 +1023,314 @@ namespace rsl
       public:
         using Base::store;
 
-        void store(T desired)
+        void store(Type desired)
         {
           store(desired, memory_order_seq_cst);
         }
 
-        void store(T desired, rsl::internal::memory_order_relaxed_s /*unused*/)
+        void store(Type desired, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_store(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::relaxed);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          rsl::atomic_store(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::relaxed);
         }
 
-        void store(T desired, rsl::internal::memory_order_release_s /*unused*/)
+        void store(Type desired, rsl::internal::memory_order_release_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_store(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::release);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          rsl::atomic_store(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::release);
         }
 
-        void store(T desired, rsl::internal::memory_order_seq_cst_s /*unused*/)
+        void store(Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          rsl::atomic_store(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          rsl::atomic_store(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst);
         }
 
       public:
         using Base::load;
 
-        T load() const
+        Type load() const
         {
-          return load(memory_order_seq_cst);
+          const auto result = load(memory_order_seq_cst);
+          return reinterpret_cast<Type>(result);
         }
 
-        T load(rsl::internal::memory_order_relaxed_s /*unused*/) const
+        Type load(rsl::internal::memory_order_relaxed_s /*unused*/) const
         {
-          return rsl::atomic_load(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::memory_order::relaxed);
+          const auto result = rsl::atomic_load(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), rsl::memory_order::relaxed);
+          return reinterpret_cast<Type>(result);
         }
 
-        T load(rsl::internal::memory_order_acquire_s /*unused*/) const
+        Type load(rsl::internal::memory_order_acquire_s /*unused*/) const
         {
-          return rsl::atomic_load(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::memory_order::acquire);
+          const auto result = rsl::atomic_load(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), rsl::memory_order::acquire);
+          return reinterpret_cast<Type>(result);
         }
 
-        T load(rsl::internal::memory_order_seq_cst_s /*unused*/) const
+        Type load(rsl::internal::memory_order_seq_cst_s /*unused*/) const
         {
-          return rsl::atomic_load(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::memory_order::seq_cst);
+          const auto result = rsl::atomic_load(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), rsl::memory_order::seq_cst);
+          return reinterpret_cast<Type>(result);
         }
 
       public:
         using Base::exchange;
 
-        T exchange(T desired)
+        Type exchange(Type desired)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          const auto result = rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst);
+          return reinterpret_cast<Type>(result);
         }
 
-        T exchange(T desired, rsl::internal::memory_order_relaxed_s /*unused*/)
+        Type exchange(Type desired, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::relaxed);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          const auto result = rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::relaxed);
+          return reinterpret_cast<Type>(result);
         }
 
-        T exchange(T desired, rsl::internal::memory_order_acquire_s /*unused*/)
+        Type exchange(Type desired, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::acquire);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          const auto result = rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::acquire);
+          return reinterpret_cast<Type>(result);
         }
 
-        T exchange(T desired, rsl::internal::memory_order_release_s /*unused*/)
+        Type exchange(Type desired, rsl::internal::memory_order_release_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::release);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          const auto result = rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::release);
+          return reinterpret_cast<Type>(result);
         }
 
-        T exchange(T desired, rsl::internal::memory_order_acq_rel_s /*unused*/)
+        Type exchange(Type desired, rsl::internal::memory_order_acq_rel_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::acq_rel);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          const auto result = rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::acq_rel);
+          return reinterpret_cast<Type>(result);
         }
 
-        T exchange(T desired, rsl::internal::memory_order_seq_cst_s /*unused*/)
+        Type exchange(Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          const auto result = rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst);
+          return reinterpret_cast<Type>(result);
         }
 
       public:
         using Base::compare_exchange_weak;
 
-        bool compare_exchange_weak(T& expected, T desired)
+        bool compare_exchange_weak(Type& expected, Type desired)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed, rsl::memory_order::relaxed);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed, rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_acquire_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::acquire);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_release_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_release_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::release,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::release,
                                                   rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_acq_rel_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_acq_rel_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::acquire);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_seq_cst_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst, rsl::memory_order::seq_cst);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_relaxed_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_relaxed_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed,
                                                   rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_acquire_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_acquire_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::relaxed);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acquire, rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_acquire_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_acquire_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acquire,
                                                   rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_release_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_release_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::release,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::release,
                                                   rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_acq_rel_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_acq_rel_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::relaxed);
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel, rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_acq_rel_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_acq_rel_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak_acq_rel_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel,
                                                           rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
                                                   rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak_seq_cst_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
                                                           rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_weak(T& expected, T desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_seq_cst_s /*unused*/)
+        bool compare_exchange_weak(Type& expected, Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_seq_cst_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_weak_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_weak(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
                                                   rsl::memory_order::seq_cst);
         }
 
       public:
         using Base::compare_exchange_strong;
 
-        bool compare_exchange_strong(T& expected, T desired)
+        bool compare_exchange_strong(Type& expected, Type desired)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
                                             rsl::memory_order::seq_cst);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed,
                                             rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_acquire_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acquire,
                                                     rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_release_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_release_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::release,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::release,
                                                     rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_acq_rel_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_acq_rel_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_acq_rel(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel,
                                                     rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_seq_cst_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
                                             rsl::memory_order::seq_cst);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_relaxed_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_relaxed_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_relaxed(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::relaxed,
                                                     rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_acquire_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_acquire_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acquire,
                                                     rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_acquire_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_acquire_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_acquire_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acquire,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acquire,
                                                             rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_release_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_release_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_release(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::release,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::release,
                                                     rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_acq_rel_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_acq_rel_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_acq_rel(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel,
                                                     rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_acq_rel_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_acq_rel_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_acq_rel_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::acq_rel,
                                                             rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
                                                     rsl::memory_order::relaxed);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_seq_cst_acquire(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
                                                             rsl::memory_order::acquire);
         }
 
-        bool compare_exchange_strong(T& expected, T desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_seq_cst_s /*unused*/)
+        bool compare_exchange_strong(Type& expected, Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/, rsl::internal::memory_order_seq_cst_s /*unused*/)
         {
-          const atomic_t<T> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<T>>((desired));
-          return rsl::atomic_cmpxchg_strong_seq_cst(rsl::internal::atomic_type_cast<atomic_t<T>>((this->atomic_address())), rsl::internal::atomic_type_cast<atomic_t<T>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
+          const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
+          return rsl::atomic_cmpxchg_strong(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), *rsl::internal::atomic_type_cast<atomic_t<Type>>((&expected)), fixed_width_desired, rsl::memory_order::seq_cst,
                                                     rsl::memory_order::seq_cst);
         }
 
       public:
         using Base::operator=;
 
-        T operator=(T desired) // NOLINT(misc-unconventional-assign-operator)
+        Type operator=(Type desired) // NOLINT(misc-unconventional-assign-operator)
         {
           store(desired, rsl::memory_order_seq_cst);
           return desired;

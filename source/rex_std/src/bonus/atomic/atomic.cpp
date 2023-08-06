@@ -19,7 +19,7 @@ namespace rsl
     namespace internal
     {
 
-      static void rex_compiler_barrier_data_dependency_func(void* /*unused*/) {}
+      static void rex_compiler_barrier_data_dependency_func(const void* /*unused*/) {}
 
       volatile CompilerBarrierDataDependencyFuncPtr g_compiler_barrier_data_dependency_func = &rex_compiler_barrier_data_dependency_func; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
     }                                                                                                                                     // namespace internal

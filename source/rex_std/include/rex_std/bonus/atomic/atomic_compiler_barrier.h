@@ -13,6 +13,7 @@
 #pragma once
 
 #include "rex_std/bonus/types.h"
+#include "rex_std/bonus/atomic/compiler.h"
 
 #include <intrin.h>
 
@@ -33,7 +34,7 @@ namespace rsl
     REX_FORCE_INLINE void compiler_barrier(const T* ptr)
     {
 #if defined(REX_COMPILER_MSVC)
-      g_compiler_barrier_data_dependency_func(ptr);
+      internal::g_compiler_barrier_data_dependency_func(ptr);
       compiler_barrier();
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
       __asm__ __volatile__("" : /* Output Operands */ : "r"(ptr) : "memory");

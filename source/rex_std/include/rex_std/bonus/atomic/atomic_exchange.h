@@ -26,34 +26,38 @@ namespace rsl
   inline namespace v1
   {
 #if defined(REX_COMPILER_MSVC)
+    namespace internal
+    {
+      template <typename T>
+      auto interlocked_exchange(volatile atomic8_t* volatileObject, atomic_t<T> newVal)
+      {
+        return _InterlockedExchange8(volatileObject, newVal);
+      }
+      template <typename T>
+      auto interlocked_exchange(volatile atomic16_t* volatileObject, atomic_t<T> newVal)
+      {
+        return _InterlockedExchange16(volatileObject, newVal);
+      }
+      template <typename T>
+      auto interlocked_exchange(volatile atomic32_t* volatileObject, atomic_t<T> newVal)
+      {
+        return _InterlockedExchange(volatileObject, newVal);
+      }
+      template <typename T>
+      auto interlocked_exchange(volatile atomic64_t* volatileObject, atomic_t<T> newVal)
+      {
+        return _InterlockedExchange64(volatileObject, newVal);
+      }
+    }
+
     template <typename T>
-    atomic_t<T> atomic_exchange(T* obj, T value, rsl::memory_order order)
+    T atomic_exchange(T* obj, T value, rsl::memory_order order)
     {
       (void)order;
-      atomic_t<T> atom_value_to_set      = value;
+      const atomic_t<T> atom_value_to_set      = *rsl::internal::atomic_integral_cast<const atomic_t<T>>(&value);
       volatile atomic_t<T>* volatile_obj = rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>(obj);
 
-      if constexpr(sizeof(T) == 1)
-      {
-        return _InterlockedExchange8(volatile_obj, atom_value_to_set);
-      }
-      else if constexpr(sizeof(T) == 2)
-      {
-        return _InterlockedExchange16(volatile_obj, atom_value_to_set);
-      }
-      else if constexpr(sizeof(T) == 4)
-      {
-        return _InterlockedExchange(volatile_obj, atom_value_to_set);
-      }
-      else if constexpr(sizeof(T) == 8)
-      {
-        return _InterlockedExchange64(volatile_obj, atom_value_to_set);
-      }
-      else
-      {
-        static_assert(rsl::internal::always_false<T>, "Invalid type used for atomic add fetch");
-        return 0;
-      }
+      return internal::interlocked_exchange<T>(volatile_obj, atom_value_to_set);
     }
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
     template <typename T>
