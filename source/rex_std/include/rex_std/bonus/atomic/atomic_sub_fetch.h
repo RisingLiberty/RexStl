@@ -27,7 +27,7 @@ namespace rsl
   {
 #if defined(REX_COMPILER_MSVC)
     template <typename T>
-    atomic_t<T> atomic_sub_fetch(T* obj, T valToSub, rsl::memory_order order)
+    atomic_t<T> atomic_sub_fetch(T* obj, T valToSub, rsl::memory_order /*unused*/)
     {
       T value_to_sub                     = internal::atomic_negate_operand(valToSub);
       atomic_t<T> atom_value_to_sub      = value_to_sub;

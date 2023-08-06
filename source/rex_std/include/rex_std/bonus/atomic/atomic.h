@@ -39,6 +39,7 @@
 #include "rex_std/bonus/atomic/atomic_or_fetch.h"
 #include "rex_std/bonus/atomic/atomic_read.h"
 #include "rex_std/bonus/atomic/atomic_signal_fence.h"
+#include "rex_std/bonus/atomic/atomic_sub_fetch.h"
 #include "rex_std/bonus/atomic/atomic_store.h"
 #include "rex_std/bonus/atomic/atomic_thread_fence.h"
 #include "rex_std/bonus/atomic/atomic_xor_fetch.h"
@@ -298,7 +299,7 @@ namespace rsl
     template <typename T>
     bool operator==(const atomic<T>& lhs, T rhs)
     {
-      reutnr lhs.load() == rhs;
+      return lhs.load() == rhs;
     }
     template <typename T>
     bool operator==(T lhs, const atomic<T>& rhs)

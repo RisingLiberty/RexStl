@@ -1052,25 +1052,25 @@ namespace rsl
         Type load() const
         {
           const auto result = load(memory_order_seq_cst);
-          return reinterpret_cast<Type>(result);
+          return *reinterpret_cast<const Type*>(&result);
         }
 
         Type load(rsl::internal::memory_order_relaxed_s /*unused*/) const
         {
           const auto result = rsl::atomic_load(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), rsl::memory_order::relaxed);
-          return reinterpret_cast<Type>(result);
+          return *reinterpret_cast<const Type*>(&result);
         }
 
         Type load(rsl::internal::memory_order_acquire_s /*unused*/) const
         {
           const auto result = rsl::atomic_load(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), rsl::memory_order::acquire);
-          return reinterpret_cast<Type>(result);
+          return *reinterpret_cast<const Type*>(&result);
         }
 
         Type load(rsl::internal::memory_order_seq_cst_s /*unused*/) const
         {
           const auto result = rsl::atomic_load(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), rsl::memory_order::seq_cst);
-          return reinterpret_cast<Type>(result);
+          return *reinterpret_cast<const Type*>(&result);
         }
 
       public:
@@ -1080,42 +1080,42 @@ namespace rsl
         {
           const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
           const auto result = rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst);
-          return reinterpret_cast<Type>(result);
+          return *reinterpret_cast<const Type*>(&result);
         }
 
         Type exchange(Type desired, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
           const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
           const auto result = rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::relaxed);
-          return reinterpret_cast<Type>(result);
+          return *reinterpret_cast<const Type*>(&result);
         }
 
         Type exchange(Type desired, rsl::internal::memory_order_acquire_s /*unused*/)
         {
           const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
           const auto result = rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::acquire);
-          return reinterpret_cast<Type>(result);
+          return *reinterpret_cast<const Type*>(&result);
         }
 
         Type exchange(Type desired, rsl::internal::memory_order_release_s /*unused*/)
         {
           const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
           const auto result = rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::release);
-          return reinterpret_cast<Type>(result);
+          return *reinterpret_cast<const Type*>(&result);
         }
 
         Type exchange(Type desired, rsl::internal::memory_order_acq_rel_s /*unused*/)
         {
           const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
           const auto result = rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::acq_rel);
-          return reinterpret_cast<Type>(result);
+          return *reinterpret_cast<const Type*>(&result);
         }
 
         Type exchange(Type desired, rsl::internal::memory_order_seq_cst_s /*unused*/)
         {
           const atomic_t<Type> fixed_width_desired = rsl::internal::atomic_type_pun_cast<atomic_t<Type>>((desired));
           const auto result = rsl::atomic_exchange(rsl::internal::atomic_type_cast<atomic_t<Type>>((this->atomic_address())), fixed_width_desired, rsl::memory_order::seq_cst);
-          return reinterpret_cast<Type>(result);
+          return *reinterpret_cast<const Type*>(&result);
         }
 
       public:

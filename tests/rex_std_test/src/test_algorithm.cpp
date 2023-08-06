@@ -15,7 +15,7 @@
 #include "rex_std_test/test_object.h"
 #include "rex_std_test/test_allocator.h"
 #include "rex_std_test/test_rand.h"
-#include "rex_std_test/rex_std_test.h"
+#include "rex_std_test/test_rex_std.h"
 #include "rex_std/vector.h"
 #include "rex_std/functional.h"
 #include "rex_std/forward_list.h"
