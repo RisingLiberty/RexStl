@@ -80,7 +80,7 @@ namespace rsl
       // That is, they are not scaled by the size of the type to which the pointer points.
       // { tmp = *ptr; *ptr op= val; return tmp; }
       // Therefore we save their value to a temporary of type uintptr first and perform the operation on that
-      rsl::uintptr tmp = *obj;
+      rsl::uintptr& tmp = *reinterpret_cast<rsl::uintptr*>(obj);
 
       int failure_order = -1;
       switch(failureOrder)

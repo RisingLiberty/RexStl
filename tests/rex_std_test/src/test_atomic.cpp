@@ -14,6 +14,8 @@
 
 #include "rex_std/atomic.h"
 
+//#include <Windows.h>
+
 namespace rsl::test
 {
   inline namespace v1
@@ -2486,6 +2488,12 @@ namespace rsl::test
 		void AtomicIntegralBasicTest<T>::TestAtomicAddFetch()
 		{
 			{
+				//bool b = true;
+				//while (b)
+				//{
+				//	Sleep(1);
+				//}
+
 				AtomicType atomic;
 
 				IntegralType ret = atomic.add_fetch(1, rsl::memory_order_relaxed);
