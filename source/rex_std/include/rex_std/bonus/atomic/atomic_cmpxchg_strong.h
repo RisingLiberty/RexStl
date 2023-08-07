@@ -28,30 +28,30 @@ namespace rsl
     namespace internal
     {
       template <typename T>
-      auto interlocked_exchange(volatile atomic8_t* volatileObject, atomic_t<T> expectedValue, atomic_t<T> desiredValue)
+      auto interlocked_exchange(volatile atomic8_t* volatileObject, atomic_t<T> desiredValue, atomic_t<T> expectedValue)
       {
-        return _InterlockedCompareExchange8(volatileObject, expectedValue, desiredValue);
+        return _InterlockedCompareExchange8(volatileObject, desiredValue, expectedValue);
       }
       template <typename T>
-      auto interlocked_exchange(volatile atomic16_t* volatileObject, atomic_t<T> expectedValue, atomic_t<T> desiredValue)
+      auto interlocked_exchange(volatile atomic16_t* volatileObject, atomic_t<T> desiredValue, atomic_t<T> expectedValue)
       {
-        return _InterlockedCompareExchange16_np(volatileObject, expectedValue, desiredValue);
+        return _InterlockedCompareExchange16_np(volatileObject, desiredValue, expectedValue);
       }
       template <typename T>
-      auto interlocked_exchange(volatile atomic32_t* volatileObject, atomic_t<T> expectedValue, atomic_t<T> desiredValue)
+      auto interlocked_exchange(volatile atomic32_t* volatileObject, atomic_t<T> desiredValue, atomic_t<T> expectedValue)
       {
-        return _InterlockedCompareExchange_np(volatileObject, expectedValue, desiredValue);
+        return _InterlockedCompareExchange_np(volatileObject, desiredValue, expectedValue);
       }
       template <typename T>
-      auto interlocked_exchange(volatile atomic64_t* volatileObject, atomic_t<T> expectedValue, atomic_t<T> desiredValue)
+      auto interlocked_exchange(volatile atomic64_t* volatileObject, atomic_t<T> desiredValue, atomic_t<T> expectedValue)
       {
-        return _InterlockedCompareExchange64_np(volatileObject, expectedValue, desiredValue);
+        return _InterlockedCompareExchange64_np(volatileObject, desiredValue, expectedValue);
       }
     }
 
 #if defined(REX_COMPILER_MSVC)
     template <typename T>
-    atomic_t<T> atomic_cmpxchg_strong(T* obj, T expected, T desired, rsl::memory_order successOrder, rsl::memory_order failureOrder)
+    bool atomic_cmpxchg_strong(T* obj, T& expected, T desired, rsl::memory_order successOrder, rsl::memory_order failureOrder)
     {
       (void)successOrder;
       (void)failureOrder;
@@ -60,11 +60,19 @@ namespace rsl
       const atomic_t<T> atom_desired_value    = *rsl::internal::atomic_integral_cast<const atomic_t<T>>(&desired);
       volatile atomic_t<T>* volatile_obj      = rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>(obj);
 
-      return internal::interlocked_exchange<T>(volatile_obj, atom_expected_value, atom_desired_value);
+      atomic_t<T> prev_value = internal::interlocked_exchange<T>(volatile_obj, atom_desired_value, atom_expected_value);
+
+      if (prev_value == expected)
+      {
+        return true;
+      }
+
+      expected = prev_value;
+      return false;
     }
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
     template <typename T>
-    atomic_t<T> atomic_cmpxchg_strong(T* obj, T expected, T desired, rsl::memory_order successOrder, rsl::memory_order failureOrder)
+    bool atomic_cmpxchg_strong(T* obj, T expected, T desired, rsl::memory_order successOrder, rsl::memory_order failureOrder)
     {
       // GCC Documentation says:
       // These built-in functions perform the operation suggested by the name, and return the value that had previously been in *ptr.

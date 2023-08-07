@@ -265,27 +265,27 @@ namespace rsl
         using Base::fetch_add;
         T fetch_add(T arg)
         {
-          return rsl::atomic_fetch_and(this->atomic_address(), arg, rsl::memory_order::seq_cst);
+          return rsl::atomic_fetch_add(this->atomic_address(), arg, rsl::memory_order::seq_cst);
         }
         T fetch_add(T arg, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          return rsl::atomic_fetch_and(this->atomic_address(), arg, rsl::memory_order::relaxed);
+          return rsl::atomic_fetch_add(this->atomic_address(), arg, rsl::memory_order::relaxed);
         }
         T fetch_add(T arg, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          return rsl::atomic_fetch_and(this->atomic_address(), arg, rsl::memory_order::acquire);
+          return rsl::atomic_fetch_add(this->atomic_address(), arg, rsl::memory_order::acquire);
         }
         T fetch_add(T arg, rsl::internal::memory_order_release_s /*unused*/)
         {
-          return rsl::atomic_fetch_and(this->atomic_address(), arg, rsl::memory_order::release);
+          return rsl::atomic_fetch_add(this->atomic_address(), arg, rsl::memory_order::release);
         }
         T fetch_add(T arg, rsl::internal::memory_order_acq_rel_s /*unused*/)
         {
-          return rsl::atomic_fetch_and(this->atomic_address(), arg, rsl::memory_order::acq_rel);
+          return rsl::atomic_fetch_add(this->atomic_address(), arg, rsl::memory_order::acq_rel);
         }
         T fetch_add(T arg, rsl::internal::memory_order_seq_cst_s /*unused*/)
         {
-          return rsl::atomic_fetch_and(this->atomic_address(), arg, rsl::memory_order::seq_cst);
+          return rsl::atomic_fetch_add(this->atomic_address(), arg, rsl::memory_order::seq_cst);
         }
 
       public:
@@ -609,27 +609,27 @@ namespace rsl
         using Base::fetch_add;
         T fetch_add(T arg)
         {
-          return rsl::atomic_fetch_and(this->atomic_address(), arg, rsl::memory_order::seq_cst);
+          return rsl::atomic_fetch_add(this->atomic_address(), arg, rsl::memory_order::seq_cst);
         }
         T fetch_add(T arg, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          return rsl::atomic_fetch_and(this->atomic_address(), arg, rsl::memory_order::relaxed);
+          return rsl::atomic_fetch_add(this->atomic_address(), arg, rsl::memory_order::relaxed);
         }
         T fetch_add(T arg, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          return rsl::atomic_fetch_and(this->atomic_address(), arg, rsl::memory_order::acquire);
+          return rsl::atomic_fetch_add(this->atomic_address(), arg, rsl::memory_order::acquire);
         }
         T fetch_add(T arg, rsl::internal::memory_order_release_s /*unused*/)
         {
-          return rsl::atomic_fetch_and(this->atomic_address(), arg, rsl::memory_order::release);
+          return rsl::atomic_fetch_add(this->atomic_address(), arg, rsl::memory_order::release);
         }
         T fetch_add(T arg, rsl::internal::memory_order_acq_rel_s /*unused*/)
         {
-          return rsl::atomic_fetch_and(this->atomic_address(), arg, rsl::memory_order::acq_rel);
+          return rsl::atomic_fetch_add(this->atomic_address(), arg, rsl::memory_order::acq_rel);
         }
         T fetch_add(T arg, rsl::internal::memory_order_seq_cst_s /*unused*/)
         {
-          return rsl::atomic_fetch_and(this->atomic_address(), arg, rsl::memory_order::seq_cst);
+          return rsl::atomic_fetch_add(this->atomic_address(), arg, rsl::memory_order::seq_cst);
         }
 
       public:
@@ -953,27 +953,27 @@ namespace rsl
         using Base::fetch_add;
         T fetch_add(T arg)
         {
-          return rsl::atomic_fetch_and(this->atomic_address(), arg, rsl::memory_order::seq_cst);
+          return rsl::atomic_fetch_add(this->atomic_address(), arg, rsl::memory_order::seq_cst);
         }
         T fetch_add(T arg, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          return rsl::atomic_fetch_and(this->atomic_address(), arg, rsl::memory_order::relaxed);
+          return rsl::atomic_fetch_add(this->atomic_address(), arg, rsl::memory_order::relaxed);
         }
         T fetch_add(T arg, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          return rsl::atomic_fetch_and(this->atomic_address(), arg, rsl::memory_order::acquire);
+          return rsl::atomic_fetch_add(this->atomic_address(), arg, rsl::memory_order::acquire);
         }
         T fetch_add(T arg, rsl::internal::memory_order_release_s /*unused*/)
         {
-          return rsl::atomic_fetch_and(this->atomic_address(), arg, rsl::memory_order::release);
+          return rsl::atomic_fetch_add(this->atomic_address(), arg, rsl::memory_order::release);
         }
         T fetch_add(T arg, rsl::internal::memory_order_acq_rel_s /*unused*/)
         {
-          return rsl::atomic_fetch_and(this->atomic_address(), arg, rsl::memory_order::acq_rel);
+          return rsl::atomic_fetch_add(this->atomic_address(), arg, rsl::memory_order::acq_rel);
         }
         T fetch_add(T arg, rsl::internal::memory_order_seq_cst_s /*unused*/)
         {
-          return rsl::atomic_fetch_and(this->atomic_address(), arg, rsl::memory_order::seq_cst);
+          return rsl::atomic_fetch_add(this->atomic_address(), arg, rsl::memory_order::seq_cst);
         }
 
       public:
@@ -1297,27 +1297,27 @@ namespace rsl
         using Base::fetch_add;
         T fetch_add(T arg)
         {
-          return rsl::atomic_fetch_and(this->atomic_address(), arg, rsl::memory_order::seq_cst);
+          return rsl::atomic_fetch_add(this->atomic_address(), arg, rsl::memory_order::seq_cst);
         }
         T fetch_add(T arg, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          return rsl::atomic_fetch_and(this->atomic_address(), arg, rsl::memory_order::relaxed);
+          return rsl::atomic_fetch_add(this->atomic_address(), arg, rsl::memory_order::relaxed);
         }
         T fetch_add(T arg, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          return rsl::atomic_fetch_and(this->atomic_address(), arg, rsl::memory_order::acquire);
+          return rsl::atomic_fetch_add(this->atomic_address(), arg, rsl::memory_order::acquire);
         }
         T fetch_add(T arg, rsl::internal::memory_order_release_s /*unused*/)
         {
-          return rsl::atomic_fetch_and(this->atomic_address(), arg, rsl::memory_order::release);
+          return rsl::atomic_fetch_add(this->atomic_address(), arg, rsl::memory_order::release);
         }
         T fetch_add(T arg, rsl::internal::memory_order_acq_rel_s /*unused*/)
         {
-          return rsl::atomic_fetch_and(this->atomic_address(), arg, rsl::memory_order::acq_rel);
+          return rsl::atomic_fetch_add(this->atomic_address(), arg, rsl::memory_order::acq_rel);
         }
         T fetch_add(T arg, rsl::internal::memory_order_seq_cst_s /*unused*/)
         {
-          return rsl::atomic_fetch_and(this->atomic_address(), arg, rsl::memory_order::seq_cst);
+          return rsl::atomic_fetch_add(this->atomic_address(), arg, rsl::memory_order::seq_cst);
         }
 
       public:
@@ -1641,27 +1641,27 @@ namespace rsl
         using Base::fetch_add;
         T fetch_add(T arg)
         {
-          return rsl::atomic_fetch_and(this->atomic_address(), arg, rsl::memory_order::seq_cst);
+          return rsl::atomic_fetch_add(this->atomic_address(), arg, rsl::memory_order::seq_cst);
         }
         T fetch_add(T arg, rsl::internal::memory_order_relaxed_s /*unused*/)
         {
-          return rsl::atomic_fetch_and(this->atomic_address(), arg, rsl::memory_order::relaxed);
+          return rsl::atomic_fetch_add(this->atomic_address(), arg, rsl::memory_order::relaxed);
         }
         T fetch_add(T arg, rsl::internal::memory_order_acquire_s /*unused*/)
         {
-          return rsl::atomic_fetch_and(this->atomic_address(), arg, rsl::memory_order::acquire);
+          return rsl::atomic_fetch_add(this->atomic_address(), arg, rsl::memory_order::acquire);
         }
         T fetch_add(T arg, rsl::internal::memory_order_release_s /*unused*/)
         {
-          return rsl::atomic_fetch_and(this->atomic_address(), arg, rsl::memory_order::release);
+          return rsl::atomic_fetch_add(this->atomic_address(), arg, rsl::memory_order::release);
         }
         T fetch_add(T arg, rsl::internal::memory_order_acq_rel_s /*unused*/)
         {
-          return rsl::atomic_fetch_and(this->atomic_address(), arg, rsl::memory_order::acq_rel);
+          return rsl::atomic_fetch_add(this->atomic_address(), arg, rsl::memory_order::acq_rel);
         }
         T fetch_add(T arg, rsl::internal::memory_order_seq_cst_s /*unused*/)
         {
-          return rsl::atomic_fetch_and(this->atomic_address(), arg, rsl::memory_order::seq_cst);
+          return rsl::atomic_fetch_add(this->atomic_address(), arg, rsl::memory_order::seq_cst);
         }
 
       public:

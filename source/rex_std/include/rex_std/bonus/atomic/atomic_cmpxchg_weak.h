@@ -28,7 +28,7 @@ namespace rsl
   {
 #if defined(REX_COMPILER_MSVC)
     template <typename T>
-    atomic_t<T> atomic_cmpxchg_weak(T* obj, T expected, T desired, rsl::memory_order successOrder, rsl::memory_order failureOrder)
+    bool atomic_cmpxchg_weak(T* obj, T& expected, T desired, rsl::memory_order successOrder, rsl::memory_order failureOrder)
     {
       (void)successOrder;
       (void)failureOrder;
@@ -36,32 +36,41 @@ namespace rsl
       atomic_t<T> atom_expected_value    = expected;
       atomic_t<T> atom_desired_value     = desired;
       volatile atomic_t<T>* volatile_obj = rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>(obj);
+      atomic_t<T> prev_value = T{};
 
       if constexpr(sizeof(T) == 1)
       {
-        return _InterlockedCompareExchange8(volatile_obj, atom_expected_value, atom_desired_value);
+        prev_value = _InterlockedCompareExchange8(volatile_obj, atom_desired_value, atom_expected_value);
       }
       else if constexpr(sizeof(T) == 2)
       {
-        return _InterlockedCompareExchange16_np(volatile_obj, atom_expected_value, atom_desired_value);
+        prev_value = _InterlockedCompareExchange16_np(volatile_obj, atom_desired_value, atom_expected_value);
       }
       else if constexpr(sizeof(T) == 4)
       {
-        return _InterlockedCompareExchange_np(volatile_obj, atom_expected_value, atom_desired_value);
+        prev_value = _InterlockedCompareExchange_np(volatile_obj, atom_desired_value, atom_expected_value);
       }
       else if constexpr(sizeof(T) == 8)
       {
-        return _InterlockedCompareExchange64_np(volatile_obj, atom_expected_value, atom_desired_value);
+        prev_value = _InterlockedCompareExchange64_np(volatile_obj, atom_desired_value, atom_expected_value);
       }
       else
       {
         static_assert(rsl::internal::always_false<T>, "Invalid type used for atomic add fetch");
-        return 0;
+        return false;
       }
+
+      if (prev_value == expected)
+      {
+        return true;
+      }
+
+      expected = prev_value;
+      return false;
     }
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
     template <typename T>
-    atomic_t<T> atomic_cmpxchg_weak(T* obj, T expected, T desired, rsl::memory_order successOrder, rsl::memory_order failureOrder)
+    bool atomic_cmpxchg_weak(T* obj, T expected, T desired, rsl::memory_order successOrder, rsl::memory_order failureOrder)
     {
       // GCC Documentation says:
       // These built-in functions perform the operation suggested by the name, and return the value that had previously been in *ptr.

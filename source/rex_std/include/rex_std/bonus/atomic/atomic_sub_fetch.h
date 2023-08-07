@@ -33,27 +33,30 @@ namespace rsl
       atomic_t<T> atom_value_to_sub      = value_to_sub;
       volatile atomic_t<T>* volatile_obj = rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>(obj);
 
+      atomic_t<T> res = 0;
       if constexpr(sizeof(T) == 1)
       {
-        return _InterlockedExchangeAdd8(volatile_obj, atom_value_to_sub) - atom_value_to_sub;
+        res = _InterlockedExchangeAdd8(volatile_obj, atom_value_to_sub);
       }
       else if constexpr(sizeof(T) == 2)
       {
-        return _InterlockedExchangeAdd16(volatile_obj, atom_value_to_sub) - atom_value_to_sub;
+        res = _InterlockedExchangeAdd16(volatile_obj, atom_value_to_sub);
       }
       else if constexpr(sizeof(T) == 4)
       {
-        return _InterlockedExchangeAdd(volatile_obj, atom_value_to_sub) - atom_value_to_sub;
+        res = _InterlockedExchangeAdd(volatile_obj, atom_value_to_sub);
       }
       else if constexpr(sizeof(T) == 8)
       {
-        return _InterlockedExchangeAdd64(volatile_obj, atom_value_to_sub) - atom_value_to_sub;
+        res = _InterlockedExchangeAdd64(volatile_obj, atom_value_to_sub);
       }
       else
       {
         static_assert(rsl::internal::always_false<T>, "Invalid type used for atomic fetch or");
         return 0;
       }
+
+      return res + atom_value_to_sub; // atomc_value_to_sub is negative, so we need to add, not subtract
     }
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
     template <typename T>
