@@ -12,8 +12,8 @@
 
 #pragma once
 
-#include "rex_std/bonus/types.h"
 #include "rex_std/bonus/type_traits/type_select.h"
+#include "rex_std/bonus/types.h"
 #include "rex_std/internal/limits/numeric_limits.h"
 #include "rex_std/internal/type_traits/is_pointer.h"
 
@@ -67,12 +67,9 @@ namespace rsl
     using atomic_fixed_width_type_t = typename atomic_fixed_width_type<Bits>::type;
 
     template <typename T>
-    using atomic_t = type_select_t<rsl::is_pointer_v<T>, 
-      typename atomic_fixed_width_type<sizeof(void*) * rsl::limits_byte::num_bits_per_byte>::type,
-      typename atomic_fixed_width_type<sizeof(T) * rsl::limits_byte::num_bits_per_byte>::type
-    >;
+    using atomic_t = type_select_t<rsl::is_pointer_v<T>, typename atomic_fixed_width_type<sizeof(void*) * rsl::limits_byte::num_bits_per_byte>::type, typename atomic_fixed_width_type<sizeof(T) * rsl::limits_byte::num_bits_per_byte>::type>;
 
-    using atomic8_t = typename atomic_fixed_width_type<1 * rsl::limits_byte::num_bits_per_byte>::type;
+    using atomic8_t  = typename atomic_fixed_width_type<1 * rsl::limits_byte::num_bits_per_byte>::type;
     using atomic16_t = typename atomic_fixed_width_type<2 * rsl::limits_byte::num_bits_per_byte>::type;
     using atomic32_t = typename atomic_fixed_width_type<4 * rsl::limits_byte::num_bits_per_byte>::type;
     using atomic64_t = typename atomic_fixed_width_type<8 * rsl::limits_byte::num_bits_per_byte>::type;

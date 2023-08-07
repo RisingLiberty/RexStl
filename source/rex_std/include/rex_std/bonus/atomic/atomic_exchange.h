@@ -48,14 +48,14 @@ namespace rsl
       {
         return _InterlockedExchange64(volatileObject, newVal);
       }
-    }
+    } // namespace internal
 
     template <typename T>
     T atomic_exchange(T* obj, T value, rsl::memory_order order)
     {
       (void)order;
-      const atomic_t<T> atom_value_to_set      = *rsl::internal::atomic_integral_cast<const atomic_t<T>>(&value);
-      volatile atomic_t<T>* volatile_obj = rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>(obj);
+      const atomic_t<T> atom_value_to_set = *rsl::internal::atomic_integral_cast<const atomic_t<T>>(&value);
+      volatile atomic_t<T>* volatile_obj  = rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>(obj);
 
       return internal::interlocked_exchange<T>(volatile_obj, atom_value_to_set);
     }

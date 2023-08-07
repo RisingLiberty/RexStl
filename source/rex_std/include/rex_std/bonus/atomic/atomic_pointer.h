@@ -54,19 +54,19 @@ namespace rsl
 
       public:                                     /* ctors */
         constexpr atomic_pointer_base(T* desired) // NOLINT(google-explicit-constructor)
-          : Base{ desired }
+            : Base {desired}
         {
         }
 
         constexpr atomic_pointer_base() = default;
-        ~atomic_pointer_base() = default;
+        ~atomic_pointer_base()          = default;
 
         atomic_pointer_base(const atomic_pointer_base&) = delete;
 
       public: /* assignment operators */
         using Base::operator=;
 
-        atomic_pointer_base& operator=(const atomic_pointer_base&) = delete;
+        atomic_pointer_base& operator=(const atomic_pointer_base&)          = delete;
         atomic_pointer_base& operator=(const atomic_pointer_base&) volatile = delete;
 
       public: /* fetch_add */
@@ -84,12 +84,12 @@ namespace rsl
       public:                                                      /* operator++ && operator-- */
         REX_ATOMIC_POINTER_STATIC_ASSERT_INC_DEC_OPERATOR_IMPL(++) // NOLINT(bugprone-macro-repeated-side-effects)
 
-          REX_ATOMIC_POINTER_STATIC_ASSERT_INC_DEC_OPERATOR_IMPL(--) // NOLINT(bugprone-macro-repeated-side-effects)
+        REX_ATOMIC_POINTER_STATIC_ASSERT_INC_DEC_OPERATOR_IMPL(--) // NOLINT(bugprone-macro-repeated-side-effects)
 
       public: /* operator+= && operator-= */
-        REX_ATOMIC_POINTER_STATIC_ASSERT_ASSIGNMENT_OPERATOR_IMPL(+= )
+        REX_ATOMIC_POINTER_STATIC_ASSERT_ASSIGNMENT_OPERATOR_IMPL(+=)
 
-          REX_ATOMIC_POINTER_STATIC_ASSERT_ASSIGNMENT_OPERATOR_IMPL(-= )
+        REX_ATOMIC_POINTER_STATIC_ASSERT_ASSIGNMENT_OPERATOR_IMPL(-=)
       };
 
       template <typename T, unsigned Width = sizeof(T)>
@@ -101,7 +101,7 @@ namespace rsl
     ptr_integral_type retType;                                                                                                                                                                                                                           \
     ptr_integral_type addend = static_cast<ptr_integral_type>(arg) * static_cast<ptr_integral_type>(sizeof(T));                                                                                                                                          \
                                                                                                                                                                                                                                                          \
-    MERGE(op, 64)(ptr_integral_type, retType, REX_ATOMIC_INTEGRAL_CAST(ptr_integral_type, this->atomic_address()), addend);                                                                                                                            \
+    MERGE(op, 64)(ptr_integral_type, retType, REX_ATOMIC_INTEGRAL_CAST(ptr_integral_type, this->this->atomic_address()), addend);                                                                                                                        \
                                                                                                                                                                                                                                                          \
     retVal = reinterpret_cast<T*>(retType);                                                                                                                                                                                                              \
   }                                                                                                                                                                                                                                                      \
@@ -111,14 +111,14 @@ namespace rsl
   T* funcName(ptrdiff_t arg)                                                                                                                                                                                                                             \
   {                                                                                                                                                                                                                                                      \
     REX_ATOMIC_STATIC_ASSERT_TYPE_IS_OBJECT(T);                                                                                                                                                                                                          \
-    REX_ATOMIC_POINTER_FUNC_IMPL(op, 64);                                                                                                                                                                                                              \
+    REX_ATOMIC_POINTER_FUNC_IMPL(op, 64);                                                                                                                                                                                                                \
   }
 
 #define REX_ATOMIC_POINTER_FETCH_ORDER_IMPL(funcName, orderType, op, bits)                                                                                                                                                                               \
   T* funcName(ptrdiff_t arg, orderType)                                                                                                                                                                                                                  \
   {                                                                                                                                                                                                                                                      \
     REX_ATOMIC_STATIC_ASSERT_TYPE_IS_OBJECT(T);                                                                                                                                                                                                          \
-    REX_ATOMIC_POINTER_FUNC_IMPL(op, 64);                                                                                                                                                                                                              \
+    REX_ATOMIC_POINTER_FUNC_IMPL(op, 64);                                                                                                                                                                                                                \
   }
 
 #define REX_ATOMIC_POINTER_FETCH_OP_JOIN(fetchOp, Order) MERGE(MERGE(REX_ATOMIC_, fetchOp), Order)
@@ -126,15 +126,15 @@ namespace rsl
 #define REX_ATOMIC_POINTER_FETCH_FUNCS_IMPL(funcName, fetchOp, bits)                                                                                                                                                                                     \
   using Base::funcName;                                                                                                                                                                                                                                  \
                                                                                                                                                                                                                                                          \
-  REX_ATOMIC_POINTER_FETCH_IMPL(funcName, REX_ATOMIC_POINTER_FETCH_OP_JOIN(fetchOp, _SEQ_CST_), 64)                                                                                                                                                    \
+  REX_ATOMIC_POINTER_FETCH_IMPL(funcName, REX_ATOMIC_POINTER_FETCH_OP_JOIN(fetchOp, _SEQ_CST_), 64)                                                                                                                                                      \
                                                                                                                                                                                                                                                          \
-  REX_ATOMIC_POINTER_FETCH_ORDER_IMPL(funcName, rsl::internal::memory_order_relaxed_s, REX_ATOMIC_POINTER_FETCH_OP_JOIN(fetchOp, _RELAXED_), 64)                                                                                                       \
+  REX_ATOMIC_POINTER_FETCH_ORDER_IMPL(funcName, rsl::internal::memory_order_relaxed_s, REX_ATOMIC_POINTER_FETCH_OP_JOIN(fetchOp, _RELAXED_), 64)                                                                                                         \
                                                                                                                                                                                                                                                          \
-  REX_ATOMIC_POINTER_FETCH_ORDER_IMPL(funcName, rsl::internal::memory_order_acquire_s, REX_ATOMIC_POINTER_FETCH_OP_JOIN(fetchOp, _ACQUIRE_), 64)                                                                                                       \
+  REX_ATOMIC_POINTER_FETCH_ORDER_IMPL(funcName, rsl::internal::memory_order_acquire_s, REX_ATOMIC_POINTER_FETCH_OP_JOIN(fetchOp, _ACQUIRE_), 64)                                                                                                         \
                                                                                                                                                                                                                                                          \
-  REX_ATOMIC_POINTER_FETCH_ORDER_IMPL(funcName, rsl::internal::memory_order_release_s, REX_ATOMIC_POINTER_FETCH_OP_JOIN(fetchOp, _RELEASE_), 64)                                                                                                       \
+  REX_ATOMIC_POINTER_FETCH_ORDER_IMPL(funcName, rsl::internal::memory_order_release_s, REX_ATOMIC_POINTER_FETCH_OP_JOIN(fetchOp, _RELEASE_), 64)                                                                                                         \
                                                                                                                                                                                                                                                          \
-  REX_ATOMIC_POINTER_FETCH_ORDER_IMPL(funcName, rsl::internal::memory_order_acq_rel_s, REX_ATOMIC_POINTER_FETCH_OP_JOIN(fetchOp, _ACQ_REL_), 64)                                                                                                       \
+  REX_ATOMIC_POINTER_FETCH_ORDER_IMPL(funcName, rsl::internal::memory_order_acq_rel_s, REX_ATOMIC_POINTER_FETCH_OP_JOIN(fetchOp, _ACQ_REL_), 64)                                                                                                         \
                                                                                                                                                                                                                                                          \
   REX_ATOMIC_POINTER_FETCH_ORDER_IMPL(funcName, rsl::internal::memory_order_seq_cst_s, REX_ATOMIC_POINTER_FETCH_OP_JOIN(fetchOp, _SEQ_CST_), 64)
 
@@ -163,22 +163,22 @@ namespace rsl
       struct atomic_pointer_width<T*, 8> : public atomic_pointer_base<T*, 8>
       {
       private:
-        using Base = atomic_pointer_base<T*, 8>;
+        using Base                = atomic_pointer_base<T*, 8>;
         using u_ptr_integral_type = uint64_t;
-        using ptr_integral_type = int64_t;
+        using ptr_integral_type   = int64_t;
 
       public:
         constexpr atomic_pointer_width(T* desired) noexcept
-          : Base{ desired }
+            : Base {desired}
         {
         }
 
-        constexpr atomic_pointer_width() noexcept = default;
+        constexpr atomic_pointer_width() noexcept                  = default;
         atomic_pointer_width(const atomic_pointer_width&) noexcept = delete;
 
       public:
         using Base::operator=;
-        atomic_pointer_width& operator=(const atomic_pointer_width&) noexcept = delete;
+        atomic_pointer_width& operator=(const atomic_pointer_width&) noexcept          = delete;
         atomic_pointer_width& operator=(const atomic_pointer_width&) volatile noexcept = delete;
 
       public:
@@ -197,13 +197,12 @@ namespace rsl
             {
               __int64 retIntegral;
               ptr_integral_type valCompute;
-              valCompute = ((addend));
+              valCompute                = ((addend));
               const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
-              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
-              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              retIntegral               = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((this->atomic_address()))))), valIntegral);
+              retType                   = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
               ;
-            }
-            ;
+            };
             retVal = reinterpret_cast<T*>(retType);
           }
           return retVal;
@@ -222,13 +221,12 @@ namespace rsl
             {
               __int64 retIntegral;
               ptr_integral_type valCompute;
-              valCompute = ((addend));
+              valCompute                = ((addend));
               const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
-              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
-              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              retIntegral               = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((this->atomic_address()))))), valIntegral);
+              retType                   = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
               ;
-            }
-            ;
+            };
             retVal = reinterpret_cast<T*>(retType);
           }
           return retVal;
@@ -247,13 +245,12 @@ namespace rsl
             {
               __int64 retIntegral;
               ptr_integral_type valCompute;
-              valCompute = ((addend));
+              valCompute                = ((addend));
               const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
-              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
-              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              retIntegral               = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((this->atomic_address()))))), valIntegral);
+              retType                   = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
               ;
-            }
-            ;
+            };
             retVal = reinterpret_cast<T*>(retType);
           }
           return retVal;
@@ -272,13 +269,12 @@ namespace rsl
             {
               __int64 retIntegral;
               ptr_integral_type valCompute;
-              valCompute = ((addend));
+              valCompute                = ((addend));
               const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
-              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
-              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              retIntegral               = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((this->atomic_address()))))), valIntegral);
+              retType                   = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
               ;
-            }
-            ;
+            };
             retVal = reinterpret_cast<T*>(retType);
           }
           return retVal;
@@ -297,13 +293,12 @@ namespace rsl
             {
               __int64 retIntegral;
               ptr_integral_type valCompute;
-              valCompute = ((addend));
+              valCompute                = ((addend));
               const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
-              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
-              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              retIntegral               = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((this->atomic_address()))))), valIntegral);
+              retType                   = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
               ;
-            }
-            ;
+            };
             retVal = reinterpret_cast<T*>(retType);
           }
           return retVal;
@@ -322,13 +317,12 @@ namespace rsl
             {
               __int64 retIntegral;
               ptr_integral_type valCompute;
-              valCompute = ((addend));
+              valCompute                = ((addend));
               const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
-              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
-              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              retIntegral               = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((this->atomic_address()))))), valIntegral);
+              retType                   = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
               ;
-            }
-            ;
+            };
             retVal = reinterpret_cast<T*>(retType);
           }
           return retVal;
@@ -350,13 +344,12 @@ namespace rsl
             {
               __int64 retIntegral;
               ptr_integral_type valCompute;
-              valCompute = ((addend));
+              valCompute                = ((addend));
               const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
-              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
-              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
-              retType = (retType)+((addend));
-            }
-            ;
+              retIntegral               = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((this->atomic_address()))))), valIntegral);
+              retType                   = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              retType                   = (retType) + ((addend));
+            };
             retVal = reinterpret_cast<T*>(retType);
           }
           return retVal;
@@ -375,13 +368,12 @@ namespace rsl
             {
               __int64 retIntegral;
               ptr_integral_type valCompute;
-              valCompute = ((addend));
+              valCompute                = ((addend));
               const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
-              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
-              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
-              retType = (retType)+((addend));
-            }
-            ;
+              retIntegral               = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((this->atomic_address()))))), valIntegral);
+              retType                   = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              retType                   = (retType) + ((addend));
+            };
             retVal = reinterpret_cast<T*>(retType);
           }
           return retVal;
@@ -400,13 +392,12 @@ namespace rsl
             {
               __int64 retIntegral;
               ptr_integral_type valCompute;
-              valCompute = ((addend));
+              valCompute                = ((addend));
               const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
-              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
-              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
-              retType = (retType)+((addend));
-            }
-            ;
+              retIntegral               = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((this->atomic_address()))))), valIntegral);
+              retType                   = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              retType                   = (retType) + ((addend));
+            };
             retVal = reinterpret_cast<T*>(retType);
           }
           return retVal;
@@ -425,13 +416,12 @@ namespace rsl
             {
               __int64 retIntegral;
               ptr_integral_type valCompute;
-              valCompute = ((addend));
+              valCompute                = ((addend));
               const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
-              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
-              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
-              retType = (retType)+((addend));
-            }
-            ;
+              retIntegral               = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((this->atomic_address()))))), valIntegral);
+              retType                   = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              retType                   = (retType) + ((addend));
+            };
             retVal = reinterpret_cast<T*>(retType);
           }
           return retVal;
@@ -450,13 +440,12 @@ namespace rsl
             {
               __int64 retIntegral;
               ptr_integral_type valCompute;
-              valCompute = ((addend));
+              valCompute                = ((addend));
               const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
-              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
-              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
-              retType = (retType)+((addend));
-            }
-            ;
+              retIntegral               = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((this->atomic_address()))))), valIntegral);
+              retType                   = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              retType                   = (retType) + ((addend));
+            };
             retVal = reinterpret_cast<T*>(retType);
           }
           return retVal;
@@ -475,18 +464,18 @@ namespace rsl
             {
               __int64 retIntegral;
               ptr_integral_type valCompute;
-              valCompute = ((addend));
+              valCompute                = ((addend));
               const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
-              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
-              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
-              retType = (retType)+((addend));
-            }
-            ;
+              retIntegral               = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((this->atomic_address()))))), valIntegral);
+              retType                   = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              retType                   = (retType) + ((addend));
+            };
             retVal = reinterpret_cast<T*>(retType);
           }
           return retVal;
           ;
         }
+
       public:
         using Base::fetch_sub;
         T* fetch_sub(ptrdiff_t arg) noexcept
@@ -502,13 +491,12 @@ namespace rsl
             {
               __int64 retIntegral;
               ptr_integral_type valCompute;
-              valCompute = rsl::internal::atomic_negate_operand((((addend))));
+              valCompute                = rsl::internal::atomic_negate_operand((((addend))));
               const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
-              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
-              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              retIntegral               = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((this->atomic_address()))))), valIntegral);
+              retType                   = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
               ;
-            }
-            ;
+            };
             retVal = reinterpret_cast<T*>(retType);
           }
           return retVal;
@@ -527,13 +515,12 @@ namespace rsl
             {
               __int64 retIntegral;
               ptr_integral_type valCompute;
-              valCompute = rsl::internal::atomic_negate_operand((((addend))));
+              valCompute                = rsl::internal::atomic_negate_operand((((addend))));
               const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
-              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
-              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              retIntegral               = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((this->atomic_address()))))), valIntegral);
+              retType                   = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
               ;
-            }
-            ;
+            };
             retVal = reinterpret_cast<T*>(retType);
           }
           return retVal;
@@ -552,13 +539,12 @@ namespace rsl
             {
               __int64 retIntegral;
               ptr_integral_type valCompute;
-              valCompute = rsl::internal::atomic_negate_operand((((addend))));
+              valCompute                = rsl::internal::atomic_negate_operand((((addend))));
               const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
-              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
-              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              retIntegral               = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((this->atomic_address()))))), valIntegral);
+              retType                   = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
               ;
-            }
-            ;
+            };
             retVal = reinterpret_cast<T*>(retType);
           }
           return retVal;
@@ -577,13 +563,12 @@ namespace rsl
             {
               __int64 retIntegral;
               ptr_integral_type valCompute;
-              valCompute = rsl::internal::atomic_negate_operand((((addend))));
+              valCompute                = rsl::internal::atomic_negate_operand((((addend))));
               const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
-              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
-              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              retIntegral               = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((this->atomic_address()))))), valIntegral);
+              retType                   = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
               ;
-            }
-            ;
+            };
             retVal = reinterpret_cast<T*>(retType);
           }
           return retVal;
@@ -602,13 +587,12 @@ namespace rsl
             {
               __int64 retIntegral;
               ptr_integral_type valCompute;
-              valCompute = rsl::internal::atomic_negate_operand((((addend))));
+              valCompute                = rsl::internal::atomic_negate_operand((((addend))));
               const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
-              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
-              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              retIntegral               = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((this->atomic_address()))))), valIntegral);
+              retType                   = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
               ;
-            }
-            ;
+            };
             retVal = reinterpret_cast<T*>(retType);
           }
           return retVal;
@@ -627,18 +611,18 @@ namespace rsl
             {
               __int64 retIntegral;
               ptr_integral_type valCompute;
-              valCompute = rsl::internal::atomic_negate_operand((((addend))));
+              valCompute                = rsl::internal::atomic_negate_operand((((addend))));
               const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
-              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
-              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              retIntegral               = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((this->atomic_address()))))), valIntegral);
+              retType                   = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
               ;
-            }
-            ;
+            };
             retVal = reinterpret_cast<T*>(retType);
           }
           return retVal;
           ;
         }
+
       public:
         using Base::sub_fetch;
         T* sub_fetch(ptrdiff_t arg) noexcept
@@ -654,13 +638,12 @@ namespace rsl
             {
               __int64 retIntegral;
               ptr_integral_type valCompute;
-              valCompute = rsl::internal::atomic_negate_operand((((addend))));
+              valCompute                = rsl::internal::atomic_negate_operand((((addend))));
               const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
-              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
-              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
-              retType = (retType)-((addend));
-            }
-            ;
+              retIntegral               = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((this->atomic_address()))))), valIntegral);
+              retType                   = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              retType                   = (retType) - ((addend));
+            };
             retVal = reinterpret_cast<T*>(retType);
           }
           return retVal;
@@ -679,13 +662,12 @@ namespace rsl
             {
               __int64 retIntegral;
               ptr_integral_type valCompute;
-              valCompute = rsl::internal::atomic_negate_operand((((addend))));
+              valCompute                = rsl::internal::atomic_negate_operand((((addend))));
               const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
-              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
-              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
-              retType = (retType)-((addend));
-            }
-            ;
+              retIntegral               = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((this->atomic_address()))))), valIntegral);
+              retType                   = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              retType                   = (retType) - ((addend));
+            };
             retVal = reinterpret_cast<T*>(retType);
           }
           return retVal;
@@ -704,13 +686,12 @@ namespace rsl
             {
               __int64 retIntegral;
               ptr_integral_type valCompute;
-              valCompute = rsl::internal::atomic_negate_operand((((addend))));
+              valCompute                = rsl::internal::atomic_negate_operand((((addend))));
               const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
-              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
-              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
-              retType = (retType)-((addend));
-            }
-            ;
+              retIntegral               = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((this->atomic_address()))))), valIntegral);
+              retType                   = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              retType                   = (retType) - ((addend));
+            };
             retVal = reinterpret_cast<T*>(retType);
           }
           return retVal;
@@ -729,13 +710,12 @@ namespace rsl
             {
               __int64 retIntegral;
               ptr_integral_type valCompute;
-              valCompute = rsl::internal::atomic_negate_operand((((addend))));
+              valCompute                = rsl::internal::atomic_negate_operand((((addend))));
               const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
-              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
-              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
-              retType = (retType)-((addend));
-            }
-            ;
+              retIntegral               = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((this->atomic_address()))))), valIntegral);
+              retType                   = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              retType                   = (retType) - ((addend));
+            };
             retVal = reinterpret_cast<T*>(retType);
           }
           return retVal;
@@ -754,13 +734,12 @@ namespace rsl
             {
               __int64 retIntegral;
               ptr_integral_type valCompute;
-              valCompute = rsl::internal::atomic_negate_operand((((addend))));
+              valCompute                = rsl::internal::atomic_negate_operand((((addend))));
               const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
-              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
-              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
-              retType = (retType)-((addend));
-            }
-            ;
+              retIntegral               = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((this->atomic_address()))))), valIntegral);
+              retType                   = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              retType                   = (retType) - ((addend));
+            };
             retVal = reinterpret_cast<T*>(retType);
           }
           return retVal;
@@ -779,61 +758,60 @@ namespace rsl
             {
               __int64 retIntegral;
               ptr_integral_type valCompute;
-              valCompute = rsl::internal::atomic_negate_operand((((addend))));
+              valCompute                = rsl::internal::atomic_negate_operand((((addend))));
               const __int64 valIntegral = rsl::internal::atomic_type_pun_cast<__int64>((valCompute));
-              retIntegral = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((atomic_address()))))), valIntegral);
-              retType = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
-              retType = (retType)-((addend));
-            }
-            ;
+              retIntegral               = _InterlockedExchangeAdd64(rsl::internal::atomic_volatile_integral_cast<__int64>(((rsl::internal::atomic_integral_cast<ptr_integral_type>((this->atomic_address()))))), valIntegral);
+              retType                   = rsl::internal::atomic_type_pun_cast<ptr_integral_type>((retIntegral));
+              retType                   = (retType) - ((addend));
+            };
             retVal = reinterpret_cast<T*>(retType);
           }
           return retVal;
           ;
         }
+
       public:
-        using Base::operator ++;
-        T* operator ++() noexcept
+        using Base::operator++;
+        T* operator++() noexcept
         {
           return add_fetch(1, rsl::memory_order_seq_cst);
         }
-        T* operator ++(int) noexcept
+        T* operator++(int) noexcept
         {
           return fetch_add(1, rsl::memory_order_seq_cst);
         }
-        using Base::operator --;
-        T* operator --() noexcept
+        using Base::operator--;
+        T* operator--() noexcept
         {
           return sub_fetch(1, rsl::memory_order_seq_cst);
         }
-        T* operator --(int) noexcept
+        T* operator--(int) noexcept
         {
           return fetch_sub(1, rsl::memory_order_seq_cst);
         }
+
       public:
-        using Base::operator +=;
-        T* operator +=(ptrdiff_t arg) noexcept
+        using Base::operator+=;
+        T* operator+=(ptrdiff_t arg) noexcept
         {
           return add_fetch(arg, rsl::memory_order_seq_cst);
         }
-        using Base::operator -=;
-        T* operator -=(ptrdiff_t arg) noexcept
+        using Base::operator-=;
+        T* operator-=(ptrdiff_t arg) noexcept
         {
           return sub_fetch(arg, rsl::memory_order_seq_cst);
         }
+
       public:
         using Base::load;
         T* load(rsl::internal::memory_order_read_depends_s) noexcept
         {
-            static_assert(rsl::is_pointer_v<T*>, "rsl::atomic<T> : Read Depends Type must be a Pointer Type!");
-            static_assert(rsl::is_pointer_v<rsl::remove_pointer_t<decltype(atomic_address())>>, "rsl::atomic<T> : Read Depends Ptr must be a Pointer to a Pointer!");
-            
-            return (*rsl::internal::atomic_volatile_cast((atomic_address())));
+          static_assert(rsl::is_pointer_v<T*>, "rsl::atomic<T> : Read Depends Type must be a Pointer Type!");
+          static_assert(rsl::is_pointer_v<rsl::remove_pointer_t<decltype(this->atomic_address())>>, "rsl::atomic<T> : Read Depends Ptr must be a Pointer to a Pointer!");
+
+          return (*rsl::internal::atomic_volatile_cast((this->atomic_address())));
         }
       };
-
-
-
 
     } // namespace internal
   }   // namespace v1

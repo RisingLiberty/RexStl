@@ -36,7 +36,7 @@ namespace rsl
       atomic_t<T> atom_expected_value    = expected;
       atomic_t<T> atom_desired_value     = desired;
       volatile atomic_t<T>* volatile_obj = rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>(obj);
-      atomic_t<T> prev_value = T{};
+      atomic_t<T> prev_value             = T {};
 
       if constexpr(sizeof(T) == 1)
       {
@@ -60,7 +60,7 @@ namespace rsl
         return false;
       }
 
-      if (prev_value == expected)
+      if(prev_value == expected)
       {
         return true;
       }

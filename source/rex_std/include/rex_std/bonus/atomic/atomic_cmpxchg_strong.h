@@ -47,7 +47,7 @@ namespace rsl
       {
         return _InterlockedCompareExchange64_np(volatileObject, desiredValue, expectedValue);
       }
-    }
+    } // namespace internal
 
 #if defined(REX_COMPILER_MSVC)
     template <typename T>
@@ -56,13 +56,13 @@ namespace rsl
       (void)successOrder;
       (void)failureOrder;
 
-      const atomic_t<T> atom_expected_value   = *rsl::internal::atomic_integral_cast<const atomic_t<T>>(&expected);
-      const atomic_t<T> atom_desired_value    = *rsl::internal::atomic_integral_cast<const atomic_t<T>>(&desired);
-      volatile atomic_t<T>* volatile_obj      = rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>(obj);
+      const atomic_t<T> atom_expected_value = *rsl::internal::atomic_integral_cast<const atomic_t<T>>(&expected);
+      const atomic_t<T> atom_desired_value  = *rsl::internal::atomic_integral_cast<const atomic_t<T>>(&desired);
+      volatile atomic_t<T>* volatile_obj    = rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>(obj);
 
       atomic_t<T> prev_value = internal::interlocked_exchange<T>(volatile_obj, atom_desired_value, atom_expected_value);
 
-      if (prev_value == expected)
+      if(prev_value == expected)
       {
         return true;
       }
