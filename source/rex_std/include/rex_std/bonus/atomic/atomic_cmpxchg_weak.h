@@ -70,7 +70,7 @@ namespace rsl
     }
 #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
     template <typename T>
-    bool atomic_cmpxchg_weak(T* obj, T expected, T desired, rsl::memory_order successOrder, rsl::memory_order failureOrder)
+    bool atomic_cmpxchg_weak(T* obj, T& expected, T desired, rsl::memory_order successOrder, rsl::memory_order failureOrder)
     {
       // GCC Documentation says:
       // These built-in functions perform the operation suggested by the name, and return the value that had previously been in *ptr.
@@ -83,23 +83,23 @@ namespace rsl
       int failure_order = -1;
       switch(failureOrder)
       {
-        case rsl::v1::memory_order::relaxed: failure_order = __ATOMIC_RELAXED;
-        case rsl::v1::memory_order::consume: failure_order = __ATOMIC_CONSUME;
-        case rsl::v1::memory_order::acquire: failure_order = __ATOMIC_ACQUIRE;
-        case rsl::v1::memory_order::release: failure_order = __ATOMIC_RELEASE;
-        case rsl::v1::memory_order::acq_rel: failure_order = __ATOMIC_ACQ_REL;
-        case rsl::v1::memory_order::seq_cst: failure_order = __ATOMIC_SEQ_CST;
+        case rsl::v1::memory_order::relaxed: failure_order = __ATOMIC_RELAXED;  break;
+        case rsl::v1::memory_order::consume: failure_order = __ATOMIC_CONSUME;  break;
+        case rsl::v1::memory_order::acquire: failure_order = __ATOMIC_ACQUIRE;  break;
+        case rsl::v1::memory_order::release: failure_order = __ATOMIC_RELEASE;  break;
+        case rsl::v1::memory_order::acq_rel: failure_order = __ATOMIC_ACQ_REL;  break;
+        case rsl::v1::memory_order::seq_cst: failure_order = __ATOMIC_SEQ_CST;  break;
         default: RSL_ASSERT("Invalid failure memory order for operation"); break;
       }
 
       switch(successOrder)
       {
-        case rsl::v1::memory_order::relaxed: return __atomic_compare_exchange_n(obj, &expected, desired, true, __ATOMIC_RELAXED, failure_order);
-        case rsl::v1::memory_order::consume: return __atomic_compare_exchange_n(obj, &expected, desired, true, __ATOMIC_CONSUME, failure_order);
-        case rsl::v1::memory_order::acquire: return __atomic_compare_exchange_n(obj, &expected, desired, true, __ATOMIC_ACQUIRE, failure_order);
-        case rsl::v1::memory_order::release: return __atomic_compare_exchange_n(obj, &expected, desired, true, __ATOMIC_RELEASE, failure_order);
-        case rsl::v1::memory_order::acq_rel: return __atomic_compare_exchange_n(obj, &expected, desired, true, __ATOMIC_ACQ_REL, failure_order);
-        case rsl::v1::memory_order::seq_cst: return __atomic_compare_exchange_n(obj, &expected, desired, true, __ATOMIC_SEQ_CST, failure_order);
+        case rsl::v1::memory_order::relaxed: return __atomic_compare_exchange_n(tmp, &expected, desired, true, __ATOMIC_RELAXED, failure_order);
+        case rsl::v1::memory_order::consume: return __atomic_compare_exchange_n(tmp, &expected, desired, true, __ATOMIC_CONSUME, failure_order);
+        case rsl::v1::memory_order::acquire: return __atomic_compare_exchange_n(tmp, &expected, desired, true, __ATOMIC_ACQUIRE, failure_order);
+        case rsl::v1::memory_order::release: return __atomic_compare_exchange_n(tmp, &expected, desired, true, __ATOMIC_RELEASE, failure_order);
+        case rsl::v1::memory_order::acq_rel: return __atomic_compare_exchange_n(tmp, &expected, desired, true, __ATOMIC_ACQ_REL, failure_order);
+        case rsl::v1::memory_order::seq_cst: return __atomic_compare_exchange_n(tmp, &expected, desired, true, __ATOMIC_SEQ_CST, failure_order);
         default: RSL_ASSERT("Invalid sucess memory order for operation"); break;
       }
     }

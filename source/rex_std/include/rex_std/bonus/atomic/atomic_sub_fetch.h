@@ -72,12 +72,12 @@ namespace rsl
 
       switch(order)
       {
-        case rsl::v1::memory_order::relaxed: return __atomic_sub_fetch(obj, valToSub, __ATOMIC_RELAXED);
-        case rsl::v1::memory_order::consume: return __atomic_sub_fetch(obj, valToSub, __ATOMIC_CONSUME);
-        case rsl::v1::memory_order::acquire: return __atomic_sub_fetch(obj, valToSub, __ATOMIC_ACQUIRE);
-        case rsl::v1::memory_order::release: return __atomic_sub_fetch(obj, valToSub, __ATOMIC_RELEASE);
-        case rsl::v1::memory_order::acq_rel: return __atomic_sub_fetch(obj, valToSub, __ATOMIC_ACQ_REL);
-        case rsl::v1::memory_order::seq_cst: return __atomic_sub_fetch(obj, valToSub, __ATOMIC_SEQ_CST);
+        case rsl::v1::memory_order::relaxed: return __atomic_sub_fetch(tmp, valToSub, __ATOMIC_RELAXED);
+        case rsl::v1::memory_order::consume: return __atomic_sub_fetch(tmp, valToSub, __ATOMIC_CONSUME);
+        case rsl::v1::memory_order::acquire: return __atomic_sub_fetch(tmp, valToSub, __ATOMIC_ACQUIRE);
+        case rsl::v1::memory_order::release: return __atomic_sub_fetch(tmp, valToSub, __ATOMIC_RELEASE);
+        case rsl::v1::memory_order::acq_rel: return __atomic_sub_fetch(tmp, valToSub, __ATOMIC_ACQ_REL);
+        case rsl::v1::memory_order::seq_cst: return __atomic_sub_fetch(tmp, valToSub, __ATOMIC_SEQ_CST);
         default: RSL_ASSERT("Invalid memory order for atomic sub_fetch"); break;
       }
     }
