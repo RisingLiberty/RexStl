@@ -16,27 +16,6 @@
 
 #define REX_ATOMIC_STATIC_ASSERT_INVALID_MEMORY_ORDER(type) static_assert(!rsl::is_same<type, type>::value, "rsl::atomic<T> : invalid memory order for the given operation!");
 
-#define REX_ATOMIC_STATIC_ASSERT_TYPE(type)                                                                                                                                                                                                              \
-  /* User Provided T must not be cv qualified */                                                                                                                                                                                                         \
-  static_assert(!rsl::is_const<type>::value, "rsl::atomic<T> : Template Typename T cannot be const!");                                                                                                                                                   \
-  static_assert(!rsl::is_volatile<type>::value, "rsl::atomic<T> : Template Typename T cannot be volatile! Use the memory orders to access the underlying type for the guarantees you need.");                                                            \
-  /* T must satisfy StandardLayoutType */                                                                                                                                                                                                                \
-  static_assert(rsl::is_standard_layout<type>::value, "rsl::atomic<T> : Must have standard layout!");                                                                                                                                                    \
-  /* T must be TriviallyCopyable but it does not have to be TriviallyConstructible */                                                                                                                                                                    \
-  static_assert(rsl::is_trivially_copyable<type>::value, "rsl::atomci<T> : Template Typename T must be trivially copyable!");                                                                                                                            \
-  static_assert(rsl::is_copy_constructible<type>::value, "rsl::atomic<T> : Template Typename T must be copy constructible!");                                                                                                                            \
-  static_assert(rsl::is_move_constructible<type>::value, "rsl::atomic<T> : Template Typename T must be move constructible!");                                                                                                                            \
-  static_assert(rsl::is_copy_assignable<type>::value, "rsl::atomic<T> : Template Typename T must be copy assignable!");                                                                                                                                  \
-  static_assert(rsl::is_move_assignable<type>::value, "rsl::atomic<T> : Template Typename T must be move assignable!");                                                                                                                                  \
-  static_assert(rsl::is_trivially_destructible<type>::value, "rsl::atomic<T> : Must be trivially destructible!");                                                                                                                                        \
-  static_assert(rsl::internal::is_atomic_lockfree_size<type>::value, "rsl::atomic<T> : Template Typename T must be a lockfree size!");
-
-#define REX_ATOMIC_STATIC_ASSERT_TYPE_IS_OBJECT(type) static_assert(rsl::is_object<type>::value, "rsl::atomic<T> : Template Typename T must be an object type!");
-
-#define REX_ATOMIC_ASSERT_ALIGNED(alignment)                                                                                                                                                                                                             \
-  RSL_ASSERT((alignment & (alignment - 1)) == 0);                                                                                                                                                                                                        \
-  RSL_ASSERT((reinterpret_cast<uintptr_t>(this) & (alignment - 1)) == 0)
-
 namespace rsl
 {
 

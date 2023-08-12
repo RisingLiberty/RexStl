@@ -67,20 +67,12 @@ namespace rsl
     template <typename T>
     atomic_t<T> atomic_load(T* obj, rsl::memory_order order)
     {
-      // GCC Documentation says:
-      // These built-in functions perform the operation suggested by the name, and return the value that had previously been in *ptr.
-      // Operations on pointer arguments are performed as if the operands were of the uintptr_t type.
-      // That is, they are not scaled by the size of the type to which the pointer points.
-      // { tmp = *ptr; *ptr op= val; return tmp; }
-      // Therefore we save their value to a temporary of type uintptr first and perform the operation on that
-      rsl::uintptr& tmp = *reinterpret_cast<rsl::uintptr*>(obj);
-
       switch(order)
       {
-        case rsl::v1::memory_order::relaxed: return __atomic_load_n(&tmp, __ATOMIC_RELAXED);
-        case rsl::v1::memory_order::consume: return __atomic_load_n(&tmp, __ATOMIC_CONSUME);
-        case rsl::v1::memory_order::acquire: return __atomic_load_n(&tmp, __ATOMIC_ACQUIRE);
-        case rsl::v1::memory_order::seq_cst: return __atomic_load_n(&tmp, __ATOMIC_SEQ_CST);
+        case rsl::v1::memory_order::relaxed: return __atomic_load_n(obj, __ATOMIC_RELAXED);
+        case rsl::v1::memory_order::consume: return __atomic_load_n(obj, __ATOMIC_CONSUME);
+        case rsl::v1::memory_order::acquire: return __atomic_load_n(obj, __ATOMIC_ACQUIRE);
+        case rsl::v1::memory_order::seq_cst: return __atomic_load_n(obj, __ATOMIC_SEQ_CST);
         default: RSL_ASSERT("Invalid memory order for atomic load"); break;
       }
 

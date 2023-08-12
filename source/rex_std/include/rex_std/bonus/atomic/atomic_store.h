@@ -75,13 +75,6 @@ namespace rsl
     template <typename T>
     void atomic_store(T* obj, T valToStore, rsl::memory_order order)
     {
-      // GCC Documentation says:
-      // These built-in functions perform the operation suggested by the name, and the value that had previously been in *obj.
-      // Operations on pointer arguments are performed as if the operands were of the uintptr_t type.
-      // That is, they are not scaled by the size of the type to which the pointer points.
-      // { tmp = *obj; *obj op= val; tmp; }
-      // Therefore we save their value to a temporary of type uintptr first and perform the operation on that
-
       switch(order)
       {
         case rsl::v1::memory_order::relaxed: __atomic_store(obj, &valToStore, __ATOMIC_RELAXED); break;
