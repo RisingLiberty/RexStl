@@ -61,10 +61,10 @@ namespace rsl
 #endif
       }
       template <typename T>
-      int64 crz64(T val)
+      int32 crz64(T val)
       {
 #ifdef REX_COMPILER_MSVC
-        return _tzcnt_u64(val);
+        return static_cast<int32>(_tzcnt_u64(val));
 #else
         return __builtin_ctzll(val);
 #endif
@@ -83,7 +83,7 @@ namespace rsl
       int32 popcount64(T val)
       {
 #ifdef REX_COMPILER_MSVC
-        return __popcnt64(val);
+        return static_cast<int32>(__popcnt64(val));
 #else
         return __builtin_popcountll(val);
 #endif
@@ -187,7 +187,7 @@ namespace rsl
     template <typename T>
     REX_NO_DISCARD constexpr int32 countr_one(T val)
     {
-      return val != rsl::numeric_limits<T>::max() ? rsl::countl_zero(static_cast<T>(~val)) : rsl::numeric_limits<T>::digits;
+      return val != rsl::numeric_limits<T>::max() ? rsl::countr_zero(static_cast<T>(~val)) : rsl::numeric_limits<T>::digits;
     }
 
     template <typename T>
@@ -257,11 +257,11 @@ namespace rsl
     template <typename T>
     REX_NO_DISCARD constexpr int32 popcount(T val)
     {
-      if (sizeof(val) <= sizeof(uint32))
+      if constexpr (sizeof(val) <= sizeof(uint32))
       {
         return internal::popcount32(static_cast<uint32>(val));
       }
-      else if (sizeof(val) <= sizeof(uint64))
+      else if constexpr (sizeof(val) <= sizeof(uint64))
       {
         return internal::popcount64(static_cast<uint64>(val));
       }
