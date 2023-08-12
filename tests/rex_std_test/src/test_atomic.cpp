@@ -18,3909 +18,3906 @@ namespace rsl::test
 {
   inline namespace v1
   {
-		static rsl::atomic<int> sAtomicInt{ 4 };
-		static rsl::atomic<void*> sAtomicPtr{ nullptr };
+    class AtomicStandaloneBasicTest
+    {
+    public:
 
-		void TestAtomicConstantInitialization()
-		{
-			CHECK(sAtomicInt.load() == 4);
-			CHECK(sAtomicPtr == nullptr);
-		}
+      int RunTest()
+      {
+        AtomicSignalFence();
 
-		class AtomicStandaloneBasicTest
-		{
-		public:
+        AtomicThreadFence();
 
-			int RunTest()
-			{
-				AtomicSignalFence();
+        AtomicCpuPause();
 
-				AtomicThreadFence();
+        AtomicCompilerBarrier();
 
-				AtomicCpuPause();
+        return nErrorCount;
+      }
 
-				AtomicCompilerBarrier();
+    private:
 
-				return nErrorCount;
-			}
+      void AtomicSignalFence();
 
-		private:
+      void AtomicThreadFence();
 
-			void AtomicSignalFence();
+      void AtomicCpuPause();
 
-			void AtomicThreadFence();
+      void AtomicCompilerBarrier();
 
-			void AtomicCpuPause();
+    private:
 
-			void AtomicCompilerBarrier();
+      int nErrorCount = 0;
+    };
 
-		private:
+    void AtomicStandaloneBasicTest::AtomicSignalFence()
+    {
+      rsl::atomic_signal_fence(rsl::memory_order_relaxed);
 
-			int nErrorCount = 0;
-		};
+      rsl::atomic_signal_fence(rsl::memory_order_acquire);
 
-		void AtomicStandaloneBasicTest::AtomicSignalFence()
-		{
-			rsl::atomic_signal_fence(rsl::memory_order_relaxed);
+      rsl::atomic_signal_fence(rsl::memory_order_release);
 
-			rsl::atomic_signal_fence(rsl::memory_order_acquire);
+      rsl::atomic_signal_fence(rsl::memory_order_acq_rel);
 
-			rsl::atomic_signal_fence(rsl::memory_order_release);
+      rsl::atomic_signal_fence(rsl::memory_order_seq_cst);
+    }
 
-			rsl::atomic_signal_fence(rsl::memory_order_acq_rel);
+    void AtomicStandaloneBasicTest::AtomicThreadFence()
+    {
+      rsl::atomic_thread_fence(rsl::memory_order_relaxed);
 
-			rsl::atomic_signal_fence(rsl::memory_order_seq_cst);
-		}
+      rsl::atomic_thread_fence(rsl::memory_order_acquire);
 
-		void AtomicStandaloneBasicTest::AtomicThreadFence()
-		{
-			rsl::atomic_thread_fence(rsl::memory_order_relaxed);
+      rsl::atomic_thread_fence(rsl::memory_order_release);
 
-			rsl::atomic_thread_fence(rsl::memory_order_acquire);
+      rsl::atomic_thread_fence(rsl::memory_order_acq_rel);
 
-			rsl::atomic_thread_fence(rsl::memory_order_release);
+      rsl::atomic_thread_fence(rsl::memory_order_seq_cst);
+    }
 
-			rsl::atomic_thread_fence(rsl::memory_order_acq_rel);
+    void AtomicStandaloneBasicTest::AtomicCpuPause()
+    {
+      rsl::cpu_pause();
+    }
 
-			rsl::atomic_thread_fence(rsl::memory_order_seq_cst);
-		}
+    void AtomicStandaloneBasicTest::AtomicCompilerBarrier()
+    {
+      rsl::compiler_barrier();
 
-		void AtomicStandaloneBasicTest::AtomicCpuPause()
-		{
-			rsl::cpu_pause();
-		}
+      {
+        bool ret = false;
+        rsl::compiler_barrier_data_dependency(ret);
+      }
+    }
 
-		void AtomicStandaloneBasicTest::AtomicCompilerBarrier()
-		{
-			rsl::compiler_barrier();
+    class AtomicFlagBasicTest
+    {
+    public:
 
-			{
-				bool ret = false;
-				rsl::compiler_barrier_data_dependency(ret);
-			}
-		}
+      using AtomicType = rsl::atomic_flag;
+      using BoolType = bool;
 
-		class AtomicFlagBasicTest
-		{
-		public:
+      int RunTest()
+      {
+        TestAtomicFlagCtor();
 
-			using AtomicType = rsl::atomic_flag;
-			using BoolType = bool;
+        TestAtomicFlagClear();
 
-			int RunTest()
-			{
-				TestAtomicFlagCtor();
+        TestAtomicFlagTestAndSet();
 
-				TestAtomicFlagClear();
+        TestAtomicFlagTest();
 
-				TestAtomicFlagTestAndSet();
+        TestAllMemoryOrders();
 
-				TestAtomicFlagTest();
+        TestAtomicFlagStandalone();
 
-				TestAllMemoryOrders();
+        return nErrorCount;
+      }
 
-				TestAtomicFlagStandalone();
+    private:
 
-				return nErrorCount;
-			}
+      void TestAtomicFlagCtor();
 
-		private:
+      void TestAtomicFlagClear();
 
-			void TestAtomicFlagCtor();
+      void TestAtomicFlagTestAndSet();
 
-			void TestAtomicFlagClear();
+      void TestAtomicFlagTest();
 
-			void TestAtomicFlagTestAndSet();
+      void TestAllMemoryOrders();
 
-			void TestAtomicFlagTest();
+      void TestAtomicFlagStandalone();
 
-			void TestAllMemoryOrders();
+    private:
 
-			void TestAtomicFlagStandalone();
+      int nErrorCount = 0;
+    };
 
-		private:
+    void AtomicFlagBasicTest::TestAtomicFlagCtor()
+    {
+      {
+        AtomicType atomic;
 
-			int nErrorCount = 0;
-		};
+        CHECK(atomic.test(rsl::memory_order_relaxed) == false);
+      }
 
-		void AtomicFlagBasicTest::TestAtomicFlagCtor()
-		{
-			{
-				AtomicType atomic;
+      {
+        AtomicType atomic{ false };
 
-				CHECK(atomic.test(rsl::memory_order_relaxed) == false);
-			}
+        CHECK(atomic.test(rsl::memory_order_relaxed) == false);
+      }
 
-			{
-				AtomicType atomic{ false };
+      {
+        AtomicType atomic{ true };
 
-				CHECK(atomic.test(rsl::memory_order_relaxed) == false);
-			}
+        CHECK(atomic.test(rsl::memory_order_relaxed) == true);
+      }
+    }
 
-			{
-				AtomicType atomic{ true };
+    void AtomicFlagBasicTest::TestAtomicFlagClear()
+    {
+      {
+        AtomicType atomic;
 
-				CHECK(atomic.test(rsl::memory_order_relaxed) == true);
-			}
-		}
+        atomic.clear(rsl::memory_order_relaxed);
 
-		void AtomicFlagBasicTest::TestAtomicFlagClear()
-		{
-			{
-				AtomicType atomic;
+        CHECK(atomic.test(rsl::memory_order_relaxed) == false);
+      }
 
-				atomic.clear(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ true };
 
-				CHECK(atomic.test(rsl::memory_order_relaxed) == false);
-			}
+        atomic.clear(rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ true };
+        CHECK(atomic.test(rsl::memory_order_relaxed) == false);
+      }
+    }
 
-				atomic.clear(rsl::memory_order_relaxed);
+    void AtomicFlagBasicTest::TestAtomicFlagTestAndSet()
+    {
+      {
+        AtomicType atomic;
 
-				CHECK(atomic.test(rsl::memory_order_relaxed) == false);
-			}
-		}
+        BoolType ret = atomic.test_and_set(rsl::memory_order_relaxed);
 
-		void AtomicFlagBasicTest::TestAtomicFlagTestAndSet()
-		{
-			{
-				AtomicType atomic;
+        CHECK(ret == false);
 
-				BoolType ret = atomic.test_and_set(rsl::memory_order_relaxed);
+        CHECK(atomic.test(rsl::memory_order_relaxed) == true);
+      }
 
-				CHECK(ret == false);
+      {
+        AtomicType atomic{ true };
 
-				CHECK(atomic.test(rsl::memory_order_relaxed) == true);
-			}
+        BoolType ret = atomic.test_and_set(rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ true };
+        CHECK(ret == true);
 
-				BoolType ret = atomic.test_and_set(rsl::memory_order_relaxed);
+        CHECK(atomic.test(rsl::memory_order_relaxed) == true);
+      }
+    }
 
-				CHECK(ret == true);
+    void AtomicFlagBasicTest::TestAtomicFlagTest()
+    {
+      {
+        AtomicType atomic;
 
-				CHECK(atomic.test(rsl::memory_order_relaxed) == true);
-			}
-		}
+        CHECK(atomic.test(rsl::memory_order_relaxed) == false);
+      }
 
-		void AtomicFlagBasicTest::TestAtomicFlagTest()
-		{
-			{
-				AtomicType atomic;
+      {
+        AtomicType atomic{ true };
 
-				CHECK(atomic.test(rsl::memory_order_relaxed) == false);
-			}
+        CHECK(atomic.test(rsl::memory_order_relaxed) == true);
+      }
+    }
 
-			{
-				AtomicType atomic{ true };
+    void AtomicFlagBasicTest::TestAllMemoryOrders()
+    {
+      {
+        AtomicType atomic;
 
-				CHECK(atomic.test(rsl::memory_order_relaxed) == true);
-			}
-		}
+        atomic.clear();
 
-		void AtomicFlagBasicTest::TestAllMemoryOrders()
-		{
-			{
-				AtomicType atomic;
+        atomic.clear(rsl::memory_order_relaxed);
 
-				atomic.clear();
+        atomic.clear(rsl::memory_order_release);
 
-				atomic.clear(rsl::memory_order_relaxed);
+        atomic.clear(rsl::memory_order_seq_cst);
+      }
 
-				atomic.clear(rsl::memory_order_release);
+      {
+        AtomicType atomic;
 
-				atomic.clear(rsl::memory_order_seq_cst);
-			}
+        atomic.test_and_set();
 
-			{
-				AtomicType atomic;
+        atomic.test_and_set(rsl::memory_order_relaxed);
 
-				atomic.test_and_set();
+        atomic.test_and_set(rsl::memory_order_acquire);
 
-				atomic.test_and_set(rsl::memory_order_relaxed);
+        atomic.test_and_set(rsl::memory_order_release);
 
-				atomic.test_and_set(rsl::memory_order_acquire);
+        atomic.test_and_set(rsl::memory_order_acq_rel);
 
-				atomic.test_and_set(rsl::memory_order_release);
+        atomic.test_and_set(rsl::memory_order_seq_cst);
+      }
 
-				atomic.test_and_set(rsl::memory_order_acq_rel);
+      {
+        AtomicType atomic;
 
-				atomic.test_and_set(rsl::memory_order_seq_cst);
-			}
+        BoolType ret = atomic.test();
 
-			{
-				AtomicType atomic;
+        ret = atomic.test(rsl::memory_order_relaxed);
 
-				BoolType ret = atomic.test();
+        ret = atomic.test(rsl::memory_order_acquire);
 
-				ret = atomic.test(rsl::memory_order_relaxed);
+        ret = atomic.test(rsl::memory_order_seq_cst);
+      }
+    }
 
-				ret = atomic.test(rsl::memory_order_acquire);
+    void AtomicFlagBasicTest::TestAtomicFlagStandalone()
+    {
+      {
+        AtomicType atomic;
 
-				ret = atomic.test(rsl::memory_order_seq_cst);
-			}
-		}
+        BoolType ret = atomic_flag_test_and_set(&atomic);
 
-		void AtomicFlagBasicTest::TestAtomicFlagStandalone()
-		{
-			{
-				AtomicType atomic;
+        ret = atomic_flag_test_and_set_explicit(&atomic, rsl::memory_order_relaxed);
 
-				BoolType ret = atomic_flag_test_and_set(&atomic);
+        ret = atomic_flag_test_and_set_explicit(&atomic, rsl::memory_order_acquire);
 
-				ret = atomic_flag_test_and_set_explicit(&atomic, rsl::memory_order_relaxed);
+        ret = atomic_flag_test_and_set_explicit(&atomic, rsl::memory_order_release);
 
-				ret = atomic_flag_test_and_set_explicit(&atomic, rsl::memory_order_acquire);
+        ret = atomic_flag_test_and_set_explicit(&atomic, rsl::memory_order_acq_rel);
 
-				ret = atomic_flag_test_and_set_explicit(&atomic, rsl::memory_order_release);
+        ret = atomic_flag_test_and_set_explicit(&atomic, rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic_flag_test_and_set_explicit(&atomic, rsl::memory_order_acq_rel);
+      {
+        AtomicType atomic;
 
-				ret = atomic_flag_test_and_set_explicit(&atomic, rsl::memory_order_seq_cst);
-			}
+        atomic_flag_clear(&atomic);
 
-			{
-				AtomicType atomic;
+        atomic_flag_clear_explicit(&atomic, rsl::memory_order_relaxed);
 
-				atomic_flag_clear(&atomic);
+        atomic_flag_clear_explicit(&atomic, rsl::memory_order_release);
 
-				atomic_flag_clear_explicit(&atomic, rsl::memory_order_relaxed);
+        atomic_flag_clear_explicit(&atomic, rsl::memory_order_seq_cst);
+      }
 
-				atomic_flag_clear_explicit(&atomic, rsl::memory_order_release);
+      {
+        AtomicType atomic;
 
-				atomic_flag_clear_explicit(&atomic, rsl::memory_order_seq_cst);
-			}
+        BoolType ret = atomic_flag_test(&atomic);
 
-			{
-				AtomicType atomic;
+        ret = atomic_flag_test_explicit(&atomic, rsl::memory_order_relaxed);
 
-				BoolType ret = atomic_flag_test(&atomic);
+        ret = atomic_flag_test_explicit(&atomic, rsl::memory_order_acquire);
 
-				ret = atomic_flag_test_explicit(&atomic, rsl::memory_order_relaxed);
+        ret = atomic_flag_test_explicit(&atomic, rsl::memory_order_seq_cst);
+      }
+    }
 
-				ret = atomic_flag_test_explicit(&atomic, rsl::memory_order_acquire);
+    class AtomicVoidPointerBasicTest
+    {
+    public:
 
-				ret = atomic_flag_test_explicit(&atomic, rsl::memory_order_seq_cst);
-			}
-		}
+      using AtomicType = rsl::atomic<void*>;
+      using PtrType = void*;
 
-		class AtomicVoidPointerBasicTest
-		{
-		public:
+      int RunTest()
+      {
+        TestAtomicCtor();
 
-			using AtomicType = rsl::atomic<void*>;
-			using PtrType = void*;
+        TestAssignmentOperators();
 
-			int RunTest()
-			{
-				TestAtomicCtor();
+        TestIsLockFree();
 
-				TestAssignmentOperators();
+        TestStore();
 
-				TestIsLockFree();
+        TestLoad();
 
-				TestStore();
+        TestExchange();
 
-				TestLoad();
+        TestCompareExchangeWeak();
 
-				TestExchange();
+        TestCompareExchangeStrong();
 
-				TestCompareExchangeWeak();
+        TestAllMemoryOrders();
 
-				TestCompareExchangeStrong();
+        return nErrorCount;
+      }
 
-				TestAllMemoryOrders();
+    private:
 
-				return nErrorCount;
-			}
+      void TestAtomicCtor();
 
-		private:
+      void TestAssignmentOperators();
 
-			void TestAtomicCtor();
+      void TestIsLockFree();
 
-			void TestAssignmentOperators();
+      void TestStore();
 
-			void TestIsLockFree();
+      void TestLoad();
 
-			void TestStore();
+      void TestExchange();
 
-			void TestLoad();
+      void TestCompareExchangeWeak();
 
-			void TestExchange();
+      void TestCompareExchangeStrong();
 
-			void TestCompareExchangeWeak();
+      void TestAllMemoryOrders();
 
-			void TestCompareExchangeStrong();
+    private:
 
-			void TestAllMemoryOrders();
+      int nErrorCount = 0;
+    };
 
-		private:
+    void AtomicVoidPointerBasicTest::TestAtomicCtor()
+    {
+      {
+        AtomicType atomic;
 
-			int nErrorCount = 0;
-		};
+        CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x0);
+      }
 
-		void AtomicVoidPointerBasicTest::TestAtomicCtor()
-		{
-			{
-				AtomicType atomic;
+      {
+        AtomicType atomic{ (PtrType)0x04 };
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x0);
-			}
+        CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x04);
+      }
+    }
 
-			{
-				AtomicType atomic{ (PtrType)0x04 };
+    void AtomicVoidPointerBasicTest::TestAssignmentOperators()
+    {
+      {
+        AtomicType atomic;
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x04);
-			}
-		}
+        PtrType ret = atomic = (PtrType)0x04;
 
-		void AtomicVoidPointerBasicTest::TestAssignmentOperators()
-		{
-			{
-				AtomicType atomic;
+        CHECK(ret == (PtrType)0x04);
 
-				PtrType ret = atomic = (PtrType)0x04;
+        CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x04);
+      }
 
-				CHECK(ret == (PtrType)0x04);
+      {
+        AtomicType atomic;
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x04);
-			}
+        PtrType ret = atomic = (PtrType)0x0;
 
-			{
-				AtomicType atomic;
+        CHECK(ret == (PtrType)0x0);
 
-				PtrType ret = atomic = (PtrType)0x0;
+        CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x0);
+      }
+    }
 
-				CHECK(ret == (PtrType)0x0);
+    void AtomicVoidPointerBasicTest::TestIsLockFree()
+    {
+      {
+        AtomicType atomic;
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x0);
-			}
-		}
+        CHECK(atomic.is_lock_free() == true);
 
-		void AtomicVoidPointerBasicTest::TestIsLockFree()
-		{
-			{
-				AtomicType atomic;
+        CHECK(atomic.is_always_lock_free == true);
+      }
+    }
 
-				CHECK(atomic.is_lock_free() == true);
+    void AtomicVoidPointerBasicTest::TestStore()
+    {
+      {
+        PtrType val = (PtrType)0x0;
+        AtomicType atomic;
 
-				CHECK(atomic.is_always_lock_free == true);
-			}
-		}
+        atomic.store(val, rsl::memory_order_relaxed);
 
-		void AtomicVoidPointerBasicTest::TestStore()
-		{
-			{
-				PtrType val = (PtrType)0x0;
-				AtomicType atomic;
+        CHECK(atomic.load(rsl::memory_order_relaxed) == val);
+      }
 
-				atomic.store(val, rsl::memory_order_relaxed);
+      {
+        PtrType val = (PtrType)0x4;
+        AtomicType atomic;
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == val);
-			}
+        atomic.store(val, rsl::memory_order_relaxed);
 
-			{
-				PtrType val = (PtrType)0x4;
-				AtomicType atomic;
+        CHECK(atomic.load(rsl::memory_order_relaxed) == val);
+      }
+    }
 
-				atomic.store(val, rsl::memory_order_relaxed);
+    void AtomicVoidPointerBasicTest::TestLoad()
+    {
+      {
+        AtomicType atomic{ (PtrType)0x4 };
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == val);
-			}
-		}
+        PtrType ret = atomic.load(rsl::memory_order_relaxed);
 
-		void AtomicVoidPointerBasicTest::TestLoad()
-		{
-			{
-				AtomicType atomic{ (PtrType)0x4 };
+        CHECK(ret == (PtrType)0x4);
 
-				PtrType ret = atomic.load(rsl::memory_order_relaxed);
+        CHECK(atomic == (PtrType)0x4);
+      }
+    }
 
-				CHECK(ret == (PtrType)0x4);
+    void AtomicVoidPointerBasicTest::TestExchange()
+    {
+      {
+        AtomicType atomic;
 
-				CHECK(atomic == (PtrType)0x4);
-			}
-		}
+        PtrType ret = atomic.exchange((PtrType)0x4, rsl::memory_order_release);
 
-		void AtomicVoidPointerBasicTest::TestExchange()
-		{
-			{
-				AtomicType atomic;
+        CHECK(ret == (PtrType)0x0);
 
-				PtrType ret = atomic.exchange((PtrType)0x4, rsl::memory_order_release);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
+      }
+    }
 
-				CHECK(ret == (PtrType)0x0);
+    void AtomicVoidPointerBasicTest::TestCompareExchangeWeak()
+    {
+      {
+        AtomicType atomic;
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
-			}
-		}
+        PtrType observed = (PtrType)0x0;
+        bool ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_relaxed);
 
-		void AtomicVoidPointerBasicTest::TestCompareExchangeWeak()
-		{
-			{
-				AtomicType atomic;
+        if (ret)
+        {
+          CHECK(ret == true);
+          CHECK(observed == (PtrType)0x0);
+          CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
+        }
+      }
 
-				PtrType observed = (PtrType)0x0;
-				bool ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_relaxed);
+      {
+        AtomicType atomic;
 
-				if (ret)
-				{
-					CHECK(ret == true);
-					CHECK(observed == (PtrType)0x0);
-					CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
-				}
-			}
+        PtrType observed = (PtrType)0x4;
+        bool ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == false);
+        CHECK(observed == (PtrType)0x0);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x0);
+      }
+    }
 
-				PtrType observed = (PtrType)0x4;
-				bool ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_relaxed);
+    void AtomicVoidPointerBasicTest::TestCompareExchangeStrong()
+    {
+      {
+        AtomicType atomic;
 
-				CHECK(ret == false);
-				CHECK(observed == (PtrType)0x0);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x0);
-			}
-		}
+        PtrType observed = (PtrType)0x0;
+        bool ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_relaxed);
 
-		void AtomicVoidPointerBasicTest::TestCompareExchangeStrong()
-		{
-			{
-				AtomicType atomic;
+        CHECK(ret == true);
+        CHECK(observed == (PtrType)0x0);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
+      }
 
-				PtrType observed = (PtrType)0x0;
-				bool ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_relaxed);
+      {
+        AtomicType atomic;
 
-				CHECK(ret == true);
-				CHECK(observed == (PtrType)0x0);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
-			}
+        PtrType observed = (PtrType)0x4;
+        bool ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == false);
+        CHECK(observed == (PtrType)0x0);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x0);
+      }
+    }
 
-				PtrType observed = (PtrType)0x4;
-				bool ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_relaxed);
+    void AtomicVoidPointerBasicTest::TestAllMemoryOrders()
+    {
+      {
+        AtomicType atomic;
+        PtrType val = (PtrType)0x4;
 
-				CHECK(ret == false);
-				CHECK(observed == (PtrType)0x0);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x0);
-			}
-		}
+        atomic.store(val);
 
-		void AtomicVoidPointerBasicTest::TestAllMemoryOrders()
-		{
-			{
-				AtomicType atomic;
-				PtrType val = (PtrType)0x4;
+        atomic.store(val, rsl::memory_order_relaxed);
 
-				atomic.store(val);
+        atomic.store(val, rsl::memory_order_release);
 
-				atomic.store(val, rsl::memory_order_relaxed);
+        atomic.store(val, rsl::memory_order_seq_cst);
+      }
 
-				atomic.store(val, rsl::memory_order_release);
+      {
+        AtomicType atomic;
 
-				atomic.store(val, rsl::memory_order_seq_cst);
-			}
+        PtrType ret = atomic.load();
 
-			{
-				AtomicType atomic;
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				PtrType ret = atomic.load();
+        ret = atomic.load(rsl::memory_order_acquire);
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_seq_cst);
 
-				ret = atomic.load(rsl::memory_order_acquire);
+        ret = atomic.load(rsl::memory_order_read_depends);
+      }
 
-				ret = atomic.load(rsl::memory_order_seq_cst);
+      {
+        AtomicType atomic;
 
-				ret = atomic.load(rsl::memory_order_read_depends);
-			}
+        PtrType ret = atomic.exchange((PtrType)0x4);
 
-			{
-				AtomicType atomic;
+        ret = atomic.exchange((PtrType)0x4, rsl::memory_order_relaxed);
 
-				PtrType ret = atomic.exchange((PtrType)0x4);
+        ret = atomic.exchange((PtrType)0x4, rsl::memory_order_acquire);
 
-				ret = atomic.exchange((PtrType)0x4, rsl::memory_order_relaxed);
+        ret = atomic.exchange((PtrType)0x4, rsl::memory_order_release);
 
-				ret = atomic.exchange((PtrType)0x4, rsl::memory_order_acquire);
+        ret = atomic.exchange((PtrType)0x4, rsl::memory_order_acq_rel);
 
-				ret = atomic.exchange((PtrType)0x4, rsl::memory_order_release);
+        ret = atomic.exchange((PtrType)0x4, rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.exchange((PtrType)0x4, rsl::memory_order_acq_rel);
+      {
+        AtomicType atomic;
+        PtrType observed = (PtrType)0x0;
 
-				ret = atomic.exchange((PtrType)0x4, rsl::memory_order_seq_cst);
-			}
+        bool ret = atomic.compare_exchange_weak(observed, (PtrType)0x4);
 
-			{
-				AtomicType atomic;
-				PtrType observed = (PtrType)0x0;
+        ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_relaxed);
 
-				bool ret = atomic.compare_exchange_weak(observed, (PtrType)0x4);
+        ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_release);
 
-				ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_acquire);
+        ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_acq_rel);
 
-				ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_release);
+        ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_acq_rel);
+      {
+        AtomicType atomic;
+        PtrType observed = (PtrType)0x0;
 
-				ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_seq_cst);
-			}
+        bool ret = atomic.compare_exchange_strong(observed, (PtrType)0x4);
 
-			{
-				AtomicType atomic;
-				PtrType observed = (PtrType)0x0;
+        ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_relaxed);
 
-				bool ret = atomic.compare_exchange_strong(observed, (PtrType)0x4);
+        ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_release);
 
-				ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_acquire);
+        ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_acq_rel);
 
-				ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_release);
+        ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_acq_rel);
+      {
+        AtomicType atomic;
+        PtrType observed = (PtrType)0x0;
+        bool ret;
 
-				ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_seq_cst);
-			}
+        ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_relaxed, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
-				PtrType observed = (PtrType)0x0;
-				bool ret;
+        ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_acquire, rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_relaxed, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_acquire, rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_acquire, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_release, rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_acquire, rsl::memory_order_acquire);
+        ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_acq_rel, rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_release, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_acq_rel, rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_acq_rel, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_seq_cst, rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_acq_rel, rsl::memory_order_acquire);
+        ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_seq_cst, rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_seq_cst, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_seq_cst, rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_seq_cst, rsl::memory_order_acquire);
+      {
+        AtomicType atomic;
+        PtrType observed = (PtrType)0x0;
+        bool ret;
 
-				ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_seq_cst, rsl::memory_order_seq_cst);
-			}
+        ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_relaxed, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
-				PtrType observed = (PtrType)0x0;
-				bool ret;
+        ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_acquire, rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_relaxed, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_acquire, rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_acquire, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_release, rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_acquire, rsl::memory_order_acquire);
+        ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_acq_rel, rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_release, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_acq_rel, rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_acq_rel, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_seq_cst, rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_acq_rel, rsl::memory_order_acquire);
+        ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_seq_cst, rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_seq_cst, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_seq_cst, rsl::memory_order_seq_cst);
+      }
+    }
 
-				ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_seq_cst, rsl::memory_order_acquire);
+    class AtomicPointerBasicTest
+    {
+    public:
 
-				ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_seq_cst, rsl::memory_order_seq_cst);
-			}
-		}
+      using AtomicType = rsl::atomic<uint32_t*>;
+      using PtrType = uint32_t*;
 
-		class AtomicPointerBasicTest
-		{
-		public:
+      int RunTest()
+      {
+        TestAtomicCtor();
 
-			using AtomicType = rsl::atomic<uint32_t*>;
-			using PtrType = uint32_t*;
+        TestAssignmentOperators();
 
-			int RunTest()
-			{
-				TestAtomicCtor();
+        TestIsLockFree();
 
-				TestAssignmentOperators();
+        TestStore();
 
-				TestIsLockFree();
+        TestLoad();
 
-				TestStore();
+        TestExchange();
 
-				TestLoad();
+        TestCompareExchangeWeak();
 
-				TestExchange();
+        TestCompareExchangeStrong();
 
-				TestCompareExchangeWeak();
+        TestAllMemoryOrders();
 
-				TestCompareExchangeStrong();
+        TestFetchAdd();
+        TestAddFetch();
 
-				TestAllMemoryOrders();
+        TestFetchSub();
+        TestSubFetch();
 
-				TestFetchAdd();
-				TestAddFetch();
+        TestAtomicPointerStandalone();
 
-				TestFetchSub();
-				TestSubFetch();
+        return nErrorCount;
+      }
 
-				TestAtomicPointerStandalone();
+    private:
 
-				return nErrorCount;
-			}
+      void TestAtomicCtor();
 
-		private:
+      void TestAssignmentOperators();
 
-			void TestAtomicCtor();
+      void TestIsLockFree();
 
-			void TestAssignmentOperators();
+      void TestStore();
 
-			void TestIsLockFree();
+      void TestLoad();
 
-			void TestStore();
+      void TestExchange();
 
-			void TestLoad();
+      void TestCompareExchangeWeak();
 
-			void TestExchange();
+      void TestCompareExchangeStrong();
 
-			void TestCompareExchangeWeak();
+      void TestAllMemoryOrders();
 
-			void TestCompareExchangeStrong();
+      void TestFetchAdd();
+      void TestAddFetch();
 
-			void TestAllMemoryOrders();
+      void TestFetchSub();
+      void TestSubFetch();
 
-			void TestFetchAdd();
-			void TestAddFetch();
+      void TestAtomicPointerStandalone();
 
-			void TestFetchSub();
-			void TestSubFetch();
+    private:
 
-			void TestAtomicPointerStandalone();
+      int nErrorCount = 0;
+    };
 
-		private:
+    void AtomicPointerBasicTest::TestAtomicCtor()
+    {
+      {
+        AtomicType atomic{};
 
-			int nErrorCount = 0;
-		};
+        PtrType ret = atomic.load(rsl::memory_order_relaxed);
 
-		void AtomicPointerBasicTest::TestAtomicCtor()
-		{
-			{
-				AtomicType atomic{};
+        CHECK(ret == nullptr);
+      }
 
-				PtrType ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ (PtrType)0x4 };
 
-				CHECK(ret == nullptr);
-			}
+        PtrType ret = atomic.load(rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ (PtrType)0x4 };
+        CHECK(ret == (PtrType)0x4);
+      }
+    }
 
-				PtrType ret = atomic.load(rsl::memory_order_relaxed);
+    void AtomicPointerBasicTest::TestAssignmentOperators()
+    {
+      {
+        PtrType val = (PtrType)0x4;
+        AtomicType atomic{ val };
 
-				CHECK(ret == (PtrType)0x4);
-			}
-		}
+        PtrType expected = (PtrType)0x8;
 
-		void AtomicPointerBasicTest::TestAssignmentOperators()
-		{
-			{
-				PtrType val = (PtrType)0x4;
-				AtomicType atomic{ val };
+        PtrType ret = atomic = expected;
 
-				PtrType expected = (PtrType)0x8;
+        CHECK(ret == expected);
 
-				PtrType ret = atomic = expected;
+        CHECK(atomic.load(rsl::memory_order_relaxed) == expected);
+      }
 
-				CHECK(ret == expected);
+      {
+        PtrType val = (PtrType)0x0;
+        AtomicType atomic{ val };
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == expected);
-			}
+        PtrType ret = atomic = val;
 
-			{
-				PtrType val = (PtrType)0x0;
-				AtomicType atomic{ val };
+        CHECK(ret == val);
 
-				PtrType ret = atomic = val;
+        CHECK(atomic.load(rsl::memory_order_relaxed) == val);
+      }
 
-				CHECK(ret == val);
+      {
+        PtrType val = (PtrType)0x4;
+        AtomicType atomic{ val };
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == val);
-			}
+        PtrType expected = (PtrType)0x8;
+        PtrType ret = ++atomic;
 
-			{
-				PtrType val = (PtrType)0x4;
-				AtomicType atomic{ val };
+        CHECK(ret == expected);
 
-				PtrType expected = (PtrType)0x8;
-				PtrType ret = ++atomic;
+        CHECK(atomic.load(rsl::memory_order_relaxed) == expected);
+      }
 
-				CHECK(ret == expected);
+      {
+        PtrType val = (PtrType)0x4;
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == expected);
-			}
+        AtomicType atomic{ val };
 
-			{
-				PtrType val = (PtrType)0x4;
+        PtrType expected = (PtrType)0x8;
+        PtrType ret = atomic++;
 
-				AtomicType atomic{ val };
+        CHECK(ret == val);
 
-				PtrType expected = (PtrType)0x8;
-				PtrType ret = atomic++;
+        CHECK(atomic.load(rsl::memory_order_relaxed) == expected);
+      }
 
-				CHECK(ret == val);
+      {
+        PtrType val = (PtrType)0x4;
+        AtomicType atomic{ val };
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == expected);
-			}
+        PtrType expected = (PtrType)0x10;
+        PtrType ret = atomic += 3;
 
-			{
-				PtrType val = (PtrType)0x4;
-				AtomicType atomic{ val };
+        CHECK(ret == expected);
 
-				PtrType expected = (PtrType)0x10;
-				PtrType ret = atomic += 3;
+        CHECK(atomic.load(rsl::memory_order_relaxed) == expected);
+      }
 
-				CHECK(ret == expected);
+      {
+        PtrType val = (PtrType)0x4;
+        AtomicType atomic{ val };
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == expected);
-			}
+        PtrType expected = (PtrType)0x4;
+        PtrType ret = atomic += 0;
 
-			{
-				PtrType val = (PtrType)0x4;
-				AtomicType atomic{ val };
+        CHECK(ret == expected);
 
-				PtrType expected = (PtrType)0x4;
-				PtrType ret = atomic += 0;
+        CHECK(atomic.load(rsl::memory_order_relaxed) == expected);
+      }
 
-				CHECK(ret == expected);
+      {
+        PtrType val = (PtrType)0x4;
+        AtomicType atomic{ val };
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == expected);
-			}
+        PtrType expected = (PtrType)0x0;
+        PtrType ret = atomic -= 1;
 
-			{
-				PtrType val = (PtrType)0x4;
-				AtomicType atomic{ val };
+        CHECK(ret == expected);
 
-				PtrType expected = (PtrType)0x0;
-				PtrType ret = atomic -= 1;
+        CHECK(atomic.load(rsl::memory_order_relaxed) == expected);
+      }
 
-				CHECK(ret == expected);
+      {
+        PtrType val = (PtrType)0x4;
+        AtomicType atomic{ val };
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == expected);
-			}
+        PtrType expected = (PtrType)0x4;
+        PtrType ret = atomic -= 0;
 
-			{
-				PtrType val = (PtrType)0x4;
-				AtomicType atomic{ val };
+        CHECK(ret == expected);
 
-				PtrType expected = (PtrType)0x4;
-				PtrType ret = atomic -= 0;
+        CHECK(atomic.load(rsl::memory_order_relaxed) == expected);
+      }
+    }
 
-				CHECK(ret == expected);
+    void AtomicPointerBasicTest::TestIsLockFree()
+    {
+      {
+        AtomicType atomic;
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == expected);
-			}
-		}
+        CHECK(atomic.is_lock_free() == true);
 
-		void AtomicPointerBasicTest::TestIsLockFree()
-		{
-			{
-				AtomicType atomic;
+        CHECK(atomic.is_always_lock_free == true);
+      }
+    }
 
-				CHECK(atomic.is_lock_free() == true);
+    void AtomicPointerBasicTest::TestStore()
+    {
+      {
+        PtrType val = (PtrType)0x0;
+        AtomicType atomic;
 
-				CHECK(atomic.is_always_lock_free == true);
-			}
-		}
+        atomic.store(val, rsl::memory_order_relaxed);
 
-		void AtomicPointerBasicTest::TestStore()
-		{
-			{
-				PtrType val = (PtrType)0x0;
-				AtomicType atomic;
+        CHECK(atomic.load(rsl::memory_order_relaxed) == val);
+      }
 
-				atomic.store(val, rsl::memory_order_relaxed);
+      {
+        PtrType val = (PtrType)0x4;
+        AtomicType atomic;
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == val);
-			}
+        atomic.store(val, rsl::memory_order_relaxed);
 
-			{
-				PtrType val = (PtrType)0x4;
-				AtomicType atomic;
+        CHECK(atomic.load(rsl::memory_order_relaxed) == val);
+      }
+    }
 
-				atomic.store(val, rsl::memory_order_relaxed);
+    void AtomicPointerBasicTest::TestLoad()
+    {
+      {
+        AtomicType atomic{ (PtrType)0x4 };
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == val);
-			}
-		}
+        PtrType ret = atomic.load(rsl::memory_order_relaxed);
 
-		void AtomicPointerBasicTest::TestLoad()
-		{
-			{
-				AtomicType atomic{ (PtrType)0x4 };
+        CHECK(ret == (PtrType)0x4);
 
-				PtrType ret = atomic.load(rsl::memory_order_relaxed);
+        CHECK(atomic == (PtrType)0x4);
+      }
+    }
 
-				CHECK(ret == (PtrType)0x4);
+    void AtomicPointerBasicTest::TestCompareExchangeWeak()
+    {
+      {
+        AtomicType atomic;
 
-				CHECK(atomic == (PtrType)0x4);
-			}
-		}
+        PtrType observed = (PtrType)0x0;
+        bool ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_relaxed);
 
-		void AtomicPointerBasicTest::TestCompareExchangeWeak()
-		{
-			{
-				AtomicType atomic;
+        if (ret)
+        {
+          CHECK(ret == true);
+          CHECK(observed == (PtrType)0x0);
+          CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
+        }
+      }
 
-				PtrType observed = (PtrType)0x0;
-				bool ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_relaxed);
+      {
+        AtomicType atomic;
 
-				if (ret)
-				{
-					CHECK(ret == true);
-					CHECK(observed == (PtrType)0x0);
-					CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
-				}
-			}
+        PtrType observed = (PtrType)0x4;
+        bool ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == false);
+        CHECK(observed == (PtrType)0x0);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x0);
+      }
+    }
 
-				PtrType observed = (PtrType)0x4;
-				bool ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_relaxed);
+    void AtomicPointerBasicTest::TestCompareExchangeStrong()
+    {
+      {
+        AtomicType atomic;
 
-				CHECK(ret == false);
-				CHECK(observed == (PtrType)0x0);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x0);
-			}
-		}
+        PtrType observed = (PtrType)0x0;
+        bool ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_relaxed);
 
-		void AtomicPointerBasicTest::TestCompareExchangeStrong()
-		{
-			{
-				AtomicType atomic;
+        CHECK(ret == true);
+        CHECK(observed == (PtrType)0x0);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
+      }
 
-				PtrType observed = (PtrType)0x0;
-				bool ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_relaxed);
+      {
+        AtomicType atomic;
 
-				CHECK(ret == true);
-				CHECK(observed == (PtrType)0x0);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
-			}
+        PtrType observed = (PtrType)0x4;
+        bool ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == false);
+        CHECK(observed == (PtrType)0x0);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x0);
+      }
+    }
 
-				PtrType observed = (PtrType)0x4;
-				bool ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_relaxed);
+    void AtomicPointerBasicTest::TestExchange()
+    {
+      {
+        AtomicType atomic;
 
-				CHECK(ret == false);
-				CHECK(observed == (PtrType)0x0);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x0);
-			}
-		}
+        PtrType ret = atomic.exchange((PtrType)0x4, rsl::memory_order_release);
 
-		void AtomicPointerBasicTest::TestExchange()
-		{
-			{
-				AtomicType atomic;
+        CHECK(ret == (PtrType)0x0);
 
-				PtrType ret = atomic.exchange((PtrType)0x4, rsl::memory_order_release);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
+      }
+    }
 
-				CHECK(ret == (PtrType)0x0);
+    void AtomicPointerBasicTest::TestAllMemoryOrders()
+    {
+      {
+        AtomicType atomic;
+        PtrType val = (PtrType)0x4;
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
-			}
-		}
+        atomic.store(val);
 
-		void AtomicPointerBasicTest::TestAllMemoryOrders()
-		{
-			{
-				AtomicType atomic;
-				PtrType val = (PtrType)0x4;
+        atomic.store(val, rsl::memory_order_relaxed);
 
-				atomic.store(val);
+        atomic.store(val, rsl::memory_order_release);
 
-				atomic.store(val, rsl::memory_order_relaxed);
+        atomic.store(val, rsl::memory_order_seq_cst);
+      }
 
-				atomic.store(val, rsl::memory_order_release);
+      {
+        AtomicType atomic;
 
-				atomic.store(val, rsl::memory_order_seq_cst);
-			}
+        PtrType ret = atomic.load();
 
-			{
-				AtomicType atomic;
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				PtrType ret = atomic.load();
+        ret = atomic.load(rsl::memory_order_acquire);
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_seq_cst);
 
-				ret = atomic.load(rsl::memory_order_acquire);
+        ret = atomic.load(rsl::memory_order_read_depends);
+      }
 
-				ret = atomic.load(rsl::memory_order_seq_cst);
+      {
+        AtomicType atomic;
 
-				ret = atomic.load(rsl::memory_order_read_depends);
-			}
+        PtrType ret = atomic.fetch_add(0);
 
-			{
-				AtomicType atomic;
+        ret = atomic.fetch_add(0, rsl::memory_order_relaxed);
 
-				PtrType ret = atomic.fetch_add(0);
+        ret = atomic.fetch_add(0, rsl::memory_order_acquire);
 
-				ret = atomic.fetch_add(0, rsl::memory_order_relaxed);
+        ret = atomic.fetch_add(0, rsl::memory_order_release);
 
-				ret = atomic.fetch_add(0, rsl::memory_order_acquire);
+        ret = atomic.fetch_add(0, rsl::memory_order_acq_rel);
 
-				ret = atomic.fetch_add(0, rsl::memory_order_release);
+        ret = atomic.fetch_add(0, rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.fetch_add(0, rsl::memory_order_acq_rel);
+      {
+        AtomicType atomic;
 
-				ret = atomic.fetch_add(0, rsl::memory_order_seq_cst);
-			}
+        PtrType ret = atomic.fetch_sub(0);
 
-			{
-				AtomicType atomic;
+        ret = atomic.fetch_sub(0, rsl::memory_order_relaxed);
 
-				PtrType ret = atomic.fetch_sub(0);
+        ret = atomic.fetch_sub(0, rsl::memory_order_acquire);
 
-				ret = atomic.fetch_sub(0, rsl::memory_order_relaxed);
+        ret = atomic.fetch_sub(0, rsl::memory_order_release);
 
-				ret = atomic.fetch_sub(0, rsl::memory_order_acquire);
+        ret = atomic.fetch_sub(0, rsl::memory_order_acq_rel);
 
-				ret = atomic.fetch_sub(0, rsl::memory_order_release);
+        ret = atomic.fetch_sub(0, rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.fetch_sub(0, rsl::memory_order_acq_rel);
+      {
+        AtomicType atomic;
 
-				ret = atomic.fetch_sub(0, rsl::memory_order_seq_cst);
-			}
+        PtrType ret = atomic.add_fetch(0);
 
-			{
-				AtomicType atomic;
+        ret = atomic.add_fetch(0, rsl::memory_order_relaxed);
 
-				PtrType ret = atomic.add_fetch(0);
+        ret = atomic.add_fetch(0, rsl::memory_order_acquire);
 
-				ret = atomic.add_fetch(0, rsl::memory_order_relaxed);
+        ret = atomic.add_fetch(0, rsl::memory_order_release);
 
-				ret = atomic.add_fetch(0, rsl::memory_order_acquire);
+        ret = atomic.add_fetch(0, rsl::memory_order_acq_rel);
 
-				ret = atomic.add_fetch(0, rsl::memory_order_release);
+        ret = atomic.add_fetch(0, rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.add_fetch(0, rsl::memory_order_acq_rel);
+      {
+        AtomicType atomic;
 
-				ret = atomic.add_fetch(0, rsl::memory_order_seq_cst);
-			}
+        PtrType ret = atomic.sub_fetch(0);
 
-			{
-				AtomicType atomic;
+        ret = atomic.sub_fetch(0, rsl::memory_order_relaxed);
 
-				PtrType ret = atomic.sub_fetch(0);
+        ret = atomic.sub_fetch(0, rsl::memory_order_acquire);
 
-				ret = atomic.sub_fetch(0, rsl::memory_order_relaxed);
+        ret = atomic.sub_fetch(0, rsl::memory_order_release);
 
-				ret = atomic.sub_fetch(0, rsl::memory_order_acquire);
+        ret = atomic.sub_fetch(0, rsl::memory_order_acq_rel);
 
-				ret = atomic.sub_fetch(0, rsl::memory_order_release);
+        ret = atomic.sub_fetch(0, rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.sub_fetch(0, rsl::memory_order_acq_rel);
+      {
+        AtomicType atomic;
 
-				ret = atomic.sub_fetch(0, rsl::memory_order_seq_cst);
-			}
+        PtrType ret = atomic.exchange((PtrType)0x4);
 
-			{
-				AtomicType atomic;
+        ret = atomic.exchange((PtrType)0x4, rsl::memory_order_relaxed);
 
-				PtrType ret = atomic.exchange((PtrType)0x4);
+        ret = atomic.exchange((PtrType)0x4, rsl::memory_order_acquire);
 
-				ret = atomic.exchange((PtrType)0x4, rsl::memory_order_relaxed);
+        ret = atomic.exchange((PtrType)0x4, rsl::memory_order_release);
 
-				ret = atomic.exchange((PtrType)0x4, rsl::memory_order_acquire);
+        ret = atomic.exchange((PtrType)0x4, rsl::memory_order_acq_rel);
 
-				ret = atomic.exchange((PtrType)0x4, rsl::memory_order_release);
+        ret = atomic.exchange((PtrType)0x4, rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.exchange((PtrType)0x4, rsl::memory_order_acq_rel);
+      {
+        AtomicType atomic;
+        PtrType observed = (PtrType)0x0;
 
-				ret = atomic.exchange((PtrType)0x4, rsl::memory_order_seq_cst);
-			}
+        bool ret = atomic.compare_exchange_weak(observed, (PtrType)0x4);
 
-			{
-				AtomicType atomic;
-				PtrType observed = (PtrType)0x0;
+        ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_relaxed);
 
-				bool ret = atomic.compare_exchange_weak(observed, (PtrType)0x4);
+        ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_release);
 
-				ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_acquire);
+        ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_acq_rel);
 
-				ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_release);
+        ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_acq_rel);
+      {
+        AtomicType atomic;
+        PtrType observed = (PtrType)0x0;
 
-				ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_seq_cst);
-			}
+        bool ret = atomic.compare_exchange_strong(observed, (PtrType)0x4);
 
-			{
-				AtomicType atomic;
-				PtrType observed = (PtrType)0x0;
+        ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_relaxed);
 
-				bool ret = atomic.compare_exchange_strong(observed, (PtrType)0x4);
+        ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_release);
 
-				ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_acquire);
+        ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_acq_rel);
 
-				ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_release);
+        ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_acq_rel);
+      {
+        AtomicType atomic;
+        PtrType observed = (PtrType)0x0;
+        bool ret;
 
-				ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_seq_cst);
-			}
+        ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_relaxed, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
-				PtrType observed = (PtrType)0x0;
-				bool ret;
+        ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_acquire, rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_relaxed, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_acquire, rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_acquire, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_release, rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_acquire, rsl::memory_order_acquire);
+        ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_acq_rel, rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_release, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_acq_rel, rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_acq_rel, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_seq_cst, rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_acq_rel, rsl::memory_order_acquire);
+        ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_seq_cst, rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_seq_cst, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_seq_cst, rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_seq_cst, rsl::memory_order_acquire);
+      {
+        AtomicType atomic;
+        PtrType observed = (PtrType)0x0;
+        bool ret;
 
-				ret = atomic.compare_exchange_weak(observed, (PtrType)0x4, rsl::memory_order_seq_cst, rsl::memory_order_seq_cst);
-			}
+        ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_relaxed, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
-				PtrType observed = (PtrType)0x0;
-				bool ret;
+        ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_acquire, rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_relaxed, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_acquire, rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_acquire, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_release, rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_acquire, rsl::memory_order_acquire);
+        ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_acq_rel, rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_release, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_acq_rel, rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_acq_rel, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_seq_cst, rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_acq_rel, rsl::memory_order_acquire);
+        ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_seq_cst, rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_seq_cst, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_seq_cst, rsl::memory_order_seq_cst);
+      }
+    }
 
-				ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_seq_cst, rsl::memory_order_acquire);
+    void AtomicPointerBasicTest::TestFetchAdd()
+    {
+      {
+        PtrType val = (PtrType)0x4;
+        AtomicType atomic{ val };
 
-				ret = atomic.compare_exchange_strong(observed, (PtrType)0x4, rsl::memory_order_seq_cst, rsl::memory_order_seq_cst);
-			}
-		}
+        PtrType ret = atomic.fetch_add(1, rsl::memory_order_relaxed);
 
-		void AtomicPointerBasicTest::TestFetchAdd()
-		{
-			{
-				PtrType val = (PtrType)0x4;
-				AtomicType atomic{ val };
+        CHECK(ret == (PtrType)0x4);
 
-				PtrType ret = atomic.fetch_add(1, rsl::memory_order_relaxed);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x8);
+      }
 
-				CHECK(ret == (PtrType)0x4);
+      {
+        PtrType val = (PtrType)0x4;
+        AtomicType atomic{ val };
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x8);
-			}
+        PtrType ret = atomic.fetch_add(0, rsl::memory_order_relaxed);
 
-			{
-				PtrType val = (PtrType)0x4;
-				AtomicType atomic{ val };
+        CHECK(ret == (PtrType)0x4);
 
-				PtrType ret = atomic.fetch_add(0, rsl::memory_order_relaxed);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
+      }
+    }
 
-				CHECK(ret == (PtrType)0x4);
+    void AtomicPointerBasicTest::TestAddFetch()
+    {
+      {
+        PtrType val = (PtrType)0x4;
+        AtomicType atomic{ val };
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
-			}
-		}
+        PtrType ret = atomic.add_fetch(1, rsl::memory_order_relaxed);
 
-		void AtomicPointerBasicTest::TestAddFetch()
-		{
-			{
-				PtrType val = (PtrType)0x4;
-				AtomicType atomic{ val };
+        CHECK(ret == (PtrType)0x8);
 
-				PtrType ret = atomic.add_fetch(1, rsl::memory_order_relaxed);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x8);
+      }
 
-				CHECK(ret == (PtrType)0x8);
+      {
+        PtrType val = (PtrType)0x4;
+        AtomicType atomic{ val };
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x8);
-			}
+        PtrType ret = atomic.add_fetch(0, rsl::memory_order_relaxed);
 
-			{
-				PtrType val = (PtrType)0x4;
-				AtomicType atomic{ val };
+        CHECK(ret == (PtrType)0x4);
 
-				PtrType ret = atomic.add_fetch(0, rsl::memory_order_relaxed);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
+      }
+    }
 
-				CHECK(ret == (PtrType)0x4);
+    void AtomicPointerBasicTest::TestFetchSub()
+    {
+      {
+        PtrType val = (PtrType)0x4;
+        AtomicType atomic{ val };
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
-			}
-		}
+        PtrType ret = atomic.fetch_sub(1, rsl::memory_order_relaxed);
 
-		void AtomicPointerBasicTest::TestFetchSub()
-		{
-			{
-				PtrType val = (PtrType)0x4;
-				AtomicType atomic{ val };
+        CHECK(ret == (PtrType)0x4);
 
-				PtrType ret = atomic.fetch_sub(1, rsl::memory_order_relaxed);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x0);
+      }
 
-				CHECK(ret == (PtrType)0x4);
+      {
+        PtrType val = (PtrType)0x4;
+        AtomicType atomic{ val };
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x0);
-			}
+        PtrType ret = atomic.fetch_sub(0, rsl::memory_order_relaxed);
 
-			{
-				PtrType val = (PtrType)0x4;
-				AtomicType atomic{ val };
+        CHECK(ret == (PtrType)0x4);
 
-				PtrType ret = atomic.fetch_sub(0, rsl::memory_order_relaxed);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
+      }
+    }
 
-				CHECK(ret == (PtrType)0x4);
+    void AtomicPointerBasicTest::TestSubFetch()
+    {
+      {
+        PtrType val = (PtrType)0x4;
+        AtomicType atomic{ val };
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
-			}
-		}
+        PtrType ret = atomic.sub_fetch(1, rsl::memory_order_relaxed);
 
-		void AtomicPointerBasicTest::TestSubFetch()
-		{
-			{
-				PtrType val = (PtrType)0x4;
-				AtomicType atomic{ val };
+        CHECK(ret == (PtrType)0x0);
 
-				PtrType ret = atomic.sub_fetch(1, rsl::memory_order_relaxed);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x0);
+      }
 
-				CHECK(ret == (PtrType)0x0);
+      {
+        PtrType val = (PtrType)0x4;
+        AtomicType atomic{ val };
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x0);
-			}
+        PtrType ret = atomic.sub_fetch(0, rsl::memory_order_relaxed);
 
-			{
-				PtrType val = (PtrType)0x4;
-				AtomicType atomic{ val };
+        CHECK(ret == (PtrType)0x4);
 
-				PtrType ret = atomic.sub_fetch(0, rsl::memory_order_relaxed);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
+      }
+    }
 
-				CHECK(ret == (PtrType)0x4);
+    void AtomicPointerBasicTest::TestAtomicPointerStandalone()
+    {
+      {
+        AtomicType atomic;
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
-			}
-		}
+        CHECK(atomic_is_lock_free(&atomic) == true);
+      }
 
-		void AtomicPointerBasicTest::TestAtomicPointerStandalone()
-		{
-			{
-				AtomicType atomic;
+      {
+        AtomicType atomic;
+        PtrType val = (PtrType)0x4;
 
-				CHECK(atomic_is_lock_free(&atomic) == true);
-			}
+        atomic_store(&atomic, val);
 
-			{
-				AtomicType atomic;
-				PtrType val = (PtrType)0x4;
+        CHECK(atomic.load(rsl::memory_order_relaxed) == val);
+      }
 
-				atomic_store(&atomic, val);
+      {
+        AtomicType atomic;
+        PtrType val = (PtrType)0x4;
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == val);
-			}
+        atomic_store_explicit(&atomic, val, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
-				PtrType val = (PtrType)0x4;
+        CHECK(atomic.load(rsl::memory_order_relaxed) == val);
+      }
 
-				atomic_store_explicit(&atomic, val, rsl::memory_order_relaxed);
+      {
+        AtomicType atomic;
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == val);
-			}
+        PtrType ret = atomic_load(&atomic);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == (PtrType)0x0);
+      }
 
-				PtrType ret = atomic_load(&atomic);
+      {
+        AtomicType atomic;
 
-				CHECK(ret == (PtrType)0x0);
-			}
+        PtrType ret = atomic_load_explicit(&atomic, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == (PtrType)0x0);
+      }
 
-				PtrType ret = atomic_load_explicit(&atomic, rsl::memory_order_relaxed);
+      {
+        AtomicType atomic;
 
-				CHECK(ret == (PtrType)0x0);
-			}
+        PtrType ret = atomic_load_cond(&atomic, [](PtrType /*val*/) { return true; });
 
-			{
-				AtomicType atomic;
+        CHECK(ret == (PtrType)0x0);
+      }
 
-				PtrType ret = atomic_load_cond(&atomic, [](PtrType /*val*/) { return true; });
+      {
+        AtomicType atomic;
 
-				CHECK(ret == (PtrType)0x0);
-			}
+        PtrType ret = atomic_load_cond_explicit(&atomic, [](PtrType /*val*/) { return true; }, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == (PtrType)0x0);
+      }
 
-				PtrType ret = atomic_load_cond_explicit(&atomic, [](PtrType /*val*/) { return true; }, rsl::memory_order_relaxed);
+      {
+        AtomicType atomic;
 
-				CHECK(ret == (PtrType)0x0);
-			}
+        PtrType ret = atomic_exchange(&atomic, (PtrType)0x4);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == (PtrType)0x0);
 
-				PtrType ret = atomic_exchange(&atomic, (PtrType)0x4);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
+      }
 
-				CHECK(ret == (PtrType)0x0);
+      {
+        AtomicType atomic;
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
-			}
+        PtrType ret = atomic_exchange_explicit(&atomic, (PtrType)0x4, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == (PtrType)0x0);
 
-				PtrType ret = atomic_exchange_explicit(&atomic, (PtrType)0x4, rsl::memory_order_relaxed);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
+      }
 
-				CHECK(ret == (PtrType)0x0);
+      {
+        AtomicType atomic;
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
-			}
+        PtrType ret = atomic_add_fetch(&atomic, 1);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == (PtrType)0x4);
 
-				PtrType ret = atomic_add_fetch(&atomic, 1);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
+      }
 
-				CHECK(ret == (PtrType)0x4);
+      {
+        AtomicType atomic;
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
-			}
+        PtrType ret = atomic_add_fetch_explicit(&atomic, 1, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == (PtrType)0x4);
 
-				PtrType ret = atomic_add_fetch_explicit(&atomic, 1, rsl::memory_order_relaxed);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
+      }
 
-				CHECK(ret == (PtrType)0x4);
+      {
+        AtomicType atomic;
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
-			}
+        PtrType ret = atomic_fetch_add(&atomic, 1);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == (PtrType)0x0);
 
-				PtrType ret = atomic_fetch_add(&atomic, 1);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
+      }
 
-				CHECK(ret == (PtrType)0x0);
+      {
+        AtomicType atomic;
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
-			}
+        PtrType ret = atomic_fetch_add_explicit(&atomic, 1, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == (PtrType)0x0);
 
-				PtrType ret = atomic_fetch_add_explicit(&atomic, 1, rsl::memory_order_relaxed);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
+      }
 
-				CHECK(ret == (PtrType)0x0);
+      {
+        AtomicType atomic{ (PtrType)0x4 };
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
-			}
+        PtrType ret = atomic_fetch_sub(&atomic, 1);
 
-			{
-				AtomicType atomic{ (PtrType)0x4 };
+        CHECK(ret == (PtrType)0x4);
 
-				PtrType ret = atomic_fetch_sub(&atomic, 1);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x0);
+      }
 
-				CHECK(ret == (PtrType)0x4);
+      {
+        AtomicType atomic{ (PtrType)0x4 };
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x0);
-			}
+        PtrType ret = atomic_fetch_sub_explicit(&atomic, 1, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ (PtrType)0x4 };
+        CHECK(ret == (PtrType)0x4);
 
-				PtrType ret = atomic_fetch_sub_explicit(&atomic, 1, rsl::memory_order_relaxed);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x0);
+      }
 
-				CHECK(ret == (PtrType)0x4);
+      {
+        AtomicType atomic{ (PtrType)0x4 };
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x0);
-			}
+        PtrType ret = atomic_sub_fetch(&atomic, 1);
 
-			{
-				AtomicType atomic{ (PtrType)0x4 };
+        CHECK(ret == (PtrType)0x0);
 
-				PtrType ret = atomic_sub_fetch(&atomic, 1);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x0);
+      }
 
-				CHECK(ret == (PtrType)0x0);
+      {
+        AtomicType atomic{ (PtrType)0x4 };
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x0);
-			}
+        PtrType ret = atomic_sub_fetch_explicit(&atomic, 1, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ (PtrType)0x4 };
+        CHECK(ret == (PtrType)0x0);
 
-				PtrType ret = atomic_sub_fetch_explicit(&atomic, 1, rsl::memory_order_relaxed);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x0);
+      }
 
-				CHECK(ret == (PtrType)0x0);
+      {
+        AtomicType atomic;
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x0);
-			}
+        PtrType expected = (PtrType)0x0;
+        bool ret = atomic_compare_exchange_strong(&atomic, &expected, (PtrType)0x4);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == true);
 
-				PtrType expected = (PtrType)0x0;
-				bool ret = atomic_compare_exchange_strong(&atomic, &expected, (PtrType)0x4);
+        CHECK(expected == (PtrType)0x0);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
+      }
 
-				CHECK(ret == true);
+      {
+        AtomicType atomic;
 
-				CHECK(expected == (PtrType)0x0);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
-			}
+        PtrType expected = (PtrType)0x0;
+        bool ret = atomic_compare_exchange_strong_explicit(&atomic, &expected, (PtrType)0x4, rsl::memory_order_relaxed, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == true);
 
-				PtrType expected = (PtrType)0x0;
-				bool ret = atomic_compare_exchange_strong_explicit(&atomic, &expected, (PtrType)0x4, rsl::memory_order_relaxed, rsl::memory_order_relaxed);
+        CHECK(expected == (PtrType)0x0);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
+      }
 
-				CHECK(ret == true);
+      {
+        AtomicType atomic;
 
-				CHECK(expected == (PtrType)0x0);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
-			}
+        PtrType expected = (PtrType)0x0;
+        bool ret = atomic_compare_exchange_weak(&atomic, &expected, (PtrType)0x4);
 
-			{
-				AtomicType atomic;
+        if (ret)
+        {
+          CHECK(ret == true);
 
-				PtrType expected = (PtrType)0x0;
-				bool ret = atomic_compare_exchange_weak(&atomic, &expected, (PtrType)0x4);
+          CHECK(expected == (PtrType)0x0);
+          CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
+        }
+      }
 
-				if (ret)
-				{
-					CHECK(ret == true);
+      {
+        AtomicType atomic;
 
-					CHECK(expected == (PtrType)0x0);
-					CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
-				}
-			}
+        PtrType expected = (PtrType)0x0;
+        bool ret = atomic_compare_exchange_weak_explicit(&atomic, &expected, (PtrType)0x4, rsl::memory_order_relaxed, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
+        if (ret)
+        {
+          CHECK(ret == true);
 
-				PtrType expected = (PtrType)0x0;
-				bool ret = atomic_compare_exchange_weak_explicit(&atomic, &expected, (PtrType)0x4, rsl::memory_order_relaxed, rsl::memory_order_relaxed);
+          CHECK(expected == (PtrType)0x0);
+          CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
+        }
+      }
+    }
 
-				if (ret)
-				{
-					CHECK(ret == true);
+    struct AtomicNonTriviallyConstructible
+    {
+      AtomicNonTriviallyConstructible()
+        : a(0)
+        , b(0)
+      {
+      }
 
-					CHECK(expected == (PtrType)0x0);
-					CHECK(atomic.load(rsl::memory_order_relaxed) == (PtrType)0x4);
-				}
-			}
-		}
+      AtomicNonTriviallyConstructible(uint16_t a, uint16_t b)
+        : a(a)
+        , b(b)
+      {
+      }
 
-		struct AtomicNonTriviallyConstructible
-		{
-			AtomicNonTriviallyConstructible()
-				: a(0)
-				, b(0)
-			{
-			}
+      friend bool operator==(const AtomicNonTriviallyConstructible& a, const AtomicNonTriviallyConstructible& b)
+      {
+        return a.a == b.a && a.b == b.b;
+      }
 
-			AtomicNonTriviallyConstructible(uint16_t a, uint16_t b)
-				: a(a)
-				, b(b)
-			{
-			}
+      uint16_t a;
+      uint16_t b;
+    };
 
-			friend bool operator==(const AtomicNonTriviallyConstructible& a, const AtomicNonTriviallyConstructible& b)
-			{
-				return a.a == b.a && a.b == b.b;
-			}
+    struct AtomicNonTriviallyConstructibleNoExcept
+    {
+      AtomicNonTriviallyConstructibleNoExcept() noexcept
+        : a(0)
+        , b(0)
+      {
+      }
 
-			uint16_t a;
-			uint16_t b;
-		};
+      AtomicNonTriviallyConstructibleNoExcept(uint16_t a, uint16_t b) noexcept
+        : a(a)
+        , b(b)
+      {
+      }
 
-		struct AtomicNonTriviallyConstructibleNoExcept
-		{
-			AtomicNonTriviallyConstructibleNoExcept() noexcept
-				: a(0)
-				, b(0)
-			{
-			}
+      friend bool operator==(const AtomicNonTriviallyConstructibleNoExcept& a, const AtomicNonTriviallyConstructibleNoExcept& b)
+      {
+        return a.a == b.a && a.b == b.b;
+      }
 
-			AtomicNonTriviallyConstructibleNoExcept(uint16_t a, uint16_t b) noexcept
-				: a(a)
-				, b(b)
-			{
-			}
+      uint16_t a;
+      uint16_t b;
+    };
 
-			friend bool operator==(const AtomicNonTriviallyConstructibleNoExcept& a, const AtomicNonTriviallyConstructibleNoExcept& b)
-			{
-				return a.a == b.a && a.b == b.b;
-			}
+    struct AtomicUserType16
+    {
+      uint8_t a;
+      uint8_t b;
 
-			uint16_t a;
-			uint16_t b;
-		};
+      friend bool operator==(const AtomicUserType16& a, const AtomicUserType16& b)
+      {
+        return (a.a == b.a) && (a.b == b.b);
+      }
+    };
 
-		struct AtomicUserType16
-		{
-			uint8_t a;
-			uint8_t b;
+    struct AtomicUserType128
+    {
+      uint32_t a;
+      uint32_t b;
+      uint32_t c;
+      uint32_t d;
 
-			friend bool operator==(const AtomicUserType16& a, const AtomicUserType16& b)
-			{
-				return (a.a == b.a) && (a.b == b.b);
-			}
-		};
+      AtomicUserType128() = default;
 
-		struct AtomicUserType128
-		{
-			uint32_t a;
-			uint32_t b;
-			uint32_t c;
-			uint32_t d;
+      AtomicUserType128(const AtomicUserType128&) = default;
 
-			AtomicUserType128() = default;
+      AtomicUserType128(uint32_t a, uint32_t b)
+        : a(a)
+        , b(b)
+        , c(0)
+        , d(0)
+      {
+      }
 
-			AtomicUserType128(const AtomicUserType128&) = default;
+      AtomicUserType128& operator=(const AtomicUserType128&) = default;
 
-			AtomicUserType128(uint32_t a, uint32_t b)
-				: a(a)
-				, b(b)
-				, c(0)
-				, d(0)
-			{
-			}
+      friend bool operator==(const AtomicUserType128& a, const AtomicUserType128& b)
+      {
+        return (a.a == b.a) && (a.b == b.b) && (a.c == b.c) && (a.d == b.d);
+      }
+    };
 
-			AtomicUserType128& operator=(const AtomicUserType128&) = default;
+    template <typename T>
+    class AtomicUserTypeBasicTest
+    {
+    public:
 
-			friend bool operator==(const AtomicUserType128& a, const AtomicUserType128& b)
-			{
-				return (a.a == b.a) && (a.b == b.b) && (a.c == b.c) && (a.d == b.d);
-			}
-		};
+      using AtomicType = rsl::atomic<T>;
+      using UserType = T;
 
-		template <typename T>
-		class AtomicUserTypeBasicTest
-		{
-		public:
+      int RunTest()
+      {
+        TestAtomicCtor();
 
-			using AtomicType = rsl::atomic<T>;
-			using UserType = T;
+        TestAssignmentOperators();
 
-			int RunTest()
-			{
-				TestAtomicCtor();
+        TestIsLockFree();
 
-				TestAssignmentOperators();
+        TestStore();
 
-				TestIsLockFree();
+        TestLoad();
 
-				TestStore();
+        TestExchange();
 
-				TestLoad();
+        TestCompareExchangeWeak();
 
-				TestExchange();
+        TestCompareExchangeStrong();
 
-				TestCompareExchangeWeak();
+        TestAllMemoryOrders();
 
-				TestCompareExchangeStrong();
+        return nErrorCount;
+      }
 
-				TestAllMemoryOrders();
+    private:
 
-				return nErrorCount;
-			}
+      void TestAtomicCtor();
 
-		private:
+      void TestAssignmentOperators();
 
-			void TestAtomicCtor();
+      void TestIsLockFree();
 
-			void TestAssignmentOperators();
+      void TestStore();
 
-			void TestIsLockFree();
+      void TestLoad();
 
-			void TestStore();
+      void TestExchange();
 
-			void TestLoad();
+      void TestCompareExchangeWeak();
 
-			void TestExchange();
+      void TestCompareExchangeStrong();
 
-			void TestCompareExchangeWeak();
+      void TestAllMemoryOrders();
 
-			void TestCompareExchangeStrong();
+    private:
 
-			void TestAllMemoryOrders();
+      int nErrorCount = 0;
+    };
 
-		private:
+    template <typename T>
+    void AtomicUserTypeBasicTest<T>::TestAtomicCtor()
+    {
+      {
+        AtomicType atomic;
+        UserType expected{ 0, 0 };
 
-			int nErrorCount = 0;
-		};
+        UserType ret = atomic.load(rsl::memory_order_relaxed);
 
-		template <typename T>
-		void AtomicUserTypeBasicTest<T>::TestAtomicCtor()
-		{
-			{
-				AtomicType atomic;
-				UserType expected{ 0, 0 };
+        CHECK(ret == expected);
+      }
 
-				UserType ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ {5, 8} };
+        UserType expected{ 5, 8 };
 
-				CHECK(ret == expected);
-			}
+        UserType ret = atomic.load(rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ {5, 8} };
-				UserType expected{ 5, 8 };
+        CHECK(ret == expected);
+      }
+    }
 
-				UserType ret = atomic.load(rsl::memory_order_relaxed);
+    template <typename T>
+    void AtomicUserTypeBasicTest<T>::TestAssignmentOperators()
+    {
+      {
+        AtomicType atomic;
+        UserType expected{ 5, 6 };
 
-				CHECK(ret == expected);
-			}
-		}
+        atomic = { 5, 6 };
 
-		template <typename T>
-		void AtomicUserTypeBasicTest<T>::TestAssignmentOperators()
-		{
-			{
-				AtomicType atomic;
-				UserType expected{ 5, 6 };
+        CHECK(atomic.load(rsl::memory_order_relaxed) == expected);
+      }
 
-				atomic = { 5, 6 };
+      {
+        AtomicType atomic;
+        UserType expected{ 0, 0 };
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == expected);
-			}
+        atomic = { 0, 0 };
 
-			{
-				AtomicType atomic;
-				UserType expected{ 0, 0 };
+        CHECK(atomic.load(rsl::memory_order_relaxed) == expected);
+      }
+    }
 
-				atomic = { 0, 0 };
+    template <typename T>
+    void AtomicUserTypeBasicTest<T>::TestIsLockFree()
+    {
+      {
+        AtomicType atomic;
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == expected);
-			}
-		}
+        CHECK(atomic.is_lock_free() == true);
 
-		template <typename T>
-		void AtomicUserTypeBasicTest<T>::TestIsLockFree()
-		{
-			{
-				AtomicType atomic;
+        CHECK(AtomicType::is_always_lock_free == true);
+      }
+    }
 
-				CHECK(atomic.is_lock_free() == true);
+    template <typename T>
+    void AtomicUserTypeBasicTest<T>::TestStore()
+    {
+      {
+        AtomicType atomic;
+        UserType expected{ 5, 6 };
 
-				CHECK(AtomicType::is_always_lock_free == true);
-			}
-		}
+        atomic.store(expected, rsl::memory_order_relaxed);
 
-		template <typename T>
-		void AtomicUserTypeBasicTest<T>::TestStore()
-		{
-			{
-				AtomicType atomic;
-				UserType expected{ 5, 6 };
+        UserType ret = atomic.load(rsl::memory_order_relaxed);
 
-				atomic.store(expected, rsl::memory_order_relaxed);
+        CHECK(ret == expected);
+      }
 
-				UserType ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic;
+        UserType expected{ 5, 6 };
 
-				CHECK(ret == expected);
-			}
+        atomic.store({ 5, 6 }, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
-				UserType expected{ 5, 6 };
+        UserType ret = atomic.load(rsl::memory_order_relaxed);
 
-				atomic.store({ 5, 6 }, rsl::memory_order_relaxed);
+        CHECK(ret == expected);
+      }
+    }
 
-				UserType ret = atomic.load(rsl::memory_order_relaxed);
+    template <typename T>
+    void AtomicUserTypeBasicTest<T>::TestLoad()
+    {
+      {
+        AtomicType atomic;
+        UserType expected{ 0, 0 };
 
-				CHECK(ret == expected);
-			}
-		}
+        CHECK(atomic.load(rsl::memory_order_relaxed) == expected);
 
-		template <typename T>
-		void AtomicUserTypeBasicTest<T>::TestLoad()
-		{
-			{
-				AtomicType atomic;
-				UserType expected{ 0, 0 };
+        CHECK(atomic == expected);
+      }
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == expected);
+      {
+        AtomicType atomic{ {5, 6} };
+        UserType expected{ 5, 6 };
 
-				CHECK(atomic == expected);
-			}
+        CHECK(atomic.load(rsl::memory_order_relaxed) == expected);
 
-			{
-				AtomicType atomic{ {5, 6} };
-				UserType expected{ 5, 6 };
+        CHECK(atomic == expected);
+      }
+    }
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == expected);
+    template <typename T>
+    void AtomicUserTypeBasicTest<T>::TestExchange()
+    {
+      {
+        AtomicType atomic;
 
-				CHECK(atomic == expected);
-			}
-		}
+        UserType expected{ 0, 0 };
 
-		template <typename T>
-		void AtomicUserTypeBasicTest<T>::TestExchange()
-		{
-			{
-				AtomicType atomic;
+        UserType ret = atomic.exchange({ 0, 0 }, rsl::memory_order_relaxed);
 
-				UserType expected{ 0, 0 };
+        CHECK(ret == expected);
+      }
 
-				UserType ret = atomic.exchange({ 0, 0 }, rsl::memory_order_relaxed);
+      {
+        AtomicType atomic;
+        UserType expected{ 0, 0 };
+        UserType expected2{ 0, 1 };
 
-				CHECK(ret == expected);
-			}
+        UserType ret = atomic.exchange({ 0, 1 }, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
-				UserType expected{ 0, 0 };
-				UserType expected2{ 0, 1 };
+        CHECK(ret == expected);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == expected2);
+      }
+    }
 
-				UserType ret = atomic.exchange({ 0, 1 }, rsl::memory_order_relaxed);
+    template <typename T>
+    void AtomicUserTypeBasicTest<T>::TestCompareExchangeWeak()
+    {
+      {
+        AtomicType atomic;
 
-				CHECK(ret == expected);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == expected2);
-			}
-		}
+        UserType observed{ 0, 0 };
+        bool ret = atomic.compare_exchange_weak(observed, { 0, 0 }, rsl::memory_order_relaxed);
 
-		template <typename T>
-		void AtomicUserTypeBasicTest<T>::TestCompareExchangeWeak()
-		{
-			{
-				AtomicType atomic;
+        UserType expected{ 0, 0 };
+        if (ret)
+        {
+          CHECK(ret == true);
+          CHECK(observed == expected);
+          CHECK(atomic.load(rsl::memory_order_relaxed) == expected);
+        }
+      }
 
-				UserType observed{ 0, 0 };
-				bool ret = atomic.compare_exchange_weak(observed, { 0, 0 }, rsl::memory_order_relaxed);
+      {
+        AtomicType atomic;
 
-				UserType expected{ 0, 0 };
-				if (ret)
-				{
-					CHECK(ret == true);
-					CHECK(observed == expected);
-					CHECK(atomic.load(rsl::memory_order_relaxed) == expected);
-				}
-			}
+        UserType observed{ 0, 0 };
+        bool ret = atomic.compare_exchange_weak(observed, { 0, 1 }, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
+        UserType expected{ 0, 1 };
+        UserType expected2{ 0, 0 };
+        if (ret)
+        {
+          CHECK(ret == true);
+          CHECK(observed == expected2);
+          CHECK(atomic.load(rsl::memory_order_relaxed) == expected);
+        }
+      }
 
-				UserType observed{ 0, 0 };
-				bool ret = atomic.compare_exchange_weak(observed, { 0, 1 }, rsl::memory_order_relaxed);
+      {
+        AtomicType atomic;
 
-				UserType expected{ 0, 1 };
-				UserType expected2{ 0, 0 };
-				if (ret)
-				{
-					CHECK(ret == true);
-					CHECK(observed == expected2);
-					CHECK(atomic.load(rsl::memory_order_relaxed) == expected);
-				}
-			}
+        UserType observed{ 0, 1 };
+        bool ret = atomic.compare_exchange_weak(observed, { 0, 1 }, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
+        UserType expected{ 0, 0 };
 
-				UserType observed{ 0, 1 };
-				bool ret = atomic.compare_exchange_weak(observed, { 0, 1 }, rsl::memory_order_relaxed);
+        CHECK(ret == false);
+        CHECK(observed == expected);
+      }
+    }
 
-				UserType expected{ 0, 0 };
+    template <typename T>
+    void AtomicUserTypeBasicTest<T>::TestCompareExchangeStrong()
+    {
+      {
+        AtomicType atomic;
 
-				CHECK(ret == false);
-				CHECK(observed == expected);
-			}
-		}
+        UserType observed{ 0, 0 };
+        bool ret = atomic.compare_exchange_strong(observed, { 0, 0 }, rsl::memory_order_relaxed);
 
-		template <typename T>
-		void AtomicUserTypeBasicTest<T>::TestCompareExchangeStrong()
-		{
-			{
-				AtomicType atomic;
+        UserType expected{ 0, 0 };
 
-				UserType observed{ 0, 0 };
-				bool ret = atomic.compare_exchange_strong(observed, { 0, 0 }, rsl::memory_order_relaxed);
+        CHECK(ret == true);
+        CHECK(observed == expected);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == expected);
+      }
 
-				UserType expected{ 0, 0 };
+      {
+        AtomicType atomic;
 
-				CHECK(ret == true);
-				CHECK(observed == expected);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == expected);
-			}
+        UserType observed{ 0, 0 };
+        bool ret = atomic.compare_exchange_strong(observed, { 0, 1 }, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
+        UserType expected{ 0, 1 };
+        UserType expected2{ 0, 0 };
 
-				UserType observed{ 0, 0 };
-				bool ret = atomic.compare_exchange_strong(observed, { 0, 1 }, rsl::memory_order_relaxed);
+        CHECK(ret == true);
+        CHECK(observed == expected2);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == expected);
+      }
 
-				UserType expected{ 0, 1 };
-				UserType expected2{ 0, 0 };
+      {
+        AtomicType atomic;
 
-				CHECK(ret == true);
-				CHECK(observed == expected2);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == expected);
-			}
+        UserType observed{ 0, 1 };
+        bool ret = atomic.compare_exchange_strong(observed, { 0, 1 }, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
+        UserType expected{ 0, 0 };
 
-				UserType observed{ 0, 1 };
-				bool ret = atomic.compare_exchange_strong(observed, { 0, 1 }, rsl::memory_order_relaxed);
+        CHECK(ret == false);
+        CHECK(observed == expected);
+      }
+    }
 
-				UserType expected{ 0, 0 };
+    template <typename T>
+    void AtomicUserTypeBasicTest<T>::TestAllMemoryOrders()
+    {
+      {
+        AtomicType atomic;
+        UserType val{ 0, 1 };
 
-				CHECK(ret == false);
-				CHECK(observed == expected);
-			}
-		}
+        atomic.store(val);
 
-		template <typename T>
-		void AtomicUserTypeBasicTest<T>::TestAllMemoryOrders()
-		{
-			{
-				AtomicType atomic;
-				UserType val{ 0, 1 };
+        atomic.store(val, rsl::memory_order_relaxed);
 
-				atomic.store(val);
+        atomic.store(val, rsl::memory_order_release);
 
-				atomic.store(val, rsl::memory_order_relaxed);
+        atomic.store(val, rsl::memory_order_seq_cst);
+      }
 
-				atomic.store(val, rsl::memory_order_release);
+      {
+        AtomicType atomic;
 
-				atomic.store(val, rsl::memory_order_seq_cst);
-			}
+        UserType ret = atomic.load();
 
-			{
-				AtomicType atomic;
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				UserType ret = atomic.load();
+        ret = atomic.load(rsl::memory_order_acquire);
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.load(rsl::memory_order_acquire);
+      {
+        AtomicType atomic;
 
-				ret = atomic.load(rsl::memory_order_seq_cst);
-			}
+        UserType ret = atomic.exchange({ 0, 1 });
 
-			{
-				AtomicType atomic;
+        ret = atomic.exchange({ 0, 0 }, rsl::memory_order_relaxed);
 
-				UserType ret = atomic.exchange({ 0, 1 });
+        ret = atomic.exchange({ 0, 0 }, rsl::memory_order_acquire);
 
-				ret = atomic.exchange({ 0, 0 }, rsl::memory_order_relaxed);
+        ret = atomic.exchange({ 0, 0 }, rsl::memory_order_release);
 
-				ret = atomic.exchange({ 0, 0 }, rsl::memory_order_acquire);
+        ret = atomic.exchange({ 0, 0 }, rsl::memory_order_acq_rel);
 
-				ret = atomic.exchange({ 0, 0 }, rsl::memory_order_release);
+        ret = atomic.exchange({ 0, 0 }, rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.exchange({ 0, 0 }, rsl::memory_order_acq_rel);
+      {
+        AtomicType atomic;
 
-				ret = atomic.exchange({ 0, 0 }, rsl::memory_order_seq_cst);
-			}
+        UserType observed{ 0, 0 };
 
-			{
-				AtomicType atomic;
+        bool ret = atomic.compare_exchange_weak(observed, { 0, 0 });
 
-				UserType observed{ 0, 0 };
+        ret = atomic.compare_exchange_weak(observed, { 0, 0 }, rsl::memory_order_relaxed);
 
-				bool ret = atomic.compare_exchange_weak(observed, { 0, 0 });
+        ret = atomic.compare_exchange_weak(observed, { 0, 0 }, rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_weak(observed, { 0, 0 }, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_weak(observed, { 0, 0 }, rsl::memory_order_release);
 
-				ret = atomic.compare_exchange_weak(observed, { 0, 0 }, rsl::memory_order_acquire);
+        ret = atomic.compare_exchange_weak(observed, { 0, 0 }, rsl::memory_order_acq_rel);
 
-				ret = atomic.compare_exchange_weak(observed, { 0, 0 }, rsl::memory_order_release);
+        ret = atomic.compare_exchange_weak(observed, { 0, 0 }, rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.compare_exchange_weak(observed, { 0, 0 }, rsl::memory_order_acq_rel);
+      {
+        AtomicType atomic;
 
-				ret = atomic.compare_exchange_weak(observed, { 0, 0 }, rsl::memory_order_seq_cst);
-			}
+        UserType observed{ 0, 0 };
 
-			{
-				AtomicType atomic;
+        bool ret = atomic.compare_exchange_strong(observed, { 0, 0 });
 
-				UserType observed{ 0, 0 };
+        ret = atomic.compare_exchange_strong(observed, { 0, 0 }, rsl::memory_order_relaxed);
 
-				bool ret = atomic.compare_exchange_strong(observed, { 0, 0 });
+        ret = atomic.compare_exchange_strong(observed, { 0, 0 }, rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_strong(observed, { 0, 0 }, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_strong(observed, { 0, 0 }, rsl::memory_order_release);
 
-				ret = atomic.compare_exchange_strong(observed, { 0, 0 }, rsl::memory_order_acquire);
+        ret = atomic.compare_exchange_strong(observed, { 0, 0 }, rsl::memory_order_acq_rel);
 
-				ret = atomic.compare_exchange_strong(observed, { 0, 0 }, rsl::memory_order_release);
+        ret = atomic.compare_exchange_strong(observed, { 0, 0 }, rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.compare_exchange_strong(observed, { 0, 0 }, rsl::memory_order_acq_rel);
+      {
+        AtomicType atomic;
 
-				ret = atomic.compare_exchange_strong(observed, { 0, 0 }, rsl::memory_order_seq_cst);
-			}
+        UserType observed{ 0, 0 };
+        bool ret;
 
-			{
-				AtomicType atomic;
+        ret = atomic.compare_exchange_weak(observed, { 0, 0 }, rsl::memory_order_relaxed, rsl::memory_order_relaxed);
 
-				UserType observed{ 0, 0 };
-				bool ret;
+        ret = atomic.compare_exchange_weak(observed, { 0, 0 }, rsl::memory_order_acquire, rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_weak(observed, { 0, 0 }, rsl::memory_order_relaxed, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_weak(observed, { 0, 0 }, rsl::memory_order_acquire, rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_weak(observed, { 0, 0 }, rsl::memory_order_acquire, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_weak(observed, { 0, 0 }, rsl::memory_order_release, rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_weak(observed, { 0, 0 }, rsl::memory_order_acquire, rsl::memory_order_acquire);
+        ret = atomic.compare_exchange_weak(observed, { 0, 0 }, rsl::memory_order_acq_rel, rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_weak(observed, { 0, 0 }, rsl::memory_order_release, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_weak(observed, { 0, 0 }, rsl::memory_order_acq_rel, rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_weak(observed, { 0, 0 }, rsl::memory_order_acq_rel, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_weak(observed, { 0, 0 }, rsl::memory_order_seq_cst, rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_weak(observed, { 0, 0 }, rsl::memory_order_acq_rel, rsl::memory_order_acquire);
+        ret = atomic.compare_exchange_weak(observed, { 0, 0 }, rsl::memory_order_seq_cst, rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_weak(observed, { 0, 0 }, rsl::memory_order_seq_cst, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_weak(observed, { 0, 0 }, rsl::memory_order_seq_cst, rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.compare_exchange_weak(observed, { 0, 0 }, rsl::memory_order_seq_cst, rsl::memory_order_acquire);
+      {
+        AtomicType atomic;
 
-				ret = atomic.compare_exchange_weak(observed, { 0, 0 }, rsl::memory_order_seq_cst, rsl::memory_order_seq_cst);
-			}
+        UserType observed{ 0, 0 };
+        bool ret;
 
-			{
-				AtomicType atomic;
+        ret = atomic.compare_exchange_strong(observed, { 0, 0 }, rsl::memory_order_relaxed, rsl::memory_order_relaxed);
 
-				UserType observed{ 0, 0 };
-				bool ret;
+        ret = atomic.compare_exchange_strong(observed, { 0, 0 }, rsl::memory_order_acquire, rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_strong(observed, { 0, 0 }, rsl::memory_order_relaxed, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_strong(observed, { 0, 0 }, rsl::memory_order_acquire, rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_strong(observed, { 0, 0 }, rsl::memory_order_acquire, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_strong(observed, { 0, 0 }, rsl::memory_order_release, rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_strong(observed, { 0, 0 }, rsl::memory_order_acquire, rsl::memory_order_acquire);
+        ret = atomic.compare_exchange_strong(observed, { 0, 0 }, rsl::memory_order_acq_rel, rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_strong(observed, { 0, 0 }, rsl::memory_order_release, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_strong(observed, { 0, 0 }, rsl::memory_order_acq_rel, rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_strong(observed, { 0, 0 }, rsl::memory_order_acq_rel, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_strong(observed, { 0, 0 }, rsl::memory_order_seq_cst, rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_strong(observed, { 0, 0 }, rsl::memory_order_acq_rel, rsl::memory_order_acquire);
+        ret = atomic.compare_exchange_strong(observed, { 0, 0 }, rsl::memory_order_seq_cst, rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_strong(observed, { 0, 0 }, rsl::memory_order_seq_cst, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_strong(observed, { 0, 0 }, rsl::memory_order_seq_cst, rsl::memory_order_seq_cst);
+      }
+    }
 
-				ret = atomic.compare_exchange_strong(observed, { 0, 0 }, rsl::memory_order_seq_cst, rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_strong(observed, { 0, 0 }, rsl::memory_order_seq_cst, rsl::memory_order_seq_cst);
-			}
-		}
+    class AtomicBoolBasicTest
+    {
+    public:
 
+      using AtomicType = rsl::atomic<bool>;
+      using BoolType = bool;
 
-		class AtomicBoolBasicTest
-		{
-		public:
+      int RunTest()
+      {
+        TestAtomicCtor();
 
-			using AtomicType = rsl::atomic<bool>;
-			using BoolType = bool;
+        TestAssignmentOperators();
 
-			int RunTest()
-			{
-				TestAtomicCtor();
+        TestIsLockFree();
 
-				TestAssignmentOperators();
+        TestStore();
 
-				TestIsLockFree();
+        TestLoad();
 
-				TestStore();
+        TestExchange();
 
-				TestLoad();
+        TestCompareExchangeWeak();
 
-				TestExchange();
+        TestCompareExchangeStrong();
 
-				TestCompareExchangeWeak();
+        TestAllMemoryOrders();
 
-				TestCompareExchangeStrong();
+        return nErrorCount;
+      }
 
-				TestAllMemoryOrders();
+    private:
 
-				return nErrorCount;
-			}
+      void TestAtomicCtor();
 
-		private:
+      void TestAssignmentOperators();
 
-			void TestAtomicCtor();
+      void TestIsLockFree();
 
-			void TestAssignmentOperators();
+      void TestStore();
 
-			void TestIsLockFree();
+      void TestLoad();
 
-			void TestStore();
+      void TestExchange();
 
-			void TestLoad();
+      void TestCompareExchangeWeak();
 
-			void TestExchange();
+      void TestCompareExchangeStrong();
 
-			void TestCompareExchangeWeak();
+      void TestAllMemoryOrders();
 
-			void TestCompareExchangeStrong();
+    private:
 
-			void TestAllMemoryOrders();
+      int nErrorCount = 0;
+    };
 
-		private:
+    void AtomicBoolBasicTest::TestAtomicCtor()
+    {
+      {
+        AtomicType atomic{ false };
 
-			int nErrorCount = 0;
-		};
+        BoolType ret = atomic.load(rsl::memory_order_relaxed);
 
-		void AtomicBoolBasicTest::TestAtomicCtor()
-		{
-			{
-				AtomicType atomic{ false };
+        CHECK(ret == false);
+      }
 
-				BoolType ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ true };
 
-				CHECK(ret == false);
-			}
+        BoolType ret = atomic.load(rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ true };
+        CHECK(ret == true);
+      }
 
-				BoolType ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic;
 
-				CHECK(ret == true);
-			}
+        BoolType ret = atomic.load(rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == false);
+      }
 
-				BoolType ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{};
 
-				CHECK(ret == false);
-			}
+        BoolType ret = atomic.load(rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{};
+        CHECK(ret == false);
+      }
+    }
 
-				BoolType ret = atomic.load(rsl::memory_order_relaxed);
+    void AtomicBoolBasicTest::TestAssignmentOperators()
+    {
+      {
+        AtomicType atomic;
 
-				CHECK(ret == false);
-			}
-		}
+        BoolType ret = atomic = true;
 
-		void AtomicBoolBasicTest::TestAssignmentOperators()
-		{
-			{
-				AtomicType atomic;
+        CHECK(ret == true);
 
-				BoolType ret = atomic = true;
+        CHECK(atomic.load(rsl::memory_order_relaxed) == true);
+      }
+    }
 
-				CHECK(ret == true);
+    void AtomicBoolBasicTest::TestIsLockFree()
+    {
+      {
+        AtomicType atomic;
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == true);
-			}
-		}
+        bool ret = atomic.is_lock_free();
 
-		void AtomicBoolBasicTest::TestIsLockFree()
-		{
-			{
-				AtomicType atomic;
+        CHECK(ret == true);
 
-				bool ret = atomic.is_lock_free();
+        CHECK(AtomicType::is_always_lock_free == true);
+      }
+    }
 
-				CHECK(ret == true);
+    void AtomicBoolBasicTest::TestStore()
+    {
+      {
+        AtomicType atomic;
 
-				CHECK(AtomicType::is_always_lock_free == true);
-			}
-		}
+        atomic.store(true, rsl::memory_order_relaxed);
 
-		void AtomicBoolBasicTest::TestStore()
-		{
-			{
-				AtomicType atomic;
+        CHECK(atomic.load(rsl::memory_order_relaxed) == true);
+      }
+    }
 
-				atomic.store(true, rsl::memory_order_relaxed);
+    void AtomicBoolBasicTest::TestLoad()
+    {
+      {
+        AtomicType atomic;
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == true);
-			}
-		}
+        CHECK(atomic.load(rsl::memory_order_relaxed) == false);
+      }
 
-		void AtomicBoolBasicTest::TestLoad()
-		{
-			{
-				AtomicType atomic;
+      {
+        AtomicType atomic{ true };
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == false);
-			}
+        CHECK(atomic.load(rsl::memory_order_relaxed) == true);
+      }
+    }
 
-			{
-				AtomicType atomic{ true };
+    void AtomicBoolBasicTest::TestExchange()
+    {
+      {
+        AtomicType atomic;
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == true);
-			}
-		}
+        BoolType ret = atomic.exchange(false, rsl::memory_order_relaxed);
 
-		void AtomicBoolBasicTest::TestExchange()
-		{
-			{
-				AtomicType atomic;
+        CHECK(ret == false);
 
-				BoolType ret = atomic.exchange(false, rsl::memory_order_relaxed);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == false);
+      }
 
-				CHECK(ret == false);
+      {
+        AtomicType atomic;
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == false);
-			}
+        BoolType ret = atomic.exchange(true, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == false);
 
-				BoolType ret = atomic.exchange(true, rsl::memory_order_relaxed);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == true);
+      }
+    }
 
-				CHECK(ret == false);
+    void AtomicBoolBasicTest::TestCompareExchangeWeak()
+    {
+      {
+        AtomicType atomic{ false };
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == true);
-			}
-		}
+        BoolType observed = false;
+        bool ret = atomic.compare_exchange_weak(observed, false, rsl::memory_order_relaxed);
 
-		void AtomicBoolBasicTest::TestCompareExchangeWeak()
-		{
-			{
-				AtomicType atomic{ false };
+        if (ret)
+        {
+          CHECK(ret == true);
+          CHECK(observed == false);
+          CHECK(atomic.load(rsl::memory_order_relaxed) == false);
+        }
+      }
 
-				BoolType observed = false;
-				bool ret = atomic.compare_exchange_weak(observed, false, rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ false };
 
-				if (ret)
-				{
-					CHECK(ret == true);
-					CHECK(observed == false);
-					CHECK(atomic.load(rsl::memory_order_relaxed) == false);
-				}
-			}
+        BoolType observed = false;
+        bool ret = atomic.compare_exchange_weak(observed, true, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ false };
+        if (ret)
+        {
+          CHECK(ret == true);
+          CHECK(observed == false);
+          CHECK(atomic.load(rsl::memory_order_relaxed) == true);
+        }
+      }
 
-				BoolType observed = false;
-				bool ret = atomic.compare_exchange_weak(observed, true, rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ false };
 
-				if (ret)
-				{
-					CHECK(ret == true);
-					CHECK(observed == false);
-					CHECK(atomic.load(rsl::memory_order_relaxed) == true);
-				}
-			}
+        BoolType observed = true;
+        bool ret = atomic.compare_exchange_weak(observed, true, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ false };
+        CHECK(ret == false);
+        CHECK(observed == false);
+      }
+    }
 
-				BoolType observed = true;
-				bool ret = atomic.compare_exchange_weak(observed, true, rsl::memory_order_relaxed);
+    void AtomicBoolBasicTest::TestCompareExchangeStrong()
+    {
+      {
+        AtomicType atomic{ false };
 
-				CHECK(ret == false);
-				CHECK(observed == false);
-			}
-		}
+        BoolType observed = false;
+        bool ret = atomic.compare_exchange_weak(observed, false, rsl::memory_order_relaxed);
 
-		void AtomicBoolBasicTest::TestCompareExchangeStrong()
-		{
-			{
-				AtomicType atomic{ false };
+        CHECK(ret == true);
+        CHECK(observed == false);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == false);
+      }
 
-				BoolType observed = false;
-				bool ret = atomic.compare_exchange_weak(observed, false, rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ false };
 
-				CHECK(ret == true);
-				CHECK(observed == false);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == false);
-			}
+        BoolType observed = false;
+        bool ret = atomic.compare_exchange_weak(observed, true, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ false };
+        CHECK(ret == true);
+        CHECK(observed == false);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == true);
+      }
 
-				BoolType observed = false;
-				bool ret = atomic.compare_exchange_weak(observed, true, rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ false };
 
-				CHECK(ret == true);
-				CHECK(observed == false);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == true);
-			}
+        BoolType observed = true;
+        bool ret = atomic.compare_exchange_weak(observed, true, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ false };
+        CHECK(ret == false);
+        CHECK(observed == false);
+      }
+    }
 
-				BoolType observed = true;
-				bool ret = atomic.compare_exchange_weak(observed, true, rsl::memory_order_relaxed);
+    void AtomicBoolBasicTest::TestAllMemoryOrders()
+    {
+      {
+        AtomicType atomic;
 
-				CHECK(ret == false);
-				CHECK(observed == false);
-			}
-		}
+        atomic.store(true);
 
-		void AtomicBoolBasicTest::TestAllMemoryOrders()
-		{
-			{
-				AtomicType atomic;
+        atomic.store(true, rsl::memory_order_relaxed);
 
-				atomic.store(true);
+        atomic.store(true, rsl::memory_order_release);
 
-				atomic.store(true, rsl::memory_order_relaxed);
+        atomic.store(true, rsl::memory_order_seq_cst);
+      }
 
-				atomic.store(true, rsl::memory_order_release);
+      {
+        AtomicType atomic;
 
-				atomic.store(true, rsl::memory_order_seq_cst);
-			}
+        BoolType ret = atomic.load();
 
-			{
-				AtomicType atomic;
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				BoolType ret = atomic.load();
+        ret = atomic.load(rsl::memory_order_acquire);
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.load(rsl::memory_order_acquire);
+      {
+        AtomicType atomic;
 
-				ret = atomic.load(rsl::memory_order_seq_cst);
-			}
+        BoolType ret = atomic.exchange(true);
 
-			{
-				AtomicType atomic;
+        ret = atomic.exchange(true, rsl::memory_order_relaxed);
 
-				BoolType ret = atomic.exchange(true);
+        ret = atomic.exchange(true, rsl::memory_order_acquire);
 
-				ret = atomic.exchange(true, rsl::memory_order_relaxed);
+        ret = atomic.exchange(true, rsl::memory_order_release);
 
-				ret = atomic.exchange(true, rsl::memory_order_acquire);
+        ret = atomic.exchange(true, rsl::memory_order_acq_rel);
 
-				ret = atomic.exchange(true, rsl::memory_order_release);
+        ret = atomic.exchange(true, rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.exchange(true, rsl::memory_order_acq_rel);
+      {
+        AtomicType atomic;
 
-				ret = atomic.exchange(true, rsl::memory_order_seq_cst);
-			}
+        BoolType observed = false;
+        bool ret = atomic.compare_exchange_weak(observed, true);
 
-			{
-				AtomicType atomic;
+        ret = atomic.compare_exchange_weak(observed, true, rsl::memory_order_relaxed);
 
-				BoolType observed = false;
-				bool ret = atomic.compare_exchange_weak(observed, true);
+        ret = atomic.compare_exchange_weak(observed, true, rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_weak(observed, true, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_weak(observed, true, rsl::memory_order_release);
 
-				ret = atomic.compare_exchange_weak(observed, true, rsl::memory_order_acquire);
+        ret = atomic.compare_exchange_weak(observed, true, rsl::memory_order_acq_rel);
 
-				ret = atomic.compare_exchange_weak(observed, true, rsl::memory_order_release);
+        ret = atomic.compare_exchange_weak(observed, true, rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.compare_exchange_weak(observed, true, rsl::memory_order_acq_rel);
+      {
+        AtomicType atomic;
 
-				ret = atomic.compare_exchange_weak(observed, true, rsl::memory_order_seq_cst);
-			}
+        BoolType observed = false;
+        bool ret = atomic.compare_exchange_strong(observed, true);
 
-			{
-				AtomicType atomic;
+        ret = atomic.compare_exchange_strong(observed, true, rsl::memory_order_relaxed);
 
-				BoolType observed = false;
-				bool ret = atomic.compare_exchange_strong(observed, true);
+        ret = atomic.compare_exchange_strong(observed, true, rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_strong(observed, true, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_strong(observed, true, rsl::memory_order_release);
 
-				ret = atomic.compare_exchange_strong(observed, true, rsl::memory_order_acquire);
+        ret = atomic.compare_exchange_strong(observed, true, rsl::memory_order_acq_rel);
 
-				ret = atomic.compare_exchange_strong(observed, true, rsl::memory_order_release);
+        ret = atomic.compare_exchange_strong(observed, true, rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.compare_exchange_strong(observed, true, rsl::memory_order_acq_rel);
+      {
+        AtomicType atomic;
 
-				ret = atomic.compare_exchange_strong(observed, true, rsl::memory_order_seq_cst);
-			}
+        BoolType observed = false;
+        bool ret = atomic.compare_exchange_weak(observed, true, rsl::memory_order_relaxed, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
+        ret = atomic.compare_exchange_weak(observed, true, rsl::memory_order_acquire, rsl::memory_order_relaxed);
 
-				BoolType observed = false;
-				bool ret = atomic.compare_exchange_weak(observed, true, rsl::memory_order_relaxed, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_weak(observed, true, rsl::memory_order_acquire, rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_weak(observed, true, rsl::memory_order_acquire, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_weak(observed, true, rsl::memory_order_release, rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_weak(observed, true, rsl::memory_order_acquire, rsl::memory_order_acquire);
+        ret = atomic.compare_exchange_weak(observed, true, rsl::memory_order_acq_rel, rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_weak(observed, true, rsl::memory_order_release, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_weak(observed, true, rsl::memory_order_acq_rel, rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_weak(observed, true, rsl::memory_order_acq_rel, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_weak(observed, true, rsl::memory_order_seq_cst, rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_weak(observed, true, rsl::memory_order_acq_rel, rsl::memory_order_acquire);
+        ret = atomic.compare_exchange_weak(observed, true, rsl::memory_order_seq_cst, rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_weak(observed, true, rsl::memory_order_seq_cst, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_weak(observed, true, rsl::memory_order_seq_cst, rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.compare_exchange_weak(observed, true, rsl::memory_order_seq_cst, rsl::memory_order_acquire);
+      {
+        AtomicType atomic;
 
-				ret = atomic.compare_exchange_weak(observed, true, rsl::memory_order_seq_cst, rsl::memory_order_seq_cst);
-			}
+        BoolType observed = false;
+        bool ret = atomic.compare_exchange_strong(observed, true, rsl::memory_order_relaxed, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
+        ret = atomic.compare_exchange_strong(observed, true, rsl::memory_order_acquire, rsl::memory_order_relaxed);
 
-				BoolType observed = false;
-				bool ret = atomic.compare_exchange_strong(observed, true, rsl::memory_order_relaxed, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_strong(observed, true, rsl::memory_order_acquire, rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_strong(observed, true, rsl::memory_order_acquire, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_strong(observed, true, rsl::memory_order_release, rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_strong(observed, true, rsl::memory_order_acquire, rsl::memory_order_acquire);
+        ret = atomic.compare_exchange_strong(observed, true, rsl::memory_order_acq_rel, rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_strong(observed, true, rsl::memory_order_release, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_strong(observed, true, rsl::memory_order_acq_rel, rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_strong(observed, true, rsl::memory_order_acq_rel, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_strong(observed, true, rsl::memory_order_seq_cst, rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_strong(observed, true, rsl::memory_order_acq_rel, rsl::memory_order_acquire);
+        ret = atomic.compare_exchange_strong(observed, true, rsl::memory_order_seq_cst, rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_strong(observed, true, rsl::memory_order_seq_cst, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_strong(observed, true, rsl::memory_order_seq_cst, rsl::memory_order_seq_cst);
+      }
+    }
 
-				ret = atomic.compare_exchange_strong(observed, true, rsl::memory_order_seq_cst, rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_strong(observed, true, rsl::memory_order_seq_cst, rsl::memory_order_seq_cst);
-			}
-		}
+    template <typename T>
+    class AtomicIntegralBasicTest
+    {
+    public:
 
+      using AtomicType = rsl::atomic<T>;
+      using IntegralType = T;
 
-		template <typename T>
-		class AtomicIntegralBasicTest
-		{
-		public:
+      int RunTest()
+      {
+        TestAtomicCtor();
 
-			using AtomicType = rsl::atomic<T>;
-			using IntegralType = T;
+        TestAtomicFetchAdd();
+        TestAtomicAddFetch();
 
-			int RunTest()
-			{
-				TestAtomicCtor();
+        TestAtomicFetchSub();
+        TestAtomicSubFetch();
 
-				TestAtomicFetchAdd();
-				TestAtomicAddFetch();
+        TestAtomicFetchAnd();
+        TestAtomicAndFetch();
 
-				TestAtomicFetchSub();
-				TestAtomicSubFetch();
+        TestAtomicFetchOr();
+        TestAtomicOrFetch();
 
-				TestAtomicFetchAnd();
-				TestAtomicAndFetch();
+        TestAtomicFetchXor();
+        TestAtomicXorFetch();
 
-				TestAtomicFetchOr();
-				TestAtomicOrFetch();
+        TestAssignmentOperators();
 
-				TestAtomicFetchXor();
-				TestAtomicXorFetch();
+        TestIsLockFree();
 
-				TestAssignmentOperators();
+        TestStore();
 
-				TestIsLockFree();
+        TestLoad();
 
-				TestStore();
+        TestExchange();
 
-				TestLoad();
+        TestCompareExchangeWeak();
 
-				TestExchange();
+        TestCompareExchangeStrong();
 
-				TestCompareExchangeWeak();
+        TestAllMemoryOrders();
 
-				TestCompareExchangeStrong();
+        TestAtomicStandalone();
 
-				TestAllMemoryOrders();
+        return nErrorCount;
+      }
 
-				TestAtomicStandalone();
+    private:
 
-				return nErrorCount;
-			}
+      void TestAtomicCtor();
 
-		private:
+      void TestAtomicFetchAdd();
+      void TestAtomicAddFetch();
 
-			void TestAtomicCtor();
+      void TestAtomicFetchSub();
+      void TestAtomicSubFetch();
 
-			void TestAtomicFetchAdd();
-			void TestAtomicAddFetch();
+      void TestAtomicFetchAnd();
+      void TestAtomicAndFetch();
 
-			void TestAtomicFetchSub();
-			void TestAtomicSubFetch();
+      void TestAtomicFetchOr();
+      void TestAtomicOrFetch();
 
-			void TestAtomicFetchAnd();
-			void TestAtomicAndFetch();
+      void TestAtomicFetchXor();
+      void TestAtomicXorFetch();
 
-			void TestAtomicFetchOr();
-			void TestAtomicOrFetch();
+      void TestAssignmentOperators();
 
-			void TestAtomicFetchXor();
-			void TestAtomicXorFetch();
+      void TestIsLockFree();
 
-			void TestAssignmentOperators();
+      void TestStore();
 
-			void TestIsLockFree();
+      void TestLoad();
 
-			void TestStore();
+      void TestExchange();
 
-			void TestLoad();
+      void TestCompareExchangeWeak();
 
-			void TestExchange();
+      void TestCompareExchangeStrong();
 
-			void TestCompareExchangeWeak();
+      void TestAllMemoryOrders();
 
-			void TestCompareExchangeStrong();
+      void TestAtomicStandalone();
 
-			void TestAllMemoryOrders();
+    private:
 
-			void TestAtomicStandalone();
+      int nErrorCount = 0;
+    };
 
-		private:
+    template <typename T>
+    void AtomicIntegralBasicTest<T>::TestAtomicCtor()
+    {
+      {
+        AtomicType atomic{ 0 };
 
-			int nErrorCount = 0;
-		};
+        IntegralType ret = atomic.load(rsl::memory_order_relaxed);
 
-		template <typename T>
-		void AtomicIntegralBasicTest<T>::TestAtomicCtor()
-		{
-			{
-				AtomicType atomic{ 0 };
+        CHECK(ret == 0);
+      }
 
-				IntegralType ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 1 };
 
-				CHECK(ret == 0);
-			}
+        IntegralType ret = atomic.load(rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ 1 };
+        CHECK(ret == 1);
+      }
 
-				IntegralType ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 20 };
 
-				CHECK(ret == 1);
-			}
+        IntegralType ret = atomic.load(rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ 20 };
+        CHECK(ret == 20);
+      }
 
-				IntegralType ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic;
 
-				CHECK(ret == 20);
-			}
+        IntegralType ret = atomic.load(rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == 0);
+      }
 
-				IntegralType ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{};
 
-				CHECK(ret == 0);
-			}
+        IntegralType ret = atomic.load(rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{};
+        CHECK(ret == 0);
+      }
+    }
 
-				IntegralType ret = atomic.load(rsl::memory_order_relaxed);
+    template <typename T>
+    void AtomicIntegralBasicTest<T>::TestAtomicFetchAdd()
+    {
+      {
+        AtomicType atomic;
 
-				CHECK(ret == 0);
-			}
-		}
+        IntegralType ret = atomic.fetch_add(1, rsl::memory_order_relaxed);
 
-		template <typename T>
-		void AtomicIntegralBasicTest<T>::TestAtomicFetchAdd()
-		{
-			{
-				AtomicType atomic;
+        CHECK(ret == 0);
 
-				IntegralType ret = atomic.fetch_add(1, rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 0);
+        CHECK(ret == 1);
+      }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic;
 
-				CHECK(ret == 1);
-			}
+        IntegralType ret = atomic.fetch_add(0, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == 0);
 
-				IntegralType ret = atomic.fetch_add(0, rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 0);
+        CHECK(ret == 0);
+      }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 5 };
 
-				CHECK(ret == 0);
-			}
+        IntegralType ret = atomic.fetch_add(0, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ 5 };
+        CHECK(ret == 5);
 
-				IntegralType ret = atomic.fetch_add(0, rsl::memory_order_relaxed);
+        ret = atomic.fetch_add(4, rsl::memory_order_relaxed);
 
-				CHECK(ret == 5);
+        CHECK(ret == 5);
 
-				ret = atomic.fetch_add(4, rsl::memory_order_relaxed);
+        ret = atomic.fetch_add(1, rsl::memory_order_relaxed);
 
-				CHECK(ret == 5);
+        CHECK(ret == 9);
 
-				ret = atomic.fetch_add(1, rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 9);
+        CHECK(ret == 10);
+      }
+    }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+    template <typename T>
+    void AtomicIntegralBasicTest<T>::TestAtomicAddFetch()
+    {
+      {
+        AtomicType atomic;
 
-				CHECK(ret == 10);
-			}
-		}
+        IntegralType ret = atomic.add_fetch(1, rsl::memory_order_relaxed);
 
-		template <typename T>
-		void AtomicIntegralBasicTest<T>::TestAtomicAddFetch()
-		{
-			{
-				AtomicType atomic;
+        CHECK(ret == 1);
 
-				IntegralType ret = atomic.add_fetch(1, rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 1);
+        CHECK(ret == 1);
+      }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic;
 
-				CHECK(ret == 1);
-			}
+        IntegralType ret = atomic.add_fetch(0, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == 0);
 
-				IntegralType ret = atomic.add_fetch(0, rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 0);
+        CHECK(ret == 0);
+      }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 5 };
 
-				CHECK(ret == 0);
-			}
+        IntegralType ret = atomic.add_fetch(0, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ 5 };
+        CHECK(ret == 5);
 
-				IntegralType ret = atomic.add_fetch(0, rsl::memory_order_relaxed);
+        ret = atomic.add_fetch(4, rsl::memory_order_relaxed);
 
-				CHECK(ret == 5);
+        CHECK(ret == 9);
 
-				ret = atomic.add_fetch(4, rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 9);
+        CHECK(ret == 9);
+      }
+    }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+    template <typename T>
+    void AtomicIntegralBasicTest<T>::TestAtomicFetchSub()
+    {
+      {
+        AtomicType atomic{ 1 };
 
-				CHECK(ret == 9);
-			}
-		}
+        IntegralType ret = atomic.fetch_sub(1, rsl::memory_order_relaxed);
 
-		template <typename T>
-		void AtomicIntegralBasicTest<T>::TestAtomicFetchSub()
-		{
-			{
-				AtomicType atomic{ 1 };
+        CHECK(ret == 1);
 
-				IntegralType ret = atomic.fetch_sub(1, rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 1);
+        CHECK(ret == 0);
+      }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 1 };
 
-				CHECK(ret == 0);
-			}
+        IntegralType ret = atomic.fetch_sub(0, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ 1 };
+        CHECK(ret == 1);
 
-				IntegralType ret = atomic.fetch_sub(0, rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 1);
+        CHECK(ret == 1);
+      }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 5 };
 
-				CHECK(ret == 1);
-			}
+        IntegralType ret = atomic.fetch_sub(2, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ 5 };
+        CHECK(ret == 5);
 
-				IntegralType ret = atomic.fetch_sub(2, rsl::memory_order_relaxed);
+        ret = atomic.fetch_sub(1, rsl::memory_order_relaxed);
 
-				CHECK(ret == 5);
+        CHECK(ret == 3);
 
-				ret = atomic.fetch_sub(1, rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 3);
+        CHECK(ret == 2);
+      }
+    }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+    template <typename T>
+    void AtomicIntegralBasicTest<T>::TestAtomicSubFetch()
+    {
+      {
+        AtomicType atomic{ 1 };
 
-				CHECK(ret == 2);
-			}
-		}
+        IntegralType ret = atomic.sub_fetch(1, rsl::memory_order_relaxed);
 
-		template <typename T>
-		void AtomicIntegralBasicTest<T>::TestAtomicSubFetch()
-		{
-			{
-				AtomicType atomic{ 1 };
+        CHECK(ret == 0);
 
-				IntegralType ret = atomic.sub_fetch(1, rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 0);
+        CHECK(ret == 0);
+      }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 1 };
 
-				CHECK(ret == 0);
-			}
+        IntegralType ret = atomic.sub_fetch(0, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ 1 };
+        CHECK(ret == 1);
 
-				IntegralType ret = atomic.sub_fetch(0, rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 1);
+        CHECK(ret == 1);
+      }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 5 };
 
-				CHECK(ret == 1);
-			}
+        IntegralType ret = atomic.sub_fetch(2, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ 5 };
+        CHECK(ret == 3);
 
-				IntegralType ret = atomic.sub_fetch(2, rsl::memory_order_relaxed);
+        ret = atomic.sub_fetch(1, rsl::memory_order_relaxed);
 
-				CHECK(ret == 3);
+        CHECK(ret == 2);
 
-				ret = atomic.sub_fetch(1, rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 2);
+        CHECK(ret == 2);
+      }
+    }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+    template <typename T>
+    void AtomicIntegralBasicTest<T>::TestAtomicFetchAnd()
+    {
+      {
+        AtomicType atomic{ 0 };
 
-				CHECK(ret == 2);
-			}
-		}
+        IntegralType ret = atomic.fetch_and(0x0, rsl::memory_order_relaxed);
 
-		template <typename T>
-		void AtomicIntegralBasicTest<T>::TestAtomicFetchAnd()
-		{
-			{
-				AtomicType atomic{ 0 };
+        CHECK(ret == 0);
 
-				IntegralType ret = atomic.fetch_and(0x0, rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 0);
+        CHECK(ret == 0);
+      }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 0 };
 
-				CHECK(ret == 0);
-			}
+        IntegralType ret = atomic.fetch_and(0x1, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ 0 };
+        CHECK(ret == 0);
 
-				IntegralType ret = atomic.fetch_and(0x1, rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 0);
+        CHECK(ret == 0);
+      }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 0xF };
 
-				CHECK(ret == 0);
-			}
+        IntegralType ret = atomic.fetch_and(0x1, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ 0xF };
+        CHECK(ret == 0xF);
 
-				IntegralType ret = atomic.fetch_and(0x1, rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 0xF);
+        CHECK(ret == 0X1);
+      }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 0xF };
 
-				CHECK(ret == 0X1);
-			}
+        IntegralType ret = atomic.fetch_and(0xF0, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ 0xF };
+        CHECK(ret == 0xF);
 
-				IntegralType ret = atomic.fetch_and(0xF0, rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 0xF);
+        CHECK(ret == 0x0);
+      }
+    }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+    template <typename T>
+    void AtomicIntegralBasicTest<T>::TestAtomicAndFetch()
+    {
+      {
+        AtomicType atomic{ 0 };
 
-				CHECK(ret == 0x0);
-			}
-		}
+        IntegralType ret = atomic.and_fetch(0x0, rsl::memory_order_relaxed);
 
-		template <typename T>
-		void AtomicIntegralBasicTest<T>::TestAtomicAndFetch()
-		{
-			{
-				AtomicType atomic{ 0 };
+        CHECK(ret == 0);
 
-				IntegralType ret = atomic.and_fetch(0x0, rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 0);
+        CHECK(ret == 0);
+      }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 0 };
 
-				CHECK(ret == 0);
-			}
+        IntegralType ret = atomic.and_fetch(0x1, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ 0 };
+        CHECK(ret == 0);
 
-				IntegralType ret = atomic.and_fetch(0x1, rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 0);
+        CHECK(ret == 0);
+      }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 0xF };
 
-				CHECK(ret == 0);
-			}
+        IntegralType ret = atomic.and_fetch(0x1, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ 0xF };
+        CHECK(ret == 0x1);
 
-				IntegralType ret = atomic.and_fetch(0x1, rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 0x1);
+        CHECK(ret == 0x1);
+      }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 0xF };
 
-				CHECK(ret == 0x1);
-			}
+        IntegralType ret = atomic.and_fetch(0xF0, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ 0xF };
+        CHECK(ret == 0x0);
 
-				IntegralType ret = atomic.and_fetch(0xF0, rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 0x0);
+        CHECK(ret == 0x0);
+      }
+    }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+    template <typename T>
+    void AtomicIntegralBasicTest<T>::TestAtomicFetchOr()
+    {
+      {
+        AtomicType atomic{ 0 };
 
-				CHECK(ret == 0x0);
-			}
-		}
+        IntegralType ret = atomic.fetch_or(0x1, rsl::memory_order_relaxed);
 
-		template <typename T>
-		void AtomicIntegralBasicTest<T>::TestAtomicFetchOr()
-		{
-			{
-				AtomicType atomic{ 0 };
+        CHECK(ret == 0x0);
 
-				IntegralType ret = atomic.fetch_or(0x1, rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 0x0);
+        CHECK(ret == 0x1);
+      }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 0x1 };
 
-				CHECK(ret == 0x1);
-			}
+        IntegralType ret = atomic.fetch_or(0x0, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ 0x1 };
+        CHECK(ret == 0x1);
 
-				IntegralType ret = atomic.fetch_or(0x0, rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 0x1);
+        CHECK(ret == 0x1);
+      }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 0x1 };
 
-				CHECK(ret == 0x1);
-			}
+        IntegralType ret = atomic.fetch_or(0x2, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ 0x1 };
+        CHECK(ret == 0x1);
 
-				IntegralType ret = atomic.fetch_or(0x2, rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 0x1);
+        CHECK(ret == 0x3);
+      }
+    }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+    template <typename T>
+    void AtomicIntegralBasicTest<T>::TestAtomicOrFetch()
+    {
+      {
+        AtomicType atomic{ 0 };
 
-				CHECK(ret == 0x3);
-			}
-		}
+        IntegralType ret = atomic.or_fetch(0x1, rsl::memory_order_relaxed);
 
-		template <typename T>
-		void AtomicIntegralBasicTest<T>::TestAtomicOrFetch()
-		{
-			{
-				AtomicType atomic{ 0 };
+        CHECK(ret == 0x1);
 
-				IntegralType ret = atomic.or_fetch(0x1, rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 0x1);
+        CHECK(ret == 0x1);
+      }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 0x1 };
 
-				CHECK(ret == 0x1);
-			}
+        IntegralType ret = atomic.or_fetch(0x0, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ 0x1 };
+        CHECK(ret == 0x1);
 
-				IntegralType ret = atomic.or_fetch(0x0, rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 0x1);
+        CHECK(ret == 0x1);
+      }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 0x1 };
 
-				CHECK(ret == 0x1);
-			}
+        IntegralType ret = atomic.or_fetch(0x2, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ 0x1 };
+        CHECK(ret == 0x3);
 
-				IntegralType ret = atomic.or_fetch(0x2, rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 0x3);
+        CHECK(ret == 0x3);
+      }
+    }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+    template <typename T>
+    void AtomicIntegralBasicTest<T>::TestAtomicFetchXor()
+    {
+      {
+        AtomicType atomic{ 0 };
 
-				CHECK(ret == 0x3);
-			}
-		}
+        IntegralType ret = atomic.fetch_xor(0x0, rsl::memory_order_relaxed);
 
-		template <typename T>
-		void AtomicIntegralBasicTest<T>::TestAtomicFetchXor()
-		{
-			{
-				AtomicType atomic{ 0 };
+        CHECK(ret == 0x0);
 
-				IntegralType ret = atomic.fetch_xor(0x0, rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 0x0);
+        CHECK(ret == 0x0);
+      }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 0x1 };
 
-				CHECK(ret == 0x0);
-			}
+        IntegralType ret = atomic.fetch_xor(0x1, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ 0x1 };
+        CHECK(ret == 0x1);
 
-				IntegralType ret = atomic.fetch_xor(0x1, rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 0x1);
+        CHECK(ret == 0x0);
+      }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 0x0 };
 
-				CHECK(ret == 0x0);
-			}
+        IntegralType ret = atomic.fetch_xor(0x1, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ 0x0 };
+        CHECK(ret == 0x0);
 
-				IntegralType ret = atomic.fetch_xor(0x1, rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 0x0);
+        CHECK(ret == 0x1);
+      }
+    }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+    template <typename T>
+    void AtomicIntegralBasicTest<T>::TestAtomicXorFetch()
+    {
+      {
+        AtomicType atomic{ 0 };
 
-				CHECK(ret == 0x1);
-			}
-		}
+        IntegralType ret = atomic.xor_fetch(0x0, rsl::memory_order_relaxed);
 
-		template <typename T>
-		void AtomicIntegralBasicTest<T>::TestAtomicXorFetch()
-		{
-			{
-				AtomicType atomic{ 0 };
+        CHECK(ret == 0x0);
 
-				IntegralType ret = atomic.xor_fetch(0x0, rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 0x0);
+        CHECK(ret == 0x0);
+      }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 0x1 };
 
-				CHECK(ret == 0x0);
-			}
+        IntegralType ret = atomic.xor_fetch(0x1, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ 0x1 };
+        CHECK(ret == 0x0);
 
-				IntegralType ret = atomic.xor_fetch(0x1, rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 0x0);
+        CHECK(ret == 0x0);
+      }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 0x0 };
 
-				CHECK(ret == 0x0);
-			}
+        IntegralType ret = atomic.xor_fetch(0x1, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ 0x0 };
+        CHECK(ret == 0x1);
 
-				IntegralType ret = atomic.xor_fetch(0x1, rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 0x1);
+        CHECK(ret == 0x1);
+      }
+    }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+    template <typename T>
+    void AtomicIntegralBasicTest<T>::TestAssignmentOperators()
+    {
+      {
+        AtomicType atomic{ 0 };
 
-				CHECK(ret == 0x1);
-			}
-		}
+        IntegralType ret = (atomic = 5);
 
-		template <typename T>
-		void AtomicIntegralBasicTest<T>::TestAssignmentOperators()
-		{
-			{
-				AtomicType atomic{ 0 };
+        CHECK(ret == 5);
 
-				IntegralType ret = (atomic = 5);
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 5);
+        CHECK(ret == 5);
+      }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 0 };
 
-				CHECK(ret == 5);
-			}
+        IntegralType ret = ++atomic;
 
-			{
-				AtomicType atomic{ 0 };
+        CHECK(ret == 1);
 
-				IntegralType ret = ++atomic;
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 1);
+        CHECK(ret == 1);
+      }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 0 };
 
-				CHECK(ret == 1);
-			}
+        IntegralType ret = atomic++;
 
-			{
-				AtomicType atomic{ 0 };
+        CHECK(ret == 0);
 
-				IntegralType ret = atomic++;
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 0);
+        CHECK(ret == 1);
+      }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 1 };
 
-				CHECK(ret == 1);
-			}
+        IntegralType ret = --atomic;
 
-			{
-				AtomicType atomic{ 1 };
+        CHECK(ret == 0);
 
-				IntegralType ret = --atomic;
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 0);
+        CHECK(ret == 0);
+      }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 1 };
 
-				CHECK(ret == 0);
-			}
+        IntegralType ret = atomic--;
 
-			{
-				AtomicType atomic{ 1 };
+        CHECK(ret == 1);
 
-				IntegralType ret = atomic--;
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 1);
+        CHECK(ret == 0);
+      }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 0 };
 
-				CHECK(ret == 0);
-			}
+        IntegralType ret = atomic += 5;
 
-			{
-				AtomicType atomic{ 0 };
+        CHECK(ret == 5);
 
-				IntegralType ret = atomic += 5;
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 5);
+        CHECK(ret == 5);
+      }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 5 };
 
-				CHECK(ret == 5);
-			}
+        IntegralType ret = atomic -= 3;
 
-			{
-				AtomicType atomic{ 5 };
+        CHECK(ret == 2);
 
-				IntegralType ret = atomic -= 3;
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 2);
+        CHECK(ret == 2);
+      }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 0x0 };
 
-				CHECK(ret == 2);
-			}
+        IntegralType ret = atomic |= 0x1;
 
-			{
-				AtomicType atomic{ 0x0 };
+        CHECK(ret == 0x1);
 
-				IntegralType ret = atomic |= 0x1;
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 0x1);
+        CHECK(ret == 0x1);
+      }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 0x1 };
 
-				CHECK(ret == 0x1);
-			}
+        IntegralType ret = atomic &= 0x1;
 
-			{
-				AtomicType atomic{ 0x1 };
+        CHECK(ret == 0x1);
 
-				IntegralType ret = atomic &= 0x1;
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 0x1);
+        CHECK(ret == 0x1);
+      }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 0x1 };
 
-				CHECK(ret == 0x1);
-			}
+        IntegralType ret = atomic ^= 0x1;
 
-			{
-				AtomicType atomic{ 0x1 };
+        CHECK(ret == 0x0);
 
-				IntegralType ret = atomic ^= 0x1;
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 0x0);
+        CHECK(ret == 0x0);
+      }
+    }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+    template <typename T>
+    void AtomicIntegralBasicTest<T>::TestIsLockFree()
+    {
+      {
+        const AtomicType atomic{ 5 };
 
-				CHECK(ret == 0x0);
-			}
-		}
+        CHECK(atomic.is_lock_free() == true);
 
-		template <typename T>
-		void AtomicIntegralBasicTest<T>::TestIsLockFree()
-		{
-			{
-				const AtomicType atomic{ 5 };
+        CHECK(AtomicType::is_always_lock_free == true);
+      }
+    }
 
-				CHECK(atomic.is_lock_free() == true);
+    template <typename T>
+    void AtomicIntegralBasicTest<T>::TestStore()
+    {
+      {
+        AtomicType atomic{ 0 };
 
-				CHECK(AtomicType::is_always_lock_free == true);
-			}
-		}
+        atomic.store(0, rsl::memory_order_relaxed);
 
-		template <typename T>
-		void AtomicIntegralBasicTest<T>::TestStore()
-		{
-			{
-				AtomicType atomic{ 0 };
+        CHECK(atomic.load(rsl::memory_order_relaxed) == 0);
+      }
 
-				atomic.store(0, rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 0 };
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == 0);
-			}
+        atomic.store(1, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ 0 };
+        CHECK(atomic.load(rsl::memory_order_relaxed) == 1);
+      }
+    }
 
-				atomic.store(1, rsl::memory_order_relaxed);
+    template <typename T>
+    void AtomicIntegralBasicTest<T>::TestLoad()
+    {
+      {
+        AtomicType atomic{ 0 };
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == 1);
-			}
-		}
+        CHECK(atomic.load(rsl::memory_order_relaxed) == 0);
 
-		template <typename T>
-		void AtomicIntegralBasicTest<T>::TestLoad()
-		{
-			{
-				AtomicType atomic{ 0 };
+        bool ret = atomic == 0;
+        CHECK(ret == true);
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == 0);
+        CHECK(atomic == 0);
+      }
 
-				bool ret = atomic == 0;
-				CHECK(ret == true);
+      {
+        AtomicType atomic{ 5 };
 
-				CHECK(atomic == 0);
-			}
+        CHECK(atomic.load(rsl::memory_order_relaxed) == 5);
 
-			{
-				AtomicType atomic{ 5 };
+        bool ret = atomic == 5;
+        CHECK(ret == true);
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == 5);
+        CHECK(atomic == 5);
+      }
+    }
 
-				bool ret = atomic == 5;
-				CHECK(ret == true);
+    template <typename T>
+    void AtomicIntegralBasicTest<T>::TestExchange()
+    {
+      {
+        AtomicType atomic{ 0 };
 
-				CHECK(atomic == 5);
-			}
-		}
+        IntegralType ret = atomic.exchange(0, rsl::memory_order_relaxed);
 
-		template <typename T>
-		void AtomicIntegralBasicTest<T>::TestExchange()
-		{
-			{
-				AtomicType atomic{ 0 };
+        CHECK(ret == 0);
 
-				IntegralType ret = atomic.exchange(0, rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 0);
+        CHECK(ret == 0);
+      }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 0 };
 
-				CHECK(ret == 0);
-			}
+        IntegralType ret = atomic.exchange(1, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ 0 };
+        CHECK(ret == 0);
 
-				IntegralType ret = atomic.exchange(1, rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				CHECK(ret == 0);
+        CHECK(ret == 1);
+      }
+    }
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+    template <typename T>
+    void AtomicIntegralBasicTest<T>::TestCompareExchangeWeak()
+    {
+      {
+        AtomicType atomic{ 0 };
 
-				CHECK(ret == 1);
-			}
-		}
+        IntegralType observed = 0;
+        bool ret = atomic.compare_exchange_weak(observed, 1, rsl::memory_order_relaxed);
 
-		template <typename T>
-		void AtomicIntegralBasicTest<T>::TestCompareExchangeWeak()
-		{
-			{
-				AtomicType atomic{ 0 };
+        if (ret == true)
+        {
+          CHECK(ret == true);
+          CHECK(observed == 0);
+          CHECK(atomic.load(rsl::memory_order_relaxed) == 1);
+        }
+      }
 
-				IntegralType observed = 0;
-				bool ret = atomic.compare_exchange_weak(observed, 1, rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 0 };
 
-				if (ret == true)
-				{
-					CHECK(ret == true);
-					CHECK(observed == 0);
-					CHECK(atomic.load(rsl::memory_order_relaxed) == 1);
-				}
-			}
+        IntegralType observed = 1;
+        bool ret = atomic.compare_exchange_weak(observed, 1, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ 0 };
+        CHECK(ret == false);
+        CHECK(observed == 0);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == 0);
+      }
+    }
 
-				IntegralType observed = 1;
-				bool ret = atomic.compare_exchange_weak(observed, 1, rsl::memory_order_relaxed);
+    template <typename T>
+    void AtomicIntegralBasicTest<T>::TestCompareExchangeStrong()
+    {
+      {
+        AtomicType atomic{ 0 };
 
-				CHECK(ret == false);
-				CHECK(observed == 0);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == 0);
-			}
-		}
+        IntegralType observed = 0;
+        bool ret = atomic.compare_exchange_strong(observed, 1, rsl::memory_order_relaxed);
 
-		template <typename T>
-		void AtomicIntegralBasicTest<T>::TestCompareExchangeStrong()
-		{
-			{
-				AtomicType atomic{ 0 };
+        CHECK(ret == true);
+        CHECK(observed == 0);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == 1);
+      }
 
-				IntegralType observed = 0;
-				bool ret = atomic.compare_exchange_strong(observed, 1, rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 0 };
 
-				CHECK(ret == true);
-				CHECK(observed == 0);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == 1);
-			}
+        IntegralType observed = 1;
+        bool ret = atomic.compare_exchange_strong(observed, 1, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ 0 };
+        CHECK(ret == false);
+        CHECK(observed == 0);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == 0);
+      }
+    }
 
-				IntegralType observed = 1;
-				bool ret = atomic.compare_exchange_strong(observed, 1, rsl::memory_order_relaxed);
+    template <typename T>
+    void AtomicIntegralBasicTest<T>::TestAllMemoryOrders()
+    {
+      {
+        AtomicType atomic{};
 
-				CHECK(ret == false);
-				CHECK(observed == 0);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == 0);
-			}
-		}
+        atomic.store(1);
 
-		template <typename T>
-		void AtomicIntegralBasicTest<T>::TestAllMemoryOrders()
-		{
-			{
-				AtomicType atomic{};
+        atomic.store(1, rsl::memory_order_relaxed);
 
-				atomic.store(1);
+        atomic.store(1, rsl::memory_order_release);
 
-				atomic.store(1, rsl::memory_order_relaxed);
+        atomic.store(1, rsl::memory_order_seq_cst);
+      }
 
-				atomic.store(1, rsl::memory_order_release);
+      {
+        AtomicType atomic{};
 
-				atomic.store(1, rsl::memory_order_seq_cst);
-			}
+        IntegralType ret = atomic.load();
 
-			{
-				AtomicType atomic{};
+        ret = atomic.load(rsl::memory_order_relaxed);
 
-				IntegralType ret = atomic.load();
+        ret = atomic.load(rsl::memory_order_acquire);
 
-				ret = atomic.load(rsl::memory_order_relaxed);
+        ret = atomic.load(rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.load(rsl::memory_order_acquire);
+      {
+        AtomicType atomic{};
 
-				ret = atomic.load(rsl::memory_order_seq_cst);
-			}
+        IntegralType ret = atomic.exchange(1);
 
-			{
-				AtomicType atomic{};
+        ret = atomic.exchange(1, rsl::memory_order_relaxed);
 
-				IntegralType ret = atomic.exchange(1);
+        ret = atomic.exchange(1, rsl::memory_order_acquire);
 
-				ret = atomic.exchange(1, rsl::memory_order_relaxed);
+        ret = atomic.exchange(1, rsl::memory_order_release);
 
-				ret = atomic.exchange(1, rsl::memory_order_acquire);
+        ret = atomic.exchange(1, rsl::memory_order_acq_rel);
 
-				ret = atomic.exchange(1, rsl::memory_order_release);
+        ret = atomic.exchange(1, rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.exchange(1, rsl::memory_order_acq_rel);
+      {
+        AtomicType atomic{};
 
-				ret = atomic.exchange(1, rsl::memory_order_seq_cst);
-			}
+        IntegralType ret = atomic.fetch_add(1);
 
-			{
-				AtomicType atomic{};
+        ret = atomic.fetch_add(1, rsl::memory_order_relaxed);
 
-				IntegralType ret = atomic.fetch_add(1);
+        ret = atomic.fetch_add(1, rsl::memory_order_acquire);
 
-				ret = atomic.fetch_add(1, rsl::memory_order_relaxed);
+        ret = atomic.fetch_add(1, rsl::memory_order_release);
 
-				ret = atomic.fetch_add(1, rsl::memory_order_acquire);
+        ret = atomic.fetch_add(1, rsl::memory_order_acq_rel);
 
-				ret = atomic.fetch_add(1, rsl::memory_order_release);
+        ret = atomic.fetch_add(1, rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.fetch_add(1, rsl::memory_order_acq_rel);
+      {
+        AtomicType atomic{};
 
-				ret = atomic.fetch_add(1, rsl::memory_order_seq_cst);
-			}
+        IntegralType ret = atomic.add_fetch(1);
 
-			{
-				AtomicType atomic{};
+        ret = atomic.add_fetch(1, rsl::memory_order_relaxed);
 
-				IntegralType ret = atomic.add_fetch(1);
+        ret = atomic.add_fetch(1, rsl::memory_order_acquire);
 
-				ret = atomic.add_fetch(1, rsl::memory_order_relaxed);
+        ret = atomic.add_fetch(1, rsl::memory_order_release);
 
-				ret = atomic.add_fetch(1, rsl::memory_order_acquire);
+        ret = atomic.add_fetch(1, rsl::memory_order_acq_rel);
 
-				ret = atomic.add_fetch(1, rsl::memory_order_release);
+        ret = atomic.add_fetch(1, rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.add_fetch(1, rsl::memory_order_acq_rel);
+      {
+        AtomicType atomic{};
 
-				ret = atomic.add_fetch(1, rsl::memory_order_seq_cst);
-			}
+        IntegralType ret = atomic.fetch_sub(1);
 
-			{
-				AtomicType atomic{};
+        ret = atomic.fetch_sub(1, rsl::memory_order_relaxed);
 
-				IntegralType ret = atomic.fetch_sub(1);
+        ret = atomic.fetch_sub(1, rsl::memory_order_acquire);
 
-				ret = atomic.fetch_sub(1, rsl::memory_order_relaxed);
+        ret = atomic.fetch_sub(1, rsl::memory_order_release);
 
-				ret = atomic.fetch_sub(1, rsl::memory_order_acquire);
+        ret = atomic.fetch_sub(1, rsl::memory_order_acq_rel);
 
-				ret = atomic.fetch_sub(1, rsl::memory_order_release);
+        ret = atomic.fetch_sub(1, rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.fetch_sub(1, rsl::memory_order_acq_rel);
+      {
+        AtomicType atomic{};
 
-				ret = atomic.fetch_sub(1, rsl::memory_order_seq_cst);
-			}
+        IntegralType ret = atomic.sub_fetch(1);
 
-			{
-				AtomicType atomic{};
+        ret = atomic.sub_fetch(1, rsl::memory_order_relaxed);
 
-				IntegralType ret = atomic.sub_fetch(1);
+        ret = atomic.sub_fetch(1, rsl::memory_order_acquire);
 
-				ret = atomic.sub_fetch(1, rsl::memory_order_relaxed);
+        ret = atomic.sub_fetch(1, rsl::memory_order_release);
 
-				ret = atomic.sub_fetch(1, rsl::memory_order_acquire);
+        ret = atomic.sub_fetch(1, rsl::memory_order_acq_rel);
 
-				ret = atomic.sub_fetch(1, rsl::memory_order_release);
+        ret = atomic.sub_fetch(1, rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.sub_fetch(1, rsl::memory_order_acq_rel);
+      {
+        AtomicType atomic{};
 
-				ret = atomic.sub_fetch(1, rsl::memory_order_seq_cst);
-			}
+        IntegralType ret = atomic.fetch_and(1);
 
-			{
-				AtomicType atomic{};
+        ret = atomic.fetch_and(1, rsl::memory_order_relaxed);
 
-				IntegralType ret = atomic.fetch_and(1);
+        ret = atomic.fetch_and(1, rsl::memory_order_acquire);
 
-				ret = atomic.fetch_and(1, rsl::memory_order_relaxed);
+        ret = atomic.fetch_and(1, rsl::memory_order_release);
 
-				ret = atomic.fetch_and(1, rsl::memory_order_acquire);
+        ret = atomic.fetch_and(1, rsl::memory_order_acq_rel);
 
-				ret = atomic.fetch_and(1, rsl::memory_order_release);
+        ret = atomic.fetch_and(1, rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.fetch_and(1, rsl::memory_order_acq_rel);
+      {
+        AtomicType atomic{};
 
-				ret = atomic.fetch_and(1, rsl::memory_order_seq_cst);
-			}
+        IntegralType ret = atomic.and_fetch(1);
 
-			{
-				AtomicType atomic{};
+        ret = atomic.and_fetch(1, rsl::memory_order_relaxed);
 
-				IntegralType ret = atomic.and_fetch(1);
+        ret = atomic.and_fetch(1, rsl::memory_order_acquire);
 
-				ret = atomic.and_fetch(1, rsl::memory_order_relaxed);
+        ret = atomic.and_fetch(1, rsl::memory_order_release);
 
-				ret = atomic.and_fetch(1, rsl::memory_order_acquire);
+        ret = atomic.and_fetch(1, rsl::memory_order_acq_rel);
 
-				ret = atomic.and_fetch(1, rsl::memory_order_release);
+        ret = atomic.and_fetch(1, rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.and_fetch(1, rsl::memory_order_acq_rel);
+      {
+        AtomicType atomic{};
 
-				ret = atomic.and_fetch(1, rsl::memory_order_seq_cst);
-			}
+        IntegralType ret = atomic.fetch_or(1);
 
-			{
-				AtomicType atomic{};
+        ret = atomic.fetch_or(1, rsl::memory_order_relaxed);
 
-				IntegralType ret = atomic.fetch_or(1);
+        ret = atomic.fetch_or(1, rsl::memory_order_acquire);
 
-				ret = atomic.fetch_or(1, rsl::memory_order_relaxed);
+        ret = atomic.fetch_or(1, rsl::memory_order_release);
 
-				ret = atomic.fetch_or(1, rsl::memory_order_acquire);
+        ret = atomic.fetch_or(1, rsl::memory_order_acq_rel);
 
-				ret = atomic.fetch_or(1, rsl::memory_order_release);
+        ret = atomic.fetch_or(1, rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.fetch_or(1, rsl::memory_order_acq_rel);
+      {
+        AtomicType atomic{};
 
-				ret = atomic.fetch_or(1, rsl::memory_order_seq_cst);
-			}
+        IntegralType ret = atomic.or_fetch(1);
 
-			{
-				AtomicType atomic{};
+        ret = atomic.or_fetch(1, rsl::memory_order_relaxed);
 
-				IntegralType ret = atomic.or_fetch(1);
+        ret = atomic.or_fetch(1, rsl::memory_order_acquire);
 
-				ret = atomic.or_fetch(1, rsl::memory_order_relaxed);
+        ret = atomic.or_fetch(1, rsl::memory_order_release);
 
-				ret = atomic.or_fetch(1, rsl::memory_order_acquire);
+        ret = atomic.or_fetch(1, rsl::memory_order_acq_rel);
 
-				ret = atomic.or_fetch(1, rsl::memory_order_release);
+        ret = atomic.or_fetch(1, rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.or_fetch(1, rsl::memory_order_acq_rel);
+      {
+        AtomicType atomic{};
 
-				ret = atomic.or_fetch(1, rsl::memory_order_seq_cst);
-			}
+        IntegralType ret = atomic.fetch_xor(1);
 
-			{
-				AtomicType atomic{};
+        ret = atomic.fetch_xor(1, rsl::memory_order_relaxed);
 
-				IntegralType ret = atomic.fetch_xor(1);
+        ret = atomic.fetch_xor(1, rsl::memory_order_acquire);
 
-				ret = atomic.fetch_xor(1, rsl::memory_order_relaxed);
+        ret = atomic.fetch_xor(1, rsl::memory_order_release);
 
-				ret = atomic.fetch_xor(1, rsl::memory_order_acquire);
+        ret = atomic.fetch_xor(1, rsl::memory_order_acq_rel);
 
-				ret = atomic.fetch_xor(1, rsl::memory_order_release);
+        ret = atomic.fetch_xor(1, rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.fetch_xor(1, rsl::memory_order_acq_rel);
+      {
+        AtomicType atomic{};
 
-				ret = atomic.fetch_xor(1, rsl::memory_order_seq_cst);
-			}
+        IntegralType ret = atomic.xor_fetch(1);
 
-			{
-				AtomicType atomic{};
+        ret = atomic.xor_fetch(1, rsl::memory_order_relaxed);
 
-				IntegralType ret = atomic.xor_fetch(1);
+        ret = atomic.xor_fetch(1, rsl::memory_order_acquire);
 
-				ret = atomic.xor_fetch(1, rsl::memory_order_relaxed);
+        ret = atomic.xor_fetch(1, rsl::memory_order_release);
 
-				ret = atomic.xor_fetch(1, rsl::memory_order_acquire);
+        ret = atomic.xor_fetch(1, rsl::memory_order_acq_rel);
 
-				ret = atomic.xor_fetch(1, rsl::memory_order_release);
+        ret = atomic.xor_fetch(1, rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.xor_fetch(1, rsl::memory_order_acq_rel);
+      {
+        AtomicType atomic{};
 
-				ret = atomic.xor_fetch(1, rsl::memory_order_seq_cst);
-			}
+        IntegralType observed = 0;
+        bool ret;
 
-			{
-				AtomicType atomic{};
+        ret = atomic.compare_exchange_weak(observed, 1);
 
-				IntegralType observed = 0;
-				bool ret;
+        ret = atomic.compare_exchange_weak(observed, 1, rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_weak(observed, 1);
+        ret = atomic.compare_exchange_weak(observed, 1, rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_weak(observed, 1, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_weak(observed, 1, rsl::memory_order_release);
 
-				ret = atomic.compare_exchange_weak(observed, 1, rsl::memory_order_acquire);
+        ret = atomic.compare_exchange_weak(observed, 1, rsl::memory_order_acq_rel);
 
-				ret = atomic.compare_exchange_weak(observed, 1, rsl::memory_order_release);
+        ret = atomic.compare_exchange_weak(observed, 1, rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.compare_exchange_weak(observed, 1, rsl::memory_order_acq_rel);
+      {
+        AtomicType atomic{};
 
-				ret = atomic.compare_exchange_weak(observed, 1, rsl::memory_order_seq_cst);
-			}
+        IntegralType observed = 0;
+        bool ret;
 
-			{
-				AtomicType atomic{};
+        ret = atomic.compare_exchange_strong(observed, 1);
 
-				IntegralType observed = 0;
-				bool ret;
+        ret = atomic.compare_exchange_strong(observed, 1, rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_strong(observed, 1);
+        ret = atomic.compare_exchange_strong(observed, 1, rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_strong(observed, 1, rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_strong(observed, 1, rsl::memory_order_release);
 
-				ret = atomic.compare_exchange_strong(observed, 1, rsl::memory_order_acquire);
+        ret = atomic.compare_exchange_strong(observed, 1, rsl::memory_order_acq_rel);
 
-				ret = atomic.compare_exchange_strong(observed, 1, rsl::memory_order_release);
+        ret = atomic.compare_exchange_strong(observed, 1, rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.compare_exchange_strong(observed, 1, rsl::memory_order_acq_rel);
+      {
+        AtomicType atomic{};
 
-				ret = atomic.compare_exchange_strong(observed, 1, rsl::memory_order_seq_cst);
-			}
+        IntegralType observed = 0;
+        bool ret;
 
-			{
-				AtomicType atomic{};
+        ret = atomic.compare_exchange_weak(observed, 1,
+          rsl::memory_order_relaxed,
+          rsl::memory_order_relaxed);
 
-				IntegralType observed = 0;
-				bool ret;
+        ret = atomic.compare_exchange_weak(observed, 1,
+          rsl::memory_order_acquire,
+          rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_weak(observed, 1,
-					rsl::memory_order_relaxed,
-					rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_weak(observed, 1,
+          rsl::memory_order_acquire,
+          rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_weak(observed, 1,
-					rsl::memory_order_acquire,
-					rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_weak(observed, 1,
+          rsl::memory_order_release,
+          rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_weak(observed, 1,
-					rsl::memory_order_acquire,
-					rsl::memory_order_acquire);
+        ret = atomic.compare_exchange_weak(observed, 1,
+          rsl::memory_order_acq_rel,
+          rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_weak(observed, 1,
-					rsl::memory_order_release,
-					rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_weak(observed, 1,
+          rsl::memory_order_acq_rel,
+          rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_weak(observed, 1,
-					rsl::memory_order_acq_rel,
-					rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_weak(observed, 1,
+          rsl::memory_order_seq_cst,
+          rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_weak(observed, 1,
-					rsl::memory_order_acq_rel,
-					rsl::memory_order_acquire);
+        ret = atomic.compare_exchange_weak(observed, 1,
+          rsl::memory_order_seq_cst,
+          rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_weak(observed, 1,
-					rsl::memory_order_seq_cst,
-					rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_weak(observed, 1,
+          rsl::memory_order_seq_cst,
+          rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.compare_exchange_weak(observed, 1,
-					rsl::memory_order_seq_cst,
-					rsl::memory_order_acquire);
+      {
+        AtomicType atomic{};
 
-				ret = atomic.compare_exchange_weak(observed, 1,
-					rsl::memory_order_seq_cst,
-					rsl::memory_order_seq_cst);
-			}
+        IntegralType observed = 0;
+        bool ret;
 
-			{
-				AtomicType atomic{};
+        ret = atomic.compare_exchange_strong(observed, 1,
+          rsl::memory_order_relaxed,
+          rsl::memory_order_relaxed);
 
-				IntegralType observed = 0;
-				bool ret;
+        ret = atomic.compare_exchange_strong(observed, 1,
+          rsl::memory_order_acquire,
+          rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_strong(observed, 1,
-					rsl::memory_order_relaxed,
-					rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_strong(observed, 1,
+          rsl::memory_order_acquire,
+          rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_strong(observed, 1,
-					rsl::memory_order_acquire,
-					rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_strong(observed, 1,
+          rsl::memory_order_release,
+          rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_strong(observed, 1,
-					rsl::memory_order_acquire,
-					rsl::memory_order_acquire);
+        ret = atomic.compare_exchange_strong(observed, 1,
+          rsl::memory_order_acq_rel,
+          rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_strong(observed, 1,
-					rsl::memory_order_release,
-					rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_strong(observed, 1,
+          rsl::memory_order_acq_rel,
+          rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_strong(observed, 1,
-					rsl::memory_order_acq_rel,
-					rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_strong(observed, 1,
+          rsl::memory_order_seq_cst,
+          rsl::memory_order_relaxed);
 
-				ret = atomic.compare_exchange_strong(observed, 1,
-					rsl::memory_order_acq_rel,
-					rsl::memory_order_acquire);
+        ret = atomic.compare_exchange_strong(observed, 1,
+          rsl::memory_order_seq_cst,
+          rsl::memory_order_acquire);
 
-				ret = atomic.compare_exchange_strong(observed, 1,
-					rsl::memory_order_seq_cst,
-					rsl::memory_order_relaxed);
+        ret = atomic.compare_exchange_strong(observed, 1,
+          rsl::memory_order_seq_cst,
+          rsl::memory_order_seq_cst);
+      }
 
-				ret = atomic.compare_exchange_strong(observed, 1,
-					rsl::memory_order_seq_cst,
-					rsl::memory_order_acquire);
+    }
 
-				ret = atomic.compare_exchange_strong(observed, 1,
-					rsl::memory_order_seq_cst,
-					rsl::memory_order_seq_cst);
-			}
+    template <typename T>
+    void AtomicIntegralBasicTest<T>::TestAtomicStandalone()
+    {
+      {
+        AtomicType atomic;
 
-		}
+        IntegralType expected = 0;
+        bool ret = atomic_compare_exchange_weak(&atomic, &expected, 1);
 
-		template <typename T>
-		void AtomicIntegralBasicTest<T>::TestAtomicStandalone()
-		{
-			{
-				AtomicType atomic;
+        if (ret)
+        {
+          CHECK(ret == true);
 
-				IntegralType expected = 0;
-				bool ret = atomic_compare_exchange_weak(&atomic, &expected, 1);
+          CHECK(expected == 0);
+          CHECK(atomic.load(rsl::memory_order_relaxed) == 1);
+        }
+      }
 
-				if (ret)
-				{
-					CHECK(ret == true);
+      {
+        AtomicType atomic;
 
-					CHECK(expected == 0);
-					CHECK(atomic.load(rsl::memory_order_relaxed) == 1);
-				}
-			}
+        IntegralType expected = 0;
+        bool ret = atomic_compare_exchange_weak_explicit(&atomic, &expected, 1, rsl::memory_order_relaxed, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
+        if (ret)
+        {
+          CHECK(ret == true);
 
-				IntegralType expected = 0;
-				bool ret = atomic_compare_exchange_weak_explicit(&atomic, &expected, 1, rsl::memory_order_relaxed, rsl::memory_order_relaxed);
+          CHECK(expected == 0);
+          CHECK(atomic.load(rsl::memory_order_relaxed) == 1);
+        }
+      }
 
-				if (ret)
-				{
-					CHECK(ret == true);
+      {
+        AtomicType atomic;
 
-					CHECK(expected == 0);
-					CHECK(atomic.load(rsl::memory_order_relaxed) == 1);
-				}
-			}
+        IntegralType expected = 0;
+        bool ret = atomic_compare_exchange_strong(&atomic, &expected, 1);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == true);
 
-				IntegralType expected = 0;
-				bool ret = atomic_compare_exchange_strong(&atomic, &expected, 1);
+        CHECK(expected == 0);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == 1);
+      }
 
-				CHECK(ret == true);
+      {
+        AtomicType atomic;
 
-				CHECK(expected == 0);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == 1);
-			}
+        IntegralType expected = 0;
+        bool ret = atomic_compare_exchange_strong_explicit(&atomic, &expected, 1, rsl::memory_order_relaxed, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == true);
 
-				IntegralType expected = 0;
-				bool ret = atomic_compare_exchange_strong_explicit(&atomic, &expected, 1, rsl::memory_order_relaxed, rsl::memory_order_relaxed);
+        CHECK(expected == 0);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == 1);
+      }
 
-				CHECK(ret == true);
+      {
+        AtomicType atomic;
 
-				CHECK(expected == 0);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == 1);
-			}
+        IntegralType ret = atomic_fetch_xor(&atomic, 0x1);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == 0x0);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == 0x1);
+      }
 
-				IntegralType ret = atomic_fetch_xor(&atomic, 0x1);
+      {
+        AtomicType atomic;
 
-				CHECK(ret == 0x0);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == 0x1);
-			}
+        IntegralType ret = atomic_fetch_xor_explicit(&atomic, 0x1, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == 0x0);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == 0x1);
+      }
 
-				IntegralType ret = atomic_fetch_xor_explicit(&atomic, 0x1, rsl::memory_order_relaxed);
+      {
+        AtomicType atomic;
 
-				CHECK(ret == 0x0);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == 0x1);
-			}
+        IntegralType ret = atomic_xor_fetch(&atomic, 0x1);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == 0x1);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == 0x1);
+      }
 
-				IntegralType ret = atomic_xor_fetch(&atomic, 0x1);
+      {
+        AtomicType atomic;
 
-				CHECK(ret == 0x1);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == 0x1);
-			}
+        IntegralType ret = atomic_xor_fetch_explicit(&atomic, 0x1, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == 0x1);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == 0x1);
+      }
 
-				IntegralType ret = atomic_xor_fetch_explicit(&atomic, 0x1, rsl::memory_order_relaxed);
+      {
+        AtomicType atomic;
 
-				CHECK(ret == 0x1);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == 0x1);
-			}
+        IntegralType ret = atomic_fetch_or(&atomic, 0x1);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == 0x0);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == 0x1);
+      }
 
-				IntegralType ret = atomic_fetch_or(&atomic, 0x1);
+      {
+        AtomicType atomic;
 
-				CHECK(ret == 0x0);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == 0x1);
-			}
+        IntegralType ret = atomic_fetch_or_explicit(&atomic, 0x1, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == 0x0);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == 0x1);
+      }
 
-				IntegralType ret = atomic_fetch_or_explicit(&atomic, 0x1, rsl::memory_order_relaxed);
+      {
+        AtomicType atomic;
 
-				CHECK(ret == 0x0);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == 0x1);
-			}
+        IntegralType ret = atomic_or_fetch(&atomic, 0x1);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == 0x1);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == 0x1);
+      }
 
-				IntegralType ret = atomic_or_fetch(&atomic, 0x1);
+      {
+        AtomicType atomic;
 
-				CHECK(ret == 0x1);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == 0x1);
-			}
+        IntegralType ret = atomic_or_fetch_explicit(&atomic, 0x1, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == 0x1);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == 0x1);
+      }
 
-				IntegralType ret = atomic_or_fetch_explicit(&atomic, 0x1, rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 0x1 };
 
-				CHECK(ret == 0x1);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == 0x1);
-			}
+        IntegralType ret = atomic_fetch_and(&atomic, 0x0);
 
-			{
-				AtomicType atomic{ 0x1 };
+        CHECK(ret == 0x1);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == 0x0);
+      }
 
-				IntegralType ret = atomic_fetch_and(&atomic, 0x0);
+      {
+        AtomicType atomic{ 0x1 };
 
-				CHECK(ret == 0x1);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == 0x0);
-			}
+        IntegralType ret = atomic_fetch_and_explicit(&atomic, 0x0, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ 0x1 };
+        CHECK(ret == 0x1);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == 0x0);
+      }
 
-				IntegralType ret = atomic_fetch_and_explicit(&atomic, 0x0, rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 0x1 };
 
-				CHECK(ret == 0x1);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == 0x0);
-			}
+        IntegralType ret = atomic_and_fetch(&atomic, 0x0);
 
-			{
-				AtomicType atomic{ 0x1 };
+        CHECK(ret == 0x0);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == 0x0);
+      }
 
-				IntegralType ret = atomic_and_fetch(&atomic, 0x0);
+      {
+        AtomicType atomic{ 0x1 };
 
-				CHECK(ret == 0x0);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == 0x0);
-			}
+        IntegralType ret = atomic_and_fetch_explicit(&atomic, 0x0, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ 0x1 };
+        CHECK(ret == 0x0);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == 0x0);
+      }
 
-				IntegralType ret = atomic_and_fetch_explicit(&atomic, 0x0, rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 1 };
 
-				CHECK(ret == 0x0);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == 0x0);
-			}
+        IntegralType ret = atomic_fetch_sub(&atomic, 1);
 
-			{
-				AtomicType atomic{ 1 };
+        CHECK(ret == 1);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == 0);
+      }
 
-				IntegralType ret = atomic_fetch_sub(&atomic, 1);
+      {
+        AtomicType atomic{ 1 };
 
-				CHECK(ret == 1);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == 0);
-			}
+        IntegralType ret = atomic_fetch_sub_explicit(&atomic, 1, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ 1 };
+        CHECK(ret == 1);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == 0);
+      }
 
-				IntegralType ret = atomic_fetch_sub_explicit(&atomic, 1, rsl::memory_order_relaxed);
+      {
+        AtomicType atomic{ 1 };
 
-				CHECK(ret == 1);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == 0);
-			}
+        IntegralType ret = atomic_sub_fetch(&atomic, 1);
 
-			{
-				AtomicType atomic{ 1 };
+        CHECK(ret == 0);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == 0);
+      }
 
-				IntegralType ret = atomic_sub_fetch(&atomic, 1);
+      {
+        AtomicType atomic{ 1 };
 
-				CHECK(ret == 0);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == 0);
-			}
+        IntegralType ret = atomic_sub_fetch_explicit(&atomic, 1, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic{ 1 };
+        CHECK(ret == 0);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == 0);
+      }
 
-				IntegralType ret = atomic_sub_fetch_explicit(&atomic, 1, rsl::memory_order_relaxed);
+      {
+        AtomicType atomic;
 
-				CHECK(ret == 0);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == 0);
-			}
+        IntegralType ret = atomic_fetch_add(&atomic, 1);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == 0);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == 1);
+      }
 
-				IntegralType ret = atomic_fetch_add(&atomic, 1);
+      {
+        AtomicType atomic;
 
-				CHECK(ret == 0);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == 1);
-			}
+        IntegralType ret = atomic_fetch_add_explicit(&atomic, 1, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == 0);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == 1);
+      }
 
-				IntegralType ret = atomic_fetch_add_explicit(&atomic, 1, rsl::memory_order_relaxed);
+      {
+        AtomicType atomic;
 
-				CHECK(ret == 0);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == 1);
-			}
+        IntegralType ret = atomic_add_fetch(&atomic, 1);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == 1);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == 1);
+      }
 
-				IntegralType ret = atomic_add_fetch(&atomic, 1);
+      {
+        AtomicType atomic;
 
-				CHECK(ret == 1);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == 1);
-			}
+        IntegralType ret = atomic_add_fetch_explicit(&atomic, 1, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == 1);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == 1);
+      }
 
-				IntegralType ret = atomic_add_fetch_explicit(&atomic, 1, rsl::memory_order_relaxed);
+      {
+        AtomicType atomic;
 
-				CHECK(ret == 1);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == 1);
-			}
+        IntegralType ret = atomic_exchange(&atomic, 1);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == 0);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == 1);
+      }
 
-				IntegralType ret = atomic_exchange(&atomic, 1);
+      {
+        AtomicType atomic;
 
-				CHECK(ret == 0);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == 1);
-			}
+        IntegralType ret = atomic_exchange_explicit(&atomic, 1, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == 0);
+        CHECK(atomic.load(rsl::memory_order_relaxed) == 1);
+      }
 
-				IntegralType ret = atomic_exchange_explicit(&atomic, 1, rsl::memory_order_relaxed);
+      {
+        AtomicType atomic;
 
-				CHECK(ret == 0);
-				CHECK(atomic.load(rsl::memory_order_relaxed) == 1);
-			}
+        IntegralType ret = atomic_load(&atomic);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == 0);
+      }
 
-				IntegralType ret = atomic_load(&atomic);
+      {
+        AtomicType atomic;
 
-				CHECK(ret == 0);
-			}
+        IntegralType ret = atomic_load_explicit(&atomic, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == 0);
+      }
 
-				IntegralType ret = atomic_load_explicit(&atomic, rsl::memory_order_relaxed);
+      {
+        AtomicType atomic;
 
-				CHECK(ret == 0);
-			}
+        IntegralType ret = atomic_load_cond(&atomic, [](IntegralType /*val*/) { return true; });
 
-			{
-				AtomicType atomic;
+        CHECK(ret == 0);
+      }
 
-				IntegralType ret = atomic_load_cond(&atomic, [](IntegralType /*val*/) { return true; });
+      {
+        AtomicType atomic;
 
-				CHECK(ret == 0);
-			}
+        IntegralType ret = atomic_load_cond_explicit(&atomic, [](IntegralType /*val*/) { return true; }, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
+        CHECK(ret == 0);
+      }
 
-				IntegralType ret = atomic_load_cond_explicit(&atomic, [](IntegralType /*val*/) { return true; }, rsl::memory_order_relaxed);
+      {
+        AtomicType atomic;
 
-				CHECK(ret == 0);
-			}
+        atomic_store(&atomic, 1);
 
-			{
-				AtomicType atomic;
+        CHECK(atomic.load(rsl::memory_order_relaxed) == 1);
+      }
 
-				atomic_store(&atomic, 1);
+      {
+        AtomicType atomic;
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == 1);
-			}
+        atomic_store_explicit(&atomic, 1, rsl::memory_order_relaxed);
 
-			{
-				AtomicType atomic;
+        CHECK(atomic.load(rsl::memory_order_relaxed) == 1);
+      }
 
-				atomic_store_explicit(&atomic, 1, rsl::memory_order_relaxed);
+      {
+        AtomicType atomic;
 
-				CHECK(atomic.load(rsl::memory_order_relaxed) == 1);
-			}
+        CHECK(atomic_is_lock_free(&atomic) == true);
+      }
+    }
 
-			{
-				AtomicType atomic;
+    struct AtomicNonDefaultConstructible
+    {
+      AtomicNonDefaultConstructible(uint8_t a)
+        : a(a)
+      {
+      }
 
-				CHECK(atomic_is_lock_free(&atomic) == true);
-			}
-		}
+      friend bool operator==(const AtomicNonDefaultConstructible& a, const AtomicNonDefaultConstructible& b)
+      {
+        return a.a == b.a;
+      }
 
-		struct AtomicNonDefaultConstructible
-		{
-			AtomicNonDefaultConstructible(uint8_t a)
-				: a(a)
-			{
-			}
+      uint8_t a;
+    };
 
-			friend bool operator==(const AtomicNonDefaultConstructible& a, const AtomicNonDefaultConstructible& b)
-			{
-				return a.a == b.a;
-			}
+    struct Atomic128LoadType
+    {
+      friend bool operator==(const Atomic128LoadType& a, const Atomic128LoadType& b)
+      {
+        return a.a == b.a && a.b == b.b && a.c == b.c && a.d == b.d;
+      }
 
-			uint8_t a;
-		};
-
-		int TestAtomicNonDefaultConstructible()
-		{
-			int nErrorCount = 0;
-
-			{
-				rsl::atomic<AtomicNonDefaultConstructible> atomic{ AtomicNonDefaultConstructible{(uint8_t)3} };
-
-				CHECK(atomic.load() == AtomicNonDefaultConstructible{ (uint8_t)3 });
-			}
-
-			{
-				rsl::atomic<AtomicNonDefaultConstructible> atomic{ AtomicNonDefaultConstructible{(uint8_t)3} };
-
-				atomic.store(AtomicNonDefaultConstructible{ (uint8_t)4 });
-
-				CHECK(atomic.load() == AtomicNonDefaultConstructible{ (uint8_t)4 });
-			}
-
-			{
-				rsl::atomic<AtomicNonDefaultConstructible> atomic{ AtomicNonDefaultConstructible{(uint8_t)3} };
-
-				CHECK(atomic_load_cond(&atomic, [](AtomicNonDefaultConstructible) { return true; }) == AtomicNonDefaultConstructible{ (uint8_t)3 });
-			}
-
-			{
-				rsl::atomic<AtomicNonDefaultConstructible> atomic{ AtomicNonDefaultConstructible{(uint8_t)3} };
-
-				CHECK(atomic_load_cond_explicit(&atomic, [](AtomicNonDefaultConstructible) { return true; }, rsl::memory_order_seq_cst) == AtomicNonDefaultConstructible{ (uint8_t)3 });
-			}
-
-			return nErrorCount;
-		}
-
-		struct Atomic128LoadType
-		{
-			friend bool operator==(const Atomic128LoadType& a, const Atomic128LoadType& b)
-			{
-				return a.a == b.a && a.b == b.b && a.c == b.c && a.d == b.d;
-			}
-
-			uint32_t a, b, c, d;
-		};
+      uint32_t a, b, c, d;
+    };
 
   }
+}
 
-	TEST_CASE("Test Atomic")
-	{
-		{
-			AtomicIntegralBasicTest<uint8_t> u8AtomicTest;
+TEST_CASE("Test Atomic U8")
+{
+  rsl::test::AtomicIntegralBasicTest<uint8_t> u8AtomicTest;
 
-			u8AtomicTest.RunTest();
-		}
+  u8AtomicTest.RunTest();
+}
 
-		{
-			AtomicIntegralBasicTest<uint16_t> u16AtomicTest;
+TEST_CASE("Test Atomic U16")
+{
+  rsl::test::AtomicIntegralBasicTest<uint16_t> u16AtomicTest;
 
-			u16AtomicTest.RunTest();
-		}
+  u16AtomicTest.RunTest();
+}
 
-		{
-			AtomicIntegralBasicTest<uint32_t> u32AtomicTest;
+TEST_CASE("Test Atomic U32")
+{
+  rsl::test::AtomicIntegralBasicTest<uint32_t> u32AtomicTest;
 
-			u32AtomicTest.RunTest();
-		}
+  u32AtomicTest.RunTest();
+}
 
-		{
-			AtomicIntegralBasicTest<uint64_t> u64AtomicTest;
+TEST_CASE("Test Atomic U64")
+{
+  rsl::test::AtomicIntegralBasicTest<uint64_t> u64AtomicTest;
 
-			u64AtomicTest.RunTest();
-		}
+  u64AtomicTest.RunTest();
+}
 
-		{
-			AtomicBoolBasicTest boolAtomicTest;
+TEST_CASE("Test Atomic bool")
+{
+  rsl::test::AtomicBoolBasicTest boolAtomicTest;
 
-			boolAtomicTest.RunTest();
-		}
+  boolAtomicTest.RunTest();
+}
 
-		{
-			AtomicUserTypeBasicTest<AtomicUserType16> userTypeAtomicTest;
+TEST_CASE("Test Atomic UserType16")
+{
+  rsl::test::AtomicUserTypeBasicTest<rsl::test::AtomicUserType16> userTypeAtomicTest;
 
-			userTypeAtomicTest.RunTest();
-		}
+  userTypeAtomicTest.RunTest();
+}
 
-		{
-			AtomicUserTypeBasicTest<AtomicNonTriviallyConstructible> userTypeAtomicTest;
+TEST_CASE("Test Atomic Non Trivially Constructible")
+{
+  rsl::test::AtomicUserTypeBasicTest<rsl::test::AtomicNonTriviallyConstructible> userTypeAtomicTest;
 
-			userTypeAtomicTest.RunTest();
-		}
+  userTypeAtomicTest.RunTest();
+}
 
-		{
-			AtomicUserTypeBasicTest<AtomicNonTriviallyConstructibleNoExcept> userTypeAtomicTest;
+TEST_CASE("Test Atomic Non Trivially Constructible No Except")
+{
+  rsl::test::AtomicUserTypeBasicTest<rsl::test::AtomicNonTriviallyConstructibleNoExcept> userTypeAtomicTest;
 
-			userTypeAtomicTest.RunTest();
-		}
+  userTypeAtomicTest.RunTest();
+}
 
-		{
-			AtomicPointerBasicTest ptrAtomicTest;
+TEST_CASE("Test Atomic Pointer")
+{
+  rsl::test::AtomicPointerBasicTest ptrAtomicTest;
 
-			ptrAtomicTest.RunTest();
-		}
+  ptrAtomicTest.RunTest();
+}
 
-		{
-			AtomicVoidPointerBasicTest voidPtrAtomicTest;
+TEST_CASE("Test Atomic Void Pointer")
+{
+  rsl::test::AtomicVoidPointerBasicTest voidPtrAtomicTest;
 
-			voidPtrAtomicTest.RunTest();
-		}
+  voidPtrAtomicTest.RunTest();
+}
 
-		{
-			AtomicFlagBasicTest atomicFlagBasicTest;
+TEST_CASE("Test Atomic Flag")
+{
+  rsl::test::AtomicFlagBasicTest atomicFlagBasicTest;
 
-			atomicFlagBasicTest.RunTest();
-		}
+  atomicFlagBasicTest.RunTest();
+}
 
-		{
-			AtomicStandaloneBasicTest atomicStandaloneBasicTest;
+TEST_CASE("Test Atomic Standalone")
+{
+  rsl::test::AtomicStandaloneBasicTest atomicStandaloneBasicTest;
 
-			atomicStandaloneBasicTest.RunTest();
-		}
+  atomicStandaloneBasicTest.RunTest();
+}
+TEST_CASE("Test Atomic Non Default Constructible")
+{
+  {
+    rsl::atomic<rsl::test::AtomicNonDefaultConstructible> atomic{ rsl::test::AtomicNonDefaultConstructible{(uint8_t)3} };
 
+    CHECK(atomic.load() == rsl::test::AtomicNonDefaultConstructible{ (uint8_t)3 });
+  }
 
-		TestAtomicNonDefaultConstructible();
+  {
+    rsl::atomic<rsl::test::AtomicNonDefaultConstructible> atomic{ rsl::test::AtomicNonDefaultConstructible{(uint8_t)3} };
 
+    atomic.store(rsl::test::AtomicNonDefaultConstructible{ (uint8_t)4 });
 
-		TestAtomicConstantInitialization();
-	}
+    CHECK(atomic.load() == rsl::test::AtomicNonDefaultConstructible{ (uint8_t)4 });
+  }
+
+  {
+    rsl::atomic<rsl::test::AtomicNonDefaultConstructible> atomic{ rsl::test::AtomicNonDefaultConstructible{(uint8_t)3} };
+
+    CHECK(atomic_load_cond(&atomic, [](rsl::test::AtomicNonDefaultConstructible) { return true; }) == rsl::test::AtomicNonDefaultConstructible{ (uint8_t)3 });
+  }
+
+  {
+    rsl::atomic<rsl::test::AtomicNonDefaultConstructible> atomic{ rsl::test::AtomicNonDefaultConstructible{(uint8_t)3} };
+
+    CHECK(atomic_load_cond_explicit(&atomic, [](rsl::test::AtomicNonDefaultConstructible) { return true; }, rsl::memory_order_seq_cst) == rsl::test::AtomicNonDefaultConstructible{ (uint8_t)3 });
+  }
+}
+TEST_CASE("Test Atomic Constant Init")
+{
+  static rsl::atomic<int> sAtomicInt{ 4 };
+  static rsl::atomic<void*> sAtomicPtr{ nullptr };
+
+  CHECK(sAtomicInt.load() == 4);
+  CHECK(sAtomicPtr == nullptr);
 }
