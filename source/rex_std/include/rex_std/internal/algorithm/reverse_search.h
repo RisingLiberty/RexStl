@@ -29,7 +29,7 @@ namespace rsl
 
       // search from the back for first character matching the last character in the range to look for
       // from then on, continue search to see if an exact match is found
-      BiDirectionalIterator1 it       = last - 1;
+      BiDirectionalIterator1 it         = last - 1;
       BiDirectionalIterator2 to_find_it = lastToFind - 1;
       while(it != first - 1)
       {

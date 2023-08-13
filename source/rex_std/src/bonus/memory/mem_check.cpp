@@ -11,6 +11,7 @@
 // ============================================
 
 #include "rex_std/bonus/memory/mem_check.h"
+
 #include "rex_std/array.h"
 #include "rex_std/bonus/types.h"
 
@@ -35,14 +36,15 @@ namespace rsl
       union u16
       {
         explicit u16(uint16 val = 0)
-        : c16(val)
-        {}
+            : c16(val)
+        {
+        }
 
         uint16 c16;
         rsl::array<uint8, 2> c8;
       };
       const u16 u(value);
-      size_t i    = static_cast<size_t>(reinterpret_cast<uintptr>(p) % sizeof(uint16)); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+      size_t i = static_cast<size_t>(reinterpret_cast<uintptr>(p) % sizeof(uint16)); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
 
       for(const uint8 *p8 = static_cast<const uint8*>(p), *p8_end = static_cast<const uint8*>(p) + byteCount; p8 != p8_end; ++p8, i ^= 1u)
       {
@@ -59,14 +61,15 @@ namespace rsl
       union u32
       {
         explicit u32(uint32 val = 0)
-        : c32(val)
-        {}
+            : c32(val)
+        {
+        }
 
         uint32 c32;
         rsl::array<uint8, 4> c8;
       };
       const u32 u(value);
-      size_t i    = static_cast<size_t>(reinterpret_cast<uintptr>(p) % sizeof(uint32)); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+      size_t i = static_cast<size_t>(reinterpret_cast<uintptr>(p) % sizeof(uint32)); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
 
       for(const uint8 *p8 = static_cast<const uint8*>(p), *p8_end = static_cast<const uint8*>(p) + byteCount; p8 != p8_end; ++p8, i = (i + 1) % 4)
       {
@@ -83,14 +86,15 @@ namespace rsl
       union u64
       {
         explicit u64(uint64 val = 0)
-        : c64(val)
-        {}
+            : c64(val)
+        {
+        }
 
         uint64 c64;
         rsl::array<uint8, 8> c8;
       };
       const u64 u(value);
-      size_t i    = static_cast<size_t>(reinterpret_cast<uintptr>(p) % sizeof(uint64)); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+      size_t i = static_cast<size_t>(reinterpret_cast<uintptr>(p) % sizeof(uint64)); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
 
       for(const uint8 *p8 = static_cast<const uint8*>(p), *p8_end = static_cast<const uint8*>(p) + byteCount; p8 != p8_end; ++p8, i = (i + 1) % 8)
       {
