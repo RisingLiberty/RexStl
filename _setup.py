@@ -14,7 +14,7 @@ import subprocess
 import sys
 import time
   
-rexpy_version = "0.1.41"
+rexpy_version = "0.1.42"
 
 def __intsall_regis():
   os.system(f"py -m pip uninstall --yes regis")
@@ -39,7 +39,7 @@ def __main():
   for arg in unknown:
     arguments_to_pass_on += f" {arg}"
 
-  return os.system(f"py build/scripts/setup.py{arguments_to_pass_on}")
+  return os.system(f"py _build/scripts/setup.py{arguments_to_pass_on}")
 
 if __name__ == "__main__":
   res = __main()
