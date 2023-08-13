@@ -734,7 +734,7 @@ namespace rsl
         return *this;
       }
 
-      this_type& operator~() const
+      this_type operator~() const
       {
         return this_type(*this).flip();
       }
@@ -779,7 +779,7 @@ namespace rsl
       //bool any() const;                   // We inherit this from the base class.
       bool all() const
       {
-        return count() == size();
+        return base_type::count() == size();
       }
       bool none() const
       {

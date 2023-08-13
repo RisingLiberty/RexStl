@@ -14,17 +14,6 @@
 
 #include "rex_std/bitset.h"
 
-namespace rsl::test
-{
-  inline namespace v1
-  {
-    template class rsl::bitset<1>;
-    template class rsl::bitset<33>;
-    template class rsl::bitset<65>;
-    template class rsl::bitset<129>;
-  }
-}
-
 TEST_CASE("Test BitSet")
 {
 	int nErrorCount = 0;
