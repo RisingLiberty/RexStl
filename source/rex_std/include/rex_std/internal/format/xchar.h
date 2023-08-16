@@ -12,7 +12,7 @@
 
 #include <wchar>
 
-FMT_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 { 
 namespace detail
 {
   template <typename T>
@@ -214,6 +214,6 @@ inline auto to_wstring(const T& value) -> rsl::wstring
   return format(FMT_STRING(L"{}"), value);
 }
 FMT_MODULE_EXPORT_END
-FMT_END_NAMESPACE
+}}
 
 #endif // FMT_XCHAR_H_

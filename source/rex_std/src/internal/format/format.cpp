@@ -9,7 +9,7 @@
 
 #include "rex_std/internal/format/format_inl.h"
 
-FMT_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 { 
 namespace detail
 {
 
@@ -41,4 +41,4 @@ namespace detail
   template FMT_API void buffer<wchar_t>::append(const wchar_t*, const wchar_t*);
 
 } // namespace detail
-FMT_END_NAMESPACE
+}}

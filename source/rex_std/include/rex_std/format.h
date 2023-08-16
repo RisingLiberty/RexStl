@@ -106,7 +106,7 @@
   #ifndef FMT_THROW
     #if FMT_EXCEPTIONS
       #if FMT_MSC_VERSION || defined(__NVCC__)
-FMT_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 { 
 namespace detail
 {
   template <typename Exception>
@@ -119,7 +119,7 @@ namespace detail
       throw x;
   }
 } // namespace detail
-FMT_END_NAMESPACE
+}}
         #define FMT_THROW(x) detail::do_throw(x)
       #else
         #define FMT_THROW(x) throw x
@@ -196,7 +196,7 @@ FMT_END_NAMESPACE
   // __builtin_clz and __builtin_clzll, so only define FMT_BUILTIN_CLZ using the
   // MSVC intrinsics if the clz and clzll builtins are not available.
   #if FMT_MSC_VERSION && !defined(FMT_BUILTIN_CLZLL) && !defined(FMT_BUILTIN_CTZLL)
-FMT_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 { 
 namespace detail
 {
     // Avoid Clang with Microsoft CodeGen's -Wunknown-pragmas warning.
@@ -269,10 +269,10 @@ namespace detail
   }
     #define FMT_BUILTIN_CTZLL(n) detail::ctzll(n)
 } // namespace detail
-FMT_END_NAMESPACE
+}}
   #endif
 
-FMT_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 { 
 namespace detail
 {
 
@@ -1150,7 +1150,7 @@ namespace detail_exported
   }
 } // namespace detail_exported
 
-FMT_BEGIN_DETAIL_NAMESPACE
+namespace detail {
 
 template <typename T>
 struct is_integral : rsl::is_integral<T>
@@ -4081,7 +4081,7 @@ using format_func = void (*)(detail::buffer<char>&, int, const char*);
 FMT_API void format_error_code(buffer<char>& out, int errorCode, string_view message) noexcept;
 
 FMT_API void report_error(format_func func, int errorCode, const char* message) noexcept;
-FMT_END_DETAIL_NAMESPACE
+}
 
 FMT_API auto vsystem_error(int errorCode, string_view formatStr, format_args args) -> std::system_error;
 
@@ -4599,7 +4599,7 @@ FMT_NODISCARD auto to_string(const basic_memory_buffer<Char, SIZE>& buf) -> rsl:
   return rsl::stack_string<Char, SIZE>(buf.data(), size);
 }
 
-FMT_BEGIN_DETAIL_NAMESPACE
+namespace detail {
 
 template <typename Char>
 void vformat_to(buffer<Char>& buf, basic_string_view<Char> fmt, basic_format_args<FMT_BUFFER_CONTEXT(type_identity_t<Char>)> args, locale_ref loc)
@@ -4697,7 +4697,7 @@ extern template FMT_API auto decimal_point_impl(locale_ref) -> char;
 extern template FMT_API auto decimal_point_impl(locale_ref) -> wchar_t;
   #endif // FMT_HEADER_ONLY
 
-FMT_END_DETAIL_NAMESPACE
+}
 
   #if FMT_USE_USER_DEFINED_LITERALS
 inline namespace literals
@@ -4756,7 +4756,7 @@ FMT_INLINE auto format_to(OutputIt out, const Locale& loc, format_string<T...> f
 }
 
 FMT_MODULE_EXPORT_END
-FMT_END_NAMESPACE
+}}
 
   #ifdef FMT_HEADER_ONLY
     #define FMT_FUNC inline

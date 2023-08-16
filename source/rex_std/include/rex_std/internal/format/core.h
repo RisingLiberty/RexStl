@@ -34,10 +34,10 @@
 #include <string>
 #include <type_traits>
 
-FMT_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 { 
 FMT_MODULE_EXPORT_BEGIN
 
-FMT_BEGIN_DETAIL_NAMESPACE
+namespace detail {
 
 // Suppresses "unused variable" warnings with the method described in
 // https://herbsutter.com/2009/10/18/mailbag-shutting-up-compiler-warnings/.
@@ -136,7 +136,7 @@ constexpr auto is_utf8() -> bool
   using uchar = unsigned char;
   return FMT_UNICODE || (sizeof(micro) == 3 && uchar(micro[0]) == 0xC2 && uchar(micro[1]) == 0xB5); // NOLINT(google-readability-casting)
 }
-FMT_END_DETAIL_NAMESPACE
+}
 
 /** Specifies if ``T`` is a character type. Can be specialized by users. */
 template <typename T>
@@ -148,7 +148,7 @@ struct is_char<char> : rsl::true_type
 {
 };
 
-FMT_BEGIN_DETAIL_NAMESPACE
+namespace detail {
 
 // Returns a string view of `s`.
 template <typename Char, FMT_ENABLE_IF(is_char<Char>::value)>
@@ -246,7 +246,7 @@ struct error_handler
     throw_format_error(message);
   }
 };
-FMT_END_DETAIL_NAMESPACE
+}
 
 /** String's character type. */
 template <typename S>
@@ -348,7 +348,7 @@ public:
 
 using format_parse_context = basic_format_parse_context<char>;
 
-FMT_BEGIN_DETAIL_NAMESPACE
+namespace detail {
 // A parse context with extra data used only in compile-time checks.
 template <typename Char, typename ErrorHandler = detail::error_handler>
 class compile_parse_context : public basic_format_parse_context<Char, ErrorHandler>
@@ -397,7 +397,7 @@ public:
       this->on_error("width/precision is not integer");
   }
 };
-FMT_END_DETAIL_NAMESPACE
+}
 
 template <typename Char, typename ErrorHandler>
 FMT_CONSTEXPR void basic_format_parse_context<Char, ErrorHandler>::do_check_arg_id(int id)
@@ -466,7 +466,7 @@ struct is_contiguous<rsl::basic_string<Char, rsl::char_traits<Char>, rsl::alloca
 
 class appender;
 
-FMT_BEGIN_DETAIL_NAMESPACE
+namespace detail {
 
 template <typename Context, typename T>
 constexpr auto has_const_formatter_impl(T* /*unused*/) -> decltype(typename Context::template formatter_type<T>().format(rsl::declval<const T&>(), rsl::declval<Context&>()), true)
@@ -1466,7 +1466,7 @@ enum : unsigned long long
   has_named_args_bit = 1ULL << 62
 };
 
-FMT_END_DETAIL_NAMESPACE
+}
 
 // An output iterator that appends to a buffer.
 // It is used to reduce symbol sizes for the common case.
@@ -1601,7 +1601,7 @@ FMT_CONSTEXPR FMT_INLINE auto visit_format_arg(Visitor&& vis, const basic_format
   return vis(monostate());
 }
 
-FMT_BEGIN_DETAIL_NAMESPACE
+namespace detail {
 
 template <typename Char, typename InputIt>
 auto copy_str(InputIt begin, InputIt end, appender out) -> appender
@@ -1744,7 +1744,7 @@ FMT_CONSTEXPR inline auto make_arg(T&& value) -> basic_format_arg<Context>
 {
   return make_arg<Context>(value);
 }
-FMT_END_DETAIL_NAMESPACE
+}
 
 // Formatting context.
 template <typename OutputIt, typename Char>
@@ -2084,7 +2084,7 @@ namespace sign
 } // namespace sign
 using sign_t = sign::type;
 
-FMT_BEGIN_DETAIL_NAMESPACE
+namespace detail {
 
 // Workaround an array initialization issue in gcc 4.8.
 template <typename Char>
@@ -2132,7 +2132,7 @@ public:
     return m_data[index];
   }
 };
-FMT_END_DETAIL_NAMESPACE
+}
 
 enum class presentation_type : unsigned char
 {
@@ -2185,7 +2185,7 @@ struct basic_format_specs
 
 using format_specs = basic_format_specs<char>;
 
-FMT_BEGIN_DETAIL_NAMESPACE
+namespace detail {
 
 enum class arg_id_kind
 {
@@ -3118,7 +3118,7 @@ FMT_API void vprint_mojibake(std::FILE* /*f*/, string_view /*format_str*/, forma
 #ifndef _WIN32
 inline void vprint_mojibake(std::FILE*, string_view, format_args) {}
 #endif
-FMT_END_DETAIL_NAMESPACE
+}
 
 // A formatter specialization for the core types corresponding to detail::type
 // constants.
@@ -3363,7 +3363,7 @@ FMT_INLINE void print(std::FILE* f, format_string<T...> fmt, T&&... args)
 
 FMT_MODULE_EXPORT_END
 FMT_GCC_PRAGMA("GCC pop_options")
-FMT_END_NAMESPACE
+}}
 
 #ifdef FMT_HEADER_ONLY
   #include "format.h"

@@ -1613,13 +1613,13 @@ TEST(format_test, format_string_view) {
 #ifdef FMT_USE_STRING_VIEW
 struct string_viewable {};
 
-FMT_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 { 
 template <> struct formatter<string_viewable> : formatter<std::string_view> {
   auto format(string_viewable, format_context& ctx) -> decltype(ctx.out()) {
     return formatter<std::string_view>::format("foo", ctx);
   }
 };
-FMT_END_NAMESPACE
+}}
 
 TEST(format_test, format_std_string_view) {
   EXPECT_EQ("test", fmt::format("{}", std::string_view("test")));
@@ -1649,7 +1649,7 @@ struct converible_to_anything {
   template <typename T> operator T() const { return T(); }
 };
 
-FMT_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 { 
 template <> struct formatter<converible_to_anything> {
   FMT_CONSTEXPR auto parse(format_parse_context& ctx) -> decltype(ctx.begin()) {
     return ctx.begin();
@@ -1660,7 +1660,7 @@ template <> struct formatter<converible_to_anything> {
     return format_to(ctx.out(), "foo");
   }
 };
-FMT_END_NAMESPACE
+}}
 
 TEST(format_test, format_convertible_to_anything) {
   EXPECT_EQ("foo", fmt::format("{}", converible_to_anything()));
@@ -1668,7 +1668,7 @@ TEST(format_test, format_convertible_to_anything) {
 
 class Answer {};
 
-FMT_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 { 
 template <> struct formatter<date> {
   template <typename ParseContext>
   FMT_CONSTEXPR auto parse(ParseContext& ctx) -> decltype(ctx.begin()) {
@@ -1690,7 +1690,7 @@ template <> struct formatter<Answer> : formatter<int> {
     return formatter<int>::format(42, ctx);
   }
 };
-FMT_END_NAMESPACE
+}}
 
 TEST(format_test, format_custom) {
   EXPECT_THROW_MSG((void)fmt::format(runtime("{:s}"), date(2012, 12, 9)),
@@ -1982,7 +1982,7 @@ namespace adl_test {
   }  // namespace fmt
 }  // namespace adl_test
 
-FMT_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 { 
 template <>
 struct formatter<adl_test::fmt::detail::foo> : formatter<std::string> {
   auto format(adl_test::fmt::detail::foo, format_context& ctx)
@@ -1990,7 +1990,7 @@ struct formatter<adl_test::fmt::detail::foo> : formatter<std::string> {
     return formatter<std::string>::format("foo", ctx);
   }
 };
-FMT_END_NAMESPACE
+}}
 
 struct convertible_to_int {
   operator int() const { return 42; }
@@ -2152,7 +2152,7 @@ TEST(format_test, char_traits_is_not_ambiguous) {
 
 struct check_back_appender {};
 
-FMT_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 { 
 template <> struct formatter<check_back_appender> {
   auto parse(format_parse_context& ctx) -> decltype(ctx.begin()) {
     return ctx.begin();
@@ -2167,7 +2167,7 @@ template <> struct formatter<check_back_appender> {
     return ++out;
   }
 };
-FMT_END_NAMESPACE
+}}
 
 TEST(format_test, back_insert_slicing) {
   EXPECT_EQ(fmt::format("{}", check_back_appender{}), "y");

@@ -67,14 +67,14 @@ struct type_with_get {
   template <int> friend void get(type_with_get);
 };
 
-FMT_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 { 
 template <> struct formatter<type_with_get> : formatter<int> {
   template <typename FormatContext>
   auto format(type_with_get, FormatContext& ctx) -> decltype(ctx.out()) {
     return formatter<int>::format(42, ctx);
   }
 };
-FMT_END_NAMESPACE
+}}
 
 TEST_CASE("compile_test, compile_type_with_get") {
   REQUIRE("42" == rsl::format(FMT_COMPILE("{}"), type_with_get()));
@@ -83,7 +83,7 @@ TEST_CASE("compile_test, compile_type_with_get") {
 #if defined(__cpp_if_constexpr) && defined(__cpp_return_type_deduction)
 struct test_formattable {};
 
-FMT_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 { 
 template <> struct formatter<test_formattable> : formatter<const char*> {
   char word_spec = 'f';
   constexpr auto parse(format_parse_context& ctx) {
@@ -100,7 +100,7 @@ template <> struct formatter<test_formattable> : formatter<const char*> {
       ctx);
   }
 };
-FMT_END_NAMESPACE
+}}
 
 TEST_CASE("compile_test, format_default") {
   REQUIRE("42" == rsl::format(FMT_COMPILE("{}"), 42));
@@ -261,7 +261,7 @@ struct to_stringable {
   friend rsl::string_view to_string_view(to_stringable) { return {}; }
 };
 
-FMT_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 { 
 template <> struct formatter<to_stringable> {
   auto parse(format_parse_context& ctx) const -> decltype(ctx.begin()) {
     return ctx.begin();
@@ -272,7 +272,7 @@ template <> struct formatter<to_stringable> {
     return ctx.out();
   }
 };
-FMT_END_NAMESPACE
+}}
 
 TEST_CASE("compile_test, to_string_and_formatter") {
   rsl::format(FMT_COMPILE("{}"), to_stringable());

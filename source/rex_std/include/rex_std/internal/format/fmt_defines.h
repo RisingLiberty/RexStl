@@ -182,26 +182,10 @@
   #define FMT_UNCHECKED_ITERATOR(It) using unchecked_type = It
 #endif
 
-#ifndef FMT_BEGIN_NAMESPACE
-  #define FMT_BEGIN_NAMESPACE                                                                                                                                                                                                                            \
-    namespace rsl                                                                                                                                                                                                                                        \
-    {                                                                                                                                                                                                                                                    \
-      inline namespace v1                                                                                                                                                                                                                                \
-      {
-  #define FMT_END_NAMESPACE                                                                                                                                                                                                                              \
-    }                                                                                                                                                                                                                                                    \
-    }
-
-#endif
-
 #ifndef FMT_MODULE_EXPORT
   #define FMT_MODULE_EXPORT
   #define FMT_MODULE_EXPORT_BEGIN
   #define FMT_MODULE_EXPORT_END
-  #define FMT_BEGIN_DETAIL_NAMESPACE                                                                                                                                                                                                                     \
-    namespace detail                                                                                                                                                                                                                                     \
-    {
-  #define FMT_END_DETAIL_NAMESPACE }
 #endif
 
 #if !defined(FMT_HEADER_ONLY) && defined(_WIN32)
@@ -254,7 +238,7 @@ FMT_GCC_PRAGMA("GCC push_options")
 FMT_GCC_PRAGMA("GCC optimize(\"Og\")")
 #endif
 
-FMT_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 { 
 FMT_MODULE_EXPORT_BEGIN
 
 // Implementations of enable_if_t and other metafunctions for older systems.
@@ -273,4 +257,4 @@ struct monostate
 #endif
 
 FMT_MODULE_EXPORT_END
-FMT_END_NAMESPACE
+}}

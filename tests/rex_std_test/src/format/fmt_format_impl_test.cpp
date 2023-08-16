@@ -403,7 +403,7 @@ namespace std {
   template <> struct numeric_limits<slow_float> : numeric_limits<float> {};
 }  // namespace std
 
-FMT_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 { 
 namespace detail {
   template <> struct is_fast_float<slow_float> : std::false_type {};
   namespace dragonbox {
@@ -413,7 +413,7 @@ namespace detail {
     };
   }  // namespace dragonbox
 }  // namespace detail
-FMT_END_NAMESPACE
+}}
 
 TEST(format_impl_test, write_double_double) {
   auto s = std::string();
