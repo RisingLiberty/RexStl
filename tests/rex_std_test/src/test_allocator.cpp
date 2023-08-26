@@ -119,5 +119,43 @@ namespace rsl::test
       m_num_bytes_allocated = 0;
     }
 
+
+
+
+    int32 malloc_allocator::s_alloc_count_all = 0;
+    int32 malloc_allocator::s_free_count_all = 0;
+    size_t malloc_allocator::s_alloc_volume_all = 0;
+    void* malloc_allocator::s_last_allocation = nullptr;
+
+    void malloc_allocator::deallocate(void* p, size_t n)
+    {
+      ++m_free_count;
+      m_alloc_volume -= n;
+      ++s_free_count_all;
+      s_alloc_volume_all -= n;
+
+      return free(p);
+    }
+
+    void* malloc_allocator::allocate(size_t n, int)
+    {
+      ++m_alloc_count; m_alloc_volume += n;
+      ++s_alloc_count_all;
+      s_alloc_volume_all += n;
+      s_last_allocation = malloc(n);
+      return s_last_allocation;
+    }
+
+    void* malloc_allocator::allocate(size_t n, size_t, size_t, int)
+    {
+      ++m_alloc_count; 
+      m_alloc_volume += n;
+      ++s_alloc_count_all; 
+      s_alloc_volume_all += n; 
+      s_last_allocation = malloc(n); 
+      return s_last_allocation;
+    }
+
+    int32 instance_allocator::s_mismatch_count = 0;
   }
 }

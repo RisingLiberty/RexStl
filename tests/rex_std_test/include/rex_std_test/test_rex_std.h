@@ -10,7 +10,6 @@ namespace rsl
   {
     inline namespace v1
     {
-
       uint32 rand_seed();
       void set_rand_seed(uint32 seed);
 
@@ -79,6 +78,46 @@ namespace rsl
         missing_move_assignable(missing_move_assignable&&) {}
         missing_move_assignable& operator=(const missing_move_assignable&) { return *this; }
         bool operator<(const missing_move_assignable&) const { return true; }
+      };
+
+      class move_assignable
+      {
+      public:
+        static move_assignable create()
+        {
+          return move_assignable{};
+        }
+
+        move_assignable(move_assignable&& x)
+          : value(x.value) 
+        {}
+        move_assignable(const move_assignable&) = delete;
+        move_assignable& operator=(const move_assignable&) = delete;
+
+        ~move_assignable() = default;
+
+        move_assignable& operator=(move_assignable&& x)
+        {
+          value = x.value;
+          return *this;
+        }
+
+        static const int s_defaultValue = 42;
+        int32 value;
+
+      private:
+        move_assignable()
+          : value(s_defaultValue) 
+        {}
+      };
+
+      class const_type
+      {
+      public:
+        const_type(int value) 
+          : m_dummy(value)
+        {};
+        int m_dummy;
       };
     }
   }
