@@ -17,6 +17,7 @@
 #include "rex_std/internal/type_traits/is_reference.h"
 #include "rex_std/internal/type_traits/remove_reference.h"
 #include "rex_std/internal/type_traits/conditional.h"
+#include "rex_std/internal/utility/move.h"
 
 namespace rsl
 {

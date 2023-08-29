@@ -719,7 +719,7 @@ namespace rsl
 
             it_last.copy_backward(m_begin_it, it_first);
 
-            for (; m_begin_it != it_new_begin; it_new_begin)
+            for (; m_begin_it != it_new_begin; ++m_begin_it)
             {
               m_begin_it.m_current->~value_type();
             }
@@ -1142,16 +1142,16 @@ namespace rsl
 
       T** allocate_ptr_array(size_type n)
       {
-        T** pp = static_cast<T**>(m_allocator.allocate(n * sizeof(T*)));
+        T** pp = static_cast<T**>(m_allocator.allocate(n * sizeof(T**)));
 
-        rsl::memset(pp, 0, n * sizeof(T*));
+        rsl::memset(pp, 0, n * sizeof(T**));
 
         return pp;
       }
 
       void free_ptr_array(T** pp, size_type n)
       {
-        m_allocator.deallocate(pp, n * sizeof(T*));
+        m_allocator.deallocate(pp, n * sizeof(T**));
       }
 
       iterator reallocate_sub_array(size_type additionalCapacity, Side allocationSide)

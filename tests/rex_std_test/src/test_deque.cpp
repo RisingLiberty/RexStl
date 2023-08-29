@@ -684,7 +684,6 @@ TEST_CASE("Deque")
 		// void assign(rsl::initializer_list<value_type> ilist);
 		// iterator insert(iterator position, rsl::initializer_list<value_type> ilist);
 		rsl::deque<int32> intDeque = { 0, 1, 2 };
-    auto d2 = rsl::deque{ 1.0f,2.0f,3.0f };
     CHECK(intDeque == rsl::deque{0, 1, 2});
 
 		intDeque = { 13, 14, 15 };

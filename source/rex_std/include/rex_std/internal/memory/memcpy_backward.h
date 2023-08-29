@@ -22,14 +22,12 @@ namespace rsl
 
     constexpr void* memcpy_backward(void* dst, const void* src, card32 len)
     {
-      byte* dst_byte       = static_cast<byte*>(dst) + len;
-      const byte* src_byte = static_cast<const byte*>(src) + len;
+      byte* dst_byte       = static_cast<byte*>(dst);
+      const byte* src_byte = static_cast<const byte*>(src);
 
-      for(card32 i = 0; i < len; ++i)
+      for(card32 i = len - 1; i >= 0; --i)
       {
-        *dst_byte = *src_byte;
-        --dst_byte;
-        --src_byte;
+        dst_byte[i] = src_byte[i];
       }
       return dst;
     }
