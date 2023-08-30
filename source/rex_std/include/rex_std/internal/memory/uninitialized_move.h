@@ -12,8 +12,8 @@
 
 #pragma once
 
-#include "rex_std/internal/memory/uninitialized_copy.h"
 #include "rex_std/internal/iterator/move_iterator.h"
+#include "rex_std/internal/memory/uninitialized_copy.h"
 
 namespace rsl
 {

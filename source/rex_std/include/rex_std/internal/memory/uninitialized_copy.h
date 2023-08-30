@@ -12,10 +12,10 @@
 
 #pragma once
 
-#include "rex_std/internal/type_traits/is_trivial.h"
+#include "rex_std/internal/algorithm/copy.h"
 #include "rex_std/internal/iterator/iterator_traits.h"
 #include "rex_std/internal/memory/addressof.h"
-#include "rex_std/internal/algorithm/copy.h"
+#include "rex_std/internal/type_traits/is_trivial.h"
 
 namespace rsl
 {
@@ -24,13 +24,13 @@ namespace rsl
 		namespace internal
 		{
 			template <typename InputIterator, typename ForwardIt>
-			inline ForwardIt uninitialized_copy_impl(InputIterator first, InputIterator last, ForwardIt dest, true_type)
+			inline ForwardIt uninitialized_copy_impl(InputIterator first, InputIterator last, ForwardIt dest, true_type /*unused*/)
 			{
 				return rsl::copy(first, last, dest); // The copy() in turn will use memcpy for POD types.
 			}
 
 			template <typename InputIterator, typename ForwardIt>
-			inline ForwardIt uninitialized_copy_impl(InputIterator first, InputIterator last, ForwardIt dest, false_type)
+			inline ForwardIt uninitialized_copy_impl(InputIterator first, InputIterator last, ForwardIt dest, false_type /*unused*/)
 			{
 				using value_type = typename rsl::iterator_traits<ForwardIt>::value_type;
 				ForwardIt current_dst(dest);
@@ -46,7 +46,7 @@ namespace rsl
 
 				return current_dst;
 			}
-		}
+		} // namespace internal
 
 		template <typename InputIterator, typename ForwardIt>
 		constexpr ForwardIt uninitialized_copy(InputIterator first, InputIterator last, ForwardIt result)
