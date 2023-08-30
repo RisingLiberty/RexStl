@@ -14,5 +14,7 @@
 
 #include "rex_std/bonus/memory/typed_allocator.h"
 #include "rex_std/bonus/memory/uninitialized_default_construct.h"
+#include "rex_std/bonus/memory/uninitialized_move_fill.h"
+#include "rex_std/bonus/memory/uninitialized_fill_move.h"
 #include "rex_std/bonus/memory/unique_array.h"
 #include "rex_std/bonus/memory/zero_memory.h"

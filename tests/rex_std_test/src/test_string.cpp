@@ -2160,7 +2160,7 @@ TEST_CASE("string insertion and erasion")
 
     CHECK(str == "Hello new !world");
     CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs + 1);
-    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
+    CHECK(rsl::test::test_allocator::all_num_bytes_allocated() == pre_num_bytes_allocated + str.capacity() * sizeof(decltype(str)::value_type));
     CHECK(rsl::test::test_allocator::all_num_frees() == pre_num_frees);
   }
   // 6) iterator insert(const_iterator pos, value_type ch)

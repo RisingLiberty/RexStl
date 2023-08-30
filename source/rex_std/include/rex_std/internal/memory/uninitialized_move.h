@@ -12,19 +12,18 @@
 
 #pragma once
 
-#include "rex_std/disable_std_checking.h"
-#include "rex_std/std_alias_defines.h"
-
-#include <algorithm>
+#include "rex_std/internal/iterator/move_iterator.h"
+#include "rex_std/internal/memory/uninitialized_copy.h"
 
 namespace rsl
 {
   inline namespace v1
   {
-
-    REX_STD_FUNC_ALIAS(_Uninitialized_move);
-
+		template <typename InputIterator, typename ForwardIterator>
+		inline ForwardIterator uninitialized_move(InputIterator first, InputIterator last, ForwardIterator dest)
+		{
+			return rsl::uninitialized_copy(rsl::make_move_iterator(first), rsl::make_move_iterator(last), dest);
+		}
   } // namespace v1
 } // namespace rsl
 
-#include "rex_std/enable_std_checking.h"

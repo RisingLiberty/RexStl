@@ -12,19 +12,25 @@
 
 #pragma once
 
-#include "rex_std/disable_std_checking.h"
-#include "rex_std/std_alias_defines.h"
-
-#include <algorithm>
+#include "rex_std/internal/iterator/iterator_traits.h"
+#include "rex_std/internal/memory/addressof.h"
 
 namespace rsl
 {
   inline namespace v1
   {
+		template <typename ForwardIterator, typename Count>
+		constexpr ForwardIterator uninitialized_default_construct(ForwardIterator first, Count n)
+		{
+			using value_type = typename rsl::iterator_traits<ForwardIterator>::value_type;
+			ForwardIterator current_dst(first);
 
-    REX_STD_FUNC_ALIAS(_Uninitialized_value_construct_n);
-
+			for (; n > 0; --n, ++current_dst)
+			{
+				::new (rsl::addressof(*current_dst)) value_type;
+			}
+				return current_dst;
+		}
   } // namespace v1
 } // namespace rsl
 
-#include "rex_std/enable_std_checking.h"

@@ -13,7 +13,10 @@
 #pragma once
 
 #include "rex_std/algorithm.h"
-#include "rex_std/memory.h"
+#include "rex_std/bonus/memory/uninitialized_move_fill.h"
+#include "rex_std/bonus/memory/uninitialized_fill_move.h"
+#include "rex_std/bonus/memory/uninitialized_copy_copy.h"
+#include "rex_std/internal/memory/allocator.h"
 
 namespace rsl
 {
@@ -25,22 +28,23 @@ namespace rsl
       constexpr size_t deque_default_sub_array_size()
       {
         size_t res = 4;
+
         if constexpr(sizeof(T) <= 4)
         {
           res = 64;
         }
 
-        if constexpr(sizeof(T) <= 8)
+        else if constexpr (sizeof(T) <= 8)
         {
           res = 32;
         }
 
-        if constexpr(sizeof(T) <= 16)
+        else if constexpr(sizeof(T) <= 16)
         {
           res = 16;
         }
 
-        if constexpr(sizeof(T) <= 32)
+        else if constexpr(sizeof(T) <= 32)
         {
           res = 8;
         }
@@ -53,11 +57,11 @@ namespace rsl
     struct deque_iterator
     {
     private:
-      using this_type = deque_iterator<T>;
+      using this_type = deque_iterator<T, SubArraySize>;
 
     public:
-      using iterator          = deque_iterator<T>;
-      using const_iterator    = deque_iterator<T>;
+      using iterator          = deque_iterator<T, SubArraySize>;
+      using const_iterator    = deque_iterator<T, SubArraySize>;
       using difference_type   = ptrdiff;
       using iterator_category = random_access_iterator_tag;
       using value_type        = T;
@@ -87,7 +91,7 @@ namespace rsl
         if(++m_current == m_end)
         {
           m_begin   = *++m_current_array_ptr;
-          m_end     = m_begin + internal::deque_default_sub_array_size<T>();
+          m_end     = m_begin + SubArraySize;
           m_current = m_begin;
         }
         return *this;
@@ -104,7 +108,7 @@ namespace rsl
         if(m_current == m_begin)
         {
           m_begin   = *--m_current_array_ptr;
-          m_end     = m_begin + internal::deque_default_sub_array_size<T>();
+          m_end     = m_begin + SubArraySize;
           m_current = m_end; // fall through...
         }
         --m_current;
@@ -121,17 +125,17 @@ namespace rsl
       {
         const difference_type subarray_pos = (m_current - m_begin) + n;
 
-        if((size_t)subarray_pos < (size_t)internal::deque_default_sub_array_size<T>())
+        if((size_t)subarray_pos < (size_t)SubArraySize)
         {
           m_current += n;
         }
         else
         {
-          RSL_ASSERT_X((internal::deque_default_sub_array_size<T>() & (internal::deque_default_sub_array_size<T>() - 1)) == 0, "subarray size needs to be a power of 2"); // Verify that it is a power of 2.
-          const difference_type subarray_idx = (((16777216 + subarray_pos) / (difference_type)internal::deque_default_sub_array_size<T>())) - (16777216 / (difference_type)internal::deque_default_sub_array_size<T>());
+          RSL_ASSERT_X((SubArraySize & (SubArraySize - 1)) == 0, "subarray size needs to be a power of 2"); // Verify that it is a power of 2.
+          const difference_type subarray_idx = (((16777216 + subarray_pos) / (difference_type)SubArraySize)) - (16777216 / (difference_type)SubArraySize);
 
           set_sub_array(m_current_array_ptr + subarray_idx);
-          m_current = m_begin + (subarray_pos - (subarray_idx * (difference_type)internal::deque_default_sub_array_size<T>()));
+          m_current = m_begin + (subarray_pos - (subarray_idx * (difference_type)SubArraySize));
         }
         return *this;
       }
@@ -149,9 +153,13 @@ namespace rsl
         return this_type(*this).operator+=(-n);
       }
 
+      this_type copy(const iterator& first, const iterator& last)
+      {
+        return rsl::copy(rsl::make_move_iterator(first), rsl::make_move_iterator(last), *this);
+      }
       void copy_backward(const iterator& first, const iterator& last)
       {
-        rsl::copy_backward(rsl::make_move_iterator(first), rsl::make_move_iterator(last), rsl::make_move_iterator(*this)).base();
+        rsl::copy_backward(rsl::make_move_iterator(first), rsl::make_move_iterator(last), *this);
       }
 
       void set_sub_array(T** currentArrayPtr)
@@ -187,14 +195,18 @@ namespace rsl
     typename deque_iterator<T, SubArraySize>::difference_type operator-(const deque_iterator<T, SubArraySize>& lhs, const deque_iterator<T, SubArraySize>& rhs)
     {
       using difference_type = typename deque_iterator<T, SubArraySize>::difference_type;
-      return ((difference_type)internal::deque_default_sub_array_size<T>() * ((lhs.m_current_array_ptr - rhs.m_current_array_ptr) - 1)) + (lhs.m_current - lhs.m_begin) + (rhs.m_end - rhs.m_current);
+
+      const auto first_val = ((lhs.m_current_array_ptr - rhs.m_current_array_ptr) - 1);
+      const auto second_val = (lhs.m_current - lhs.m_begin);
+      const auto third_val = (rhs.m_end - rhs.m_current);
+      return ((difference_type)SubArraySize * first_val) + second_val + third_val;
     }
 
     template <typename T, typename Allocator = rsl::allocator, card32 SubArraySize = static_cast<card32>(internal::deque_default_sub_array_size<T>())>
     class deque
     {
     private:
-      using this_type = deque<T, Allocator>;
+      using this_type = deque<T, Allocator, SubArraySize>;
 
       static_assert((SubArraySize & (SubArraySize - 1)) == 0, "SubArraySize is not a multiple of 2");
 
@@ -219,6 +231,8 @@ namespace rsl
       using difference_type        = int32;
       using allocator_type         = Allocator;
 
+      constexpr static card32 s_subarray_size = SubArraySize;
+
       // template<typename T2, card32>
       // friend class deque_iterator<T2, SubArraySize>;
 
@@ -230,6 +244,7 @@ namespace rsl
           , m_end_it()
           , m_allocator()
       {
+        init(0);
       }
       explicit deque(const allocator_type& allocator)
           : m_ptr_array(nullptr)
@@ -238,6 +253,7 @@ namespace rsl
           , m_end_it()
           , m_allocator(allocator)
       {
+        init(0);
       }
       explicit deque(size_type n, const allocator_type& allocator = allocator_type())
           : m_ptr_array(nullptr)
@@ -249,6 +265,8 @@ namespace rsl
         init(n);
         fill_default();
       }
+      
+      template <rsl::enable_if_t<!rsl::is_integral_v<Allocator>, bool> = true> // make sure we don't pick this overload if there are 3 arguments provided where the third wouldn't be an allocator
       deque(size_type n, const value_type& value, const allocator_type& allocator = allocator_type())
           : m_ptr_array(nullptr)
           , m_ptr_array_size(0)
@@ -265,23 +283,34 @@ namespace rsl
           , m_ptr_array_size(0)
           , m_begin_it()
           , m_end_it()
-          , m_allocator(allocator)
+          , m_allocator()
       {
         init(other.size());
         rsl::uninitialized_copy(other.m_begin_it, other.m_end_it, m_begin_it);
       }
       deque(this_type&& other)
       {
+        init(0);
         swap(other);
       }
 
       deque(rsl::initializer_list<value_type> ilist, const allocator_type& allocator = allocator_type())
+        : m_ptr_array(nullptr)
+        , m_ptr_array_size(0)
+        , m_begin_it()
+        , m_end_it()
+        , m_allocator(allocator)
       {
         init_from_it(ilist.begin(), ilist.end());
       }
 
-      template <typename InputIterator>
+      template <typename InputIterator, rsl::enable_if_t<!rsl::is_integral_v<InputIterator>, bool> = true>
       deque(InputIterator first, InputIterator last)
+        : m_ptr_array(nullptr)
+        , m_ptr_array_size(0)
+        , m_begin_it()
+        , m_end_it()
+        , m_allocator()
       {
         init_from_it(first, last);
       }
@@ -296,17 +325,17 @@ namespace rsl
 
       deque& operator=(const this_type& other)
       {
-        REX_ASSERT_X(this != &other, "Cannot copy assign to yourself");
+        RSL_ASSERT_X(this != &other, "Cannot copy assign to yourself");
         RSL_ASSERT_X(get_allocator() == other.get_allocator(), "Different allocators in copy assignment, this is not allowed");
 
-        assign(other.cbegin(), other.cend());
+        assign_impl(other.cbegin(), other.cend());
 
         return *this;
       }
 
-      deque& operator=(const this_type&& other)
+      deque& operator=(this_type&& other)
       {
-        REX_ASSERT_X(this != &other, "Cannot move assign to yourself");
+        RSL_ASSERT_X(this != &other, "Cannot move assign to yourself");
         RSL_ASSERT_X(get_allocator() == other.get_allocator(), "Different allocators in move assignment, this is not allowed");
 
         swap(other);
@@ -316,27 +345,31 @@ namespace rsl
 
       deque& operator=(rsl::initializer_list<value_type> ilist)
       {
-        assign(ilist.begin(), ilist.end());
+        assign_impl(ilist.begin(), ilist.end());
         return *this;
       }
 
       void assign(size_type n, const value_type& value)
       {
-        assign(n, value);
+        assign_impl(n, value);
       }
 
       void assign(rsl::initializer_list<value_type> ilist)
       {
-        assign(ilist.begin(), ilist.end());
+        assign_impl(ilist.begin(), ilist.end());
       }
 
       template <typename InputIterator>
       void assign(InputIterator first, InputIterator last)
       {
-        assign(first, last);
+        assign_impl(first, last);
       }
 
       iterator begin()
+      {
+        return m_begin_it;
+      }
+      const_iterator begin() const
       {
         return m_begin_it;
       }
@@ -395,21 +428,12 @@ namespace rsl
 
       void resize(size_type n, const value_type& value)
       {
-        const size_type current_size = size();
-
-        if(n > current_size)
-        {
-          insert(m_end_it, n - current_size, value);
-        }
-        else
-        {
-          erase(m_begin_it + static_cast<difference_type>(n), m_end_it);
-        }
+        resize_impl(n, value);
       }
 
       void resize(size_type n)
       {
-        resize(n);
+        resize_impl(n);
       }
 
       void shrink_to_fit()
@@ -535,7 +559,7 @@ namespace rsl
           free_sub_array(m_end_it.m_begin);
           m_end_it.set_sub_array(m_end_it.m_current_array_ptr - 1);
           m_end_it.m_current = m_end_it.m_end - 1;
-          m_end_it->m_current->~value_type();
+          m_end_it.m_current->~value_type();
         }
       }
 
@@ -555,7 +579,7 @@ namespace rsl
 
         iterator it_pos(position);
         value_type value_saved(rsl::forward<Args>(args)...);
-        const difference_type i(it_pos - m_begin_it);
+        const difference_type i = static_cast<difference_type>(it_pos - m_begin_it);
 
         RSL_ASSERT_X(!empty(), "non empty deque when an empty is expected");
 
@@ -650,15 +674,15 @@ namespace rsl
         insert_values(position, n, value);
       }
 
-      template <typename InputIterator>
+      template <typename InputIterator, rsl::enable_if_t<!rsl::is_integral_v<InputIterator>, bool> = true>
       void insert(const_iterator position, InputIterator first, InputIterator last)
       {
-        insert(position, first, last);
+        insert_impl(position, first, last);
       }
 
       iterator insert(const_iterator position, rsl::initializer_list<value_type> ilist)
       {
-        const difference_type i(position - m_begin_it);
+        const difference_type i = static_cast<difference_type>(position - m_begin_it);
         insert(position, ilist.begin(), ilist.end());
         return (m_begin_it + i);
       }
@@ -670,7 +694,7 @@ namespace rsl
         iterator it_pos(position);
         iterator it_next(it_pos + 1);
 
-        const difference_type i(it_pos - m_begin_it);
+        const difference_type i = static_cast<difference_type>(it_pos - m_begin_it);
 
         if(i < static_cast<difference_type>(size() / 2))
         {
@@ -691,35 +715,43 @@ namespace rsl
         iterator it_first(first);
         iterator it_last(last);
 
-        if(it_first != m_begin_it || (it_last != m_end_it))
+        if (it_first != m_begin_it || (it_last != m_end_it))
         {
-          const iterator it_new_begin(m_begin_it + n);
-          value_type** const ptr_array_begin = m_begin_it.m_current_array_ptr;
+          const difference_type n = static_cast<difference_type>(it_last - it_first);
+          const difference_type i = static_cast<difference_type>(it_first - m_begin_it);
 
-          it_last.copy_backward(m_begin_it, it_first);
-
-          for(; m_begin_it != it_new_begin; it_new_begin)
+          if (i < static_cast<difference_type>(size() - n) / 2)
           {
-            m_begin_it.m_current->~value_type();
+            const iterator it_new_begin(m_begin_it + n);
+            value_type** const ptr_array_begin = m_begin_it.m_current_array_ptr;
+
+            it_last.copy_backward(m_begin_it, it_first);
+
+            for (; m_begin_it != it_new_begin; ++m_begin_it)
+            {
+              m_begin_it.m_current->~value_type();
+            }
+
+            free_sub_arrays(ptr_array_begin, it_new_begin.m_current_array_ptr);
+          }
+          else
+          {
+            iterator it_new_end(m_end_it - n);
+            value_type** const ptr_array_end = it_new_end.m_current_array_ptr + 1;
+
+            it_first.copy(it_last, m_end_it);
+
+            for (iterator it_temp(it_new_end); it_temp != m_end_it; ++it_temp)
+            {
+              it_temp.m_current->~value_type();
+            }
+
+            free_sub_arrays(ptr_array_end, m_end_it.m_current_array_ptr + 1);
+
+            m_end_it = it_new_end;
           }
 
-          free_sub_arrays(ptr_array_begin, it_new_begin.m_current_array_ptr);
-        }
-        else
-        {
-          iterator it_new_end(m_end_it - n);
-          value_type** const ptr_array_end = it_new_end.m_current_array_ptr + 1;
-
-          it_first.copy(it_last, m_end_it);
-
-          for(iterator it_temp(it_new_end); it_temp != m_end_it; ++it_temp)
-          {
-            it_temp.m_current->~value_type();
-          }
-
-          free_sub_arrays(ptr_array_end, m_end_it.m_current + 1);
-
-          m_end_it = it_new_end;
+          return m_begin_it + i;
         }
 
         clear();
@@ -765,7 +797,7 @@ namespace rsl
             p->~value_type();
           }
 
-          free_sub_array(ptr_array);
+          free_sub_array(*ptr_array);
         }
 
         m_end_it = m_begin_it;
@@ -834,7 +866,7 @@ namespace rsl
         using non_const_iterator_type = typename rsl::remove_const_t<ForwardIterator>;
         using non_const_value_type    = typename rsl::remove_const_t<value_type>;
 
-        const size_type n = static_cast<size_type>(rsl::distance(first, last));
+        size_type n = static_cast<size_type>(rsl::distance(first, last));
 
         init(n);
 
@@ -843,11 +875,12 @@ namespace rsl
           ForwardIterator current(first);
 
           rsl::advance(current, SubArraySize);
-          rsl::uninitialized_copy(static_cast<non_const_iterator_type>(first), static_cast<non_const_iterator_type>(last), static_cast<non_const_value_type*>(*ptr_array_current));
+          rsl::uninitialized_copy(static_cast<non_const_iterator_type>(first), static_cast<non_const_iterator_type>(current), (non_const_value_type*)(*ptr_array_current));
           first = current;
+          --n;
         }
 
-        rsl::uninitialized_copy(static_cast<non_const_iterator_type>(first), static_cast<non_const_iterator_type>(last, static_cast<non_const_iterator_type*>(m_end_it.m_begin)));
+        rsl::uninitialized_copy(static_cast<non_const_iterator_type>(first), static_cast<non_const_iterator_type>(last), (non_const_value_type*)(m_end_it.m_begin));
       }
 
       template <typename InputIterator>
@@ -895,44 +928,14 @@ namespace rsl
       }
 
       template <typename Integer, rsl::enable_if_t<rsl::is_integral_v<Integer>, bool> = true>
-      void assign(Integer n, Integer value)
+      void assign_impl(Integer n, Integer value)
       {
-        assign_values(static_cast<size_type>(n), static_cast<value_type>(value));
-      }
+        const size_type cur_size = size();
 
-      template <typename InputIterator, rsl::enable_if_t<!rsl::is_integral_v<InputIterator>, bool> = true>
-      void assign(InputIterator first, InputIterator last)
-      {
-        const size_type n    = static_cast<size_type>(rsl::distance(first, last));
-        const size_type size = size();
-
-        if(n > size)
-        {
-          InputIterator at_end(first);
-
-          rsl::advance(at_end, static_cast<difference_type>(size));
-          rsl::copy(first, at_end, m_begin_it);
-          insert(m_end_it, at_end, last);
-        }
-        else
-        {
-          iterator it_end(rsl::copy(first, last, m_begin_it));
-
-          if(n < size)
-          {
-            erase(it_end, m_end_it);
-          }
-        }
-      }
-
-      void assign_values(size_type n, const value_type& value)
-      {
-        const size_type size = size();
-
-        if(n > size)
+        if (n > cur_size)
         {
           rsl::fill(m_begin_it, m_end_it, value);
-          insert(m_end_it, n - size, value);
+          insert(m_end_it, n - cur_size, value);
         }
         else
         {
@@ -941,22 +944,49 @@ namespace rsl
         }
       }
 
+      template <typename InputIterator, rsl::enable_if_t<!rsl::is_integral_v<InputIterator>, bool> = true>
+      void assign_impl(InputIterator first, InputIterator last)
+      {
+        const size_type n    = static_cast<size_type>(rsl::distance(first, last));
+        const size_type cur_size = size();
+
+        if(n > cur_size)
+        {
+          InputIterator at_end = first;
+
+          rsl::advance(at_end, static_cast<difference_type>(cur_size));
+          rsl::copy(first, at_end, m_begin_it);
+          insert(m_end_it, at_end, last);
+        }
+        else
+        {
+          iterator it_end(rsl::copy(first, last, m_begin_it));
+
+          if(n < cur_size)
+          {
+            erase(it_end, m_end_it);
+          }
+        }
+      }
+
       template <typename Integer, rsl::enable_if_t<rsl::is_integral_v<Integer>, bool> = true>
-      void insert(const const_iterator& position, Integer n, Integer value)
+      void insert_impl(const const_iterator& position, Integer n, Integer value)
       {
         insert_values(position, static_cast<size_type>(n), static_cast<value_type>(value));
       }
 
       template <typename InputIterator>
-      void insert(const const_iterator& position, const InputIterator& first, const InputIterator& last)
+      void insert_impl(const const_iterator& position, const InputIterator& first, const InputIterator& last)
       {
         using IC = typename rsl::iterator_traits<InputIterator>::iterator_category;
-        init_from_iterator(position, first, last, IC());
+        insert_from_iterator(position, first, last, IC());
       }
 
       template <typename InputIterator>
       void insert_from_iterator(const_iterator position, const InputIterator& first, const InputIterator& last, rsl::forward_iterator_tag)
       {
+        const size_type n = static_cast<size_type>(rsl::distance(first, last));
+
         if(position.m_current == m_begin_it.m_current)
         {
           iterator it_new_begin(reallocate_sub_array(n, Side::Front));
@@ -968,15 +998,15 @@ namespace rsl
         {
           const iterator it_new_end(reallocate_sub_array(n, Side::Back));
 
-          rsl::uninitialized_default_construct(first, last, m_end_it);
+          rsl::uninitialized_copy(first, last, m_end_it);
           m_end_it = it_new_end;
         }
         else
         {
-          const difference_type insertion_index = position - m_begin_it;
-          const size_type size                  = size();
+          const difference_type insertion_index = static_cast<difference_type>(position - m_begin_it);
+          const size_type cur_size                  = size();
 
-          if(insertion_index < static_cast<difference_type>(size / 2))
+          if(insertion_index < static_cast<difference_type>(cur_size / 2))
           {
             const iterator it_new_begin(reallocate_sub_array(n, Side::Front));
             const iterator it_old_begin(m_begin_it);
@@ -986,7 +1016,7 @@ namespace rsl
             {
               iterator it_u_copy_end(m_begin_it + static_cast<difference_type>(n));
 
-              rsl::uninitialized_default_construct(m_begin_it, it_u_copy_end, it_new_begin);
+              rsl::uninitialized_copy(m_begin_it, it_u_copy_end, it_new_begin);
               it_u_copy_end = rsl::copy(it_u_copy_end, it_pos, it_old_begin);
               rsl::copy(first, last, it_u_copy_end);
             }
@@ -1005,7 +1035,7 @@ namespace rsl
           {
             const iterator it_new_end(reallocate_sub_array(n, Side::Back));
             const iterator it_old_end(m_end_it);
-            const difference_type pushed_count = static_cast<difference_type>(size) - insertion_index;
+            const difference_type pushed_count = static_cast<difference_type>(cur_size) - insertion_index;
             const iterator it_pos(m_end_it - pushed_count);
 
             if(pushed_count > static_cast<difference_type>(n))
@@ -1033,25 +1063,25 @@ namespace rsl
       {
         if(position.m_current == m_begin_it.m_current)
         {
-          const iterator it_new_begin(reallocate_sub_array(n, Side::Front));
+          const iterator it_new_begin = reallocate_sub_array(n, Side::Front);
 
           rsl::uninitialized_fill(it_new_begin, m_begin_it, value);
           m_begin_it = it_new_begin;
         }
         else if(position.m_current == m_end_it.m_current)
         {
-          const iterator it_new_end(reallocate_sub_array(n, Side::Back));
+          const iterator it_new_end = reallocate_sub_array(n, Side::Back);
 
-          rsl::uninitialized_default_construct(m_end_it, it_new_end, value);
+          rsl::uninitialized_fill(m_end_it, it_new_end, value);
           m_end_it = it_new_end;
         }
         else
         {
-          const difference_type insertion_index = position - m_begin_it;
-          const size_type size                  = size();
+          const difference_type insertion_index = static_cast<difference_type>(position - m_begin_it);
+          const size_type cur_size                  = size();
           const value_type value_saved(value);
 
-          if(insertion_index < static_cast<difference_type>(size / 2))
+          if(insertion_index < static_cast<difference_type>(cur_size / 2))
           {
             const iterator it_new_begin(reallocate_sub_array(n, Side::Front));
             const iterator it_old_begin(m_begin_it);
@@ -1076,7 +1106,7 @@ namespace rsl
           {
             const iterator it_new_end(reallocate_sub_array(n, Side::Back));
             const iterator it_old_end(m_end_it);
-            const difference_type pushed_count = static_cast<difference_type>(size) - insertion_index;
+            const difference_type pushed_count = static_cast<difference_type>(cur_size) - insertion_index;
             const iterator it_pos(m_end_it - pushed_count);
 
             if(pushed_count > static_cast<difference_type>(n))
@@ -1120,19 +1150,19 @@ namespace rsl
 
       T** allocate_ptr_array(size_type n)
       {
-        T** pp = static_cast<T**>(m_allocator.allocate(n * sizeof(T*)));
+        T** pp = static_cast<T**>(m_allocator.allocate(n * sizeof(T**)));
 
-        rsl::memset(pp, 0, n * sizeof(T*));
+        rsl::memset(pp, 0, n * sizeof(T**));
 
         return pp;
       }
 
       void free_ptr_array(T** pp, size_type n)
       {
-        m_allocator.deallocate(pp, n * sizeof(T*));
+        m_allocator.deallocate(pp, n * sizeof(T**));
       }
 
-      void reallocate_sub_array(size_type additionalCapacity, Side allocationSide)
+      iterator reallocate_sub_array(size_type additionalCapacity, Side allocationSide)
       {
         if(allocationSide == Side::Front)
         {
@@ -1147,7 +1177,7 @@ namespace rsl
               reallocate_ptr_array(static_cast<size_type>(sub_array_inc - (m_begin_it.m_current_array_ptr - m_ptr_array)), Side::Front);
             }
 
-            for(difference_type i = 1; i < sub_array_inc; ++i)
+            for(difference_type i = 1; i <= sub_array_inc; ++i)
             {
               m_begin_it.m_current_array_ptr[-i] = allocate_sub_array();
             }
@@ -1168,7 +1198,7 @@ namespace rsl
               reallocate_ptr_array(static_cast<size_type>(sub_array_inc - (((m_ptr_array + m_ptr_array_size) - m_end_it.m_current_array_ptr) - 1)), Side::Back);
             }
 
-            for(difference_type i = 1; i < sub_array_inc; ++i)
+            for(difference_type i = 1; i <= sub_array_inc; ++i)
             {
               m_end_it.m_current_array_ptr[i] = allocate_sub_array();
             }
@@ -1195,7 +1225,7 @@ namespace rsl
 
           ptr_array_begin = m_ptr_array + (unused_ptr_count_at_front - additionalCapacity);
           rsl::memmove(ptr_array_begin, m_begin_it.m_current_array_ptr, used_ptr_space);
-          rsl::memset(ptr_array_begin + used_ptr_count, 0, static_cast<card64>(m_ptr_array + m_ptr_array_size) - static_cast<card64>(ptr_array_begin + used_ptr_count));
+          rsl::memset(ptr_array_begin + used_ptr_count, 0, reinterpret_cast<card64>(m_ptr_array + m_ptr_array_size) - reinterpret_cast<card64>(ptr_array_begin + used_ptr_count));
         }
         else if((allocationSide == Side::Front) && (additionalCapacity <= unused_ptr_count_at_back))
         {
@@ -1206,7 +1236,7 @@ namespace rsl
 
           ptr_array_begin = m_begin_it.m_current_array_ptr + additionalCapacity;
           rsl::memmove(ptr_array_begin, m_begin_it.m_current_array_ptr, used_ptr_space);
-          rsl::memset(m_ptr_array, 0, static_cast<size_t>(static_cast<uintptr>(ptr_array_begin) - static_cast<uintptr>(m_ptr_array)));
+          rsl::memset(m_ptr_array, 0, static_cast<card64>(ptr_array_begin - m_ptr_array));
         }
         else
         {
@@ -1230,12 +1260,86 @@ namespace rsl
         m_end_it.set_sub_array((ptr_array_begin + used_ptr_count) - 1);
       }
 
+      template <typename ... Args>
+      void resize_impl(size_type n, Args&& ... args)
+      {
+        const size_type current_size = size();
+
+        if (n > current_size)
+        {
+          insert(m_end_it, n - current_size, rsl::forward<Args>(args)...);
+        }
+        else
+        {
+          erase(m_begin_it + static_cast<difference_type>(n), m_end_it);
+        }
+      }
+
     private:
-      T** m_ptr_array;
-      size_type m_ptr_array_size;
-      iterator m_begin_it;
-      iterator m_end_it;
-      allocator_type m_allocator;
+      T** m_ptr_array; // arrays of pointers to subarrays
+      size_type m_ptr_array_size; // the size of the ptr array
+      iterator m_begin_it; // beginning of subarrays
+      iterator m_end_it; // end of sub arrays
+      allocator_type m_allocator; // allocator used for memory allocations
     };
+
+    template <typename T, typename Allocator, card32 SubArraySize>
+    constexpr bool operator==(const deque<T, Allocator, SubArraySize>& a, const deque<T, Allocator, SubArraySize>& b)
+    {
+      return ((a.size() == b.size()) && rsl::equal(a.begin(), a.end(), b.begin()));
+    }
+
+    template <typename T, typename Allocator, card32 SubArraySize>
+    constexpr bool operator!=(const deque<T, Allocator, SubArraySize>& a, const deque<T, Allocator, SubArraySize>& b)
+    {
+      return ((a.size() != b.size()) || !rsl::equal(a.begin(), a.end(), b.begin()));
+    }
+
+    template <typename T, typename Allocator, card32 SubArraySize>
+    constexpr bool operator<(const deque<T, Allocator, SubArraySize>& a, const deque<T, Allocator, SubArraySize>& b)
+    {
+      return rsl::lexicographical_compare(a.begin(), a.end(), b.begin(), b.end());
+    }
+
+    template <typename T, typename Allocator, card32 SubArraySize>
+    constexpr bool operator>(const deque<T, Allocator, SubArraySize>& a, const deque<T, Allocator, SubArraySize>& b)
+    {
+      return b < a;
+    }
+
+    template <typename T, typename Allocator, card32 SubArraySize>
+    constexpr bool operator<=(const deque<T, Allocator, SubArraySize>& a, const deque<T, Allocator, SubArraySize>& b)
+    {
+      return !(b < a);
+    }
+
+    template <typename T, typename Allocator, card32 SubArraySize>
+    constexpr bool operator>=(const deque<T, Allocator, SubArraySize>& a, const deque<T, Allocator, SubArraySize>& b)
+    {
+      return !(a < b);
+    }
+
+    template <typename T, typename Allocator, card32 SubArraySize>
+    constexpr void swap(deque<T, Allocator, SubArraySize>& a, deque<T, Allocator, SubArraySize>& b)
+    {
+      a.swap(b);
+    }
+
+    template <class T, class Allocator, class U>
+    void erase(deque<T, Allocator>& c, const U& value)
+    {
+      // Erases all elements that compare equal to value from the container.
+      c.erase(rsl::remove(c.begin(), c.end(), value), c.end());
+    }
+
+    template <class T, class Allocator, class Predicate>
+    void erase_if(deque<T, Allocator>& c, Predicate predicate)
+    {
+      // Erases all elements that satisfy the predicate pred from the container.
+      c.erase(rsl::remove_if(c.begin(), c.end(), predicate), c.end());
+    }
+
+    template <typename T, typename Alloc = rsl::allocator>
+    deque(T...) -> deque<T, Alloc>;
   } // namespace v1
 } // namespace rsl

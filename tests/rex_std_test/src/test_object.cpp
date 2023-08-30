@@ -30,6 +30,13 @@ namespace rsl::test
       s_num_created++;
       s_num_ctor_calls++;
     }
+    test_object::test_object(card32 x, card32 y, card32 z)
+      : m_x(x + y + z)
+    {
+      s_num_created++;
+      s_num_ctor_calls++;
+    }
+
     test_object::test_object(const test_object& obj)
       : m_x(obj.m_x)
     {

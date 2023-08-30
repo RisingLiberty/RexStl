@@ -127,7 +127,7 @@ namespace rsl
       }
       bool is_lock_free() const volatile
       {
-        static_assert(rsl::internal::always_false<T>, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in EASTL/atomic.h! Use the memory orders to access the atomic object!");
+        static_assert(rsl::internal::always_false<T>, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in atomic.h! Use the memory orders to access the atomic object!");
         return false;
       }
 
@@ -140,7 +140,7 @@ namespace rsl
 
       explicit operator T() const volatile
       {
-        static_assert(rsl::internal::always_false<T>, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in EASTL/atomic.h! Use the memory orders to access the atomic object!");
+        static_assert(rsl::internal::always_false<T>, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in atomic.h! Use the memory orders to access the atomic object!");
       }
       explicit operator T() const
       {
@@ -187,7 +187,7 @@ namespace rsl
       }
       bool is_lock_free() const volatile
       {
-        static_assert(rsl::internal::always_false<T>, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in EASTL/atomic.h! Use the memory orders to access the atomic object!");
+        static_assert(rsl::internal::always_false<T>, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in atomic.h! Use the memory orders to access the atomic object!");
         return false;
       }
 
@@ -200,7 +200,7 @@ namespace rsl
 
       operator T() const volatile // NOLINT(google-explicit-constructor)
       {
-        static_assert(rsl::internal::always_false<T>, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in EASTL/atomic.h! Use the memory orders to access the atomic object!");
+        static_assert(rsl::internal::always_false<T>, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in atomic.h! Use the memory orders to access the atomic object!");
       }
       operator T() const // NOLINT(google-explicit-constructor)
       {
@@ -265,7 +265,7 @@ namespace rsl
       }
       bool is_lock_free() const volatile
       {
-        static_assert(rsl::internal::always_false<T>, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in EASTL/atomic.h! Use the memory orders to access the atomic object!");
+        static_assert(rsl::internal::always_false<T>, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in atomic.h! Use the memory orders to access the atomic object!");
         ;
         return false;
       }
@@ -279,7 +279,7 @@ namespace rsl
 
       operator T*() const volatile // NOLINT(google-explicit-constructor)
       {
-        static_assert(rsl::internal::always_false<T>, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in EASTL/atomic.h! Use the memory orders to access the atomic object!");
+        static_assert(rsl::internal::always_false<T>, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in atomic.h! Use the memory orders to access the atomic object!");
       }
       operator T*() const // NOLINT(google-explicit-constructor)
       {
