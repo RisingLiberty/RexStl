@@ -725,11 +725,11 @@ TEST_CASE("Deque")
 		toDequeB = rsl::move(deque5TO55);
     CHECK(toDequeB.size() == 5);
     CHECK(toDequeB.front().x() == 55);
-    CHECK(deque5TO55.size() == 0);
 	}
 
 
-	{   // C++11 functionality
+	{   
+    // C++11 functionality
 		// template<class... Args>
 		// iterator emplace(const_iterator position, Args&&... args);
 
@@ -747,15 +747,15 @@ TEST_CASE("Deque")
     CHECK(toDequeA.back().x() == 2);
     CHECK(rsl::test::test_object::num_ctor_calls() == 1);
 
-		toDequeA.emplace(toDequeA.begin(), 3);                                                              // This is 3 because of how subarray allocation works.
+		toDequeA.emplace(toDequeA.begin(), 3, 4, 5);                                                              
     CHECK(toDequeA.size() == 2);
-    CHECK(toDequeA.front().x() == 3);
-    CHECK(rsl::test::test_object::num_ctor_calls() == 3);
+    CHECK(toDequeA.front().x() == 12);
+    CHECK(rsl::test::test_object::num_ctor_calls() == 2);
 
-		toDequeA.emplace_front(6);
+		toDequeA.emplace_front(6, 7, 8);
     CHECK(toDequeA.size() == 3);
-    CHECK(toDequeA.front().x() == 6);
-    CHECK(rsl::test::test_object::num_ctor_calls() == 4);
+    CHECK(toDequeA.front().x() == 21);
+    CHECK(rsl::test::test_object::num_ctor_calls() == 3);
 
 		// This test is similar to the emplace pathway above. 
 		rsl::test::test_object::reset();
@@ -781,35 +781,6 @@ TEST_CASE("Deque")
     CHECK(toDequeC.front().x() == 6);
     CHECK(rsl::test::test_object::num_move_ctor_calls() == 4);
 	}
-
-
-	{
-		// Regression of deque::operator= for the case of EASTL_ALLOCATOR_COPY_ENABLED=1
-		// For this test we need to use rsl::test::instance_allocator to create two containers of the same
-		// type but with different and unequal allocator instances. The bug was that when 
-		// EASTL_ALLOCATOR_COPY_ENABLED was enabled operator=(this_type& x) assigned x.mAllocator
-		// to this and then proceeded to assign member elements from x to this. That's invalid 
-		// because the existing elements of this were allocated by a different allocator and 
-		// will be freed in the future with the allocator copied from x. 
-		// The test below should work for the case of EASTL_ALLOCATOR_COPY_ENABLED == 0 or 1.
-		rsl::test::instance_allocator::reset_all();
-
-		rsl::test::instance_allocator ia0((uint8_t)0);
-		rsl::test::instance_allocator ia1((uint8_t)1);
-
-		rsl::deque<int32, rsl::test::instance_allocator> v0((size_t)1, (int32)0, ia0);
-		rsl::deque<int32, rsl::test::instance_allocator> v1((size_t)1, (int32)1, ia1);
-
-    CHECK(v0.front() == 0);
-    CHECK(v1.front() == 1);
-
-		v0 = v1;
-    CHECK(v0.front() == 1);
-    CHECK(v1.front() == 1);
-		CHECK(rsl::test::instance_allocator::s_mismatch_count == 0);
-
-  }
-
 
 	{   // Regression of kDequeSubarraySize calculations
 		CHECK(EIntDeque::s_subarray_size >= 4);

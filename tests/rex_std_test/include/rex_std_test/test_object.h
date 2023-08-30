@@ -22,6 +22,7 @@ namespace rsl::test
     {
     public:
       test_object(card32 x = 0);
+      test_object(card32 x, card32 y, card32 z);
       test_object(const test_object& obj);
       test_object(test_object&& obj);
       ~test_object();

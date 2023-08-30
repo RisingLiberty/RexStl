@@ -288,6 +288,7 @@ namespace rsl
       }
       deque(this_type&& other)
       {
+        init(0);
         swap(other);
       }
 
@@ -303,6 +304,11 @@ namespace rsl
 
       template <typename InputIterator, rsl::enable_if_t<!rsl::is_integral_v<InputIterator>, bool> = true>
       deque(InputIterator first, InputIterator last)
+        : m_ptr_array(nullptr)
+        , m_ptr_array_size(0)
+        , m_begin_it()
+        , m_end_it()
+        , m_allocator()
       {
         init_from_it(first, last);
       }
@@ -867,7 +873,7 @@ namespace rsl
           ForwardIterator current(first);
 
           rsl::advance(current, SubArraySize);
-          rsl::uninitialized_copy(static_cast<non_const_iterator_type>(first), static_cast<non_const_iterator_type>(last), (non_const_value_type*)(*ptr_array_current));
+          rsl::uninitialized_copy(static_cast<non_const_iterator_type>(first), static_cast<non_const_iterator_type>(current), (non_const_value_type*)(*ptr_array_current));
           first = current;
           --n;
         }
@@ -1055,14 +1061,14 @@ namespace rsl
       {
         if(position.m_current == m_begin_it.m_current)
         {
-          const iterator it_new_begin(reallocate_sub_array(n, Side::Front));
+          const iterator it_new_begin = reallocate_sub_array(n, Side::Front);
 
           rsl::uninitialized_fill(it_new_begin, m_begin_it, value);
           m_begin_it = it_new_begin;
         }
         else if(position.m_current == m_end_it.m_current)
         {
-          const iterator it_new_end(reallocate_sub_array(n, Side::Back));
+          const iterator it_new_end = reallocate_sub_array(n, Side::Back);
 
           rsl::uninitialized_fill(m_end_it, it_new_end, value);
           m_end_it = it_new_end;
@@ -1169,7 +1175,7 @@ namespace rsl
               reallocate_ptr_array(static_cast<size_type>(sub_array_inc - (m_begin_it.m_current_array_ptr - m_ptr_array)), Side::Front);
             }
 
-            for(difference_type i = 1; i < sub_array_inc; ++i)
+            for(difference_type i = 1; i <= sub_array_inc; ++i)
             {
               m_begin_it.m_current_array_ptr[-i] = allocate_sub_array();
             }
