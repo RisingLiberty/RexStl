@@ -197,7 +197,7 @@ namespace rsl::test
         for (int32 i = 0; i < 1000; i++)
         {
           d1.push_back(int32());
-          typename D2::value_type& ref = d2.push_back();       // d2 here must be the EASTL version.
+          typename D2::value_type& ref = d2.push_back();
           CHECK(d1.front() == d2.front());
           CHECK(d1.back() == d2.back());
           CHECK(&ref == &d2.back());
