@@ -265,6 +265,8 @@ namespace rsl
         init(n);
         fill_default();
       }
+      
+      template <rsl::enable_if_t<!rsl::is_integral_v<Allocator>, bool> = true> // make sure we don't pick this overload if there are 3 arguments provided where the third wouldn't be an allocator
       deque(size_type n, const value_type& value, const allocator_type& allocator = allocator_type())
           : m_ptr_array(nullptr)
           , m_ptr_array_size(0)
@@ -1338,6 +1340,6 @@ namespace rsl
     }
 
     template <typename T, typename Alloc = rsl::allocator>
-    deque(T...)->deque<T, Alloc>;
+    deque(T...) -> deque<T, Alloc>;
   } // namespace v1
 } // namespace rsl
