@@ -23,6 +23,8 @@ namespace rsl::test
 {
   inline namespace v1
   {
+    // An allocator to verify if the expected amount of allocations, deallocations and bytes allocated is followed
+
     class test_allocator
     {
     public:
@@ -86,7 +88,7 @@ namespace rsl::test
       return false;
     }
 
-
+    // An allocator that uses C style malloc and free for memory allocation
     class malloc_allocator
     {
     public:
@@ -145,7 +147,7 @@ namespace rsl::test
     }
 
 
-
+    // An allocator that stores an internal id to differentiate it from other allocators
     class instance_allocator
     {
     private:
@@ -225,5 +227,25 @@ namespace rsl::test
 
     inline bool operator==(const instance_allocator& a, const instance_allocator& b) { return (a.m_instance_id == b.m_instance_id); }
     inline bool operator!=(const instance_allocator& a, const instance_allocator& b) { return (a.m_instance_id != b.m_instance_id); }
+
+    // A dummy allocator that can be used to verify if compressed pairs trigger when using empty allocators for containers
+    class dummy_non_empty_allocator : public rsl::allocator
+    {
+    public:
+      using size_type = size_t;
+      using difference_type = ptrdiff;
+
+    private:
+      int32 m_dummy_int;
+    };
+
+    constexpr bool operator==(const dummy_non_empty_allocator& /*unused*/, const dummy_non_empty_allocator& /*unused*/)
+    {
+      return true;
+    }
+    constexpr bool operator!=(const dummy_non_empty_allocator& /*unused*/, const dummy_non_empty_allocator& /*unused*/)
+    {
+      return false;
+    }
   }
 }

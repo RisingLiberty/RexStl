@@ -643,18 +643,6 @@ namespace rsl
       typename forward_list<T, Allocator>::const_iterator ib   = b.begin();
       typename forward_list<T, Allocator>::const_iterator enda = a.end();
 
-#if EASTL_SLIST_SIZE_CACHE
-      if(a.size() == b.size())
-      {
-        while((ia != enda) && (*ia == *ib))
-        {
-          ++ia;
-          ++ib;
-        }
-        return (ia == enda);
-      }
-      return false;
-#else
       typename forward_list<T, Allocator>::const_iterator endb = b.end();
 
       while((ia != enda) && (ib != endb) && (*ia == *ib))
@@ -663,7 +651,6 @@ namespace rsl
         ++ib;
       }
       return (ia == enda) && (ib == endb);
-#endif
     }
 
     template <typename T, typename Allocator>
