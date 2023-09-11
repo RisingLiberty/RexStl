@@ -97,6 +97,9 @@ namespace rsl
       template <typename U, typename Allocator>
       friend class forward_list;
 
+      template <typename T2, typename Pointer2, typename Reference2>
+      friend class forward_list_iterator;
+
       using pointer           = Pointer;
       using const_pointer     = const T*;
       using reference         = Reference;
@@ -116,6 +119,11 @@ namespace rsl
       }
       forward_list_iterator(const forward_list_iterator& other)
           : m_node(other.m_node)
+      {
+      }
+      template <typename T2, typename Pointer2, typename Reference2>
+      forward_list_iterator(forward_list_iterator<T2, Pointer2, Reference2> it)
+        : m_node(it.m_node)
       {
       }
 
@@ -416,14 +424,13 @@ namespace rsl
         m_size = 0;
 #endif
       }
-      void insert_after(const_iterator pos, size_type count) {}
-      void insert_after(const_iterator pos, const_reference value)
+      iterator insert_after(const_iterator pos, const_reference value)
       {
-        emplace_after(pos, value);
+        return emplace_after(pos, value);
       }
-      void insert_after(const_iterator pos, value_type&& value)
+      iterator insert_after(const_iterator pos, value_type&& value)
       {
-        emplace_after(pos, rsl::move(value));
+        return emplace_after(pos, rsl::move(value));
       }
       void insert_after(const_iterator pos, size_type count, const_reference value)
       {
@@ -441,14 +448,14 @@ namespace rsl
           ++first;
         }
       }
-      void insert_after(const_iterator pos, rsl::initializer_list<T> ilist)
+      iterator insert_after(const_iterator pos, rsl::initializer_list<T> ilist)
       {
-        insert_after(pos, ilist.begin(), ilist.end());
+        return insert_after(pos, ilist.begin(), ilist.end());
       }
       template <typename... Args>
-      void emplace_after(const_iterator pos, Args&&... args)
+      iterator emplace_after(const_iterator pos, Args&&... args)
       {
-        emplace_after_impl(pos.m_node, rsl::forward<Args>(args)...);
+        return emplace_after_impl(pos.m_node, rsl::forward<Args>(args)...);
       }
       iterator erase_after(const_iterator pos)
       {
@@ -550,7 +557,7 @@ namespace rsl
 
     private:
       template <typename... Args>
-      void emplace_after_impl(iterator node, Args&&... args)
+      iterator emplace_after_impl(iterator node, Args&&... args)
       {
         node_type* new_node = static_cast<node_type*>(get_allocator().allocate(sizeof(node_type)));
         get_allocator().construct(new_node, rsl::forward<Args>(args)...);
@@ -559,6 +566,8 @@ namespace rsl
 #ifdef REX_ENABLE_SIZE_IN_LISTS
         ++m_size;
 #endif
+
+        return node;
       }
 
       template <typename Iterator>

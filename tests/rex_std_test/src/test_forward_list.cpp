@@ -19,6 +19,7 @@
 #include "rex_std_test/test_object.h"
 
 #include "rex_std/forward_list.h"
+#include "rex_std/algorithm.h"
 
 TEST_CASE("Test Forward List")
 {
@@ -317,7 +318,7 @@ TEST_CASE("Test Forward List")
 		// iterator insert(const_iterator position, const value_type& value);
 		// void     insert(const_iterator position, size_type n, const value_type& value);
 		{
-			static const int32 MAGIC_VALUE = 4242;
+			static const int32 MAGIC_VALUE = 42;
 			struct TestVal
 			{
 				TestVal() : mV(MAGIC_VALUE) {}
@@ -330,8 +331,6 @@ TEST_CASE("Test Forward List")
 			CHECK(list1.empty());
 
 			auto insert_iter = rsl::begin(list1);
-			list1.insert_after(insert_iter);
-			CHECK(!list1.empty());
 
 			list1.insert_after(insert_iter, TestVal(42));
 			CHECK(!list1.empty());
@@ -355,7 +354,7 @@ TEST_CASE("Test Forward List")
 			list2.resize(400, 24);
 			CHECK(!list2.empty());
 
-			list1.insert(rsl::end(list1), rsl::begin(list2), rsl::end(list2)); // [42,42,42,...,42, | 24,24,24,24...]
+			list1.insert_after(rsl::end(list1), rsl::begin(list2), rsl::end(list2)); // [42,42,42,...,42, | 24,24,24,24...]
 			CHECK(!list1.empty());
 			CHECK(list1.front() == 42);
 
@@ -373,9 +372,9 @@ TEST_CASE("Test Forward List")
 		{
 			rsl::forward_list<int32> list1;
 			CHECK(list1.empty());
-			list1.push_front();
+			list1.push_front(0);
 
-			list1.insert_after(list1.begin());
+			list1.insert_after(list1.begin(), 0);
 			CHECK(!list1.empty());
 
 			list1.insert_after(list1.begin(), 43);
@@ -390,12 +389,12 @@ TEST_CASE("Test Forward List")
 		{
 			rsl::forward_list<rsl::test::test_object> list1;
 			CHECK(list1.empty());
-			list1.push_front();
+			list1.push_front(0);
 
-			auto inserted = list1.insert_after(list1.begin(), rsl::test::test_object(42));
+			list1.insert_after(list1.begin(), rsl::test::test_object(42));
 			CHECK(!list1.empty());
-			CHECK((*inserted).mCopyCtor == 0);
-			CHECK((*inserted).mMoveCtor == 1);
+			CHECK(rsl::test::test_object::num_copy_ctor_calls() == 0);
+			CHECK(rsl::test::test_object::num_move_ctor_calls() == 1);
 		}
 
 		// iterator insert_after(const_iterator position, InputIterator first, InputIterator last);
@@ -412,14 +411,14 @@ TEST_CASE("Test Forward List")
 		{
 			rsl::forward_list<rsl::test::test_object> list1;
 			list1.emplace_after(list1.before_begin(), 42);
-			CHECK(list1.front().mI == 42);
-			CHECK(list1.front().mCopyCtor == 0);
-			CHECK(list1.front().mMoveCtor == 0);
+			CHECK(list1.front().x() == 42);
+			CHECK(list1.front().num_copy_ctor_calls() == 0);
+			CHECK(list1.front().num_move_ctor_calls() == 0);
 
 			list1.emplace_after(list1.before_begin(), 1, 2, 3, 4);
-			CHECK(list1.front().mCopyCtor == 0);
-			CHECK(list1.front().mMoveCtor == 0);
-			CHECK(list1.front().mI == (1 + 2 + 3 + 4));
+			CHECK(list1.front().num_copy_ctor_calls() == 0);
+			CHECK(list1.front().num_move_ctor_calls() == 0);
+			CHECK(list1.front().x() == (1 + 2 + 3 + 4));
 		}
 
 		// iterator erase(const_iterator position);
@@ -435,7 +434,6 @@ TEST_CASE("Test Forward List")
 
 			list1.erase(list1.begin(), list1.end());
 			CHECK(list1 == rsl::forward_list<int32>({}));
-			CHECK(list1.size() == 0);
 			CHECK(list1.empty());
 		}
 
@@ -447,19 +445,15 @@ TEST_CASE("Test Forward List")
 
 			list1.erase_after(p);
 			CHECK(list1 == rsl::forward_list<int32>({ 0,2,3,4,5,6,7 }));
-			CHECK(list1.validate());
 
 			list1.erase_after(p);
 			CHECK(list1 == rsl::forward_list<int32>({ 0,3,4,5,6,7 }));
-			CHECK(list1.validate());
 
 			list1.erase_after(p);
 			CHECK(list1 == rsl::forward_list<int32>({ 0,4,5,6,7 }));
-			CHECK(list1.validate());
 
 			list1.erase_after(p, list1.end());
 			CHECK(list1 == rsl::forward_list<int32>({ 0 }));
-			CHECK(list1.validate());
 		}
 
 		// void clear();
@@ -632,17 +626,11 @@ TEST_CASE("Test Forward List")
 			CHECK(rsl::is_sorted(rsl::begin(list1), rsl::end(list1), compare));
 		}
 
-		{ // Test empty base-class optimization
-			struct UnemptyDummyAllocator : rsl::dummy_allocator
-			{
-				int32 foo;
-			};
+			using list1 = rsl::forward_list<int32, rsl::allocator>;
+			using list2 = rsl::forward_list<int32, rsl::test::dummy_non_empty_allocator>;
 
-			typedef rsl::rsl::forward_list<int32, rsl::dummy_allocator> list1;
-			typedef rsl::rsl::forward_list<int32, UnemptyDummyAllocator> list2;
-
-			EATEST_CHECK(sizeof(list1) < sizeof(list2));
-		}
+			CHECK(sizeof(list1) < sizeof(list2));
+		
 
 		{ // Test erase / erase_if
 			{
