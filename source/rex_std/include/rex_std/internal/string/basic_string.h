@@ -15,7 +15,6 @@
 #include "rex_std/bonus/attributes.h"
 #include "rex_std/bonus/functional/hash_result.h"
 #include "rex_std/bonus/string/stack_string.h"
-#include "rex_std/bonus/string/string_fwd.h"
 #include "rex_std/bonus/types.h"
 #include "rex_std/bonus/utility/compressed_pair.h"
 #include "rex_std/bonus/utility/element_literal.h"
@@ -51,6 +50,7 @@
 #include "rex_std/internal/string/byte_strings.h"
 #include "rex_std/internal/string/char_traits.h"
 #include "rex_std/internal/string/string_forward_declare.h"
+#include "rex_std/internal/string_view/basic_string_view.h"
 #include "rex_std/internal/type_traits/enable_if.h"
 #include "rex_std/internal/utility/move.h"
 #include "rex_std/internal/utility/swap.h"
@@ -71,11 +71,6 @@ namespace rsl
 {
   inline namespace v1
   {
-    template <typename CharType, card32 StrMaxSize>
-    class stack_string;
-
-    template <typename CharType, typename Traits>
-    class basic_string_view;
 
     template <typename CharType, typename Traits = char_traits<CharType>, typename Alloc = allocator>
     class basic_string
@@ -1260,10 +1255,8 @@ namespace rsl
         if(is_using_sso_string() && other.is_using_sso_string())
         {
           rsl::swap(m_sso_buffer, other.m_sso_buffer);
-          const size_type my_length = length(); // need to cache this as it'll change the next line
-
-          this->reset(m_sso_buffer.data(), other.length(), m_sso_buffer.max_size());
-          other.reset(other.m_sso_buffer.data(), my_length, other.m_sso_buffer.max_size());
+          this->reset(m_sso_buffer.data(), m_sso_buffer.length(), m_sso_buffer.max_size());
+          other.reset(other.m_sso_buffer.data(), other.m_sso_buffer.length(), other.m_sso_buffer.max_size());
         }
         // one is using heap memory, one is using the sso buffer
         else if(is_using_big_string() != other.is_using_big_string())
@@ -1319,7 +1312,7 @@ namespace rsl
       // finds the first substring equal to str
       REX_NO_DISCARD size_type find(const basic_string& str, size_type pos = 0) const
       {
-        return rsl::string_utils::find(m_begin, length(), pos, str.data(), str.length(), s_npos);
+        return rsl::string_utils::find<traits_type, const_pointer>(m_begin, length(), pos, str.data(), str.length(), s_npos);
       }
       /// RSL Comment: Not in ISO C++ Standard at time of writing (03/Jul/2022)
       // The standard doesn't provide an overload for a string literal
@@ -1327,7 +1320,7 @@ namespace rsl
       template <count_t Size>
       REX_NO_DISCARD size_type find(const value_type (&s)[Size], size_type pos = 0) const // NOLINT(modernize-avoid-c-arrays)
       {
-        return rsl::string_utils::find(m_begin, length(), pos, s, Size - 1, s_npos);
+        return rsl::string_utils::find<traits_type, const_pointer>(m_begin, length(), pos, s, Size - 1, s_npos);
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (03/Jul/2022)
       // because we define the above function, we don't define the following
@@ -1337,7 +1330,7 @@ namespace rsl
       // finds the first character ch (treated as a single-character substring)
       REX_NO_DISCARD size_type find(value_type ch, size_type pos = 0) const
       {
-        return rsl::string_utils::find(m_begin, length(), pos, rsl::addressof(ch), 1_elem, s_npos);
+        return rsl::string_utils::find<traits_type, const_pointer>(m_begin, length(), pos, rsl::addressof(ch), 1_elem, s_npos);
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (01/Jul/2022)
       // This is a template function in the standard due to ambiguous overload
@@ -1347,7 +1340,7 @@ namespace rsl
       // find the first substring equal to sv
       REX_NO_DISCARD size_type find(const basic_string_view<value_type, traits_type>& sv, size_type pos = 0) const
       {
-        return rsl::string_utils::find(m_begin, length(), pos, sv.data(), sv.length(), s_npos);
+        return rsl::string_utils::find<traits_type, const_pointer>(m_begin, length(), pos, sv.data(), sv.length(), s_npos);
       }
 
       // finds the last substring equal to str
@@ -1357,7 +1350,7 @@ namespace rsl
         {
           pos = length();
         }
-        return rsl::string_utils::rfind(m_begin, length(), pos, str.data(), str.length(), s_npos);
+        return rsl::string_utils::rfind<traits_type, const_pointer>(m_begin, length(), pos, str.data(), str.length(), s_npos);
       }
 
       /// RSL Comment: Different from ISO C++ Standard at time of writing (03/Jul/2022)
@@ -1372,7 +1365,7 @@ namespace rsl
         {
           pos = length();
         }
-        return rsl::string_utils::rfind(m_begin, length(), pos, rsl::addressof(ch), 1_elem, s_npos);
+        return rsl::string_utils::rfind<traits_type, const_pointer>(m_begin, length(), pos, rsl::addressof(ch), 1_elem, s_npos);
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (01/Jul/2022)
       // This is a template function in the standard due to ambiguous overload
@@ -1386,13 +1379,13 @@ namespace rsl
         {
           pos = length();
         }
-        return rsl::string_utils::rfind(m_begin, length(), pos, sv.data(), sv.length(), s_npos);
+        return rsl::string_utils::rfind<traits_type, const_pointer>(m_begin, length(), pos, sv.data(), sv.length(), s_npos);
       }
 
       // finds the first character equal to one of the characters in str
       REX_NO_DISCARD size_type find_first_of(const basic_string& str, size_type pos = 0) const
       {
-        return rsl::string_utils::find_first_of(m_begin, length(), pos, str.data(), str.length(), s_npos);
+        return rsl::string_utils::find_first_of<traits_type, const_pointer>(m_begin, length(), pos, str.data(), str.length(), s_npos);
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (03/Jul/2022)
       // because we define the function above, we don't specify the following
@@ -1402,7 +1395,7 @@ namespace rsl
       // finds the first character equal to ch
       REX_NO_DISCARD size_type find_first_of(value_type ch, size_type pos = 0) const
       {
-        return rsl::string_utils::find_first_of(m_begin, length(), pos, rsl::addressof(ch), 1_elem, s_npos);
+        return rsl::string_utils::find_first_of<traits_type, const_pointer>(m_begin, length(), pos, rsl::addressof(ch), 1_elem, s_npos);
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (01/Jul/2022)
       // This is a template function in the standard due to ambiguous overload
@@ -1412,13 +1405,13 @@ namespace rsl
       // finds the first character equal to a character in sv
       REX_NO_DISCARD size_type find_first_of(const basic_string_view<value_type, traits_type>& sv, size_type pos = 0) const
       {
-        return rsl::string_utils::find_first_of(m_begin, length(), pos, sv.data(), sv.length(), s_npos);
+        return rsl::string_utils::find_first_of<traits_type, const_pointer>(m_begin, length(), pos, sv.data(), sv.length(), s_npos);
       }
 
       // finds the first character equal to none of the characters in str
       REX_NO_DISCARD size_type find_first_not_of(const basic_string& str, size_type pos = 0) const
       {
-        return rsl::string_utils::find_first_not_of(m_begin, length(), pos, str.data(), str.length(), s_npos);
+        return rsl::string_utils::find_first_not_of<traits_type, const_pointer>(m_begin, length(), pos, str.data(), str.length(), s_npos);
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (03/Jul/2022)
       // because we define the above function, we don't define the following
@@ -1428,7 +1421,7 @@ namespace rsl
       // finds the first character not equal to ch
       REX_NO_DISCARD size_type find_first_not_of(value_type ch, size_type pos = 0) const
       {
-        return rsl::string_utils::find_first_not_of(m_begin, length(), pos, rsl::addressof(ch), 1_elem, s_npos);
+        return rsl::string_utils::find_first_not_of<traits_type, const_pointer>(m_begin, length(), pos, rsl::addressof(ch), 1_elem, s_npos);
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (01/Jul/2022)
       // This is a template function in the standard due to ambiguous overload
@@ -1438,18 +1431,13 @@ namespace rsl
       // finds the first character not equal to any character in sv
       REX_NO_DISCARD size_type find_first_not_of(const basic_string_view<value_type, traits_type>& sv, size_type pos = 0) const
       {
-        return rsl::string_utils::find_first_not_of(m_begin, length(), pos, sv.data(), sv.length(), s_npos);
+        return rsl::string_utils::find_first_not_of<traits_type, const_pointer>(m_begin, length(), pos, sv.data(), sv.length(), s_npos);
       }
 
       // finds the last character equal to one of the characters in str
-      REX_NO_DISCARD size_type find_last_of(const basic_string& str) const
+      REX_NO_DISCARD size_type find_last_of(const basic_string& str, size_type pos = s_npos) const
       {
-        return rsl::string_utils::find_last_of(m_begin, length(), str.data(), str.length(), s_npos);
-      }
-      // finds the last character equal to one of the characters in str
-      REX_NO_DISCARD size_type find_last_of(const basic_string& str, size_type pos) const
-      {
-        return rsl::string_utils::find_last_of(m_begin, pos, str.data(), str.length(), s_npos);
+        return rsl::string_utils::find_last_of<traits_type, const_pointer>(m_begin, length(), pos, str.data(), str.length(), s_npos);
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (03/Jul/2022)
       // because we define the above function, we don't define the following
@@ -1457,46 +1445,25 @@ namespace rsl
       // size_type find_last_of(const value_type* s, size_type pos = s_npos) const;
 
       // finds the last character equal to ch
-      REX_NO_DISCARD size_type find_last_of(value_type ch) const
+      REX_NO_DISCARD size_type find_last_of(value_type ch, size_type pos = s_npos) const
       {
-        return rsl::string_utils::find_last_of(m_begin, length(), rsl::addressof(ch), 1_elem, s_npos);
+        return rsl::string_utils::find_last_of<traits_type, const_pointer>(m_begin, length(), pos, rsl::addressof(ch), 1_elem, s_npos);
       }
-      // finds the last character equal to ch
-      REX_NO_DISCARD size_type find_last_of(value_type ch, size_type pos) const
-      {
-        return rsl::string_utils::find_last_of(m_begin, pos, rsl::addressof(ch), 1_elem, s_npos);
-      }
-      /// RSL Comment: Different from ISO C++ Standard at time of writing (16/Jul/2023)
-      // This is a template function in the standard due to ambiguous overload
-      // as both basic_string and basic_string_view<value_type, traits_type> can be implicitly created with a const char*.
-      // This is not possible in RSL though as the ctor for const char* for string is explicit.
-      // Therefore this takes a basic_string_view
-      // finds the last character equal to a character in sv
-      REX_NO_DISCARD size_type find_last_of(const basic_string_view<value_type, traits_type>& sv) const
-      {
-        return rsl::string_utils::find_last_of(m_begin, length(), sv.data(), sv.length(), s_npos);
-      }
-
       /// RSL Comment: Different from ISO C++ Standard at time of writing (01/Jul/2022)
       // This is a template function in the standard due to ambiguous overload
       // as both basic_string and basic_string_view<value_type, traits_type> can be implicitly created with a const char*.
       // This is not possible in RSL though as the ctor for const char* for string is explicit.
       // Therefore this takes a basic_string_view
       // finds the last character equal to a character in sv
-      REX_NO_DISCARD size_type find_last_of(const basic_string_view<value_type, traits_type>& sv, size_type pos) const
+      REX_NO_DISCARD size_type find_last_of(const basic_string_view<value_type, traits_type>& sv, size_type pos = s_npos) const
       {
-        return rsl::string_utils::find_last_of(m_begin, pos, sv.data(), sv.length(), s_npos);
+        return rsl::string_utils::find_last_of<traits_type, const_pointer>(m_begin, length(), pos, sv.data(), sv.length(), s_npos);
       }
 
       // finds the last character equal to none of the characters in str
-      REX_NO_DISCARD size_type find_last_not_of(const basic_string& str) const
+      REX_NO_DISCARD size_type find_last_not_of(const basic_string& str, size_type pos = s_npos) const
       {
-        return rsl::string_utils::find_last_not_of(m_begin, length(), str.data(), str.length(), s_npos);
-      }
-      // finds the last character equal to none of the characters in str
-      REX_NO_DISCARD size_type find_last_not_of(const basic_string& str, size_type pos) const
-      {
-        return rsl::string_utils::find_last_not_of(m_begin, pos, str.data(), str.length(), s_npos);
+        return rsl::string_utils::find_last_not_of<traits_type, const_pointer>(m_begin, length(), pos, str.data(), str.length(), s_npos);
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (03/Jul/2022)
       // because we define the above function, we don't define the following
@@ -1504,15 +1471,9 @@ namespace rsl
       // size_type find_last_not_of(const_pointer s, size_type pos = s_npos) const;
 
       // finds the last character not equal to ch
-      REX_NO_DISCARD size_type find_last_not_of(value_type ch) const
+      REX_NO_DISCARD size_type find_last_not_of(value_type ch, size_type pos = s_npos) const
       {
-        return rsl::string_utils::find_last_not_of(m_begin, length(), rsl::addressof(ch), 1_elem, s_npos);
-      }
-
-      // finds the last character not equal to ch
-      REX_NO_DISCARD size_type find_last_not_of(value_type ch, size_type pos) const
-      {
-        return rsl::string_utils::find_last_not_of(m_begin, pos, rsl::addressof(ch), 1_elem, s_npos);
+        return rsl::string_utils::find_last_not_of<traits_type, const_pointer>(m_begin, length(), pos, rsl::addressof(ch), 1_elem, s_npos);
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (01/Jul/2022)
       // This is a template function in the standard due to ambiguous overload
@@ -1520,20 +1481,9 @@ namespace rsl
       // This is not possible in RSL though as the ctor for const char* for string is explicit.
       // Therefore this takes a basic_string_view
       // finds the last character equal to none of the characters in sv
-      REX_NO_DISCARD size_type find_last_not_of(const basic_string_view<value_type, traits_type>& sv) const
+      REX_NO_DISCARD size_type find_last_not_of(const basic_string_view<value_type, traits_type>& sv, size_type pos = s_npos) const
       {
-        return rsl::string_utils::find_last_not_of(m_begin, length(), sv.data(), sv.length(), s_npos);
-      }
-
-      /// RSL Comment: Different from ISO C++ Standard at time of writing (01/Jul/2022)
-      // This is a template function in the standard due to ambiguous overload
-      // as both basic_string and basic_string_view<value_type, traits_type> can be implicitly created with a const char*.
-      // This is not possible in RSL though as the ctor for const char* for string is explicit.
-      // Therefore this takes a basic_string_view
-      // finds the last character equal to none of the characters in sv
-      REX_NO_DISCARD size_type find_last_not_of(const basic_string_view<value_type, traits_type>& sv, size_type pos) const
-      {
-        return rsl::string_utils::find_last_not_of(m_begin, pos, sv.data(), sv.length(), s_npos);
+        return rsl::string_utils::find_last_not_of<traits_type, const_pointer>(m_begin, length(), pos, sv.data(), sv.length(), s_npos);
       }
 
       /// RSL Comment: Different from ISO C++ Standard at time of writing (03/Jul/2022)
@@ -2438,4 +2388,3 @@ namespace rsl
 // NOLINTEND(misc-no-recursion)
 
 #include "rex_std/bonus/string/string_utils_impl.h"
-#include "rex_std/internal/string_view/basic_string_view.h"

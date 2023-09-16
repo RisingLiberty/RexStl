@@ -76,7 +76,7 @@ namespace rsl
       explicit stack_string(const value_type* str)
           : stack_string()
       {
-        const card32 string_length = rsl::string_utils::string_length(str);
+        const card32 string_length = rsl::string_length(str);
         const card32 copy_size     = rsl::clamp_max(string_length, StrMaxSize);
         rsl::memcpy(m_data.data(), str, copy_size);
         m_null_terminator_offset = copy_size;
