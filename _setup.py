@@ -14,7 +14,7 @@ import subprocess
 import sys
 import time
   
-rexpy_version = "0.1.44"
+rexpy_version = "0.1.45"
 
 def __intsall_regis():
   os.system(f"py -m pip install --user --upgrade \"regis=={rexpy_version}\"")
