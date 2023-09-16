@@ -12,82 +12,97 @@
 
 #include "rex_std/internal/string/basic_string.h"
 
+#include "rex_std/assert.h"
+
 namespace rsl
 {
   inline namespace v1
   {
     rsl::optional<int32> stoi(const string& str, char8* strEnd, int32 base)
     {
-      return rsl::string_utils::strtol(str.data(), &strEnd, base);
+      return rsl::strtol(str.data(), &strEnd, base);
     }
     rsl::optional<long> stol(const string& str, char8* strEnd, int32 base)
     {
-      return rsl::string_utils::strtol(str.data(), &strEnd, base);
+      return rsl::strtol(str.data(), &strEnd, base);
     }
     rsl::optional<int64> stoll(const string& str, char8* strEnd, int32 base)
     {
-      return rsl::string_utils::strtoll(str.data(), &strEnd, base);
+      return rsl::strtoll(str.data(), &strEnd, base);
     }
     rsl::optional<uint32> stoui(const string& str, char8* strEnd, int32 base)
     {
-      return rsl::string_utils::strtoul(str.data(), &strEnd, base);
+      return rsl::strtoul(str.data(), &strEnd, base);
     }
     rsl::optional<ulong> stoul(const string& str, char8* strEnd, int32 base)
     {
-      return rsl::string_utils::strtoul(str.data(), &strEnd, base);
+      return rsl::strtoul(str.data(), &strEnd, base);
     }
     rsl::optional<uint64> stoull(const string& str, char8* strEnd, int32 base)
     {
-      return rsl::string_utils::strtoull(str.data(), &strEnd, base);
+      return rsl::strtoull(str.data(), &strEnd, base);
     }
     rsl::optional<float32> stof(const string& str, char8* strEnd)
     {
-      return rsl::string_utils::strtof(str.data(), &strEnd);
+      return rsl::strtof(str.data(), &strEnd);
     }
     rsl::optional<float64> stod(const string& str, char8* strEnd)
     {
-      return rsl::string_utils::strtod(str.data(), &strEnd);
+      return rsl::strtod(str.data(), &strEnd);
     }
     rsl::optional<lfloat64> stold(const string& str, char8* strEnd)
     {
-      return rsl::string_utils::strtold(str.data(), &strEnd);
+      return rsl::strtold(str.data(), &strEnd);
     }
 
     string to_string(int32 value)
     {
-      return string_utils::internal::to_string<string>(value);
+      return internal::to_string<string>(value);
     }
     string to_string(long value)
     {
-      return string_utils::internal::to_string<string>(value);
+      return internal::to_string<string>(value);
     }
     string to_string(int64 value)
     {
-      return string_utils::internal::to_string<string>(value);
+      return internal::to_string<string>(value);
     }
     string to_string(uint32 value)
     {
-      return string_utils::internal::to_string<string>(value);
+      return internal::to_string<string>(value);
     }
     string to_string(ulong value)
     {
-      return string_utils::internal::to_string<string>(value);
+      return internal::to_string<string>(value);
     }
     string to_string(uint64 value)
     {
-      return string_utils::internal::to_string<string>(value);
+      return internal::to_string<string>(value);
     }
     string to_string(float32 value)
     {
-      return string_utils::internal::to_string<string>(value);
+      return internal::to_string<string>(value);
     }
     string to_string(float64 value)
     {
-      return string_utils::internal::to_string<string>(value);
+      return internal::to_string<string>(value);
     }
     string to_string(lfloat64 value)
     {
-      return string_utils::internal::to_string<string>(value);
+      return internal::to_string<string>(value);
+    }
+
+    /// RSL Comment: Not in ISO C++ Standard at time of writing (15/Sept/2023)
+    // Helper function to convert a wstring to a string
+    string to_string(rsl::wstring_view view)
+    {
+      rsl::string str;
+      str.reserve(view.length());
+      for (char16 c : view)
+      {
+        str += rsl::to_ascii(c);
+      }
+      return str;
     }
 
     namespace string_literals

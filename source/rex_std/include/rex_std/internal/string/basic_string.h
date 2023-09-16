@@ -1554,57 +1554,57 @@ namespace rsl
       // converts the string to an int32. same as rsl::stoi
       REX_NO_DISCARD rsl::optional<int32> to_int(int32 base = 10) const
       {
-        return rsl::string_utils::strtoi(data(), nullptr, base);
+        return rsl::strtoi(data(), nullptr, base);
       }
       /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
       // converts the string to a long. same as rsl::stol
       REX_NO_DISCARD rsl::optional<long> to_long(int32 base = 10) const
       {
-        return rsl::string_utils::strtol(data(), nullptr, base);
+        return rsl::strtol(data(), nullptr, base);
       }
       /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
       // converts the string to a long long. same as rsl::stoll
       REX_NO_DISCARD rsl::optional<int64> to_long64(int32 base = 10) const
       {
-        return rsl::string_utils::strtoll(data(), nullptr, base);
+        return rsl::strtoll(data(), nullptr, base);
       }
 
       /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
       // converts the string to an unsigned int32. same as rsl::stoui
       REX_NO_DISCARD rsl::optional<uint32> to_uint(int32 base = 10) const
       {
-        return rsl::string_utils::strtoui(data(), nullptr, base);
+        return rsl::strtoui(data(), nullptr, base);
       }
       /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
       // converts the string to an unsigned long. same as rsl::stoul
       REX_NO_DISCARD rsl::optional<ulong> to_ulong(int32 base = 10) const
       {
-        return rsl::string_utils::strtoul(data(), nullptr, base);
+        return rsl::strtoul(data(), nullptr, base);
       }
       /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
       // converts the string to an unsigned long long. same as rsl::stoull
       REX_NO_DISCARD rsl::optional<uint64> to_ulong64(int32 base = 10) const
       {
-        return rsl::string_utils::strtoull(data(), nullptr, base);
+        return rsl::strtoull(data(), nullptr, base);
       }
 
       /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
       // converts the string to a float. same as rsl::stof
       REX_NO_DISCARD rsl::optional<float32> to_float(int32 /*base*/ = 10) const
       {
-        return rsl::string_utils::strtof(data(), nullptr);
+        return rsl::strtof(data(), nullptr);
       }
       /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
       // converts the string to a double. same as rsl::stod
       REX_NO_DISCARD rsl::optional<float64> to_double(int32 /*base*/ = 10) const
       {
-        return rsl::string_utils::strtod(data(), nullptr);
+        return rsl::strtod(data(), nullptr);
       }
       /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
       // converts the string to a long double. same as rsl::stold
       REX_NO_DISCARD rsl::optional<lfloat64> to_lfloat(int32 /*base*/ = 10) const
       {
-        return rsl::string_utils::strtold(data(), nullptr);
+        return rsl::strtold(data(), nullptr);
       }
 
     private:
