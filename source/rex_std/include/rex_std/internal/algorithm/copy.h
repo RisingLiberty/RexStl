@@ -23,8 +23,6 @@
 #include "rex_std/internal/type_traits/is_trivially_copyable.h"
 #include "rex_std/internal/utility/move.h"
 
-#include <iostream>
-
 namespace rsl
 {
   inline namespace v1

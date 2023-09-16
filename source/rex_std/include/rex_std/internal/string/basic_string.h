@@ -2226,6 +2226,11 @@ namespace rsl
       return r;
     }
 
+    using string    = basic_string<char8>;
+    using wstring   = basic_string<tchar>;
+    using u16string = basic_string<char16_t>;
+    using u32string = basic_string<char32_t>;
+
     // extracts characters from input and appends them to str until the delim is found or the stream's eof.
     template <typename Char, typename Traits, typename Allocator>
     basic_istream<Char, Traits>& getline(basic_istream<Char, Traits>& input, basic_string<Char, Traits, Allocator>& str, Char delim)
@@ -2351,6 +2356,10 @@ namespace rsl
     // converts a floating point to a string
     string to_string(lfloat64 value);
 
+    /// RSL Comment: Not in ISO C++ Standard at time of writing (15/Sept/2023)
+    // Helper function to convert a wstring to a string
+    string to_string(rsl::wstring_view view);
+    
     // converts a signed integer to a wstring
     wstring to_wstring(int32 value);
     // converts a signed integer to a wstring
@@ -2369,6 +2378,10 @@ namespace rsl
     wstring to_wstring(float64 value);
     // converts a floating point to a wstring
     wstring to_wstring(lfloat64 value);
+
+    /// RSL Comment: Not in ISO C++ Standard at time of writing (15/Sept/2023)
+    // Helper function to convert a string to a wstring
+    wstring to_wstring(rsl::string_view view);
 
     namespace string_literals
     {

@@ -91,6 +91,8 @@ namespace rsl
       template <typename T>
       struct conditional_hash<T, false>
       {
+        static_assert(rsl::internal::always_false<T>, "No rsl::hash implementation for type T");
+
         conditional_hash()                        = delete;
         conditional_hash(const conditional_hash&) = delete;
         conditional_hash(conditional_hash&&)      = delete;
