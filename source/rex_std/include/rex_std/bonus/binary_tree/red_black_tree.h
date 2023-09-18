@@ -1110,19 +1110,19 @@ namespace rsl
 
         while(current)
         {
-          if(!compare(extract_key(current->value), x))
+          if(!key_comp()(extract_key(current->value), x))
           {
             range_end = current;
             current   = static_cast<node_type*>(current->left_node);
           }
           else
           {
-            RSL_ASSERT_X(!compare(x, extract_key(current->value)), "compare function doesn't give the same result when swapping the arguments");
+            RSL_ASSERT_X(!key_comp()(x, extract_key(current->value)), "compare function doesn't give the same result when swapping the arguments");
             current = static_cast<node_type*>(current->right_node);
           }
         }
 
-        if((range_end != &m_anchor) && !compare(x, extract_key(range_end->value)))
+        if((range_end != &m_anchor) && !key_comp()(x, extract_key(range_end->value)))
         {
           return iterator(range_end);
         }
@@ -1169,14 +1169,14 @@ namespace rsl
 
         while(current)
         {
-          if(!compare(extract_key(current->value), x))
+          if(!key_comp()(extract_key(current->value), x))
           {
             range_end = current;
             current   = static_cast<node_type*>(current->left_node);
           }
           else
           {
-            RSL_ASSERT_X(!compare(x, extract_key(current->value)), "compare function doesn't give the same result when swapping the arguments");
+            RSL_ASSERT_X(!key_comp()(x, extract_key(current->value)), "compare function doesn't give the same result when swapping the arguments");
             current = static_cast<node_type*>(current->right_node);
           }
         }
@@ -1209,9 +1209,9 @@ namespace rsl
 
         while(current)
         {
-          if(compare(x, extract_key, current->value))
+          if(key_comp()(x, extract_key, current->value))
           {
-            RSL_ASSERT_X(!compare(extract_key(current->value, x)));
+            RSL_ASSERT_X(!key_comp()(extract_key(current->value, x)));
             range_end = current;
             current   = static_cast<node_type*>(current->left_node);
           }
@@ -1411,7 +1411,7 @@ namespace rsl
         internal::RedBlackTreeSide side;
         extract_key extract_key;
 
-        if(forceToLeft || (nodeParent == &m_anchor) || compare(key, extract_key(nodeParent->value)))
+        if(forceToLeft || (nodeParent == &m_anchor) || key_comp()(key, extract_key(nodeParent->value)))
         {
           side = internal::RedBlackTreeSide::Left;
         }
@@ -1459,12 +1459,12 @@ namespace rsl
 
         while(current)
         {
-          value_less_than_node = compare(key, extract_key(current->value));
+          value_less_than_node = key_comp()(key, extract_key(current->value));
           lower_bound          = current;
 
           if(value_less_than_node)
           {
-            RSL_ASSERT_X(!compare(extract_key(current->value), key), "compare function doesn't give the same result when swapping the arguments");
+            RSL_ASSERT_X(!key_comp()(extract_key(current->value), key), "compare function doesn't give the same result when swapping the arguments");
             current = static_cast<node_type*>(current->left_node);
           }
           else
@@ -1488,9 +1488,9 @@ namespace rsl
           }
         }
 
-        if(compare(extract_key(lower_bound->value), key))
+        if(key_comp()(extract_key(lower_bound->value), key))
         {
-          RSL_ASSERT_X(!compare(key, extract_key(lower_bound->value)), "compare function doesn't give the same result when swapping the arguments");
+          RSL_ASSERT_X(!key_comp()(key, extract_key(lower_bound->value)), "compare function doesn't give the same result when swapping the arguments");
           canInsert = true;
           return parent;
         }
@@ -1510,9 +1510,9 @@ namespace rsl
         {
           range_end = current;
 
-          if(compare(key, extract_key(current->value)))
+          if(key_comp()(key, extract_key(current->value)))
           {
-            RSL_ASSERT_X(!compare(extract_key(current->value), key), "compare function doesn't give the same result when swapping the arguments");
+            RSL_ASSERT_X(!key_comp()(extract_key(current->value), key), "compare function doesn't give the same result when swapping the arguments");
             current = static_cast<node_type*>(current->left_node);
           }
           else
@@ -1533,13 +1533,13 @@ namespace rsl
           iterator it_next = position.next;
           ++it_next;
 
-          const bool position_less_than_value = compare(extract_key(position.node->value), key);
+          const bool position_less_than_value = key_comp()(extract_key(position.node->value), key);
 
           if(position_less_than_value)
           {
-            RSL_ASSERT_X(!compare(key, extract_key(position.node->value)), "compare function doesn't give the same result when swapping the arguments");
+            RSL_ASSERT_X(!key_comp()(key, extract_key(position.node->value)), "compare function doesn't give the same result when swapping the arguments");
 
-            const bool value_less_than_next = compare(key, extract_key(it_next.node->value));
+            const bool value_less_than_next = key_comp()(key, extract_key(it_next.node->value));
 
             if(value_less_than_next)
             {
@@ -1558,9 +1558,9 @@ namespace rsl
           return nullptr;
         }
 
-        if(size() && compare(extract_key(static_cast<node_type*>(m_anchor.right_node)->value), key))
+        if(size() && key_comp()(extract_key(static_cast<node_type*>(m_anchor.right_node)->value), key))
         {
-          RSL_ASSERT_X(!compare(key, extract_key(static_cast<node_type*>(m_anchor.right_node)->value)), "compare function doesn't give the same result when swapping the arguments");
+          RSL_ASSERT_X(!key_comp()(key, extract_key(static_cast<node_type*>(m_anchor.right_node)->value)), "compare function doesn't give the same result when swapping the arguments");
           forceToLeft = false;
           return static_cast<node_type*>(m_anchor.right_node);
         }
@@ -1578,7 +1578,7 @@ namespace rsl
           iterator it_next(position.node);
           ++it_next;
 
-          if(!compare(key, extract_key(position.node->value)) && (!compare(extract_key(it_next.node->value), key)))
+          if(!key_comp()(key, extract_key(position.node->value)) && (!key_comp()(extract_key(it_next.node->value), key)))
           {
             if(position.node->right_node)
             {
@@ -1594,7 +1594,7 @@ namespace rsl
           return nullptr;
         }
 
-        if(size() && !compare(key, extract_key(static_cast<node_type*>(m_anchor.right_node)->value)))
+        if(size() && !key_comp()(key, extract_key(static_cast<node_type*>(m_anchor.right_node)->value)))
         {
           force_to_left = false;
           return static_cast<node_type*>(m_anchor.right_node);
@@ -1717,7 +1717,7 @@ namespace rsl
         internal::RedBlackTreeSide side;
         extract_key extract_key;
 
-        if(force_to_left || (nodeParent == &m_anchor) || compare(key, extract_key(nodeParent->value)))
+        if(force_to_left || (nodeParent == &m_anchor) || key_comp()(key, extract_key(nodeParent->value)))
         {
           side = internal::RedBlackTreeSide::Left;
         }

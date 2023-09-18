@@ -61,12 +61,12 @@ namespace rsl
       {
       }
       template <typename InputIt>
-      set(InputIt first, InputIt last, const Compare& comp = Compare(), const allocator& alloc = allocator())
+      set(InputIt first, InputIt last, const Compare& comp = Compare(), const Allocator& alloc = Allocator())
           : base_type(first, last, comp, alloc)
       {
       }
       template <typename InputIt>
-      set(InputIt first, InputIt last, const allocator& alloc)
+      set(InputIt first, InputIt last, const Allocator& alloc)
           : base_type(first, last, alloc)
       {
       }
@@ -74,7 +74,7 @@ namespace rsl
           : base_type(other)
       {
       }
-      set(const set& other, const allocator& alloc)
+      set(const set& other, const Allocator& alloc)
           : base_type(other, alloc)
       {
       }
@@ -82,15 +82,15 @@ namespace rsl
           : base_type(rsl::move(other))
       {
       }
-      set(set&& other, const allocator& alloc)
+      set(set&& other, const Allocator& alloc)
           : base_type(rsl::move(other), alloc)
       {
       }
-      set(rsl::initializer_list<value_type> ilist, const Compare& comp = Compare(), const allocator& alloc = allocator)
+      set(rsl::initializer_list<value_type> ilist, const Compare& comp = Compare(), const Allocator& alloc = Allocator())
           : base_type(ilist, comp, alloc)
       {
       }
-      set(rsl::initializer_list<value_type> ilist, const allocator& alloc)
+      set(rsl::initializer_list<value_type> ilist, const Allocator& alloc)
           : base_type(ilist, alloc)
       {
       }
