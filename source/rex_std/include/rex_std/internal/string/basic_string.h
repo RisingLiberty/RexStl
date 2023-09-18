@@ -363,7 +363,7 @@ namespace rsl
         if(count > capacity())
         {
           deallocate();
-          pointer new_buffer = static_cast<pointer>(get_mutable_allocator().allocate(count + 1));
+          pointer new_buffer = static_cast<pointer>(get_mutable_allocator().allocate((count + 1) * sizeof(value_type)));
           reset(new_buffer, count, count + 1);
         }
 
@@ -1255,8 +1255,8 @@ namespace rsl
         if(is_using_sso_string() && other.is_using_sso_string())
         {
           rsl::swap(m_sso_buffer, other.m_sso_buffer);
-          this->reset(m_sso_buffer.data(), m_sso_buffer.length(), m_sso_buffer.max_size());
-          other.reset(other.m_sso_buffer.data(), other.m_sso_buffer.length(), other.m_sso_buffer.max_size());
+          this->reset(m_sso_buffer.data(), other.length(), m_sso_buffer.max_size());
+          other.reset(other.m_sso_buffer.data(), length(), other.m_sso_buffer.max_size());
         }
         // one is using heap memory, one is using the sso buffer
         else if(is_using_big_string() != other.is_using_big_string())
