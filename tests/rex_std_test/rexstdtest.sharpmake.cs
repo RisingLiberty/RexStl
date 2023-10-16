@@ -13,14 +13,17 @@ public class RexStdTest : TestProject
     SourceRootPath = ThisFileFolder;
   }
 
-  public override void Configure(RexConfiguration conf, RexTarget target)
+  protected override void SetupLibDependencies(RexConfiguration conf, RexTarget target)
   {
-    base.Configure(conf, target);
-
-    conf.Output = Configuration.OutputType.Exe;
-
-    conf.Options.Remove(Options.Vc.Compiler.JumboBuild.Enable);
+    base.SetupLibDependencies(conf, target);
 
     conf.AddPublicDependency<RexStd>(target, DependencySetting.Default | DependencySetting.IncludeHeadersForClangtools);
+  }
+
+  protected override void SetupConfigSettings(RexConfiguration conf, RexTarget target)
+  {
+    base.SetupConfigSettings(conf, target);
+
+    conf.Options.Remove(Options.Vc.Compiler.JumboBuild.Enable);
   }
 }

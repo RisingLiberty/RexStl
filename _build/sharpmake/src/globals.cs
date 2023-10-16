@@ -5,21 +5,25 @@ using System.Text.Json;
 
 [module: Sharpmake.Reference("System.Text.Json.dll")]
 
+// This class matches the settings.json file found in
+// _build/config/settings.json
 public class BuildSettings
 {
   public string intermediate_folder { get; set; }
   public string[] misc_folders { get; set; }
   public string[] misc_extensions { get; set; }
   public string build_folder { get; set; }
-  public string test_folder { get; set; }
+  public string tests_folder { get; set; }
   public string tools_folder { get; set; }
   public string libs_folder { get; set; }
   public string source_folder { get; set; }
   public string coverage_folder { get; set; }
   public string asan_folder { get; set; }
   public string ubsan_folder { get; set; }
+  public string clang_tools_project_extension { get; set; }
 }
 
+// Global variables, accessible throughout sharpmake scripts
 public class Globals
 {
   static readonly private string folder_in_root = "source";
@@ -41,6 +45,14 @@ public class Globals
     get
     {
       return Path.Combine(root, settings.source_folder);
+    }
+  }
+  
+  static public string TestsRoot
+  {
+    get
+    {
+      return Path.Combine(root, settings.tests_folder);
     }
   }
   static public string ThirdpartyRoot
@@ -72,6 +84,23 @@ public class Globals
     }
   }
 
+  static public string BuildFolder
+  {
+    get
+    {
+      return Path.Combine(root, settings.intermediate_folder, settings.build_folder);
+    }
+  }
+
+  static public string ClangToolsProjectExtension
+  {
+    get
+    {
+      return settings.clang_tools_project_extension;
+    }
+  }
+
+  // Initialize the global variables, based on the settings file loaded from disk
   static public void Init()
   {
     root = Utils.FindInParent(Directory.GetCurrentDirectory(), folder_in_root);
