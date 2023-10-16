@@ -21,7 +21,7 @@ if __name__ == "__main__":
   
   parser.add_argument("-clean", help="clean all intermediate files first", action="store_true")
   parser.add_argument("-sln", default="", help="path to nsln file")
-  parser.add_argument("-project", default="regina", help="project to build")
+  parser.add_argument("-project", default="rexstdexe", help="project to build")
   parser.add_argument("-config", default="debug_opt", help="configuration to build for")
   parser.add_argument("-compiler", default="unknown", help="configuration to build with")
 
