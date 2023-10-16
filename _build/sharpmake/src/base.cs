@@ -58,11 +58,6 @@ public class BaseConfiguration
     conf.Options.Add(Options.Vc.General.PlatformToolset.v142);
     conf.Options.Add(Options.Vc.General.WarningLevel.Level4);
     conf.Options.Add(Options.Vc.General.TreatWarningsAsErrors.Enable);
-
-    // Compiler options
-
-    // C# Options
-    conf.Options.Add(Options.CSharp.LanguageVersion.CSharp8);
   }
   // Setup the solution folder of this project.
   private void SetupSolutionFolder(RexConfiguration conf, RexTarget target)
