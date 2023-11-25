@@ -13,7 +13,7 @@
 #include <algorithm> // rsl::max
 #include <limits>    // rsl::numeric_limits
 
-FMT_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 { 
 FMT_MODULE_EXPORT_BEGIN
 
 template <typename T>
@@ -79,7 +79,7 @@ public:
   }
 };
 
-FMT_BEGIN_DETAIL_NAMESPACE
+namespace detail {
 
 // Checks if a value fits in int - used to avoid warnings about comparing
 // signed and unsigned integers.
@@ -632,7 +632,7 @@ void vprintf(buffer<Char>& buf, basic_string_view<Char> format, basic_format_arg
   }
   detail::write(out, basic_string_view<Char>(start, to_unsigned(it - start)));
 }
-FMT_END_DETAIL_NAMESPACE
+}
 
 template <typename Char>
 using basic_printf_context_t = basic_printf_context<detail::buffer_appender<Char>, Char>;
@@ -738,6 +738,6 @@ inline auto printf(const S& fmt, const T&... args) -> int
 }
 
 FMT_MODULE_EXPORT_END
-FMT_END_NAMESPACE
+}}
 
 #endif // FMT_PRINTF_H_

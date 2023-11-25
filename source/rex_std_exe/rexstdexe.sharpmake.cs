@@ -13,11 +13,14 @@ public class RexStdExe : BasicCPPProject
     SourceRootPath = ThisFileFolder;
   }
 
-  public override void Configure(RexConfiguration conf, RexTarget target)
+  protected override void SetupOutputType(RexConfiguration conf, RexTarget target)
   {
-    base.Configure(conf, target);
-
     conf.Output = Configuration.OutputType.Exe;
+  }
+
+  protected override void SetupLibDependencies(RexConfiguration conf, RexTarget target)
+  {
+    base.SetupLibDependencies(conf, target);
 
     conf.AddPublicDependency<RexStd>(target, DependencySetting.Default | DependencySetting.IncludeHeadersForClangtools);
     conf.AddPublicDependency<RexStdExtra>(target, DependencySetting.Default | DependencySetting.IncludeHeadersForClangtools);

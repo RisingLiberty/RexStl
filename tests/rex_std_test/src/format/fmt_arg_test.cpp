@@ -45,7 +45,7 @@ struct custom_type
   int i = 0;
 };
 
-FMT_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 { 
 template <> struct formatter<custom_type> 
 {
   auto parse(format_parse_context& ctx) const -> decltype(ctx.begin()) 
@@ -59,7 +59,7 @@ template <> struct formatter<custom_type>
     return format_to(ctx.out(), "cust={}", p.i);
   }
 };
-FMT_END_NAMESPACE
+}}
 
 TEST_CASE("args_test, custom_format") 
 {
@@ -83,7 +83,7 @@ struct to_stringable
   }
 };
 
-FMT_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 { 
 template <> struct formatter<to_stringable> 
 {
   auto parse(format_parse_context& ctx) const -> decltype(ctx.begin()) 
@@ -96,7 +96,7 @@ template <> struct formatter<to_stringable>
     return ctx.out();
   }
 };
-FMT_END_NAMESPACE
+}}
 
 TEST_CASE("args_test, to_string_and_formatter") 
 {

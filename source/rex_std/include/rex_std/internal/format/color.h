@@ -10,7 +10,7 @@
 
 #include "rex_std/format.h"
 
-FMT_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 { 
 FMT_MODULE_EXPORT_BEGIN
 
 enum class color : uint32
@@ -223,7 +223,7 @@ struct rgb
   uint8 b;
 };
 
-FMT_BEGIN_DETAIL_NAMESPACE
+namespace detail {
 
 // color is a struct of either a rgb color or a terminal color.
 struct color_type
@@ -259,7 +259,7 @@ struct color_type
   } value;
 };
 
-FMT_END_DETAIL_NAMESPACE
+}
 
 /** A text style consisting of foreground and background colors and emphasis. */
 class text_style
@@ -381,7 +381,7 @@ FMT_CONSTEXPR inline text_style operator|(emphasis lhs, emphasis rhs) noexcept
   return text_style(lhs) | rhs;
 }
 
-FMT_BEGIN_DETAIL_NAMESPACE
+namespace detail {
 
 template <typename Char>
 struct ansi_color_escape
@@ -576,7 +576,7 @@ void vformat_to(buffer<Char>& buf, const text_style& ts, basic_string_view<Char>
     detail::reset_color<Char>(buf);
 }
 
-FMT_END_DETAIL_NAMESPACE
+}
 
 // template <typename S, typename Char = char_t<S>>
 // void vprint(rsl::FILE* f, const text_style& ts, const S& format, basic_format_args<buffer_context<type_identity_t<Char>>> args)
@@ -741,6 +741,6 @@ FMT_CONSTEXPR auto styled(const T& value, text_style ts) -> detail::styled_arg<r
 }
 
 FMT_MODULE_EXPORT_END
-FMT_END_NAMESPACE
+}}
 
 #endif // FMT_COLOR_H_

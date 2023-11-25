@@ -46,7 +46,7 @@ namespace rsl
       handle& handle::operator=(handle&& other)
       {
         m_handle       = other.m_handle;
-        other.m_handle = nullptr;
+        other.m_handle = INVALID_HANDLE_VALUE;
         return *this;
       }
 
@@ -59,7 +59,7 @@ namespace rsl
         return is_valid();
       }
 
-      handle_t handle::get()
+      handle_t handle::get() const
       {
         return m_handle;
       }

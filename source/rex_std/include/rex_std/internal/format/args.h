@@ -16,7 +16,7 @@
 #include <functional> // rsl::reference_wrapper
 #include <memory>     // rsl::unique_ptr
 
-FMT_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 { 
 
 namespace detail
 {
@@ -255,6 +255,6 @@ public:
   }
 };
 
-FMT_END_NAMESPACE
+}}
 
 #endif // FMT_ARGS_H_

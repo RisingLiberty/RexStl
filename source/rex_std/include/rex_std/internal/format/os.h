@@ -70,7 +70,7 @@
 //
 // #define FMT_RETRY(result, expression) FMT_RETRY_VAL(result, expression, -1)
 //
-// FMT_BEGIN_NAMESPACE
+// namespace rsl { inline namespace v1 { 
 // FMT_MODULE_EXPORT_BEGIN
 //
 ///**
@@ -141,7 +141,7 @@
 // #ifdef _WIN32
 // FMT_API const rsl::error_category& system_category() noexcept;
 //
-// FMT_BEGIN_DETAIL_NAMESPACE
+// namespace detail {
 //// A converter from UTF-16 to UTF-8.
 //// It is only provided for Windows since other systems support UTF-8 natively.
 // class utf16_to_utf8 {
@@ -164,7 +164,7 @@
 //
 // FMT_API void format_windows_error(buffer<char>& out, int error_code,
 //                                   const char* message) noexcept;
-// FMT_END_DETAIL_NAMESPACE
+// }
 //
 // FMT_API rsl::system_error vwindows_error(int error_code, string_view format_str,
 //                                          format_args args);
@@ -360,7 +360,7 @@
 //// Returns the memory page size.
 // long getpagesize();
 //
-// FMT_BEGIN_DETAIL_NAMESPACE
+// namespace detail {
 //
 // struct buffer_size {
 //   buffer_size() = default;
@@ -397,7 +397,7 @@
 // #  endif
 // };
 //
-// FMT_END_DETAIL_NAMESPACE
+// }
 //
 //// Added {} below to work around default constructor error known to
 //// occur in Xcode versions 7.2.1 and 8.2.1.
@@ -473,6 +473,6 @@
 // #endif  // FMT_USE_FCNTL
 //
 // FMT_MODULE_EXPORT_END
-// FMT_END_NAMESPACE
+// }}
 //
 // #endif  // FMT_OS_H_

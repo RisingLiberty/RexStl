@@ -14,6 +14,7 @@
 
 #include "rex_std/bonus/functional/hash_result.h"
 #include "rex_std/bonus/types.h"
+#include "rex_std/bonus/utility/always_false.h"
 #include "rex_std/internal/stddef/nullptr.h"
 #include "rex_std/internal/type_traits/is_enum.h"
 
@@ -91,6 +92,8 @@ namespace rsl
       template <typename T>
       struct conditional_hash<T, false>
       {
+        static_assert(rsl::internal::always_false<T>, "No rsl::hash implementation for type T");
+
         conditional_hash()                        = delete;
         conditional_hash(const conditional_hash&) = delete;
         conditional_hash(conditional_hash&&)      = delete;

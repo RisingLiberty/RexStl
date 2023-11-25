@@ -28,7 +28,7 @@
 #endif
 
 #ifdef __cpp_lib_filesystem
-FMT_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 { 
 
 namespace detail
 {
@@ -65,18 +65,18 @@ struct formatter<rsl::filesystem::path, Char> : formatter<basic_string_view<Char
     return formatter<basic_string_view<Char>>::format(basic_string_view<Char>(quoted.data(), quoted.size()), ctx);
   }
 };
-FMT_END_NAMESPACE
+}}
 #endif
 
-FMT_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 { 
 template <typename Char>
 struct formatter<rsl::thread::id, Char> : basic_ostream_formatter<Char>
 {
 };
-FMT_END_NAMESPACE
+}}
 
 #ifdef __cpp_lib_variant
-FMT_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 { 
 template <typename Char>
 struct formatter<rsl::monostate, Char>
 {
@@ -167,7 +167,7 @@ struct formatter<Variant, Char, rsl::enable_if_t<rsl::conjunction_v<is_variant_l
     return out;
   }
 };
-FMT_END_NAMESPACE
+}}
 #endif
 
 #endif // FMT_STD_H_

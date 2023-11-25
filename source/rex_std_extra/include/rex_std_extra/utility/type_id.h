@@ -63,6 +63,24 @@ namespace rsl
         name.remove_suffix(suffix.size());
         return name;
       }
+      template <typename T>
+      constexpr rsl::string_view msvc_structless_type_name()
+      {
+        rsl::string_view name = __FUNCSIG__;
+        constexpr rsl::string_view func_name = __FUNCSIG__;
+        constexpr rsl::string_view prefix = "class rsl::v1::basic_string_view<char,class rsl::v1::char_traits<char> > __cdecl rsl::v1::internal::msvc_structless_type_name<";
+        constexpr rsl::string_view suffix = ">(void)";
+
+#ifndef REX_ENABLE_ASSERTS // "contains" has an internal assert
+        static_assert(func_name.contains(prefix), "prefix not found in name!");
+        static_assert(func_name.contains(suffix), "suffix not found in name!");
+#endif
+
+        name.remove_prefix(prefix.size());
+        name.remove_suffix(suffix.size());
+        return name;
+      }
+
 #endif
 
       template <typename T, rsl::enable_if_t<rsl::is_class_v<T>, bool> = true>
@@ -101,14 +119,18 @@ namespace rsl
   #ifndef REX_ENABLE_ASSERTS // "contains" has an internal assert
         if constexpr(func_name.contains("struct"))
   #else
-        if(func_name.contains("struct"))
+        if(func_name.contains("type_name<struct"))
   #endif
         {
           return msvc_struct_type_name<T>();
         }
-        else
+        else if (func_name.contains("type_name<class"))
         {
           return msvc_class_type_name<T>();
+        }
+        else
+        {
+          return msvc_structless_type_name<T>();
         }
 #else
   #error "Unknown Compiler."

@@ -17,31 +17,31 @@
 
 rsl::tiny_stack_string rsl::to_stack_string(const uint32 value)
 {
-  return string_utils::internal::to_string<tiny_stack_string>(value);
+  return internal::to_string<tiny_stack_string>(value);
 }
 rsl::tiny_stack_string rsl::to_stack_string(const int32 value)
 {
-  return string_utils::internal::to_string<tiny_stack_string>(value);
+  return internal::to_string<tiny_stack_string>(value);
 }
 rsl::tiny_stack_string rsl::to_stack_string(const uint64 value)
 {
-  return string_utils::internal::to_string<tiny_stack_string>(value);
+  return internal::to_string<tiny_stack_string>(value);
 }
 rsl::tiny_stack_string rsl::to_stack_string(const int64 value)
 {
-  return string_utils::internal::to_string<tiny_stack_string>(value);
+  return internal::to_string<tiny_stack_string>(value);
 }
 rsl::tiny_stack_string rsl::to_stack_string(const float32 value, card32 precision)
 {
-  return string_utils::internal::to_string<tiny_stack_string>(value, precision);
+  return internal::to_string<tiny_stack_string>(value, precision);
 }
 rsl::tiny_stack_string rsl::to_stack_string(const float64 value, card32 precision)
 {
-  return string_utils::internal::to_string<tiny_stack_string>(value, precision);
+  return internal::to_string<tiny_stack_string>(value, precision);
 }
 rsl::tiny_stack_string rsl::to_stack_string(const void* ptr)
 {
-  return string_utils::internal::to_string<tiny_stack_string>(ptr);
+  return internal::to_string<tiny_stack_string>(ptr);
 }
 
 rsl::tiny_stack_string operator"" _tiny(const char* str, size_t length)

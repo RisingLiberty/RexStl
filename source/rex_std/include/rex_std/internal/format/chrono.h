@@ -20,7 +20,7 @@
 #include <ostream>
 #include <type_traits>
 
-FMT_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 { 
 
 // Enable tzset.
 #ifndef FMT_USE_TZSET
@@ -613,7 +613,7 @@ inline rsl::tm localtime(rsl::time_t time)
                   return gmtime(rsl::chrono::system_clock::to_time_t(time_point));
                 }
 
-                FMT_BEGIN_DETAIL_NAMESPACE
+                namespace detail {
 
                 // Writes two-digit numbers a, b and c separated by sep to buf.
                 // The method by Pavel Novikov based on
@@ -2131,7 +2131,7 @@ inline rsl::tm localtime(rsl::time_t time)
                   }
                 };
 
-                FMT_END_DETAIL_NAMESPACE
+                }
 
 #if defined(__cpp_lib_chrono) && __cpp_lib_chrono >= 201907
                 using weekday = rsl::chrono::weekday;
@@ -2407,6 +2407,6 @@ inline rsl::tm localtime(rsl::time_t time)
                 };
 
                 FMT_MODULE_EXPORT_END
-                FMT_END_NAMESPACE
+                }}
 
 #endif // FMT_CHRONO_H_
