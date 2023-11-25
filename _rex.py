@@ -15,6 +15,8 @@ import os
 import argparse
 import sys
 import pkg_resources
+import subprocess
+import pip
 
 # Check if we have regis installed.
 # If not, we limit the amount of user input possibilities later on.
@@ -24,12 +26,13 @@ try:
 except:
   rexpy_installed = False
 
-required_rexpy_version = "0.1.46"
+required_rexpy_version = "0.1.60"
 
 # all scripts are located in ~/_build/scripts path.
 # to make it easier to call these scripts wherever we need them
 # we cache their paths here.
-scripts_path = os.path.join('_build', 'scripts')
+root = os.path.dirname(__file__)
+scripts_path = os.path.join(root, '_build', 'scripts')
 setup_script_path = os.path.join(scripts_path, 'setup.py')
 generate_script_path = os.path.join(scripts_path, 'generate.py')
 build_script_path = os.path.join(scripts_path, 'build.py')
@@ -48,37 +51,12 @@ def _run_script(scriptPath : str, args : list[str]):
     print(f'You\'re current working directory is: "{os.getcwd()}"')
     return
   
-  return os.system(f"py {scriptPath} {' '.join(args)}")
-
-def _exec_ext_help(parser : argparse.ArgumentParser):
-  """Display the arguments of this script and all the internal scripts"""
-  # First print the argument of this script.
-  parser.print_help()
-
-  # next print the arguments of each script we support
-  print(f'-------------------------')
-  print(f'Extended help info for scripts')
-  print(f'-------------------------')
-  print(f'SETUP')
-  print(f'-------------------------')
-  _run_script(setup_script_path, ['-h'])
-  print(f'-------------------------')
-  print(f'GENERATE')
-  print(f'-------------------------')
-  _run_script(generate_script_path, ['-h'])
-  print(f'-------------------------')
-  print(f'BUILD')
-  print(f'-------------------------')
-  _run_script(build_script_path, ['-h'])
-  print(f'-------------------------')
-  print(f'LAUNCH')
-  print(f'-------------------------')
-  _run_script(launch_script_path, ['-h'])
-  print(f'-------------------------')
-  print(f'TEST')
-  print(f'-------------------------')
-  _run_script(test_script_path, ['-h'])
-  print(f'-------------------------')
+  script_args = []
+  script_args.append('python')
+  script_args.append(scriptPath)
+  script_args.extend(args)
+  proc = subprocess.Popen(args=script_args)
+  proc.communicate()
 
 def _exec_version():
   """Load the engine version and display it"""
@@ -136,30 +114,25 @@ def _exec_launch(argsToPassOn : str):
   return
 
 def _exec_test(argsToPassOn : str):
-  """EXecute the internal test script"""
+  """Execute the internal test script"""
   _run_script(test_script_path, argsToPassOn)
   return
 
 def main():
   # look into sub parsers
-
   parser = argparse.ArgumentParser()
-  parser.add_argument("-ext_help", help="Display extended help information and exit", action="store_true")
   parser.add_argument("-version", help="Display the version of the rex engine and exit", action="store_true")
-  parser.add_argument("-setup", help="Perform the setup of the rex engine", action="store_true")
-  parser.add_argument("-setup_arg", default=[], help="Arguments to pass on to setup script", action="append")
+  command_subparser = parser.add_subparsers(dest='command')
+
+  command_subparser.add_parser('setup', help='Perform the setup of the rex engine', add_help=False)
 
   if not rexpy_installed:
     print("Warning: rexpy not installed. Only setup is possible.")
   else:
-    parser.add_argument("-generate", help="Generate the solution of rex engine", action="store_true")
-    parser.add_argument("-generate_arg", default=[], help="Arguments to pass on to generate script", action="append")
-    parser.add_argument("-build", help="Build the rex engine", action="store_true")
-    parser.add_argument("-build_arg", default=[], help="Arguments to pass on to the build script", action="store_true")
-    parser.add_argument("-launch", help="Launch a previous build project with the engine.", action="store_true")
-    parser.add_argument("-launch_arg", default=[], help="Arguments to pass on to the launch script.", action="store_true")
-    parser.add_argument("-test", help="Run a test on the engine.", action="store_true")
-    parser.add_argument("-test_arg", default=[], help="Arguments to pass on to the test script.", action="store_true")
+    command_subparser.add_parser("generate", help="Generate the solution of rex engine", add_help=False)
+    command_subparser.add_parser("build", help="Build the rex engine", add_help=False)
+    command_subparser.add_parser("launch", help="Launch a previous build project with the engine.", add_help=False)
+    command_subparser.add_parser("test", help="Run a test on the engine.", add_help=False)
 
   args, unknown_args = parser.parse_known_args()
 
@@ -171,29 +144,25 @@ def main():
     parser.print_help()
     exit(0)
 
-  if args.ext_help:
-    _exec_ext_help(parser)
-    exit(0)
-
   if args.version:
     _exec_version()
     exit(0)
   
-  if args.setup:
-    _exec_setup(args.setup_arg)
+  if args.command == 'setup':
+    _exec_setup(unknown_args)
 
   if rexpy_installed:
-    if args.generate:
-      _exec_generate(args.generate_arg)
+    if args.command == 'generate':
+      _exec_generate(unknown_args)
 
-    if args.build:
-      _exec_build(args.build_arg)
+    if args.command == 'build':
+      _exec_build(unknown_args)
 
-    if args.launch:
-      _exec_launch(args.launch_arg)
+    if args.command == 'launch':
+      _exec_launch(unknown_args)
 
-    if args.test:
-      _exec_test(args.test_arg)
+    if args.command == 'test':
+      _exec_test(unknown_args)
 
   exit(0)
 

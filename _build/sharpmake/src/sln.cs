@@ -1,20 +1,15 @@
-using System.IO;
-using System.Linq;
 using Sharpmake;
-using System;
-using System.Collections.Generic;
 
 namespace rex
 {
-  // Represents the solution that will be generated and that will contain the
-  // project with the sample code.
+  // Represents the solution that will be generated
   [Generate]
   public class MainSolution : Solution
   {
     public MainSolution() : base(typeof(RexTarget))
     {
       // The name of the solution.
-      Name = "rex-standard-library";
+      Name = GenerateName("rex-standard-library");
       GenerateTargets();
     }
 
@@ -29,7 +24,7 @@ namespace rex
 
       // Because the sharpmake project only gets added to Visual Studio
       // We can only add its dependency if the target development env is Visual Studio
-      if (target.DevEnv == DevEnv.vs2019)
+      if (target.DevEnv == DevEnv.vs2019 && target.Compiler == Compiler.MSVC)
       {
         conf.AddProject<SharpmakeProject>(target);
       }
@@ -54,30 +49,7 @@ namespace rex
 
     protected void GenerateTargets()
     {
-      if (ProjectGen.Settings.IDE == ProjectGen.IDE.VisualStudio)
-      {
-        AddTargets(RexTarget.GetAllDefaultTargets());
-      }
-      else if (ProjectGen.Settings.CoverageEnabled)
-      {
-        AddTargets(RexTarget.GetCoverageTarget());
-      }
-      else if (ProjectGen.Settings.AsanEnabled)
-      {
-        AddTargets(RexTarget.GetAsanTarget());
-      }
-      else if (ProjectGen.Settings.UbsanEnabled)
-      {
-        AddTargets(RexTarget.GetUBsanTarget());
-      }
-      else if (ProjectGen.Settings.FuzzyTestingEnabled)
-      {
-        AddTargets(RexTarget.GetFuzzyTarget());
-      }
-      else
-      {
-        AddTargets(RexTarget.GetNinjaOnlyTarget());
-      }
+      AddTargets(RexTarget.CreateTargets().ToArray());
     }
   }
 }

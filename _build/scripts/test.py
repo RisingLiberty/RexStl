@@ -15,7 +15,7 @@ import regis.diagnostics
 from datetime import datetime
 
 if __name__ == "__main__":
-  parser = argparse.ArgumentParser()
+  parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
   parser.add_argument("-clean", help="clean run, as if run for the first time", action="store_true")
   parser.add_argument("-single_threaded", help="run tests in single threaded mode", action="store_true")
   parser.add_argument("-only_errors_and_warnings", help="filter lines to only display warnings and errors", action="store_true")
@@ -53,7 +53,7 @@ if __name__ == "__main__":
     if args.auto_test_timeout:
       auto_test_timeout_secs = args.auto_test_timeout
 
-    regis.test.run_auto_tests(["debug", "debug_opt", "release"], ["msvc","clang"], ["reginatest"], int(auto_test_timeout_secs), args.clean, args.single_threaded)
+    regis.test.run_auto_tests(["debug", "debug_opt", "release"], ["msvc","clang"], ["reginaautotest"], int(auto_test_timeout_secs), args.clean, args.single_threaded)
 
   regis.diagnostics.log_no_color("")
   regis.diagnostics.log_info("Summary Report")

@@ -31,9 +31,6 @@ root_path = regis.util.find_root()
 settings = regis.rex_json.load_file(os.path.join(root_path, regis.util.settingsPathFromRoot))
 intermediate_dir = os.path.join(root_path, settings["intermediate_folder"])
 
-vscode_dir = os.path.join(root_path, ".vscode")
-vscode_build_dir = os.path.join(root_path, "_build", "vscode")
-
 misc_folders = settings["misc_folders"]
 misc_extensions = settings["misc_extensions"]
 
@@ -109,9 +106,7 @@ def _exec_run():
   regis.git_hooks.run(os.path.join(root_path, "_build", "scripts", "git", "hooks"))
 
 if __name__ == "__main__":
-  # we disable help because it always exists after displayed through the commandline.
-  # we don't want to exit when it's shown so we overwrite it ourselves
-  parser = argparse.ArgumentParser()
+  parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
   parser.add_argument("-query", help="Don't display any options and just run the script", action="store_true")
   parser.add_argument("-clean", help="clean setup, as if run for the first time", action="store_true")
   args, unknown = parser.parse_known_args()

@@ -61,10 +61,9 @@ using System.Text;
 
 public static class CodeGeneration
 {
-  //static private Dictionary<string, CodeGen.EnumGenerationSettings> EnumsToAutoGenerate = new Dictionary<string, CodeGen.EnumGenerationSettings>();
-  //static private Dictionary<string, CodeGen.ArrayGenerationSettings> ArraysToAutoGenerate = new Dictionary<string, CodeGen.ArrayGenerationSettings>();
   static private Dictionary<string, CodeGen.TypeToGenerate> TypesToGenerate = new Dictionary<string, CodeGen.TypeToGenerate>();
   static private Dictionary<string, CodeGen.UnknownTypeConfig> UnknownTypesToGenerate = new Dictionary<string, CodeGen.UnknownTypeConfig>();
+  static private object MemberAccessLock = new object();
 
   // Reads the generation config file and processes it
   public static void ReadGenerationFile(string projectName, string filePath)
@@ -113,21 +112,27 @@ public static class CodeGeneration
     // so we can add it to the content of the type later
     else
     {
-      // If we already have an enum for this, add the content to 
-      if (TypesToGenerate.ContainsKey(key))
-      {
-        TypesToGenerate[key].AddContent(projectName, content);
-      }
+      // Sharpmake runs multithreaded, so we need to make sure we use a mutex here
+      // Otherwise generation might fail because of a data race.
 
-      // The type for this key is not known yet, we need to add it to the dict of unknown types
-      // If the key doesn't exist yet in that dict, we need to add it first
-      else if (!UnknownTypesToGenerate.ContainsKey(key))
+      lock (MemberAccessLock)
       {
-        UnknownTypesToGenerate.Add(key, new CodeGen.UnknownTypeConfig());
-      }
+        // If we already have an enum for this, add the content to 
+        if (TypesToGenerate.ContainsKey(key))
+        {
+          TypesToGenerate[key].AddContent(projectName, content);
+        }
 
-      // Add the content to the unknown type in the dict
-      UnknownTypesToGenerate[key].AddContent(projectName, content);
+        // The type for this key is not known yet, we need to add it to the dict of unknown types
+        // If the key doesn't exist yet in that dict, we need to add it first
+        else if (!UnknownTypesToGenerate.ContainsKey(key))
+        {
+          UnknownTypesToGenerate.Add(key, new CodeGen.UnknownTypeConfig());
+        }
+
+        // Add the content to the unknown type in the dict
+        UnknownTypesToGenerate[key].AddContent(projectName, content);
+      }
     }
   }
 
@@ -188,7 +193,14 @@ public static class CodeGeneration
     foreach (string key in TypesToGenerate.Keys)
     {
       string typeText = TypesToGenerate[key].AsString(key);
-      WriteToDisk(TypesToGenerate[key].FilePath, typeText);
+      FileInfo generatedFileInfo = new FileInfo(TypesToGenerate[key].FilePath);
+
+      // To not mess up the build system which checks file stamps
+      // only write to disk if the new generated file is actually different
+      if (Sharpmake.Util.IsFileDifferent(generatedFileInfo, new MemoryStream(Encoding.UTF8.GetBytes(typeText))))
+      {
+        WriteToDisk(TypesToGenerate[key].FilePath, typeText);
+      }
     }
   }
 

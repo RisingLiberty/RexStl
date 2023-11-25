@@ -1,0 +1,75 @@
+[
+  {
+    "include": [
+      "<minwindef.h>",
+      "private",
+      "<Windows.h>",
+      "public"
+    ]
+  },
+  {
+    "include": [
+      "<errhandlingapi.h>",
+      "private",
+      "<Windows.h>",
+      "public"
+    ]
+  },
+  {
+    "include": [
+      "<fileapi.h>",
+      "private",
+      "<Windows.h>",
+      "public"
+    ]
+  },
+  {
+    "include": [
+      "<processthreadsapi.h>",
+      "private",
+      "<Windows.h>",
+      "public"
+    ]
+  },
+  {
+    "include": [
+      "<synchapi.h>",
+      "private",
+      "<Windows.h>",
+      "public"
+    ]
+  },
+  {
+    "include": [
+      "<handleapi.h>",
+      "private",
+      "<Windows.h>",
+      "public"
+    ]
+  },
+  {
+    "include": [
+      "<sysinfoapi.h>",
+      "private",
+      "<Windows.h>",
+      "public"
+    ]
+  },
+  {
+    "include": [
+      "<minwinbase.h>",
+      "private",
+      "<Windows.h>",
+      "public"
+    ]
+  },
+  {
+    "include": [
+      "<built-in>",
+      "private",
+      "",
+      "public"
+    ]
+  }
+  
+]
