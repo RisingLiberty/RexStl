@@ -40,7 +40,7 @@ namespace rsl
         bool is_valid() const;
         explicit operator bool() const;
 
-        handle_t get();
+        handle_t get() const;
 
         static handle_t invalid_value();
 

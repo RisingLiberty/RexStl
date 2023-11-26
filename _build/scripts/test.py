@@ -15,9 +15,11 @@ import regis.diagnostics
 from datetime import datetime
 
 if __name__ == "__main__":
-  parser = argparse.ArgumentParser()
+  parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
   parser.add_argument("-clean", help="clean run, as if run for the first time", action="store_true")
   parser.add_argument("-single_threaded", help="run tests in single threaded mode", action="store_true")
+  parser.add_argument("-only_errors_and_warnings", help="filter lines to only display warnings and errors", action="store_true")
+  parser.add_argument("-auto_fix", help="auto fix where you can (applies to iwyu and clang-tidy)", action="store_true")
 
   parser.add_argument("-all", help="run all tests", action="store_true")
   parser.add_argument("-iwyu", help="run include-what-you-use", action="store_true")
@@ -34,9 +36,9 @@ if __name__ == "__main__":
   start = time.perf_counter()
 
   if args.all or args.iwyu:
-    regis.test.test_include_what_you_use(args.clean, args.single_threaded)
+    regis.test.test_include_what_you_use(args.clean, args.single_threaded, args.auto_fix)
   if args.all or args.clang_tidy:
-    regis.test.test_clang_tidy(".*", args.clean, args.single_threaded)
+    regis.test.test_clang_tidy(".*", args.clean, args.single_threaded, args.only_errors_and_warnings, args.auto_fix)
   if args.all or args.unit_tests:
     regis.test.test_unit_tests(["rexstdtest"], args.clean, args.single_threaded)
   if args.all or args.coverage:
@@ -51,7 +53,7 @@ if __name__ == "__main__":
     if args.auto_test_timeout:
       auto_test_timeout_secs = args.auto_test_timeout
 
-    regis.test.run_auto_tests(["debug", "debug_opt", "release"], ["msvc","clang"], ["regina"], int(auto_test_timeout_secs), args.clean, args.single_threaded)
+    regis.test.run_auto_tests(["debug", "debug_opt", "release"], ["msvc","clang"], ["reginaautotest"], int(auto_test_timeout_secs), args.clean, args.single_threaded)
 
   regis.diagnostics.log_no_color("")
   regis.diagnostics.log_info("Summary Report")

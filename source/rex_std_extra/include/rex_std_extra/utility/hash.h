@@ -44,7 +44,7 @@ namespace rsl
 
       static constexpr hash_val invalid()
       {
-        return hash_val(rsl::numeric_limits<card64>::max());
+        return hash_val((rsl::numeric_limits<card64>::max)());
       }
 
       static hash_val new_hash();

@@ -31,7 +31,7 @@
 
 #include "rex_std/format.h"
 
-FMT_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 { 
 namespace detail
 {
 
@@ -1696,6 +1696,6 @@ namespace detail
 
 } // namespace detail
 
-FMT_END_NAMESPACE
+}}
 
 // NOLINTEND(hicpp-signed-bitwise, fuchsia-trailing-return, misc-no-recursion)

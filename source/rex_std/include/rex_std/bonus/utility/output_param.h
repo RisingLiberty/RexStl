@@ -36,6 +36,7 @@ namespace rsl
       Out& operator=(const value_type& rhs)
       {
         m_output = rhs;
+        return *this;
       }
 
     private:

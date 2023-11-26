@@ -19,7 +19,7 @@
 
 #include "rex_std/format.h"
 
-FMT_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 { 
 
 template <typename OutputIt, typename Char>
 class basic_printf_context;
@@ -248,6 +248,6 @@ void print(rsl::wostream& os, basic_format_string<wchar_t, type_identity_t<Args>
   vprint(os, fmt, rsl::make_format_args<buffer_context<wchar_t>>(args...));
 }
 
-FMT_END_NAMESPACE
+}}
 
 #endif // FMT_OSTREAM_H_

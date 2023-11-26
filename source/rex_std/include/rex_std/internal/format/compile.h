@@ -15,7 +15,7 @@
 #include "rex_std/internal/type_traits/integral_constant.h"
 #include "rex_std/internal/type_traits/is_void.h"
 
-FMT_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 { 
 namespace detail
 {
 
@@ -718,6 +718,6 @@ inline namespace literals
 #endif
 
 FMT_MODULE_EXPORT_END
-FMT_END_NAMESPACE
+}}
 
 #endif // FMT_COMPILE_H_

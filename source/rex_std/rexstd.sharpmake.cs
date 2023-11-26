@@ -18,11 +18,14 @@ public class RexStd : BasicCPPProject
     SourceRootPath = ThisFileFolder;
   }
 
-  public override void Configure(RexConfiguration conf, RexTarget target)
+  protected override void SetupOutputType(RexConfiguration conf, RexTarget target)
   {
-    base.Configure(conf, target);
-
     conf.Output = Configuration.OutputType.Lib;
+  }
+
+  protected override void SetupPlatformRules(RexConfiguration conf, RexTarget target)
+  {
+    base.SetupPlatformRules(conf, target);
 
     switch (conf.Platform)
     {

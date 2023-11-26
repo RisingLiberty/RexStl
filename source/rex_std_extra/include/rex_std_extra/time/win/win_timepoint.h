@@ -13,6 +13,8 @@
 
 #include "rex_std_extra/time/timepoint.h"
 
+struct _SYSTEMTIME;
+
 namespace rsl
 {
   inline namespace v1
@@ -20,6 +22,7 @@ namespace rsl
     class time_point; // IWYU pragma: keep
 
     time_point current_timepoint();
+    time_point timepoint_from_systime(const _SYSTEMTIME& sysTime);
 
   } // namespace v1
 } // namespace rsl

@@ -118,9 +118,9 @@ struct custom_char {
 
 int to_ascii(custom_char c) { return c; }
 
-FMT_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 { 
 template <> struct is_char<custom_char> : std::true_type {};
-FMT_END_NAMESPACE
+}}
 
 TEST(xchar_test, format_custom_char) {
   const custom_char format[] = { '{', '}', 0 };
@@ -503,7 +503,7 @@ TEST(locale_test, int_formatter) {
   EXPECT_EQ(fmt::to_string(buf), "12,345");
 }
 
-FMT_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 { 
 template <class charT> struct formatter<std::complex<double>, charT> {
 private:
   detail::dynamic_format_specs<char> specs_;
@@ -536,7 +536,7 @@ public:
       : fmt::format("{}i", imag));
   }
 };
-FMT_END_NAMESPACE
+}}
 
 TEST(locale_test, complex) {
   std::string s = fmt::format("{}", std::complex<double>(1, 2));

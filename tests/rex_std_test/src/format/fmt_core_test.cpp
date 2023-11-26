@@ -296,7 +296,7 @@ struct custom_context {
 
 struct test_struct {};
 
-FMT_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 { 
 template <typename Char> struct formatter<test_struct, Char> {
   auto parse(format_parse_context& ctx) -> decltype(ctx.begin()) {
     return ctx.begin();
@@ -307,7 +307,7 @@ template <typename Char> struct formatter<test_struct, Char> {
     return std::copy_n(test.data(), test.size(), ctx.out());
   }
 };
-FMT_END_NAMESPACE
+}}
 
 TEST(arg_test, format_args) {
   auto args = fmt::format_args();
@@ -576,7 +576,7 @@ struct disabled_formatter_convertible {
   operator int() const { return 42; }
 };
 
-FMT_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 { 
 template <> struct formatter<enabled_formatter> {
   auto parse(format_parse_context& ctx) -> decltype(ctx.begin()) {
     return ctx.begin();
@@ -595,7 +595,7 @@ template <> struct formatter<enabled_ptr_formatter*> {
     return ctx.out();
   }
 };
-FMT_END_NAMESPACE
+}}
 
 TEST(core_test, has_formatter) {
   using fmt::has_formatter;
@@ -609,7 +609,7 @@ TEST(core_test, has_formatter) {
 struct const_formattable {};
 struct nonconst_formattable {};
 
-FMT_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 { 
 template <> struct formatter<const_formattable> {
   auto parse(format_parse_context& ctx) -> decltype(ctx.begin()) {
     return ctx.begin();
@@ -633,7 +633,7 @@ template <> struct formatter<nonconst_formattable> {
     return std::copy_n(test.data(), test.size(), ctx.out());
   }
 };
-FMT_END_NAMESPACE
+}}
 
 struct convertible_to_pointer {
   operator const int* () const { return nullptr; }
@@ -643,7 +643,7 @@ struct convertible_to_pointer_formattable {
   operator const int* () const { return nullptr; }
 };
 
-FMT_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 { 
 template <> struct formatter<convertible_to_pointer_formattable> {
   auto parse(format_parse_context& ctx) -> decltype(ctx.begin()) {
     return ctx.begin();
@@ -655,7 +655,7 @@ template <> struct formatter<convertible_to_pointer_formattable> {
     return std::copy_n(test.data(), test.size(), ctx.out());
   }
 };
-FMT_END_NAMESPACE
+}}
 
 enum class unformattable_scoped_enum {};
 
@@ -733,7 +733,7 @@ struct convertible_to_c_string {
   operator const char* () const { return "foo"; }
 };
 
-FMT_BEGIN_NAMESPACE
+namespace rsl { inline namespace v1 { 
 template <> struct formatter<convertible_to_int> {
   auto parse(format_parse_context& ctx) -> decltype(ctx.begin()) {
     return ctx.begin();
@@ -752,7 +752,7 @@ template <> struct formatter<convertible_to_c_string> {
     return std::copy_n("bar", 3, ctx.out());
   }
 };
-FMT_END_NAMESPACE
+}}
 
 TEST(core_test, formatter_overrides_implicit_conversion) {
   EXPECT_EQ(fmt::format("{}", convertible_to_int()), "foo");
