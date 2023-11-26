@@ -112,6 +112,19 @@ namespace rsl::test
       void* allocate(size_t n, size_t, size_t, int = 0); // We don't support alignment, so you can't use this class where alignment is required.
       void deallocate(void* p, size_t n);
 
+      // construct an object of type T in allocated uninitialized storage pointer to by p
+      template <typename U, typename... Args>
+      void construct(U* p, Args&&... args)
+      {
+        new(static_cast<void*>(p)) U(rsl::forward<Args>(args)...);
+      }
+      // calls the destructor of the object pointed to by p
+      template <typename U>
+      void destroy(U* p)
+      {
+        p->~U();
+      }
+
       const char* name() const { return "malloc_allocator"; }
       void set_name(const char*) {}
 
@@ -206,6 +219,19 @@ namespace rsl::test
           free(p8);
         else
           ++s_mismatch_count;
+      }
+
+      // construct an object of type T in allocated uninitialized storage pointer to by p
+      template <typename U, typename... Args>
+      void construct(U* p, Args&&... args)
+      {
+        new(static_cast<void*>(p)) U(rsl::forward<Args>(args)...);
+      }
+      // calls the destructor of the object pointed to by p
+      template <typename U>
+      void destroy(U* p)
+      {
+        p->~U();
       }
 
       rsl::string_view name()

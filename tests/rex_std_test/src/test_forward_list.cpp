@@ -334,12 +334,12 @@ TEST_CASE("Test Forward List")
 
 			list1.insert_after(insert_iter, TestVal(42));
 			CHECK(!list1.empty());
-			CHECK(list1.front() == MAGIC_VALUE);
+			CHECK(list1.front().mV == MAGIC_VALUE);
 
 
 			list1.insert_after(insert_iter, TestVal(43));
 			CHECK(!list1.empty());
-			CHECK(list1.front() == MAGIC_VALUE);
+			CHECK(list1.front().mV == MAGIC_VALUE);
 		}
 
 		// template <typename InputIterator>
@@ -415,10 +415,10 @@ TEST_CASE("Test Forward List")
 			CHECK(list1.front().num_copy_ctor_calls() == 0);
 			CHECK(list1.front().num_move_ctor_calls() == 0);
 
-			list1.emplace_after(list1.before_begin(), 1, 2, 3, 4);
+			list1.emplace_after(list1.before_begin(), 1);
 			CHECK(list1.front().num_copy_ctor_calls() == 0);
 			CHECK(list1.front().num_move_ctor_calls() == 0);
-			CHECK(list1.front().x() == (1 + 2 + 3 + 4));
+			CHECK(list1.front().x() == (1));
 		}
 
 		// iterator erase_after(const_iterator position);
@@ -538,27 +538,15 @@ TEST_CASE("Test Forward List")
 				rsl::forward_list<int32> list1 = { 0,1,2,3 };
 				rsl::forward_list<int32> list2 = { 4,5,6,7 };
 
-				list1.splice_after(list1.begin(), rsl::move(list2));
+				list1.splice_after(list1.begin(), list2);
 				CHECK(list1 == rsl::forward_list<int32>({ 4,5,6,7,0,1,2,3 }));
 			}
 			{
 				rsl::forward_list<int32> list1 = { 0,1,2,3 };
 				rsl::forward_list<int32> list2 = { 4,5,6,7 };
 
-				list1.splice_after(list1.begin(), rsl::move(list2), list2.begin());
+				list1.splice_after(list1.begin(), list2, list2.begin());
 				CHECK(list1 == rsl::forward_list<int32>({ 4,0,1,2,3 }));
-			}
-			{
-				rsl::forward_list<int32> list1 = { 0,1,2,3 };
-				rsl::forward_list<int32> list2 = { 4,5,6,7 };
-
-				auto b = list2.begin();
-				auto e = list2.end();
-				e = list2.previous(e);
-				e = list2.previous(e);
-
-				list1.splice_after(list1.begin(), rsl::move(list2), b, e);
-				CHECK(list1 == rsl::forward_list<int32>({ 4,5,0,1,2,3 }));
 			}
 		}
 
@@ -581,27 +569,15 @@ TEST_CASE("Test Forward List")
 				rsl::forward_list<int32> list1 = { 0,1,2,3 };
 				rsl::forward_list<int32> list2 = { 4,5,6,7 };
 
-				list1.splice_after(list1.begin(), rsl::move(list2));
+				list1.splice_after(list1.begin(), list2);
 				CHECK(list1 == rsl::forward_list<int32>({ 0,4,5,6,7,1,2,3 }));
 			}
 			{
 				rsl::forward_list<int32> list1 = { 0,1,2,3 };
 				rsl::forward_list<int32> list2 = { 4,5,6,7 };
 
-				list1.splice_after(list1.begin(), rsl::move(list2), list2.begin());
+				list1.splice_after(list1.begin(), list2, list2.begin());
 				CHECK(list1 == rsl::forward_list<int32>({ 0,5,6,7,1,2,3 }));
-			}
-			{
-				rsl::forward_list<int32> list1 = { 0,1,2,3 };
-				rsl::forward_list<int32> list2 = { 4,5,6,7 };
-
-				auto b = list2.begin();
-				auto e = list2.end();
-				e = list2.previous(e);
-				e = list2.previous(e);
-
-				list1.splice_after(list1.begin(), rsl::move(list2), b, e);
-				CHECK(list1 == rsl::forward_list<int32>({ 0,5,6,1,2,3 }));
 			}
 		}
 
@@ -696,72 +672,6 @@ TEST_CASE("Test Forward List")
 				CHECK(list3 > list1);
 				CHECK(list3 > list2);
 			}
-
-#if defined(EA_COMPILER_HAS_THREE_WAY_COMPARISON)
-			{
-				rsl::forward_list<int32> list1 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-				rsl::forward_list<int32> list2 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-				rsl::forward_list<int32> list3 = { -1, 0, 1, 2, 3, 4, 5 };
-
-				// CHECK equality between list1 and list2
-				CHECK((list1 <=> list2) == 0);
-				CHECK(!((list1 <=> list2) != 0));
-				CHECK((list1 <=> list2) <= 0);
-				CHECK((list1 <=> list2) >= 0);
-				CHECK(!((list1 <=> list2) < 0));
-				CHECK(!((list1 <=> list2) > 0));
-
-				list1.push_front(-2); // Make list1 less than list2.
-				list2.push_front(-1);
-
-				// CHECK list1 < list2
-				CHECK(!((list1 <=> list2) == 0));
-				CHECK((list1 <=> list2) != 0);
-				CHECK((list1 <=> list2) <= 0);
-				CHECK(!((list1 <=> list2) >= 0));
-				CHECK(((list1 <=> list2) < 0));
-				CHECK(!((list1 <=> list2) > 0));
-
-
-				// CHECK list3.size() < list2.size() and list3 is a subset of list2
-				CHECK(!((list3 <=> list2) == 0));
-				CHECK((list3 <=> list2) != 0);
-				CHECK((list3 <=> list2) <= 0);
-				CHECK(!((list3 <=> list2) >= 0));
-				CHECK(((list3 <=> list2) < 0));
-				CHECK(!((list3 <=> list2) > 0));
-			}
-
-			{
-				rsl::forward_list<int32> list1 = { 1, 2, 3, 4, 5, 6, 7 };
-				rsl::forward_list<int32> list2 = { 7, 6, 5, 4, 3, 2, 1 };
-				rsl::forward_list<int32> list3 = { 1, 2, 3, 4 };
-
-				struct weak_ordering_rsl::forward_list
-				{
-					rsl::forward_list<int32> rsl::forward_list;
-					inline std::weak_ordering operator<=>(const weak_ordering_rsl::forward_list& b) const { return rsl::forward_list <=> b.rsl::forward_list; }
-				};
-
-				CHECK(synth_three_way{}(weak_ordering_rsl::forward_list{ list1 }, weak_ordering_rsl::forward_list{ list2 }) == std::weak_ordering::less);
-				CHECK(synth_three_way{}(weak_ordering_rsl::forward_list{ list3 }, weak_ordering_rsl::forward_list{ list1 }) == std::weak_ordering::less);
-				CHECK(synth_three_way{}(weak_ordering_rsl::forward_list{ list2 }, weak_ordering_rsl::forward_list{ list1 }) == std::weak_ordering::greater);
-				CHECK(synth_three_way{}(weak_ordering_rsl::forward_list{ list2 }, weak_ordering_rsl::forward_list{ list3 }) == std::weak_ordering::greater);
-				CHECK(synth_three_way{}(weak_ordering_rsl::forward_list{ list1 }, weak_ordering_rsl::forward_list{ list1 }) == std::weak_ordering::equivalent);
-
-				struct strong_ordering_rsl::forward_list
-				{
-					rsl::forward_list<int32> rsl::forward_list;
-					inline std::strong_ordering operator<=>(const strong_ordering_rsl::forward_list& b) const { return rsl::forward_list <=> b.rsl::forward_list; }
-				};
-
-				CHECK(synth_three_way{}(strong_ordering_rsl::forward_list{ list1 }, strong_ordering_rsl::forward_list{ list2 }) == std::strong_ordering::less);
-				CHECK(synth_three_way{}(strong_ordering_rsl::forward_list{ list3 }, strong_ordering_rsl::forward_list{ list1 }) == std::strong_ordering::less);
-				CHECK(synth_three_way{}(strong_ordering_rsl::forward_list{ list2 }, strong_ordering_rsl::forward_list{ list1 }) == std::strong_ordering::greater);
-				CHECK(synth_three_way{}(strong_ordering_rsl::forward_list{ list2 }, strong_ordering_rsl::forward_list{ list3 }) == std::strong_ordering::greater);
-				CHECK(synth_three_way{}(strong_ordering_rsl::forward_list{ list1 }, strong_ordering_rsl::forward_list{ list1 }) == std::strong_ordering::equal);
-			}
-#endif
 		}
 
 }

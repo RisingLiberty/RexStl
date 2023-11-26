@@ -12,14 +12,17 @@
 
 #pragma once
 
+#include "rex_std/bonus/algorithm/comb_sort.h"
 #include "rex_std/bonus/type_traits/type_select.h"
 #include "rex_std/bonus/types.h"
 #include "rex_std/bonus/utility/compressed_pair.h"
 #include "rex_std/bonus/utility/element_literal.h"
 #include "rex_std/compare.h"
 #include "rex_std/initializer_list.h"
+#include "rex_std/internal/algorithm/lexicographical_compare.h"
 #include "rex_std/internal/memory/allocator.h"
 #include "rex_std/internal/utility/forward.h"
+#include "rex_std/internal/memory/allocator_traits.h"
 #include "rex_std/limits.h"
 
 namespace rsl
@@ -51,21 +54,7 @@ namespace rsl
         }
       };
 
-      forward_list_node_base* reverse(forward_list_node_base* node)
-      {
-        forward_list_node_base* head = node;
-        forward_list_node_base* next = head->next;
-        head->next                   = nullptr;
-        while(next)
-        {
-          forward_list_node_base* tmp = next;
-          next                        = head;
-          head                        = node;
-          node                        = tmp;
-        }
-
-        return head;
-      }
+      forward_list_node_base* reverse_list(forward_list_node_base* node);
 
       template <typename T>
       struct forward_list_node : public forward_list_node_base
@@ -84,6 +73,8 @@ namespace rsl
 
       forward_list_node_base* forward_lst_node_base_get_previous(forward_list_node_base* pNodeBase, const forward_list_node_base* pNode);
       const forward_list_node_base* forward_lst_node_base_get_previous(const forward_list_node_base* pNodeBase, const forward_list_node_base* pNode);
+      void forward_list_node_splice_after(forward_list_node_base* pNode, forward_list_node_base* pNodeBeforeFirst, forward_list_node_base* pNodeBeforeLast);
+      void forward_list_node_splice_after(forward_list_node_base* pNode, forward_list_node_base* pNodeBase);
 
     } // namespace internal
 
@@ -117,7 +108,7 @@ namespace rsl
           : m_node(nullptr)
       {
       }
-      forward_list_iterator(node_type* node)
+      forward_list_iterator(internal::forward_list_node_base* node)
           : m_node(static_cast<node_type*>(node))
       {
       }
@@ -127,7 +118,7 @@ namespace rsl
       }
       template <typename T2, typename Pointer2, typename Reference2>
       forward_list_iterator(forward_list_iterator<T2, Pointer2, Reference2> it)
-        : m_node(it.m_node)
+          : m_node(it.m_node)
       {
       }
 
@@ -153,6 +144,11 @@ namespace rsl
       }
 
       const node_type* node() const
+      {
+        return m_node;
+      }
+
+      node_type* node()
       {
         return m_node;
       }
@@ -233,15 +229,21 @@ namespace rsl
 #ifdef REX_ENABLE_SIZE_IN_LISTS
           , m_size(0)
 #endif
-                {insert_after(end(), other.cbegin(), other.cend())} forward_list(const forward_list& other)
-          : m_cp_pre_head_node_and_allocator(other.get_allocator())
+      {
+        insert_after(end(), first, last);
+      }
+      forward_list(const forward_list& other)
+        : m_cp_pre_head_node_and_allocator(other.get_allocator())
 #ifdef REX_ENABLE_SIZE_IN_LISTS
-          , m_size(other.m_size)
+        , m_size(other.m_size)
 #endif
-                {insert_after(end(), other.cbegin(), other.cend())} forward_list(const forward_list& other, const allocator_type& alloc)
-          : m_cp_pre_head_node_and_allocator(alloc)
+      {
+        insert_after(end(), other.cbegin(), other.cend());
+      }
+      forward_list(const forward_list& other, const allocator_type& alloc)
+        : m_cp_pre_head_node_and_allocator(alloc)
 #ifdef REX_ENABLE_SIZE_IN_LISTS
-          , m_size(other.m_size)
+        , m_size(other.m_size)
 #endif
       {
         insert_after(end(), other.cbegin(), other.cend());
@@ -306,11 +308,11 @@ namespace rsl
 
         if(count > 0)
         {
-          emplace_after_impl(prev_node, count, value);
+          emplace_n_after_impl(prev_node, count, value);
         }
         else
         {
-          erase_after_impl(prev_node, end());
+          erase_after_impl(prev_node, end().node());
         }
       }
       template <typename InputIterator>
@@ -329,11 +331,11 @@ namespace rsl
 
         if(first != last)
         {
-          emplace_after_impl(prev_node, first, last);
+          emplace_n_after_impl_from_it(prev_node, static_cast<card32>(rsl::distance(first, last)), last);
         }
         else
         {
-          erase_after_impl(prev_node, end());
+          erase_after_impl(prev_node, end().node());
         }
       }
       void assign(rsl::initializer_list<T> ilist)
@@ -379,7 +381,8 @@ namespace rsl
       }
       const_iterator cbegin() const
       {
-        return const_iterator(head());
+        node_type* node = const_cast<node_type*>(head());
+        return const_iterator(node);
       }
 
       /// According to the C++ ISO Standard, this acts as a place holder
@@ -405,11 +408,11 @@ namespace rsl
       // capacity
       bool empty() const
       {
-        head() == nullptr;
+        return head() == nullptr;
       }
       size_type max_size()
       {
-        return numeric_limits<difference_type>::max();
+        return (numeric_limits<difference_type>::max)();
       }
 
       // modifiers
@@ -444,13 +447,15 @@ namespace rsl
         }
       }
       template <typename InputIt>
-      void insert_after(const_iterator pos, InputIt first, InputIt last)
+      iterator insert_after(const_iterator pos, InputIt first, InputIt last)
       {
         while(first != last)
         {
           emplace_after_impl(pos.m_node, *first);
           ++first;
         }
+
+        return pos;
       }
       iterator insert_after(const_iterator pos, rsl::initializer_list<T> ilist)
       {
@@ -463,8 +468,8 @@ namespace rsl
       }
       iterator erase_after(const_iterator pos)
       {
-        node_type* next_node = pos.m_node->next;
-        pos.m_node->erase_after();
+        node_type* next_node = static_cast<node_type*>(pos.m_node->next);
+        pos.m_node->erase_after(next_node->next);
 
         get_allocator().destroy(next_node);
         get_allocator().deallocate(next_node, sizeof(node_type));
@@ -472,6 +477,7 @@ namespace rsl
 #ifdef REX_ENABLE_SIZE_IN_LIST
         --m_size;
 #endif
+        return iterator(next_node->next);
       }
       iterator erase_after(const_iterator first, const_iterator last)
       {
@@ -480,6 +486,8 @@ namespace rsl
           auto current_node = first++;
           erase_after(current_node);
         }
+
+        return first;
       }
       void push_front(const value_type& value)
       {
@@ -528,7 +536,10 @@ namespace rsl
       {
         if(get_allocator() == other.get_allocator())
         {
-          rsl::swap(head(), other.head());
+          internal::forward_list_node_base*& my_head = pre_head_node().next;
+          internal::forward_list_node_base*& other_head = other.pre_head_node().next;
+
+          rsl::swap(my_head, other_head);
           rsl::swap(get_allocator(), other.get_allocator());
 
 #ifdef REX_ENABLE_SIZE_IN_LISTS
@@ -548,53 +559,42 @@ namespace rsl
       void merge() {}
       void splice_after(const_iterator position, this_type& other)
       {
-        if (other.internalNode().mpNext) // If there is anything to splice...
+        if(other.pre_head_node().next) // If there is anything to splice...
         {
-          if (internalAllocator() == other.internalAllocator())
+          if(get_allocator() == other.get_allocator())
           {
-            SListNodeSpliceAfter(SListNodeGetPrevious(&internalNode(), position.mpNode),
-              &other.internalNode(),
-              SListNodeGetPrevious(&x.internalNode(), NULL));
-
-#if REX_ENABLE_SIZE_IN_LISTS
-            mSize += x.mSize;
-            x.mSize = 0;
-#endif
+            internal::forward_list_node_splice_after(internal::forward_lst_node_base_get_previous(&pre_head_node(), position.node()), &other.pre_head_node(), internal::forward_lst_node_base_get_previous(&other.pre_head_node(), NULL));
           }
           else
           {
-            insert(position, x.begin(), x.end());
+            insert_after(position, other.begin(), other.end());
             other.clear();
           }
         }
       }
-      void splice_after(const_iterator position, this_type& other, const_iterator i) 
+      void splice_after(const_iterator position, this_type& other, const_iterator i)
       {
-        if (get_allocator() == other.get_allocator())
+        if(get_allocator() == other.get_allocator())
         {
-          SListNodeSpliceAfter(SListNodeGetPrevious(&pre_head_node(), position.node()),
-            SListNodeGetPrevious(&other.pre_head_node(), i.node()), i.node());
-
-#if REX_ENABLE_SIZE_IN_LISTS
-          ++mSize;
-          --x.mSize;
-#endif
+          internal::forward_list_node_splice_after(
+            internal::forward_lst_node_base_get_previous(&pre_head_node(), position.node()), 
+            internal::forward_lst_node_base_get_previous(&other.pre_head_node(), i.node()), 
+            i.node());
         }
         else
         {
           insert_after(position, *i);
           other.erase_after(i);
         }
-
       }
-      void remove(const value_type& val) 
+      card32 remove(const value_type& val)
       {
         base_node_type* node = &pre_head_node();
         size_type num_erased = 0;
 
-        while (node && node->next)
+        while(node && node->next)
         {
-          if (static_cast<node_type*>(node->next)->value == value)
+          if(static_cast<node_type*>(node->next)->value == val)
           {
             erase_after(const_iterator(node));
             ++num_erased;
@@ -605,33 +605,40 @@ namespace rsl
         return num_erased;
       }
       template <typename Predicate>
-      void remove_if(Predicate pred) 
+      card32 remove_if(Predicate pred)
       {
         base_node_type* node = &pre_head_node();
         size_type num_erased = 0;
 
-        while (node && node->next)
+        while(node && node->next)
         {
-          if (pred(static_cast<node_type*>(node->next)->value))
+          if(pred(static_cast<node_type*>(node->next)->value))
           {
-            erase_after(const_iterator(node)); // This will take care of modifying pNode->mpNext.
+            erase_after(const_iterator(node)); // This will take care of modifying pNode->next.
             ++num_erased;
           }
           else
             node = node->next;
         }
         return num_erased;
-
       }
       void reverse()
       {
         if(head())
         {
-          pre_head_node().next = static_cast<node_type*>(rsl::internal::reverse(static_cast<base_node_type*>(head())));
+          pre_head_node().next = static_cast<node_type*>(rsl::internal::reverse_list(static_cast<base_node_type*>(head())));
         }
       }
       void unique() {}
-      void sort() {}
+      void sort()
+      {
+        rsl::comb_sort(begin(), end());
+      }
+      template <typename Compare>
+      void sort(Compare comp)
+      {
+        rsl::comb_sort(begin(), end(), comp);
+      }
 
     private:
       template <typename... Args>
@@ -675,6 +682,40 @@ namespace rsl
 #endif
       }
 
+      internal::forward_list_node_base* erase_after_impl(internal::forward_list_node_base* pNode)
+      {
+        node_type* const pNodeNext = static_cast<node_type*>((base_node_type*)pNode->next);
+        internal::forward_list_node_base* const pNodeNextNext = (internal::forward_list_node_base*)pNodeNext->next;
+
+        pNode->next = pNodeNextNext;
+        get_allocator().destroy(pNodeTemp);
+        get_allocator().deallocate(pNodeTemp, sizeof(node_type));
+#if EASTL_SLIST_SIZE_CACHE
+        --mSize;
+#endif
+        return pNodeNextNext;
+      }
+
+
+      internal::forward_list_node_base* erase_after_impl(internal::forward_list_node_base* pNode, internal::forward_list_node_base* pNodeLast)
+      {
+        node_type* pNodeCurrent = static_cast<node_type*>((base_node_type*)pNode->next);
+
+        while (pNodeCurrent != (base_node_type*)pNodeLast)
+        {
+          node_type* const pNodeTemp = pNodeCurrent;
+          pNodeCurrent = static_cast<node_type*>((base_node_type*)pNodeCurrent->next);
+          get_allocator().destroy(pNodeTemp);
+          get_allocator().deallocate(pNodeTemp, sizeof(node_type));
+
+#if EASTL_SLIST_SIZE_CACHE
+          --mSize;
+#endif
+        }
+        pNode->next = pNodeLast;
+        return pNodeLast;
+      }
+
       node_type* head()
       {
         return static_cast<node_type*>(pre_head_node().next);
@@ -692,7 +733,7 @@ namespace rsl
         while(node && n > 0)
         {
           --n;
-          node = node->next;
+          node = static_cast<node_type*>(node->next);
         }
 
         return node;
@@ -744,6 +785,30 @@ namespace rsl
     bool operator!=(const forward_list<T, Allocator>& a, const forward_list<T, Allocator>& b)
     {
       return !(a == b);
+    }
+
+    template <typename T, typename Allocator>
+    inline bool operator<(const forward_list<T, Allocator>& a, const forward_list<T, Allocator>& b)
+    {
+      return rsl::lexicographical_compare(a.begin(), a.end(), b.begin(), b.end());
+    }
+
+    template <typename T, typename Allocator>
+    inline bool operator>(const forward_list<T, Allocator>& a, const forward_list<T, Allocator>& b)
+    {
+      return b < a;
+    }
+
+    template <typename T, typename Allocator>
+    inline bool operator<=(const forward_list<T, Allocator>& a, const forward_list<T, Allocator>& b)
+    {
+      return !(b < a);
+    }
+
+    template <typename T, typename Allocator>
+    inline bool operator>=(const forward_list<T, Allocator>& a, const forward_list<T, Allocator>& b)
+    {
+      return !(a < b);
     }
 
     template <typename T, typename Alloc = rsl::allocator>
