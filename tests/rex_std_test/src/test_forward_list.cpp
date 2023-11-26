@@ -421,18 +421,18 @@ TEST_CASE("Test Forward List")
 			CHECK(list1.front().x() == (1 + 2 + 3 + 4));
 		}
 
-		// iterator erase(const_iterator position);
-		// iterator erase(const_iterator first, const_iterator last);
+		// iterator erase_after(const_iterator position);
+		// iterator erase_after(const_iterator first, const_iterator last);
 		{
 			rsl::forward_list<int32> list1 = { 0,1,2,3,4,5,6,7 };
 
 			auto p = list1.begin();
 			p++; p++; p++;
 
-			list1.erase(p);
+			list1.erase_after(p);
 			CHECK(list1 == rsl::forward_list<int32>({ 0,1,2,4,5,6,7 }));
 
-			list1.erase(list1.begin(), list1.end());
+			list1.erase_after(list1.begin(), list1.end());
 			CHECK(list1 == rsl::forward_list<int32>({}));
 			CHECK(list1.empty());
 		}
@@ -496,15 +496,15 @@ TEST_CASE("Test Forward List")
 			CHECK(list1 == list2);
 		}
 
-		// void splice(const_iterator position, this_type& x);
-		// void splice(const_iterator position, this_type& x, const_iterator i);
-		// void splice(const_iterator position, this_type& x, const_iterator first, const_iterator last);
+		// void splice_after(const_iterator position, this_type& x);
+		// void splice_after(const_iterator position, this_type& x, const_iterator i);
+		// void splice_after(const_iterator position, this_type& x, const_iterator first, const_iterator last);
 		{
 			rsl::forward_list<int32> valid = { 0,1,2,3,4,5,6,7 };
 			{
 				rsl::forward_list<int32> list1 = { 0,1,2,3 };
 				rsl::forward_list<int32> list2 = { 4,5,6,7 };
-				list1.splice(list1.end(), list2);
+				list1.splice_after(list1.end(), list2);
 
 				CHECK(list1 == valid);
 			}
@@ -512,40 +512,40 @@ TEST_CASE("Test Forward List")
 				rsl::forward_list<int32> list1 = { 0,1,2,3 };
 				rsl::forward_list<int32> list2 = { 4,5,6,7 };
 
-				list1.splice(list1.begin(), list2, list2.begin());
+				list1.splice_after(list1.begin(), list2, list2.begin());
 				CHECK(list1 == rsl::forward_list<int32>({ 4,0,1,2,3 }));
 				CHECK(list2 == rsl::forward_list<int32>({ 5,6,7 }));
 
-				list1.splice(list1.begin(), list2, list2.begin());
+				list1.splice_after(list1.begin(), list2, list2.begin());
 				CHECK(list1 == rsl::forward_list<int32>({ 5,4,0,1,2,3 }));
 				CHECK(list2 == rsl::forward_list<int32>({ 6,7 }));
 
-				list1.splice(list1.begin(), list2, list2.begin());
+				list1.splice_after(list1.begin(), list2, list2.begin());
 				CHECK(list1 == rsl::forward_list<int32>({ 6,5,4,0,1,2,3 }));
 				CHECK(list2 == rsl::forward_list<int32>({ 7 }));
 
-				list1.splice(list1.begin(), list2, list2.begin());
+				list1.splice_after(list1.begin(), list2, list2.begin());
 				CHECK(list1 == rsl::forward_list<int32>({ 7,6,5,4,0,1,2,3 }));
 				CHECK(list2 == rsl::forward_list<int32>({}));
 			}
 		}
 
-		// void splice(const_iterator position, this_type&& x);
-		// void splice(const_iterator position, this_type&& x, const_iterator i);
-		// void splice(const_iterator position, this_type&& x, const_iterator first, const_iterator last);
+		// void splice_after(const_iterator position, this_type&& x);
+		// void splice_after(const_iterator position, this_type&& x, const_iterator i);
+		// void splice_after(const_iterator position, this_type&& x, const_iterator first, const_iterator last);
 		{
 			{
 				rsl::forward_list<int32> list1 = { 0,1,2,3 };
 				rsl::forward_list<int32> list2 = { 4,5,6,7 };
 
-				list1.splice(list1.begin(), rsl::move(list2));
+				list1.splice_after(list1.begin(), rsl::move(list2));
 				CHECK(list1 == rsl::forward_list<int32>({ 4,5,6,7,0,1,2,3 }));
 			}
 			{
 				rsl::forward_list<int32> list1 = { 0,1,2,3 };
 				rsl::forward_list<int32> list2 = { 4,5,6,7 };
 
-				list1.splice(list1.begin(), rsl::move(list2), list2.begin());
+				list1.splice_after(list1.begin(), rsl::move(list2), list2.begin());
 				CHECK(list1 == rsl::forward_list<int32>({ 4,0,1,2,3 }));
 			}
 			{
@@ -557,7 +557,7 @@ TEST_CASE("Test Forward List")
 				e = list2.previous(e);
 				e = list2.previous(e);
 
-				list1.splice(list1.begin(), rsl::move(list2), b, e);
+				list1.splice_after(list1.begin(), rsl::move(list2), b, e);
 				CHECK(list1 == rsl::forward_list<int32>({ 4,5,0,1,2,3 }));
 			}
 		}
@@ -632,7 +632,7 @@ TEST_CASE("Test Forward List")
 			CHECK(sizeof(list1) < sizeof(list2));
 		
 
-		{ // Test erase / erase_if
+		{ // Test erase_after / erase_if
 			{
 				rsl::forward_list<int32> l = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 

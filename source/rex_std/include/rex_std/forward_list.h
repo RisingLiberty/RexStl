@@ -81,6 +81,10 @@ namespace rsl
 
         T value;
       };
+
+      forward_list_node_base* forward_lst_node_base_get_previous(forward_list_node_base* pNodeBase, const forward_list_node_base* pNode);
+      const forward_list_node_base* forward_lst_node_base_get_previous(const forward_list_node_base* pNodeBase, const forward_list_node_base* pNode);
+
     } // namespace internal
 
     template <typename T, typename Allocator>
@@ -542,9 +546,83 @@ namespace rsl
       // operations
       // TODO: implement operations
       void merge() {}
-      void splice_after() {}
-      void remove() {}
-      void remove_if() {}
+      void splice_after(const_iterator position, this_type& other)
+      {
+        if (other.internalNode().mpNext) // If there is anything to splice...
+        {
+          if (internalAllocator() == other.internalAllocator())
+          {
+            SListNodeSpliceAfter(SListNodeGetPrevious(&internalNode(), position.mpNode),
+              &other.internalNode(),
+              SListNodeGetPrevious(&x.internalNode(), NULL));
+
+#if REX_ENABLE_SIZE_IN_LISTS
+            mSize += x.mSize;
+            x.mSize = 0;
+#endif
+          }
+          else
+          {
+            insert(position, x.begin(), x.end());
+            other.clear();
+          }
+        }
+      }
+      void splice_after(const_iterator position, this_type& other, const_iterator i) 
+      {
+        if (get_allocator() == other.get_allocator())
+        {
+          SListNodeSpliceAfter(SListNodeGetPrevious(&pre_head_node(), position.node()),
+            SListNodeGetPrevious(&other.pre_head_node(), i.node()), i.node());
+
+#if REX_ENABLE_SIZE_IN_LISTS
+          ++mSize;
+          --x.mSize;
+#endif
+        }
+        else
+        {
+          insert_after(position, *i);
+          other.erase_after(i);
+        }
+
+      }
+      void remove(const value_type& val) 
+      {
+        base_node_type* node = &pre_head_node();
+        size_type num_erased = 0;
+
+        while (node && node->next)
+        {
+          if (static_cast<node_type*>(node->next)->value == value)
+          {
+            erase_after(const_iterator(node));
+            ++num_erased;
+          }
+          else
+            node = node->next;
+        }
+        return num_erased;
+      }
+      template <typename Predicate>
+      void remove_if(Predicate pred) 
+      {
+        base_node_type* node = &pre_head_node();
+        size_type num_erased = 0;
+
+        while (node && node->next)
+        {
+          if (pred(static_cast<node_type*>(node->next)->value))
+          {
+            erase_after(const_iterator(node)); // This will take care of modifying pNode->mpNext.
+            ++num_erased;
+          }
+          else
+            node = node->next;
+        }
+        return num_erased;
+
+      }
       void reverse()
       {
         if(head())
@@ -670,6 +748,20 @@ namespace rsl
 
     template <typename T, typename Alloc = rsl::allocator>
     forward_list(T...) -> forward_list<T, Alloc>;
+
+    template <class T, class Allocator, class U>
+    typename forward_list<T, Allocator>::size_type erase(forward_list<T, Allocator>& c, const U& value)
+    {
+      // Erases all elements that compare equal to value from the container.
+      return c.remove(value);
+    }
+
+    template <class T, class Allocator, class Predicate>
+    typename forward_list<T, Allocator>::size_type erase_if(forward_list<T, Allocator>& c, Predicate predicate)
+    {
+      // Erases all elements that satisfy the predicate pred from the container.
+      return c.remove_if(predicate);
+    }
 
   } // namespace v1
 } // namespace rsl
