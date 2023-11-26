@@ -783,11 +783,6 @@ public abstract class BasicCSProject : CSharpProject
 // All projects sitting in the tests directory should inherit from this
 public class TestProject : BasicCPPProject
 {
-  protected override void SetupSolutionFolder(RexConfiguration conf, RexTarget target)
-  {
-    conf.SolutionFolder = "5_tests";
-  }
-
   protected override void SetupConfigRules(RexConfiguration conf, RexTarget target)
   {
     switch (target.Config)
