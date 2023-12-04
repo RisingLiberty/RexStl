@@ -1254,9 +1254,10 @@ namespace rsl
         // then swap the contents, reassign the pointers
         if(is_using_sso_string() && other.is_using_sso_string())
         {
+          auto my_old_length = length();
           rsl::swap(m_sso_buffer, other.m_sso_buffer);
           this->reset(m_sso_buffer.data(), other.length(), m_sso_buffer.max_size());
-          other.reset(other.m_sso_buffer.data(), length(), other.m_sso_buffer.max_size());
+          other.reset(other.m_sso_buffer.data(), my_old_length, other.m_sso_buffer.max_size());
         }
         // one is using heap memory, one is using the sso buffer
         else if(is_using_big_string() != other.is_using_big_string())
