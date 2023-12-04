@@ -1914,7 +1914,9 @@ TEST_CASE("string swap")
   using namespace rsl::test;
 
   rsl::test::test_string heap_string("this is a very long string that'll for sure get allocated on the heap");
+  rsl::test::test_string heap_string2("this is also a very long string that'll for sure get allocated on the heap");
   rsl::test::test_string stack_string;
+  rsl::test::test_string stack_string2("small string");
 
   {
     rsl::test::test_string str(heap_string);
@@ -1958,7 +1960,7 @@ TEST_CASE("string swap")
 
   {
     rsl::test::test_string str5(stack_string);
-    rsl::test::test_string str6(stack_string);
+    rsl::test::test_string str6(stack_string2);
 
     card32 pre_num_allocs = rsl::test::test_allocator::all_num_allocs();
     card32 pre_num_bytes_allocated = rsl::test::test_allocator::all_num_bytes_allocated();
@@ -1966,9 +1968,9 @@ TEST_CASE("string swap")
 
     str5.swap(str6);
 
-    CHECK(str5 == stack_string);
+    CHECK(str5 == stack_string2);
     CHECK(str6 == stack_string);
-    CHECK(str5.size() == stack_string.size());
+    CHECK(str5.size() == stack_string2.size());
     CHECK(str6.size() == stack_string.size());
 
     CHECK(rsl::test::test_allocator::all_num_allocs() == pre_num_allocs);
