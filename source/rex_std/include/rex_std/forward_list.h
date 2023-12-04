@@ -42,15 +42,17 @@ namespace rsl
         {
         }
 
+        // insert this node after the node specified
         void insert_after(forward_list_node_base* node)
         {
           next       = node->next;
           node->next = this;
         }
 
+        // erase my next node and replace it with the node specified
         void erase_after(forward_list_node_base* node)
         {
-          node->next = node->next->next;
+          next = node;
         }
       };
 
@@ -75,6 +77,7 @@ namespace rsl
       const forward_list_node_base* forward_lst_node_base_get_previous(const forward_list_node_base* pNodeBase, const forward_list_node_base* pNode);
       void forward_list_node_splice_after(forward_list_node_base* pNode, forward_list_node_base* pNodeBeforeFirst, forward_list_node_base* pNodeBeforeLast);
       void forward_list_node_splice_after(forward_list_node_base* pNode, forward_list_node_base* pNodeBase);
+      void forward_list_node_splice_single_after(forward_list_node_base* pNode, forward_list_node_base* otherHead, forward_list_node_base* toMove);
 
     } // namespace internal
 
@@ -175,6 +178,12 @@ namespace rsl
     /// while insertion and erasing, which happens more often, would become slower, we don't have a size function
     /// for both the single list and the double linked list.
 
+    // Overview of the implementation of the single linked list
+    //
+    // [ Implicit Node ]  ---- [ Node ] ---- [ Node ] ---- .. ---- [ Node ]
+    //  Always Available         Head         Head + 1             Last Node
+    //
+
     template <typename T, typename Alloc = rsl::allocator>
     class forward_list
     {
@@ -230,7 +239,7 @@ namespace rsl
           , m_size(0)
 #endif
       {
-        insert_after(end(), first, last);
+        insert_after(before_begin(), first, last);
       }
       forward_list(const forward_list& other)
         : m_cp_pre_head_node_and_allocator(other.get_allocator())
@@ -238,7 +247,7 @@ namespace rsl
         , m_size(other.m_size)
 #endif
       {
-        insert_after(end(), other.cbegin(), other.cend());
+        insert_after(before_begin(), other.cbegin(), other.cend());
       }
       forward_list(const forward_list& other, const allocator_type& alloc)
         : m_cp_pre_head_node_and_allocator(alloc)
@@ -246,7 +255,7 @@ namespace rsl
         , m_size(other.m_size)
 #endif
       {
-        insert_after(end(), other.cbegin(), other.cend());
+        insert_after(before_begin(), other.cbegin(), other.cend());
       }
       forward_list(forward_list&& other)
           : m_cp_pre_head_node_and_allocator(rsl::move(other.get_allocator()))
@@ -331,7 +340,7 @@ namespace rsl
 
         if(first != last)
         {
-          emplace_n_after_impl_from_it(prev_node, static_cast<card32>(rsl::distance(first, last)), last);
+          emplace_n_after_impl_from_it(prev_node, static_cast<card32>(rsl::distance(first, last)), first);
         }
         else
         {
@@ -427,9 +436,8 @@ namespace rsl
           get_allocator().deallocate(tmp_node, sizeof(node_type));
         }
 
-#ifdef REX_ENABLE_SIZE_IN_LISTS
-        m_size = 0;
-#endif
+        // set the head to nullptr
+        pre_head_node().next = nullptr;;
       }
       iterator insert_after(const_iterator pos, const_reference value)
       {
@@ -444,14 +452,16 @@ namespace rsl
         while(count > 0)
         {
           emplace_after_impl(pos.m_node, value);
+          --count;
         }
       }
       template <typename InputIt>
       iterator insert_after(const_iterator pos, InputIt first, InputIt last)
       {
+        auto node = pos.m_node;
         while(first != last)
         {
-          emplace_after_impl(pos.m_node, *first);
+          node = emplace_after_impl(node, *first).node();
           ++first;
         }
 
@@ -468,7 +478,7 @@ namespace rsl
       }
       iterator erase_after(const_iterator pos)
       {
-        node_type* next_node = static_cast<node_type*>(pos.m_node->next);
+        node_type* next_node = static_cast<node_type*>(pos.m_node->next); // node to erase
         pos.m_node->erase_after(next_node->next);
 
         get_allocator().destroy(next_node);
@@ -481,10 +491,12 @@ namespace rsl
       }
       iterator erase_after(const_iterator first, const_iterator last)
       {
-        while(first != last)
+        auto it = first;
+        auto next_it = ++first;
+        while(next_it != last)
         {
-          auto current_node = first++;
-          erase_after(current_node);
+          erase_after(it);
+          next_it = const_iterator(it.node()->next);
         }
 
         return first;
@@ -529,7 +541,7 @@ namespace rsl
         }
         else
         {
-          emplace_after(const_iterator(node), value);
+          emplace_n_after_impl(const_iterator(node), count, value);
         }
       }
       void swap(this_type& other)
@@ -556,14 +568,15 @@ namespace rsl
 
       // operations
       // TODO: implement operations
-      void merge() {}
+      //void merge() {}
+
       void splice_after(const_iterator position, this_type& other)
       {
         if(other.pre_head_node().next) // If there is anything to splice...
         {
           if(get_allocator() == other.get_allocator())
           {
-            internal::forward_list_node_splice_after(internal::forward_lst_node_base_get_previous(&pre_head_node(), position.node()), &other.pre_head_node(), internal::forward_lst_node_base_get_previous(&other.pre_head_node(), NULL));
+            internal::forward_list_node_splice_after(position.node(), other.before_begin().node());
           }
           else
           {
@@ -576,10 +589,7 @@ namespace rsl
       {
         if(get_allocator() == other.get_allocator())
         {
-          internal::forward_list_node_splice_after(
-            internal::forward_lst_node_base_get_previous(&pre_head_node(), position.node()), 
-            internal::forward_lst_node_base_get_previous(&other.pre_head_node(), i.node()), 
-            i.node());
+          internal::forward_list_node_splice_single_after(position.node(), other.before_begin().node(), i.node()->next);
         }
         else
         {
@@ -652,7 +662,7 @@ namespace rsl
         ++m_size;
 #endif
 
-        return node;
+        return new_node;
       }
 
       template <typename Iterator>
@@ -660,7 +670,7 @@ namespace rsl
       {
         while(count-- > 0)
         {
-          emplace_after_impl(node, *it);
+          node = emplace_after_impl(node, *it);
           ++it;
         }
       }
@@ -728,9 +738,9 @@ namespace rsl
       // Find's the nth node or end if n > size
       node_type* find_nth(size_type n)
       {
-        node_type* node = head();
+        node_type* node = static_cast<node_type*>(&pre_head_node());
 
-        while(node && n > 0)
+        while(node->next && n > 0)
         {
           --n;
           node = static_cast<node_type*>(node->next);

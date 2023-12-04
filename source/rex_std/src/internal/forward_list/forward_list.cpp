@@ -50,20 +50,33 @@ namespace rsl
         }
       }
 
+      void forward_list_node_splice_single_after(forward_list_node_base* pNode, forward_list_node_base* otherHead, forward_list_node_base* toMove)
+      {
+        if (pNode != toMove && pNode != toMove->next)
+        {
+          forward_list_node_base* const node_before_to_move = forward_lst_node_base_get_previous(otherHead, toMove);
+          node_before_to_move->next = toMove->next; // unlink from original list
+
+          // insert into our list
+          toMove->next = pNode->next;
+          pNode->next = toMove;
+        }
+      }
+
       forward_list_node_base* reverse_list(forward_list_node_base* node)
       {
-        forward_list_node_base* head = node;
-        forward_list_node_base* next = head->next;
-        head->next = nullptr;
-        while (next)
+        forward_list_node_base* first_node = node;
+        node = node->next;
+        first_node->next = nullptr;
+        while (node)
         {
-          forward_list_node_base* tmp = next;
-          next = head;
-          head = node;
+          forward_list_node_base* tmp = node->next;
+          node->next = first_node;
+          first_node = node;
           node = tmp;
         }
 
-        return head;
+        return first_node;
       }
     } // namespace internal
   }   // namespace v1
