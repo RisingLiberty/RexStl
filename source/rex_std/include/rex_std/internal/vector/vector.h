@@ -223,9 +223,18 @@ namespace rsl
         m_end = m_begin + count;
       }
       // Replaces the contents with copies of those in the range
-      void assign(const_iterator begin, const_iterator last)
+      template <typename It>
+      void assign(It begin, It last)
       {
         copy_range(begin, last);
+      }
+      /// RSL Comment: Not in ISO C++ Standard at time of writing (06/Dec/2023)
+      // The standard does not have this overload but we found it useful to have this.
+      // Replaces the contents with copies of those in the range
+      template <typename It>
+      void assign(It begin, size_type count)
+      {
+        copy_range(begin, count);
       }
       // Replaces the contents with the elements from the initializer list.
       void assign(rsl::initializer_list<T> ilist)
@@ -769,7 +778,15 @@ namespace rsl
       {
         const difference_type count = static_cast<difference_type>(rsl::distance(first, last));
 
-        // we need to aqcuire a bigger buffer, so let's do the following
+        copy_range(first, count);
+      }
+
+      // resizes if necessary
+      // copies n elements starting from it into the internal buffer, starting from m_begin
+      template <typename It>
+      void copy_range(It first, size_type count)
+      {
+        // we need to acquire a bigger buffer, so let's do the following
         // 1. deallocate our current one.
         // 2. allocate a new buffer to fit the required number of elements
         // 3. copy over the elements into the new buffer
@@ -802,7 +819,6 @@ namespace rsl
         }
         m_end = m_begin + count;
       }
-
       // resizes if necessary
       // moves the range to the internal element starting at m_begin
       template <typename It>
