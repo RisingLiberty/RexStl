@@ -1205,6 +1205,19 @@ namespace rsl
         count2 = obj_length_or_count(sv, count2, pos2);
         return replace(pos, count, sv.data() + pos2, count2);
       }
+      /// RSL Comment: Not in ISO C++ Standard at time of writing (01/Jul/2022)
+      // Replaces all occurrences of "from" to "to" in the current string.
+      // Be careful as this might do a few reallocations if "to" is larger than "from"
+      basic_string& replace(rsl::string_view from, rsl::string_view to)
+      {
+        size_type pos = 0;
+        while ((pos = find(from, pos)) != npos())
+        {
+          replace(pos, from.length(), to);
+        }
+
+        return *this;
+      }
 
       /// RSL Comment: Different from ISO C++ Standard at time of writing (03/Jul/2022)
       // Instead of returning a basic_string, this function returns a basic_string_view
