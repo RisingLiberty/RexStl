@@ -21,6 +21,11 @@ namespace rsl
         }
       }
 
+      if (start != str.size())
+      {
+        result.push_back(str.substr(start));
+      }
+      
       return result;
     }
   }
