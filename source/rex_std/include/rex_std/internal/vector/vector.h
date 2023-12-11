@@ -223,7 +223,7 @@ namespace rsl
         m_end = m_begin + count;
       }
       // Replaces the contents with copies of those in the range
-      template <typename It>
+      template <typename It, rsl::enable_if_t<!rsl::is_arithmetic_v<It>, bool> = true>
       void assign(It begin, It last)
       {
         copy_range(begin, last);
@@ -231,7 +231,7 @@ namespace rsl
       /// RSL Comment: Not in ISO C++ Standard at time of writing (06/Dec/2023)
       // The standard does not have this overload but we found it useful to have this.
       // Replaces the contents with copies of those in the range
-      template <typename It>
+      template <typename It, rsl::enable_if_t<!rsl::is_arithmetic_v<It>, bool> = true>
       void assign(It begin, size_type count)
       {
         copy_range(begin, count);
