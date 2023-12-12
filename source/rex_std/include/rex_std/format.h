@@ -4481,6 +4481,11 @@ namespace detail {
           res += sep;
         }
 
+        if (!res.empty())
+        {
+          res.resize(res.size() - sep.length());
+        }
+        
         return res;
       }
     };
