@@ -33,7 +33,7 @@ void rsl::stack_allocator::deallocate(pointer /*ptr*/, const size_type /*size*/)
 
 void rsl::stack_allocator::reset()
 {
-  set_market(0);
+  set_marker(0);
 }
 
 rsl::StackMarker rsl::stack_allocator::current_marker() const
@@ -41,7 +41,7 @@ rsl::StackMarker rsl::stack_allocator::current_marker() const
   return m_current_marker;
 }
 
-void rsl::stack_allocator::set_market(StackMarker marker)
+void rsl::stack_allocator::set_marker(StackMarker marker)
 {
   m_current_marker = marker;
 }

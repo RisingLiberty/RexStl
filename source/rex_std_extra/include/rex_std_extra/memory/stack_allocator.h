@@ -40,7 +40,7 @@ namespace rsl
       void reset();
 
       StackMarker current_marker() const;
-      void set_market(StackMarker marker);
+      void set_marker(StackMarker marker);
 
     private:
       rsl::unique_array<rsl::byte> m_base_ptr;
