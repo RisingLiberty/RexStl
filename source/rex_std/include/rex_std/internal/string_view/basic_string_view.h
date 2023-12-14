@@ -291,8 +291,13 @@ namespace rsl
         {
           return false;
         }
-        
-        return rsl::string_utils::compare<traits_type>(data() + (length() - rhs.size()), rhs.data(), (length() - rhs.size()), rhs.length()) == 0;
+
+        auto lhs_ptr = data() + (length() - rhs.size());
+        auto rhs_ptr = rhs.data();
+        auto lhs_size = rhs.length();
+        auto rhs_size = rhs.length();
+
+        return rsl::string_utils::compare<traits_type>(lhs_ptr, rhs_ptr, lhs_size, rhs_size) == 0;
       }
       // checks if the string view ends with the given suffix
       template <typename T, typename rsl::enable_if_t<rsl::is_same_v<T, CharType>, bool> = true>

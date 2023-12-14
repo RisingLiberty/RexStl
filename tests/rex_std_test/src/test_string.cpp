@@ -3103,8 +3103,8 @@ TEST_CASE("string ends with")
   {
     rsl::test::test_string str("Hello World");
     const char8* empty = "";
-    CHECK(str.ends_with("") == false);
-    CHECK(str.ends_with(empty) == false);
+    CHECK(str.ends_with("") == true);
+    CHECK(str.ends_with(empty) == true);
   }
 }
 TEST_CASE("string contains")
