@@ -15,7 +15,11 @@ namespace rsl
         {
           if (c == d)
           {
-            result.push_back(str.substr(start, i - start));
+            rsl::string_view sub_str = str.substr(start, i - start);
+            if (!sub_str.empty())
+            {
+              result.push_back(str.substr(start, i - start));
+            }
             start = i + 1;
           }
         }
