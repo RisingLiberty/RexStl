@@ -49,10 +49,11 @@
   },
   "IDE": {
     "Description": "Select which IDE to use. Visual Studio is the default.",
-    "Value": "Visual Studio",
+    "Value": "None",
     "Options": [
       "VisualStudio",
-      "VSCode"
+      "VSCode",
+      "None"
     ]
   },
   "disable-clang-tidy-for-thirdparty": {
