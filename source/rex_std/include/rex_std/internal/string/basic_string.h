@@ -987,7 +987,12 @@ namespace rsl
       // checks if the string ends with the given suffix
       REX_NO_DISCARD bool ends_with(basic_string_view<value_type, traits_type> sv) const
       {
-        return traits_type::compare(data() + (size() - sv.length()), sv.data(), sv.length()) == 0;
+        if (length() < rhs.length())
+        {
+          return false;
+        }
+        
+        return rsl::string_utils::compare<traits_type>(data() + (length() - rhs.size()), rhs.data(), (length() - rhs.size()), rhs.length()) == 0;
       }
       // checks if the string ends with the given suffix
       REX_NO_DISCARD bool ends_with(value_type c) const

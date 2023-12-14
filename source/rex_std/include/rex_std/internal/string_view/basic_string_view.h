@@ -287,7 +287,12 @@ namespace rsl
       // checks if the string view ends with the given suffix
       REX_NO_DISCARD constexpr bool ends_with(const basic_string_view rhs) const
       {
-        return rsl::string_utils::compare<traits_type>(data() + (length() - rhs.size()), rhs.data(), rhs.length(), rhs.length()) == 0;
+        if (length() < rhs.length())
+        {
+          return false;
+        }
+        
+        return rsl::string_utils::compare<traits_type>(data() + (length() - rhs.size()), rhs.data(), (length() - rhs.size()), rhs.length()) == 0;
       }
       // checks if the string view ends with the given suffix
       template <typename T, typename rsl::enable_if_t<rsl::is_same_v<T, CharType>, bool> = true>
