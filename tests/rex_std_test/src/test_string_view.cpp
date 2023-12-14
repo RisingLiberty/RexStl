@@ -226,16 +226,38 @@ TEST_CASE("string view starts with")
 }
 TEST_CASE("string view ends with")
 {
-  rsl::string_view str("Hello World");
-  const char8* hello = "Hello";
-  const char8* world = "World";
-  CHECK(str.ends_with("Hello") == false);
-  CHECK(str.ends_with(hello) == false);
-  CHECK(str.ends_with('H') == false);
+  {
+    rsl::string_view str("Hello World");
+    const char8* hello = "Hello";
+    const char8* world = "World";
+    CHECK(str.ends_with("Hello") == false);
+    CHECK(str.ends_with(hello) == false);
+    CHECK(str.ends_with('H') == false);
 
-  CHECK(str.ends_with("World") == true);
-  CHECK(str.ends_with(world) == true);
-  CHECK(str.ends_with('d') == true);
+    CHECK(str.ends_with("World") == true);
+    CHECK(str.ends_with(world) == true);
+    CHECK(str.ends_with('d') == true);
+  }
+
+  {
+    rsl::string_view str;
+    const char8* hello = "Hello";
+    const char8* world = "World";
+    CHECK(str.ends_with("Hello") == false);
+    CHECK(str.ends_with(hello) == false);
+    CHECK(str.ends_with('H') == false);
+
+    CHECK(str.ends_with("World") == false);
+    CHECK(str.ends_with(world) == false);
+    CHECK(str.ends_with('d') == false);
+  }
+
+  {
+    rsl::string_view str("Hello World");
+    const char8* empty = "";
+    CHECK(str.ends_with("") == false);
+    CHECK(str.ends_with(empty) == false);
+  }
 }
 TEST_CASE("string view contains")
 {

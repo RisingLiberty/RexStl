@@ -3074,16 +3074,38 @@ TEST_CASE("string ends with")
 {
   using namespace rsl::test;
 
-  rsl::test::test_string str("Hello World");
-  const char8* hello = "Hello";
-  const char8* world = "World";
-  CHECK(str.ends_with("Hello") == false);
-  CHECK(str.ends_with(hello) == false);
-  CHECK(str.ends_with('H') == false);
+  {
+    rsl::test::test_string str("Hello World");
+    const char8* hello = "Hello";
+    const char8* world = "World";
+    CHECK(str.ends_with("Hello") == false);
+    CHECK(str.ends_with(hello) == false);
+    CHECK(str.ends_with('H') == false);
 
-  CHECK(str.ends_with("World") == true);
-  CHECK(str.ends_with(world) == true);
-  CHECK(str.ends_with('d') == true);
+    CHECK(str.ends_with("World") == true);
+    CHECK(str.ends_with(world) == true);
+    CHECK(str.ends_with('d') == true);
+  }
+
+  {
+    rsl::test::test_string str;
+    const char8* hello = "Hello";
+    const char8* world = "World";
+    CHECK(str.ends_with("Hello") == false);
+    CHECK(str.ends_with(hello) == false);
+    CHECK(str.ends_with('H') == false);
+
+    CHECK(str.ends_with("World") == false);
+    CHECK(str.ends_with(world) == false);
+    CHECK(str.ends_with('d') == false);
+  }
+
+  {
+    rsl::test::test_string str("Hello World");
+    const char8* empty = "";
+    CHECK(str.ends_with("") == false);
+    CHECK(str.ends_with(empty) == false);
+  }
 }
 TEST_CASE("string contains")
 {
