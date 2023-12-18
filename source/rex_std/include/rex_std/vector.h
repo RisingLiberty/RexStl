@@ -12,5 +12,17 @@
 
 #pragma once
 
+// Forward declare here to avoid annoying compiler errors caused by include orders
+namespace rsl 
+{
+    inline namespace v1
+    {
+        class allocator;
+
+        template <typename T, typename Allocator = allocator>
+        class vector;
+    }
+}
+
 #include "rex_std/internal/assert/assert_impl.h"
 #include "rex_std/internal/vector/vector.h"

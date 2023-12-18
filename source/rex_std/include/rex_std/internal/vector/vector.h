@@ -40,7 +40,7 @@ namespace rsl
     /// RSL Comment: Different from ISO C++ Standard at time of writing (27/Jun/2022)
     // RSL vector also has the numerator and denumerator which used to expand the vector in case of reallocation.
     // by default, the vector's capacity is doubled.
-    template <typename T, typename Allocator = rsl::allocator>
+    template <typename T, typename Allocator>
     class vector
     {
     private:
