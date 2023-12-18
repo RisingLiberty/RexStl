@@ -6,7 +6,7 @@
 // Twitter: @nick_debreuck
 //
 // File: diagnostics.h
-// Copyright � Nick De Breuck 2023
+// Copyright (c) Nick De Breuck 2023
 //
 // ============================================
 
