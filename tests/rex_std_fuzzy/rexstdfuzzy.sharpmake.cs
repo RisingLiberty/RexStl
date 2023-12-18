@@ -11,6 +11,8 @@ public class RexStdFuzzy : TestProject
 
     string ThisFileFolder = Path.GetDirectoryName(Utils.CurrentFile());
     SourceRootPath = ThisFileFolder;
+
+    ProjectType = ProjectGen.TestProjectType.Fuzzy;
   }
 
   protected override void SetupLibDependencies(RexConfiguration conf, RexTarget target)
