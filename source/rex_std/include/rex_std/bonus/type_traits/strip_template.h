@@ -23,17 +23,17 @@
 // -----------------------------------------------------------------------------------------
 //   using first_tuple = std::tuple<int, int, int>;
 //   using second_tuple = rsl::change_template_t<first_tuple, float, float>;
-// 
+//
 //   static_assert(rsl::is_same_v<second_tuple, std::tuple<float, float>>, "new type");
-// 
+//
 //   rsl::hash<rsl::string> str_hash;
 //   using type = rsl::change_template_t<decltype(str_hash), rsl::string_view>;
-// 
+//
 //   static_assert(rsl::is_same_v<type, rsl::hash<rsl::string_view>>, "new type");
-// 
+//
 //   rsl::unordered_map<rsl::string, int> my_map;
 //   rsl::string_view view = "";
-//   
+//
 //   my_map.find(view);
 // -----------------------------------------------------------------------------------------
 

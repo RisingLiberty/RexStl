@@ -12,11 +12,11 @@
 
 #pragma once
 
+#include "rex_std/array.h"
+#include "rex_std/bit.h"
+#include "rex_std/bonus/string/stack_string.h"
 #include "rex_std/bonus/types.h"
 #include "rex_std/limits.h"
-#include "rex_std/bit.h"
-#include "rex_std/array.h"
-#include "rex_std/bonus/string/stack_string.h"
 
 namespace rsl
 {
@@ -32,8 +32,8 @@ namespace rsl
         using this_type = bitset_base<N, WordType>;
         using size_type = card32;
 
-        static constexpr size_type BitsPerWord = limits_byte::num_bits_per_byte * sizeof(word_type);
-        static constexpr size_type BitsPerWordMask = BitsPerWord - 1;
+        static constexpr size_type BitsPerWord      = limits_byte::num_bits_per_byte * sizeof(word_type);
+        static constexpr size_type BitsPerWordMask  = BitsPerWord - 1;
         static constexpr size_type BitsPerWordShift = ((BitsPerWord == 8) ? 3 : ((BitsPerWord == 16) ? 4 : ((BitsPerWord == 32) ? 5 : (((BitsPerWord == 64) ? 6 : 7)))));
 
       public:
@@ -49,21 +49,21 @@ namespace rsl
 
         void operator&=(const this_type& other)
         {
-          for (size_type i = 0; i < N; ++i)
+          for(size_type i = 0; i < N; ++i)
           {
             m_word[i] &= other.m_word[i];
           }
         }
         void operator|=(const this_type& other)
         {
-          for (size_type i = 0; i < N; ++i)
+          for(size_type i = 0; i < N; ++i)
           {
             m_word[i] |= other.m_word[i];
           }
         }
         void operator^=(const this_type& other)
         {
-          for (size_type i = 0; i < N; ++i)
+          for(size_type i = 0; i < N; ++i)
           {
             m_word[i] ^= other.m_word[i];
           }
@@ -73,17 +73,17 @@ namespace rsl
         {
           const size_type word_shift = static_cast<size_type>(n >> BitsPerWordShift);
 
-          if (word_shift)
+          if(word_shift)
           {
-            for (size_type i = static_cast<size_type>(N - 1); i >= 0; --i)
+            for(size_type i = static_cast<size_type>(N - 1); i >= 0; --i)
             {
               m_word[i] = (word_shift <= static_cast<size_type>(i)) ? m_word[i - word_shift] : static_cast<word_type>(0);
             }
           }
 
-          if (n &= BitsPerWordMask)
+          if(n &= BitsPerWordMask)
           {
-            for (size_type i = (N - 1); i > 0; --i)
+            for(size_type i = (N - 1); i > 0; --i)
             {
               m_word[i] = static_cast<word_type>(m_word[i] << n) | (m_word[i - 1] >> (BitsPerWord - n));
             }
@@ -94,17 +94,17 @@ namespace rsl
         {
           const size_type word_shift = static_cast<size_type>(n >> BitsPerWordShift);
 
-          if (word_shift)
+          if(word_shift)
           {
-            for (size_type i = 0; i < N; ++i)
+            for(size_type i = 0; i < N; ++i)
             {
               m_word[i] = ((word_shift < (N - i)) ? m_word[i + word_shift] : static_cast<word_type>(0));
             }
           }
 
-          if (n &= BitsPerWordMask)
+          if(n &= BitsPerWordMask)
           {
-            for (size_type i = 0; i < (N - 1); ++i)
+            for(size_type i = 0; i < (N - 1); ++i)
             {
               m_word[i] = static_cast<word_type>((m_word[i] >> n) | (m_word[i + 1] << (BitsPerWord - n)));
             }
@@ -114,21 +114,21 @@ namespace rsl
 
         void flip()
         {
-          for (size_type i = 0; i < N; ++i)
+          for(size_type i = 0; i < N; ++i)
           {
             m_word[i] = ~m_word[i];
           }
         }
         void set()
         {
-          for (size_type i = 0; i < N; ++i)
+          for(size_type i = 0; i < N; ++i)
           {
             m_word[i] = static_cast<word_type>(~static_cast<word_type>(0));
           }
         }
         void set(size_type idx, bool value)
         {
-          if (value)
+          if(value)
           {
             m_word[idx >> BitsPerWordShift] |= (static_cast<word_type>(1) << (idx & BitsPerWordMask));
           }
@@ -139,13 +139,13 @@ namespace rsl
         }
         void reset()
         {
-          if constexpr (N > 16)
+          if constexpr(N > 16)
           {
             rsl::memset(m_word.data(), 0, sizeof(m_word));
           }
           else
           {
-            for (size_type i = 0; i < N; ++i)
+            for(size_type i = 0; i < N; ++i)
             {
               m_word[i] = 0;
             }
@@ -154,9 +154,9 @@ namespace rsl
 
         bool operator==(const this_type& other) const
         {
-          for (size_type i = 0; i < N; ++i)
+          for(size_type i = 0; i < N; ++i)
           {
-            if (m_word[i] != other.m_word[i])
+            if(m_word[i] != other.m_word[i])
             {
               return false;
             }
@@ -171,9 +171,9 @@ namespace rsl
 
         bool any() const
         {
-          for (size_type i = 0; i < N; i++)
+          for(size_type i = 0; i < N; i++)
           {
-            if (m_word[i])
+            if(m_word[i])
             {
               return true;
             }
@@ -187,7 +187,7 @@ namespace rsl
         size_type count() const
         {
           size_type res = 0;
-          for (size_type i = 0; i < N; ++i)
+          for(size_type i = 0; i < N; ++i)
           {
             res += rsl::popcount(m_word[i]);
           }
@@ -214,11 +214,11 @@ namespace rsl
         // we use a stack_string instead.
         rsl::stack_string<char8, N * BitsPerWord> to_string() const
         {
-          rsl::stack_string<char8, N* BitsPerWord> res{};
-          
-          for (size_type i = 0; i < size(); ++i)
+          rsl::stack_string<char8, N * BitsPerWord> res {};
+
+          for(size_type i = 0; i < size(); ++i)
           {
-            if ((*this)[i])
+            if((*this)[i])
               res[size() - 1 - i] = '1';
           }
 
@@ -247,8 +247,8 @@ namespace rsl
         using this_type = bitset_base<1, WordType>;
         using size_type = card32;
 
-        static constexpr size_type BitsPerWord = limits_byte::num_bits_per_byte * sizeof(word_type);
-        static constexpr size_type BitsPerWordMask = BitsPerWord - 1;
+        static constexpr size_type BitsPerWord      = limits_byte::num_bits_per_byte * sizeof(word_type);
+        static constexpr size_type BitsPerWordMask  = BitsPerWord - 1;
         static constexpr size_type BitsPerWordShift = ((BitsPerWord == 8) ? 3 : ((BitsPerWord == 16) ? 4 : ((BitsPerWord == 32) ? 5 : (((BitsPerWord == 64) ? 6 : 7)))));
 
       public:
@@ -293,7 +293,7 @@ namespace rsl
         }
         void set(size_type idx, bool value)
         {
-          if (value)
+          if(value)
           {
             m_word.front() |= (static_cast<word_type>(1) << idx);
           }
@@ -323,7 +323,7 @@ namespace rsl
         size_type count() const
         {
           size_type n = 0;
-          for (word_type w = m_word.front(); w; w >>= 4)
+          for(word_type w = m_word.front(); w; w >>= 4)
           {
             n += rsl::popcount(w & 0xF);
           }
@@ -352,11 +352,11 @@ namespace rsl
         // we use a stack_string instead.
         rsl::stack_string<char8, 1 * BitsPerWord> to_string() const
         {
-          rsl::stack_string<char8, N * BitsPerWord> res{};
+          rsl::stack_string<char8, N * BitsPerWord> res {};
 
-          for (size_type i = 0; i < size(); ++i)
+          for(size_type i = 0; i < size(); ++i)
           {
-            if ((*this)[i])
+            if((*this)[i])
               res[size() - 1 - i] = '1';
           }
 
@@ -385,8 +385,8 @@ namespace rsl
         using this_type = bitset_base<2, WordType>;
         using size_type = card32;
 
-        static constexpr size_type BitsPerWord = limits_byte::num_bits_per_byte * sizeof(word_type);
-        static constexpr size_type BitsPerWordMask = BitsPerWord - 1;
+        static constexpr size_type BitsPerWord      = limits_byte::num_bits_per_byte * sizeof(word_type);
+        static constexpr size_type BitsPerWordMask  = BitsPerWord - 1;
         static constexpr size_type BitsPerWordShift = ((BitsPerWord == 8) ? 3 : ((BitsPerWord == 16) ? 4 : ((BitsPerWord == 32) ? 5 : (((BitsPerWord == 64) ? 6 : 7)))));
 
       public:
@@ -419,9 +419,9 @@ namespace rsl
 
         void operator<<=(size_type n)
         {
-          if (n)
+          if(n)
           {
-            if (n >= BitsPerWord)
+            if(n >= BitsPerWord)
             {
               m_word[1] = rsl::exchange(m_word[0], 0);
               n -= BitsPerWord;
@@ -433,9 +433,9 @@ namespace rsl
         }
         void operator>>=(size_type n)
         {
-          if (n)
+          if(n)
           {
-            if (n >= BitsPerWord)
+            if(n >= BitsPerWord)
             {
               m_word[0] = rsl::exchange(m_word[1], 0);
               n -= BitsPerWord;
@@ -458,7 +458,7 @@ namespace rsl
         }
         void set(size_type idx, bool value)
         {
-          if (value)
+          if(value)
           {
             m_word[idx >> BitsPerWordShift] |= (static_cast<word_type>(1) << (idx & BitsPerWordMask));
           }
@@ -514,11 +514,11 @@ namespace rsl
         // we use a stack_string instead.
         rsl::stack_string<char8, 2 * BitsPerWord> to_string() const
         {
-          rsl::stack_string<char8, N* BitsPerWord> res{};
+          rsl::stack_string<char8, N * BitsPerWord> res {};
 
-          for (size_type i = 0; i < size(); ++i)
+          for(size_type i = 0; i < size(); ++i)
           {
-            if ((*this)[i])
+            if((*this)[i])
               res[size() - 1 - i] = '1';
           }
 
@@ -528,7 +528,7 @@ namespace rsl
       protected:
         rsl::array<word_type, 2>& word()
         {
-        return m_word;
+          return m_word;
         }
 
         const rsl::array<word_type, 2>& word() const
@@ -545,7 +545,7 @@ namespace rsl
       {
         return (bitCount == 0 ? 1 : ((bitCount - 1) / (8 * sizeof(WordType)) + 1));
       }
-    }
+    } // namespace internal
 
     template <card32 N>
     class bitset : public internal::bitset_base<internal::word_count<uint64>(N), uint64>
@@ -554,13 +554,13 @@ namespace rsl
       using base_type = internal::bitset_base<internal::word_count<uint64>(N), uint64>;
       using this_type = bitset<N>;
       using word_type = typename base_type::word_type;
-      
+
       static constexpr card32 BitsPerWord      = limits_byte::num_bits_per_byte * sizeof(word_type);
       static constexpr card32 BitsPerWordMask  = (BitsPerWord - 1);
       static constexpr card32 BitsPerWordShift = ((BitsPerWord == 8) ? 3 : ((BitsPerWord == 16) ? 4 : ((BitsPerWord == 32) ? 5 : (((BitsPerWord == 64) ? 6 : 7)))));
-			static constexpr card32 Size             = N;                                    // The number of bits the bitset holds
-			static constexpr card32 WordSize         = sizeof(word_type);                    // The size of individual words the bitset uses to hold the bits.
-			static constexpr card32 WordCount        = (N == 0 ? 1 : ((N - 1) / (8 * sizeof(word_type)) + 1)); // The number of words the bitset uses to hold the bits. sizeof(bitset<N, WordType>) == kWordSize * kWordCount.
+      static constexpr card32 Size             = N;                                                      // The number of bits the bitset holds
+      static constexpr card32 WordSize         = sizeof(word_type);                                      // The size of individual words the bitset uses to hold the bits.
+      static constexpr card32 WordCount        = (N == 0 ? 1 : ((N - 1) / (8 * sizeof(word_type)) + 1)); // The number of words the bitset uses to hold the bits. sizeof(bitset<N, WordType>) == kWordSize * kWordCount.
 
     public:
       using size_type = typename base_type::size_type;
@@ -569,13 +569,14 @@ namespace rsl
       {
       public:
         reference(const bitset& word, card32 idx)
-          : m_bit_word(&const_cast<bitset&>(word).word()[idx >> BitsPerWordShift])
-          , m_bit_idx(idx)
-        {}
+            : m_bit_word(&const_cast<bitset&>(word).word()[idx >> BitsPerWordShift])
+            , m_bit_idx(idx)
+        {
+        }
 
         reference& operator=(bool value)
         {
-          if (value)
+          if(value)
           {
             *m_bit_word |= (static_cast<word_type>(1) << (m_bit_idx & BitsPerWordMask));
           }
@@ -588,7 +589,7 @@ namespace rsl
         }
         reference& operator=(const reference& other)
         {
-          if (*other.m_bit_word & (static_cast<word_type>(1) << (other.m_bit_idx & BitsPerWordMask)))
+          if(*other.m_bit_word & (static_cast<word_type>(1) << (other.m_bit_idx & BitsPerWordMask)))
           {
             *m_bit_word |= (static_cast<word_type>(1) << (m_bit_idx & BitsPerWordMask));
           }
@@ -622,9 +623,9 @@ namespace rsl
 
       bitset() = default;
       bitset(size_type value)
-        : base_type(value)
+          : base_type(value)
       {
-        if constexpr ((N & BitsPerWordMask) || N == 0)
+        if constexpr((N & BitsPerWordMask) || N == 0)
         {
           base_type::word()[WordCount - 1] &= ~(static_cast<word_type>(~static_cast<word_type>(0)) << (N & BitsPerWordMask));
         }
@@ -648,10 +649,10 @@ namespace rsl
 
       this_type& operator<<=(size_type n)
       {
-        if ((static_cast<intptr>(n) < static_cast<intptr>(N)))
+        if((static_cast<intptr>(n) < static_cast<intptr>(N)))
         {
           base_type::operator<<=(n);
-          if constexpr ((N & BitsPerWordMask) || (N == 0))
+          if constexpr((N & BitsPerWordMask) || (N == 0))
           {
             base_type::word()[WordCount - 1] &= ~(static_cast<word_type>(~static_cast<word_type>(0)) << (N & BitsPerWordMask));
           }
@@ -665,7 +666,7 @@ namespace rsl
       }
       this_type& operator>>=(size_type n)
       {
-        if (n < N)
+        if(n < N)
         {
           base_type::operator>>=(n);
         }
@@ -680,7 +681,7 @@ namespace rsl
       this_type& set()
       {
         base_type::set();
-        if constexpr ((N & BitsPerWordMask) || (N == 0))
+        if constexpr((N & BitsPerWordMask) || (N == 0))
         {
           base_type::word()[WordCount - 1] &= ~(static_cast<word_type>(~static_cast<word_type>(0)) << (N & BitsPerWordMask));
         }
@@ -689,7 +690,7 @@ namespace rsl
       }
       this_type& set(size_type idx, bool value = true)
       {
-        if (idx < N)
+        if(idx < N)
         {
           base_type::set(idx, value);
         }
@@ -718,7 +719,7 @@ namespace rsl
       this_type& flip()
       {
         base_type::flip();
-        if constexpr ((N & BitsPerWordMask) || (N == 0))
+        if constexpr((N & BitsPerWordMask) || (N == 0))
         {
           base_type::word()[WordCount - 1] &= ~(static_cast<word_type>(~static_cast<word_type>(0)) << (N & BitsPerWordMask));
         }
@@ -745,7 +746,7 @@ namespace rsl
 
         return reference(*this, idx);
       }
-      bool      operator[](size_type idx) const
+      bool operator[](size_type idx) const
       {
         RSL_ASSERT_X(idx < N, "index out of range");
 
@@ -776,7 +777,7 @@ namespace rsl
         const auto mask = (static_cast<word_type>(1) << (idx & BitsPerWordMask));
         return ((word & mask) != 0);
       }
-      //bool any() const;                   // We inherit this from the base class.
+      // bool any() const;                   // We inherit this from the base class.
       bool all() const
       {
         return base_type::count() == size();
@@ -797,4 +798,3 @@ namespace rsl
     };
   } // namespace v1
 } // namespace rsl
-

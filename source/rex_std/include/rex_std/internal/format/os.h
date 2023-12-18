@@ -70,7 +70,7 @@
 //
 // #define FMT_RETRY(result, expression) FMT_RETRY_VAL(result, expression, -1)
 //
-// namespace rsl { inline namespace v1 { 
+// namespace rsl { inline namespace v1 {
 // FMT_MODULE_EXPORT_BEGIN
 //
 ///**

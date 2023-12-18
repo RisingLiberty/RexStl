@@ -75,12 +75,12 @@ namespace rsl
       int failure_order = -1;
       switch(failureOrder)
       {
-        case rsl::v1::memory_order::relaxed: failure_order = __ATOMIC_RELAXED;  break;
-        case rsl::v1::memory_order::consume: failure_order = __ATOMIC_CONSUME;  break;
-        case rsl::v1::memory_order::acquire: failure_order = __ATOMIC_ACQUIRE;  break;
-        case rsl::v1::memory_order::release: failure_order = __ATOMIC_RELEASE;  break;
-        case rsl::v1::memory_order::acq_rel: failure_order = __ATOMIC_ACQ_REL;  break;
-        case rsl::v1::memory_order::seq_cst: failure_order = __ATOMIC_SEQ_CST;  break;
+        case rsl::v1::memory_order::relaxed: failure_order = __ATOMIC_RELAXED; break;
+        case rsl::v1::memory_order::consume: failure_order = __ATOMIC_CONSUME; break;
+        case rsl::v1::memory_order::acquire: failure_order = __ATOMIC_ACQUIRE; break;
+        case rsl::v1::memory_order::release: failure_order = __ATOMIC_RELEASE; break;
+        case rsl::v1::memory_order::acq_rel: failure_order = __ATOMIC_ACQ_REL; break;
+        case rsl::v1::memory_order::seq_cst: failure_order = __ATOMIC_SEQ_CST; break;
         default: RSL_ASSERT("Invalid failure memory order for operation"); break;
       }
 

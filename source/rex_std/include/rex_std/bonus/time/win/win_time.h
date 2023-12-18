@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "rex_std_extra/time/time.h"
+#include "rex_std/bonus/time/time.h"
 
 namespace rsl
 {

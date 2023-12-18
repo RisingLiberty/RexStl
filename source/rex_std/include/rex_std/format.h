@@ -106,7 +106,10 @@
   #ifndef FMT_THROW
     #if FMT_EXCEPTIONS
       #if FMT_MSC_VERSION || defined(__NVCC__)
-namespace rsl { inline namespace v1 { 
+namespace rsl
+{
+  inline namespace v1
+  {
     namespace detail
     {
       template <typename Exception>
@@ -119,7 +122,8 @@ namespace rsl { inline namespace v1 {
           throw x;
       }
     } // namespace detail
-}}
+  }   // namespace v1
+} // namespace rsl
         #define FMT_THROW(x) detail::do_throw(x)
       #else
         #define FMT_THROW(x) throw x
@@ -196,7 +200,10 @@ namespace rsl { inline namespace v1 {
   // __builtin_clz and __builtin_clzll, so only define FMT_BUILTIN_CLZ using the
   // MSVC intrinsics if the clz and clzll builtins are not available.
   #if FMT_MSC_VERSION && !defined(FMT_BUILTIN_CLZLL) && !defined(FMT_BUILTIN_CTZLL)
-namespace rsl { inline namespace v1 { 
+namespace rsl
+{
+  inline namespace v1
+  {
     namespace detail
     {
     // Avoid Clang with Microsoft CodeGen's -Wunknown-pragmas warning.
@@ -269,10 +276,14 @@ namespace rsl { inline namespace v1 {
       }
     #define FMT_BUILTIN_CTZLL(n) detail::ctzll(n)
     } // namespace detail
-}}
+  }   // namespace v1
+} // namespace rsl
   #endif
 
-namespace rsl { inline namespace v1 { 
+namespace rsl
+{
+  inline namespace v1
+  {
     namespace detail
     {
 
@@ -1150,7 +1161,8 @@ namespace rsl { inline namespace v1 {
       }
     } // namespace detail_exported
 
-namespace detail {
+    namespace detail
+    {
 
       template <typename T>
       struct is_integral : rsl::is_integral<T>
@@ -4081,7 +4093,7 @@ namespace detail {
       FMT_API void format_error_code(buffer<char>& out, int errorCode, string_view message) noexcept;
 
       FMT_API void report_error(format_func func, int errorCode, const char* message) noexcept;
-}
+    } // namespace detail
 
     FMT_API auto vsystem_error(int errorCode, string_view formatStr, format_args args) -> std::system_error;
 
@@ -4475,17 +4487,17 @@ namespace detail {
       rsl::string as_string()
       {
         rsl::string res;
-        for (auto it = begin; it != end; ++it)
+        for(auto it = begin; it != end; ++it)
         {
           res += *it;
           res += sep;
         }
 
-        if (!res.empty())
+        if(!res.empty())
         {
           res.resize(res.size() - sep.length());
         }
-        
+
         return res;
       }
     };
@@ -4616,7 +4628,8 @@ namespace detail {
       return rsl::stack_string<Char, SIZE>(buf.data(), size);
     }
 
-namespace detail {
+    namespace detail
+    {
 
       template <typename Char>
       void vformat_to(buffer<Char>& buf, basic_string_view<Char> fmt, basic_format_args<FMT_BUFFER_CONTEXT(type_identity_t<Char>)> args, locale_ref loc)
@@ -4714,7 +4727,7 @@ namespace detail {
       extern template FMT_API auto decimal_point_impl(locale_ref) -> wchar_t;
   #endif // FMT_HEADER_ONLY
 
-}
+    } // namespace detail
 
   #if FMT_USE_USER_DEFINED_LITERALS
     inline namespace literals
@@ -4773,7 +4786,8 @@ namespace detail {
     }
 
     FMT_MODULE_EXPORT_END
-}}
+  } // namespace v1
+} // namespace rsl
 
   #ifdef FMT_HEADER_ONLY
     #define FMT_FUNC inline

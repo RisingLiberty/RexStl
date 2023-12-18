@@ -13,9 +13,9 @@
 #pragma once
 
 #include "rex_std/algorithm.h"
-#include "rex_std/bonus/memory/uninitialized_move_fill.h"
-#include "rex_std/bonus/memory/uninitialized_fill_move.h"
 #include "rex_std/bonus/memory/uninitialized_copy_copy.h"
+#include "rex_std/bonus/memory/uninitialized_fill_move.h"
+#include "rex_std/bonus/memory/uninitialized_move_fill.h"
 #include "rex_std/internal/memory/allocator.h"
 
 namespace rsl
@@ -34,7 +34,7 @@ namespace rsl
           res = 64;
         }
 
-        else if constexpr (sizeof(T) <= 8)
+        else if constexpr(sizeof(T) <= 8)
         {
           res = 32;
         }
@@ -196,9 +196,9 @@ namespace rsl
     {
       using difference_type = typename deque_iterator<T, SubArraySize>::difference_type;
 
-      const auto first_val = ((lhs.m_current_array_ptr - rhs.m_current_array_ptr) - 1);
+      const auto first_val  = ((lhs.m_current_array_ptr - rhs.m_current_array_ptr) - 1);
       const auto second_val = (lhs.m_current - lhs.m_begin);
-      const auto third_val = (rhs.m_end - rhs.m_current);
+      const auto third_val  = (rhs.m_end - rhs.m_current);
       return ((difference_type)SubArraySize * first_val) + second_val + third_val;
     }
 
@@ -265,7 +265,7 @@ namespace rsl
         init(n);
         fill_default();
       }
-      
+
       template <rsl::enable_if_t<!rsl::is_integral_v<Allocator>, bool> = true> // make sure we don't pick this overload if there are 3 arguments provided where the third wouldn't be an allocator
       deque(size_type n, const value_type& value, const allocator_type& allocator = allocator_type())
           : m_ptr_array(nullptr)
@@ -295,22 +295,22 @@ namespace rsl
       }
 
       deque(rsl::initializer_list<value_type> ilist, const allocator_type& allocator = allocator_type())
-        : m_ptr_array(nullptr)
-        , m_ptr_array_size(0)
-        , m_begin_it()
-        , m_end_it()
-        , m_allocator(allocator)
+          : m_ptr_array(nullptr)
+          , m_ptr_array_size(0)
+          , m_begin_it()
+          , m_end_it()
+          , m_allocator(allocator)
       {
         init_from_it(ilist.begin(), ilist.end());
       }
 
       template <typename InputIterator, rsl::enable_if_t<!rsl::is_integral_v<InputIterator>, bool> = true>
       deque(InputIterator first, InputIterator last)
-        : m_ptr_array(nullptr)
-        , m_ptr_array_size(0)
-        , m_begin_it()
-        , m_end_it()
-        , m_allocator()
+          : m_ptr_array(nullptr)
+          , m_ptr_array_size(0)
+          , m_begin_it()
+          , m_end_it()
+          , m_allocator()
       {
         init_from_it(first, last);
       }
@@ -715,19 +715,19 @@ namespace rsl
         iterator it_first(first);
         iterator it_last(last);
 
-        if (it_first != m_begin_it || (it_last != m_end_it))
+        if(it_first != m_begin_it || (it_last != m_end_it))
         {
           const difference_type n = static_cast<difference_type>(it_last - it_first);
           const difference_type i = static_cast<difference_type>(it_first - m_begin_it);
 
-          if (i < static_cast<difference_type>(size() - n) / 2)
+          if(i < static_cast<difference_type>(size() - n) / 2)
           {
             const iterator it_new_begin(m_begin_it + n);
             value_type** const ptr_array_begin = m_begin_it.m_current_array_ptr;
 
             it_last.copy_backward(m_begin_it, it_first);
 
-            for (; m_begin_it != it_new_begin; ++m_begin_it)
+            for(; m_begin_it != it_new_begin; ++m_begin_it)
             {
               m_begin_it.m_current->~value_type();
             }
@@ -741,7 +741,7 @@ namespace rsl
 
             it_first.copy(it_last, m_end_it);
 
-            for (iterator it_temp(it_new_end); it_temp != m_end_it; ++it_temp)
+            for(iterator it_temp(it_new_end); it_temp != m_end_it; ++it_temp)
             {
               it_temp.m_current->~value_type();
             }
@@ -932,7 +932,7 @@ namespace rsl
       {
         const size_type cur_size = size();
 
-        if (n > cur_size)
+        if(n > cur_size)
         {
           rsl::fill(m_begin_it, m_end_it, value);
           insert(m_end_it, n - cur_size, value);
@@ -947,7 +947,7 @@ namespace rsl
       template <typename InputIterator, rsl::enable_if_t<!rsl::is_integral_v<InputIterator>, bool> = true>
       void assign_impl(InputIterator first, InputIterator last)
       {
-        const size_type n    = static_cast<size_type>(rsl::distance(first, last));
+        const size_type n        = static_cast<size_type>(rsl::distance(first, last));
         const size_type cur_size = size();
 
         if(n > cur_size)
@@ -1004,7 +1004,7 @@ namespace rsl
         else
         {
           const difference_type insertion_index = static_cast<difference_type>(position - m_begin_it);
-          const size_type cur_size                  = size();
+          const size_type cur_size              = size();
 
           if(insertion_index < static_cast<difference_type>(cur_size / 2))
           {
@@ -1078,7 +1078,7 @@ namespace rsl
         else
         {
           const difference_type insertion_index = static_cast<difference_type>(position - m_begin_it);
-          const size_type cur_size                  = size();
+          const size_type cur_size              = size();
           const value_type value_saved(value);
 
           if(insertion_index < static_cast<difference_type>(cur_size / 2))
@@ -1260,12 +1260,12 @@ namespace rsl
         m_end_it.set_sub_array((ptr_array_begin + used_ptr_count) - 1);
       }
 
-      template <typename ... Args>
-      void resize_impl(size_type n, Args&& ... args)
+      template <typename... Args>
+      void resize_impl(size_type n, Args&&... args)
       {
         const size_type current_size = size();
 
-        if (n > current_size)
+        if(n > current_size)
         {
           insert(m_end_it, n - current_size, rsl::forward<Args>(args)...);
         }
@@ -1276,10 +1276,10 @@ namespace rsl
       }
 
     private:
-      T** m_ptr_array; // arrays of pointers to subarrays
+      T** m_ptr_array;            // arrays of pointers to subarrays
       size_type m_ptr_array_size; // the size of the ptr array
-      iterator m_begin_it; // beginning of subarrays
-      iterator m_end_it; // end of sub arrays
+      iterator m_begin_it;        // beginning of subarrays
+      iterator m_end_it;          // end of sub arrays
       allocator_type m_allocator; // allocator used for memory allocations
     };
 

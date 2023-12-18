@@ -4,7 +4,7 @@
 //
 // Author: Nick De Breuck
 // Twitter: @nick_debreuck
-// 
+//
 // File: uninitialized_fill_move.h
 // Copyright (c) Nick De Breuck 2023
 //
@@ -19,13 +19,12 @@ namespace rsl
 {
   inline namespace v1
   {
-		template <typename ForwardIterator, typename T, typename InputIterator>
-		inline ForwardIterator
-			uninitialized_fill_move(ForwardIterator result, ForwardIterator mid, const T& value, InputIterator first, InputIterator last)
-		{
-			rsl::uninitialized_fill(result, mid, value);
+    template <typename ForwardIterator, typename T, typename InputIterator>
+    inline ForwardIterator uninitialized_fill_move(ForwardIterator result, ForwardIterator mid, const T& value, InputIterator first, InputIterator last)
+    {
+      rsl::uninitialized_fill(result, mid, value);
 
-			return rsl::uninitialized_move(first, last, mid);
-		}
-  }
-}
+      return rsl::uninitialized_move(first, last, mid);
+    }
+  } // namespace v1
+} // namespace rsl

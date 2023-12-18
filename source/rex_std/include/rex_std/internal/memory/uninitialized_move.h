@@ -19,11 +19,10 @@ namespace rsl
 {
   inline namespace v1
   {
-		template <typename InputIterator, typename ForwardIterator>
-		inline ForwardIterator uninitialized_move(InputIterator first, InputIterator last, ForwardIterator dest)
-		{
-			return rsl::uninitialized_copy(rsl::make_move_iterator(first), rsl::make_move_iterator(last), dest);
-		}
+    template <typename InputIterator, typename ForwardIterator>
+    inline ForwardIterator uninitialized_move(InputIterator first, InputIterator last, ForwardIterator dest)
+    {
+      return rsl::uninitialized_copy(rsl::make_move_iterator(first), rsl::make_move_iterator(last), dest);
+    }
   } // namespace v1
 } // namespace rsl
-

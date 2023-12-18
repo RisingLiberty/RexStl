@@ -12,8 +12,8 @@
 
 #pragma once
 
+#include "rex_std/bonus/time/timepoint.h"
 #include "rex_std/bonus/types.h"
-#include "rex_std_extra/time/timepoint.h"
 
 namespace rsl
 {

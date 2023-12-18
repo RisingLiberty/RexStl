@@ -1379,11 +1379,11 @@ namespace rsl
         if(can_insert)
         {
           iterator it_result = insert_value(position, false, key, new_node);
-          return insert_result<iterator> { it_result, true };
+          return insert_result<iterator> {it_result, true};
         }
 
         free_node(new_node);
-        return insert_result<iterator> { iterator(position), false };
+        return insert_result<iterator> {iterator(position), false};
       }
       template <typename... Args>
       iterator insert_value(false_type, Args&&... args)

@@ -18,9 +18,9 @@
 #include <tuple>
 #include <type_traits>
 
-namespace rsl 
+namespace rsl
 {
-  inline namespace v1 
+  inline namespace v1
   {
 
     namespace detail
@@ -29,7 +29,7 @@ namespace rsl
       template <typename RangeT, typename OutputIterator>
       OutputIterator copy(const RangeT& range, OutputIterator out)
       {
-        for (auto it = range.begin(), end = range.end(); it != end; ++it)
+        for(auto it = range.begin(), end = range.end(); it != end; ++it)
           *out++ = *it;
         return out;
       }
@@ -37,7 +37,7 @@ namespace rsl
       template <typename OutputIterator>
       OutputIterator copy(const char* str, OutputIterator out)
       {
-        while (*str)
+        while(*str)
           *out++ = *str++;
         return out;
       }
@@ -118,7 +118,7 @@ namespace rsl
 
 #if !FMT_MSC_VERSION || FMT_MSC_VERSION > 1800
 
-#define FMT_DECLTYPE_RETURN(val)                                                                                                                                                                                                                       \
+  #define FMT_DECLTYPE_RETURN(val)                                                                                                                                                                                                                       \
     ->decltype(val)                                                                                                                                                                                                                                      \
     {                                                                                                                                                                                                                                                    \
       return val;                                                                                                                                                                                                                                        \
@@ -126,14 +126,14 @@ namespace rsl
     static_assert(true, "") // This makes it so that a semicolon is required after the
       // macro, which helps clang-format handle the formatting.
 
-// C array overload
+      // C array overload
       template <typename T, rsl::size_t N>
-      auto range_begin(const T(&arr)[N]) -> const T*
+      auto range_begin(const T (&arr)[N]) -> const T*
       {
         return arr;
       }
       template <typename T, rsl::size_t N>
-      auto range_end(const T(&arr)[N]) -> const T*
+      auto range_end(const T (&arr)[N]) -> const T*
       {
         return arr + N;
       }
@@ -190,7 +190,7 @@ namespace rsl
       struct is_range_<T, void> : rsl::integral_constant<bool, (has_const_begin_end<T>::value || has_mutable_begin_end<T>::value)>
       {
       };
-#undef FMT_DECLTYPE_RETURN
+  #undef FMT_DECLTYPE_RETURN
 #endif
 
       // tuple_size and tuple_element check.
@@ -269,7 +269,7 @@ namespace rsl
       {
         using rsl::get;
         // using free function get<I>(T) now.
-        const int _[] = { 0, ((void)f(get<Is>(tup)), 0)... };
+        const int _[] = {0, ((void)f(get<Is>(tup)), 0)...};
         (void)_; // blocks warnings
       }
 
@@ -366,12 +366,12 @@ namespace rsl
     };
 
     template <typename TupleT, typename Char>
-    struct formatter<TupleT, Char, enable_if_t<rsl::is_tuple_like<TupleT>::value&& rsl::is_tuple_formattable<TupleT, Char>::value>>
+    struct formatter<TupleT, Char, enable_if_t<rsl::is_tuple_like<TupleT>::value && rsl::is_tuple_formattable<TupleT, Char>::value>>
     {
     private:
-      basic_string_view<Char> separator_ = detail::basic_string_literal<Char, ',', ' '>{};
-      basic_string_view<Char> opening_bracket_ = detail::basic_string_literal<Char, '('>{};
-      basic_string_view<Char> closing_bracket_ = detail::basic_string_literal<Char, ')'>{};
+      basic_string_view<Char> separator_       = detail::basic_string_literal<Char, ',', ' '> {};
+      basic_string_view<Char> opening_bracket_ = detail::basic_string_literal<Char, '('> {};
+      basic_string_view<Char> closing_bracket_ = detail::basic_string_literal<Char, ')'> {};
 
       // C++11 generic lambda for format().
       template <typename FormatContext>
@@ -380,7 +380,7 @@ namespace rsl
         template <typename T>
         void operator()(const T& v)
         {
-          if (i > 0)
+          if(i > 0)
             out = detail::copy_str<Char>(separator, out);
           out = detail::write_range_entry<Char>(out, v);
           ++i;
@@ -414,7 +414,7 @@ namespace rsl
       auto format(const TupleT& values, FormatContext& ctx) const -> decltype(ctx.out())
       {
         auto out = ctx.out();
-        out = detail::copy_str<Char>(opening_bracket_, out);
+        out      = detail::copy_str<Char>(opening_bracket_, out);
         detail::for_each(values, format_each<FormatContext> {0, out, separator_});
         out = detail::copy_str<Char>(closing_bracket_, out);
         return out;
@@ -447,7 +447,7 @@ namespace rsl
       };
 
       template <typename Char, typename Element>
-      using range_formatter_type = conditional_t < is_formattable<Element, Char>::value, formatter < remove_cvref_t<decltype(range_mapper<buffer_context<Char>> {}.map(rsl::declval<Element>())) > , Char > , fallback_formatter<Element, Char >> ;
+      using range_formatter_type = conditional_t<is_formattable<Element, Char>::value, formatter<remove_cvref_t<decltype(range_mapper<buffer_context<Char>> {}.map(rsl::declval<Element>()))>, Char>, fallback_formatter<Element, Char>>;
 
       template <typename R>
       using maybe_const_range = conditional_t<has_const_begin_end<R>::value, const R, R>;
@@ -470,10 +470,10 @@ namespace rsl
     {
     private:
       detail::range_formatter_type<Char, T> underlying_;
-      bool custom_specs_ = false;
-      basic_string_view<Char> separator_ = detail::basic_string_literal<Char, ',', ' '>{};
-      basic_string_view<Char> opening_bracket_ = detail::basic_string_literal<Char, '['>{};
-      basic_string_view<Char> closing_bracket_ = detail::basic_string_literal<Char, ']'>{};
+      bool custom_specs_                       = false;
+      basic_string_view<Char> separator_       = detail::basic_string_literal<Char, ',', ' '> {};
+      basic_string_view<Char> opening_bracket_ = detail::basic_string_literal<Char, '['> {};
+      basic_string_view<Char> closing_bracket_ = detail::basic_string_literal<Char, ']'> {};
 
       template <class U>
       FMT_CONSTEXPR static auto maybe_set_debug_format(U& u, int) -> decltype(u.set_debug_format())
@@ -513,27 +513,27 @@ namespace rsl
       template <typename ParseContext>
       FMT_CONSTEXPR auto parse(ParseContext& ctx) -> decltype(ctx.begin())
       {
-        auto it = ctx.begin();
+        auto it  = ctx.begin();
         auto end = ctx.end();
-        if (it == end || *it == '}')
+        if(it == end || *it == '}')
         {
           maybe_set_debug_format();
           return it;
         }
 
-        if (*it == 'n')
+        if(*it == 'n')
         {
           set_brackets({}, {});
           ++it;
         }
 
-        if (*it == '}')
+        if(*it == '}')
         {
           maybe_set_debug_format();
           return it;
         }
 
-        if (*it != ':')
+        if(*it != ':')
           FMT_THROW(format_error("no other top-level range formatters supported"));
 
         custom_specs_ = true;
@@ -547,13 +547,13 @@ namespace rsl
       {
         detail::range_mapper<buffer_context<Char>> mapper;
         auto out = ctx.out();
-        out = detail::copy_str<Char>(opening_bracket_, out);
-        int i = 0;
-        auto it = detail::range_begin(range);
+        out      = detail::copy_str<Char>(opening_bracket_, out);
+        int i    = 0;
+        auto it  = detail::range_begin(range);
         auto end = detail::range_end(range);
-        for (; it != end; ++it)
+        for(; it != end; ++it)
         {
-          if (i > 0)
+          if(i > 0)
             out = detail::copy_str<Char>(separator_, out);
           ;
           ctx.advance_to(out);
@@ -635,13 +635,13 @@ namespace rsl
 
     template <typename R, typename Char>
     struct formatter<R, Char,
-      enable_if_t<conjunction<bool_constant<range_format_kind<R, Char>::value != range_format::disabled>
-      // Workaround a bug in MSVC 2015 and earlier.
+                     enable_if_t<conjunction<bool_constant<range_format_kind<R, Char>::value != range_format::disabled>
+    // Workaround a bug in MSVC 2015 and earlier.
 #if !FMT_MSC_VERSION || FMT_MSC_VERSION >= 1910
-      ,
-      detail::is_formattable_delayed<R, Char>
+                                             ,
+                                             detail::is_formattable_delayed<R, Char>
 #endif
-                                         >::value>> : detail::range_default_formatter<range_format_kind<R, Char>::value, R, Char>
+                                             >::value>> : detail::range_default_formatter<range_format_kind<R, Char>::value, R, Char>
     {
     };
 
@@ -652,8 +652,8 @@ namespace rsl
       basic_string_view<Char> sep;
 
       tuple_join_view(const rsl::tuple<T...>& t, basic_string_view<Char> s)
-        : tuple(t)
-        , sep{ s }
+          : tuple(t)
+          , sep {s}
       {
       }
     };
@@ -665,7 +665,7 @@ namespace rsl
     // support in tuple_join. It is disabled by default because of issues with
     // the dynamic width and precision.
 #ifndef FMT_TUPLE_JOIN_SPECIFIERS
-#define FMT_TUPLE_JOIN_SPECIFIERS 0
+  #define FMT_TUPLE_JOIN_SPECIFIERS 0
 #endif
 
     template <typename Char, typename... T>
@@ -698,10 +698,10 @@ namespace rsl
         auto end = ctx.begin();
 #if FMT_TUPLE_JOIN_SPECIFIERS
         end = rsl::get<sizeof...(T) - N>(formatters_).parse(ctx);
-        if (N > 1)
+        if(N > 1)
         {
           auto end1 = do_parse(ctx, rsl::integral_constant<size_t, N - 1>());
-          if (end != end1)
+          if(end != end1)
             FMT_THROW(format_error("incompatible format specs for tuple elements"));
         }
 #endif
@@ -718,7 +718,7 @@ namespace rsl
       auto do_format(const tuple_join_view<Char, T...>& value, FormatContext& ctx, rsl::integral_constant<size_t, N>) const -> typename FormatContext::iterator
       {
         auto out = rsl::get<sizeof...(T) - N>(formatters_).format(rsl::get<sizeof...(T) - N>(value.tuple), ctx);
-        if (N > 1)
+        if(N > 1)
         {
           out = rsl::copy(value.sep.begin(), value.sep.end(), out);
           ctx.advance_to(out);
@@ -730,27 +730,27 @@ namespace rsl
 
     FMT_MODULE_EXPORT_BEGIN
 
-      /**
-        \rst
-        Returns an object that formats `tuple` with elements separated by `sep`.
+    /**
+      \rst
+      Returns an object that formats `tuple` with elements separated by `sep`.
 
-        **Example**::
+      **Example**::
 
-          rsl::tuple<int, char> t = {1, 'a'};
-          rsl::print("{}", rsl::join(t, ", "));
-          // Output: "1, a"
-        \endrst
-       */
-      template <typename... T>
+        rsl::tuple<int, char> t = {1, 'a'};
+        rsl::print("{}", rsl::join(t, ", "));
+        // Output: "1, a"
+      \endrst
+     */
+    template <typename... T>
     FMT_CONSTEXPR auto join(const rsl::tuple<T...>& tuple, string_view sep) -> tuple_join_view<char, T...>
     {
-      return { tuple, sep };
+      return {tuple, sep};
     }
 
     template <typename... T>
     FMT_CONSTEXPR auto join(const rsl::tuple<T...>& tuple, basic_string_view<wchar_t> sep) -> tuple_join_view<wchar_t, T...>
     {
-      return { tuple, sep };
+      return {tuple, sep};
     }
 
     /**
@@ -771,7 +771,7 @@ namespace rsl
     }
 
     FMT_MODULE_EXPORT_END
-  }
-}
+  } // namespace v1
+} // namespace rsl
 
 #endif // FMT_RANGES_H_

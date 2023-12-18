@@ -287,13 +287,13 @@ namespace rsl
       // checks if the string view ends with the given suffix
       REX_NO_DISCARD constexpr bool ends_with(const basic_string_view rhs) const
       {
-        if (length() < rhs.length())
+        if(length() < rhs.length())
         {
           return false;
         }
 
-        auto lhs_ptr = data() + (length() - rhs.size());
-        auto rhs_ptr = rhs.data();
+        auto lhs_ptr  = data() + (length() - rhs.size());
+        auto rhs_ptr  = rhs.data();
         auto lhs_size = rhs.length();
         auto rhs_size = rhs.length();
 

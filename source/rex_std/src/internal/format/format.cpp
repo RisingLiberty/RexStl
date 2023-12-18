@@ -9,7 +9,8 @@
 
 #include "rex_std/internal/format/format_inl.h"
 
-namespace rsl {
+namespace rsl
+{
   inline namespace v1
   {
     namespace detail
@@ -20,12 +21,12 @@ namespace rsl {
 
 #ifndef FMT_STATIC_THOUSANDS_SEPARATOR
       template FMT_API locale_ref::locale_ref(const std::locale& loc);
-      template FMT_API auto locale_ref::get<std::locale>() const->std::locale;
+      template FMT_API auto locale_ref::get<std::locale>() const -> std::locale;
 #endif
 
       // Explicit instantiations for char.
 
-      template FMT_API auto thousands_sep_impl(locale_ref)->thousands_sep_result<char>;
+      template FMT_API auto thousands_sep_impl(locale_ref) -> thousands_sep_result<char>;
       template FMT_API auto decimal_point_impl(locale_ref) -> char;
 
       template FMT_API void buffer<char>::append(const char*, const char*);
@@ -37,11 +38,11 @@ namespace rsl {
 
       // Explicit instantiations for wchar_t.
 
-      template FMT_API auto thousands_sep_impl(locale_ref)->thousands_sep_result<wchar_t>;
+      template FMT_API auto thousands_sep_impl(locale_ref) -> thousands_sep_result<wchar_t>;
       template FMT_API auto decimal_point_impl(locale_ref) -> wchar_t;
 
       template FMT_API void buffer<wchar_t>::append(const wchar_t*, const wchar_t*);
 
     } // namespace detail
-  }
-}
+  }   // namespace v1
+} // namespace rsl

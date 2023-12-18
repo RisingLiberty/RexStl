@@ -113,7 +113,7 @@ namespace rsl
       {
         const card32 new_length = rsl::clamp_max(view.length(), StrMaxSize);
         rsl::memcpy(m_data.data(), view.data(), new_length * sizeof(value_type));
-        m_null_terminator_offset = new_length;
+        m_null_terminator_offset         = new_length;
         m_data[m_null_terminator_offset] = value_type();
         return *this;
       }
@@ -121,7 +121,7 @@ namespace rsl
       {
         const card32 new_length = rsl::clamp_max(rsl::string_length(str), StrMaxSize);
         rsl::memcpy(m_data.data(), str, new_length);
-        m_null_terminator_offset = new_length;
+        m_null_terminator_offset         = new_length;
         m_data[m_null_terminator_offset] = value_type();
         return *this;
       }

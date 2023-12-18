@@ -47,7 +47,7 @@ namespace rsl
         template <typename InputIterator, typename OutputIterator>
         static OutputIterator move_or_copy_backward(InputIterator first, InputIterator last, OutputIterator dstLast)
         {
-          while (first != last)
+          while(first != last)
           {
             *--dstLast = rsl::move(*--last);
           }

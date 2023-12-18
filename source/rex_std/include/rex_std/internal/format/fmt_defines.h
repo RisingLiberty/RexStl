@@ -238,14 +238,17 @@ FMT_GCC_PRAGMA("GCC push_options")
 FMT_GCC_PRAGMA("GCC optimize(\"Og\")")
 #endif
 
-namespace rsl { inline namespace v1 { 
-FMT_MODULE_EXPORT_BEGIN
-
-// Implementations of enable_if_t and other metafunctions for older systems.
-struct monostate
+namespace rsl
 {
-  constexpr monostate() = default;
-};
+  inline namespace v1
+  {
+    FMT_MODULE_EXPORT_BEGIN
+
+    // Implementations of enable_if_t and other metafunctions for older systems.
+    struct monostate
+    {
+      constexpr monostate() = default;
+    };
 
 // An enable_if helper to be used in template parameters which results in much
 // shorter symbols: https://godbolt.org/z/sWw4vP. Extra parentheses are needed
@@ -256,5 +259,6 @@ struct monostate
   #define FMT_ENABLE_IF(...) enable_if_t<(__VA_ARGS__), int> = 0
 #endif
 
-FMT_MODULE_EXPORT_END
-}}
+    FMT_MODULE_EXPORT_END
+  } // namespace v1
+} // namespace rsl

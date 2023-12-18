@@ -21,8 +21,8 @@
 #include "rex_std/initializer_list.h"
 #include "rex_std/internal/algorithm/lexicographical_compare.h"
 #include "rex_std/internal/memory/allocator.h"
-#include "rex_std/internal/utility/forward.h"
 #include "rex_std/internal/memory/allocator_traits.h"
+#include "rex_std/internal/utility/forward.h"
 #include "rex_std/limits.h"
 
 namespace rsl
@@ -242,17 +242,17 @@ namespace rsl
         insert_after(before_begin(), first, last);
       }
       forward_list(const forward_list& other)
-        : m_cp_pre_head_node_and_allocator(other.get_allocator())
+          : m_cp_pre_head_node_and_allocator(other.get_allocator())
 #ifdef REX_ENABLE_SIZE_IN_LISTS
-        , m_size(other.m_size)
+          , m_size(other.m_size)
 #endif
       {
         insert_after(before_begin(), other.cbegin(), other.cend());
       }
       forward_list(const forward_list& other, const allocator_type& alloc)
-        : m_cp_pre_head_node_and_allocator(alloc)
+          : m_cp_pre_head_node_and_allocator(alloc)
 #ifdef REX_ENABLE_SIZE_IN_LISTS
-        , m_size(other.m_size)
+          , m_size(other.m_size)
 #endif
       {
         insert_after(before_begin(), other.cbegin(), other.cend());
@@ -437,7 +437,8 @@ namespace rsl
         }
 
         // set the head to nullptr
-        pre_head_node().next = nullptr;;
+        pre_head_node().next = nullptr;
+        ;
       }
       iterator insert_after(const_iterator pos, const_reference value)
       {
@@ -491,7 +492,7 @@ namespace rsl
       }
       iterator erase_after(const_iterator first, const_iterator last)
       {
-        auto it = first;
+        auto it      = first;
         auto next_it = ++first;
         while(next_it != last)
         {
@@ -548,7 +549,7 @@ namespace rsl
       {
         if(get_allocator() == other.get_allocator())
         {
-          internal::forward_list_node_base*& my_head = pre_head_node().next;
+          internal::forward_list_node_base*& my_head    = pre_head_node().next;
           internal::forward_list_node_base*& other_head = other.pre_head_node().next;
 
           rsl::swap(my_head, other_head);
@@ -568,7 +569,7 @@ namespace rsl
 
       // operations
       // TODO: implement operations
-      //void merge() {}
+      // void merge() {}
 
       void splice_after(const_iterator position, this_type& other)
       {
@@ -694,7 +695,7 @@ namespace rsl
 
       internal::forward_list_node_base* erase_after_impl(internal::forward_list_node_base* pNode)
       {
-        node_type* const pNodeNext = static_cast<node_type*>((base_node_type*)pNode->next);
+        node_type* const pNodeNext                            = static_cast<node_type*>((base_node_type*)pNode->next);
         internal::forward_list_node_base* const pNodeNextNext = (internal::forward_list_node_base*)pNodeNext->next;
 
         pNode->next = pNodeNextNext;
@@ -706,15 +707,14 @@ namespace rsl
         return pNodeNextNext;
       }
 
-
       internal::forward_list_node_base* erase_after_impl(internal::forward_list_node_base* pNode, internal::forward_list_node_base* pNodeLast)
       {
         node_type* pNodeCurrent = static_cast<node_type*>((base_node_type*)pNode->next);
 
-        while (pNodeCurrent != (base_node_type*)pNodeLast)
+        while(pNodeCurrent != (base_node_type*)pNodeLast)
         {
           node_type* const pNodeTemp = pNodeCurrent;
-          pNodeCurrent = static_cast<node_type*>((base_node_type*)pNodeCurrent->next);
+          pNodeCurrent               = static_cast<node_type*>((base_node_type*)pNodeCurrent->next);
           get_allocator().destroy(pNodeTemp);
           get_allocator().deallocate(pNodeTemp, sizeof(node_type));
 

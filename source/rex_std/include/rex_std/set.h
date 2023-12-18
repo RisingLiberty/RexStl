@@ -12,8 +12,8 @@
 
 #pragma once
 
-#include "rex_std/bonus/utility/use_self.h"
 #include "rex_std/bonus/binary_tree/red_black_tree.h"
+#include "rex_std/bonus/utility/use_self.h"
 #include "rex_std/initializer_list.h"
 #include "rex_std/internal/functional/less.h"
 #include "rex_std/internal/iterator/iterator_traits.h"

@@ -35,18 +35,21 @@ namespace rsl
       using value_type        = typename iterator_traits<Iter>::value_type;
       using difference_type   = typename iterator_traits<Iter>::difference_type;
       using pointer           = Iter;
-      using reference = conditional_t<is_reference_v<wrapped_iterator_reference>, remove_reference_t<wrapped_iterator_reference>&&, wrapped_iterator_reference>;
+      using reference         = conditional_t<is_reference_v<wrapped_iterator_reference>, remove_reference_t<wrapped_iterator_reference>&&, wrapped_iterator_reference>;
 
       constexpr move_iterator()
-        : m_iterator()
-      {}
+          : m_iterator()
+      {
+      }
       constexpr explicit move_iterator(iterator_type it)
-        : m_iterator(it)
-      {}
+          : m_iterator(it)
+      {
+      }
       template <typename U>
       constexpr explicit move_iterator(const move_iterator<U>& other)
-        : m_iterator(other.base())
-      {}
+          : m_iterator(other.base())
+      {
+      }
 
       template <typename U>
       constexpr move_iterator& operator=(const move_iterator<U>& other)

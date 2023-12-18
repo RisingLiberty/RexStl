@@ -12,8 +12,8 @@
 
 #pragma once
 
+#include "rex_std/bonus/concepts.h"
 #include "rex_std/bonus/types.h"
-#include "rex_std_extra/concepts.h"
 #include "utility/swap.h"
 
 #include <algorithm>

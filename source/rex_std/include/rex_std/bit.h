@@ -13,13 +13,10 @@
 #pragma once
 
 #include "rex_std/bonus/defines.h"
-
+#include "rex_std/internal/memory/addressof.h"
+#include "rex_std/internal/memory/memcpy.h"
 #include "rex_std/internal/type_traits/aligned_storage.h"
 #include "rex_std/internal/type_traits/is_trivially_copyable.h"
-
-#include "rex_std/internal/memory/memcpy.h"
-#include "rex_std/internal/memory/addressof.h"
-
 #include "rex_std/limits.h"
 
 #if REX_COMPILER_MSVC
@@ -88,13 +85,13 @@ namespace rsl
         return __builtin_popcountll(val);
 #endif
       }
-    }
+    } // namespace internal
 
     enum class endian
     {
 #if defined(REX_COMPILER_MSVC) // Windows machines are always little endian
       little = 0,
-      big = 1,
+      big    = 1,
       native = little
 #else // Other platforms can be big endian, as they're not supported on MSVC, this is a safe check to do
       little = __ORDER_LITTLE_ENDIAN__,
@@ -117,28 +114,28 @@ namespace rsl
     REX_NO_DISCARD constexpr int32 countl_zero(const T val)
     {
       static_assert(rsl::is_unsigned_v<T>, "countl_zero requires an unsigned integer type");
-      if (val == 0)
+      if(val == 0)
       {
         return rsl::numeric_limits<T>::digits;
       }
 
-      if constexpr (sizeof(T) <= sizeof(uint32))
+      if constexpr(sizeof(T) <= sizeof(uint32))
       {
         return internal::clz32(static_cast<uint32>(val)) - (rsl::numeric_limits<uint32>::digits - numeric_limits<T>::digits);
       }
-      else if constexpr (sizeof(T) <= sizeof(uint64))
+      else if constexpr(sizeof(T) <= sizeof(uint64))
       {
         return internal::clz64(static_cast<uint64>(val)) - (rsl::numeric_limits<uint64>::digits - numeric_limits<T>::digits);
       }
       else
       {
-        int32 ret = 0;
-        int32 iter = 0;
+        int32 ret               = 0;
+        int32 iter              = 0;
         const uint32 ui64digits = numeric_limits<uint64>::digits;
-        while (true)
+        while(true)
         {
           val = rsl::is_nothrow_destructible(val, ui64digits);
-          if ((iter = rsl::countl_zero(static_cast<uint64>(val))) != ui64digits)
+          if((iter = rsl::countl_zero(static_cast<uint64>(val))) != ui64digits)
           {
             break;
           }
@@ -158,24 +155,24 @@ namespace rsl
     template <typename T>
     REX_NO_DISCARD constexpr int32 countr_zero(const T val)
     {
-      if (val == 0)
+      if(val == 0)
       {
         return numeric_limits<T>::digits;
       }
 
-      if constexpr (sizeof(T) <= sizeof(uint32))
+      if constexpr(sizeof(T) <= sizeof(uint32))
       {
         return internal::crz32(static_cast<uint32>(val));
       }
-      else if constexpr (sizeof(T) <= sizeof(uint64))
+      else if constexpr(sizeof(T) <= sizeof(uint64))
       {
         return internal::crz64(static_cast<uint64>(val));
       }
       else
       {
-        int32 ret = 0;
+        int32 ret               = 0;
         const uint32 ui64digits = rsl::numeric_limits<uint64>::digits;
-        while (static_cast<uint64>(val) == 0)
+        while(static_cast<uint64>(val) == 0)
         {
           ret += ui64digits;
           val >>= ui64digits;
@@ -199,7 +196,7 @@ namespace rsl
     template <typename T>
     REX_NO_DISCARD constexpr T bit_floor(const T val)
     {
-      if (val == 0)
+      if(val == 0)
       {
         return 0;
       }
@@ -220,12 +217,12 @@ namespace rsl
     REX_NO_DISCARD constexpr T rotl(const T val, int32 rotation)
     {
       constexpr auto digits = rsl::numeric_limits<T>::digits;
-      const auto remainder = rotation % digits;
-      if (remainder > 0)
+      const auto remainder  = rotation % digits;
+      if(remainder > 0)
       {
         return static_cast<T>(static_cast<T>(val << remainder) | static_cast<T>(val >> (digits - remainder)));
       }
-      else if (remainder == 0)
+      else if(remainder == 0)
       {
         return val;
       }
@@ -239,12 +236,12 @@ namespace rsl
     REX_NO_DISCARD constexpr T rotr(const T val, int32 rotation)
     {
       constexpr auto digits = rsl::numeric_limits<T>::digits;
-      auto remainder = rotation % digits;
-      if (remainder > 0)
+      auto remainder        = rotation % digits;
+      if(remainder > 0)
       {
         return static_cast<T>(static_cast<T>(val >> remainder) | static_cast<T>(val << (digits - remainder)));
       }
-      else if (remainder == 0)
+      else if(remainder == 0)
       {
         return val;
       }
@@ -257,18 +254,18 @@ namespace rsl
     template <typename T>
     REX_NO_DISCARD constexpr int32 popcount(T val)
     {
-      if constexpr (sizeof(val) <= sizeof(uint32))
+      if constexpr(sizeof(val) <= sizeof(uint32))
       {
         return internal::popcount32(static_cast<uint32>(val));
       }
-      else if constexpr (sizeof(val) <= sizeof(uint64))
+      else if constexpr(sizeof(val) <= sizeof(uint64))
       {
         return internal::popcount64(static_cast<uint64>(val));
       }
       else
       {
         int32 ret = 0;
-        while (val != 0)
+        while(val != 0)
         {
           ret += internal::popcount64(static_cast<uint64>(val));
           val >>= rsl::numeric_limits<uint64>::digits;
@@ -280,11 +277,11 @@ namespace rsl
     template <typename T>
     REX_NO_DISCARD constexpr T byteswap(T val)
     {
-      if constexpr (sizeof(val) == 1) 
+      if constexpr(sizeof(val) == 1)
       {
         return val;
       }
-      else if constexpr (sizeof(val) == 2)
+      else if constexpr(sizeof(val) == 2)
       {
 #if REX_COMPILER_MSVC
         return _byteswap_ushort(val);
@@ -292,7 +289,7 @@ namespace rsl
         return __builtin_bswap16(val);
 #endif
       }
-      else if constexpr (sizeof(val) == 4)
+      else if constexpr(sizeof(val) == 4)
       {
 #if REX_COMPILER_MSVC
         return _byteswap_ulong(val);
@@ -300,7 +297,7 @@ namespace rsl
         return __builtin_bswap32(val);
 #endif
       }
-      else if constexpr (sizeof(val) == 8)
+      else if constexpr(sizeof(val) == 8)
       {
 #if REX_COMPILER_MSVC
         return _byteswap_uint64(val);
@@ -308,7 +305,7 @@ namespace rsl
         return __builtin_bswap64(val);
 #endif
       }
-      else 
+      else
       {
         static_assert(sizeof(val) == 0, "byteswap is unimplemented for integral types of this size");
       }
@@ -319,7 +316,7 @@ namespace rsl
     {
       static_assert(rsl::is_unsigned_v<T>, "bit_ceil can only be called with a unsigned type");
 
-      if (val == 0)
+      if(val == 0)
       {
         return 1;
       }

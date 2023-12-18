@@ -1212,7 +1212,7 @@ namespace rsl
       basic_string& replace(rsl::string_view from, rsl::string_view to)
       {
         size_type pos = 0;
-        while ((pos = find(from, pos)) != npos())
+        while((pos = find(from, pos)) != npos())
         {
           replace(pos, from.length(), to);
         }
@@ -2324,7 +2324,7 @@ namespace rsl
     /// RSL Comment: Not in ISO C++ Standard at time of writing (15/Sept/2023)
     // Helper function to convert a wstring to a string
     string to_string(rsl::wstring_view view);
-    
+
     // converts a signed integer to a wstring
     wstring to_wstring(int32 value);
     // converts a signed integer to a wstring

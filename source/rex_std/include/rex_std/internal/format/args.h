@@ -16,245 +16,249 @@
 #include <functional> // rsl::reference_wrapper
 #include <memory>     // rsl::unique_ptr
 
-namespace rsl { inline namespace v1 { 
-
-namespace detail
+namespace rsl
 {
+  inline namespace v1
+  {
 
-  template <typename T>
-  struct is_reference_wrapper : rsl::false_type
-  {
-  };
-  template <typename T>
-  struct is_reference_wrapper<rsl::reference_wrapper<T>> : rsl::true_type
-  {
-  };
-
-  template <typename T>
-  const T& unwrap(const T& v)
-  {
-    return v;
-  }
-  template <typename T>
-  const T& unwrap(const rsl::reference_wrapper<T>& v)
-  {
-    return static_cast<const T&>(v);
-  }
-
-  class dynamic_arg_list
-  {
-    // Workaround for clang's -Wweak-vtables. Unlike for regular classes, for
-    // templates it doesn't complain about inability to deduce single translation
-    // unit for placing vtable. So storage_node_base is made a fake template.
-    template <typename = void>
-    struct node
+    namespace detail
     {
-      virtual ~node() = default;
-      rsl::unique_ptr<node<>> next;
-    };
 
-    template <typename T>
-    struct typed_node : node<>
-    {
-      T value;
-
-      template <typename Arg>
-      FMT_CONSTEXPR typed_node(const Arg& arg)
-          : value(arg)
+      template <typename T>
+      struct is_reference_wrapper : rsl::false_type
       {
+      };
+      template <typename T>
+      struct is_reference_wrapper<rsl::reference_wrapper<T>> : rsl::true_type
+      {
+      };
+
+      template <typename T>
+      const T& unwrap(const T& v)
+      {
+        return v;
+      }
+      template <typename T>
+      const T& unwrap(const rsl::reference_wrapper<T>& v)
+      {
+        return static_cast<const T&>(v);
       }
 
-      template <typename Char>
-      FMT_CONSTEXPR typed_node(const basic_string_view<Char>& arg)
-          : value(arg.data(), arg.size())
+      class dynamic_arg_list
       {
-      }
-    };
+        // Workaround for clang's -Wweak-vtables. Unlike for regular classes, for
+        // templates it doesn't complain about inability to deduce single translation
+        // unit for placing vtable. So storage_node_base is made a fake template.
+        template <typename = void>
+        struct node
+        {
+          virtual ~node() = default;
+          rsl::unique_ptr<node<>> next;
+        };
 
-    rsl::unique_ptr<node<>> m_head;
+        template <typename T>
+        struct typed_node : node<>
+        {
+          T value;
 
-  public:
-    template <typename T, typename Arg>
-    const T& push(const Arg& arg)
-    {
-      auto new_node  = rsl::unique_ptr<typed_node<T>>(new typed_node<T>(arg));
-      auto& value    = new_node->value;
-      new_node->next = rsl::move(m_head);
-      m_head         = rsl::move(new_node);
-      return value;
-    }
-  };
-} // namespace detail
+          template <typename Arg>
+          FMT_CONSTEXPR typed_node(const Arg& arg)
+              : value(arg)
+          {
+          }
 
-/**
-  \rst
-  A dynamic version of `rsl::format_arg_store`.
-  It's equipped with a storage to potentially temporary objects which lifetimes
-  could be shorter than the format arguments object.
+          template <typename Char>
+          FMT_CONSTEXPR typed_node(const basic_string_view<Char>& arg)
+              : value(arg.data(), arg.size())
+          {
+          }
+        };
 
-  It can be implicitly converted into `~rsl::basic_format_args` for passing
-  into type-erased formatting functions such as `~rsl::vformat`.
-  \endrst
- */
-template <typename Context>
-class dynamic_format_arg_store
+        rsl::unique_ptr<node<>> m_head;
+
+      public:
+        template <typename T, typename Arg>
+        const T& push(const Arg& arg)
+        {
+          auto new_node  = rsl::unique_ptr<typed_node<T>>(new typed_node<T>(arg));
+          auto& value    = new_node->value;
+          new_node->next = rsl::move(m_head);
+          m_head         = rsl::move(new_node);
+          return value;
+        }
+      };
+    } // namespace detail
+
+    /**
+      \rst
+      A dynamic version of `rsl::format_arg_store`.
+      It's equipped with a storage to potentially temporary objects which lifetimes
+      could be shorter than the format arguments object.
+
+      It can be implicitly converted into `~rsl::basic_format_args` for passing
+      into type-erased formatting functions such as `~rsl::vformat`.
+      \endrst
+     */
+    template <typename Context>
+    class dynamic_format_arg_store
 #if FMT_GCC_VERSION && FMT_GCC_VERSION < 409
-    // Workaround a GCC template argument substitution bug.
-    : public basic_format_args<Context>
+        // Workaround a GCC template argument substitution bug.
+        : public basic_format_args<Context>
 #endif
-{
-private:
-  using char_type = typename Context::char_type;
-
-  template <typename T>
-  struct need_copy
-  {
-    static constexpr detail::type mapped_type = detail::mapped_type_constant<T, Context>::value;
-
-    enum
     {
-      value = !(detail::is_reference_wrapper<T>::value || rsl::is_same<T, basic_string_view<char_type>>::value || rsl::is_same<T, detail::std_string_view<char_type>>::value ||
-                (mapped_type != detail::type::cstring_type && mapped_type != detail::type::string_type && mapped_type != detail::type::custom_type))
+    private:
+      using char_type = typename Context::char_type;
+
+      template <typename T>
+      struct need_copy
+      {
+        static constexpr detail::type mapped_type = detail::mapped_type_constant<T, Context>::value;
+
+        enum
+        {
+          value = !(detail::is_reference_wrapper<T>::value || rsl::is_same<T, basic_string_view<char_type>>::value || rsl::is_same<T, detail::std_string_view<char_type>>::value ||
+                    (mapped_type != detail::type::cstring_type && mapped_type != detail::type::string_type && mapped_type != detail::type::custom_type))
+        };
+      };
+
+      template <typename T>
+      using stored_type = conditional_t<rsl::is_char_array_v<T> && !detail::is_reference_wrapper<T>::value, rsl::basic_string<char_type>, T>;
+
+      // Storage of basic_format_arg must be contiguous.
+      rsl::vector<basic_format_arg<Context>> data_;
+      rsl::vector<detail::named_arg_info<char_type>> named_info_;
+
+      // Storage of arguments not fitting into basic_format_arg must grow
+      // without relocation because items in data_ refer to it.
+      detail::dynamic_arg_list dynamic_args_;
+
+      friend class basic_format_args<Context>;
+
+      unsigned long long get_types() const
+      {
+        return detail::is_unpacked_bit | data_.size() | (named_info_.empty() ? 0ULL : static_cast<unsigned long long>(detail::has_named_args_bit));
+      }
+
+      const basic_format_arg<Context>* data() const
+      {
+        return named_info_.empty() ? data_.data() : data_.data() + 1;
+      }
+
+      template <typename T>
+      void emplace_arg(const T& arg)
+      {
+        data_.emplace_back(detail::make_arg<Context>(arg));
+      }
+
+      template <typename T>
+      void emplace_arg(const detail::named_arg<char_type, T>& arg)
+      {
+        if(named_info_.empty())
+        {
+          constexpr const detail::named_arg_info<char_type>* zero_ptr {nullptr};
+          data_.insert(data_.begin(), {zero_ptr, 0});
+        }
+        data_.emplace_back(detail::make_arg<Context>(detail::unwrap(arg.value)));
+        auto pop_one = [](rsl::vector<basic_format_arg<Context>>* data) { data->pop_back(); };
+        rsl::unique_ptr<rsl::vector<basic_format_arg<Context>>, decltype(pop_one)> guard {&data_, pop_one};
+        named_info_.push_back({arg.name, static_cast<int>(data_.size() - 2u)});
+        data_[0].m_value.named_args = {named_info_.data(), named_info_.size()};
+        [[maybe_unused]] auto ptr   = guard.release();
+      }
+
+    public:
+      constexpr dynamic_format_arg_store() = default;
+
+      /**
+        \rst
+        Adds an argument into the dynamic store for later passing to a formatting
+        function.
+
+        Note that custom types and string types (but not string views) are copied
+        into the store dynamically allocating memory if necessary.
+
+        **Example**::
+
+          rsl::dynamic_format_arg_store<rsl::format_context> store;
+          store.push_back(42);
+          store.push_back("abc");
+          store.push_back(1.5f);
+          rsl::string result = rsl::vformat("{} and {} and {}", store);
+        \endrst
+      */
+      template <typename T>
+      void push_back(const T& arg)
+      {
+        if(detail::const_check(need_copy<T>::value))
+          emplace_arg(dynamic_args_.push<stored_type<T>>(arg));
+        else
+          emplace_arg(detail::unwrap(arg));
+      }
+
+      /**
+        \rst
+        Adds a reference to the argument into the dynamic store for later passing to
+        a formatting function.
+
+        **Example**::
+
+          rsl::dynamic_format_arg_store<rsl::format_context> store;
+          char band[] = "Rolling Stones";
+          store.push_back(rsl::cref(band));
+          band[9] = 'c'; // Changing str affects the output.
+          rsl::string result = rsl::vformat("{}", store);
+          // result == "Rolling Scones"
+        \endrst
+      */
+      template <typename T>
+      void push_back(rsl::reference_wrapper<T> arg)
+      {
+        static_assert(need_copy<T>::value, "objects of built-in types and string views are always copied");
+        emplace_arg(arg.get());
+      }
+
+      /**
+        Adds named argument into the dynamic store for later passing to a formatting
+        function. ``rsl::reference_wrapper`` is supported to avoid copying of the
+        argument. The name is always copied into the store.
+      */
+      template <typename T>
+      void push_back(const detail::named_arg<char_type, T>& arg)
+      {
+        const char_type* arg_name = dynamic_args_.push<rsl::basic_string<char_type>>(arg.name).c_str();
+        if(detail::const_check(need_copy<T>::value))
+        {
+          emplace_arg(rsl::arg(arg_name, dynamic_args_.push<stored_type<T>>(arg.value)));
+        }
+        else
+        {
+          emplace_arg(rsl::arg(arg_name, arg.value));
+        }
+      }
+
+      /** Erase all elements from the store */
+      void clear()
+      {
+        data_.clear();
+        named_info_.clear();
+        dynamic_args_ = detail::dynamic_arg_list();
+      }
+
+      /**
+        \rst
+        Reserves space to store at least *new_cap* arguments including
+        *new_cap_named* named arguments.
+        \endrst
+      */
+      void reserve(count_t new_cap, count_t new_cap_named)
+      {
+        FMT_ASSERT(new_cap >= new_cap_named, "Set of arguments includes set of named arguments");
+        data_.reserve(new_cap);
+        named_info_.reserve(new_cap_named);
+      }
     };
-  };
 
-  template <typename T>
-  using stored_type = conditional_t<rsl::is_char_array_v<T> && !detail::is_reference_wrapper<T>::value, rsl::basic_string<char_type>, T>;
-
-  // Storage of basic_format_arg must be contiguous.
-  rsl::vector<basic_format_arg<Context>> data_;
-  rsl::vector<detail::named_arg_info<char_type>> named_info_;
-
-  // Storage of arguments not fitting into basic_format_arg must grow
-  // without relocation because items in data_ refer to it.
-  detail::dynamic_arg_list dynamic_args_;
-
-  friend class basic_format_args<Context>;
-
-  unsigned long long get_types() const
-  {
-    return detail::is_unpacked_bit | data_.size() | (named_info_.empty() ? 0ULL : static_cast<unsigned long long>(detail::has_named_args_bit));
-  }
-
-  const basic_format_arg<Context>* data() const
-  {
-    return named_info_.empty() ? data_.data() : data_.data() + 1;
-  }
-
-  template <typename T>
-  void emplace_arg(const T& arg)
-  {
-    data_.emplace_back(detail::make_arg<Context>(arg));
-  }
-
-  template <typename T>
-  void emplace_arg(const detail::named_arg<char_type, T>& arg)
-  {
-    if(named_info_.empty())
-    {
-      constexpr const detail::named_arg_info<char_type>* zero_ptr {nullptr};
-      data_.insert(data_.begin(), {zero_ptr, 0});
-    }
-    data_.emplace_back(detail::make_arg<Context>(detail::unwrap(arg.value)));
-    auto pop_one = [](rsl::vector<basic_format_arg<Context>>* data) { data->pop_back(); };
-    rsl::unique_ptr<rsl::vector<basic_format_arg<Context>>, decltype(pop_one)> guard {&data_, pop_one};
-    named_info_.push_back({arg.name, static_cast<int>(data_.size() - 2u)});
-    data_[0].m_value.named_args = {named_info_.data(), named_info_.size()};
-    [[maybe_unused]] auto ptr   = guard.release();
-  }
-
-public:
-  constexpr dynamic_format_arg_store() = default;
-
-  /**
-    \rst
-    Adds an argument into the dynamic store for later passing to a formatting
-    function.
-
-    Note that custom types and string types (but not string views) are copied
-    into the store dynamically allocating memory if necessary.
-
-    **Example**::
-
-      rsl::dynamic_format_arg_store<rsl::format_context> store;
-      store.push_back(42);
-      store.push_back("abc");
-      store.push_back(1.5f);
-      rsl::string result = rsl::vformat("{} and {} and {}", store);
-    \endrst
-  */
-  template <typename T>
-  void push_back(const T& arg)
-  {
-    if(detail::const_check(need_copy<T>::value))
-      emplace_arg(dynamic_args_.push<stored_type<T>>(arg));
-    else
-      emplace_arg(detail::unwrap(arg));
-  }
-
-  /**
-    \rst
-    Adds a reference to the argument into the dynamic store for later passing to
-    a formatting function.
-
-    **Example**::
-
-      rsl::dynamic_format_arg_store<rsl::format_context> store;
-      char band[] = "Rolling Stones";
-      store.push_back(rsl::cref(band));
-      band[9] = 'c'; // Changing str affects the output.
-      rsl::string result = rsl::vformat("{}", store);
-      // result == "Rolling Scones"
-    \endrst
-  */
-  template <typename T>
-  void push_back(rsl::reference_wrapper<T> arg)
-  {
-    static_assert(need_copy<T>::value, "objects of built-in types and string views are always copied");
-    emplace_arg(arg.get());
-  }
-
-  /**
-    Adds named argument into the dynamic store for later passing to a formatting
-    function. ``rsl::reference_wrapper`` is supported to avoid copying of the
-    argument. The name is always copied into the store.
-  */
-  template <typename T>
-  void push_back(const detail::named_arg<char_type, T>& arg)
-  {
-    const char_type* arg_name = dynamic_args_.push<rsl::basic_string<char_type>>(arg.name).c_str();
-    if(detail::const_check(need_copy<T>::value))
-    {
-      emplace_arg(rsl::arg(arg_name, dynamic_args_.push<stored_type<T>>(arg.value)));
-    }
-    else
-    {
-      emplace_arg(rsl::arg(arg_name, arg.value));
-    }
-  }
-
-  /** Erase all elements from the store */
-  void clear()
-  {
-    data_.clear();
-    named_info_.clear();
-    dynamic_args_ = detail::dynamic_arg_list();
-  }
-
-  /**
-    \rst
-    Reserves space to store at least *new_cap* arguments including
-    *new_cap_named* named arguments.
-    \endrst
-  */
-  void reserve(count_t new_cap, count_t new_cap_named)
-  {
-    FMT_ASSERT(new_cap >= new_cap_named, "Set of arguments includes set of named arguments");
-    data_.reserve(new_cap);
-    named_info_.reserve(new_cap_named);
-  }
-};
-
-}}
+  } // namespace v1
+} // namespace rsl
 
 #endif // FMT_ARGS_H_

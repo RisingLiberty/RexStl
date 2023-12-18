@@ -12,10 +12,10 @@
 
 #pragma once
 
-#include "rex_std_extra/filesystem/core_mounts.h"
-#include "rex_std_extra/filesystem/open_flags.h"
+#include "rex_std/bonus/filesystem/core_mounts.h"
+#include "rex_std/bonus/filesystem/open_flags.h"
 
 #ifdef REX_PLATFORM_WINDOWS
-  #include "rex_std_extra/filesystem/win/win_file.h"
-  #include "rex_std_extra/filesystem/win/win_virtual_file_system.h"
+  #include "rex_std/bonus/filesystem/win/win_file.h"
+  #include "rex_std/bonus/filesystem/win/win_virtual_file_system.h"
 #endif
