@@ -1512,7 +1512,7 @@ namespace rsl
     {
 #ifdef _WIN32
       using dword = conditional_t<sizeof(long) == 4, unsigned long, unsigned>;
-      extern "C" __declspec(dllimport) int __stdcall WriteConsoleW( // NOLINT(readability-identifier-naming)
+      extern "C" __declspec(dllimport) int __stdcall WriteConsoleW( // NOLINT(readability-identifier-naming, readability-redundant-declaration)
           void*, const void*, dword, dword*, void*);
 
       FMT_FUNC bool write_console(std::FILE* f, string_view text) // NOLINT(misc-definitions-in-headers)

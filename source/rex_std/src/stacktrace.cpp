@@ -164,7 +164,7 @@ namespace rsl
 
     /// RSL Comment: Different from ISO C++ Standard at time of writing (17/Mar/2023)
     // This returns a std::string in the standard
-    rsl::string stacktrace_entry::description() const
+    rsl::string stacktrace_entry::description() const // NOLINT(misc-no-recursion)
     {
       rsl::string result;
 

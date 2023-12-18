@@ -16,6 +16,6 @@ namespace rsl
 {
   inline namespace v1
   {
-    void abort();
+    void abort(); // NOLINT(readability-redundant-declaration)
   } // namespace v1
 } // namespace rsl

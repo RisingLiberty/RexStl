@@ -98,7 +98,7 @@ namespace rsl
     {
       rsl::string str;
       str.reserve(view.length());
-      for(char16 c: view)
+      for(const char16 c : view)
       {
         str += rsl::to_ascii(c);
       }

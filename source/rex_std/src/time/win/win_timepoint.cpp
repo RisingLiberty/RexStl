@@ -25,8 +25,8 @@ rsl::time_point rsl::current_timepoint()
 
 rsl::time_point rsl::timepoint_from_systime(const _SYSTEMTIME& sysTime)
 {
-  rsl::time time = rsl::time(sysTime.wHour, sysTime.wMinute, sysTime.wSecond);
-  rsl::date date = rsl::date(sysTime.wDayOfWeek, sysTime.wDay, sysTime.wMonth, sysTime.wYear);
+  const rsl::time time = rsl::time(sysTime.wHour, sysTime.wMinute, sysTime.wSecond);
+  const rsl::date date = rsl::date(sysTime.wDayOfWeek, sysTime.wDay, sysTime.wMonth, sysTime.wYear);
 
   return rsl::time_point(date, time);
 }

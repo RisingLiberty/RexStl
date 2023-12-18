@@ -13,7 +13,7 @@
 
 #include "rex_std/bonus/time/timepoint.h"
 
-struct _SYSTEMTIME;
+struct _SYSTEMTIME; // NOLINT(bugprone-reserved-identifier)
 
 namespace rsl
 {

@@ -6,47 +6,34 @@ namespace rsl
   {
     namespace internal
     {
-      forward_list_node_base* forward_lst_node_base_get_previous(forward_list_node_base* node_base, const forward_list_node_base* node)
+      forward_list_node_base* forward_list_node_base_get_previous(forward_list_node_base* nodeBase, const forward_list_node_base* node)
       {
-        while(node_base && (node_base->next != node))
+        while(nodeBase && (nodeBase->next != node)) // NOLINT(readability-implicit-bool-conversion)
         {
-          node_base = node_base->next;
+          nodeBase = nodeBase->next;
         }
-        return node_base;
+        return nodeBase;
       }
 
-      const forward_list_node_base* forward_lst_node_base_get_previous(const forward_list_node_base* node_base, const forward_list_node_base* node)
+      const forward_list_node_base* forward_list_node_base_get_previous(const forward_list_node_base* nodeBase, const forward_list_node_base* node)
       {
-        while(node_base && (node_base->next != node))
+        while(nodeBase && (nodeBase->next != node)) // NOLINT(readability-implicit-bool-conversion)
         {
-          node_base = node_base->next;
+          nodeBase = nodeBase->next;
         }
-        return node_base;
+        return nodeBase;
       }
 
       void forward_list_node_splice_after(forward_list_node_base* pNode, forward_list_node_base* pNodeBeforeFirst, forward_list_node_base* pNodeBeforeLast)
       {
         if((pNode != pNodeBeforeFirst) && (pNode != pNodeBeforeLast))
         {
-          forward_list_node_base* const pFirst    = pNodeBeforeFirst->next;
-          forward_list_node_base* const pPosition = pNode->next;
+          forward_list_node_base* const first    = pNodeBeforeFirst->next;
+          forward_list_node_base* const position = pNode->next;
 
           pNodeBeforeFirst->next = pNodeBeforeLast->next;
-          pNode->next            = pFirst;
-          pNodeBeforeLast->next  = pPosition;
-        }
-      }
-
-      void forward_list_node_splice_after(forward_list_node_base* pNode, forward_list_node_base* pNodeBase)
-      {
-        forward_list_node_base* const pNodeBeforeLast = forward_lst_node_base_get_previous(pNodeBase, NULL);
-
-        if(pNodeBeforeLast != pNodeBase)
-        {
-          forward_list_node_base* const pPosition = pNode->next;
-          pNode->next                             = pNodeBase->next;
-          pNodeBase->next                         = NULL;
-          pNodeBeforeLast->next                   = pPosition;
+          pNode->next            = first;
+          pNodeBeforeLast->next  = position;
         }
       }
 
@@ -54,7 +41,7 @@ namespace rsl
       {
         if(pNode != toMove && pNode != toMove->next)
         {
-          forward_list_node_base* const node_before_to_move = forward_lst_node_base_get_previous(otherHead, toMove);
+          forward_list_node_base* const node_before_to_move = forward_list_node_base_get_previous(otherHead, toMove);
           node_before_to_move->next                         = toMove->next; // unlink from original list
 
           // insert into our list
@@ -68,7 +55,7 @@ namespace rsl
         forward_list_node_base* first_node = node;
         node                               = node->next;
         first_node->next                   = nullptr;
-        while(node)
+        while(node) // NOLINT(readability-implicit-bool-conversion)
         {
           forward_list_node_base* tmp = node->next;
           node->next                  = first_node;

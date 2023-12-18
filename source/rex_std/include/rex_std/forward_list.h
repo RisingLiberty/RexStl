@@ -64,7 +64,7 @@ namespace rsl
         using size_type = typename forward_list_node_base::size_type;
 
         template <typename... Args>
-        forward_list_node(Args&&... args)
+        explicit forward_list_node(Args&&... args)
             : forward_list_node_base()
             , value(rsl::forward<Args>(args)...)
         {
@@ -73,10 +73,7 @@ namespace rsl
         T value;
       };
 
-      forward_list_node_base* forward_lst_node_base_get_previous(forward_list_node_base* pNodeBase, const forward_list_node_base* pNode);
-      const forward_list_node_base* forward_lst_node_base_get_previous(const forward_list_node_base* pNodeBase, const forward_list_node_base* pNode);
       void forward_list_node_splice_after(forward_list_node_base* pNode, forward_list_node_base* pNodeBeforeFirst, forward_list_node_base* pNodeBeforeLast);
-      void forward_list_node_splice_after(forward_list_node_base* pNode, forward_list_node_base* pNodeBase);
       void forward_list_node_splice_single_after(forward_list_node_base* pNode, forward_list_node_base* otherHead, forward_list_node_base* toMove);
 
     } // namespace internal
@@ -111,16 +108,13 @@ namespace rsl
           : m_node(nullptr)
       {
       }
-      forward_list_iterator(internal::forward_list_node_base* node)
+      explicit forward_list_iterator(internal::forward_list_node_base* node)
           : m_node(static_cast<node_type*>(node))
       {
       }
-      forward_list_iterator(const forward_list_iterator& other)
-          : m_node(other.m_node)
-      {
-      }
+
       template <typename T2, typename Pointer2, typename Reference2>
-      forward_list_iterator(forward_list_iterator<T2, Pointer2, Reference2> it)
+      explicit forward_list_iterator(forward_list_iterator<T2, Pointer2, Reference2> it)
           : m_node(it.m_node)
       {
       }

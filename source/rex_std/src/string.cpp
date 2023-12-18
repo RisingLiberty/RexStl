@@ -10,12 +10,12 @@ namespace rsl
       card32 start = 0;
       for(card32 i = 0; i < str.size(); ++i)
       {
-        char8 c = str[i];
-        for(char8 d: deliminators)
+        const char8 c = str[i];
+        for(const char8 d : deliminators)
         {
           if(c == d)
           {
-            rsl::string_view sub_str = str.substr(start, i - start);
+            const rsl::string_view sub_str = str.substr(start, i - start);
             if(!sub_str.empty())
             {
               result.push_back(str.substr(start, i - start));
