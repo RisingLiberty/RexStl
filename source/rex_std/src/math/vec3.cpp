@@ -10,11 +10,11 @@
 //
 // ============================================
 
-#include "rex_std_extra/math/vec3.h"
+#include "rex_std/bonus/math/vec3.h"
 
+#include "rex_std/bonus/math/float.h"
 #include "rex_std/format.h"
 #include "rex_std/math.h"
-#include "rex_std_extra/math/float.h"
 
 rsl::vec3::vec3()
     : x(0.0f)

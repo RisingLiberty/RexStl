@@ -10,10 +10,10 @@
 //
 // ============================================
 
-#include "rex_std_extra/time/win/win_time.h"
+#include "rex_std/bonus/time/win/win_time.h"
 
-#include "rex_std_extra/time/time.h"
-#include "rex_std_extra/time/win/win_time_functions.h"
+#include "rex_std/bonus/time/time.h"
+#include "rex_std/bonus/time/win/win_time_functions.h"
 
 #include <Windows.h>
 

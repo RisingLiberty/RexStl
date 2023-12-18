@@ -10,7 +10,7 @@
 //
 // ============================================
 
-#include "rex_std_extra/math/matrix_33.h"
+#include "rex_std/bonus/math/matrix_33.h"
 
 #include "rex_std/math.h"
 

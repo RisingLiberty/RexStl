@@ -10,10 +10,10 @@
 //
 // ============================================
 
-#include "rex_std_extra/math/vec4.h"
+#include "rex_std/bonus/math/vec4.h"
 
+#include "rex_std/bonus/math/float.h"
 #include "rex_std/format.h"
-#include "rex_std_extra/math/float.h"
 
 #include <cmath>
 

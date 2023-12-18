@@ -10,7 +10,7 @@
 //
 // ============================================
 
-#include "rex_std_extra/math/point.h"
+#include "rex_std/bonus/math/point.h"
 
 rsl::point::point()
     : x(0)

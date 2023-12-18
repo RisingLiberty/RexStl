@@ -1,4 +1,4 @@
-#include "rex_std_extra/string.h"
+#include "rex_std/bonus/string.h"
 
 namespace rsl
 {
@@ -8,15 +8,15 @@ namespace rsl
     {
       rsl::vector<rsl::string_view> result;
       card32 start = 0;
-      for (card32 i = 0; i < str.size(); ++i)
+      for(card32 i = 0; i < str.size(); ++i)
       {
         char8 c = str[i];
-        for (char8 d : deliminators)
+        for(char8 d: deliminators)
         {
-          if (c == d)
+          if(c == d)
           {
             rsl::string_view sub_str = str.substr(start, i - start);
-            if (!sub_str.empty())
+            if(!sub_str.empty())
             {
               result.push_back(str.substr(start, i - start));
             }
@@ -25,12 +25,12 @@ namespace rsl
         }
       }
 
-      if (start != str.size())
+      if(start != str.size())
       {
         result.push_back(str.substr(start));
       }
-      
+
       return result;
     }
-  }
-}
+  } // namespace v1
+} // namespace rsl

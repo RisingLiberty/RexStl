@@ -10,7 +10,7 @@
 //
 // ============================================
 
-#include "rex_std_extra/memory/stack_allocator.h"
+#include "rex_std/bonus/memory/stack_allocator.h"
 
 rsl::stack_allocator::stack_allocator(size_type size)
     : m_base_ptr(rsl::make_unique<rsl::byte[]>(size)) // NOLINT(modernize-avoid-c-arrays)

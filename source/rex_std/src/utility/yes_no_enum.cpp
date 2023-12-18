@@ -10,7 +10,7 @@
 //
 // ============================================
 
-#include "rex_std_extra/utility/yes_no.h"
+#include "rex_std/bonus/utility/yes_no.h"
 
 rsl::yes_no::yes_no(eyes_no value)
     : m_value(value)

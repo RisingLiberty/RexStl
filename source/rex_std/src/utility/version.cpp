@@ -10,9 +10,9 @@
 //
 // ============================================
 
-#include "rex_std_extra/utility/version.h"
+#include "rex_std/bonus/utility/version.h"
 
-#include "rex_std_extra/utility/casting.h"
+#include "rex_std/bonus/utility/casting.h"
 
 rsl::version::version(card8 major, card8 minor, card32 patch)
     : m_major(major)

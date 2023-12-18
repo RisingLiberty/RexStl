@@ -10,9 +10,9 @@
 //
 // ============================================
 
-#include "rex_std_extra/time/timer.h"
+#include "rex_std/bonus/time/timer.h"
 
-#include "rex_std_extra/time/win/win_timepoint.h"
+#include "rex_std/bonus/time/win/win_timepoint.h"
 
 rsl::timer::timer(float32 maxTimeInSeconds)
     : m_max_time(maxTimeInSeconds * 0.0001f) // convert to milli seconds

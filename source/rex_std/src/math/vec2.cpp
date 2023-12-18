@@ -10,13 +10,13 @@
 //
 // ============================================
 
-#include "rex_std_extra/math/vec2.h"
+#include "rex_std/bonus/math/vec2.h"
 
+#include "rex_std/bonus/math/float.h"
 #include "rex_std/format.h"
 #include "rex_std/internal/math/cos.h"
 #include "rex_std/internal/math/sin.h"
 #include "rex_std/internal/math/sqrt.h"
-#include "rex_std_extra/math/float.h"
 
 #include <corecrt_math.h>
 

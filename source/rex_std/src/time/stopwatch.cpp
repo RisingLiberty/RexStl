@@ -10,10 +10,10 @@
 //
 // ============================================
 
-#include "rex_std_extra/time/stopwatch.h"
+#include "rex_std/bonus/time/stopwatch.h"
 
-#include "rex_std_extra/time/timepoint.h"
-#include "rex_std_extra/time/win/win_timepoint.h"
+#include "rex_std/bonus/time/timepoint.h"
+#include "rex_std/bonus/time/win/win_timepoint.h"
 
 rsl::stopwatch::stopwatch()
     : m_start(current_timepoint())

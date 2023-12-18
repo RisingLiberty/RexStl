@@ -10,10 +10,10 @@
 //
 // ============================================
 
-#include "rex_std_extra/utility/hash.h"
+#include "rex_std/bonus/utility/hash.h"
 
+#include "rex_std/bonus/random/rand.h"
 #include "rex_std/internal/functional/hash.h"
-#include "rex_std_extra/random/rand.h"
 
 rsl::hash_val rsl::hash_val::new_hash()
 {
