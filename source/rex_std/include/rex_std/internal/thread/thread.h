@@ -203,5 +203,14 @@ namespace rsl
       }
     };
 
+    template <>
+    struct hash<thread::id>
+    {
+      constexpr hash_result operator()(const thread::id& id) const
+      {
+        return static_cast<hash_result>(*reinterpret_cast<const ulong*>(&id)); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+      }
+    };
+
   } // namespace v1
 } // namespace rsl
