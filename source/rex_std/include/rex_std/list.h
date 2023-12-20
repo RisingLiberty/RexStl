@@ -571,7 +571,7 @@ namespace rsl
       }
       size_type max_size() const
       {
-        return numeric_limits<difference_type>::max();
+        return (numeric_limits<difference_type>::max)();
       }
 
       // modifiers
