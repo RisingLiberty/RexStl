@@ -302,11 +302,25 @@ namespace rsl
         view.remove_prefix(count);
         *this = view;
       }
+      void remove_prefix(rsl::string_view prefix)
+      {
+        if (starts_with(prefix))
+        {
+          remove_prefix(prefix.length());
+        }
+      }
       void remove_suffix(card32 count)
       {
         basic_string_view<CharType, char_traits<CharType>> view = to_view();
         view.remove_suffix(count);
         *this = view;
+      }
+      void remove_suffix(rsl::string_view suffix)
+      {
+        if (ends_width(suffix))
+        {
+          remove_suffix(suffix.length());
+        }
       }
 
       void copy(value_type* dest, card32 count, card32 pos = 0) const

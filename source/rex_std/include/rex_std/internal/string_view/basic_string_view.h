@@ -207,10 +207,27 @@ namespace rsl
         m_data += n;
         m_length -= n;
       }
+      /// RSL Comment: Not in ISO C++ Standard at time of writing (20/Dec/2023)
+      constexpr void remove_prefix(rsl::string_view prefix)
+      {
+        if (starts_with(prefix))
+        {
+          remove_prefix(prefix.length());
+        }
+      }
+
       // move the end of the view backward by n characters
       constexpr void remove_suffix(const size_type n)
       {
         m_length -= n;
+      }
+      /// RSL Comment: Not in ISO C++ Standard at time of writing (20/Dec/2023)
+      constexpr void remove_suffix(rsl::string_view suffix)
+      {
+        if (ends_width(suffix))
+        {
+          remove_suffix(suffix.length());
+        }
       }
       // exchanges the view with that of v
       constexpr void swap(basic_string_view& other)
