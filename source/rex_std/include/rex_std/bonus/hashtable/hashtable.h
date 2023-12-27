@@ -433,12 +433,12 @@ namespace rsl
 
         node_type** bucket_array = m_cp_key_equal_and_bucket_array.second() + n;
 
-        while(*bucket_array && !m_cp_key_equal_and_bucket_array.first()(k, m_cp_extract_key_and_rehash_policy.first()((*bucket_array)->value)))
+        while(*bucket_array && !compare_key(k, m_cp_extract_key_and_rehash_policy.first()((*bucket_array)->value)))
         {
           bucket_array = &(*bucket_array)->next;
         }
 
-        while(*bucket_array && m_cp_key_equal_and_bucket_array.first()(k, m_cp_extract_key_and_rehash_policy.first()((*bucket_array)->value)))
+        while(*bucket_array && compare_key(k, m_cp_extract_key_and_rehash_policy.first()((*bucket_array)->value)))
         {
           node_type* node = *bucket_array;
           *bucket_array   = node->next;
@@ -456,17 +456,17 @@ namespace rsl
         const size_type n                   = static_cast<size_type>(bucket_index(hr, bucket_count()));
         const size_type element_count_saved = size();
 
-        node_type** bucket_array = bucket_array() + n;
+        node_type** bucket_arr = bucket_array() + n;
 
-        while(*bucket_array && !compare(rsl::forward<K>(k), *bucket_array))
+        while(*bucket_arr && !compare_key(rsl::forward<K>(k), m_cp_extract_key_and_rehash_policy.first()((*bucket_arr)->value)))
         {
-          bucket_array = &(*bucket_array)->next;
+          bucket_arr = &(*bucket_arr)->next;
         }
 
-        while(*bucket_array && compare(rsl::forward<K>(k), *bucket_array))
+        while(*bucket_arr && compare_key(rsl::forward<K>(k), m_cp_extract_key_and_rehash_policy.first()((*bucket_arr)->value)))
         {
-          node_type* node = *bucket_array;
-          *bucket_array   = node->next;
+          node_type* node = *bucket_arr;
+          *bucket_arr     = node->next;
           free_node(node);
           --m_cp_bucket_idx_finder_and_element_count.second();
         }
@@ -560,7 +560,7 @@ namespace rsl
           // advantage of the fact that the count will always be zero or one in that case.
           for(; node; node = node->next)
           {
-            if(!compare(x, node))
+            if(!compare_key(x, m_cp_extract_key_and_rehash_policy.first()((*bucket_array)->value)))
             {
               ++result;
             }
@@ -591,7 +591,7 @@ namespace rsl
 
           for(; p1; p1 = p1->next)
           {
-            if(!compare(k, p1))
+            if(!compare_key(k, m_cp_extract_key_and_rehash_policy.first()((*bucket_array)->value)))
             {
               break;
             }
@@ -622,7 +622,7 @@ namespace rsl
 
           for(; p1; p1 = p1->next)
           {
-            if(!compare(k, p1))
+            if(!compare_key(k, m_cp_extract_key_and_rehash_policy.first()((*bucket_array)->value)))
             {
               break;
             }
@@ -790,6 +790,14 @@ namespace rsl
           const new_hash_type hasher {};
           return hasher(type);
         }
+      }
+
+      template <typename K1, typename K2>
+      bool compare_key(const K1& k1, const K2& k2)
+      {
+        const auto& comparer = m_cp_key_equal_and_bucket_array.first();
+        using other_type     = rsl::conditional_t<rsl::is_same_v<K1, Key>, K2, K1>;
+        return comparer(k1, k2);
       }
 
     private:
