@@ -44,6 +44,12 @@ namespace rsl
           , value(rsl::forward<Args>(args)...)
       {
       }
+      template <typename K, typename... Args, rsl::enable_if_t<rsl::is_constructible_v<Key, K>, bool> = true>
+      key_value(K&& k, Args&&... args)
+          : key(rsl::forward<K>(k))
+          , value(rsl::forward<Args>(args)...)
+      {
+      }
 
       const Key& first() const
       {
