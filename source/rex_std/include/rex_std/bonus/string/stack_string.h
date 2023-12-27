@@ -551,7 +551,7 @@ namespace rsl
       {
         stack_string<CharType, StrMaxSize> lowered = *this;
         lowered.lower();
-        return lower;
+        return lowered;
       }
       void lower()
       {
