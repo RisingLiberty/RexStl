@@ -154,7 +154,7 @@ namespace rsl
   #endif
 
   #ifndef FMT_USE_USER_DEFINED_LITERALS
-// EDG based compilers (Intel, NVIDIA, Elbrus, etc), GCC and MSVC support UDLs.
+  // EDG based compilers (Intel, NVIDIA, Elbrus, etc), GCC and MSVC support UDLs.
     #if(FMT_HAS_FEATURE(cxx_user_literals) || FMT_GCC_VERSION >= 407 || FMT_MSC_VERSION >= 1900) && (!defined(__EDG_VERSION__) || __EDG_VERSION__ >= /* UDL feature */ 480)
       #define FMT_USE_USER_DEFINED_LITERALS 1
     #else
@@ -4484,9 +4484,9 @@ namespace rsl
       {
       }
 
-      rsl::string as_string()
+      auto as_string()
       {
-        rsl::string res;
+        rsl::basic_string<Char> res;
         for(auto it = begin; it != end; ++it)
         {
           res += *it;
@@ -4563,7 +4563,17 @@ namespace rsl
       separated by `sep`.
      */
     template <typename It, typename Sentinel>
-    auto join(It begin, Sentinel end, string_view sep) -> join_view<It, Sentinel>
+    auto join(It begin, Sentinel end, string_view sep) -> join_view<It, Sentinel, char8>
+    {
+      return {begin, end, sep};
+    }
+
+    /**
+      Returns a view that formats the iterator range `[begin, end)` with elements
+      separated by `sep`.
+     */
+    template <typename It, typename Sentinel>
+    auto join(It begin, Sentinel end, wstring_view sep) -> join_view<It, Sentinel, tchar>
     {
       return {begin, end, sep};
     }
@@ -4585,7 +4595,29 @@ namespace rsl
       \endrst
      */
     template <typename Range>
-    auto join(Range&& range, string_view sep) -> join_view<detail::iterator_t<Range>, detail::sentinel_t<Range>>
+    auto join(Range&& range, string_view sep) -> join_view<detail::iterator_t<Range>, detail::sentinel_t<Range>, char>
+    {
+      return join(rsl::begin(range), rsl::end(range), sep);
+    }
+
+    /**
+      \rst
+      Returns a view that formats `range` with elements separated by `sep`.
+
+      **Example**::
+
+        rsl::vector<int> v = {1, 2, 3};
+        rsl::print("{}", rsl::join(v, ", "));
+        // Output: "1, 2, 3"
+
+      ``rsl::join`` applies passed format specifiers to the range elements::
+
+        rsl::print("{:02}", rsl::join(v, ", "));
+        // Output: "01, 02, 03"
+      \endrst
+     */
+    template <typename Range>
+    auto join(Range&& range, wstring_view sep) -> join_view<detail::iterator_t<Range>, detail::sentinel_t<Range>, tchar>
     {
       return join(rsl::begin(range), rsl::end(range), sep);
     }
@@ -4601,31 +4633,34 @@ namespace rsl
         rsl::string answer = rsl::to_string(42);
       \endrst
      */
-    template <typename T, FMT_ENABLE_IF(!rsl::is_integral<T>::value)>
-    inline auto to_string(const T& value) -> rsl::big_stack_string
+    namespace fmt
     {
-      auto result = rsl::big_stack_string();
-      detail::write<char>(rsl::back_inserter(result), value);
-      return result;
-    }
+      template <typename T, FMT_ENABLE_IF(!rsl::is_integral<T>::value && !rsl::is_same_v<T, rsl::wstring> && !rsl::is_same_v<T, rsl::wstring_view>)>
+      inline auto to_string(const T& value) -> rsl::big_stack_string
+      {
+        auto result = rsl::big_stack_string();
+        detail::write<char>(rsl::back_inserter(result), value);
+        return result;
+      }
 
-    template <typename T, FMT_ENABLE_IF(rsl::is_integral<T>::value)>
-    FMT_NODISCARD inline auto to_string(T value) -> rsl::tiny_stack_string
-    {
-      // The buffer should be large enough to store the number including the sign
-      // or "false" for bool.
-      constexpr int max_size = detail::digits10<T>() + 2;
-      char buffer[max_size > 5 ? static_cast<unsigned>(max_size) : 5];
-      char* begin = buffer;
-      return rsl::tiny_stack_string(begin, detail::write<char>(begin, value));
-    }
+      template <typename T, FMT_ENABLE_IF(rsl::is_integral<T>::value)>
+      FMT_NODISCARD inline auto to_string(T value) -> rsl::tiny_stack_string
+      {
+        // The buffer should be large enough to store the number including the sign
+        // or "false" for bool.
+        constexpr int max_size = detail::digits10<T>() + 2;
+        char buffer[max_size > 5 ? static_cast<unsigned>(max_size) : 5];
+        char* begin = buffer;
+        return rsl::tiny_stack_string(begin, detail::write<char>(begin, value));
+      }
 
-    template <typename Char, count_t SIZE>
-    FMT_NODISCARD auto to_string(const basic_memory_buffer<Char, SIZE>& buf) -> rsl::stack_string<Char, SIZE>
-    {
-      auto size = buf.size();
-      detail::assume(size < rsl::stack_string<Char, SIZE>().max_size());
-      return rsl::stack_string<Char, SIZE>(buf.data(), size);
+      template <typename Char, count_t SIZE>
+      FMT_NODISCARD auto to_string(const basic_memory_buffer<Char, SIZE>& buf) -> rsl::stack_string<Char, SIZE>
+      {
+        auto size = buf.size();
+        detail::assume(size < rsl::stack_string<Char, SIZE>().max_size());
+        return rsl::stack_string<Char, SIZE>(buf.data(), size);
+      }
     }
 
     namespace detail

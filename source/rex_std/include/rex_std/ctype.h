@@ -76,14 +76,11 @@ namespace rsl
     REX_NO_DISCARD constexpr bool is_print(char8 ch);
     REX_NO_DISCARD constexpr bool is_punct(char8 ch);
 
-    template <typename Iterator>
-    REX_NO_DISCARD constexpr bool is_digit(Iterator digit);
+    REX_NO_DISCARD constexpr bool is_digit(char8 digit);
 
-    template <typename Iterator>
-    REX_NO_DISCARD constexpr bool is_upper(Iterator letter);
+    REX_NO_DISCARD constexpr bool is_upper(char8 letter);
 
-    template <typename Iterator>
-    REX_NO_DISCARD constexpr bool is_lower(Iterator letter);
+    REX_NO_DISCARD constexpr bool is_lower(char8 letter);
 
     // checks if a character is alphanumeric
     REX_NO_DISCARD constexpr bool is_alnum(char8 ch)
@@ -96,24 +93,20 @@ namespace rsl
       return is_lower(ch) || is_upper(ch);
     }
 
-    template <typename CharType>
-    REX_NO_DISCARD constexpr bool is_upper(CharType letter)
+    REX_NO_DISCARD constexpr bool is_upper(char8 letter)
     {
       return letter >= 'A' && letter <= 'Z';
     }
-    template <typename CharType>
-    REX_NO_DISCARD constexpr bool is_lower(CharType letter)
+    REX_NO_DISCARD constexpr bool is_lower(char8 letter)
     {
       return letter >= 'a' && letter <= 'z';
     }
 
-    template <typename CharType>
-    REX_NO_DISCARD constexpr bool is_digit(CharType digit)
+    REX_NO_DISCARD constexpr bool is_digit(char8 digit)
     {
       return digit >= '0' && digit <= '9';
     }
-    template <typename CharType>
-    REX_NO_DISCARD constexpr bool is_digitf(CharType digit)
+    REX_NO_DISCARD constexpr bool is_digitf(char8 digit)
     {
       return is_digit(digit) || digit == '.';
     }

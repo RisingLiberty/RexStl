@@ -688,6 +688,11 @@ namespace rsl
     using medium_stack_string = stack_string<char8, 128>; // NOLINT(readability-magic-numbers)
     using big_stack_string    = stack_string<char8, 256>; // NOLINT(readability-magic-numbers)
 
+    using wtiny_stack_string   = stack_string<tchar, 32>;  // NOLINT(readability-magic-numbers)
+    using wsmall_stack_string  = stack_string<tchar, 64>;  // NOLINT(readability-magic-numbers)
+    using wmedium_stack_string = stack_string<tchar, 128>; // NOLINT(readability-magic-numbers)
+    using wbig_stack_string    = stack_string<tchar, 256>; // NOLINT(readability-magic-numbers)
+
     tiny_stack_string to_stack_string(uint32 value);
     tiny_stack_string to_stack_string(int32 value);
     tiny_stack_string to_stack_string(uint64 value);

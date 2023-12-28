@@ -28,5 +28,7 @@ namespace rsl
   {
     // Splits the string input into different parts using the deliminators
     rsl::vector<rsl::string_view> split(rsl::string_view str, rsl::string_view deliminators);
+    // Splits the string input into different parts using the deliminators
+    rsl::vector<rsl::wstring_view> split(rsl::wstring_view str, rsl::wstring_view deliminators);
   } // namespace v1
 } // namespace rsl
