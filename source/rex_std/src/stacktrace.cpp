@@ -168,11 +168,11 @@ namespace rsl
     {
       rsl::string result;
 
-      result += rsl::to_string(m_handle);
+      result += rsl::fmt::to_string(m_handle);
       result += " - ";
       result += m_file;
       result += "(";
-      result += rsl::to_stack_string(m_line_nr);
+      result += rsl::to_string(m_line_nr);
       result += ") ";
       result += m_function;
 

@@ -1505,7 +1505,7 @@ namespace rsl
       // can be better optimized in rsl::format anyway.
       auto buffer = memory_buffer();
       detail::vformat_to(buffer, fmt, args);
-      return to_string(buffer);
+      return fmt::to_string(buffer);
     }
 
     namespace detail

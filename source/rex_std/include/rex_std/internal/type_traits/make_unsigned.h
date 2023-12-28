@@ -153,6 +153,11 @@ namespace rsl
     {
       using type = uint8;
     };
+    template <>
+    struct make_unsigned<wchar_t>
+    {
+      using type = rsl::conditional_t<sizeof(wchar_t) == 2, uint16, uint32>;
+    };
 #ifdef REX_ENABLE_WITH_CPP20
     template <>
     struct make_unsigned<char8_t>

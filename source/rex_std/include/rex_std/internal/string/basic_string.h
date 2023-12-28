@@ -978,7 +978,7 @@ namespace rsl
       template <typename T, typename rsl::enable_if_t<rsl::is_same_v<T, CharType>, bool> = true>
       REX_NO_DISCARD bool starts_with(const T* const& s) const
       {
-        return starts_with(rsl::string_view(s));
+        return starts_with(rsl::basic_string_view(s));
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (01/Jul/2022)
       // because we have the above function, we don't define the following
@@ -1000,7 +1000,7 @@ namespace rsl
       template <typename T, typename rsl::enable_if_t<rsl::is_same_v<T, CharType>, bool> = true>
       REX_NO_DISCARD bool ends_with(const T* const& s) const
       {
-        return ends_with(rsl::string_view(s));
+        return ends_with(rsl::basic_string_view(s));
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (01/Jul/2022)
       // because we have the above function, we don't define the following
@@ -1022,7 +1022,7 @@ namespace rsl
       template <typename T, typename rsl::enable_if_t<rsl::is_same_v<T, CharType>, bool> = true>
       REX_NO_DISCARD bool contains(const T* const& s) const
       {
-        return contains(rsl::string_view(s));
+        return contains(rsl::basic_string_view(s));
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (01/Jul/2022)
       // because we have the above function, we don't define the following
@@ -1209,7 +1209,7 @@ namespace rsl
       /// RSL Comment: Not in ISO C++ Standard at time of writing (01/Jul/2022)
       // Replaces all occurrences of "from" to "to" in the current string.
       // Be careful as this might do a few reallocations if "to" is larger than "from"
-      basic_string& replace(rsl::string_view from, rsl::string_view to)
+      basic_string& replace(rsl::basic_string_view<CharType, Traits> from, rsl::basic_string_view<CharType, Traits> to)
       {
         size_type pos = 0;
         while((pos = find(from, pos)) != npos())
@@ -1776,12 +1776,12 @@ namespace rsl
       // returns the minimum between either the length of sv or count
       size_type obj_length_or_count(const basic_string_view<value_type, traits_type>& sv, size_type count, size_type startPos = 0) const
       {
-        return (count == s_npos || count > sv.length()) ? rsl::max(0, sv.length() - startPos) : count;
+        return (count == s_npos || count > sv.length()) ? (rsl::max)(0, sv.length() - startPos) : count;
       }
       // returns the minimum between either the length of s or count
       size_type obj_length_or_count(const basic_string& s, size_type count, size_type startPos = 0)
       {
-        return (count == s_npos || count > s.length()) ? rsl::max(0, s.length() - startPos) : count;
+        return (count == s_npos || count > s.length()) ? (rsl::max)(0, s.length() - startPos) : count;
       }
       // returns the size of a new buffer on reallocation
       size_type new_buffer_capacity(size_type numElementsToAdd) const
@@ -2015,7 +2015,7 @@ namespace rsl
 
       return Traits::compare(lhs.data(), rhs.data(), lhs.length()) == 0;
     }
-    // compares if 2 string objects are equal
+    //  compares if 2 string objects are equal
     template <typename Char, typename Traits, typename Alloc>
     bool operator==(const rsl::basic_string_view<Char, Traits>& lhs, const rsl::basic_string<Char, Traits, Alloc>& rhs)
     {

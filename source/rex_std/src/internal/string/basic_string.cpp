@@ -98,9 +98,59 @@ namespace rsl
     {
       rsl::string str;
       str.reserve(view.length());
-      for(const char16 c : view)
+      for(const char16 c: view)
       {
         str += rsl::to_ascii(c);
+      }
+      return str;
+    }
+
+    wstring to_wstring(int32 value)
+    {
+      return internal::to_string<wstring>(value);
+    }
+    wstring to_wstring(long value)
+    {
+      return internal::to_string<wstring>(value);
+    }
+    wstring to_wstring(int64 value)
+    {
+      return internal::to_string<wstring>(value);
+    }
+    wstring to_wstring(uint32 value)
+    {
+      return internal::to_string<wstring>(value);
+    }
+    wstring to_wstring(ulong value)
+    {
+      return internal::to_string<wstring>(value);
+    }
+    wstring to_wstring(uint64 value)
+    {
+      return internal::to_string<wstring>(value);
+    }
+    wstring to_wstring(float32 value)
+    {
+      return internal::to_string<wstring>(value);
+    }
+    wstring to_wstring(float64 value)
+    {
+      return internal::to_string<wstring>(value);
+    }
+    wstring to_wstring(lfloat64 value)
+    {
+      return internal::to_string<wstring>(value);
+    }
+
+    /// RSL Comment: Not in ISO C++ Standard at time of writing (15/Sept/2023)
+    // Helper function to convert a wstring to a string
+    wstring to_wstring(rsl::string_view view)
+    {
+      rsl::wstring str;
+      str.reserve(view.length());
+      for (const char c : view)
+      {
+        str += rsl::to_wide_char(c);
       }
       return str;
     }
