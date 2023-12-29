@@ -4797,12 +4797,6 @@ namespace rsl
       return vformat_to(out, loc, fmt, rsl::make_format_args(args...));
     }
 
-    template <typename OutputIt, typename Locale, typename... T, FMT_ENABLE_IF(detail::is_output_iterator<OutputIt, tchar>::value&& detail::is_locale<Locale>::value)>
-    FMT_INLINE auto format_to(OutputIt out, const Locale& loc, rsl::basic_format_string<tchar, rsl::type_identity_t<T>...> fmt, T&&... args) -> OutputIt
-    {
-      return vformat_to(out, loc, fmt, rsl::make_format_args(args...));
-    }
-
     FMT_MODULE_EXPORT_END
   } // namespace v1
 } // namespace rsl

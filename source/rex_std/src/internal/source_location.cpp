@@ -30,5 +30,12 @@ namespace rsl
 
       return result;
     }
+
+    rsl::wbig_stack_string to_wstring(const source_location& sourceLoc)
+    {
+      auto ascii_string = to_string(sourceLoc);
+
+      return rsl::to_wstring(ascii_string);
+    }
   } // namespace v1
 } // namespace rsl

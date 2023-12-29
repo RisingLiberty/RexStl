@@ -211,10 +211,13 @@ namespace rsl
     /**
       Converts *value* to ``rsl::wstring`` using the default format for type *T*.
      */
-    template <typename T>
-    inline auto to_wstring(const T& value) -> rsl::wstring
+    namespace fmt
     {
-      return format(FMT_STRING(L"{}"), value);
+      template <typename T>
+      inline auto to_wstring(const T& value) -> wide_fmt_stack_string
+      {
+        return format(FMT_STRING(L"{}"), value);
+      }
     }
     FMT_MODULE_EXPORT_END
   } // namespace v1

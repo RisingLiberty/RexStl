@@ -65,12 +65,8 @@ namespace rsl
     template <typename Char, typename Traits>
     class basic_ostream;
 
-    template <typename Char, typename Traits>
-    rsl::basic_ostream<Char, Traits>& operator<<(rsl::basic_ostream<Char, Traits>& os, const stacktrace_entry& entry)
-    {
-      os << entry.description();
-      return os;
-    }
+    rsl::ostream& operator<<(rsl::ostream& os, const stacktrace_entry& entry);
+    rsl::wostream& operator<<(rsl::wostream& os, const stacktrace_entry& entry);
 
     template <>
     struct formatter<stacktrace_entry>

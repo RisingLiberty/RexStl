@@ -80,6 +80,7 @@ namespace rsl
     };
 
     rsl::big_stack_string to_string(const source_location& sourceLoc);
+    rsl::wbig_stack_string to_wstring(const source_location& sourceLoc);
 
   } // namespace v1
 } // namespace rsl

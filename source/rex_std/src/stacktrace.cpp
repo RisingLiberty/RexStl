@@ -11,6 +11,7 @@
 // ============================================
 
 #include "rex_std/stacktrace.h"
+#include "rex_std/iostream.h"
 
 // NOLINTBEGIN(llvm-include-order)
 // clang-format off
@@ -203,6 +204,19 @@ namespace rsl
     {
       return entry.description();
     }
+
+    ostream& operator<<(ostream& os, const stacktrace_entry& entry)
+    {
+      os << entry.description();
+      return os;
+    }
+
+    wostream& operator<<(wostream& os, const stacktrace_entry& entry)
+    {
+      os << rsl::to_wstring(entry.description());
+      return os;
+    }
+
   } // namespace v1
 } // namespace rsl
 // NOLINTEND(modernize-use-nullptr)

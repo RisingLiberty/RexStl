@@ -17,11 +17,13 @@
 #include "rex_std/internal/string/basic_string.h"
 #include "rex_std/internal/string/memchr.h"
 #include "rex_std/internal/string_view/basic_string_view.h"
+#include "rex_std/internal/type_traits/enable_if.h"
 #include "rex_std/internal/type_traits/is_class.h"
 #include "rex_std/internal/type_traits/is_constant_evaluated.h"
 #include "rex_std/internal/type_traits/is_convertible.h"
 #include "rex_std/internal/type_traits/is_function.h"
 #include "rex_std/internal/type_traits/is_pointer.h"
+#include "rex_std/internal/type_traits/is_same.h"
 #include "rex_std/internal/type_traits/remove_cvref.h"
 #include "rex_std/internal/type_traits/remove_pointer.h"
 #include "rex_std/internal/type_traits/underlying_type.h"
@@ -441,7 +443,8 @@ namespace rsl
     template <typename T, typename Char = char, typename Enable = void>
     struct formatter
     {
-      auto parse(format_parse_context& ctx) const -> decltype(ctx.begin()) // NOLINT(readability-convert-member-functions-to-static)
+      template <typename Context>
+      auto parse(Context& ctx) const -> decltype(ctx.begin()) // NOLINT(readability-convert-member-functions-to-static)
       {
         return ctx.begin();
       }
@@ -449,9 +452,18 @@ namespace rsl
       template <typename FormatContext>
       auto format(const T& val, FormatContext& ctx) -> decltype(ctx.out())
       {
-        rsl::stringstream ss;
+        rsl::basic_stringstream<Char> ss;
         ss << val;
-        return format_to(ctx.out(), "{}", ss.view());
+
+        if constexpr (rsl::is_same_v<Char, char>)
+        {
+          return format_to(ctx.out(), "{}", ss.view());
+        }
+
+        if constexpr (rsl::is_same_v<Char, tchar>)
+        {
+          return format_to(ctx.out(), L"{}", ss.view());
+        }
       }
     };
 
@@ -3274,15 +3286,6 @@ namespace rsl
     {
       using detail::get_buffer;
       auto&& buf = get_buffer<char>(out);
-      detail::vformat_to(buf, fmt, args, {});
-      return detail::get_iterator(buf);
-    }
-
-    template <typename OutputIt, FMT_ENABLE_IF(detail::is_output_iterator<OutputIt, tchar>::value)>
-    auto vformat_to(OutputIt out, wstring_view fmt, basic_format_args<buffer_context<tchar>> args) -> OutputIt
-    {
-      using detail::get_buffer;
-      auto&& buf = get_buffer<tchar>(out);
       detail::vformat_to(buf, fmt, args, {});
       return detail::get_iterator(buf);
     }
