@@ -10,7 +10,7 @@
 
 #include "rex_std/format.h"
 
-#include <wchar>
+#include <cwchar>
 
 namespace rsl
 {
@@ -99,15 +99,15 @@ namespace rsl
     }
 
     template <typename Char, FMT_ENABLE_IF(!rsl::is_same<Char, char>::value)>
-    auto vformat(basic_string_view<Char> format_str, basic_format_args<buffer_context<type_identity_t<Char>>> args) -> rsl::basic_string<Char>
+    auto vformat(basic_string_view<Char> format_str, basic_format_args<buffer_context<type_identity_t<Char>>> args) -> rsl::stack_string<Char, 500>
     {
       basic_memory_buffer<Char> buffer;
       detail::vformat_to(buffer, format_str, args);
-      return to_string(buffer);
+      return fmt::to_string(buffer);
     }
 
     template <typename... T>
-    auto format(wformat_string<T...> fmt, T&&... args) -> rsl::wstring
+    auto format(wformat_string<T...> fmt, T&&... args) -> wide_fmt_stack_string
     {
       return vformat(rsl::wstring_view(fmt), rsl::make_wformat_args(args...));
     }
@@ -187,7 +187,7 @@ namespace rsl
       wmemory_buffer buffer;
       detail::vformat_to(buffer, fmt, args);
       buffer.push_back(L'\0');
-      if(rsl::fputws(buffer.data(), f) == -1)
+      if(std::fputws(buffer.data(), f) == -1)
         FMT_THROW(system_error(errno, FMT_STRING("cannot write to file")));
     }
 
@@ -197,7 +197,7 @@ namespace rsl
     }
 
     template <typename... T>
-    void print(rsl::FILE* f, wformat_string<T...> fmt, T&&... args)
+    void print(FILE* f, wformat_string<T...> fmt, T&&... args)
     {
       return vprint(f, wstring_view(fmt), rsl::make_wformat_args(args...));
     }

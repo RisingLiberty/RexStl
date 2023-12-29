@@ -3244,9 +3244,12 @@ namespace rsl
     FMT_FORMAT_AS(rsl::nullptr_t, const void*);
     // FMT_FORMAT_AS(detail::std_string_view<Char>, basic_string_view<Char>);
 
-    using fmt_stack_string = rsl::stack_string<char8, 500>;
+    using fmt_stack_string      = rsl::stack_string<char8, 500>;
+    using wide_fmt_stack_string = rsl::stack_string<tchar, 500>;
 
     FMT_API auto vformat(string_view fmt, format_args args) -> fmt_stack_string;
+
+    FMT_API auto vformat(wstring_view fmt, format_args args) -> wide_fmt_stack_string;
 
     /**
       \rst

@@ -154,7 +154,7 @@ namespace rsl
   #endif
 
   #ifndef FMT_USE_USER_DEFINED_LITERALS
-  // EDG based compilers (Intel, NVIDIA, Elbrus, etc), GCC and MSVC support UDLs.
+// EDG based compilers (Intel, NVIDIA, Elbrus, etc), GCC and MSVC support UDLs.
     #if(FMT_HAS_FEATURE(cxx_user_literals) || FMT_GCC_VERSION >= 407 || FMT_MSC_VERSION >= 1900) && (!defined(__EDG_VERSION__) || __EDG_VERSION__ >= /* UDL feature */ 480)
       #define FMT_USE_USER_DEFINED_LITERALS 1
     #else
@@ -4569,16 +4569,6 @@ namespace rsl
     }
 
     /**
-      Returns a view that formats the iterator range `[begin, end)` with elements
-      separated by `sep`.
-     */
-    template <typename It, typename Sentinel>
-    auto join(It begin, Sentinel end, wstring_view sep) -> join_view<It, Sentinel, tchar>
-    {
-      return {begin, end, sep};
-    }
-
-    /**
       \rst
       Returns a view that formats `range` with elements separated by `sep`.
 
@@ -4596,28 +4586,6 @@ namespace rsl
      */
     template <typename Range>
     auto join(Range&& range, string_view sep) -> join_view<detail::iterator_t<Range>, detail::sentinel_t<Range>, char>
-    {
-      return join(rsl::begin(range), rsl::end(range), sep);
-    }
-
-    /**
-      \rst
-      Returns a view that formats `range` with elements separated by `sep`.
-
-      **Example**::
-
-        rsl::vector<int> v = {1, 2, 3};
-        rsl::print("{}", rsl::join(v, ", "));
-        // Output: "1, 2, 3"
-
-      ``rsl::join`` applies passed format specifiers to the range elements::
-
-        rsl::print("{:02}", rsl::join(v, ", "));
-        // Output: "01, 02, 03"
-      \endrst
-     */
-    template <typename Range>
-    auto join(Range&& range, wstring_view sep) -> join_view<detail::iterator_t<Range>, detail::sentinel_t<Range>, tchar>
     {
       return join(rsl::begin(range), rsl::end(range), sep);
     }
@@ -4661,7 +4629,7 @@ namespace rsl
         detail::assume(size < rsl::stack_string<Char, SIZE>().max_size());
         return rsl::stack_string<Char, SIZE>(buf.data(), size);
       }
-    }
+    } // namespace fmt
 
     namespace detail
     {
@@ -4823,7 +4791,6 @@ namespace rsl
       return detail::get_iterator(buf);
     }
 
-
     template <typename OutputIt, typename Locale, typename... T, FMT_ENABLE_IF(detail::is_output_iterator<OutputIt, char>::value&& detail::is_locale<Locale>::value)>
     FMT_INLINE auto format_to(OutputIt out, const Locale& loc, format_string<T...> fmt, T&&... args) -> OutputIt
     {
@@ -4874,6 +4841,7 @@ namespace rsl
 
 // NOLINTEND(fuchsia-trailing-return, hicpp-signed-bitwise, misc-no-recursion)
 
+#include "rex_std/internal/format/xchar.h"
 #include "rex_std/internal/assert/assert_impl.h"
 
 #ifdef __clang__
