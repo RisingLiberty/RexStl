@@ -3275,6 +3275,15 @@ namespace rsl
       return detail::get_iterator(buf);
     }
 
+    template <typename OutputIt, FMT_ENABLE_IF(detail::is_output_iterator<OutputIt, tchar>::value)>
+    auto vformat_to(OutputIt out, wstring_view fmt, basic_format_args<buffer_context<tchar>> args) -> OutputIt
+    {
+      using detail::get_buffer;
+      auto&& buf = get_buffer<tchar>(out);
+      detail::vformat_to(buf, fmt, args, {});
+      return detail::get_iterator(buf);
+    }
+
     /**
      \rst
      Formats ``args`` according to specifications in ``fmt``, writes the result to
