@@ -12,6 +12,8 @@
 
 #include "rex_std/source_location.h"
 
+#include "rex_std/string.h"
+
 #include "rex_std/assert.h"
 
 namespace rsl
@@ -35,7 +37,9 @@ namespace rsl
     {
       auto ascii_string = to_string(sourceLoc);
 
-      return rsl::to_wstring(ascii_string);
+      rsl::wstring res = rsl::to_wstring(ascii_string);
+
+      return rsl::wbig_stack_string(res);
     }
   } // namespace v1
 } // namespace rsl
