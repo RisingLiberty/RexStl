@@ -8,7 +8,7 @@ namespace rsl
 {
   inline namespace v1
   {
-    using fuzz_span = std::basic_string_view<char>;
+    using fuzz_span = rsl::basic_string_view<char>;
 
     // Creates an object by copying N bytes into a trivial object
     // The input is reduced by the number of bytes copied
