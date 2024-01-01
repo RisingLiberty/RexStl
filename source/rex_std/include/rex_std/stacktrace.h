@@ -19,6 +19,7 @@
 #include "rex_std/internal/iterator/random_access_iterator.h"
 #include "rex_std/internal/iterator/reverse_iterator.h"
 #include "rex_std/internal/memory/allocator.h"
+#include "rex_std/iostream.h"
 #include "rex_std/string.h"
 #include "rex_std/vector.h"
 
