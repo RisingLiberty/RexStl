@@ -12,9 +12,11 @@
 
 #pragma once
 
+#include "rex_std/bonus/functional/crc/crc32c.h"
 #include "rex_std/bonus/functional/hash_result.h"
 #include "rex_std/bonus/types.h"
 #include "rex_std/bonus/utility/always_false.h"
+#include "rex_std/cstring.h"
 #include "rex_std/internal/stddef/nullptr.h"
 #include "rex_std/internal/type_traits/is_enum.h"
 
@@ -35,44 +37,18 @@ namespace rsl
         return static_cast<hash_result>(seed ^ hash);   // NOLINT(hicpp-signed-bitwise)
       }
 
-#pragma warning(push)
-#pragma warning(disable : 4307)
       template <typename CharType>
       constexpr hash_result hash(const CharType* key)
       {
-        const uint64 p    = 31;
-        const uint64 m    = static_cast<uint64>(1e9 + 9);
-        int64 hash_value  = 0;
-        int64 p_pow       = 1;
-        const CharType* c = key;
-        while(*c)
-        {
-          hash_value = (hash_value + (*c - static_cast<uint64>('a') + 1) * p_pow) % m;
-          p_pow      = (p_pow * p) % m; // NOLINT(cppcoreguidelines-narrowing-conversions)
-          c++;
-        }
+        count_t len = rsl::strlen(key);
 
-        return static_cast<hash_result>(hash_value);
+        return static_cast<hash_result>(crc32c::Crc32c(key, len));
       }
       template <typename CharType>
       constexpr hash_result hash(const CharType* key, count_t count)
       {
-        const uint64 p    = 31;
-        const uint64 m    = static_cast<uint64>(1e9 + 9); // NOLINT(google-readability-casting)
-        int64 hash_value  = 0;
-        int64 p_pow       = 1;
-        const CharType* c = key;
-        while(count > 0)
-        {
-          hash_value = (hash_value + (*c - static_cast<uint64>('a') + 1) * p_pow) % m;
-          p_pow      = (p_pow * p) % m; // NOLINT(cppcoreguidelines-narrowing-conversions)
-          c++;
-          --count;
-        }
-
-        return static_cast<hash_result>(hash_value);
+        return static_cast<hash_result>(crc32c::Crc32c(key, count));
       }
-#pragma warning(pop)
     } // namespace internal
 
     template <typename T>
