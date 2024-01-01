@@ -208,9 +208,9 @@ namespace rsl
         m_length -= n;
       }
       /// RSL Comment: Not in ISO C++ Standard at time of writing (20/Dec/2023)
-      constexpr void remove_prefix(rsl::string_view prefix)
+      constexpr void remove_prefix(basic_string_view prefix)
       {
-        if (starts_with(prefix))
+        if(starts_with(prefix))
         {
           remove_prefix(prefix.length());
         }
@@ -222,9 +222,9 @@ namespace rsl
         m_length -= n;
       }
       /// RSL Comment: Not in ISO C++ Standard at time of writing (20/Dec/2023)
-      constexpr void remove_suffix(rsl::string_view suffix)
+      constexpr void remove_suffix(basic_string_view suffix)
       {
-        if (ends_width(suffix))
+        if(ends_width(suffix))
         {
           remove_suffix(suffix.length());
         }
