@@ -159,6 +159,10 @@ public abstract class BasicCPPProject : Project
     // These are private and are not virtualized to be configurable derived projects
     SetupProjectPaths(conf, target);
 
+    // This is private and controlled by this project.
+    // derived project should not change the behavior of this
+    SetupTestingFlags(conf, target);
+
     // This is expected to be overriden by derived projects as it's abstract
     SetupOutputType(conf, target);
 
@@ -174,10 +178,6 @@ public abstract class BasicCPPProject : Project
     SetupCompilerRules(conf, target);
     SetupConfigRules(conf, target);
     SetupPostBuildEvents(conf, target);
-
-    // This is private and controlled by this project.
-    // derived project should not change the behavior of this
-    SetupTestingFlags(conf, target);
   }
 
   #region CppProjectFunctions
@@ -278,6 +278,12 @@ public abstract class BasicCPPProject : Project
     conf.Options.Add(Options.Vc.Linker.GenerateMapFile.Disable);
     conf.Options.Add(Options.Vc.Linker.GenerateManifest.Disable);
     conf.Options.Add(Options.Vc.Linker.TreatLinkerWarningAsErrors.Enable);
+
+    // This allows SSE for CRC when using Clang
+    if (target.Compiler == Compiler.Clang)
+    {
+      conf.AdditionalCompilerOptions.Add("-msse4.2");
+    }
   }
 
   // Setup the output type of this project
@@ -289,10 +295,10 @@ public abstract class BasicCPPProject : Project
   // This is meant to be overriden by derived projects and extended where needed
   protected virtual void SetupIncludePaths(RexConfiguration conf, RexTarget target)
   {
-    // To make sure we use the exact same includes, regardless of the compiler
-    // We add them here. Clang can figure them out on its own, but it can possibly
-    // use updated include files which could break compilation.
-    // This would also cause inconsistency between compilers
+    // Clang can figure out these includes on its own, but we need to give MSVC a hand
+    // in finding them, that's why we provide them here
+    if (target.Compiler == Compiler.MSVC)
+    {
       List<string> includePaths = new List<string>();
       includePaths.AddRange(ToolPaths["windows_sdk_includes"].ToList());
       includePaths.AddRange(ToolPaths["msvc_includes"].ToList());
@@ -300,6 +306,7 @@ public abstract class BasicCPPProject : Project
       {
         conf.IncludeSystemPaths.Add(path);
       }
+    }
 
     // We always add the include folder of the project to its include paths
     conf.IncludePaths.Add($@"{SourceRootPath}\include");
@@ -352,6 +359,19 @@ public abstract class BasicCPPProject : Project
         conf.Options.Add(Options.Vc.Linker.EnableCOMDATFolding.RemoveRedundantCOMDATs);
         conf.Options.Add(Options.Vc.Linker.Reference.EliminateUnreferencedData);
         break;
+    }
+
+    // disable lto to avoid asan odr issues.
+    // can't disable them with ASAN_OPTIONS=detect_odr_violation=0 due to unknown bug
+    if (conf.NinjaEnableAddressSanitizer)
+    {
+      conf.Options.Add(Options.Vc.General.WholeProgramOptimization.Disable);
+      conf.Options.Add(Options.Vc.Compiler.Optimization.Disable);
+    }
+
+    if (conf.NinjaEnableUndefinedBehaviorSanitizer)
+    {
+      conf.Options.Add(Options.Vc.Compiler.Optimization.Disable);
     }
 
     // Setup the difference between optimized builds vs shipping builds
