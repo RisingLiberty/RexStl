@@ -38,16 +38,19 @@ namespace rsl
       }
 
       template <typename CharType>
+      constexpr hash_result hash(const CharType* key, count_t count)
+      {
+        const uint8_t* data = reinterpret_cast<const uint8_t*>(key);
+        count = count * sizeof(CharType);
+        return static_cast<hash_result>(crc32c::Crc32c(data, count));
+      }
+
+      template <typename CharType>
       constexpr hash_result hash(const CharType* key)
       {
         count_t len = rsl::strlen(key);
 
-        return static_cast<hash_result>(crc32c::Crc32c(key, len));
-      }
-      template <typename CharType>
-      constexpr hash_result hash(const CharType* key, count_t count)
-      {
-        return static_cast<hash_result>(crc32c::Crc32c(key, count));
+        return hash(key, len);
       }
     } // namespace internal
 
