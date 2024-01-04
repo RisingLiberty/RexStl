@@ -703,14 +703,14 @@ namespace rsl
 
       node_type** allocate_buckets(size_type bucketCount)
       {
-        node_type** const bucket_array = static_cast<node_type**>(m_allocator.allocate(bucketCount * sizeof(node_type**)));
+        node_type** const bucket_array = static_cast<node_type**>(m_allocator.allocate((bucketCount + 1) * sizeof(node_type**))); // + 1 for the sentinal
         memset(bucket_array, 0, bucketCount * sizeof(node_type**));
         return bucket_array;
       }
 
       void free_buckets(node_type** bucketArray)
       {
-        m_allocator.deallocate(bucketArray, bucket_count() * sizeof(node_type**));
+        m_allocator.deallocate(bucketArray, (bucket_count() + 1) * sizeof(node_type**)); // +1 for sentinal
       }
 
       void free_nodes(node_type** nodeArray, size_type bucketCount)
