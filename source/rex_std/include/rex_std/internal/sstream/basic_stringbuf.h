@@ -111,7 +111,7 @@ namespace rsl
       ~basic_stringbuf()
       {
         const auto size = base::epptr() - base::pbase();
-        m_allocator.deallocate(m_buffer, size);
+        m_allocator.deallocate(m_buffer, size * sizeof(CharType));
       }
 
       basic_stringbuf& operator=(const basic_stringbuf&) = delete;
@@ -236,12 +236,12 @@ namespace rsl
         }
 
         const auto old_read_size = base::gptr() - base::eback();
-        const auto new_buffer    = static_cast<CharType*>(m_allocator.allocate(new_size));
+        const auto new_buffer    = static_cast<CharType*>(m_allocator.allocate(new_size * sizeof(CharType)));
 
         traits_type::copy(new_buffer, base::eback(), static_cast<count_t>(old_size));
         traits_type::copy(new_buffer + old_size, s, count);
 
-        m_allocator.deallocate(m_buffer, old_size);
+        m_allocator.deallocate(m_buffer, old_size * sizeof(CharType));
         m_buffer = new_buffer;
 
         m_current_write = m_buffer + old_size + count;
