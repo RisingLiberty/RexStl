@@ -676,6 +676,17 @@ namespace rsl
     };
 
     template <typename CharType, card32 Size>
+    bool operator==(basic_string_view<CharType> lhs, const stack_string<CharType, Size> rhs)
+    {
+      return rhs == lhs;
+    }
+    template <typename CharType, card32 Size>
+    bool operator!=(basic_string_view<CharType> lhs, const stack_string<CharType, Size> rhs)
+    {
+      return !(lhs == rhs)
+    }
+
+    template <typename CharType, card32 Size>
     stack_string<CharType, Size> operator+(const CharType* str, const stack_string<CharType, Size>& string)
     {
       stack_string<CharType, Size> res(str);
