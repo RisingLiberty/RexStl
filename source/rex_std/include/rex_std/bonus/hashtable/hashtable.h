@@ -707,7 +707,7 @@ namespace rsl
         node_type** const bucket_array = static_cast<node_type**>(m_allocator.allocate((bucketCount + 1) * sizeof(node_type**))); // + 1 for the sentinal
         rsl::memset(bucket_array, 0, bucketCount * sizeof(node_type**));
         // set the sentinal bucket to an invalid value
-        rsl::memset(bucket_array + bucketCount, 0xFF, sizeof(node_type**));
+        rsl::memset(bucket_array + bucketCount, 0xFFi8, sizeof(node_type**));
         return bucket_array;
       }
 
