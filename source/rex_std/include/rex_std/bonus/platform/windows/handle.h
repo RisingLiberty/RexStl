@@ -37,6 +37,8 @@ namespace rsl
         handle& operator=(const handle&) = delete;
         handle& operator=(handle&& other);
 
+        void close();
+
         bool is_valid() const;
         explicit operator bool() const;
 

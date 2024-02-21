@@ -40,7 +40,10 @@ namespace rsl
 
       handle::~handle()
       {
-        CloseHandle(m_handle);
+        if (is_valid())
+        {
+          close();
+        }
       }
 
       handle& handle::operator=(handle&& other)
@@ -48,6 +51,12 @@ namespace rsl
         m_handle       = other.m_handle;
         other.m_handle = INVALID_HANDLE_VALUE;
         return *this;
+      }
+
+      void handle::close()
+      {
+        CloseHandle(m_handle);
+        m_handle = INVALID_HANDLE_VALUE;
       }
 
       bool handle::is_valid() const
