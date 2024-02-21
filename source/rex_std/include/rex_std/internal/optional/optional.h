@@ -131,11 +131,11 @@ namespace rsl
         }
         constexpr const value_type& val() const
         {
-          return *m_val.get<value_type>();
+          return *m_val.template get<value_type>();
         }
         constexpr value_type& val()
         {
-          return *m_val.get<value_type>();
+          return *m_val.template get<value_type>();
         }
 
         constexpr void swap(const optional_storage<value_type>& other)
