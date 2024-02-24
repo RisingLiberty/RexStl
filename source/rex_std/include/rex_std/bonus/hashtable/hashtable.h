@@ -577,7 +577,7 @@ namespace rsl
       template <typename K>
       bool contains(const K& x) const
       {
-        return find(rsl::forward<K>(x)) != cend();
+        return find(x) != cend();
       }
 
       range<iterator> equal_range(const key_type& k)
