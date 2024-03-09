@@ -18,15 +18,22 @@
 
 #include <Windows.h>
 
-rsl::time_point rsl::current_timepoint()
+namespace rsl
 {
-  return rsl::time_point(current_date(), current_time());
-}
+  inline namespace v1
+  {
+    time_point current_timepoint()
+    {
+      return time_point(current_date(), current_time());
+    }
 
-rsl::time_point rsl::timepoint_from_systime(const _SYSTEMTIME& sysTime)
-{
-  const rsl::time time = rsl::time(sysTime.wHour, sysTime.wMinute, sysTime.wSecond);
-  const rsl::date date = rsl::date(sysTime.wDayOfWeek, sysTime.wDay, sysTime.wMonth, sysTime.wYear);
+    time_point timepoint_from_systime(const _SYSTEMTIME& sysTime)
+    {
+      const rsl::time time = rsl::time(sysTime.wHour, sysTime.wMinute, sysTime.wSecond);
+      const rsl::date date = rsl::date(sysTime.wDayOfWeek, sysTime.wDay, sysTime.wMonth, sysTime.wYear);
 
-  return rsl::time_point(date, time);
+      return rsl::time_point(date, time);
+
+    }
+  }
 }
