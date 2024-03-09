@@ -267,5 +267,21 @@ TEST_CASE("functional not fn")
   CHECK(not_foobar(2) == false);
   CHECK(not_foobar(0) == true);
 }
+TEST_CASE("wrapping a function")
+{
+  rsl::function<int()> func1 = []()
+  {
+    return 1;
+  };
 
+  rsl::function<int()> func2 = [
+    func = rsl::move(func1)
+  ]()
+    {
+      func();
+      return 2;
+    };
+
+  CHECK(func2() == 2);
+}
 // NOLINTEND
