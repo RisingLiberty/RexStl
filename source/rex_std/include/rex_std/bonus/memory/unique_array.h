@@ -29,32 +29,32 @@ namespace rsl
     class unique_array
     {
     public:
-      using pointer            = rsl::remove_extent_t<T>*;
-      using const_pointer      = const rsl::remove_extent_t<T>*;
-      using element_type       = rsl::remove_extent_t<T>;
+      using pointer = rsl::remove_extent_t<T>*;
+      using const_pointer = const rsl::remove_extent_t<T>*;
+      using element_type = rsl::remove_extent_t<T>;
       using const_element_type = const rsl::remove_extent_t<T>;
 
       unique_array()
-          : m_ptr(nullptr)
-          , m_count(0)
+        : m_ptr(nullptr)
+        , m_count(0)
       {
       }
       unique_array(rsl::nullptr_t) // NOLINT(google-explicit-constructor)
-          : m_ptr(nullptr)
-          , m_count(0)
+        : m_ptr(nullptr)
+        , m_count(0)
       {
       }
 
       unique_array(pointer pointer, card32 count)
-          : m_ptr(pointer)
-          , m_count(count)
+        : m_ptr(pointer)
+        , m_count(count)
       {
       }
 
       unique_array(const unique_array&) = delete;
       unique_array(unique_array&& other) noexcept
-          : m_ptr(other.release())
-          , m_count(other.count())
+        : m_ptr(other.release())
+        , m_count(other.count())
       {
       }
 
@@ -73,13 +73,13 @@ namespace rsl
 
       void swap(unique_array& other)
       {
-        T* tmp_ptr       = m_ptr;
+        T* tmp_ptr = m_ptr;
         card32 tmp_count = m_count;
 
-        m_ptr   = other.m_ptr;
+        m_ptr = other.m_ptr;
         m_count = other.m_count;
 
-        other.m_ptr   = tmp_ptr;
+        other.m_ptr = tmp_ptr;
         other.m_count = tmp_count;
       }
 
@@ -93,9 +93,18 @@ namespace rsl
       }
       REX_NO_DISCARD pointer release()
       {
+        m_count = 0;
         return rsl::exchange(m_ptr, pointer());
       }
 
+      card32 elem_size() const
+      {
+        return sizeof(T);
+      }
+      card32 byte_size() const
+      {
+        return count() * elem_size();
+      }
       card32 count() const
       {
         return m_count;
@@ -117,8 +126,8 @@ namespace rsl
 
       void reset(pointer ptr = pointer(), card32 count = 0)
       {
-        operator delete[](m_ptr, sizeof(element_type) * m_count);
-        m_ptr   = ptr;
+        operator delete[](m_ptr, sizeof(element_type)* m_count);
+        m_ptr = ptr;
         m_count = count;
       }
 
