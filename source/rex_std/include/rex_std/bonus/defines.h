@@ -22,23 +22,23 @@
 #define RSL_LINE_TO_STRING(L) #L
 #define RSL_CALL_MACRO(M, L)  M(L)
 
-#ifdef __clang__
-  #define STATIC_WARNING(expr)
+#ifdef RSL_COMPILER_CLANG
+  #define RSL_STATIC_WARNING(expr)
 #else
-  #define RSL_THIS_LINE             RSL_CALL_MACRO(STRINGIZE2, __LINE__)
+  #define RSL_THIS_LINE             RSL_CALL_MACRO(RSL_STRINGIZE2, __LINE__)
   #define RSL_STATIC_WARNING_PREFIX __FILE__ "(" RSL_THIS_LINE "): [WARNING] "
   #define RSL_STATIC_WARNING(expr)  __pragma(message(RSL_STATIC_WARNING_PREFIX##expr))
 #endif
 
-#ifdef __clang__
-  #define STATIC_INFO(expr)
+#ifdef RSL_COMPILER_CLANG
+  #define RSL_STATIC_INFO(expr)
 #else
   #define RSL_STATIC_INFO_PREFIX __FILE__ "(" THIS_LINE "): [INFO] "
   #define RSL_STATIC_INFO(expr)  __pragma(message(RSL_STATIC_INFO_PREFIX##expr))
 #endif
 
-#define RSL_MERGE(a, b)  MERGE1(a, b)
-#define RSL_MERGE1(a, b) MERGE2(a, b)
+#define RSL_MERGE(a, b)  RSL_MERGE1(a, b)
+#define RSL_MERGE1(a, b) RSL_MERGE2(a, b)
 #define RSL_MERGE2(a, b) a##b
 
 #define RSL_FUNC_SIGNATURE __FUNCSIG__
@@ -46,7 +46,7 @@
 #ifdef __COUNTER__
   #define RSL_ANONYMOUS_VARIABLE(str) RSL_MERGE(str, __COUNTER__)
 #else
-MERGE(str, __LINE__)
+  #define RSL_ANONYMOUS_VARIABLE(str) RSL_MERGE(str, __LINE__)
 #endif
 
 #define RSL_EXECUTE_ONCE(expression)                                                                                                                                                                                                                         \

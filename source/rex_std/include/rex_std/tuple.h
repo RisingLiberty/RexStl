@@ -37,7 +37,7 @@ namespace rsl
   inline namespace v1
   {
 
-    STATIC_WARNING("using rsl::tuple - this is deprecated, please use a named struct");
+    RSL_STATIC_WARNING("using rsl::tuple - this is deprecated, please use a named struct");
     // non-recursive tuple implementation based on libc++ tuple implementation and description at
     // http://mitchnull.blogspot.ca/2012/06/c11-tuple-implementation-details-part-1.html
 
