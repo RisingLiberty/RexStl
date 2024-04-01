@@ -53,7 +53,14 @@ public class BaseConfiguration
     conf.Options.Add(Options.Vc.General.CharacterSet.MultiByte);
     conf.Options.Add(Options.Vc.General.PlatformToolset.v142);
     conf.Options.Add(Options.Vc.General.WarningLevel.Level4);
-    conf.Options.Add(Options.Vc.General.TreatWarningsAsErrors.Enable);
+
+    // Disable warning as errors in debug so that we can add debug code
+    // without the compiler warning about it.
+    // We just need to make sure we delete it before it goes in to version control
+    if (target.Config != Config.debug)
+    {
+      conf.Options.Add(Options.Vc.General.TreatWarningsAsErrors.Enable);
+    }
   }
   // Setup the solution folder of this project.
   private void SetupSolutionFolder(RexConfiguration conf, RexTarget target)
@@ -61,6 +68,11 @@ public class BaseConfiguration
     // Setup solution folder..
     // Ideally we want to specify the following in the third party project
     // But Rex Std is a BasicCPPProject, so we have to hack around it like this
+    // Rex Std is a BasicCPPProject because it is a standalone repository
+    // In which it's not a thirdparty project
+    // Because Rex Std is its own repository, also using sharpmake and in it
+    // The project definition comes from the repository there.
+    // Base config doesn't setup the solution folder, other than the thirdparty folder
     if (Utils.FindInParent(Project.SourceRootPath, "0_thirdparty") != "")
     {
       conf.SolutionFolder = "0_thirdparty";
@@ -92,6 +104,7 @@ public class RegenerateProjects : Project
     // We need give the configuration a proper name or sharpmake fails to generate
     conf.Name = string.Concat(target.Config.ToString().ToLower(), target.Compiler.ToString().ToLower());
     conf.ProjectPath = Path.Combine(Globals.BuildFolder, ProjectGen.Settings.IntermediateDir, target.DevEnv.ToString(), Name);
+    conf.SolutionFolder = "_Generation";
 
     string rexpyPath = Path.Combine(Globals.Root, "_rex.py");
 
