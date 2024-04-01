@@ -40,11 +40,11 @@ namespace rsl
       {
       }
 
-      constexpr T* getData()
+      constexpr T* data()
       {
         return color_data.data();
       }
-      constexpr const T* getData() const
+      constexpr const T* data() const
       {
         return color_data.data();
       }
@@ -159,11 +159,11 @@ namespace rsl
       {
       }
 
-      T* getData()
+      T* data()
       {
         return color_data.data();
       }
-      const T* getData() const
+      const T* data() const
       {
         return color_data.data();
       }
