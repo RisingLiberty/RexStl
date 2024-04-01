@@ -34,6 +34,7 @@
 #include "rex_std/bonus/utility/scopeguard.h"
 #include "rex_std/bonus/utility/strong_type.h"
 #include "rex_std/bonus/utility/swap.h"
+#include "rex_std/bonus/utility/type_id.h"
 #include "rex_std/bonus/utility/use_first.h"
 #include "rex_std/bonus/utility/use_second.h"
 #include "rex_std/bonus/utility/use_self.h"
