@@ -47,7 +47,7 @@ namespace rsl
       constexpr nullopt_t(nullopt_tag /*unused*/ = {}) {} // NOLINT(google-explicit-constructor)
     };
 
-    constexpr nullopt_t nullopt{ nullopt_tag {} };
+    constexpr nullopt_t nullopt {nullopt_tag {}};
 
     namespace internal
     {
@@ -58,50 +58,50 @@ namespace rsl
         using value_type = rsl::remove_const_t<T>;
 
         constexpr optional_storage()
-          : m_has_value(false)
-          , m_val()
+            : m_has_value(false)
+            , m_val()
         {
         }
 
         constexpr explicit optional_storage(const value_type& v)
-          : m_has_value(true)
+            : m_has_value(true)
         {
           new(rsl::addressof(m_val)) value_type(v);
         }
 
         constexpr explicit optional_storage(value_type&& v)
-          : m_has_value(true)
+            : m_has_value(true)
         {
           new(rsl::addressof(m_val)) value_type(rsl::move(v));
         }
 
         template <typename... Args>
         constexpr explicit optional_storage(in_place_t /*unused*/, Args&&... args)
-          : m_has_value(true)
+            : m_has_value(true)
         {
           new(rsl::addressof(m_val)) value_type(rsl::forward<Args>(args)...);
         }
 
         template <typename U, typename... Args, typename = enable_if_t<is_constructible_v<T, rsl::initializer_list<U>&, Args&&...>>>
         constexpr explicit optional_storage(in_place_t /*unused*/, rsl::initializer_list<U> ilist, Args&&... args)
-          : m_has_value(true)
+            : m_has_value(true)
         {
           new(rsl::addressof(m_val)) value_type(ilist, rsl::forward<Args>(args)...);
         }
 
         constexpr optional_storage(const optional_storage&) = default;
-        constexpr optional_storage(optional_storage&&) = default;
+        constexpr optional_storage(optional_storage&&)      = default;
 
         ~optional_storage()
         {
-          if (m_has_value)
+          if(m_has_value)
           {
             destroy_value();
           }
         }
 
         constexpr optional_storage& operator=(const optional_storage&) = default;
-        constexpr optional_storage& operator=(optional_storage&&) = default;
+        constexpr optional_storage& operator=(optional_storage&&)      = default;
 
         template <typename... Args>
         constexpr void construct_value(Args&&... args)
@@ -140,16 +140,16 @@ namespace rsl
 
         constexpr void swap(const optional_storage<value_type>& other)
         {
-          if (has_value() == other.has_value())
+          if(has_value() == other.has_value())
           {
-            if (has_value())
+            if(has_value())
             {
               rsl::swap(val(), other.val());
             }
           }
           else
           {
-            if (has_value())
+            if(has_value())
             {
               other.construct_value(rsl::move(val()));
               destroy_value();
@@ -166,7 +166,7 @@ namespace rsl
 
       private:
         bool m_has_value;
-        aligned_storage_t<value_type> m_val{};
+        aligned_storage_t<value_type> m_val {};
       };
 
       template <typename T>
@@ -176,32 +176,32 @@ namespace rsl
         using value_type = rsl::remove_const_t<T>;
 
         constexpr optional_storage()
-          : m_has_value(false)
+            : m_has_value(false)
         {
         }
 
         constexpr explicit optional_storage(const value_type& v)
-          : m_has_value(true)
+            : m_has_value(true)
         {
           m_val.template set<value_type>(v);
         }
 
         constexpr explicit optional_storage(value_type&& v)
-          : m_has_value(true)
+            : m_has_value(true)
         {
           m_val.template set<value_type>(rsl::move(v));
         }
 
         template <typename... Args>
         constexpr explicit optional_storage(in_place_t /*unused*/, Args&&... args)
-          : m_has_value(true)
+            : m_has_value(true)
         {
           m_val.template set(rsl::forward<Args>(args)...);
         }
 
         template <typename U, typename... Args, typename = enable_if_t<is_constructible_v<T, rsl::initializer_list<U>&, Args&&...>>>
         constexpr explicit optional_storage(in_place_t /*unused*/, rsl::initializer_list<U> ilist, Args&&... args)
-          : m_has_value(true)
+            : m_has_value(true)
         {
           m_val.template set(ilist, rsl::forward<Args>(args)...);
         }
@@ -243,16 +243,16 @@ namespace rsl
 
         constexpr void swap(optional_storage<value_type>& other)
         {
-          if (has_value() == other.has_value())
+          if(has_value() == other.has_value())
           {
-            if (has_value())
+            if(has_value())
             {
               rsl::swap(val(), other.val());
             }
           }
           else
           {
-            if (has_value())
+            if(has_value())
             {
               other.construct_value(rsl::move(val()));
               destroy_value();
@@ -269,7 +269,7 @@ namespace rsl
 
       private:
         bool m_has_value;
-        aligned_storage_t<value_type> m_val{};
+        aligned_storage_t<value_type> m_val {};
       };
     } // namespace internal
 
@@ -281,7 +281,7 @@ namespace rsl
 
       template <typename T2>
       using allow_direct_conversion =
-        bool_constant<conjunction_v<negation<is_same<remove_cvref_t<T2>, optional>>, negation<is_same<remove_cvref_t<T2>, in_place_t>>, is_constructible<T, T2>, negation<is_same<bool, T>>>>; // solving issues when assigning opt<int> to opt<bool>
+          bool_constant<conjunction_v<negation<is_same<remove_cvref_t<T2>, optional>>, negation<is_same<remove_cvref_t<T2>, in_place_t>>, is_constructible<T, T2>, negation<is_same<bool, T>>>>; // solving issues when assigning opt<int> to opt<bool>
     public:
       using value_type = T;
 
@@ -293,7 +293,7 @@ namespace rsl
       constexpr optional() = default;
       // constructs an object that does not contain a value
       constexpr optional(nullopt_t /*unused*/) // NOLINT(google-explicit-constructor)
-        : m_storage()
+          : m_storage()
       {
       }
       // copy constructor, if other contains a value, it's copied in to this
@@ -301,7 +301,7 @@ namespace rsl
       {
         m_storage.has_value(other.has_value());
 
-        if (m_storage.has_value())
+        if(m_storage.has_value())
         {
           const auto& other_value = other.value();
           m_storage.construct_value(other_value);
@@ -312,7 +312,7 @@ namespace rsl
       {
         m_storage.has_value(other.has_value());
 
-        if (m_storage.has_value())
+        if(m_storage.has_value())
         {
           auto& other_value = other.value();
           m_storage.construct_value(rsl::move(other_value));
@@ -324,7 +324,7 @@ namespace rsl
       {
         m_storage.has_value(other.has_value());
 
-        if (m_storage.has_value())
+        if(m_storage.has_value())
         {
           const auto& other_value = other.value();
           m_storage.construct_value(other_value);
@@ -336,7 +336,7 @@ namespace rsl
       {
         m_storage.has_value(other.has_value());
 
-        if (m_storage.has_value())
+        if(m_storage.has_value())
         {
           auto& other_value = other.value();
           m_storage.construct_value(rsl::move(other_value));
@@ -345,34 +345,34 @@ namespace rsl
       // construct an optional object that contains a value initialized with the arguments "arg"
       template <typename... Args>
       constexpr explicit optional(in_place_t /*unused*/, Args&&... args)
-        : m_storage(in_place, rsl::forward<Args>(args)...)
+          : m_storage(in_place, rsl::forward<Args>(args)...)
       {
       }
 
       // construct an optional object that contains a value initialized with the arguments ilist and "arg"
       template <typename U, typename... Args, typename = enable_if_t<is_constructible_v<T, rsl::initializer_list<U>&, Args&&...>>>
       constexpr optional(in_place_t /*unused*/, rsl::initializer_list<U> ilist, Args&&... args)
-        : m_storage(in_place, ilist, rsl::forward<Args>(args)...)
+          : m_storage(in_place, ilist, rsl::forward<Args>(args)...)
       {
       }
       /// RSL Comment: Not in ISO C++ Standard at time of writing (12/Oct/2022)
       // copies val into this optional
       // this overload is provided to avoid conflicts with optional bools
       optional(const T& val) // NOLINT(google-explicit-constructor)
-        : m_storage(val)
+          : m_storage(val)
       {
       }
       /// RSL Comment: Not in ISO C++ Standard at time of writing (12/Oct/2022)
       // moves val into this optional
       // this overload is provided to avoid conflicts with optional bools
       optional(T&& val) // NOLINT(google-explicit-constructor)
-        : m_storage(rsl::move(val))
+          : m_storage(rsl::move(val))
       {
       }
       // construct an object initialized from the argument provided
       template <typename U = T, enable_if_t<allow_direct_conversion<U>::value, bool> = true>
       optional(U&& value) // NOLINT(google-explicit-constructor)
-        : m_storage(rsl::forward<U>(value))
+          : m_storage(rsl::forward<U>(value))
       {
       }
 
@@ -389,16 +389,16 @@ namespace rsl
       constexpr optional& operator=(const optional& other)
       {
         auto* other_value = reinterpret_cast<const T*>(rsl::addressof(other.val())); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
-        if (m_storage.has_value() == other.has_value())
+        if(m_storage.has_value() == other.has_value())
         {
-          if (m_storage.has_value())
+          if(m_storage.has_value())
           {
             m_storage.val() = *other_value;
           }
         }
         else
         {
-          if (m_storage.has_value())
+          if(m_storage.has_value())
           {
             m_storage.destroy_value();
             m_storage.has_value(false);
@@ -415,16 +415,16 @@ namespace rsl
       constexpr optional& operator=(optional&& other)
       {
         auto* other_value = reinterpret_cast<const T*>(rsl::addressof(other.value())); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
-        if (m_storage.has_value() == other.has_value())
+        if(m_storage.has_value() == other.has_value())
         {
-          if (m_storage.has_value())
+          if(m_storage.has_value())
           {
             m_storage.set_val(rsl::move(*other_value));
           }
         }
         else
         {
-          if (m_storage.has_value())
+          if(m_storage.has_value())
           {
             m_storage.destroy_value();
             m_storage.has_value(false);
@@ -441,7 +441,7 @@ namespace rsl
       template <typename U, typename = rsl::enable_if_t<rsl::is_same_v<rsl::decay_t<U>, T>>>
       constexpr optional& operator=(U&& u)
       {
-        if (m_storage.has_value())
+        if(m_storage.has_value())
         {
           m_storage.val() = rsl::forward<U>(u);
         }
@@ -457,16 +457,16 @@ namespace rsl
       constexpr optional& operator=(const optional<U>& other)
       {
         auto* other_value = reinterpret_cast<const T*>(rsl::addressof(other.val())); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
-        if (m_storage.has_value() == other.has_value())
+        if(m_storage.has_value() == other.has_value())
         {
-          if (m_storage.has_value())
+          if(m_storage.has_value())
           {
             m_storage.val() = *other_value;
           }
         }
         else
         {
-          if (m_storage.has_value())
+          if(m_storage.has_value())
           {
             m_storage.destroy_value();
             m_storage.has_value(false);
@@ -484,16 +484,16 @@ namespace rsl
       constexpr optional& operator=(optional<U>&& other)
       {
         auto* other_value = reinterpret_cast<const T*>(rsl::addressof(other.val())); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
-        if (m_storage.has_value() == other.has_value())
+        if(m_storage.has_value() == other.has_value())
         {
-          if (m_storage.has_value())
+          if(m_storage.has_value())
           {
             m_storage.val() = rsl::move(*other_value);
           }
         }
         else
         {
-          if (m_storage.has_value())
+          if(m_storage.has_value())
           {
             m_storage.destroy_value();
             m_storage.has_value(false);
@@ -523,7 +523,7 @@ namespace rsl
         return m_storage.val();
       }
       // returns a reference to the contained value
-      constexpr T& operator*()&
+      constexpr T& operator*() &
       {
         return m_storage.val();
       }
@@ -532,7 +532,7 @@ namespace rsl
         return m_storage.val();
       }
       // returns a reference to the contained value
-      constexpr T&& operator*()&&
+      constexpr T&& operator*() &&
       {
         return m_storage.val();
       }
@@ -550,7 +550,7 @@ namespace rsl
 
       // if this contains a value, returns a reference to the contained value.
       // asserts otherwise
-      constexpr T& value()&
+      constexpr T& value() &
       {
         RSL_ASSERT_X(has_value(), "bad optional access!");
         return m_storage.val();
@@ -564,7 +564,7 @@ namespace rsl
       }
       // if this contains a value, returns a reference to the contained value.
       // asserts otherwise
-      constexpr T&& value()&&
+      constexpr T&& value() &&
       {
         RSL_ASSERT_X(has_value(), "bad optional access!");
         return rsl::move(m_storage.val());
@@ -585,7 +585,7 @@ namespace rsl
       }
       // returns the contained value if this has one, returns default value otherwise
       template <typename U>
-      constexpr value_type value_or(U&& defaultValue)&&
+      constexpr value_type value_or(U&& defaultValue) &&
       {
         return m_storage.has_value() ? rsl::move(m_storage.val()) : static_cast<value_type>(defaultValue);
       }
@@ -620,7 +620,7 @@ namespace rsl
       template <typename... Args>
       constexpr T& emplace(Args&&... args)
       {
-        if (has_value())
+        if(has_value())
         {
           m_storage.destroy_value();
         }
@@ -646,7 +646,7 @@ namespace rsl
       // if this contains a value, destroy that value by calling its constructor.
       constexpr void reset()
       {
-        if (has_value())
+        if(has_value())
         {
           m_storage.destroy_value();
           m_storage.has_value(false);
@@ -654,19 +654,19 @@ namespace rsl
       }
 
     private:
-      storage_type m_storage{};
+      storage_type m_storage {};
     };
 
     // compares two optional objects
     template <typename T, typename U>
     constexpr bool operator==(const optional<T>& lhs, const optional<U>& rhs)
     {
-      if (lhs.has_value() != rhs.has_value())
+      if(lhs.has_value() != rhs.has_value())
       {
         return false;
       }
 
-      if (!lhs.has_value())
+      if(!lhs.has_value())
       {
         return true;
       }
@@ -683,12 +683,12 @@ namespace rsl
     template <typename T, typename U>
     constexpr bool operator<(const optional<T>& lhs, const optional<U>& rhs)
     {
-      if (!rhs.has_value())
+      if(!rhs.has_value())
       {
         return false;
       }
 
-      if (!lhs.has_value())
+      if(!lhs.has_value())
       {
         return true;
       }
@@ -791,7 +791,7 @@ namespace rsl
     template <typename T, typename U>
     constexpr bool operator==(const optional<T>& opt, const U& value)
     {
-      if (opt.has_value())
+      if(opt.has_value())
       {
         return *opt == value;
       }
@@ -802,7 +802,7 @@ namespace rsl
     template <typename T, typename U>
     constexpr bool operator==(const U& value, const optional<T>& opt)
     {
-      if (opt.has_value())
+      if(opt.has_value())
       {
         return value == *opt;
       }
@@ -813,7 +813,7 @@ namespace rsl
     template <typename T, typename U>
     constexpr bool operator!=(const optional<T>& opt, const U& value)
     {
-      if (opt.has_value())
+      if(opt.has_value())
       {
         return !(*opt == value);
       }
@@ -824,7 +824,7 @@ namespace rsl
     template <typename T, typename U>
     constexpr bool operator!=(const U& value, const optional<T>& opt)
     {
-      if (opt.has_value())
+      if(opt.has_value())
       {
         return !(value == opt);
       }
@@ -835,7 +835,7 @@ namespace rsl
     template <typename T, typename U>
     constexpr bool operator<(const optional<T>& opt, const U& value)
     {
-      if (opt.has_value())
+      if(opt.has_value())
       {
         return *opt < value;
       }
@@ -846,7 +846,7 @@ namespace rsl
     template <typename T, typename U>
     constexpr bool operator<(const U& value, const optional<T>& opt)
     {
-      if (opt.has_value())
+      if(opt.has_value())
       {
         return value < *opt;
       }
@@ -869,7 +869,7 @@ namespace rsl
     template <typename T, typename U>
     constexpr bool operator>(const optional<T>& opt, const U& value)
     {
-      if (opt.has_value())
+      if(opt.has_value())
       {
         return value < *opt;
       }
@@ -880,7 +880,7 @@ namespace rsl
     template <typename T, typename U>
     constexpr bool operator>(const U& value, const optional<T>& opt)
     {
-      if (opt.has_value())
+      if(opt.has_value())
       {
         return *opt < value;
       }
@@ -928,7 +928,7 @@ namespace rsl
 
     // deduction guides
     template <typename T>
-    optional(T)->optional<T>;
+    optional(T) -> optional<T>;
 
     template <typename T>
     struct hash;
@@ -938,7 +938,7 @@ namespace rsl
     {
       constexpr hash_result operator()(const optional<T>& opt) const
       {
-        if (opt.has_value())
+        if(opt.has_value())
         {
           return hash<T> {}(*opt);
         }

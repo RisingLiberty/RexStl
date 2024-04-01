@@ -21,10 +21,10 @@
 #include "rex_std/bonus/string/stack_string.h"
 #include "rex_std/bonus/types.h"
 
-#ifdef REX_ENABLE_WITH_CPP20
-  #define REX_CONSTEVAL_WITH_CPP20 consteval
+#ifdef RSL_ENABLE_WITH_CPP20
+  #define RSL_CONSTEVAL_WITH_CPP20 consteval
 #else
-  #define REX_CONSTEVAL_WITH_CPP20 constexpr
+  #define RSL_CONSTEVAL_WITH_CPP20 constexpr
 #endif
 
 namespace rsl
@@ -35,7 +35,7 @@ namespace rsl
     class source_location
     {
     public:
-      REX_CONSTEVAL_WITH_CPP20 source_location()
+      RSL_CONSTEVAL_WITH_CPP20 source_location()
           : m_line(0)
           , m_column(0)
           , m_file_name()

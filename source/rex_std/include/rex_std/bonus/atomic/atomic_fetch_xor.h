@@ -17,7 +17,7 @@
 #include "rex_std/bonus/atomic/atomic_fixed_width_type.h"
 #include "rex_std/bonus/types.h"
 
-#if defined(REX_COMPILER_MSVC)
+#if defined(RSL_COMPILER_MSVC)
   #include <intrin.h>
 #endif
 
@@ -25,7 +25,7 @@ namespace rsl
 {
   inline namespace v1
   {
-#if defined(REX_COMPILER_MSVC)
+#if defined(RSL_COMPILER_MSVC)
     template <typename T>
     atomic_t<T> atomic_fetch_xor(T* obj, T valToAdd, rsl::memory_order /*unused*/)
     {
@@ -54,7 +54,7 @@ namespace rsl
         return 0;
       }
     }
-#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+#elif defined(RSL_COMPILER_GCC) || defined(RSL_COMPILER_CLANG)
     template <typename T>
     atomic_t<T> atomic_fetch_xor(T* obj, T valToAdd, rsl::memory_order order)
     {

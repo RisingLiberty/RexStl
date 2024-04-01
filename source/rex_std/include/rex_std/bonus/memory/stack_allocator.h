@@ -34,7 +34,7 @@ namespace rsl
 
       explicit stack_allocator(size_type size);
 
-      REX_NO_DISCARD pointer allocate(size_type size);
+      RSL_NO_DISCARD pointer allocate(size_type size);
       void deallocate(pointer ptr, size_type size);
 
       void reset();

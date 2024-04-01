@@ -14,7 +14,7 @@
 
 #include "rex_std/internal/type_traits/conditional.h"
 
-#define REX_CREATE_STRONG_TYPE(Type, UnderlyingType)                                                                                                                                                                                                     \
+#define RSL_CREATE_STRONG_TYPE(Type, UnderlyingType)                                                                                                                                                                                                     \
                                                                                                                                                                                                                                                          \
   class Type                                                                                                                                                                                                                                             \
   {                                                                                                                                                                                                                                                      \
@@ -126,7 +126,7 @@ namespace rsl
   } // namespace v1
 } // namespace rsl
 
-#define REX_CREATE_LITERAL_FOR_STRONG_TYPE(type, lit_suffix)                                                                                                                                                                                             \
+#define RSL_CREATE_LITERAL_FOR_STRONG_TYPE(type, lit_suffix)                                                                                                                                                                                             \
   constexpr type operator"" _##lit_suffix(rsl::internal::literal_type_t<rsl::internal::underlying_type_t<type>> value)                                                                                                                                   \
   {                                                                                                                                                                                                                                                      \
     return type(static_cast<rsl::internal::underlying_type_t<type>>(value));                                                                                                                                                                             \

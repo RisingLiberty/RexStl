@@ -16,7 +16,7 @@
 #include "rex_std/bonus/atomic/atomic_compiler_barrier.h"
 #include "rex_std/bonus/atomic/atomic_fixed_width_type.h"
 
-#if defined(REX_COMPILER_MSVC)
+#if defined(RSL_COMPILER_MSVC)
   #include <intrin.h>
 #endif
 
@@ -24,7 +24,7 @@ namespace rsl
 {
   inline namespace v1
   {
-#if defined(REX_COMPILER_MSVC)
+#if defined(RSL_COMPILER_MSVC)
     template <typename T>
     void atomic_store(T* obj, T valToStore, rsl::memory_order order)
     {
@@ -34,7 +34,7 @@ namespace rsl
 
       if constexpr(sizeof(T) == 1)
       {
-  #if defined(REX_COMPILER_MSVC) && (REX_COMPILER_VERSION >= 1920) // >= VS2019
+  #if defined(RSL_COMPILER_MSVC) && (RSL_COMPILER_VERSION >= 1920) // >= VS2019
         __iso_volatile_store8(volatile_obj, atom_value_to_store);
 
   #else
@@ -43,7 +43,7 @@ namespace rsl
       }
       else if constexpr(sizeof(T) == 2)
       {
-  #if defined(REX_COMPILER_MSVC) && (REX_COMPILER_VERSION >= 1920) // >= VS2019
+  #if defined(RSL_COMPILER_MSVC) && (RSL_COMPILER_VERSION >= 1920) // >= VS2019
         __iso_volatile_store16(volatile_obj, atom_value_to_store);
   #else
         (*rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>((obj))) = atom_value_to_store;
@@ -51,7 +51,7 @@ namespace rsl
       }
       else if constexpr(sizeof(T) == 4)
       {
-  #if defined(REX_COMPILER_MSVC) && (REX_COMPILER_VERSION >= 1920) // >= VS2019
+  #if defined(RSL_COMPILER_MSVC) && (RSL_COMPILER_VERSION >= 1920) // >= VS2019
         __iso_volatile_store32(rsl::internal::atomic_volatile_integral_cast<int>(volatile_obj), atom_value_to_store);
   #else
         (*rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>((obj))) = atom_value_to_store;
@@ -59,7 +59,7 @@ namespace rsl
       }
       else if constexpr(sizeof(T) == 8)
       {
-  #if defined(REX_COMPILER_MSVC) && (REX_COMPILER_VERSION >= 1920) // >= VS2019
+  #if defined(RSL_COMPILER_MSVC) && (RSL_COMPILER_VERSION >= 1920) // >= VS2019
         __iso_volatile_store64(volatile_obj, atom_value_to_store);
   #else
         (*rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>((obj))) = atom_value_to_store;
@@ -71,7 +71,7 @@ namespace rsl
         0;
       }
     }
-#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+#elif defined(RSL_COMPILER_GCC) || defined(RSL_COMPILER_CLANG)
     template <typename T>
     void atomic_store(T* obj, T valToStore, rsl::memory_order order)
     {

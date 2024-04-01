@@ -21,22 +21,22 @@ namespace rsl
 {
   inline namespace v1
   {
-    REX_FORCE_INLINE void compiler_barrier()
+    RSL_FORCE_INLINE void compiler_barrier()
     {
-#if defined(REX_COMPILER_MSVC)
+#if defined(RSL_COMPILER_MSVC)
       _ReadWriteBarrier();
-#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+#elif defined(RSL_COMPILER_GCC) || defined(RSL_COMPILER_CLANG)
       __asm__ __volatile__("" ::: "memory"); // NOLINT(hicpp-no-assembler)
 #endif
     }
 
     template <typename T>
-    REX_FORCE_INLINE void compiler_barrier(const T* ptr)
+    RSL_FORCE_INLINE void compiler_barrier(const T* ptr)
     {
-#if defined(REX_COMPILER_MSVC)
+#if defined(RSL_COMPILER_MSVC)
       internal::g_compiler_barrier_data_dependency_func(ptr);
       compiler_barrier();
-#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+#elif defined(RSL_COMPILER_GCC) || defined(RSL_COMPILER_CLANG)
       __asm__ __volatile__("" : /* Output Operands */ : "r"(ptr) : "memory");
 #endif
     }

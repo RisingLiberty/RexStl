@@ -14,7 +14,7 @@
 
 #include "rex_std/bonus/defines.h"
 
-#ifdef REX_ENABLE_WITH_CPP20
+#ifdef RSL_ENABLE_WITH_CPP20
 
 namespace rsl
 {

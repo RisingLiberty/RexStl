@@ -22,7 +22,7 @@ namespace rsl
   inline namespace v1
   {
 
-    REX_STD_FUNC_ALIAS(bsearch);
+    RSL_FUNC_ALIAS(bsearch);
 
   } // namespace v1
 } // namespace rsl

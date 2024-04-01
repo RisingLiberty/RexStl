@@ -157,10 +157,10 @@ namespace rsl
 
     namespace string_literals
     {
-#if defined(REX_COMPILER_MSVC)
+#if defined(RSL_COMPILER_MSVC)
   #pragma warning(push)
   #pragma warning(disable : 4455) // literal suffix identifiers that do not start with an underscore are reserved
-#elif defined(REX_COMPILER_CLANG)
+#elif defined(RSL_COMPILER_CLANG)
   #pragma clang diagnostic push
   #pragma clang diagnostic ignored "-Wuser-defined-literals" // literal suffix identifiers that do not start with an underscore are reserved
 #endif
@@ -188,9 +188,9 @@ namespace rsl
         const count_t len_as_count = static_cast<count_t>(len);
         return wstring(s, len_as_count);
       }
-#if defined(REX_COMPILER_MSVC)
+#if defined(RSL_COMPILER_MSVC)
   #pragma warning(pop)
-#elif defined(REX_COMPILER_CLANG)
+#elif defined(RSL_COMPILER_CLANG)
   #pragma clang diagnostic pop
 #endif
     } // namespace string_literals

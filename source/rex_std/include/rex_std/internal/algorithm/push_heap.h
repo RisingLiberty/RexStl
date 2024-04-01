@@ -22,7 +22,7 @@ namespace rsl
   inline namespace v1
   {
 
-    REX_STD_FUNC_ALIAS(push_heap);
+    RSL_FUNC_ALIAS(push_heap);
 
   } // namespace v1
 } // namespace rsl

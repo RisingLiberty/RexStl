@@ -23,10 +23,10 @@ namespace rsl
   inline namespace v1
   {
 
-    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename OuterAlloc, typename... InnerAlloc>, scoped_allocator_adaptor, OuterAlloc, InnerAlloc...);
+    RSL_TEMPLATED_CLASS_ALIAS(template <typename OuterAlloc, typename... InnerAlloc>, scoped_allocator_adaptor, OuterAlloc, InnerAlloc...);
 
-    REX_STD_FUNC_ALIAS(operator==);
-    REX_STD_FUNC_ALIAS(operator!=);
+    RSL_FUNC_ALIAS(operator==);
+    RSL_FUNC_ALIAS(operator!=);
 
   } // namespace v1
 } // namespace rsl

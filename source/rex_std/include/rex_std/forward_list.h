@@ -198,21 +198,21 @@ namespace rsl
 
       forward_list()
           : m_cp_pre_head_node_and_allocator()
-#ifdef REX_ENABLE_SIZE_IN_LISTS
+#ifdef RSL_ENABLE_SIZE_IN_LISTS
           , m_size(0)
 #endif
       {
       }
       explicit forward_list(const allocator_type& alloc)
           : m_cp_pre_head_node_and_allocator(alloc)
-#ifdef REX_ENABLE_SIZE_IN_LISTS
+#ifdef RSL_ENABLE_SIZE_IN_LISTS
           , m_size(0)
 #endif
       {
       }
       forward_list(size_type count, const_reference value, const allocator_type& alloc = allocator_type())
           : m_cp_pre_head_node_and_allocator(alloc)
-#ifdef REX_ENABLE_SIZE_IN_LISTS
+#ifdef RSL_ENABLE_SIZE_IN_LISTS
           , m_size(count)
 #endif
       {
@@ -220,7 +220,7 @@ namespace rsl
       }
       explicit forward_list(size_type count, const allocator_type& alloc = allocator_type())
           : m_cp_pre_head_node_and_allocator(alloc)
-#ifdef REX_ENABLE_SIZE_IN_LISTS
+#ifdef RSL_ENABLE_SIZE_IN_LISTS
           , m_size(count)
 #endif
       {
@@ -229,7 +229,7 @@ namespace rsl
       template <typename InputIt>
       forward_list(InputIt first, InputIt last, const allocator_type& alloc = allocator_type())
           : m_cp_pre_head_node_and_allocator(alloc)
-#ifdef REX_ENABLE_SIZE_IN_LISTS
+#ifdef RSL_ENABLE_SIZE_IN_LISTS
           , m_size(0)
 #endif
       {
@@ -237,7 +237,7 @@ namespace rsl
       }
       forward_list(const forward_list& other)
           : m_cp_pre_head_node_and_allocator(other.get_allocator())
-#ifdef REX_ENABLE_SIZE_IN_LISTS
+#ifdef RSL_ENABLE_SIZE_IN_LISTS
           , m_size(other.m_size)
 #endif
       {
@@ -245,7 +245,7 @@ namespace rsl
       }
       forward_list(const forward_list& other, const allocator_type& alloc)
           : m_cp_pre_head_node_and_allocator(alloc)
-#ifdef REX_ENABLE_SIZE_IN_LISTS
+#ifdef RSL_ENABLE_SIZE_IN_LISTS
           , m_size(other.m_size)
 #endif
       {
@@ -253,7 +253,7 @@ namespace rsl
       }
       forward_list(forward_list&& other)
           : m_cp_pre_head_node_and_allocator(rsl::move(other.get_allocator()))
-#ifdef REX_ENABLE_SIZE_IN_LISTS
+#ifdef RSL_ENABLE_SIZE_IN_LISTS
           , m_size(0)
 #endif
       {
@@ -261,7 +261,7 @@ namespace rsl
       }
       forward_list(forward_list&& other, const allocator_type& alloc)
           : m_cp_pre_head_node_and_allocator(alloc)
-#ifdef REX_ENABLE_SIZE_IN_LISTS
+#ifdef RSL_ENABLE_SIZE_IN_LISTS
           , m_size(0)
 #endif
       {
@@ -269,7 +269,7 @@ namespace rsl
       }
       forward_list(rsl::initializer_list<value_type> ilist, const allocator_type& alloc = allocator_type())
           : m_cp_pre_head_node_and_allocator(alloc)
-#ifdef REX_ENABLE_SIZE_IN_LISTS
+#ifdef RSL_ENABLE_SIZE_IN_LISTS
           , m_size(0)
 #endif
       {
@@ -479,7 +479,7 @@ namespace rsl
         get_allocator().destroy(next_node);
         get_allocator().deallocate(next_node, sizeof(node_type));
 
-#ifdef REX_ENABLE_SIZE_IN_LIST
+#ifdef RSL_ENABLE_SIZE_IN_LIST
         --m_size;
 #endif
         return iterator(next_node->next);
@@ -549,7 +549,7 @@ namespace rsl
           rsl::swap(my_head, other_head);
           rsl::swap(get_allocator(), other.get_allocator());
 
-#ifdef REX_ENABLE_SIZE_IN_LISTS
+#ifdef RSL_ENABLE_SIZE_IN_LISTS
           rsl::swap(m_size, other.m_size);
 #endif
         }
@@ -653,7 +653,7 @@ namespace rsl
         get_allocator().construct(new_node, rsl::forward<Args>(args)...);
         new_node->insert_after(node.m_node);
 
-#ifdef REX_ENABLE_SIZE_IN_LISTS
+#ifdef RSL_ENABLE_SIZE_IN_LISTS
         ++m_size;
 #endif
 
@@ -682,7 +682,7 @@ namespace rsl
           ++new_node;
         }
 
-#ifdef REX_ENABLE_SIZE_IN_LISTS
+#ifdef RSL_ENABLE_SIZE_IN_LISTS
         m_size += count;
 #endif
       }
@@ -763,7 +763,7 @@ namespace rsl
     private:
       rsl::compressed_pair<internal::forward_list_node_base, allocator_type> m_cp_pre_head_node_and_allocator;
 
-#ifdef REX_ENABLE_SIZE_IN_LISTS
+#ifdef RSL_ENABLE_SIZE_IN_LISTS
       size_type m_size;
 #endif
     };

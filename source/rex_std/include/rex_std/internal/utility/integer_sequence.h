@@ -27,7 +27,7 @@ namespace rsl
 
       using value_type = T;
 
-      REX_NO_DISCARD static constexpr card32 size() noexcept
+      RSL_NO_DISCARD static constexpr card32 size() noexcept
       {
         return sizeof...(Vals);
       }

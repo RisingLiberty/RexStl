@@ -20,18 +20,18 @@ namespace rsl
   {
 
     template <typename T>
-    REX_NO_DISCARD constexpr T* addressof(T& val)
+    RSL_NO_DISCARD constexpr T* addressof(T& val)
     {
       return __builtin_addressof(val);
     }
     template <typename T>
-    REX_NO_DISCARD constexpr const T* addressof(const T& val) // Not in the standard
+    RSL_NO_DISCARD constexpr const T* addressof(const T& val) // Not in the standard
     {
       return __builtin_addressof(val);
     }
 
     template <typename T>
-    REX_NO_DISCARD const T* addressof(const T&&) = delete;
+    RSL_NO_DISCARD const T* addressof(const T&&) = delete;
 
   } // namespace v1
 } // namespace rsl

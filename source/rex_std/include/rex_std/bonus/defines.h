@@ -14,62 +14,62 @@
 
 #include "rex_std/bonus/attributes.h"
 
-#define REX_UNUSED(x) REX_MAYBE_UNUSED x
+#define RSL_UNUSED(x) (void)x
 
-#define STRINGIZE(x)  STRINGIZE2(x)
-#define STRINGIZE2(x) #x
+#define RSL_STRINGIZE(x)  RSL_STRINGIZE2(x)
+#define RSL_STRINGIZE2(x) #x
 
-#define LINE_TO_STRING(L) #L
-#define CALL_MACRO(M, L)  M(L)
+#define RSL_LINE_TO_STRING(L) #L
+#define RSL_CALL_MACRO(M, L)  M(L)
 
 #ifdef __clang__
   #define STATIC_WARNING(expr)
 #else
-  #define THIS_LINE             CALL_MACRO(STRINGIZE2, __LINE__)
-  #define STATIC_WARNING_PREFIX __FILE__ "(" THIS_LINE "): [WARNING] "
-  #define STATIC_WARNING(expr)  __pragma(message(STATIC_WARNING_PREFIX##expr))
+  #define RSL_THIS_LINE             RSL_CALL_MACRO(STRINGIZE2, __LINE__)
+  #define RSL_STATIC_WARNING_PREFIX __FILE__ "(" RSL_THIS_LINE "): [WARNING] "
+  #define RSL_STATIC_WARNING(expr)  __pragma(message(RSL_STATIC_WARNING_PREFIX##expr))
 #endif
 
 #ifdef __clang__
   #define STATIC_INFO(expr)
 #else
-  #define STATIC_INFO_PREFIX __FILE__ "(" THIS_LINE "): [INFO] "
-  #define STATIC_INFO(expr)  __pragma(message(STATIC_INFO_PREFIX##expr))
+  #define RSL_STATIC_INFO_PREFIX __FILE__ "(" THIS_LINE "): [INFO] "
+  #define RSL_STATIC_INFO(expr)  __pragma(message(RSL_STATIC_INFO_PREFIX##expr))
 #endif
 
-#define MERGE(a, b)  MERGE1(a, b)
-#define MERGE1(a, b) MERGE2(a, b)
-#define MERGE2(a, b) a##b
+#define RSL_MERGE(a, b)  MERGE1(a, b)
+#define RSL_MERGE1(a, b) MERGE2(a, b)
+#define RSL_MERGE2(a, b) a##b
 
-#define FUNC_SIGNATURE __FUNCSIG__
+#define RSL_FUNC_SIGNATURE __FUNCSIG__
 
 #ifdef __COUNTER__
-  #define ANONYMOUS_VARIABLE(str) MERGE(str, __COUNTER__)
+  #define RSL_ANONYMOUS_VARIABLE(str) RSL_MERGE(str, __COUNTER__)
 #else
 MERGE(str, __LINE__)
 #endif
 
-#define EXECUTE_ONCE(expression)                                                                                                                                                                                                                         \
-  static auto ANONYMOUS_VARIABLE(execute_once_var) = [&]()                                                                                                                                                                                               \
+#define RSL_EXECUTE_ONCE(expression)                                                                                                                                                                                                                         \
+  static auto RSL_ANONYMOUS_VARIABLE(execute_once_var) = [&]()                                                                                                                                                                                               \
   {                                                                                                                                                                                                                                                      \
     expression;                                                                                                                                                                                                                                          \
     return 1;                                                                                                                                                                                                                                            \
   }();
 
-#define TO_WIDE_STRING(str) L##str
+#define RSL_TO_WIDE_STRING(str) L##str
 
-#ifdef REX_ENABLE_TODO_CHECKING
-  #define REX_STATIC_TODO(msg) static_assert(false, "TODO: ", msg);
+#ifdef RSL_ENABLE_TODO_CHECKING
+  #define RSL_STATIC_TODO(msg) static_assert(false, "TODO: ", msg);
 #else
-  #define REX_STATIC_TODO(msg)
+  #define RSL_STATIC_TODO(msg)
 #endif
 
-#if defined REX_COMPILER_CLANG
-  #define DEBUG_BREAK() __builtin_trap()
-#elif defined REX_COMPILER_MSVC
-  #define DEBUG_BREAK() __debugbreak()
+#if defined RSL_COMPILER_CLANG
+  #define RSL_DEBUG_BREAK() __builtin_trap()
+#elif defined RSL_COMPILER_MSVC
+  #define RSL_DEBUG_BREAK() __debugbreak()
 #else
-  #error DEBUG_BREAK unsupported machine instruction ...
+  #error RSL_DEBUG_BREAK unsupported machine instruction ...
 #endif
 
-#define REX_FORCE_INLINE __forceinline
+#define RSL_FORCE_INLINE __forceinline

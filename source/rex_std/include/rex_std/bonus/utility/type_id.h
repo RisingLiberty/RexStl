@@ -27,7 +27,7 @@ namespace rsl
     {
       // we have to split create a constexpr and non-constexpr variable here pointing to the func signature
       // because the static_assert expects all variables passed in to be constexpr.
-#if defined(REX_COMPILER_MSVC)
+#if defined(RSL_COMPILER_MSVC)
       template <typename T>
       constexpr rsl::string_view msvc_class_type_name()
       {
@@ -36,7 +36,7 @@ namespace rsl
         constexpr rsl::string_view prefix    = "class rsl::v1::basic_string_view<char,class rsl::v1::char_traits<char> > __cdecl rsl::v1::internal::msvc_class_type_name<class ";
         constexpr rsl::string_view suffix    = ">(void)";
 
-  #ifndef REX_ENABLE_ASSERTS // "contains" has an internal assert
+  #ifndef RSL_ENABLE_ASSERTS // "contains" has an internal assert
         static_assert(func_name.contains(prefix), "prefix not found in name!");
         static_assert(func_name.contains(suffix), "suffix not found in name!");
   #endif
@@ -54,7 +54,7 @@ namespace rsl
         constexpr rsl::string_view prefix    = "class rsl::v1::basic_string_view<char,class rsl::v1::char_traits<char> > __cdecl rsl::v1::internal::msvc_struct_type_name<struct ";
         constexpr rsl::string_view suffix    = ">(void)";
 
-  #ifndef REX_ENABLE_ASSERTS // "contains" has an internal assert
+  #ifndef RSL_ENABLE_ASSERTS // "contains" has an internal assert
         static_assert(func_name.contains(prefix), "prefix not found in name!");
         static_assert(func_name.contains(suffix), "suffix not found in name!");
   #endif
@@ -71,7 +71,7 @@ namespace rsl
         constexpr rsl::string_view prefix    = "class rsl::v1::basic_string_view<char,class rsl::v1::char_traits<char> > __cdecl rsl::v1::internal::msvc_structless_type_name<";
         constexpr rsl::string_view suffix    = ">(void)";
 
-  #ifndef REX_ENABLE_ASSERTS // "contains" has an internal assert
+  #ifndef RSL_ENABLE_ASSERTS // "contains" has an internal assert
         static_assert(func_name.contains(prefix), "prefix not found in name!");
         static_assert(func_name.contains(suffix), "suffix not found in name!");
   #endif
@@ -86,13 +86,13 @@ namespace rsl
       template <typename T, rsl::enable_if_t<rsl::is_class_v<T>, bool> = true>
       constexpr rsl::string_view type_name()
       {
-#ifdef REX_COMPILER_CLANG
+#ifdef RSL_COMPILER_CLANG
         rsl::string_view name                = __PRETTY_FUNCTION__;
         constexpr rsl::string_view func_name = __PRETTY_FUNCTION__;
         constexpr rsl::string_view prefix    = "rsl::string_view rsl::internal::type_name() [T = ";
         constexpr rsl::string_view suffix    = "]";
 
-  #ifndef REX_ENABLE_ASSERTS // "contains" has an internal assert
+  #ifndef RSL_ENABLE_ASSERTS // "contains" has an internal assert
         static_assert(func_name.contains(prefix), "prefix not found in name!");
         static_assert(func_name.contains(suffix), "suffix not found in name!");
   #endif
@@ -100,13 +100,13 @@ namespace rsl
         name.remove_prefix(prefix.size());
         name.remove_suffix(suffix.size());
         return name;
-#elif defined(REX_COMPILER_GCC)
+#elif defined(RSL_COMPILER_GCC)
         rsl::string_view name                = __PRETTY_FUNCTION__;
         constexpr rsl::string_view func_name = __PRETTY_FUNCTION__;
         constexpr rsl::string_view prefix    = "rsl::string_view rsl::internal::type_name() [T = ";
         constexpr rsl::string_view suffix    = "]";
 
-  #ifndef REX_ENABLE_ASSERTS // "contains" has an internal assert
+  #ifndef RSL_ENABLE_ASSERTS // "contains" has an internal assert
         static_assert(func_name.contains(prefix), "prefix not found in name!");
         static_assert(func_name.contains(suffix), "suffix not found in name!");
   #endif
@@ -114,9 +114,9 @@ namespace rsl
         name.remove_prefix(prefix.size());
         name.remove_suffix(suffix.size());
         return name;
-#elif defined(REX_COMPILER_MSVC)
+#elif defined(RSL_COMPILER_MSVC)
         constexpr rsl::string_view func_name = __FUNCSIG__;
-  #ifndef REX_ENABLE_ASSERTS // "contains" has an internal assert
+  #ifndef RSL_ENABLE_ASSERTS // "contains" has an internal assert
         if constexpr(func_name.contains("struct"))
   #else
         if(func_name.contains("type_name<struct"))
@@ -140,35 +140,35 @@ namespace rsl
       template <typename T, rsl::enable_if_t<rsl::is_arithmetic_v<T>, bool> = true>
       constexpr rsl::string_view type_name()
       {
-#ifdef REX_COMPILER_CLANG
+#ifdef RSL_COMPILER_CLANG
         rsl::string_view name                = __PRETTY_FUNCTION__;
         constexpr rsl::string_view func_name = __PRETTY_FUNCTION__;
         constexpr rsl::string_view prefix    = "rsl::string_view rsl::internal::type_name() [T = ";
         constexpr rsl::string_view suffix    = "]";
 
-  #ifndef REX_ENABLE_ASSERTS // "contains" has an internal assert
+  #ifndef RSL_ENABLE_ASSERTS // "contains" has an internal assert
         static_assert(func_name.contains(prefix), "prefix not found in name!");
         static_assert(func_name.contains(suffix), "suffix not found in name!");
   #endif
 
-#elif defined(REX_COMPILER_GCC)
+#elif defined(RSL_COMPILER_GCC)
         rsl::string_view name                = __PRETTY_FUNCTION__;
         constexpr rsl::string_view func_name = __PRETTY_FUNCTION__;
         constexpr rsl::string_view prefix    = "rsl::string_view rsl::internal::type_name() [T = ";
         constexpr rsl::string_view suffix    = "]";
 
-  #ifndef REX_ENABLE_ASSERTS // "contains" has an internal assert
+  #ifndef RSL_ENABLE_ASSERTS // "contains" has an internal assert
         static_assert(func_name.contains(prefix), "prefix not found in name!");
         static_assert(func_name.contains(suffix), "suffix not found in name!");
   #endif
 
-#elif defined(REX_COMPILER_MSVC)
+#elif defined(RSL_COMPILER_MSVC)
         rsl::string_view name                = __FUNCSIG__;
         constexpr rsl::string_view func_name = __FUNCSIG__;
         constexpr rsl::string_view prefix    = "class rsl::v1::basic_string_view<char,class rsl::v1::char_traits<char> > __cdecl rsl::v1::internal::type_name<";
         constexpr rsl::string_view suffix    = ",true>(void)";
 
-  #ifndef REX_ENABLE_ASSERTS // "contains" has an internal assert
+  #ifndef RSL_ENABLE_ASSERTS // "contains" has an internal assert
         static_assert(func_name.contains(prefix), "prefix not found in name!");
         static_assert(func_name.contains(suffix), "suffix not found in name!");
   #endif

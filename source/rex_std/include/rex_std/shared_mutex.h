@@ -23,12 +23,12 @@ namespace rsl
   inline namespace v1
   {
 
-    REX_STD_CLASS_ALIAS(shared_mutex);
-    REX_STD_CLASS_ALIAS(shared_timed_mutex);
+    RSL_CLASS_ALIAS(shared_mutex);
+    RSL_CLASS_ALIAS(shared_timed_mutex);
 
-    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename Mutex>, shared_lock, Mutex);
+    RSL_TEMPLATED_CLASS_ALIAS(template <typename Mutex>, shared_lock, Mutex);
 
-    // REX_STD_FUNC_ALIAS(swap); // Doesn't work because rsl has its own swap
+    // RSL_FUNC_ALIAS(swap); // Doesn't work because rsl has its own swap
 
   } // namespace v1
 } // namespace rsl

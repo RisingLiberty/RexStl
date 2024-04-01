@@ -26,7 +26,7 @@ namespace rsl
       {
       }
 
-      REX_NO_DISCARD bool try_lock()
+      RSL_NO_DISCARD bool try_lock()
       {
         return rsl::internal::mutex_base::try_lock();
       }

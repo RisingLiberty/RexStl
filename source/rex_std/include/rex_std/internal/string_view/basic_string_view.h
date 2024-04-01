@@ -243,23 +243,23 @@ namespace rsl
         return count;
       }
       // returns a view of the substring [pos, pos + count)
-      REX_NO_DISCARD constexpr basic_string_view substr(size_type pos = 0, size_type count = s_npos) const
+      RSL_NO_DISCARD constexpr basic_string_view substr(size_type pos = 0, size_type count = s_npos) const
       {
         count = count == s_npos ? m_length - pos : count;
         return basic_string_view(m_data + pos, count);
       }
       // compares 2 character sequences
-      REX_NO_DISCARD constexpr int32 compare(basic_string_view sv) const
+      RSL_NO_DISCARD constexpr int32 compare(basic_string_view sv) const
       {
         return rsl::string_utils::compare<traits_type>(data(), sv.data(), size(), sv.size());
       }
       // compares 2 characters sequences
-      REX_NO_DISCARD constexpr int32 compare(size_type pos1, size_type count1, basic_string_view v) const
+      RSL_NO_DISCARD constexpr int32 compare(size_type pos1, size_type count1, basic_string_view v) const
       {
         return substr(pos1, count1).compare(v);
       }
       // compares 2 character sequences
-      REX_NO_DISCARD constexpr int32 compare(size_type pos1, size_type count1, basic_string_view v, size_type pos2, size_type count2) const
+      RSL_NO_DISCARD constexpr int32 compare(size_type pos1, size_type count1, basic_string_view v, size_type pos2, size_type count2) const
       {
         return substr(pos1, count1).compare(v.substr(pos2, count2));
       }
@@ -267,7 +267,7 @@ namespace rsl
       // The standard doesn't provide an overload for a string literal
       // compares 2 character sequences
       template <count_t Size>
-      REX_NO_DISCARD constexpr int32 compare(const value_type (&s)[Size]) const // NOLINT(modernize-avoid-c-arrays)
+      RSL_NO_DISCARD constexpr int32 compare(const value_type (&s)[Size]) const // NOLINT(modernize-avoid-c-arrays)
       {
         return compare(basic_string_view(s, Size - 1));
       }
@@ -275,34 +275,34 @@ namespace rsl
       // The standard doesn't provide an overload for a string literal
       // compares 2 character sequences
       template <count_t Size>
-      REX_NO_DISCARD constexpr int32 compare(size_type pos1, size_type count1, const value_type (&s)[Size]) const // NOLINT(modernize-avoid-c-arrays)
+      RSL_NO_DISCARD constexpr int32 compare(size_type pos1, size_type count1, const value_type (&s)[Size]) const // NOLINT(modernize-avoid-c-arrays)
       {
         return substr(pos1, count1).compare(basic_string_view(s, Size - 1));
       }
       // compares 2 character sequences
-      REX_NO_DISCARD constexpr int32 compare(size_type pos1, size_type count1, const_pointer s, size_type count2) const
+      RSL_NO_DISCARD constexpr int32 compare(size_type pos1, size_type count1, const_pointer s, size_type count2) const
       {
         return substr(pos1, count1).compare(basic_string_view(s, count2));
       }
 
       // checks if the string view starts with the given prefix
-      REX_NO_DISCARD constexpr bool starts_with(const basic_string_view sv) const
+      RSL_NO_DISCARD constexpr bool starts_with(const basic_string_view sv) const
       {
         return length() >= sv.length() && traits_type::compare(data(), sv.data(), sv.length()) == 0;
       }
       // checks if the string view starts with the given prefix
-      REX_NO_DISCARD constexpr bool starts_with(const value_type c) const
+      RSL_NO_DISCARD constexpr bool starts_with(const value_type c) const
       {
         return traits_type::eq(front(), c);
       }
       // checks if the string view starts with the given prefix
       template <typename T, typename rsl::enable_if_t<rsl::is_same_v<T, CharType>, bool> = true>
-      REX_NO_DISCARD constexpr bool starts_with(const T* const& s) const
+      RSL_NO_DISCARD constexpr bool starts_with(const T* const& s) const
       {
         return starts_with(basic_string_view(s));
       }
       // checks if the string view ends with the given suffix
-      REX_NO_DISCARD constexpr bool ends_with(const basic_string_view rhs) const
+      RSL_NO_DISCARD constexpr bool ends_with(const basic_string_view rhs) const
       {
         if(length() < rhs.length())
         {
@@ -318,29 +318,29 @@ namespace rsl
       }
       // checks if the string view ends with the given suffix
       template <typename T, typename rsl::enable_if_t<rsl::is_same_v<T, CharType>, bool> = true>
-      REX_NO_DISCARD constexpr bool ends_with(const T* const& s) const
+      RSL_NO_DISCARD constexpr bool ends_with(const T* const& s) const
       {
         return ends_with(basic_string_view(s));
       }
       // checks if the string view ends with the given suffix
-      REX_NO_DISCARD constexpr bool ends_with(const CharType c) const
+      RSL_NO_DISCARD constexpr bool ends_with(const CharType c) const
       {
         return !empty() && traits_type::eq(back(), c);
       }
 
       // checks if the string view contains the given substring
-      REX_NO_DISCARD constexpr bool contains(basic_string_view sv) const
+      RSL_NO_DISCARD constexpr bool contains(basic_string_view sv) const
       {
         return find(sv) != s_npos;
       }
       // checks if the string view contains the given substring
-      REX_NO_DISCARD constexpr bool contains(value_type c) const
+      RSL_NO_DISCARD constexpr bool contains(value_type c) const
       {
         return find(c) != s_npos;
       }
       // checks if the string view contains the given substring
       template <typename T, typename rsl::enable_if_t<rsl::is_same_v<T, CharType>, bool> = true>
-      REX_NO_DISCARD constexpr bool contains(const T* const& s) const
+      RSL_NO_DISCARD constexpr bool contains(const T* const& s) const
       {
         return contains(basic_string_view(s));
       }
@@ -660,10 +660,10 @@ namespace rsl
 
     namespace string_view_literals
     {
-#if defined(REX_COMPILER_MSVC)
+#if defined(RSL_COMPILER_MSVC)
   #pragma warning(push)
   #pragma warning(disable : 4455) // literal suffix identifiers that do not start with an underscore are reserved
-#elif defined(REX_COMPILER_CLANG)
+#elif defined(RSL_COMPILER_CLANG)
   #pragma clang diagnostic push
   #pragma clang diagnostic ignored "-Wuser-defined-literals" // literal suffix identifiers that do not start with an underscore are reserved
 #endif
@@ -691,9 +691,9 @@ namespace rsl
         const count_t len_as_count = static_cast<count_t>(len);
         return WStringView(s, len_as_count);
       }
-#if defined(REX_COMPILER_MSVC)
+#if defined(RSL_COMPILER_MSVC)
   #pragma warning(pop)
-#elif defined(REX_COMPILER_CLANG)
+#elif defined(RSL_COMPILER_CLANG)
   #pragma clang diagnostic pop
 #endif
     } // namespace string_view_literals

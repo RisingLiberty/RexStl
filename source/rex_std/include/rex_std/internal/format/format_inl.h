@@ -42,7 +42,7 @@ namespace rsl
       {
         // Use unchecked std::fprintf to avoid triggering another assertion when
         // writing to stderr fails
-        REX_MAYBE_UNUSED const int result = std::fprintf(stderr, "%s:%d: assertion failed: %s", file, line, message);
+        RSL_MAYBE_UNUSED const int result = std::fprintf(stderr, "%s:%d: assertion failed: %s", file, line, message);
         // Chosen instead of rsl::abort to satisfy Clang in CUDA mode during device
         // code pass.
 
@@ -84,7 +84,7 @@ namespace rsl
         func(full_message, errorCode, message);
         // Don't use fwrite_fully because the latter may throw.
         if(std::fwrite(full_message.data(), full_message.size(), 1, stderr) > 0)
-          REX_MAYBE_UNUSED const int res = std::fputc('\n', stderr);
+          RSL_MAYBE_UNUSED const int res = std::fputc('\n', stderr);
       }
 
       // A wrapper around fwrite that throws on error.

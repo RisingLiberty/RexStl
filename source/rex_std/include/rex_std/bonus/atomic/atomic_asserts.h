@@ -11,10 +11,10 @@
 #include "rex_std/internal/type_traits/is_trivially_destructible.h"
 #include "rex_std/internal/type_traits/is_volatile.h"
 
-#define REX_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(type)                                                                                                                                                                                                   \
+#define RSL_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(type)                                                                                                                                                                                                   \
   static_assert(!rsl::is_same<type, type>::value, "rsl::atomic<T> : volatile rsl::atomic<T> is not what you expect! Read the docs in rex_std/atomic.h! Use the memory orders to access the atomic object!");
 
-#define REX_ATOMIC_STATIC_ASSERT_INVALID_MEMORY_ORDER(type) static_assert(!rsl::is_same<type, type>::value, "rsl::atomic<T> : invalid memory order for the given operation!");
+#define RSL_ATOMIC_STATIC_ASSERT_INVALID_MEMORY_ORDER(type) static_assert(!rsl::is_same<type, type>::value, "rsl::atomic<T> : invalid memory order for the given operation!");
 
 namespace rsl
 {

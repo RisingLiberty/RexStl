@@ -30,10 +30,10 @@ public class RexStd : BasicCPPProject
     switch (conf.Platform)
     {
       case Platform.win32:
-        conf.add_public_define("REX_PLATFORM_X86");
+        conf.add_public_define("RSL_PLATFORM_X86");
         break;
       case Platform.win64:
-        conf.add_public_define("REX_PLATFORM_X64");
+        conf.add_public_define("RSL_PLATFORM_X64");
         break;
       default:
         break;

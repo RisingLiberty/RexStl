@@ -34,13 +34,13 @@ namespace rsl
       template <typename Order>
       void clear(Order /*order*/) volatile
       {
-        REX_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(Order);
+        RSL_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(Order);
       }
 
       template <typename Order>
       void clear(Order /*order*/)
       {
-        REX_ATOMIC_STATIC_ASSERT_INVALID_MEMORY_ORDER(Order);
+        RSL_ATOMIC_STATIC_ASSERT_INVALID_MEMORY_ORDER(Order);
       }
 
       void clear(rsl::internal::memory_order_relaxed_s /*unused*/)
@@ -67,14 +67,14 @@ namespace rsl
       template <typename Order>
       bool test_and_set(Order /*order*/) volatile
       {
-        REX_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(Order);
+        RSL_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(Order);
         return false;
       }
 
       template <typename Order>
       bool test_and_set(Order /*order*/)
       {
-        REX_ATOMIC_STATIC_ASSERT_INVALID_MEMORY_ORDER(Order);
+        RSL_ATOMIC_STATIC_ASSERT_INVALID_MEMORY_ORDER(Order);
         return false;
       }
 
@@ -112,14 +112,14 @@ namespace rsl
       template <typename Order>
       bool test(Order /*order*/) const volatile
       {
-        REX_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(Order);
+        RSL_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(Order);
         return false;
       }
 
       template <typename Order>
       bool test(Order /*order*/) const
       {
-        REX_ATOMIC_STATIC_ASSERT_INVALID_MEMORY_ORDER(Order);
+        RSL_ATOMIC_STATIC_ASSERT_INVALID_MEMORY_ORDER(Order);
         return false;
       }
 

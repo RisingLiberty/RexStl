@@ -907,17 +907,17 @@ namespace rsl
       // comparison and queries
 
       // compares this string to str
-      REX_NO_DISCARD int32 compare(const basic_string& str) const
+      RSL_NO_DISCARD int32 compare(const basic_string& str) const
       {
         return Traits::compare(data(), str.data());
       }
       // compares a [pos1, pos1+count1) substring of this string to str
-      REX_NO_DISCARD int32 compare(size_type pos1, size_type count1, const basic_string& str) const
+      RSL_NO_DISCARD int32 compare(size_type pos1, size_type count1, const basic_string& str) const
       {
         return rsl::string_utils::compare<traits_type>(data() + pos1, str.data(), count1, str.length());
       }
       // compares a [pos1, pos1+count1) substring of this string to a substring [pos2, pos2+count2) of str
-      REX_NO_DISCARD int32 compare(size_type pos1, size_type count1, const basic_string& str, size_type pos2, size_type count2) const
+      RSL_NO_DISCARD int32 compare(size_type pos1, size_type count1, const basic_string& str, size_type pos2, size_type count2) const
       {
         return rsl::string_utils::compare<traits_type>(data() + pos1, str.data() + pos2, count1, count2);
       }
@@ -928,7 +928,7 @@ namespace rsl
 
       // compares a [pos1, pos1+count1) substring of this string to another string pointed
       // to by s with a length of count2.
-      REX_NO_DISCARD int32 compare(size_type pos1, size_type count1, const_pointer s, size_type count2) const
+      RSL_NO_DISCARD int32 compare(size_type pos1, size_type count1, const_pointer s, size_type count2) const
       {
         return rsl::string_utils::compare<traits_type>(data() + pos1, s, count1, count2);
       }
@@ -938,7 +938,7 @@ namespace rsl
       // This is not possible in RSL though as the ctor for const char* for string is explicit.
       // Therefore this takes a basic_string_view
       // compares this string to sv
-      REX_NO_DISCARD int32 compare(const basic_string_view<value_type, traits_type>& sv) const
+      RSL_NO_DISCARD int32 compare(const basic_string_view<value_type, traits_type>& sv) const
       {
         return rsl::string_utils::compare<traits_type>(data(), sv.data(), length(), sv.length());
       }
@@ -948,7 +948,7 @@ namespace rsl
       // This is not possible in RSL though as the ctor for const char* for string is explicit.
       // Therefore this takes a basic_string_view
       // compares [pos1, pos1+count1) substring of this string to sv
-      REX_NO_DISCARD int32 compare(size_type pos1, size_type count1, const basic_string_view<value_type, traits_type> sv) const
+      RSL_NO_DISCARD int32 compare(size_type pos1, size_type count1, const basic_string_view<value_type, traits_type> sv) const
       {
         return rsl::string_utils::compare<traits_type>(data() + pos1, sv.data(), count1, sv.length());
       }
@@ -958,25 +958,25 @@ namespace rsl
       // This is not possible in RSL though as the ctor for const char* for string is explicit.
       // Therefore this takes a basic_string_view
       // compares [pos1, pos1+count1) substring of this string to a substring [pos2, pos2+count2) of sv
-      REX_NO_DISCARD int32 compare(size_type pos1, size_type count1, const basic_string_view<value_type, traits_type> sv, size_type pos2, size_type count2 = s_npos) const
+      RSL_NO_DISCARD int32 compare(size_type pos1, size_type count1, const basic_string_view<value_type, traits_type> sv, size_type pos2, size_type count2 = s_npos) const
       {
         return rsl::string_utils::compare<traits_type>(data() + pos1, sv.data() + pos2, count1, obj_length_or_count(sv, count2, pos2));
       }
 
       // checks if the string begins with the given prefix
-      REX_NO_DISCARD bool starts_with(basic_string_view<value_type, traits_type> sv) const
+      RSL_NO_DISCARD bool starts_with(basic_string_view<value_type, traits_type> sv) const
       {
         return traits_type::compare(data(), sv.data(), sv.length()) == 0;
       }
       // checks if the string begins with the given prefix
-      REX_NO_DISCARD bool starts_with(value_type c) const
+      RSL_NO_DISCARD bool starts_with(value_type c) const
       {
         return traits_type::eq(front(), c);
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (13/Nov/2022)
       // by adding a reference to the const_pointer overload, this one will only get selected if the argument
       template <typename T, typename rsl::enable_if_t<rsl::is_same_v<T, CharType>, bool> = true>
-      REX_NO_DISCARD bool starts_with(const T* const& s) const
+      RSL_NO_DISCARD bool starts_with(const T* const& s) const
       {
         return starts_with(rsl::basic_string_view(s));
       }
@@ -985,20 +985,20 @@ namespace rsl
       // bool starts_with(const_pointer s) const;
 
       // checks if the string ends with the given suffix
-      REX_NO_DISCARD bool ends_with(basic_string_view<value_type, traits_type> sv) const
+      RSL_NO_DISCARD bool ends_with(basic_string_view<value_type, traits_type> sv) const
       {
         auto this_view = operator rsl::v1::basic_string_view<CharType, Traits>();
         return this_view.ends_with(sv);
       }
       // checks if the string ends with the given suffix
-      REX_NO_DISCARD bool ends_with(value_type c) const
+      RSL_NO_DISCARD bool ends_with(value_type c) const
       {
         return traits_type::eq(back(), c);
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (13/Nov/2022)
       // by adding a reference to the const_pointer overload, this one will only get selected if the argument
       template <typename T, typename rsl::enable_if_t<rsl::is_same_v<T, CharType>, bool> = true>
-      REX_NO_DISCARD bool ends_with(const T* const& s) const
+      RSL_NO_DISCARD bool ends_with(const T* const& s) const
       {
         return ends_with(rsl::basic_string_view(s));
       }
@@ -1007,20 +1007,20 @@ namespace rsl
       // bool ends_with(const_pointer s) const;
 
       // checks if the string contains the given substring
-      REX_NO_DISCARD bool contains(const basic_string_view<value_type, traits_type> sv) const
+      RSL_NO_DISCARD bool contains(const basic_string_view<value_type, traits_type> sv) const
       {
         return find(sv) != s_npos;
       }
 
       // checks if the string contains the given substring
-      REX_NO_DISCARD bool contains(value_type c) const
+      RSL_NO_DISCARD bool contains(value_type c) const
       {
         return find(c) != s_npos;
       }
       /// RSL Comment: Different from ISO C++ Standard at time of writing (13/Nov/2022)
       // by adding a reference to the const_pointer overload, this one will only get selected if the argument
       template <typename T, typename rsl::enable_if_t<rsl::is_same_v<T, CharType>, bool> = true>
-      REX_NO_DISCARD bool contains(const T* const& s) const
+      RSL_NO_DISCARD bool contains(const T* const& s) const
       {
         return contains(rsl::basic_string_view(s));
       }
@@ -1325,7 +1325,7 @@ namespace rsl
       //
 
       // finds the first substring equal to str
-      REX_NO_DISCARD size_type find(const basic_string& str, size_type pos = 0) const
+      RSL_NO_DISCARD size_type find(const basic_string& str, size_type pos = 0) const
       {
         return rsl::string_utils::find<traits_type, const_pointer>(m_begin, length(), pos, str.data(), str.length(), s_npos);
       }
@@ -1333,7 +1333,7 @@ namespace rsl
       // The standard doesn't provide an overload for a string literal
       // finds the first substring equal to s
       template <count_t Size>
-      REX_NO_DISCARD size_type find(const value_type (&s)[Size], size_type pos = 0) const // NOLINT(modernize-avoid-c-arrays)
+      RSL_NO_DISCARD size_type find(const value_type (&s)[Size], size_type pos = 0) const // NOLINT(modernize-avoid-c-arrays)
       {
         return rsl::string_utils::find<traits_type, const_pointer>(m_begin, length(), pos, s, Size - 1, s_npos);
       }
@@ -1343,7 +1343,7 @@ namespace rsl
       // size_type find(const_pointer s, size_type pos = 0) const;
 
       // finds the first character ch (treated as a single-character substring)
-      REX_NO_DISCARD size_type find(value_type ch, size_type pos = 0) const
+      RSL_NO_DISCARD size_type find(value_type ch, size_type pos = 0) const
       {
         return rsl::string_utils::find<traits_type, const_pointer>(m_begin, length(), pos, rsl::addressof(ch), 1_elem, s_npos);
       }
@@ -1353,13 +1353,13 @@ namespace rsl
       // This is not possible in RSL though as the ctor for const char* for string is explicit.
       // Therefore this takes a basic_string_view
       // find the first substring equal to sv
-      REX_NO_DISCARD size_type find(const basic_string_view<value_type, traits_type>& sv, size_type pos = 0) const
+      RSL_NO_DISCARD size_type find(const basic_string_view<value_type, traits_type>& sv, size_type pos = 0) const
       {
         return rsl::string_utils::find<traits_type, const_pointer>(m_begin, length(), pos, sv.data(), sv.length(), s_npos);
       }
 
       // finds the last substring equal to str
-      REX_NO_DISCARD size_type rfind(const basic_string& str, size_type pos = s_npos) const
+      RSL_NO_DISCARD size_type rfind(const basic_string& str, size_type pos = s_npos) const
       {
         if(pos == s_npos)
         {
@@ -1374,7 +1374,7 @@ namespace rsl
       // size_type rfind(const_pointer str, size_type pos = s_npos) const;
 
       // finds the last character equal to ch
-      REX_NO_DISCARD size_type rfind(value_type ch, size_type pos = s_npos) const
+      RSL_NO_DISCARD size_type rfind(value_type ch, size_type pos = s_npos) const
       {
         if(pos == s_npos)
         {
@@ -1388,7 +1388,7 @@ namespace rsl
       // This is not possible in RSL though as the ctor for const char* for string is explicit.
       // Therefore this takes a basic_string_view
       // find the last substring equal to sv
-      REX_NO_DISCARD size_type rfind(const basic_string_view<value_type, traits_type>& sv, size_type pos = s_npos) const
+      RSL_NO_DISCARD size_type rfind(const basic_string_view<value_type, traits_type>& sv, size_type pos = s_npos) const
       {
         if(pos == s_npos)
         {
@@ -1398,7 +1398,7 @@ namespace rsl
       }
 
       // finds the first character equal to one of the characters in str
-      REX_NO_DISCARD size_type find_first_of(const basic_string& str, size_type pos = 0) const
+      RSL_NO_DISCARD size_type find_first_of(const basic_string& str, size_type pos = 0) const
       {
         return rsl::string_utils::find_first_of<traits_type, const_pointer>(m_begin, length(), pos, str.data(), str.length(), s_npos);
       }
@@ -1408,7 +1408,7 @@ namespace rsl
       // size_type find_first_of(const_pointer s, size_type pos = 0) const;
 
       // finds the first character equal to ch
-      REX_NO_DISCARD size_type find_first_of(value_type ch, size_type pos = 0) const
+      RSL_NO_DISCARD size_type find_first_of(value_type ch, size_type pos = 0) const
       {
         return rsl::string_utils::find_first_of<traits_type, const_pointer>(m_begin, length(), pos, rsl::addressof(ch), 1_elem, s_npos);
       }
@@ -1418,13 +1418,13 @@ namespace rsl
       // This is not possible in RSL though as the ctor for const char* for string is explicit.
       // Therefore this takes a basic_string_view
       // finds the first character equal to a character in sv
-      REX_NO_DISCARD size_type find_first_of(const basic_string_view<value_type, traits_type>& sv, size_type pos = 0) const
+      RSL_NO_DISCARD size_type find_first_of(const basic_string_view<value_type, traits_type>& sv, size_type pos = 0) const
       {
         return rsl::string_utils::find_first_of<traits_type, const_pointer>(m_begin, length(), pos, sv.data(), sv.length(), s_npos);
       }
 
       // finds the first character equal to none of the characters in str
-      REX_NO_DISCARD size_type find_first_not_of(const basic_string& str, size_type pos = 0) const
+      RSL_NO_DISCARD size_type find_first_not_of(const basic_string& str, size_type pos = 0) const
       {
         return rsl::string_utils::find_first_not_of<traits_type, const_pointer>(m_begin, length(), pos, str.data(), str.length(), s_npos);
       }
@@ -1434,7 +1434,7 @@ namespace rsl
       // size_type find_first_not_of(const_pointer s, size_type pos = s_npos) const;
 
       // finds the first character not equal to ch
-      REX_NO_DISCARD size_type find_first_not_of(value_type ch, size_type pos = 0) const
+      RSL_NO_DISCARD size_type find_first_not_of(value_type ch, size_type pos = 0) const
       {
         return rsl::string_utils::find_first_not_of<traits_type, const_pointer>(m_begin, length(), pos, rsl::addressof(ch), 1_elem, s_npos);
       }
@@ -1444,13 +1444,13 @@ namespace rsl
       // This is not possible in RSL though as the ctor for const char* for string is explicit.
       // Therefore this takes a basic_string_view
       // finds the first character not equal to any character in sv
-      REX_NO_DISCARD size_type find_first_not_of(const basic_string_view<value_type, traits_type>& sv, size_type pos = 0) const
+      RSL_NO_DISCARD size_type find_first_not_of(const basic_string_view<value_type, traits_type>& sv, size_type pos = 0) const
       {
         return rsl::string_utils::find_first_not_of<traits_type, const_pointer>(m_begin, length(), pos, sv.data(), sv.length(), s_npos);
       }
 
       // finds the last character equal to one of the characters in str
-      REX_NO_DISCARD size_type find_last_of(const basic_string& str, size_type pos = s_npos) const
+      RSL_NO_DISCARD size_type find_last_of(const basic_string& str, size_type pos = s_npos) const
       {
         return rsl::string_utils::find_last_of<traits_type, const_pointer>(m_begin, length(), pos, str.data(), str.length(), s_npos);
       }
@@ -1460,7 +1460,7 @@ namespace rsl
       // size_type find_last_of(const value_type* s, size_type pos = s_npos) const;
 
       // finds the last character equal to ch
-      REX_NO_DISCARD size_type find_last_of(value_type ch, size_type pos = s_npos) const
+      RSL_NO_DISCARD size_type find_last_of(value_type ch, size_type pos = s_npos) const
       {
         return rsl::string_utils::find_last_of<traits_type, const_pointer>(m_begin, length(), pos, rsl::addressof(ch), 1_elem, s_npos);
       }
@@ -1470,13 +1470,13 @@ namespace rsl
       // This is not possible in RSL though as the ctor for const char* for string is explicit.
       // Therefore this takes a basic_string_view
       // finds the last character equal to a character in sv
-      REX_NO_DISCARD size_type find_last_of(const basic_string_view<value_type, traits_type>& sv, size_type pos = s_npos) const
+      RSL_NO_DISCARD size_type find_last_of(const basic_string_view<value_type, traits_type>& sv, size_type pos = s_npos) const
       {
         return rsl::string_utils::find_last_of<traits_type, const_pointer>(m_begin, length(), pos, sv.data(), sv.length(), s_npos);
       }
 
       // finds the last character equal to none of the characters in str
-      REX_NO_DISCARD size_type find_last_not_of(const basic_string& str, size_type pos = s_npos) const
+      RSL_NO_DISCARD size_type find_last_not_of(const basic_string& str, size_type pos = s_npos) const
       {
         return rsl::string_utils::find_last_not_of<traits_type, const_pointer>(m_begin, length(), pos, str.data(), str.length(), s_npos);
       }
@@ -1486,7 +1486,7 @@ namespace rsl
       // size_type find_last_not_of(const_pointer s, size_type pos = s_npos) const;
 
       // finds the last character not equal to ch
-      REX_NO_DISCARD size_type find_last_not_of(value_type ch, size_type pos = s_npos) const
+      RSL_NO_DISCARD size_type find_last_not_of(value_type ch, size_type pos = s_npos) const
       {
         return rsl::string_utils::find_last_not_of<traits_type, const_pointer>(m_begin, length(), pos, rsl::addressof(ch), 1_elem, s_npos);
       }
@@ -1496,7 +1496,7 @@ namespace rsl
       // This is not possible in RSL though as the ctor for const char* for string is explicit.
       // Therefore this takes a basic_string_view
       // finds the last character equal to none of the characters in sv
-      REX_NO_DISCARD size_type find_last_not_of(const basic_string_view<value_type, traits_type>& sv, size_type pos = s_npos) const
+      RSL_NO_DISCARD size_type find_last_not_of(const basic_string_view<value_type, traits_type>& sv, size_type pos = s_npos) const
       {
         return rsl::string_utils::find_last_not_of<traits_type, const_pointer>(m_begin, length(), pos, sv.data(), sv.length(), s_npos);
       }
@@ -1517,57 +1517,57 @@ namespace rsl
 
       /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
       // converts the string to an int32. same as rsl::stoi
-      REX_NO_DISCARD rsl::optional<int32> to_int(int32 base = 10) const
+      RSL_NO_DISCARD rsl::optional<int32> to_int(int32 base = 10) const
       {
         return rsl::strtoi(data(), nullptr, base);
       }
       /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
       // converts the string to a long. same as rsl::stol
-      REX_NO_DISCARD rsl::optional<long> to_long(int32 base = 10) const
+      RSL_NO_DISCARD rsl::optional<long> to_long(int32 base = 10) const
       {
         return rsl::strtol(data(), nullptr, base);
       }
       /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
       // converts the string to a long long. same as rsl::stoll
-      REX_NO_DISCARD rsl::optional<int64> to_long64(int32 base = 10) const
+      RSL_NO_DISCARD rsl::optional<int64> to_long64(int32 base = 10) const
       {
         return rsl::strtoll(data(), nullptr, base);
       }
 
       /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
       // converts the string to an unsigned int32. same as rsl::stoui
-      REX_NO_DISCARD rsl::optional<uint32> to_uint(int32 base = 10) const
+      RSL_NO_DISCARD rsl::optional<uint32> to_uint(int32 base = 10) const
       {
         return rsl::strtoui(data(), nullptr, base);
       }
       /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
       // converts the string to an unsigned long. same as rsl::stoul
-      REX_NO_DISCARD rsl::optional<ulong> to_ulong(int32 base = 10) const
+      RSL_NO_DISCARD rsl::optional<ulong> to_ulong(int32 base = 10) const
       {
         return rsl::strtoul(data(), nullptr, base);
       }
       /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
       // converts the string to an unsigned long long. same as rsl::stoull
-      REX_NO_DISCARD rsl::optional<uint64> to_ulong64(int32 base = 10) const
+      RSL_NO_DISCARD rsl::optional<uint64> to_ulong64(int32 base = 10) const
       {
         return rsl::strtoull(data(), nullptr, base);
       }
 
       /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
       // converts the string to a float. same as rsl::stof
-      REX_NO_DISCARD rsl::optional<float32> to_float(int32 /*base*/ = 10) const
+      RSL_NO_DISCARD rsl::optional<float32> to_float(int32 /*base*/ = 10) const
       {
         return rsl::strtof(data(), nullptr);
       }
       /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
       // converts the string to a double. same as rsl::stod
-      REX_NO_DISCARD rsl::optional<float64> to_double(int32 /*base*/ = 10) const
+      RSL_NO_DISCARD rsl::optional<float64> to_double(int32 /*base*/ = 10) const
       {
         return rsl::strtod(data(), nullptr);
       }
       /// RSL Comment: Not in ISO C++ Standard at time of writing (07/Jul/2022)
       // converts the string to a long double. same as rsl::stold
-      REX_NO_DISCARD rsl::optional<lfloat64> to_lfloat(int32 /*base*/ = 10) const
+      RSL_NO_DISCARD rsl::optional<lfloat64> to_lfloat(int32 /*base*/ = 10) const
       {
         return rsl::strtold(data(), nullptr);
       }
@@ -2350,10 +2350,10 @@ namespace rsl
 
     namespace string_literals
     {
-#if defined(REX_COMPILER_MSVC)
+#if defined(RSL_COMPILER_MSVC)
   #pragma warning(push)
   #pragma warning(disable : 4455) // literal suffix identifiers that do not start with an underscore are reserved
-#elif defined(REX_COMPILER_CLANG)
+#elif defined(RSL_COMPILER_CLANG)
   #pragma clang diagnostic push
   #pragma clang diagnostic ignored "-Wuser-defined-literals" // literal suffix identifiers that do not start with an underscore are reserved
 #endif
@@ -2365,9 +2365,9 @@ namespace rsl
       u32string operator""s(const char32_t* s, size_t len); // NOLINT(clang-diagnostic-user-defined-literals)
       // returns a string of the desired type
       wstring operator""s(const tchar* s, size_t len); // NOLINT(clang-diagnostic-user-defined-literals)
-#if defined(REX_COMPILER_MSVC)
+#if defined(RSL_COMPILER_MSVC)
   #pragma warning(pop)
-#elif defined(REX_COMPILER_CLANG)
+#elif defined(RSL_COMPILER_CLANG)
   #pragma clang diagnostic pop
 #endif
     } // namespace string_literals

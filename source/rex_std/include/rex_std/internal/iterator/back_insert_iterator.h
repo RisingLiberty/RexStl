@@ -85,7 +85,7 @@ namespace rsl
     };
 
     template <class Container>
-    REX_NO_DISCARD constexpr back_insert_iterator<Container> back_inserter(Container& cont)
+    RSL_NO_DISCARD constexpr back_insert_iterator<Container> back_inserter(Container& cont)
     {
       return back_insert_iterator<Container>(cont);
     }

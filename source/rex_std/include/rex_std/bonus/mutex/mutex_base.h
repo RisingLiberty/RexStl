@@ -21,10 +21,10 @@ namespace rsl
   {
     namespace internal
     {
-#if defined(REX_PLATFORM_X64)
+#if defined(RSL_PLATFORM_X64)
       inline constexpr card32 g_mutex_size      = 16;
       inline constexpr card32 g_mutex_alignment = 8;
-#elif defined(REX_PLATFORM_X86)
+#elif defined(RSL_PLATFORM_X86)
       inline constexpr card32 g_mutex_size      = 12;
       inline constexpr card32 g_mutex_alignment = 4;
 #else

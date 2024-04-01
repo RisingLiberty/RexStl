@@ -1262,7 +1262,7 @@ namespace rsl
         node_type* node = allocate_node();
         new(rsl::addressof(node->value)) value_type(pair_first_construct, key);
 
-#if REX_DEBUG
+#if RSL_DEBUG
         node->right_node  = nullptr;
         node->left_node   = nullptr;
         node->parent_node = nullptr;
@@ -1277,7 +1277,7 @@ namespace rsl
 
         new(rsl::addressof(node->value)) value_type(value);
 
-#if REX_DEBUG
+#if RSL_DEBUG
         node->right_node  = nullptr;
         node->left_node   = nullptr;
         node->parent_node = nullptr;
@@ -1292,7 +1292,7 @@ namespace rsl
         node_type* node = allocate_node();
         new(rsl::addressof(node->value)) value_type(rsl::move(value));
 
-#if REX_DEBUG
+#if RSL_DEBUG
         node->right_node  = nullptr;
         node->left_node   = nullptr;
         node->parent_node = nullptr;
@@ -1309,7 +1309,7 @@ namespace rsl
 
         new(rsl::addressof(node->value)) value_type(rsl::forward<Args>(args)...);
 
-#if REX_DEBUG
+#if RSL_DEBUG
         node->right_node  = nullptr;
         node->left_node   = nullptr;
         node->parent_node = nullptr;

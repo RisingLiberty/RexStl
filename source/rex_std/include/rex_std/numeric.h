@@ -23,20 +23,20 @@ namespace rsl
   inline namespace v1
   {
 
-    REX_STD_FUNC_ALIAS(iota);
-    REX_STD_FUNC_ALIAS(accumulate);
-    REX_STD_FUNC_ALIAS(reduce);
-    REX_STD_FUNC_ALIAS(transform_reduce);
-    REX_STD_FUNC_ALIAS(inner_product);
-    REX_STD_FUNC_ALIAS(adjacent_difference);
-    REX_STD_FUNC_ALIAS(partial_sum);
-    REX_STD_FUNC_ALIAS(inclusive_scan);
-    REX_STD_FUNC_ALIAS(exclusive_scan);
-    REX_STD_FUNC_ALIAS(transform_inclusive_scan);
-    REX_STD_FUNC_ALIAS(transform_exclusive_scan);
-    REX_STD_FUNC_ALIAS(gcd);
-    REX_STD_FUNC_ALIAS(lcm);
-    REX_STD_FUNC_ALIAS(midpoint);
+    RSL_FUNC_ALIAS(iota);
+    RSL_FUNC_ALIAS(accumulate);
+    RSL_FUNC_ALIAS(reduce);
+    RSL_FUNC_ALIAS(transform_reduce);
+    RSL_FUNC_ALIAS(inner_product);
+    RSL_FUNC_ALIAS(adjacent_difference);
+    RSL_FUNC_ALIAS(partial_sum);
+    RSL_FUNC_ALIAS(inclusive_scan);
+    RSL_FUNC_ALIAS(exclusive_scan);
+    RSL_FUNC_ALIAS(transform_inclusive_scan);
+    RSL_FUNC_ALIAS(transform_exclusive_scan);
+    RSL_FUNC_ALIAS(gcd);
+    RSL_FUNC_ALIAS(lcm);
+    RSL_FUNC_ALIAS(midpoint);
 
   } // namespace v1
 } // namespace rsl

@@ -331,7 +331,7 @@ namespace rsl
       using years        = duration<int64, ratio<31556952>>;
 
       template <typename ToDuration, typename Rep, typename Period, enable_if_t<internal::is_duration<ToDuration>::value, bool> = true>
-      REX_NO_DISCARD constexpr ToDuration floor(const duration<Rep, Period>& dur)
+      RSL_NO_DISCARD constexpr ToDuration floor(const duration<Rep, Period>& dur)
       {
         // convert duration to another duration; round towards negative infinity
         // i.e. the greatest integral result such that the result <= dur
@@ -345,7 +345,7 @@ namespace rsl
       }
 
       template <typename ToDuration, typename Rep, typename Period, enable_if_t<internal::is_duration<ToDuration>::value, bool> = true>
-      REX_NO_DISCARD constexpr ToDuration ceil(const duration<Rep, Period>& dur)
+      RSL_NO_DISCARD constexpr ToDuration ceil(const duration<Rep, Period>& dur)
       {
         // convert duration to another duration; round towards positive infinity
         // i.e. the least integral result such that dur <= the result
@@ -369,7 +369,7 @@ namespace rsl
       } // namespace internal
 
       template <typename ToDuration, typename Rep, typename Period, enable_if_t<internal::is_duration<ToDuration>::value && !treat_as_floating_point<typename ToDuration::rep>::value, bool> = true>
-      REX_NO_DISCARD constexpr ToDuration round(const duration<Rep, Period>& dur)
+      RSL_NO_DISCARD constexpr ToDuration round(const duration<Rep, Period>& dur)
       {
         // convert duration to another duration, round to nearest, ties to even
         const ToDuration floored {chrono::floor<ToDuration>(dur)};
@@ -385,7 +385,7 @@ namespace rsl
       }
 
       template <typename Rep, typename Period, enable_if_t<numeric_limits<Rep>::is_signed, bool> = true>
-      REX_NO_DISCARD constexpr duration<Rep, Period> abs(const duration<Rep, Period> dur)
+      RSL_NO_DISCARD constexpr duration<Rep, Period> abs(const duration<Rep, Period> dur)
       {
         // create a duration with count() the absolute value of dur.count()
         return dur < duration<Rep, Period>::zero() ? duration<Rep, Period>::zero() - dur : dur;
@@ -503,10 +503,10 @@ namespace rsl
   {
     namespace chrono_literals
     {
-#if defined(REX_COMPILER_MSVC)
+#if defined(RSL_COMPILER_MSVC)
   #pragma warning(push)
   #pragma warning(disable : 4455) // literal suffix identifiers that do not start with an underscore are reserved
-#elif defined(REX_COMPILER_CLANG)
+#elif defined(RSL_COMPILER_CLANG)
   #pragma clang diagnostic push
   #pragma clang diagnostic ignored "-Wuser-defined-literals" // literal suffix identifiers that do not start with an underscore are reserved
 #endif
@@ -558,9 +558,9 @@ namespace rsl
       {
         return rsl::chrono::duration<float64, nano>(val);
       }
-#if defined(REX_COMPILER_MSVC)
+#if defined(RSL_COMPILER_MSVC)
   #pragma warning(pop)
-#elif defined(REX_COMPILER_CLANG)
+#elif defined(RSL_COMPILER_CLANG)
   #pragma clang diagnostic pop
 #endif
     } // namespace chrono_literals

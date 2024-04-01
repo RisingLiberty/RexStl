@@ -23,7 +23,7 @@ namespace rsl
   inline namespace v1
   {
 
-    REX_STD_FUNC_ALIAS(transform_reduce);
+    RSL_FUNC_ALIAS(transform_reduce);
 
   }
 } // namespace rsl

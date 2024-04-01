@@ -137,47 +137,47 @@ namespace rsl
     { // numeric limits for arbitrary type
       // T (say little or nothing)
     public:
-      REX_NO_DISCARD static constexpr T(min)() noexcept
+      RSL_NO_DISCARD static constexpr T(min)() noexcept
       {
         return T();
       }
 
-      REX_NO_DISCARD static constexpr T(max)() noexcept
+      RSL_NO_DISCARD static constexpr T(max)() noexcept
       {
         return T();
       }
 
-      REX_NO_DISCARD static constexpr T lowest() noexcept
+      RSL_NO_DISCARD static constexpr T lowest() noexcept
       {
         return T();
       }
 
-      REX_NO_DISCARD static constexpr T epsilon() noexcept
+      RSL_NO_DISCARD static constexpr T epsilon() noexcept
       {
         return T();
       }
 
-      REX_NO_DISCARD static constexpr T round_error() noexcept
+      RSL_NO_DISCARD static constexpr T round_error() noexcept
       {
         return T();
       }
 
-      REX_NO_DISCARD static constexpr T denorm_min() noexcept
+      RSL_NO_DISCARD static constexpr T denorm_min() noexcept
       {
         return T();
       }
 
-      REX_NO_DISCARD static constexpr T infinity() noexcept
+      RSL_NO_DISCARD static constexpr T infinity() noexcept
       {
         return T();
       }
 
-      REX_NO_DISCARD static constexpr T quiet_nan() noexcept
+      RSL_NO_DISCARD static constexpr T quiet_nan() noexcept
       {
         return T();
       }
 
-      REX_NO_DISCARD static constexpr T signaling_na_n() noexcept
+      RSL_NO_DISCARD static constexpr T signaling_na_n() noexcept
       {
         return T();
       }
@@ -203,47 +203,47 @@ namespace rsl
     class numeric_limits<bool> : public internal::num_int_base
     {
     public:
-      REX_NO_DISCARD static constexpr bool(min)() noexcept
+      RSL_NO_DISCARD static constexpr bool(min)() noexcept
       {
         return false;
       }
 
-      REX_NO_DISCARD static constexpr bool(max)() noexcept
+      RSL_NO_DISCARD static constexpr bool(max)() noexcept
       {
         return true;
       }
 
-      REX_NO_DISCARD static constexpr bool lowest() noexcept
+      RSL_NO_DISCARD static constexpr bool lowest() noexcept
       {
         return (min)();
       }
 
-      REX_NO_DISCARD static constexpr bool epsilon() noexcept
+      RSL_NO_DISCARD static constexpr bool epsilon() noexcept
       {
         return false;
       }
 
-      REX_NO_DISCARD static constexpr bool round_error() noexcept
+      RSL_NO_DISCARD static constexpr bool round_error() noexcept
       {
         return false;
       }
 
-      REX_NO_DISCARD static constexpr bool denorm_min() noexcept
+      RSL_NO_DISCARD static constexpr bool denorm_min() noexcept
       {
         return false;
       }
 
-      REX_NO_DISCARD static constexpr bool infinity() noexcept
+      RSL_NO_DISCARD static constexpr bool infinity() noexcept
       {
         return false;
       }
 
-      REX_NO_DISCARD static constexpr bool quiet_nan() noexcept
+      RSL_NO_DISCARD static constexpr bool quiet_nan() noexcept
       {
         return false;
       }
 
-      REX_NO_DISCARD static constexpr bool signaling_na_n() noexcept
+      RSL_NO_DISCARD static constexpr bool signaling_na_n() noexcept
       {
         return false;
       }
@@ -256,47 +256,47 @@ namespace rsl
     class numeric_limits<char> : public internal::num_int_base
     {
     public:
-      REX_NO_DISCARD static constexpr char(min)() noexcept
+      RSL_NO_DISCARD static constexpr char(min)() noexcept
       {
         return limits_8bit::signed_min;
       }
 
-      REX_NO_DISCARD static constexpr char(max)() noexcept
+      RSL_NO_DISCARD static constexpr char(max)() noexcept
       {
         return limits_8bit::signed_max;
       }
 
-      REX_NO_DISCARD static constexpr char lowest() noexcept
+      RSL_NO_DISCARD static constexpr char lowest() noexcept
       {
         return (min)();
       }
 
-      REX_NO_DISCARD static constexpr char epsilon() noexcept
+      RSL_NO_DISCARD static constexpr char epsilon() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr char round_error() noexcept
+      RSL_NO_DISCARD static constexpr char round_error() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr char denorm_min() noexcept
+      RSL_NO_DISCARD static constexpr char denorm_min() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr char infinity() noexcept
+      RSL_NO_DISCARD static constexpr char infinity() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr char quiet_nan() noexcept
+      RSL_NO_DISCARD static constexpr char quiet_nan() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr char signaling_na_n() noexcept
+      RSL_NO_DISCARD static constexpr char signaling_na_n() noexcept
       {
         return 0;
       }
@@ -312,47 +312,47 @@ namespace rsl
     class numeric_limits<signed char> : public internal::num_int_base
     {
     public:
-      REX_NO_DISCARD static constexpr signed char(min)() noexcept
+      RSL_NO_DISCARD static constexpr signed char(min)() noexcept
       {
         return limits_8bit::signed_min;
       }
 
-      REX_NO_DISCARD static constexpr signed char(max)() noexcept
+      RSL_NO_DISCARD static constexpr signed char(max)() noexcept
       {
         return limits_8bit::signed_max;
       }
 
-      REX_NO_DISCARD static constexpr signed char lowest() noexcept
+      RSL_NO_DISCARD static constexpr signed char lowest() noexcept
       {
         return (min)();
       }
 
-      REX_NO_DISCARD static constexpr signed char epsilon() noexcept
+      RSL_NO_DISCARD static constexpr signed char epsilon() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr signed char round_error() noexcept
+      RSL_NO_DISCARD static constexpr signed char round_error() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr signed char denorm_min() noexcept
+      RSL_NO_DISCARD static constexpr signed char denorm_min() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr signed char infinity() noexcept
+      RSL_NO_DISCARD static constexpr signed char infinity() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr signed char quiet_nan() noexcept
+      RSL_NO_DISCARD static constexpr signed char quiet_nan() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr signed char signaling_na_n() noexcept
+      RSL_NO_DISCARD static constexpr signed char signaling_na_n() noexcept
       {
         return 0;
       }
@@ -367,47 +367,47 @@ namespace rsl
     class numeric_limits<unsigned char> : public internal::num_int_base
     {
     public:
-      REX_NO_DISCARD static constexpr unsigned char(min)() noexcept
+      RSL_NO_DISCARD static constexpr unsigned char(min)() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr unsigned char(max)() noexcept
+      RSL_NO_DISCARD static constexpr unsigned char(max)() noexcept
       {
         return limits_8bit::unsigned_max;
       }
 
-      REX_NO_DISCARD static constexpr unsigned char lowest() noexcept
+      RSL_NO_DISCARD static constexpr unsigned char lowest() noexcept
       {
         return (min)();
       }
 
-      REX_NO_DISCARD static constexpr unsigned char epsilon() noexcept
+      RSL_NO_DISCARD static constexpr unsigned char epsilon() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr unsigned char round_error() noexcept
+      RSL_NO_DISCARD static constexpr unsigned char round_error() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr unsigned char denorm_min() noexcept
+      RSL_NO_DISCARD static constexpr unsigned char denorm_min() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr unsigned char infinity() noexcept
+      RSL_NO_DISCARD static constexpr unsigned char infinity() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr unsigned char quiet_nan() noexcept
+      RSL_NO_DISCARD static constexpr unsigned char quiet_nan() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr unsigned char signaling_na_n() noexcept
+      RSL_NO_DISCARD static constexpr unsigned char signaling_na_n() noexcept
       {
         return 0;
       }
@@ -423,47 +423,47 @@ namespace rsl
     class numeric_limits<char8_t> : public internal::num_int_base
     {
     public:
-      REX_NO_DISCARD static constexpr char8_t(min)() noexcept
+      RSL_NO_DISCARD static constexpr char8_t(min)() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr char8_t(max)() noexcept
+      RSL_NO_DISCARD static constexpr char8_t(max)() noexcept
       {
         return limits_8bit::unsigned_max;
       }
 
-      REX_NO_DISCARD static constexpr char8_t lowest() noexcept
+      RSL_NO_DISCARD static constexpr char8_t lowest() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr char8_t epsilon() noexcept
+      RSL_NO_DISCARD static constexpr char8_t epsilon() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr char8_t round_error() noexcept
+      RSL_NO_DISCARD static constexpr char8_t round_error() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr char8_t denorm_min() noexcept
+      RSL_NO_DISCARD static constexpr char8_t denorm_min() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr char8_t infinity() noexcept
+      RSL_NO_DISCARD static constexpr char8_t infinity() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr char8_t quiet_nan() noexcept
+      RSL_NO_DISCARD static constexpr char8_t quiet_nan() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr char8_t signaling_na_n() noexcept
+      RSL_NO_DISCARD static constexpr char8_t signaling_na_n() noexcept
       {
         return 0;
       }
@@ -479,47 +479,47 @@ namespace rsl
     class numeric_limits<char16_t> : public internal::num_int_base
     {
     public:
-      REX_NO_DISCARD static constexpr char16_t(min)() noexcept
+      RSL_NO_DISCARD static constexpr char16_t(min)() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr char16_t(max)() noexcept
+      RSL_NO_DISCARD static constexpr char16_t(max)() noexcept
       {
         return limits_16bit::unsigned_max;
       }
 
-      REX_NO_DISCARD static constexpr char16_t lowest() noexcept
+      RSL_NO_DISCARD static constexpr char16_t lowest() noexcept
       {
         return (min)();
       }
 
-      REX_NO_DISCARD static constexpr char16_t epsilon() noexcept
+      RSL_NO_DISCARD static constexpr char16_t epsilon() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr char16_t round_error() noexcept
+      RSL_NO_DISCARD static constexpr char16_t round_error() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr char16_t denorm_min() noexcept
+      RSL_NO_DISCARD static constexpr char16_t denorm_min() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr char16_t infinity() noexcept
+      RSL_NO_DISCARD static constexpr char16_t infinity() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr char16_t quiet_nan() noexcept
+      RSL_NO_DISCARD static constexpr char16_t quiet_nan() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr char16_t signaling_na_n() noexcept
+      RSL_NO_DISCARD static constexpr char16_t signaling_na_n() noexcept
       {
         return 0;
       }
@@ -534,47 +534,47 @@ namespace rsl
     class numeric_limits<char32_t> : public internal::num_int_base
     {
     public:
-      REX_NO_DISCARD static constexpr char32_t(min)() noexcept
+      RSL_NO_DISCARD static constexpr char32_t(min)() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr char32_t(max)() noexcept
+      RSL_NO_DISCARD static constexpr char32_t(max)() noexcept
       {
         return limits_32bit::unsigned_max;
       }
 
-      REX_NO_DISCARD static constexpr char32_t lowest() noexcept
+      RSL_NO_DISCARD static constexpr char32_t lowest() noexcept
       {
         return (min)();
       }
 
-      REX_NO_DISCARD static constexpr char32_t epsilon() noexcept
+      RSL_NO_DISCARD static constexpr char32_t epsilon() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr char32_t round_error() noexcept
+      RSL_NO_DISCARD static constexpr char32_t round_error() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr char32_t denorm_min() noexcept
+      RSL_NO_DISCARD static constexpr char32_t denorm_min() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr char32_t infinity() noexcept
+      RSL_NO_DISCARD static constexpr char32_t infinity() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr char32_t quiet_nan() noexcept
+      RSL_NO_DISCARD static constexpr char32_t quiet_nan() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr char32_t signaling_na_n() noexcept
+      RSL_NO_DISCARD static constexpr char32_t signaling_na_n() noexcept
       {
         return 0;
       }
@@ -589,12 +589,12 @@ namespace rsl
     class numeric_limits<wchar_t> : public internal::num_int_base
     {
     public:
-      REX_NO_DISCARD static constexpr wchar_t(min)() noexcept
+      RSL_NO_DISCARD static constexpr wchar_t(min)() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr wchar_t(max)() noexcept
+      RSL_NO_DISCARD static constexpr wchar_t(max)() noexcept
       {
         if constexpr(sizeof(wchar_t) == 2)
         {
@@ -606,37 +606,37 @@ namespace rsl
         }
       }
 
-      REX_NO_DISCARD static constexpr wchar_t lowest() noexcept
+      RSL_NO_DISCARD static constexpr wchar_t lowest() noexcept
       {
         return (min)();
       }
 
-      REX_NO_DISCARD static constexpr wchar_t epsilon() noexcept
+      RSL_NO_DISCARD static constexpr wchar_t epsilon() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr wchar_t round_error() noexcept
+      RSL_NO_DISCARD static constexpr wchar_t round_error() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr wchar_t denorm_min() noexcept
+      RSL_NO_DISCARD static constexpr wchar_t denorm_min() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr wchar_t infinity() noexcept
+      RSL_NO_DISCARD static constexpr wchar_t infinity() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr wchar_t quiet_nan() noexcept
+      RSL_NO_DISCARD static constexpr wchar_t quiet_nan() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr wchar_t signaling_na_n() noexcept
+      RSL_NO_DISCARD static constexpr wchar_t signaling_na_n() noexcept
       {
         return 0;
       }
@@ -651,47 +651,47 @@ namespace rsl
     class numeric_limits<short> : public internal::num_int_base
     {
     public:
-      REX_NO_DISCARD static constexpr short(min)() noexcept
+      RSL_NO_DISCARD static constexpr short(min)() noexcept
       {
         return limits_16bit::signed_min;
       }
 
-      REX_NO_DISCARD static constexpr short(max)() noexcept
+      RSL_NO_DISCARD static constexpr short(max)() noexcept
       {
         return limits_16bit::signed_max;
       }
 
-      REX_NO_DISCARD static constexpr short lowest() noexcept
+      RSL_NO_DISCARD static constexpr short lowest() noexcept
       {
         return (min)();
       }
 
-      REX_NO_DISCARD static constexpr short epsilon() noexcept
+      RSL_NO_DISCARD static constexpr short epsilon() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr short round_error() noexcept
+      RSL_NO_DISCARD static constexpr short round_error() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr short denorm_min() noexcept
+      RSL_NO_DISCARD static constexpr short denorm_min() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr short infinity() noexcept
+      RSL_NO_DISCARD static constexpr short infinity() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr short quiet_nan() noexcept
+      RSL_NO_DISCARD static constexpr short quiet_nan() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr short signaling_na_n() noexcept
+      RSL_NO_DISCARD static constexpr short signaling_na_n() noexcept
       {
         return 0;
       }
@@ -706,47 +706,47 @@ namespace rsl
     class numeric_limits<int32> : public internal::num_int_base
     {
     public:
-      REX_NO_DISCARD static constexpr int32(min)() noexcept
+      RSL_NO_DISCARD static constexpr int32(min)() noexcept
       {
         return limits_32bit::signed_min;
       }
 
-      REX_NO_DISCARD static constexpr int32(max)() noexcept
+      RSL_NO_DISCARD static constexpr int32(max)() noexcept
       {
         return limits_32bit::signed_max;
       }
 
-      REX_NO_DISCARD static constexpr int32 lowest() noexcept
+      RSL_NO_DISCARD static constexpr int32 lowest() noexcept
       {
         return (min)();
       }
 
-      REX_NO_DISCARD static constexpr int32 epsilon() noexcept
+      RSL_NO_DISCARD static constexpr int32 epsilon() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr int32 round_error() noexcept
+      RSL_NO_DISCARD static constexpr int32 round_error() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr int32 denorm_min() noexcept
+      RSL_NO_DISCARD static constexpr int32 denorm_min() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr int32 infinity() noexcept
+      RSL_NO_DISCARD static constexpr int32 infinity() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr int32 quiet_nan() noexcept
+      RSL_NO_DISCARD static constexpr int32 quiet_nan() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr int32 signaling_na_n() noexcept
+      RSL_NO_DISCARD static constexpr int32 signaling_na_n() noexcept
       {
         return 0;
       }
@@ -761,47 +761,47 @@ namespace rsl
     class numeric_limits<long> : public internal::num_int_base
     {
     public:
-      REX_NO_DISCARD static constexpr long(min)() noexcept
+      RSL_NO_DISCARD static constexpr long(min)() noexcept
       {
         return limits_32bit::signed_min;
       }
 
-      REX_NO_DISCARD static constexpr long(max)() noexcept
+      RSL_NO_DISCARD static constexpr long(max)() noexcept
       {
         return limits_32bit::signed_max;
       }
 
-      REX_NO_DISCARD static constexpr long lowest() noexcept
+      RSL_NO_DISCARD static constexpr long lowest() noexcept
       {
         return (min)();
       }
 
-      REX_NO_DISCARD static constexpr long epsilon() noexcept
+      RSL_NO_DISCARD static constexpr long epsilon() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr long round_error() noexcept
+      RSL_NO_DISCARD static constexpr long round_error() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr long denorm_min() noexcept
+      RSL_NO_DISCARD static constexpr long denorm_min() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr long infinity() noexcept
+      RSL_NO_DISCARD static constexpr long infinity() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr long quiet_nan() noexcept
+      RSL_NO_DISCARD static constexpr long quiet_nan() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr long signaling_na_n() noexcept
+      RSL_NO_DISCARD static constexpr long signaling_na_n() noexcept
       {
         return 0;
       }
@@ -817,47 +817,47 @@ namespace rsl
     class numeric_limits<long long> : public internal::num_int_base
     {
     public:
-      REX_NO_DISCARD static constexpr long long(min)() noexcept
+      RSL_NO_DISCARD static constexpr long long(min)() noexcept
       {
         return limits_64bit::signed_min;
       }
 
-      REX_NO_DISCARD static constexpr long long(max)() noexcept
+      RSL_NO_DISCARD static constexpr long long(max)() noexcept
       {
         return limits_64bit::signed_max;
       }
 
-      REX_NO_DISCARD static constexpr long long lowest() noexcept
+      RSL_NO_DISCARD static constexpr long long lowest() noexcept
       {
         return (min)();
       }
 
-      REX_NO_DISCARD static constexpr long long epsilon() noexcept
+      RSL_NO_DISCARD static constexpr long long epsilon() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr long long round_error() noexcept
+      RSL_NO_DISCARD static constexpr long long round_error() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr long long denorm_min() noexcept
+      RSL_NO_DISCARD static constexpr long long denorm_min() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr long long infinity() noexcept
+      RSL_NO_DISCARD static constexpr long long infinity() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr long long quiet_nan() noexcept
+      RSL_NO_DISCARD static constexpr long long quiet_nan() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr long long signaling_na_n() noexcept
+      RSL_NO_DISCARD static constexpr long long signaling_na_n() noexcept
       {
         return 0;
       }
@@ -873,47 +873,47 @@ namespace rsl
     class numeric_limits<unsigned short> : public internal::num_int_base
     {
     public:
-      REX_NO_DISCARD static constexpr unsigned short(min)() noexcept
+      RSL_NO_DISCARD static constexpr unsigned short(min)() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr unsigned short(max)() noexcept
+      RSL_NO_DISCARD static constexpr unsigned short(max)() noexcept
       {
         return limits_16bit::unsigned_max;
       }
 
-      REX_NO_DISCARD static constexpr unsigned short lowest() noexcept
+      RSL_NO_DISCARD static constexpr unsigned short lowest() noexcept
       {
         return (min)();
       }
 
-      REX_NO_DISCARD static constexpr unsigned short epsilon() noexcept
+      RSL_NO_DISCARD static constexpr unsigned short epsilon() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr unsigned short round_error() noexcept
+      RSL_NO_DISCARD static constexpr unsigned short round_error() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr unsigned short denorm_min() noexcept
+      RSL_NO_DISCARD static constexpr unsigned short denorm_min() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr unsigned short infinity() noexcept
+      RSL_NO_DISCARD static constexpr unsigned short infinity() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr unsigned short quiet_nan() noexcept
+      RSL_NO_DISCARD static constexpr unsigned short quiet_nan() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr unsigned short signaling_na_n() noexcept
+      RSL_NO_DISCARD static constexpr unsigned short signaling_na_n() noexcept
       {
         return 0;
       }
@@ -929,47 +929,47 @@ namespace rsl
     class numeric_limits<uint32> : public internal::num_int_base
     {
     public:
-      REX_NO_DISCARD static constexpr uint32(min)() noexcept
+      RSL_NO_DISCARD static constexpr uint32(min)() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr uint32(max)() noexcept
+      RSL_NO_DISCARD static constexpr uint32(max)() noexcept
       {
         return limits_32bit::unsigned_max;
       }
 
-      REX_NO_DISCARD static constexpr uint32 lowest() noexcept
+      RSL_NO_DISCARD static constexpr uint32 lowest() noexcept
       {
         return (min)();
       }
 
-      REX_NO_DISCARD static constexpr uint32 epsilon() noexcept
+      RSL_NO_DISCARD static constexpr uint32 epsilon() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr uint32 round_error() noexcept
+      RSL_NO_DISCARD static constexpr uint32 round_error() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr uint32 denorm_min() noexcept
+      RSL_NO_DISCARD static constexpr uint32 denorm_min() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr uint32 infinity() noexcept
+      RSL_NO_DISCARD static constexpr uint32 infinity() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr uint32 quiet_nan() noexcept
+      RSL_NO_DISCARD static constexpr uint32 quiet_nan() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr uint32 signaling_na_n() noexcept
+      RSL_NO_DISCARD static constexpr uint32 signaling_na_n() noexcept
       {
         return 0;
       }
@@ -984,47 +984,47 @@ namespace rsl
     class numeric_limits<unsigned long> : public internal::num_int_base
     {
     public:
-      REX_NO_DISCARD static constexpr unsigned long(min)() noexcept
+      RSL_NO_DISCARD static constexpr unsigned long(min)() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr unsigned long(max)() noexcept
+      RSL_NO_DISCARD static constexpr unsigned long(max)() noexcept
       {
         return limits_32bit::unsigned_max;
       }
 
-      REX_NO_DISCARD static constexpr unsigned long lowest() noexcept
+      RSL_NO_DISCARD static constexpr unsigned long lowest() noexcept
       {
         return (min)();
       }
 
-      REX_NO_DISCARD static constexpr unsigned long epsilon() noexcept
+      RSL_NO_DISCARD static constexpr unsigned long epsilon() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr unsigned long round_error() noexcept
+      RSL_NO_DISCARD static constexpr unsigned long round_error() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr unsigned long denorm_min() noexcept
+      RSL_NO_DISCARD static constexpr unsigned long denorm_min() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr unsigned long infinity() noexcept
+      RSL_NO_DISCARD static constexpr unsigned long infinity() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr unsigned long quiet_nan() noexcept
+      RSL_NO_DISCARD static constexpr unsigned long quiet_nan() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr unsigned long signaling_na_n() noexcept
+      RSL_NO_DISCARD static constexpr unsigned long signaling_na_n() noexcept
       {
         return 0;
       }
@@ -1040,47 +1040,47 @@ namespace rsl
     class numeric_limits<unsigned long long> : public internal::num_int_base
     {
     public:
-      REX_NO_DISCARD static constexpr unsigned long long(min)() noexcept
+      RSL_NO_DISCARD static constexpr unsigned long long(min)() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr unsigned long long(max)() noexcept
+      RSL_NO_DISCARD static constexpr unsigned long long(max)() noexcept
       {
         return limits_64bit::unsigned_max;
       }
 
-      REX_NO_DISCARD static constexpr unsigned long long lowest() noexcept
+      RSL_NO_DISCARD static constexpr unsigned long long lowest() noexcept
       {
         return (min)();
       }
 
-      REX_NO_DISCARD static constexpr unsigned long long epsilon() noexcept
+      RSL_NO_DISCARD static constexpr unsigned long long epsilon() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr unsigned long long round_error() noexcept
+      RSL_NO_DISCARD static constexpr unsigned long long round_error() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr unsigned long long denorm_min() noexcept
+      RSL_NO_DISCARD static constexpr unsigned long long denorm_min() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr unsigned long long infinity() noexcept
+      RSL_NO_DISCARD static constexpr unsigned long long infinity() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr unsigned long long quiet_nan() noexcept
+      RSL_NO_DISCARD static constexpr unsigned long long quiet_nan() noexcept
       {
         return 0;
       }
 
-      REX_NO_DISCARD static constexpr unsigned long long signaling_na_n() noexcept
+      RSL_NO_DISCARD static constexpr unsigned long long signaling_na_n() noexcept
       {
         return 0;
       }
@@ -1095,47 +1095,47 @@ namespace rsl
     class numeric_limits<float> : public internal::num_float_base
     {
     public:
-      REX_NO_DISCARD static constexpr float(min)() noexcept
+      RSL_NO_DISCARD static constexpr float(min)() noexcept
       {
         return limits_32bit::float_min_normalized;
       }
 
-      REX_NO_DISCARD static constexpr float(max)() noexcept
+      RSL_NO_DISCARD static constexpr float(max)() noexcept
       {
         return limits_32bit::float_max;
       }
 
-      REX_NO_DISCARD static constexpr float lowest() noexcept
+      RSL_NO_DISCARD static constexpr float lowest() noexcept
       {
         return -(max)();
       }
 
-      REX_NO_DISCARD static constexpr float epsilon() noexcept
+      RSL_NO_DISCARD static constexpr float epsilon() noexcept
       {
         return limits_32bit::epsilon_value;
       }
 
-      REX_NO_DISCARD static constexpr float round_error() noexcept
+      RSL_NO_DISCARD static constexpr float round_error() noexcept
       {
         return 0.5F;
       }
 
-      REX_NO_DISCARD static constexpr float denorm_min() noexcept
+      RSL_NO_DISCARD static constexpr float denorm_min() noexcept
       {
         return limits_32bit::float_min;
       }
 
-      REX_NO_DISCARD static constexpr float infinity() noexcept
+      RSL_NO_DISCARD static constexpr float infinity() noexcept
       {
         return __builtin_huge_valf();
       }
 
-      REX_NO_DISCARD static constexpr float quiet_nan() noexcept
+      RSL_NO_DISCARD static constexpr float quiet_nan() noexcept
       {
         return __builtin_nanf("0");
       }
 
-      REX_NO_DISCARD static constexpr float signaling_na_n() noexcept
+      RSL_NO_DISCARD static constexpr float signaling_na_n() noexcept
       {
         return __builtin_nansf("1");
       }
@@ -1154,47 +1154,47 @@ namespace rsl
     class numeric_limits<double> : public internal::num_float_base
     {
     public:
-      REX_NO_DISCARD static constexpr double(min)() noexcept
+      RSL_NO_DISCARD static constexpr double(min)() noexcept
       {
         return limits_64bit::float_min_normalized;
       }
 
-      REX_NO_DISCARD static constexpr double(max)() noexcept
+      RSL_NO_DISCARD static constexpr double(max)() noexcept
       {
         return limits_64bit::float_max;
       }
 
-      REX_NO_DISCARD static constexpr double lowest() noexcept
+      RSL_NO_DISCARD static constexpr double lowest() noexcept
       {
         return -(max)();
       }
 
-      REX_NO_DISCARD static constexpr double epsilon() noexcept
+      RSL_NO_DISCARD static constexpr double epsilon() noexcept
       {
         return limits_64bit::epsilon_value;
       }
 
-      REX_NO_DISCARD static constexpr double round_error() noexcept
+      RSL_NO_DISCARD static constexpr double round_error() noexcept
       {
         return 0.5;
       }
 
-      REX_NO_DISCARD static constexpr double denorm_min() noexcept
+      RSL_NO_DISCARD static constexpr double denorm_min() noexcept
       {
         return limits_64bit::float_min;
       }
 
-      REX_NO_DISCARD static constexpr double infinity() noexcept
+      RSL_NO_DISCARD static constexpr double infinity() noexcept
       {
         return __builtin_huge_val();
       }
 
-      REX_NO_DISCARD static constexpr double quiet_nan() noexcept
+      RSL_NO_DISCARD static constexpr double quiet_nan() noexcept
       {
         return __builtin_nan("0");
       }
 
-      REX_NO_DISCARD static constexpr double signaling_na_n() noexcept
+      RSL_NO_DISCARD static constexpr double signaling_na_n() noexcept
       {
         return __builtin_nans("1");
       }
@@ -1213,47 +1213,47 @@ namespace rsl
     class numeric_limits<long double> : public internal::num_float_base
     {
     public:
-      REX_NO_DISCARD static constexpr long double(min)() noexcept
+      RSL_NO_DISCARD static constexpr long double(min)() noexcept
       {
         return limits_64bit::float_min_normalized;
       }
 
-      REX_NO_DISCARD static constexpr long double(max)() noexcept
+      RSL_NO_DISCARD static constexpr long double(max)() noexcept
       {
         return limits_64bit::float_max;
       }
 
-      REX_NO_DISCARD static constexpr long double lowest() noexcept
+      RSL_NO_DISCARD static constexpr long double lowest() noexcept
       {
         return -(max)();
       }
 
-      REX_NO_DISCARD static constexpr long double epsilon() noexcept
+      RSL_NO_DISCARD static constexpr long double epsilon() noexcept
       {
         return limits_64bit::epsilon_value;
       }
 
-      REX_NO_DISCARD static constexpr long double round_error() noexcept
+      RSL_NO_DISCARD static constexpr long double round_error() noexcept
       {
         return 0.5L;
       }
 
-      REX_NO_DISCARD static constexpr long double denorm_min() noexcept
+      RSL_NO_DISCARD static constexpr long double denorm_min() noexcept
       {
         return limits_64bit::float_min;
       }
 
-      REX_NO_DISCARD static constexpr long double infinity() noexcept
+      RSL_NO_DISCARD static constexpr long double infinity() noexcept
       {
         return __builtin_huge_val(); // NOLINT(cppcoreguidelines-narrowing-conversions)
       }
 
-      REX_NO_DISCARD static constexpr long double quiet_nan() noexcept
+      RSL_NO_DISCARD static constexpr long double quiet_nan() noexcept
       {
         return __builtin_nan("0");
       }
 
-      REX_NO_DISCARD static constexpr long double signaling_na_n() noexcept
+      RSL_NO_DISCARD static constexpr long double signaling_na_n() noexcept
       {
         return __builtin_nans("1");
       }

@@ -66,37 +66,37 @@ namespace rsl
 //     template <typename CharT>
 //     class char_traits;
 //
-//     REX_STD_TEMPLATED_CLASS_ALIAS(template <typename T, typename CharT = char8, typename Traits = rsl::char_traits<CharT>, typename Distance = ptrdiff>, istream_iterator, T, CharT, Traits, Distance);
+//     RSL_TEMPLATED_CLASS_ALIAS(template <typename T, typename CharT = char8, typename Traits = rsl::char_traits<CharT>, typename Distance = ptrdiff>, istream_iterator, T, CharT, Traits, Distance);
 //
-//     REX_STD_TEMPLATED_CLASS_ALIAS(template <typename T, typename CharT = char8, typename Traits = rsl::char_traits<CharT>>, ostream_iterator, T, CharT, Traits);
+//     RSL_TEMPLATED_CLASS_ALIAS(template <typename T, typename CharT = char8, typename Traits = rsl::char_traits<CharT>>, ostream_iterator, T, CharT, Traits);
 //
-//     REX_STD_TEMPLATED_CLASS_ALIAS(template <typename CharT, typename Traits = char_traits<CharT>>, ostreambuf_iterator, CharT, Traits);
+//     RSL_TEMPLATED_CLASS_ALIAS(template <typename CharT, typename Traits = char_traits<CharT>>, ostreambuf_iterator, CharT, Traits);
 //
-//     REX_STD_FUNC_ALIAS(front_inserter);
-//     REX_STD_FUNC_ALIAS(back_inserter);
-//     REX_STD_FUNC_ALIAS(inserter);
+//     RSL_FUNC_ALIAS(front_inserter);
+//     RSL_FUNC_ALIAS(back_inserter);
+//     RSL_FUNC_ALIAS(inserter);
 //
-//     REX_STD_FUNC_ALIAS(operator==);
-//     REX_STD_FUNC_ALIAS(operator!=);
-//     REX_STD_FUNC_ALIAS(operator<);
-//     REX_STD_FUNC_ALIAS(operator<=);
-//     REX_STD_FUNC_ALIAS(operator>);
-//     REX_STD_FUNC_ALIAS(operator>=);
-//     REX_STD_FUNC_ALIAS(operator+);
-//     REX_STD_FUNC_ALIAS(operator-);
+//     RSL_FUNC_ALIAS(operator==);
+//     RSL_FUNC_ALIAS(operator!=);
+//     RSL_FUNC_ALIAS(operator<);
+//     RSL_FUNC_ALIAS(operator<=);
+//     RSL_FUNC_ALIAS(operator>);
+//     RSL_FUNC_ALIAS(operator>=);
+//     RSL_FUNC_ALIAS(operator+);
+//     RSL_FUNC_ALIAS(operator-);
 //
-//     REX_STD_FUNC_ALIAS(advance);
-//     REX_STD_FUNC_ALIAS(next);
-//     REX_STD_FUNC_ALIAS(prev);
-//     REX_STD_FUNC_ALIAS(cbegin);
-//     REX_STD_FUNC_ALIAS(cend);
-//     REX_STD_FUNC_ALIAS(rbegin);
-//     REX_STD_FUNC_ALIAS(crbegin);
-//     REX_STD_FUNC_ALIAS(rend);
-//     REX_STD_FUNC_ALIAS(crend);
-//     REX_STD_FUNC_ALIAS(size);
-//     REX_STD_FUNC_ALIAS(ssize);
-//     REX_STD_FUNC_ALIAS(data);
+//     RSL_FUNC_ALIAS(advance);
+//     RSL_FUNC_ALIAS(next);
+//     RSL_FUNC_ALIAS(prev);
+//     RSL_FUNC_ALIAS(cbegin);
+//     RSL_FUNC_ALIAS(cend);
+//     RSL_FUNC_ALIAS(rbegin);
+//     RSL_FUNC_ALIAS(crbegin);
+//     RSL_FUNC_ALIAS(rend);
+//     RSL_FUNC_ALIAS(crend);
+//     RSL_FUNC_ALIAS(size);
+//     RSL_FUNC_ALIAS(ssize);
+//     RSL_FUNC_ALIAS(data);
 //
 //   } // namespace v1
 // } // namespace rsl

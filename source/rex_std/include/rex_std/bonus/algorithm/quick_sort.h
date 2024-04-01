@@ -24,7 +24,7 @@ namespace rsl
   {
     namespace internal
     {
-#ifdef REX_PLATFORM_X64
+#ifdef RSL_PLATFORM_X64
       inline constexpr card32 g_quicksort_limit = 28; // For sorts of random arrays over 100 items, 28 - 32 have been found to be good numbers on x86.
 #else
       inline constexpr card32 g_quicksort_limit = 16; // It seems that on other processors lower limits are more beneficial, as they result in fewer compares.

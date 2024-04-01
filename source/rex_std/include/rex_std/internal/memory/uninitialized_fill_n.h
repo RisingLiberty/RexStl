@@ -21,7 +21,7 @@ namespace rsl
 {
   inline namespace v1
   {
-    REX_STD_FUNC_ALIAS(uninitialized_fill_n);
+    RSL_FUNC_ALIAS(uninitialized_fill_n);
 
   } // namespace v1
 } // namespace rsl

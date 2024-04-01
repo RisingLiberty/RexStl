@@ -63,95 +63,95 @@ namespace rsl
 
     // Forward declarations
     // checks if a character is alphanumeric
-    REX_NO_DISCARD constexpr bool is_alnum(char8 ch);
-    REX_NO_DISCARD constexpr bool is_alpha(char8 ch);
-    // REX_NO_DISCARD constexpr bool is_lower(char8 ch);
-    // REX_NO_DISCARD constexpr bool is_upper(char8 ch);
-    // REX_NO_DISCARD constexpr bool is_digit(char8 ch);
-    REX_NO_DISCARD constexpr bool is_xdigit(char8 ch);
-    REX_NO_DISCARD constexpr bool is_cntrl(char8 ch);
-    REX_NO_DISCARD constexpr bool is_graph(char8 ch);
-    REX_NO_DISCARD constexpr bool is_space(char8 ch);
-    REX_NO_DISCARD constexpr bool is_blank(char8 ch);
-    REX_NO_DISCARD constexpr bool is_print(char8 ch);
-    REX_NO_DISCARD constexpr bool is_punct(char8 ch);
+    RSL_NO_DISCARD constexpr bool is_alnum(char8 ch);
+    RSL_NO_DISCARD constexpr bool is_alpha(char8 ch);
+    // RSL_NO_DISCARD constexpr bool is_lower(char8 ch);
+    // RSL_NO_DISCARD constexpr bool is_upper(char8 ch);
+    // RSL_NO_DISCARD constexpr bool is_digit(char8 ch);
+    RSL_NO_DISCARD constexpr bool is_xdigit(char8 ch);
+    RSL_NO_DISCARD constexpr bool is_cntrl(char8 ch);
+    RSL_NO_DISCARD constexpr bool is_graph(char8 ch);
+    RSL_NO_DISCARD constexpr bool is_space(char8 ch);
+    RSL_NO_DISCARD constexpr bool is_blank(char8 ch);
+    RSL_NO_DISCARD constexpr bool is_print(char8 ch);
+    RSL_NO_DISCARD constexpr bool is_punct(char8 ch);
 
-    REX_NO_DISCARD constexpr bool is_digit(char8 digit);
+    RSL_NO_DISCARD constexpr bool is_digit(char8 digit);
 
-    REX_NO_DISCARD constexpr bool is_upper(char8 letter);
+    RSL_NO_DISCARD constexpr bool is_upper(char8 letter);
 
-    REX_NO_DISCARD constexpr bool is_lower(char8 letter);
+    RSL_NO_DISCARD constexpr bool is_lower(char8 letter);
 
     // checks if a character is alphanumeric
-    REX_NO_DISCARD constexpr bool is_alnum(char8 ch)
+    RSL_NO_DISCARD constexpr bool is_alnum(char8 ch)
     {
       return is_alpha(ch) || is_digit(ch);
     }
     // checks if a character is alphabetic
-    REX_NO_DISCARD constexpr bool is_alpha(char8 ch)
+    RSL_NO_DISCARD constexpr bool is_alpha(char8 ch)
     {
       return is_lower(ch) || is_upper(ch);
     }
 
-    REX_NO_DISCARD constexpr bool is_upper(char8 letter)
+    RSL_NO_DISCARD constexpr bool is_upper(char8 letter)
     {
       return letter >= 'A' && letter <= 'Z';
     }
-    REX_NO_DISCARD constexpr bool is_lower(char8 letter)
+    RSL_NO_DISCARD constexpr bool is_lower(char8 letter)
     {
       return letter >= 'a' && letter <= 'z';
     }
 
-    REX_NO_DISCARD constexpr bool is_digit(char8 digit)
+    RSL_NO_DISCARD constexpr bool is_digit(char8 digit)
     {
       return digit >= '0' && digit <= '9';
     }
-    REX_NO_DISCARD constexpr bool is_digitf(char8 digit)
+    RSL_NO_DISCARD constexpr bool is_digitf(char8 digit)
     {
       return is_digit(digit) || digit == '.';
     }
 
     // checks if a character is a hexadecimal character
-    REX_NO_DISCARD constexpr bool is_xdigit(char8 ch)
+    RSL_NO_DISCARD constexpr bool is_xdigit(char8 ch)
     {
       return is_digit(ch) || (ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F');
     }
     // checks if a character is a control character
-    REX_NO_DISCARD constexpr bool is_cntrl(char8 ch)
+    RSL_NO_DISCARD constexpr bool is_cntrl(char8 ch)
     {
       return (ch >= 0 && ch <= 31) || ch == 127; // NOLINT(readability-magic-numbers)
     }
     // checks if a character is a graphical character
-    REX_NO_DISCARD constexpr bool is_graph(char8 ch)
+    RSL_NO_DISCARD constexpr bool is_graph(char8 ch)
     {
       return is_print(ch) && ch != ' ';
     }
     // checks if a character is a space character
-    REX_NO_DISCARD constexpr bool is_space(char8 ch)
+    RSL_NO_DISCARD constexpr bool is_space(char8 ch)
     {
       return ch == ' ' || (ch >= '\t' && ch <= '\r');
     }
     // checks if a character is a blank character
-    REX_NO_DISCARD constexpr bool is_blank(char8 ch)
+    RSL_NO_DISCARD constexpr bool is_blank(char8 ch)
     {
       return ch == '\t' || ch == ' ';
     }
     // checks if a character is a printing character
-    REX_NO_DISCARD constexpr bool is_print(char8 ch)
+    RSL_NO_DISCARD constexpr bool is_print(char8 ch)
     {
       return !is_cntrl(ch);
     }
     // checks if a character is a punctuation character
-    REX_NO_DISCARD constexpr bool is_punct(char8 ch)
+    RSL_NO_DISCARD constexpr bool is_punct(char8 ch)
     {
       return is_graph(ch) && !is_alnum(ch);
     }
 
-    REX_NO_DISCARD constexpr char8 to_upper(char8 letter)
+    RSL_NO_DISCARD constexpr char8 to_upper(char8 letter)
     {
       return is_lower(letter) ? letter - ('z' - 'Z') : letter; // NOLINT(cppcoreguidelines-narrowing-conversions)
     }
-    REX_NO_DISCARD constexpr char8 to_lower(char8 letter)
+    RSL_NO_DISCARD constexpr char8 to_lower(char8 letter)
     {
       return is_upper(letter) ? letter - ('Z' - 'z') : letter; // NOLINT(cppcoreguidelines-narrowing-conversions)
     }

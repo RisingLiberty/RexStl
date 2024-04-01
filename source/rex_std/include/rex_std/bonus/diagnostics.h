@@ -17,7 +17,7 @@
 #include "rex_std/bonus/diagnostics/log_message.h"
 #include "rex_std/bonus/diagnostics/logging.h"
 
-#ifdef REX_PLATFORM_WINDOWS
+#ifdef RSL_PLATFORM_WINDOWS
   #include "rex_std/bonus/diagnostics/win/hr_call.h"
   #include "rex_std/bonus/diagnostics/win/win_call.h"
   #include "rex_std/bonus/diagnostics/win/win_console.h"

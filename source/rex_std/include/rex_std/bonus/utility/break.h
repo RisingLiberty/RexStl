@@ -14,14 +14,14 @@
 
 // Microsoft C/C++ Compiler
 #ifdef _MSC_VER
-  #define REX_BREAK __debugbreak()
+  #define RSL_BREAK __debugbreak()
 #endif
 
-#define REX_BREAK_INF                                                                                                                                                                                                                                    \
+#define RSL_BREAK_INF                                                                                                                                                                                                                                    \
   {                                                                                                                                                                                                                                                      \
     while(true)                                                                                                                                                                                                                                          \
     {                                                                                                                                                                                                                                                    \
-      REX_BREAK;                                                                                                                                                                                                                                         \
+      RSL_BREAK;                                                                                                                                                                                                                                         \
       using namespace rsl                                                                                                                                                                                                                                \
       {                                                                                                                                                                                                                                                  \
         inline namespace v1                                                                                                                                                                                                                              \
@@ -30,8 +30,8 @@
           rsl::this_thread::sleep_for(1s);                                                                                                                                                                                                               \
         }                                                                                                                                                                                                                                                \
       }
-#define REX_BREAK_MSG(msg)                                                                                                                                                                                                                               \
+#define RSL_BREAK_MSG(msg)                                                                                                                                                                                                                               \
   {                                                                                                                                                                                                                                                      \
     rsl::message_box(msg);                                                                                                                                                                                                                               \
-    REX_BREAK;                                                                                                                                                                                                                                           \
+    RSL_BREAK;                                                                                                                                                                                                                                           \
   }

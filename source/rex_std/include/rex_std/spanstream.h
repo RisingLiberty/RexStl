@@ -12,7 +12,7 @@
 
 #pragma once
 
-#ifdef REX_ENABLE_WITH_CPP23
+#ifdef RSL_ENABLE_WITH_CPP23
 
   #include "rex_std/disable_std_checking.h"
   #include "rex_std/std_alias_defines.h"
@@ -24,31 +24,31 @@ namespace rsl
   inline namespace v1
   {
 
-    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename CharT, typename Traits = char_traits<CharT>>, basic_spanbuf, CharT, Traits);
+    RSL_TEMPLATED_CLASS_ALIAS(template <typename CharT, typename Traits = char_traits<CharT>>, basic_spanbuf, CharT, Traits);
 
-    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename CharT, typename Traits = char_traits<CharT>>, basic_ispanstream, CharT, Traits);
+    RSL_TEMPLATED_CLASS_ALIAS(template <typename CharT, typename Traits = char_traits<CharT>>, basic_ispanstream, CharT, Traits);
 
-    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename CharT, typename Traits = char_traits<CharT>>, basic_ospanstream, CharT, Traits);
+    RSL_TEMPLATED_CLASS_ALIAS(template <typename CharT, typename Traits = char_traits<CharT>>, basic_ospanstream, CharT, Traits);
 
-    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename CharT, typename Traits = char_traits<CharT>>, basic_spanstream, CharT, Traits);
+    RSL_TEMPLATED_CLASS_ALIAS(template <typename CharT, typename Traits = char_traits<CharT>>, basic_spanstream, CharT, Traits);
 
-    REX_STD_CLASS_ALIAS(spanbuf);
-    REX_STD_CLASS_ALIAS(wspanbuf);
+    RSL_CLASS_ALIAS(spanbuf);
+    RSL_CLASS_ALIAS(wspanbuf);
 
-    REX_STD_CLASS_ALIAS(ispanstream);
-    REX_STD_CLASS_ALIAS(wispanstream);
+    RSL_CLASS_ALIAS(ispanstream);
+    RSL_CLASS_ALIAS(wispanstream);
 
-    REX_STD_CLASS_ALIAS(ospanstream);
-    REX_STD_CLASS_ALIAS(wospanstream);
+    RSL_CLASS_ALIAS(ospanstream);
+    RSL_CLASS_ALIAS(wospanstream);
 
-    REX_STD_CLASS_ALIAS(spanstream);
-    REX_STD_CLASS_ALIAS(wspanstream);
+    RSL_CLASS_ALIAS(spanstream);
+    RSL_CLASS_ALIAS(wspanstream);
 
-    // REX_STD_FUNC_ALIAS(swap); // Doesn't work because rsl has its own swap
+    // RSL_FUNC_ALIAS(swap); // Doesn't work because rsl has its own swap
 
   } // namespace v1
 } // namespace rsl
 
   #include "rex_std/enable_std_checking.h"
 
-#endif // REX_ENABLE_WITH_CPP23
+#endif // RSL_ENABLE_WITH_CPP23

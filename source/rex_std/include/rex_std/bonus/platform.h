@@ -12,12 +12,12 @@
 
 #pragma once
 
-#ifdef REX_PLATFORM_WINDOWS
+#ifdef RSL_PLATFORM_WINDOWS
   #include "rex_std/bonus/platform/windows/handle.h"
 #endif
 
-#ifdef REX_PLATFORM_ARM64
-  #define REX_NOT_IMPLEMENTED_FOR_ARM() static_assert(false, "Logic needed here isn't implemented yet for platforms using ARM")
+#ifdef RSL_PLATFORM_ARM64
+  #define RSL_NOT_IMPLEMENTED_FOR_ARM() static_assert(false, "Logic needed here isn't implemented yet for platforms using ARM")
 #else
-  #define REX_NOT_IMPLEMENTED_FOR_ARM()
+  #define RSL_NOT_IMPLEMENTED_FOR_ARM()
 #endif

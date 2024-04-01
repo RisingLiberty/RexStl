@@ -23,7 +23,7 @@ namespace rsl
   inline namespace v1
   {
 
-    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename T>, is_execution_policy, T);
+    RSL_TEMPLATED_CLASS_ALIAS(template <typename T>, is_execution_policy, T);
 
     namespace execution
     {

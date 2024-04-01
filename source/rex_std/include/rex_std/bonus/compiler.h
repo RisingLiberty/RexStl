@@ -25,27 +25,27 @@ namespace rsl
         gcc
       };
 
-#if defined(REX_COMPILER_CLANG)
-  #define REX_COMPILER_VERSION (__clang_major__ * 100 + __clang_minor__)
-  #define REX_COMPILER_NAME    "Clang"
-#elif defined(REX_COMPILER_MSVC)
-  #define REX_COMPILER_VERSION _MSC_VER
-  #define REX_COMPILER_NAME    "MSVC"
-#elif defined(REX_COMPILER_GCC)
-  #define REX_COMPILER_VERSION (__GNUC__ * 1000 + __GNUC_MINOR__)
-  #define REX_COMPILER_NAME    "GCC"
+#if defined(RSL_COMPILER_CLANG)
+  #define RSL_COMPILER_VERSION (__clang_major__ * 100 + __clang_minor__)
+  #define RSL_COMPILER_NAME    "Clang"
+#elif defined(RSL_COMPILER_MSVC)
+  #define RSL_COMPILER_VERSION _MSC_VER
+  #define RSL_COMPILER_NAME    "MSVC"
+#elif defined(RSL_COMPILER_GCC)
+  #define RSL_COMPILER_VERSION (__GNUC__ * 1000 + __GNUC_MINOR__)
+  #define RSL_COMPILER_NAME    "GCC"
 #else
-  #define REX_COMPILER_VERSION = 0
-  #define REX_COMPILER_NAME    "Unknown Compiler"
+  #define RSL_COMPILER_VERSION = 0
+  #define RSL_COMPILER_NAME    "Unknown Compiler"
 #endif
 
       constexpr compiler get_compiler()
       {
-#if defined(REX_COMPILER_CLANG)
+#if defined(RSL_COMPILER_CLANG)
         return compiler::clang;
-#elif defined(REX_COMPILER_MSVC)
+#elif defined(RSL_COMPILER_MSVC)
         return compiler::msvc;
-#elif defined(REX_COMPILER_GCC)
+#elif defined(RSL_COMPILER_GCC)
         return compiler::gcc;
 #else
   #error unknown compiler used

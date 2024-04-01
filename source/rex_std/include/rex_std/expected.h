@@ -12,7 +12,7 @@
 
 #pragma once
 
-#ifdef REX_ENABLE_WITH_CPP23
+#ifdef RSL_ENABLE_WITH_CPP23
 
   #include "rex_std/disable_std_checking.h"
   #include "rex_std/std_alias_defines.h"
@@ -24,11 +24,11 @@ namespace rsl
   inline namespace v1
   {
 
-    REX_STD_TEMPLATED_CLASS_ALIAS(expected, typename T, typename E);
-    REX_STD_TEMPLATED_CLASS_ALIAS(unexpected, typename E);
+    RSL_TEMPLATED_CLASS_ALIAS(expected, typename T, typename E);
+    RSL_TEMPLATED_CLASS_ALIAS(unexpected, typename E);
 
-    REX_STD_CLASS_ALIAS(unexpect_t);
-    REX_STD_OBJECT_ALIAS(unexpect);
+    RSL_CLASS_ALIAS(unexpect_t);
+    RSL_OBJECT_ALIAS(unexpect);
 
   } // namespace v1
 } // namespace rsl

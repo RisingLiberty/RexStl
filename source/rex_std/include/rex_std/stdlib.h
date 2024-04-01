@@ -25,9 +25,9 @@ namespace rsl
   {
 
 // unsigned integer type returned by the sizeof operator
-#if defined(REX_PLATFORM_X86)
+#if defined(RSL_PLATFORM_X86)
     using size_t = uint32;
-#elif defined(REX_PLATFORM_X64)
+#elif defined(RSL_PLATFORM_X64)
     using size_t = uint64;
 #else
   #error "No platform defined"
@@ -167,29 +167,29 @@ namespace rsl
   inline namespace v1
   {
 
-    REX_STD_FUNC_ALIAS(abort);
-    REX_STD_FUNC_ALIAS(exit);
-    REX_STD_FUNC_ALIAS(quick_exit);
-    REX_STD_FUNC_ALIAS(_Exit);
-    REX_STD_FUNC_ALIAS(atexit);
-    REX_STD_FUNC_ALIAS(at_quick_exit);
-    REX_STD_FUNC_ALIAS(system);
-    REX_STD_FUNC_ALIAS(getenv);
-    REX_STD_FUNC_ALIAS(malloc);
-    // REX_STD_FUNC_ALIAS(aligned_alloc); /// [29/Aug/2022] RSL Comment: not supported on MSVC
-    REX_STD_FUNC_ALIAS(calloc);
-    REX_STD_FUNC_ALIAS(realloc);
-    REX_STD_FUNC_ALIAS(free);
+    RSL_FUNC_ALIAS(abort);
+    RSL_FUNC_ALIAS(exit);
+    RSL_FUNC_ALIAS(quick_exit);
+    RSL_FUNC_ALIAS(_Exit);
+    RSL_FUNC_ALIAS(atexit);
+    RSL_FUNC_ALIAS(at_quick_exit);
+    RSL_FUNC_ALIAS(system);
+    RSL_FUNC_ALIAS(getenv);
+    RSL_FUNC_ALIAS(malloc);
+    // RSL_FUNC_ALIAS(aligned_alloc); /// [29/Aug/2022] RSL Comment: not supported on MSVC
+    RSL_FUNC_ALIAS(calloc);
+    RSL_FUNC_ALIAS(realloc);
+    RSL_FUNC_ALIAS(free);
 
-    REX_STD_FUNC_ALIAS(mblen);
-    REX_STD_FUNC_ALIAS(mbtowc);
-    REX_STD_FUNC_ALIAS(wctomb);
-    REX_STD_FUNC_ALIAS(mbstowcs);
-    REX_STD_FUNC_ALIAS(wcstombs);
-    REX_STD_FUNC_ALIAS(rand);
-    REX_STD_FUNC_ALIAS(srand);
-    REX_STD_FUNC_ALIAS(qsort);
-    REX_STD_FUNC_ALIAS(bsearch);
+    RSL_FUNC_ALIAS(mblen);
+    RSL_FUNC_ALIAS(mbtowc);
+    RSL_FUNC_ALIAS(wctomb);
+    RSL_FUNC_ALIAS(mbstowcs);
+    RSL_FUNC_ALIAS(wcstombs);
+    RSL_FUNC_ALIAS(rand);
+    RSL_FUNC_ALIAS(srand);
+    RSL_FUNC_ALIAS(qsort);
+    RSL_FUNC_ALIAS(bsearch);
 
   } // namespace v1
 } // namespace rsl

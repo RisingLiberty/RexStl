@@ -30,7 +30,7 @@ namespace rsl
 #define PRIdFAST32  PRId32
 #define PRIdFAST64  PRId64
 #define PRIdMAX     PRId64
-#ifdef REX_PLATFORM_X86
+#ifdef RSL_PLATFORM_X86
   #define PRIdPTR PRId32
 #else
   #define PRIdPTR PRId64
@@ -49,7 +49,7 @@ namespace rsl
 #define PRIiFAST32  PRIi32
 #define PRIiFAST64  PRIi64
 #define PRIiMAX     PRIi64
-#ifdef REX_PLATFORM_X86
+#ifdef RSL_PLATFORM_X86
   #define PRIiPTR PRIi32
 #else
   #define PRIiPTR PRIi64
@@ -68,7 +68,7 @@ namespace rsl
 #define PRIoFAST32  PRIo32
 #define PRIoFAST64  PRIo64
 #define PRIoMAX     PRIo64
-#ifdef REX_PLATFORM_X86
+#ifdef RSL_PLATFORM_X86
   #define PRIoPTR PRIo32
 #else
   #define PRIoPTR PRIo64
@@ -87,7 +87,7 @@ namespace rsl
 #define PRIuFAST32  PRIu32
 #define PRIuFAST64  PRIu64
 #define PRIuMAX     PRIu64
-#ifdef REX_PLATFORM_X86
+#ifdef RSL_PLATFORM_X86
   #define PRIuPTR PRIu32
 #else
   #define PRIuPTR PRIu64
@@ -106,7 +106,7 @@ namespace rsl
 #define PRIxFAST32  PRIx32
 #define PRIxFAST64  PRIx64
 #define PRIxMAX     PRIx64
-#ifdef REX_PLATFORM_X86
+#ifdef RSL_PLATFORM_X86
   #define PRIxPTR PRIx32
 #else
   #define PRIxPTR PRIx64
@@ -125,7 +125,7 @@ namespace rsl
 #define PRIXFAST32  PRIX32
 #define PRIXFAST64  PRIX64
 #define PRIXMAX     PRIX64
-#ifdef REX_PLATFORM_X86
+#ifdef RSL_PLATFORM_X86
   #define PRIXPTR PRIX32
 #else
   #define PRIXPTR PRIX64
@@ -144,7 +144,7 @@ namespace rsl
 #define SCNdFAST32  SCNd32
 #define SCNdFAST64  SCNd64
 #define SCNdMAX     SCNd64
-#ifdef REX_PLATFORM_X86
+#ifdef RSL_PLATFORM_X86
   #define SCNdPTR SCNd32
 #else
   #define SCNdPTR SCNd64
@@ -163,7 +163,7 @@ namespace rsl
 #define SCNiFAST32  SCNi32
 #define SCNiFAST64  SCNi64
 #define SCNiMAX     SCNi64
-#ifdef REX_PLATFORM_X86
+#ifdef RSL_PLATFORM_X86
   #define SCNiPTR SCNi32
 #else
   #define SCNiPTR SCNi64
@@ -182,7 +182,7 @@ namespace rsl
 #define SCNoFAST32  SCNo32
 #define SCNoFAST64  SCNo64
 #define SCNoMAX     SCNo64
-#ifdef REX_PLATFORM_X86
+#ifdef RSL_PLATFORM_X86
   #define SCNoPTR SCNo32
 #else
   #define SCNoPTR SCNo64
@@ -201,7 +201,7 @@ namespace rsl
 #define SCNuFAST32  SCNu32
 #define SCNuFAST64  SCNu64
 #define SCNuMAX     SCNu64
-#ifdef REX_PLATFORM_X86
+#ifdef RSL_PLATFORM_X86
   #define SCNuPTR SCNu32
 #else
   #define SCNuPTR SCNu64
@@ -220,7 +220,7 @@ namespace rsl
 #define SCNxFAST32  SCNx32
 #define SCNxFAST64  SCNx64
 #define SCNxMAX     SCNx64
-#ifdef REX_PLATFORM_X86
+#ifdef RSL_PLATFORM_X86
   #define SCNxPTR SCNx32
 #else
   #define SCNxPTR SCNx64

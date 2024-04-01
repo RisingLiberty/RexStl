@@ -18,7 +18,7 @@ namespace rsl
 {
   inline namespace v1
   {
-#if defined(REX_COMPILER_MSVC)
+#if defined(RSL_COMPILER_MSVC)
     template <typename T>
     atomic_t<T> atomic_load(T* obj, rsl::memory_order order)
     {
@@ -27,7 +27,7 @@ namespace rsl
 
       if constexpr(sizeof(T) == 1)
       {
-  #if(REX_COMPILER_VERSION >= 1920)
+  #if(RSL_COMPILER_VERSION >= 1920)
         return __iso_volatile_load8(volatile_obj);
   #else
         return (*(rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>(obj)));
@@ -35,7 +35,7 @@ namespace rsl
       }
       else if constexpr(sizeof(T) == 2)
       {
-  #if(REX_COMPILER_VERSION >= 1920)
+  #if(RSL_COMPILER_VERSION >= 1920)
         return __iso_volatile_load16(volatile_obj);
   #else
         return (*(rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>(obj)));
@@ -43,7 +43,7 @@ namespace rsl
       }
       else if constexpr(sizeof(T) == 4)
       {
-  #if(REX_COMPILER_VERSION >= 1920)
+  #if(RSL_COMPILER_VERSION >= 1920)
         return __iso_volatile_load32(rsl::internal::atomic_volatile_integral_cast<int>(volatile_obj));
   #else
         return (*(rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>(obj)));
@@ -51,7 +51,7 @@ namespace rsl
       }
       else if constexpr(sizeof(T) == 8)
       {
-  #if(REX_COMPILER_VERSION >= 1920)
+  #if(RSL_COMPILER_VERSION >= 1920)
         return __iso_volatile_load64(volatile_obj);
   #else
         return (*(rsl::internal::atomic_volatile_integral_cast<atomic_t<T>>(obj)));
@@ -63,7 +63,7 @@ namespace rsl
         return 0;
       }
     }
-#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+#elif defined(RSL_COMPILER_GCC) || defined(RSL_COMPILER_CLANG)
     template <typename T>
     atomic_t<T> atomic_load(T* obj, rsl::memory_order order)
     {

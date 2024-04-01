@@ -9,44 +9,44 @@ namespace rsl
     namespace internal
     {
 
-#define REX_ATOMIC_SIZE_ALIGNED_STATIC_ASSERT_CMPXCHG_IMPL(funcName)                                                                                                                                                                                     \
+#define RSL_ATOMIC_SIZE_ALIGNED_STATIC_ASSERT_CMPXCHG_IMPL(funcName)                                                                                                                                                                                     \
   template <typename OrderSuccess, typename OrderFailure>                                                                                                                                                                                                \
   bool funcName(T& /*expected*/, T /*desired*/, OrderSuccess /*orderSuccess*/, OrderFailure /*orderFailure*/)                                                                                                                                            \
   {                                                                                                                                                                                                                                                      \
-    REX_ATOMIC_STATIC_ASSERT_INVALID_MEMORY_ORDER(T);                                                                                                                                                                                                    \
+    RSL_ATOMIC_STATIC_ASSERT_INVALID_MEMORY_ORDER(T);                                                                                                                                                                                                    \
     return false;                                                                                                                                                                                                                                        \
   }                                                                                                                                                                                                                                                      \
                                                                                                                                                                                                                                                          \
   template <typename OrderSuccess, typename OrderFailure>                                                                                                                                                                                                \
   bool funcName(T& /*expected*/, T /*desired*/, OrderSuccess /*orderSuccess*/, OrderFailure /*orderFailure*/) volatile                                                                                                                                   \
   {                                                                                                                                                                                                                                                      \
-    REX_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);                                                                                                                                                                                                         \
+    RSL_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);                                                                                                                                                                                                         \
     return false;                                                                                                                                                                                                                                        \
   }                                                                                                                                                                                                                                                      \
                                                                                                                                                                                                                                                          \
   template <typename Order>                                                                                                                                                                                                                              \
   bool funcName(T& /*expected*/, T /*desired*/, Order /*order*/)                                                                                                                                                                                         \
   {                                                                                                                                                                                                                                                      \
-    REX_ATOMIC_STATIC_ASSERT_INVALID_MEMORY_ORDER(T);                                                                                                                                                                                                    \
+    RSL_ATOMIC_STATIC_ASSERT_INVALID_MEMORY_ORDER(T);                                                                                                                                                                                                    \
     return false;                                                                                                                                                                                                                                        \
   }                                                                                                                                                                                                                                                      \
                                                                                                                                                                                                                                                          \
   template <typename Order>                                                                                                                                                                                                                              \
   bool funcName(T& /*expected*/, T /*desired*/, Order /*order*/) volatile                                                                                                                                                                                \
   {                                                                                                                                                                                                                                                      \
-    REX_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);                                                                                                                                                                                                         \
+    RSL_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);                                                                                                                                                                                                         \
     return false;                                                                                                                                                                                                                                        \
   }                                                                                                                                                                                                                                                      \
                                                                                                                                                                                                                                                          \
   bool funcName(T& /*expected*/, T /*desired*/) volatile                                                                                                                                                                                                 \
   {                                                                                                                                                                                                                                                      \
-    REX_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);                                                                                                                                                                                                         \
+    RSL_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);                                                                                                                                                                                                         \
     return false;                                                                                                                                                                                                                                        \
   }
 
-#define REX_ATOMIC_SIZE_ALIGNED_STATIC_ASSERT_CMPXCHG_WEAK_IMPL() REX_ATOMIC_SIZE_ALIGNED_STATIC_ASSERT_CMPXCHG_IMPL(compare_exchange_weak)
+#define RSL_ATOMIC_SIZE_ALIGNED_STATIC_ASSERT_CMPXCHG_WEAK_IMPL() RSL_ATOMIC_SIZE_ALIGNED_STATIC_ASSERT_CMPXCHG_IMPL(compare_exchange_weak)
 
-#define REX_ATOMIC_SIZE_ALIGNED_STATIC_ASSERT_CMPXCHG_STRONG_IMPL() REX_ATOMIC_SIZE_ALIGNED_STATIC_ASSERT_CMPXCHG_IMPL(compare_exchange_strong)
+#define RSL_ATOMIC_SIZE_ALIGNED_STATIC_ASSERT_CMPXCHG_STRONG_IMPL() RSL_ATOMIC_SIZE_ALIGNED_STATIC_ASSERT_CMPXCHG_IMPL(compare_exchange_strong)
 
       template <typename T>
       struct atomic_size_aligned
@@ -70,66 +70,66 @@ namespace rsl
         template <typename Order>
         void store(T /*desired*/, Order /*order*/)
         {
-          REX_ATOMIC_STATIC_ASSERT_INVALID_MEMORY_ORDER(T);
+          RSL_ATOMIC_STATIC_ASSERT_INVALID_MEMORY_ORDER(T);
         }
 
         template <typename Order>
         void store(T /*desired*/, Order /*order*/) volatile
         {
-          REX_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);
+          RSL_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);
         }
 
         void store(T /*desired*/) volatile
         {
-          REX_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);
+          RSL_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);
         }
 
       public: /* load */
         template <typename Order>
         T load(Order /*order*/) const
         {
-          REX_ATOMIC_STATIC_ASSERT_INVALID_MEMORY_ORDER(T);
+          RSL_ATOMIC_STATIC_ASSERT_INVALID_MEMORY_ORDER(T);
         }
 
         template <typename Order>
         T load(Order /*order*/) const volatile
         {
-          REX_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);
+          RSL_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);
         }
 
         T load() const volatile
         {
-          REX_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);
+          RSL_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);
         }
 
       public: /* exchange */
         template <typename Order>
         T exchange(T /*desired*/, Order /*order*/)
         {
-          REX_ATOMIC_STATIC_ASSERT_INVALID_MEMORY_ORDER(T);
+          RSL_ATOMIC_STATIC_ASSERT_INVALID_MEMORY_ORDER(T);
         }
 
         template <typename Order>
         T exchange(T /*desired*/, Order /*order*/) volatile
         {
-          REX_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);
+          RSL_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);
         }
 
         T exchange(T /*desired*/) volatile
         {
-          REX_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);
+          RSL_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);
         }
 
       public: /* compare_exchange_weak */
-        REX_ATOMIC_SIZE_ALIGNED_STATIC_ASSERT_CMPXCHG_WEAK_IMPL()
+        RSL_ATOMIC_SIZE_ALIGNED_STATIC_ASSERT_CMPXCHG_WEAK_IMPL()
 
       public: /* compare_exchange_strong */
-        REX_ATOMIC_SIZE_ALIGNED_STATIC_ASSERT_CMPXCHG_STRONG_IMPL()
+        RSL_ATOMIC_SIZE_ALIGNED_STATIC_ASSERT_CMPXCHG_STRONG_IMPL()
 
       public:                               /* assignment operator */
         T operator=(T /*desired*/) volatile // NOLINT(misc-unconventional-assign-operator)
         {
-          REX_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);
+          RSL_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);
         }
 
         atomic_size_aligned& operator=(const atomic_size_aligned&)          = delete;

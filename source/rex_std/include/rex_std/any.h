@@ -22,11 +22,11 @@ namespace rsl
   inline namespace v1
   {
 
-    REX_STD_CLASS_ALIAS(any);
+    RSL_CLASS_ALIAS(any);
 
-    ////REX_STD_FUNC_ALIAS(swap); // Doesn't work because rsl has its own swap // Doesn't work because rsl has its own swap
-    REX_STD_FUNC_ALIAS(make_any);
-    REX_STD_FUNC_ALIAS(any_cast);
+    ////RSL_FUNC_ALIAS(swap); // Doesn't work because rsl has its own swap // Doesn't work because rsl has its own swap
+    RSL_FUNC_ALIAS(make_any);
+    RSL_FUNC_ALIAS(any_cast);
 
   } // namespace v1
 } // namespace rsl

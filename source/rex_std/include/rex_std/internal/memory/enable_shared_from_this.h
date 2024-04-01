@@ -31,22 +31,22 @@ namespace rsl
     public:
       using enable_shared_from_this_type = enable_shared_from_this;
 
-      REX_NO_DISCARD shared_ptr<T> shared_from_this()
+      RSL_NO_DISCARD shared_ptr<T> shared_from_this()
       {
         return shared_ptr<T>(m_weak_ptr);
       }
 
-      REX_NO_DISCARD shared_ptr<const T> shared_from_this() const
+      RSL_NO_DISCARD shared_ptr<const T> shared_from_this() const
       {
         return shared_ptr<const T>(m_weak_ptr);
       }
 
-      REX_NO_DISCARD weak_ptr<T> weak_from_this()
+      RSL_NO_DISCARD weak_ptr<T> weak_from_this()
       {
         return m_weak_ptr;
       }
 
-      REX_NO_DISCARD weak_ptr<const T> weak_from_this() const
+      RSL_NO_DISCARD weak_ptr<const T> weak_from_this() const
       {
         return m_weak_ptr;
       }

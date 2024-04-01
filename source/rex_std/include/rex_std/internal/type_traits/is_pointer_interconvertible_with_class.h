@@ -12,7 +12,7 @@
 
 #pragma once
 
-#ifdef REX_ENABLE_WITH_CPP20
+#ifdef RSL_ENABLE_WITH_CPP20
 
 namespace rsl
 {

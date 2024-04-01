@@ -56,24 +56,24 @@ namespace rsl
   inline namespace v1
   {
 
-    REX_STD_FUNC_ALIAS(mem_fn);
+    RSL_FUNC_ALIAS(mem_fn);
 
-    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename ForwardIt, typename BinaryPredicate = rsl::equal_to<>>, default_searcher, ForwardIt, BinaryPredicate);
+    RSL_TEMPLATED_CLASS_ALIAS(template <typename ForwardIt, typename BinaryPredicate = rsl::equal_to<>>, default_searcher, ForwardIt, BinaryPredicate);
 
-    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename RandomIt1, typename Hash = rsl::hash<typename rsl::iterator_traits<RandomIt1>::value_type>, typename BinaryPredicate = rsl::equal_to<>>, boyer_moore_searcher, RandomIt1, Hash, BinaryPredicate);
+    RSL_TEMPLATED_CLASS_ALIAS(template <typename RandomIt1, typename Hash = rsl::hash<typename rsl::iterator_traits<RandomIt1>::value_type>, typename BinaryPredicate = rsl::equal_to<>>, boyer_moore_searcher, RandomIt1, Hash, BinaryPredicate);
 
-    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename RandomIt1, typename Hash = rsl::hash<typename rsl::iterator_traits<RandomIt1>::value_type>, typename BinaryPredicate = rsl::equal_to<>>, boyer_moore_horspool_searcher, RandomIt1, Hash,
+    RSL_TEMPLATED_CLASS_ALIAS(template <typename RandomIt1, typename Hash = rsl::hash<typename rsl::iterator_traits<RandomIt1>::value_type>, typename BinaryPredicate = rsl::equal_to<>>, boyer_moore_horspool_searcher, RandomIt1, Hash,
                                   BinaryPredicate);
 
     // Leaving out bind_front, bind_back and bind because people should be using lambdas
 
-#ifdef REX_ENABLE_WITH_CPP23
+#ifdef RSL_ENABLE_WITH_CPP23
 
-    REX_STD_TEMPLATED_CLASS_ALIAS(move_only_function, typename...);
+    RSL_TEMPLATED_CLASS_ALIAS(move_only_function, typename...);
 
-    REX_STD_FUNC_ALIAS(invoke_r);
+    RSL_FUNC_ALIAS(invoke_r);
 
-#endif // REX_ENABLE_WITH_CPP23
+#endif // RSL_ENABLE_WITH_CPP23
 
   } // namespace v1
 } // namespace rsl

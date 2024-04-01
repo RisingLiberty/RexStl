@@ -22,7 +22,7 @@ namespace rsl
   inline namespace v1
   {
 
-    REX_STD_FUNC_ALIAS(lexicographical_compare_three_way);
+    RSL_FUNC_ALIAS(lexicographical_compare_three_way);
 
   } // namespace v1
 } // namespace rsl

@@ -24,7 +24,7 @@ namespace rsl
   inline namespace v1
   {
 
-    REX_STD_CLASS_ALIAS(type_index);
+    RSL_CLASS_ALIAS(type_index);
     template <typename T>
     struct hash;
 

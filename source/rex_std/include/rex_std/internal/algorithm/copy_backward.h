@@ -109,8 +109,8 @@ namespace rsl
       using value_type_input  = typename iterator_traits<InputIterator>::value_type;
       using value_type_output = typename iterator_traits<OutputIterator>::value_type;
 
-      REX_UNUSED(static constexpr bool IsMove)        = rsl::is_move_iterator_v<InputIterator>;
-      REX_UNUSED(static constexpr bool CanBeMemmoved) = rsl::is_trivially_copyable_v<value_type_output> && rsl::is_same_v<value_type_input, value_type_output> &&
+      RSL_MAYBE_UNUSED static constexpr bool IsMove        = rsl::is_move_iterator_v<InputIterator>;
+      RSL_MAYBE_UNUSED static constexpr bool CanBeMemmoved = rsl::is_trivially_copyable_v<value_type_output> && rsl::is_same_v<value_type_input, value_type_output> &&
                                                         (rsl::is_pointer_v<InputIterator> || rsl::is_same_v<IIC, rsl::continuous_iterator_tag>)&&(rsl::is_pointer_v<OutputIterator> || rsl::is_same_v<OIC, rsl::continuous_iterator_tag>);
 
       return internal::move_and_copy_backward_helper<InputIterator, IsMove, CanBeMemmoved>::move_or_copy_backward(first, last, dstFirst);

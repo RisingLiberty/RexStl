@@ -50,7 +50,7 @@ namespace rsl
           return time_point(duration(rsl::internal::get_time_in_ticks()));
         }
 
-        REX_NO_DISCARD static __time64_t to_time_t(const time_point& time)
+        RSL_NO_DISCARD static __time64_t to_time_t(const time_point& time)
         {
           return duration_cast<seconds>(time.time_since_epoch()).count();
         }
@@ -104,7 +104,7 @@ namespace rsl
         }
       } // namespace internal
 
-#ifdef REX_ENABLE_WITH_CPP20
+#ifdef RSL_ENABLE_WITH_CPP20
       class utc_clock;
       template <typename Duration>
       using utc_time    = time_point<utc_clock, Duration>;
@@ -117,7 +117,7 @@ namespace rsl
       };
 
       template <typename Duration>
-      REX_NO_DISCARD leap_seconds_info get_leap_second_info(const utc_time<Duration>& time)
+      RSL_NO_DISCARD leap_seconds_info get_leap_second_info(const utc_time<Duration>& time)
       {
         const utc_seconds time_floor = rsl::chrono::floor<seconds>(time);
         const auto& tzdb             = rsl::chrono::get_tzdb();
@@ -182,7 +182,7 @@ namespace rsl
           // convert to the last leap second before or equal to time.
           const auto& last_leap             = *--it;
           const utc_seconds utc_leap_second = last_leap.date().time_since_epoch() + it->elapsed() - seconds(1);
-  #ifdef REX_ENABLE_WITH_CPP20
+  #ifdef RSL_ENABLE_WITH_CPP20
           const auto leap_cmp = utc_leap_second <=> time_floor;
   #else
           const auto leap_cmp = utc_leap_second > time_floor ? strong_ordering::greater : utc_leap_second == time_floor ? strong_ordering::equal : strong_ordering::less;
@@ -205,13 +205,13 @@ namespace rsl
 
         static constexpr bool IsSteady = system_clock::IsSteady;
 
-        REX_NO_DISCARD static time_point now()
+        RSL_NO_DISCARD static time_point now()
         {
           return from_sys(system_clock::now());
         }
 
         template <typename Duration>
-        REX_NO_DISCARD static sys_time<common_type_t<Duration, seconds>> to_sys(const utc_time<Duration>& utcTime)
+        RSL_NO_DISCARD static sys_time<common_type_t<Duration, seconds>> to_sys(const utc_time<Duration>& utcTime)
         {
           using common_type        = common_type_t<Duration, seconds>;
           const auto leap_sec_info = get_leap_second_info(utcTime);
@@ -237,7 +237,7 @@ namespace rsl
           return SysTimme<common_type>(ticks);
         }
         template <typename Duration>
-        REX_NO_DISCARD static utc_time<common_type<Duration, seconds>> from_sys(const sys_time<Duration>& sysTime)
+        RSL_NO_DISCARD static utc_time<common_type<Duration, seconds>> from_sys(const sys_time<Duration>& sysTime)
         {
           const auto& tzdb      = rsl::chrono::get_tzdb();
           const auto& ls_vector = tzdb.leap_seconds;
@@ -265,17 +265,17 @@ namespace rsl
 
         static constexpr seconds TaiEpochAdjust {378691210};
 
-        REX_NO_DISCARD static time_point now()
+        RSL_NO_DISCARD static time_point now()
         {
           return from_utc(utc_clock::now());
         }
         template <typename Duration>
-        REX_NO_DISCARD static utc_time<common_type_t<Duration, seconds>> to_ufc(const tai_time<Duration&> time)
+        RSL_NO_DISCARD static utc_time<common_type_t<Duration, seconds>> to_ufc(const tai_time<Duration&> time)
         {
           return utc_time<common_type_t<Duration, seconds>>(time.time_since_epoch() - TaiEpochAdjust);
         }
         template <typename Duration>
-        REX_NO_DISCARD static utc_time<common_type_t<Duration, seconds>> from_utc(const utc_time<Duration>& time)
+        RSL_NO_DISCARD static utc_time<common_type_t<Duration, seconds>> from_utc(const utc_time<Duration>& time)
         {
           return tai_time<common_type_t<Duration, seconds>>(time.time_since_epoch() - TaiEpochAdjust);
         }
@@ -299,18 +299,18 @@ namespace rsl
 
         static constexpr seconds GpsEpochAdjust {-315964809};
 
-        REX_NO_DISCARD static time_point now()
+        RSL_NO_DISCARD static time_point now()
         {
           return from_utc(utc_clock::now());
         }
         template <typename Duration>
-        REX_NO_DISCARD static utc_time<common_type_t<Duration, seconds>> to_utc(const gps_time<Duration>& time)
+        RSL_NO_DISCARD static utc_time<common_type_t<Duration, seconds>> to_utc(const gps_time<Duration>& time)
         {
           return utc_time<common_type_t<Duration, seconds>>(time.time_since_epoch() - GpsEpochAdjust);
         }
 
         template <typename Duration>
-        REX_NO_DISCARD static gps_time<common_type_t<Duration, seconds>> from_utc(const utc_time<Duration>& time)
+        RSL_NO_DISCARD static gps_time<common_type_t<Duration, seconds>> from_utc(const utc_time<Duration>& time)
         {
           return gps_time<common_type_t<Duration, seconds>> {time.time_since_epoch()} + GpsEpochAdjust;
         }
@@ -340,7 +340,7 @@ namespace rsl
       struct clock_time_conversion<Clock, Clock>
       {
         template <typename Duration>
-        REX_NO_DISCARD time_point<Clock, Duration> operator()(const time_point<Clock, Duration>& time) const
+        RSL_NO_DISCARD time_point<Clock, Duration> operator()(const time_point<Clock, Duration>& time) const
         {
           return time;
         }
@@ -350,7 +350,7 @@ namespace rsl
       struct clock_time_conversion<system_clock, system_clock>
       {
         template <typename Duration>
-        REX_NO_DISCARD sys_time<Duration> operator()(const sys_time<Duration>& time)
+        RSL_NO_DISCARD sys_time<Duration> operator()(const sys_time<Duration>& time)
         {
           return time;
         }
@@ -360,7 +360,7 @@ namespace rsl
       struct clock_time_conversion<utc_clock, utc_clock>
       {
         template <typename Duration>
-        REX_NO_DISCARD utc_time<Duration> operator()(const utc_time<Duration>& time)
+        RSL_NO_DISCARD utc_time<Duration> operator()(const utc_time<Duration>& time)
         {
           return time;
         }
@@ -370,7 +370,7 @@ namespace rsl
       struct clock_time_conversion<system_clock, utc_clock>
       {
         template <typename Duration>
-        REX_NO_DISCARD sys_time<common_type_t<Duration, seconds>> operator()(const utc_time<Duration>& time)
+        RSL_NO_DISCARD sys_time<common_type_t<Duration, seconds>> operator()(const utc_time<Duration>& time)
         {
           return utc_clock::to_sys(time);
         }
@@ -380,7 +380,7 @@ namespace rsl
       struct clock_time_conversion<utc_clock, system_clock>
       {
         template <typename Duration>
-        REX_NO_DISCARD utc_time<common_type_t<Duration, seconds>> operator()(const sys_time<Duration>& time)
+        RSL_NO_DISCARD utc_time<common_type_t<Duration, seconds>> operator()(const sys_time<Duration>& time)
         {
           return utc_clock::from_sys(time);
         }

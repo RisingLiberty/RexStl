@@ -27,7 +27,7 @@ namespace rsl
     class char_traits<char8>;
     template <>
     class char_traits<tchar>;
-#ifdef REX_ENABLE_WITH_CPP20
+#ifdef RSL_ENABLE_WITH_CPP20
     template <>
     class char_traits<char8_t>;
 #endif
@@ -87,15 +87,15 @@ namespace rsl
     template <typename CharT, typename Traits, typename Allocator>
     class basic_stringstream;
 
-#ifdef REX_ENABLE_WITH_CPP20
+#ifdef RSL_ENABLE_WITH_CPP20
     template <typename CharT, typename Traits, typename Allocator>
     class basic_syncbuf;
 
     template <typename CharT, typename Traits, typename Allocator>
     class basic_osyncstream;
-#endif // REX_ENABLE_WITH_CPP20
+#endif // RSL_ENABLE_WITH_CPP20
 
-#ifdef REX_ENABLE_WITH_CPP23
+#ifdef RSL_ENABLE_WITH_CPP23
     template <typename CharT, typename Traits>
     class basic_spanbuf;
 
@@ -107,7 +107,7 @@ namespace rsl
 
     template <typename CharT, typename Traits>
     class basic_spanstream;
-#endif // REX_ENABLE_WITH_CPP23
+#endif // RSL_ENABLE_WITH_CPP23
 
   } // namespace v1
 } // namespace rsl

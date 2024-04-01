@@ -16,7 +16,7 @@
 #include "rex_std/internal/utility/forward.h"
 #include "rex_std/limits.h"
 
-#ifdef REX_ALLOCATOR_IS_TYPE_BASED
+#ifdef RSL_ALLOCATOR_IS_TYPE_BASED
   #include "rex_std/bonus/memory/typed_allocator.h"
 #endif
 
@@ -27,7 +27,7 @@ namespace rsl
 
 // the only reason we have this define/config is to easily replace std calls with rsl calls
 // when using std, use the type based allocator
-#ifdef REX_ALLOCATOR_IS_TYPE_BASED
+#ifdef RSL_ALLOCATOR_IS_TYPE_BASED
     template <typename T>
     using allocator = typed_allocator<T>;
 #else
@@ -64,7 +64,7 @@ namespace rsl
       // template <typename U>
       // constexpr allocator(const allocator<U> &);
       // allocates count bytes of uninitialized storage
-      REX_NO_DISCARD void* allocate(const size_type count) // NOLINT(readability-convert-member-functions-to-static)
+      RSL_NO_DISCARD void* allocate(const size_type count) // NOLINT(readability-convert-member-functions-to-static)
       {
         return (operator new(count));
       }

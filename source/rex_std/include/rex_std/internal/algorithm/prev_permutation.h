@@ -22,7 +22,7 @@ namespace rsl
   inline namespace v1
   {
 
-    REX_STD_FUNC_ALIAS(prev_permutation);
+    RSL_FUNC_ALIAS(prev_permutation);
 
   } // namespace v1
 } // namespace rsl

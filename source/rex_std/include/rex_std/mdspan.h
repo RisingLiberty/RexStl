@@ -12,7 +12,7 @@
 
 #pragma once
 
-#ifdef REX_ENABLE_WITH_CPP23
+#ifdef RSL_ENABLE_WITH_CPP23
 
   #include "rex_std/compare.h"
   #include "rex_std/disable_std_checking.h"
@@ -33,4 +33,4 @@ namespace rsl
 
   #include <rex_std/enable_std_checking.h>
 
-#endif // REX_ENABLE_WITH_CPP23
+#endif // RSL_ENABLE_WITH_CPP23

@@ -23,7 +23,7 @@ namespace rsl
   inline namespace v1
   {
 
-    REX_STD_CLASS_ALIAS(type_info);
+    RSL_CLASS_ALIAS(type_info);
 
   }
 } // namespace rsl

@@ -23,8 +23,8 @@ namespace rsl
 {
   inline namespace v1
   {
-    REX_STD_CLASS_ALIAS(wctrans_t);
-    REX_STD_CLASS_ALIAS(wctype_t);
+    RSL_CLASS_ALIAS(wctrans_t);
+    RSL_CLASS_ALIAS(wctype_t);
 
     // all of these functions are similar to the standards, except for 2 differences.
     // first, the "is" is separated with an underscore for readability.
@@ -70,94 +70,94 @@ namespace rsl
 
     // Forward declarations
     // checks if a character is alphanumeric
-    REX_NO_DISCARD constexpr bool is_alnum(tchar ch);
-    REX_NO_DISCARD constexpr bool is_alpha(tchar ch);
-    // REX_NO_DISCARD constexpr bool is_lower(tchar ch);
-    // REX_NO_DISCARD constexpr bool is_upper(tchar ch);
-    // REX_NO_DISCARD constexpr bool is_digit(tchar ch);
-    REX_NO_DISCARD constexpr bool is_xdigit(tchar ch);
-    REX_NO_DISCARD constexpr bool is_cntrl(tchar ch);
-    REX_NO_DISCARD constexpr bool is_graph(tchar ch);
-    REX_NO_DISCARD constexpr bool is_space(tchar ch);
-    REX_NO_DISCARD constexpr bool is_blank(tchar ch);
-    REX_NO_DISCARD constexpr bool is_print(tchar ch);
-    REX_NO_DISCARD constexpr bool is_punct(tchar ch);
+    RSL_NO_DISCARD constexpr bool is_alnum(tchar ch);
+    RSL_NO_DISCARD constexpr bool is_alpha(tchar ch);
+    // RSL_NO_DISCARD constexpr bool is_lower(tchar ch);
+    // RSL_NO_DISCARD constexpr bool is_upper(tchar ch);
+    // RSL_NO_DISCARD constexpr bool is_digit(tchar ch);
+    RSL_NO_DISCARD constexpr bool is_xdigit(tchar ch);
+    RSL_NO_DISCARD constexpr bool is_cntrl(tchar ch);
+    RSL_NO_DISCARD constexpr bool is_graph(tchar ch);
+    RSL_NO_DISCARD constexpr bool is_space(tchar ch);
+    RSL_NO_DISCARD constexpr bool is_blank(tchar ch);
+    RSL_NO_DISCARD constexpr bool is_print(tchar ch);
+    RSL_NO_DISCARD constexpr bool is_punct(tchar ch);
 
-    REX_NO_DISCARD constexpr bool is_digit(tchar digit);
-    REX_NO_DISCARD constexpr bool is_upper(tchar letter);
-    REX_NO_DISCARD constexpr bool is_lower(tchar letter);
+    RSL_NO_DISCARD constexpr bool is_digit(tchar digit);
+    RSL_NO_DISCARD constexpr bool is_upper(tchar letter);
+    RSL_NO_DISCARD constexpr bool is_lower(tchar letter);
 
     // checks if a character is alphanumeric
-    REX_NO_DISCARD constexpr bool is_alnum(tchar ch)
+    RSL_NO_DISCARD constexpr bool is_alnum(tchar ch)
     {
       return is_alpha(ch) || is_digit(ch);
     }
     // checks if a character is alphabetic
-    REX_NO_DISCARD constexpr bool is_alpha(tchar ch)
+    RSL_NO_DISCARD constexpr bool is_alpha(tchar ch)
     {
       return is_lower(ch) || is_upper(ch);
     }
 
-    REX_NO_DISCARD constexpr bool is_upper(tchar letter)
+    RSL_NO_DISCARD constexpr bool is_upper(tchar letter)
     {
       return letter >= L'A' && letter <= L'Z';
     }
-    REX_NO_DISCARD constexpr bool is_lower(tchar letter)
+    RSL_NO_DISCARD constexpr bool is_lower(tchar letter)
     {
       return letter >= L'a' && letter <= L'z';
     }
 
-    REX_NO_DISCARD constexpr bool is_digit(tchar digit)
+    RSL_NO_DISCARD constexpr bool is_digit(tchar digit)
     {
       return digit >= L'0' && digit <= L'9';
     }
-    REX_NO_DISCARD constexpr bool is_digitf(tchar digit)
+    RSL_NO_DISCARD constexpr bool is_digitf(tchar digit)
     {
       return is_digit(digit) || digit == L'.';
     }
 
     // checks if a character is a hexadecimal character
-    REX_NO_DISCARD constexpr bool is_xdigit(tchar ch)
+    RSL_NO_DISCARD constexpr bool is_xdigit(tchar ch)
     {
       return is_digit(ch) || (ch >= L'a' && ch <= L'f') || (ch >= L'A' && ch <= L'F');
     }
     // checks if a character is a control character
-    REX_NO_DISCARD constexpr bool is_cntrl(tchar ch)
+    RSL_NO_DISCARD constexpr bool is_cntrl(tchar ch)
     {
       return (ch >= 0 && ch <= 31) || ch == 127; // NOLINT(readability-magic-numbers)
     }
     // checks if a character is a graphical character
-    REX_NO_DISCARD constexpr bool is_graph(tchar ch)
+    RSL_NO_DISCARD constexpr bool is_graph(tchar ch)
     {
       return is_print(ch) && ch != ' ';
     }
     // checks if a character is a space character
-    REX_NO_DISCARD constexpr bool is_space(tchar ch)
+    RSL_NO_DISCARD constexpr bool is_space(tchar ch)
     {
       return ch == ' ' || (ch >= L'\t' && ch <= L'\r');
     }
     // checks if a character is a blank character
-    REX_NO_DISCARD constexpr bool is_blank(tchar ch)
+    RSL_NO_DISCARD constexpr bool is_blank(tchar ch)
     {
       return ch == L'\t' || ch == L' ';
     }
     // checks if a character is a printing character
-    REX_NO_DISCARD constexpr bool is_print(tchar ch)
+    RSL_NO_DISCARD constexpr bool is_print(tchar ch)
     {
       return !is_cntrl(ch);
     }
     // checks if a character is a punctuation character
-    REX_NO_DISCARD constexpr bool is_punct(tchar ch)
+    RSL_NO_DISCARD constexpr bool is_punct(tchar ch)
     {
       return is_graph(ch) && !is_alnum(ch);
     }
 
 
-    REX_NO_DISCARD constexpr tchar to_upper(tchar letter)
+    RSL_NO_DISCARD constexpr tchar to_upper(tchar letter)
     {
       return is_lower(letter) ? letter - (L'z' - L'Z') : letter; // NOLINT(cppcoreguidelines-narrowing-conversions)
     }
-    REX_NO_DISCARD constexpr tchar to_lower(tchar letter)
+    RSL_NO_DISCARD constexpr tchar to_lower(tchar letter)
     {
       return is_upper(letter) ? letter - (L'Z' - L'z') : letter; // NOLINT(cppcoreguidelines-narrowing-conversions)
     }

@@ -21,16 +21,16 @@ namespace rsl
 {
   inline namespace v1
   {
-    REX_FORCE_INLINE void atomic_thread_fence(rsl::memory_order order)
+    RSL_FORCE_INLINE void atomic_thread_fence(rsl::memory_order order)
     {
-#if defined(REX_COMPILER_MSVC)
+#if defined(RSL_COMPILER_MSVC)
       (void)order;
-  #if defined(REX_PLATFORM_ARM64)
+  #if defined(RSL_PLATFORM_ARM64)
       memory_barrier();
-  #elif defined(REX_PLATFORM_X64)
+  #elif defined(RSL_PLATFORM_X64)
       compiler_barrier();
   #endif
-#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+#elif defined(RSL_COMPILER_GCC) || defined(RSL_COMPILER_CLANG)
       switch(order)
       {
         case rsl::v1::memory_order::relaxed: return __atomic_thread_fence(__ATOMIC_RELAXED);

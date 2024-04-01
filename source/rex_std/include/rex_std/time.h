@@ -26,9 +26,9 @@ namespace rsl
     using clock_t = int32;
 
 // unsigned integer type returned by the sizeof operator
-#if defined(REX_PLATFORM_X86)
+#if defined(RSL_PLATFORM_X86)
     using size_t = uint32;
-#elif defined(REX_PLATFORM_X64)
+#elif defined(RSL_PLATFORM_X64)
     using size_t = uint64;
 #else
   #error "No platform specified"
@@ -122,15 +122,15 @@ namespace rsl
   inline namespace v1
   {
 
-    REX_STD_FUNC_ALIAS(time);
-    REX_STD_FUNC_ALIAS(clock);
-    REX_STD_FUNC_ALIAS(timespec_get);
+    RSL_FUNC_ALIAS(time);
+    RSL_FUNC_ALIAS(clock);
+    RSL_FUNC_ALIAS(timespec_get);
 
-    REX_STD_FUNC_ALIAS(strftime);
-    REX_STD_FUNC_ALIAS(wcsftime);
-    REX_STD_FUNC_ALIAS(gmtime);
-    REX_STD_FUNC_ALIAS(localtime);
-    REX_STD_FUNC_ALIAS(mktime);
+    RSL_FUNC_ALIAS(strftime);
+    RSL_FUNC_ALIAS(wcsftime);
+    RSL_FUNC_ALIAS(gmtime);
+    RSL_FUNC_ALIAS(localtime);
+    RSL_FUNC_ALIAS(mktime);
 
   } // namespace v1
 } // namespace rsl

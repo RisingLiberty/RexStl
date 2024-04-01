@@ -29,38 +29,38 @@ namespace rsl
 
     // bitwise LEFT SHIFT, every static_cast is intentional
     template <typename IntType, enable_if_t<is_integral_v<IntType>, bool> = true>
-    REX_NO_DISCARD constexpr byte operator<<(const byte arg, const IntType shift) noexcept
+    RSL_NO_DISCARD constexpr byte operator<<(const byte arg, const IntType shift) noexcept
     {
       return static_cast<byte>(static_cast<uint8>(static_cast<uint32>(arg) << shift));
     }
 
     // bitwise RIGHT SHIFT, every static_cast is intentional
     template <typename IntType, enable_if_t<is_integral_v<IntType>, bool> = true>
-    REX_NO_DISCARD constexpr byte operator>>(const byte arg, const IntType shift) noexcept
+    RSL_NO_DISCARD constexpr byte operator>>(const byte arg, const IntType shift) noexcept
     {
       return static_cast<byte>(static_cast<uint8>(static_cast<uint8>(arg) >> shift));
     }
 
     // bitwise OR, every static_cast is intentional
-    REX_NO_DISCARD constexpr byte operator|(const byte left, const byte right) noexcept
+    RSL_NO_DISCARD constexpr byte operator|(const byte left, const byte right) noexcept
     {
       return static_cast<byte>(static_cast<uint8>(static_cast<uint8>(left) | static_cast<uint8>(right)));
     }
 
     // bitwise AND, every static_cast is intentional
-    REX_NO_DISCARD constexpr byte operator&(const byte left, const byte right) noexcept
+    RSL_NO_DISCARD constexpr byte operator&(const byte left, const byte right) noexcept
     {
       return static_cast<byte>(static_cast<uint8>(static_cast<uint8>(left) & static_cast<uint8>(right)));
     }
 
     // bitwise XOR, every static_cast is intentional
-    REX_NO_DISCARD constexpr byte operator^(const byte left, const byte right) noexcept
+    RSL_NO_DISCARD constexpr byte operator^(const byte left, const byte right) noexcept
     {
       return static_cast<byte>(static_cast<uint8>(static_cast<uint8>(left) ^ static_cast<uint8>(right)));
     }
 
     // bitwise NOT, every static_cast is intentional
-    REX_NO_DISCARD constexpr byte operator~(const byte arg) noexcept
+    RSL_NO_DISCARD constexpr byte operator~(const byte arg) noexcept
     {
       return static_cast<byte>(static_cast<uint8>(~static_cast<uint8>(arg)));
     }
@@ -99,7 +99,7 @@ namespace rsl
 
     // convert byte to integer
     template <typename IntType, enable_if_t<is_integral_v<IntType>, bool> = true>
-    REX_NO_DISCARD constexpr IntType to_integer(const byte arg) noexcept
+    RSL_NO_DISCARD constexpr IntType to_integer(const byte arg) noexcept
     {
       return static_cast<IntType>(arg);
     }

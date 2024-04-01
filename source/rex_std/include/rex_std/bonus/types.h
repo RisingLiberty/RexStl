@@ -114,7 +114,7 @@ namespace rsl
     static_assert(true == 1, "C++ true keyword does not equal 1");   // NOLINT
 
 // types that need to be defined for standard purposes
-#if defined(REX_PLATFORM_X86)
+#if defined(RSL_PLATFORM_X86)
     static_assert(sizeof(void*) == 4, "size of void* must be 4 bytes");
     using intptr  = int32;
     using uintptr = uint32;
@@ -122,7 +122,7 @@ namespace rsl
     using intmax  = int32;
     using uintmax = uint32;
     using size_t  = uint32;
-#elif defined(REX_PLATFORM_X64)
+#elif defined(RSL_PLATFORM_X64)
     static_assert(sizeof(void*) == 8, "size of void* must be 8 bytes");
     using intptr  = int64;
     using uintptr = uint64;
@@ -144,14 +144,14 @@ namespace rsl
     using count_t = card32;
 
     // useful strong types
-    REX_CREATE_STRONG_TYPE(Capacity, card32);
-    REX_CREATE_STRONG_TYPE(Size, card32);
+    RSL_CREATE_STRONG_TYPE(Capacity, card32);
+    RSL_CREATE_STRONG_TYPE(Size, card32);
 
   } // namespace v1
 } // namespace rsl
 
-REX_CREATE_LITERAL_FOR_STRONG_TYPE(rsl::Capacity, cap)
-REX_CREATE_LITERAL_FOR_STRONG_TYPE(rsl::Size, size)
+RSL_CREATE_LITERAL_FOR_STRONG_TYPE(rsl::Capacity, cap)
+RSL_CREATE_LITERAL_FOR_STRONG_TYPE(rsl::Size, size)
 
 using rsl::int16; // NOLINT
 using rsl::int32; // NOLINT
@@ -182,5 +182,5 @@ using rsl::uintptr; // NOLINT
 
 using rsl::count_t; // NOLINT
 
-REX_CREATE_LITERAL_FOR_STRONG_TYPE(rsl::Capacity, _cap);
-REX_CREATE_LITERAL_FOR_STRONG_TYPE(rsl::Size, _size);
+RSL_CREATE_LITERAL_FOR_STRONG_TYPE(rsl::Capacity, _cap);
+RSL_CREATE_LITERAL_FOR_STRONG_TYPE(rsl::Size, _size);

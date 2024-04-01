@@ -26,7 +26,7 @@ namespace rsl
       using is_transparent = int32;
 
       template <typename T>
-      REX_NO_DISCARD constexpr T&& operator()(T&& arg) const
+      RSL_NO_DISCARD constexpr T&& operator()(T&& arg) const
       {
         return rsl::forward<T>(arg);
       }

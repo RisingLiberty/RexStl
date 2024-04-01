@@ -11,39 +11,39 @@ namespace rsl
       template <typename T, unsigned Width = sizeof(T)>
       struct atomic_pointer_base;
 
-#define REX_ATOMIC_POINTER_STATIC_ASSERT_FUNCS_IMPL(funcName)                                                                                                                                                                                            \
+#define RSL_ATOMIC_POINTER_STATIC_ASSERT_FUNCS_IMPL(funcName)                                                                                                                                                                                            \
   template <typename Order>                                                                                                                                                                                                                              \
   T* funcName(ptrdiff_t /*arg*/, Order /*order*/)                                                                                                                                                                                                        \
   {                                                                                                                                                                                                                                                      \
-    REX_ATOMIC_STATIC_ASSERT_INVALID_MEMORY_ORDER(T);                                                                                                                                                                                                    \
+    RSL_ATOMIC_STATIC_ASSERT_INVALID_MEMORY_ORDER(T);                                                                                                                                                                                                    \
   }                                                                                                                                                                                                                                                      \
                                                                                                                                                                                                                                                          \
   template <typename Order>                                                                                                                                                                                                                              \
   T* funcName(ptrdiff_t /*arg*/, Order /*order*/) volatile                                                                                                                                                                                               \
   {                                                                                                                                                                                                                                                      \
-    REX_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);                                                                                                                                                                                                         \
+    RSL_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);                                                                                                                                                                                                         \
   }                                                                                                                                                                                                                                                      \
                                                                                                                                                                                                                                                          \
   T* funcName(ptrdiff_t /*arg*/) volatile                                                                                                                                                                                                                \
   {                                                                                                                                                                                                                                                      \
-    REX_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);                                                                                                                                                                                                         \
+    RSL_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);                                                                                                                                                                                                         \
   }
 
-#define REX_ATOMIC_POINTER_STATIC_ASSERT_INC_DEC_OPERATOR_IMPL(operatorOp)                                                                                                                                                                               \
+#define RSL_ATOMIC_POINTER_STATIC_ASSERT_INC_DEC_OPERATOR_IMPL(operatorOp)                                                                                                                                                                               \
   T* operator operatorOp() volatile                                                                                                                                                                                                                      \
   {                                                                                                                                                                                                                                                      \
-    REX_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);                                                                                                                                                                                                         \
+    RSL_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);                                                                                                                                                                                                         \
   }                                                                                                                                                                                                                                                      \
                                                                                                                                                                                                                                                          \
   T* operator operatorOp(int) volatile                                                                                                                                                                                                                   \
   {                                                                                                                                                                                                                                                      \
-    REX_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);                                                                                                                                                                                                         \
+    RSL_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);                                                                                                                                                                                                         \
   }
 
-#define REX_ATOMIC_POINTER_STATIC_ASSERT_ASSIGNMENT_OPERATOR_IMPL(operatorOp)                                                                                                                                                                            \
+#define RSL_ATOMIC_POINTER_STATIC_ASSERT_ASSIGNMENT_OPERATOR_IMPL(operatorOp)                                                                                                                                                                            \
   T* operator operatorOp(ptrdiff_t /*arg*/) volatile                                                                                                                                                                                                     \
   {                                                                                                                                                                                                                                                      \
-    REX_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);                                                                                                                                                                                                         \
+    RSL_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(T);                                                                                                                                                                                                         \
   }
 
       template <typename T, unsigned Width>
@@ -70,75 +70,75 @@ namespace rsl
         atomic_pointer_base& operator=(const atomic_pointer_base&) volatile = delete;
 
       public: /* fetch_add */
-        REX_ATOMIC_POINTER_STATIC_ASSERT_FUNCS_IMPL(fetch_add)
+        RSL_ATOMIC_POINTER_STATIC_ASSERT_FUNCS_IMPL(fetch_add)
 
       public: /* add_fetch */
-        REX_ATOMIC_POINTER_STATIC_ASSERT_FUNCS_IMPL(add_fetch)
+        RSL_ATOMIC_POINTER_STATIC_ASSERT_FUNCS_IMPL(add_fetch)
 
       public: /* fetch_sub */
-        REX_ATOMIC_POINTER_STATIC_ASSERT_FUNCS_IMPL(fetch_sub)
+        RSL_ATOMIC_POINTER_STATIC_ASSERT_FUNCS_IMPL(fetch_sub)
 
       public: /* sub_fetch */
-        REX_ATOMIC_POINTER_STATIC_ASSERT_FUNCS_IMPL(sub_fetch)
+        RSL_ATOMIC_POINTER_STATIC_ASSERT_FUNCS_IMPL(sub_fetch)
 
       public:                                                      /* operator++ && operator-- */
-        REX_ATOMIC_POINTER_STATIC_ASSERT_INC_DEC_OPERATOR_IMPL(++) // NOLINT(bugprone-macro-repeated-side-effects)
+        RSL_ATOMIC_POINTER_STATIC_ASSERT_INC_DEC_OPERATOR_IMPL(++) // NOLINT(bugprone-macro-repeated-side-effects)
 
-        REX_ATOMIC_POINTER_STATIC_ASSERT_INC_DEC_OPERATOR_IMPL(--) // NOLINT(bugprone-macro-repeated-side-effects)
+        RSL_ATOMIC_POINTER_STATIC_ASSERT_INC_DEC_OPERATOR_IMPL(--) // NOLINT(bugprone-macro-repeated-side-effects)
 
       public: /* operator+= && operator-= */
-        REX_ATOMIC_POINTER_STATIC_ASSERT_ASSIGNMENT_OPERATOR_IMPL(+=)
+        RSL_ATOMIC_POINTER_STATIC_ASSERT_ASSIGNMENT_OPERATOR_IMPL(+=)
 
-        REX_ATOMIC_POINTER_STATIC_ASSERT_ASSIGNMENT_OPERATOR_IMPL(-=)
+        RSL_ATOMIC_POINTER_STATIC_ASSERT_ASSIGNMENT_OPERATOR_IMPL(-=)
       };
 
       template <typename T, unsigned Width = sizeof(T)>
       struct atomic_pointer_width;
 
-#define REX_ATOMIC_POINTER_FUNC_IMPL(op, bits)                                                                                                                                                                                                           \
+#define RSL_ATOMIC_POINTER_FUNC_IMPL(op, bits)                                                                                                                                                                                                           \
   T* retVal;                                                                                                                                                                                                                                             \
   {                                                                                                                                                                                                                                                      \
     ptr_integral_type retType;                                                                                                                                                                                                                           \
     ptr_integral_type addend = static_cast<ptr_integral_type>(arg) * static_cast<ptr_integral_type>(sizeof(T));                                                                                                                                          \
                                                                                                                                                                                                                                                          \
-    MERGE(op, 64)(ptr_integral_type, retType, REX_ATOMIC_INTEGRAL_CAST(ptr_integral_type, this->this->atomic_address()), addend);                                                                                                                        \
+    MERGE(op, 64)(ptr_integral_type, retType, RSL_ATOMIC_INTEGRAL_CAST(ptr_integral_type, this->this->atomic_address()), addend);                                                                                                                        \
                                                                                                                                                                                                                                                          \
     retVal = reinterpret_cast<T*>(retType);                                                                                                                                                                                                              \
   }                                                                                                                                                                                                                                                      \
   return retVal;
 
-#define REX_ATOMIC_POINTER_FETCH_IMPL(funcName, op, bits)                                                                                                                                                                                                \
+#define RSL_ATOMIC_POINTER_FETCH_IMPL(funcName, op, bits)                                                                                                                                                                                                \
   T* funcName(ptrdiff_t arg)                                                                                                                                                                                                                             \
   {                                                                                                                                                                                                                                                      \
-    REX_ATOMIC_STATIC_ASSERT_TYPE_IS_OBJECT(T);                                                                                                                                                                                                          \
-    REX_ATOMIC_POINTER_FUNC_IMPL(op, 64);                                                                                                                                                                                                                \
+    RSL_ATOMIC_STATIC_ASSERT_TYPE_IS_OBJECT(T);                                                                                                                                                                                                          \
+    RSL_ATOMIC_POINTER_FUNC_IMPL(op, 64);                                                                                                                                                                                                                \
   }
 
-#define REX_ATOMIC_POINTER_FETCH_ORDER_IMPL(funcName, orderType, op, bits)                                                                                                                                                                               \
+#define RSL_ATOMIC_POINTER_FETCH_ORDER_IMPL(funcName, orderType, op, bits)                                                                                                                                                                               \
   T* funcName(ptrdiff_t arg, orderType)                                                                                                                                                                                                                  \
   {                                                                                                                                                                                                                                                      \
-    REX_ATOMIC_STATIC_ASSERT_TYPE_IS_OBJECT(T);                                                                                                                                                                                                          \
-    REX_ATOMIC_POINTER_FUNC_IMPL(op, 64);                                                                                                                                                                                                                \
+    RSL_ATOMIC_STATIC_ASSERT_TYPE_IS_OBJECT(T);                                                                                                                                                                                                          \
+    RSL_ATOMIC_POINTER_FUNC_IMPL(op, 64);                                                                                                                                                                                                                \
   }
 
-#define REX_ATOMIC_POINTER_FETCH_OP_JOIN(fetchOp, Order) MERGE(MERGE(REX_ATOMIC_, fetchOp), Order)
+#define RSL_ATOMIC_POINTER_FETCH_OP_JOIN(fetchOp, Order) MERGE(MERGE(RSL_ATOMIC_, fetchOp), Order)
 
-#define REX_ATOMIC_POINTER_FETCH_FUNCS_IMPL(funcName, fetchOp, bits)                                                                                                                                                                                     \
+#define RSL_ATOMIC_POINTER_FETCH_FUNCS_IMPL(funcName, fetchOp, bits)                                                                                                                                                                                     \
   using Base::funcName;                                                                                                                                                                                                                                  \
                                                                                                                                                                                                                                                          \
-  REX_ATOMIC_POINTER_FETCH_IMPL(funcName, REX_ATOMIC_POINTER_FETCH_OP_JOIN(fetchOp, _SEQ_CST_), 64)                                                                                                                                                      \
+  RSL_ATOMIC_POINTER_FETCH_IMPL(funcName, RSL_ATOMIC_POINTER_FETCH_OP_JOIN(fetchOp, _SEQ_CST_), 64)                                                                                                                                                      \
                                                                                                                                                                                                                                                          \
-  REX_ATOMIC_POINTER_FETCH_ORDER_IMPL(funcName, rsl::internal::memory_order_relaxed_s, REX_ATOMIC_POINTER_FETCH_OP_JOIN(fetchOp, _RELAXED_), 64)                                                                                                         \
+  RSL_ATOMIC_POINTER_FETCH_ORDER_IMPL(funcName, rsl::internal::memory_order_relaxed_s, RSL_ATOMIC_POINTER_FETCH_OP_JOIN(fetchOp, _RELAXED_), 64)                                                                                                         \
                                                                                                                                                                                                                                                          \
-  REX_ATOMIC_POINTER_FETCH_ORDER_IMPL(funcName, rsl::internal::memory_order_acquire_s, REX_ATOMIC_POINTER_FETCH_OP_JOIN(fetchOp, _ACQUIRE_), 64)                                                                                                         \
+  RSL_ATOMIC_POINTER_FETCH_ORDER_IMPL(funcName, rsl::internal::memory_order_acquire_s, RSL_ATOMIC_POINTER_FETCH_OP_JOIN(fetchOp, _ACQUIRE_), 64)                                                                                                         \
                                                                                                                                                                                                                                                          \
-  REX_ATOMIC_POINTER_FETCH_ORDER_IMPL(funcName, rsl::internal::memory_order_release_s, REX_ATOMIC_POINTER_FETCH_OP_JOIN(fetchOp, _RELEASE_), 64)                                                                                                         \
+  RSL_ATOMIC_POINTER_FETCH_ORDER_IMPL(funcName, rsl::internal::memory_order_release_s, RSL_ATOMIC_POINTER_FETCH_OP_JOIN(fetchOp, _RELEASE_), 64)                                                                                                         \
                                                                                                                                                                                                                                                          \
-  REX_ATOMIC_POINTER_FETCH_ORDER_IMPL(funcName, rsl::internal::memory_order_acq_rel_s, REX_ATOMIC_POINTER_FETCH_OP_JOIN(fetchOp, _ACQ_REL_), 64)                                                                                                         \
+  RSL_ATOMIC_POINTER_FETCH_ORDER_IMPL(funcName, rsl::internal::memory_order_acq_rel_s, RSL_ATOMIC_POINTER_FETCH_OP_JOIN(fetchOp, _ACQ_REL_), 64)                                                                                                         \
                                                                                                                                                                                                                                                          \
-  REX_ATOMIC_POINTER_FETCH_ORDER_IMPL(funcName, rsl::internal::memory_order_seq_cst_s, REX_ATOMIC_POINTER_FETCH_OP_JOIN(fetchOp, _SEQ_CST_), 64)
+  RSL_ATOMIC_POINTER_FETCH_ORDER_IMPL(funcName, rsl::internal::memory_order_seq_cst_s, RSL_ATOMIC_POINTER_FETCH_OP_JOIN(fetchOp, _SEQ_CST_), 64)
 
-#define REX_ATOMIC_POINTER_FETCH_INC_DEC_OPERATOR_IMPL(operatorOp, preFuncName, postFuncName)                                                                                                                                                            \
+#define RSL_ATOMIC_POINTER_FETCH_INC_DEC_OPERATOR_IMPL(operatorOp, preFuncName, postFuncName)                                                                                                                                                            \
   using Base::operator operatorOp;                                                                                                                                                                                                                       \
                                                                                                                                                                                                                                                          \
   T* operator operatorOp()                                                                                                                                                                                                                               \
@@ -151,7 +151,7 @@ namespace rsl
     return postFuncName(1, rsl::memory_order_seq_cst);                                                                                                                                                                                                   \
   }
 
-#define REX_ATOMIC_POINTER_FETCH_ASSIGNMENT_OPERATOR_IMPL(operatorOp, funcName)                                                                                                                                                                          \
+#define RSL_ATOMIC_POINTER_FETCH_ASSIGNMENT_OPERATOR_IMPL(operatorOp, funcName)                                                                                                                                                                          \
   using Base::operator operatorOp;                                                                                                                                                                                                                       \
                                                                                                                                                                                                                                                          \
   T* operator operatorOp(ptrdiff_t arg)                                                                                                                                                                                                                  \

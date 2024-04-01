@@ -31,11 +31,11 @@ namespace rsl
     constexpr ToType safe_numeric_cast(const FromType value)
     {
       static_assert(rsl::is_arithmetic_v<FromType>, "FromType must be arithmetic type");
-#if REX_ENABLE_SAFE_CASTING
+#if RSL_ENABLE_SAFE_CASTING
       ToType to_val = static_cast<ToType>(value);
       if(to_val != value) // narrow check
       {
-        REX_ERROR("numeric cast loses value");
+        RSL_ERROR("numeric cast loses value");
       }
 
       constexpr auto max_signed_val = rsl::numeric_limits<rsl::make_signed_t<FromType>>::max();
@@ -48,7 +48,7 @@ namespace rsl
       // comparing the values here would never trigger because the signed would be promoted to an unsigned
       if(to_val > max_signed_val || to_val < 0) // sign cast check
       {
-        REX_ERROR("numeric cast loses value");
+        RSL_ERROR("numeric cast loses value");
       }
 
   #pragma pop

@@ -25,20 +25,20 @@
 //   inline namespace v1
 //   {
 //
-//     REX_STD_CLASS_ALIAS(nothrow_t);
-//     REX_STD_CLASS_ALIAS(align_val_t);
-//     REX_STD_CLASS_ALIAS(destroying_delete_t);
+//     RSL_CLASS_ALIAS(nothrow_t);
+//     RSL_CLASS_ALIAS(align_val_t);
+//     RSL_CLASS_ALIAS(destroying_delete_t);
 //
-//     REX_STD_CLASS_ALIAS(new_handler);
+//     RSL_CLASS_ALIAS(new_handler);
 //
-//     REX_STD_OBJECT_ALIAS(nothrow);
-//     REX_STD_OBJECT_ALIAS(destroying_delete);
-//     REX_STD_OBJECT_ALIAS(hardware_destructive_interference_size);
-//     REX_STD_OBJECT_ALIAS(hardware_constructive_interference_size);
+//     RSL_OBJECT_ALIAS(nothrow);
+//     RSL_OBJECT_ALIAS(destroying_delete);
+//     RSL_OBJECT_ALIAS(hardware_destructive_interference_size);
+//     RSL_OBJECT_ALIAS(hardware_constructive_interference_size);
 //
-//     REX_STD_FUNC_ALIAS(get_new_handler);
-//     REX_STD_FUNC_ALIAS(set_new_handler);
-//     REX_STD_FUNC_ALIAS(launder);
+//     RSL_FUNC_ALIAS(get_new_handler);
+//     RSL_FUNC_ALIAS(set_new_handler);
+//     RSL_FUNC_ALIAS(launder);
 //
 //   } // namespace v1
 // } // namespace rsl

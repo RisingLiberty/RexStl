@@ -28,14 +28,14 @@ namespace rsl
 
     class allocator;
 
-    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename T, typename Container = rsl::deque<T, allocator>>, stack, T, Container);
+    RSL_TEMPLATED_CLASS_ALIAS(template <typename T, typename Container = rsl::deque<T, allocator>>, stack, T, Container);
 
-    REX_STD_FUNC_ALIAS(operator==);
-    REX_STD_FUNC_ALIAS(operator!=);
-    REX_STD_FUNC_ALIAS(operator<);
-    REX_STD_FUNC_ALIAS(operator<=);
-    REX_STD_FUNC_ALIAS(operator>);
-    REX_STD_FUNC_ALIAS(operator>=);
+    RSL_FUNC_ALIAS(operator==);
+    RSL_FUNC_ALIAS(operator!=);
+    RSL_FUNC_ALIAS(operator<);
+    RSL_FUNC_ALIAS(operator<=);
+    RSL_FUNC_ALIAS(operator>);
+    RSL_FUNC_ALIAS(operator>=);
 
   } // namespace v1
 } // namespace rsl

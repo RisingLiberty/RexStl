@@ -34,7 +34,7 @@ namespace rsl
 /// RSL Comment: Different from ISO C++ Standard at time of writing (15/Sep/2022)
 // The standard only accepts a condition in the assert macro,
 // Rex Standard Library however accepts condition as well a message.
-#ifdef REX_ENABLE_ASSERTS
+#ifdef RSL_ENABLE_ASSERTS
   // #define assert(cond, ...) rsl::assert(cond, __VA_ARGS__)
 
   #define RSL_ASSERT_X(cond, ...) rsl::rex_assert(cond, __VA_ARGS__)

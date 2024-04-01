@@ -18,12 +18,12 @@ namespace rsl
   {
     void cpu_pause()
     {
-#if defined(REX_COMPILER_MSVC)
+#if defined(RSL_COMPILER_MSVC)
       YieldProcessor();
-#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
-  #if defined(REX_PLATFORM_ARM64)
+#elif defined(RSL_COMPILER_GCC) || defined(RSL_COMPILER_CLANG)
+  #if defined(RSL_PLATFORM_ARM64)
       __asm__ __volatile__("yield"); // NOLINT(hicpp-no-assembler)
-  #elif defined(REX_PLATFORM_X64)
+  #elif defined(RSL_PLATFORM_X64)
       __asm__ __volatile__("pause"); // NOLINT(hicpp-no-assembler)
   #else
       static_assert(false, "cpu pause not implemented");

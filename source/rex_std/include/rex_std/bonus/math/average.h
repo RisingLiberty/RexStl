@@ -20,7 +20,7 @@ namespace rsl
   {
 
     template <typename Iterator>
-    REX_NO_DISCARD constexpr typename Iterator::value_type average(const Iterator first, const Iterator last)
+    RSL_NO_DISCARD constexpr typename Iterator::value_type average(const Iterator first, const Iterator last)
     {
       using underlying_type = typename Iterator::value_type;
 

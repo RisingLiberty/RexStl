@@ -45,7 +45,7 @@ namespace rsl
 
       extern volatile CompilerBarrierDataDependencyFuncPtr g_compiler_barrier_data_dependency_func; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
 
-#define REX_COMPILER_ATOMIC_COMPILER_BARRIER_DATA_DEPENDENCY_FUNC(ptr) rsl::internal::g_compiler_barrier_data_dependency_func(ptr)
+#define RSL_COMPILER_ATOMIC_COMPILER_BARRIER_DATA_DEPENDENCY_FUNC(ptr) rsl::internal::g_compiler_barrier_data_dependency_func(ptr)
 
     } // namespace internal
 

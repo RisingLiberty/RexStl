@@ -29,7 +29,7 @@ namespace rsl
       {
       }
 
-      REX_NO_DISCARD pointer allocate(const size_type size)
+      RSL_NO_DISCARD pointer allocate(const size_type size)
       {
         return m_alloc.allocate(size);
       }

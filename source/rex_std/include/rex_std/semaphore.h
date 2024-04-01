@@ -23,9 +23,9 @@ namespace rsl
   inline namespace v1
   {
 
-    REX_STD_TEMPLATED_CLASS_ALIAS(template <ptrdiff LeastMaxValue>, counting_semaphore, LeastMaxValue);
+    RSL_TEMPLATED_CLASS_ALIAS(template <ptrdiff LeastMaxValue>, counting_semaphore, LeastMaxValue);
 
-    REX_STD_CLASS_ALIAS(binary_semaphore);
+    RSL_CLASS_ALIAS(binary_semaphore);
 
   } // namespace v1
 } // namespace rsl

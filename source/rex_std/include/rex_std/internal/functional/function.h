@@ -465,10 +465,10 @@ namespace rsl
           }
         }
 
-#if defined(REX_COMPILER_MSVC)
+#if defined(RSL_COMPILER_MSVC)
 #pragma warning(push)
 #pragma warning(disable : 4716) // 'function' must return a value
-#elif defined(REX_COMPILER_CLANG)
+#elif defined(RSL_COMPILER_CLANG)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wreturn-type" // non-void function should return a value
 #endif
@@ -478,9 +478,9 @@ namespace rsl
           RSL_ASSERT("Bad function call!");
           // if R is not default constructible, we'll get a compiler error here, meaning we did something wrong.
         } // NOLINT(clang-diagnostic-return-type)
-#if defined(REX_COMPILER_MSVC)
+#if defined(RSL_COMPILER_MSVC)
 #pragma warning(pop)
-#elif defined(REX_COMPILER_CLANG)
+#elif defined(RSL_COMPILER_CLANG)
 #pragma clang diagnostic push
 #endif
 

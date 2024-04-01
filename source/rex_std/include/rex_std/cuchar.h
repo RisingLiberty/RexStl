@@ -22,18 +22,18 @@ namespace rsl
   inline namespace v1
   {
 
-    REX_STD_CLASS_ALIAS(mbstate_t);
-    REX_STD_CLASS_ALIAS(size_t);
+    RSL_CLASS_ALIAS(mbstate_t);
+    RSL_CLASS_ALIAS(size_t);
 
-    REX_STD_FUNC_ALIAS(mbrtoc16);
-    REX_STD_FUNC_ALIAS(c16rtomb);
-    REX_STD_FUNC_ALIAS(mbrtoc32);
-    REX_STD_FUNC_ALIAS(c32rtomb);
+    RSL_FUNC_ALIAS(mbrtoc16);
+    RSL_FUNC_ALIAS(c16rtomb);
+    RSL_FUNC_ALIAS(mbrtoc32);
+    RSL_FUNC_ALIAS(c32rtomb);
 
-#ifdef REX_ENABLE_WITH_CPP20
-    REX_STD_FUNC_ALIAS(mbrtoc8);
-    REX_STD_FUNC_ALIAS(c8rtomb);
-#endif // REX_ENABLE_WITH_CPP20
+#ifdef RSL_ENABLE_WITH_CPP20
+    RSL_FUNC_ALIAS(mbrtoc8);
+    RSL_FUNC_ALIAS(c8rtomb);
+#endif // RSL_ENABLE_WITH_CPP20
 
   } // namespace v1
 } // namespace rsl

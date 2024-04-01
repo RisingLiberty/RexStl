@@ -29,33 +29,34 @@ namespace rsl
     class unique_array
     {
     public:
-      using pointer = rsl::remove_extent_t<T>*;
-      using const_pointer = const rsl::remove_extent_t<T>*;
-      using element_type = rsl::remove_extent_t<T>;
+      using pointer            = rsl::remove_extent_t<T>*;
+      using const_pointer      = const rsl::remove_extent_t<T>*;
+      using element_type       = rsl::remove_extent_t<T>;
       using const_element_type = const rsl::remove_extent_t<T>;
 
       unique_array()
-        : m_ptr(nullptr)
-        , m_count(0)
+          : m_ptr(nullptr)
+          , m_count(0)
       {
       }
       unique_array(rsl::nullptr_t) // NOLINT(google-explicit-constructor)
-        : m_ptr(nullptr)
-        , m_count(0)
+          : m_ptr(nullptr)
+          , m_count(0)
       {
       }
 
       unique_array(pointer pointer, card32 count)
-        : m_ptr(pointer)
-        , m_count(count)
+          : m_ptr(pointer)
+          , m_count(count)
       {
       }
 
       unique_array(const unique_array&) = delete;
       unique_array(unique_array&& other) noexcept
-        : m_ptr(other.release())
-        , m_count(other.count())
+          : m_ptr()
+          , m_count(other.count())
       {
+        m_ptr = other.release();
       }
 
       ~unique_array()
@@ -66,32 +67,33 @@ namespace rsl
       unique_array& operator=(const unique_array&) = delete;
       unique_array& operator=(unique_array&& other) noexcept
       {
+        card32 other_count = other.m_count;
         reset(other.release());
-        m_count = other.m_count;
+        m_count = other_count;
         return *this;
       }
 
       void swap(unique_array& other)
       {
-        T* tmp_ptr = m_ptr;
+        T* tmp_ptr       = m_ptr;
         card32 tmp_count = m_count;
 
-        m_ptr = other.m_ptr;
+        m_ptr   = other.m_ptr;
         m_count = other.m_count;
 
-        other.m_ptr = tmp_ptr;
+        other.m_ptr   = tmp_ptr;
         other.m_count = tmp_count;
       }
 
-      REX_NO_DISCARD const_pointer get() const
+      RSL_NO_DISCARD const_pointer get() const
       {
         return m_ptr;
       }
-      REX_NO_DISCARD pointer get()
+      RSL_NO_DISCARD pointer get()
       {
         return m_ptr;
       }
-      REX_NO_DISCARD pointer release()
+      RSL_NO_DISCARD pointer release()
       {
         m_count = 0;
         return rsl::exchange(m_ptr, pointer());
@@ -126,8 +128,8 @@ namespace rsl
 
       void reset(pointer ptr = pointer(), card32 count = 0)
       {
-        operator delete[](m_ptr, sizeof(element_type)* m_count);
-        m_ptr = ptr;
+        operator delete[](m_ptr, sizeof(element_type) * m_count);
+        m_ptr   = ptr;
         m_count = count;
       }
 
@@ -137,7 +139,7 @@ namespace rsl
     };
 
     template <typename T, rsl::enable_if_t<rsl::is_array_v<T>, bool> = true>
-    REX_NO_DISCARD unique_array<rsl::remove_extent_t<T>> make_unique(card32 size)
+    RSL_NO_DISCARD unique_array<rsl::remove_extent_t<T>> make_unique(card32 size)
     {
       using Elem = rsl::remove_extent_t<T>;
       return unique_array<Elem>(new Elem[size](), size);

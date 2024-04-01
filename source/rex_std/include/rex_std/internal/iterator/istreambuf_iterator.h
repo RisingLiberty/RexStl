@@ -71,7 +71,7 @@ namespace rsl
           , m_value()
       {
       }
-#ifdef REX_ENABLE_WITH_CPP20
+#ifdef RSL_ENABLE_WITH_CPP20
       constexpr istreambuf_iterator(default_sentinel_t)
           : m_stream_buf(nullptr)
           , m_got_ch(true)
@@ -148,7 +148,7 @@ namespace rsl
         return (m_stream_buf != nullptr && other.m_streambuf != nullptr) || (m_stream_buf && other.m_stream_buf);
       }
 
-#ifdef REX_ENABLE_WITH_CPP20
+#ifdef RSL_ENABLE_WITH_CPP20
       friend bool operator==(const istreambuf_iterator& lhs, default_sentinel_t)
       {
         if(!lhs.m_got_ch)

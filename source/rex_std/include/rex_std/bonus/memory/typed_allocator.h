@@ -53,7 +53,7 @@ namespace rsl
       typed_allocator& operator=(const typed_allocator&) = default;
 
       // allocates n * sizeof(T) bytes of uninitialized storage
-      REX_NO_DISCARD T* allocate(const size_type count)
+      RSL_NO_DISCARD T* allocate(const size_type count)
       {
         return static_cast<T*>(operator new(sizeof(T) * count));
       }

@@ -29,14 +29,14 @@ namespace rsl
     //     #define offsetof(s,m) ((size_t)&reinterpret_cast<char const volatile&>((((s*)0)->m)))
     // #endif
 
-#if defined(REX_PLATFORM_X86)
+#if defined(RSL_PLATFORM_X86)
     // unsigned integer type returned by the sizeof operator
     using size_t = uint32;
     // signed integer type returned when subtracting two pointers
     using ptrdiff = int32;
     // trivial type with alignment requirement as great as any other scalar type
     using max_align = float32;
-#elif defined(REX_PLATFORM_X64)
+#elif defined(RSL_PLATFORM_X64)
     // unsigned integer type returned by the sizeof operator
     using size_t = uint64;
     // signed integer type returned when subtracting two pointers

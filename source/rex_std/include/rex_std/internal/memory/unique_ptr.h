@@ -155,7 +155,7 @@ namespace rsl
       unique_ptr& operator=(const unique_ptr&) = delete;
 
       // releases the ownership of the managed object
-      REX_NO_DISCARD pointer release()
+      RSL_NO_DISCARD pointer release()
       {
         return rsl::exchange(m_cp_ptr_and_deleter.first(), pointer());
       }
@@ -188,23 +188,23 @@ namespace rsl
       // however, pointers where the object they're pointing to is const rather than the pointer itself
       // are much more common, so that's why rex standard propagates const.
       // returns a pointer to the managed object
-      REX_NO_DISCARD const_pointer get() const
+      RSL_NO_DISCARD const_pointer get() const
       {
         return m_cp_ptr_and_deleter.first();
       }
       // returns a pointer to the managed object
-      REX_NO_DISCARD pointer get()
+      RSL_NO_DISCARD pointer get()
       {
         return m_cp_ptr_and_deleter.first();
       }
 
       // returns the deleter object used to destroy the managed object
-      REX_NO_DISCARD const deleter_type& get_deleter() const
+      RSL_NO_DISCARD const deleter_type& get_deleter() const
       {
         return m_cp_ptr_and_deleter.second();
       }
       // returns the deleter object used to destroy the managed object
-      REX_NO_DISCARD deleter_type& get_deleter()
+      RSL_NO_DISCARD deleter_type& get_deleter()
       {
         return m_cp_ptr_and_deleter.second();
       }
@@ -351,7 +351,7 @@ namespace rsl
     }
 
     template <typename T, typename... Args, rsl::enable_if_t<!rsl::is_array_v<T>, bool> = true>
-    REX_NO_DISCARD unique_ptr<T> make_unique(Args&&... args)
+    RSL_NO_DISCARD unique_ptr<T> make_unique(Args&&... args)
     {
       return unique_ptr<T>(new T(rsl::forward<Args>(args)...));
     }

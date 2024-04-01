@@ -21,7 +21,7 @@ namespace rsl
 {
   inline namespace v1
   {
-#if defined(REX_COMPILER_MSVC)
+#if defined(RSL_COMPILER_MSVC)
     template <typename T>
     struct is_destructible : bool_constant<__is_destructible(T)>
     {

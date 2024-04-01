@@ -50,7 +50,7 @@ namespace rsl
     } // namespace internal
 
     template <typename... T>
-    REX_NO_DISCARD inline rsl::fmt_stack_string format(format_string<T...> fmt, T&&... args); // NOLINT(misc-no-recursion, readability-redundant-declaration)
+    RSL_NO_DISCARD inline rsl::fmt_stack_string format(format_string<T...> fmt, T&&... args); // NOLINT(misc-no-recursion, readability-redundant-declaration)
 
     template <typename... Args>
     bool rex_assert(bool cond, Args&&... args) // NOLINT(misc-no-recursion)

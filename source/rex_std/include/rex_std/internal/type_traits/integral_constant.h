@@ -33,7 +33,7 @@ namespace rsl
         return value;
       }
 
-      REX_NO_DISCARD constexpr value_type operator()() const
+      RSL_NO_DISCARD constexpr value_type operator()() const
       {
         return value;
       }

@@ -12,7 +12,7 @@
 
 #pragma once
 
-#ifdef REX_ENABLE_WITH_CPP23
+#ifdef RSL_ENABLE_WITH_CPP23
 
   #include "rex_std/disable_std_checking.h"
   #include "rex_std/std_alias_defines.h"
@@ -24,11 +24,11 @@ namespace rsl
   inline namespace v1
   {
 
-    REX_STD_CLASS_ALIAS(float16_t);
-    REX_STD_CLASS_ALIAS(float32_t);
-    REX_STD_CLASS_ALIAS(float64_t);
-    REX_STD_CLASS_ALIAS(float128_t);
-    REX_STD_CLASS_ALIAS(bfloat16_t);
+    RSL_CLASS_ALIAS(float16_t);
+    RSL_CLASS_ALIAS(float32_t);
+    RSL_CLASS_ALIAS(float64_t);
+    RSL_CLASS_ALIAS(float128_t);
+    RSL_CLASS_ALIAS(bfloat16_t);
 
   } // namespace v1
 } // namespace rsl

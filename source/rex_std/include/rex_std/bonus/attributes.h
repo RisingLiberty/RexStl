@@ -12,6 +12,6 @@
 
 #pragma once
 
-#define REX_NO_DISCARD   [[nodiscard]]
-#define REX_MAYBE_UNUSED [[maybe_unused]]
-#define REX_NO_RETURN    [[noreturn]]
+#define RSL_NO_DISCARD   [[nodiscard]]
+#define RSL_MAYBE_UNUSED [[maybe_unused]]
+#define RSL_NO_RETURN    [[noreturn]]

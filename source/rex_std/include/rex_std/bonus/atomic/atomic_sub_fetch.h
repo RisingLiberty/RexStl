@@ -17,7 +17,7 @@
 #include "rex_std/bonus/atomic/atomic_memory_order.h"
 #include "rex_std/bonus/types.h"
 
-#if defined(REX_COMPILER_MSVC)
+#if defined(RSL_COMPILER_MSVC)
   #include <intrin.h>
 #endif
 
@@ -25,7 +25,7 @@ namespace rsl
 {
   inline namespace v1
   {
-#if defined(REX_COMPILER_MSVC)
+#if defined(RSL_COMPILER_MSVC)
     template <typename T>
     atomic_t<T> atomic_sub_fetch(T* obj, T valToSub, rsl::memory_order /*unused*/)
     {
@@ -58,7 +58,7 @@ namespace rsl
 
       return res + atom_value_to_sub; // atomc_value_to_sub is negative, so we need to add, not subtract
     }
-#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+#elif defined(RSL_COMPILER_GCC) || defined(RSL_COMPILER_CLANG)
     template <typename T>
     atomic_t<T> atomic_sub_fetch(T* obj, T valToSub, rsl::memory_order order)
     {

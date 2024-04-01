@@ -318,21 +318,21 @@ namespace rsl
 
       list()
           : m_cp_head_tail_link_and_alloc()
-#ifdef REX_ENABLE_SIZE_IN_LISTS
+#ifdef RSL_ENABLE_SIZE_IN_LISTS
           , m_size(0)
 #endif
       {
       }
       explicit list(const allocator_type& alloc)
           : m_cp_head_tail_link_and_alloc(alloc)
-#ifdef REX_ENABLE_SIZE_IN_LISTS
+#ifdef RSL_ENABLE_SIZE_IN_LISTS
           , m_size(0)
 #endif
       {
       }
       list(size_type count, const_reference value, const allocator_type& alloc = allocator_type())
           : m_cp_head_tail_link_and_alloc(alloc)
-#ifdef REX_ENABLE_SIZE_IN_LISTS
+#ifdef RSL_ENABLE_SIZE_IN_LISTS
           , m_size(count)
 #endif
       {
@@ -340,7 +340,7 @@ namespace rsl
       }
       explicit list(size_type count, const allocator_type& alloc = allocator_type())
           : m_cp_head_tail_link_and_alloc(alloc)
-#ifdef REX_ENABLE_SIZE_IN_LISTS
+#ifdef RSL_ENABLE_SIZE_IN_LISTS
           , m_size(count)
 #endif
       {
@@ -349,7 +349,7 @@ namespace rsl
       template <typename InputIt>
       list(InputIt first, InputIt last, const allocator_type& alloc = allocator_type())
           : m_cp_head_tail_link_and_alloc(alloc)
-#ifdef REX_ENABLE_SIZE_IN_LISTS
+#ifdef RSL_ENABLE_SIZE_IN_LISTS
           , m_size(0)
 #endif
       {
@@ -357,7 +357,7 @@ namespace rsl
       }
       list(const list& other)
           : m_cp_head_tail_link_and_alloc(other.get_allocator())
-#ifdef REX_ENABLE_SIZE_IN_LISTS
+#ifdef RSL_ENABLE_SIZE_IN_LISTS
           , m_size(other.m_size)
 #endif
       {
@@ -365,7 +365,7 @@ namespace rsl
       }
       list(const list& other, const allocator_type& alloc)
           : m_cp_head_tail_link_and_alloc(alloc)
-#ifdef REX_ENABLE_SIZE_IN_LISTS
+#ifdef RSL_ENABLE_SIZE_IN_LISTS
           , m_size(other.m_size)
 #endif
       {
@@ -373,7 +373,7 @@ namespace rsl
       }
       list(list&& other)
           : m_cp_head_tail_link_and_alloc(rsl::move(other.get_allocator()))
-#ifdef REX_ENABLE_SIZE_IN_LISTS
+#ifdef RSL_ENABLE_SIZE_IN_LISTS
           , m_size(0)
 #endif
       {
@@ -381,7 +381,7 @@ namespace rsl
       }
       list(list&& other, const allocator_type& alloc)
           : m_cp_head_tail_link_and_alloc(alloc)
-#ifdef REX_ENABLE_SIZE_IN_LISTS
+#ifdef RSL_ENABLE_SIZE_IN_LISTS
           , m_size(0)
 #endif
       {
@@ -389,7 +389,7 @@ namespace rsl
       }
       list(rsl::initializer_list<value_type> ilist, const allocator_type& alloc = allocator_type())
           : m_cp_head_tail_link_and_alloc(alloc)
-#ifdef REX_ENABLE_SIZE_IN_LISTS
+#ifdef RSL_ENABLE_SIZE_IN_LISTS
           , m_size(0)
 #endif
       {
@@ -556,7 +556,7 @@ namespace rsl
       }
       size_type size() const
       {
-#ifdef REX_ENABLE_SIZE_IN_LISTS
+#ifdef RSL_ENABLE_SIZE_IN_LISTS
         return m_size;
 #else
         size_type count = 0;
@@ -586,7 +586,7 @@ namespace rsl
           get_allocator().deallocate(tmp_node, sizeof(node_type));
         }
 
-#ifdef REX_ENABLE_SIZE_IN_LISTS
+#ifdef RSL_ENABLE_SIZE_IN_LISTS
         m_size = 0;
 #endif
       }
@@ -615,7 +615,7 @@ namespace rsl
           node_type* new_node = static_cast<node_type*>(get_allocator().allocate(sizeof(node_type)));
           insert_at(pos_node, value, new_node);
           --count;
-#ifdef REX_ENABLE_SIZE_IN_LISTS
+#ifdef RSL_ENABLE_SIZE_IN_LISTS
           ++m_size;
 #endif
         }
@@ -639,7 +639,7 @@ namespace rsl
         {
           emplace(pos, *first);
           ++first;
-#ifdef REX_ENABLE_SIZE_IN_LISTS
+#ifdef RSL_ENABLE_SIZE_IN_LISTS
           ++m_size;
 #endif
         }
@@ -677,7 +677,7 @@ namespace rsl
         get_allocator().destroy(pos_node);
         get_allocator().deallocate(pos_node, sizeof(node_type));
 
-#ifdef REX_ENABLE_SIZE_IN_LISTS
+#ifdef RSL_ENABLE_SIZE_IN_LISTS
         --m_size;
 #endif
         ++pos;
@@ -732,7 +732,7 @@ namespace rsl
       void resize(size_type new_size)
       {
         size_type num_new_elements = new_size - size();
-#ifdef REX_ENABLE_SIZE_IN_LISTS
+#ifdef RSL_ENABLE_SIZE_IN_LISTS
         m_size = new_size;
 #endif
         while(num_new_elements > 0)
@@ -746,7 +746,7 @@ namespace rsl
       void resize(size_type new_size, const value_type& value)
       {
         size_type num_new_elements = new_size - size();
-#ifdef REX_ENABLE_SIZE_IN_LISTS
+#ifdef RSL_ENABLE_SIZE_IN_LISTS
         m_size = new_size;
 #endif
         while(num_new_elements > 0)
@@ -1113,7 +1113,7 @@ namespace rsl
       /// but the size() function should be much faster now.
       /// At time of writing (08/June/2022) it was decided we wouldn't follow this as only the size function would be more performant.
       /// Which is not called very often.
-#ifdef REX_ENABLE_SIZE_IN_LISTS
+#ifdef RSL_ENABLE_SIZE_IN_LISTS
       size_type m_size;
 #endif
     };
@@ -1169,27 +1169,27 @@ namespace rsl
 {
   inline namespace v1
   {
-    REX_STD_FUNC_ALIAS(operator==);
-    REX_STD_FUNC_ALIAS(operator!=);
-    REX_STD_FUNC_ALIAS(operator<);
-    REX_STD_FUNC_ALIAS(operator<=);
-    REX_STD_FUNC_ALIAS(operator>);
-    REX_STD_FUNC_ALIAS(operator>=);
+    RSL_FUNC_ALIAS(operator==);
+    RSL_FUNC_ALIAS(operator!=);
+    RSL_FUNC_ALIAS(operator<);
+    RSL_FUNC_ALIAS(operator<=);
+    RSL_FUNC_ALIAS(operator>);
+    RSL_FUNC_ALIAS(operator>=);
 
-    REX_STD_FUNC_ALIAS(erase);
-    REX_STD_FUNC_ALIAS(erase_if);
+    RSL_FUNC_ALIAS(erase);
+    RSL_FUNC_ALIAS(erase_if);
 
-    REX_STD_FUNC_ALIAS(begin);
-    REX_STD_FUNC_ALIAS(cbegin);
-    REX_STD_FUNC_ALIAS(cend);
-    REX_STD_FUNC_ALIAS(rbegin);
-    REX_STD_FUNC_ALIAS(crbegin);
-    REX_STD_FUNC_ALIAS(rend);
-    REX_STD_FUNC_ALIAS(crend);
-    REX_STD_FUNC_ALIAS(size);
-    REX_STD_FUNC_ALIAS(ssize);
-    REX_STD_FUNC_ALIAS(empty);
-    REX_STD_FUNC_ALIAS(data);
+    RSL_FUNC_ALIAS(begin);
+    RSL_FUNC_ALIAS(cbegin);
+    RSL_FUNC_ALIAS(cend);
+    RSL_FUNC_ALIAS(rbegin);
+    RSL_FUNC_ALIAS(crbegin);
+    RSL_FUNC_ALIAS(rend);
+    RSL_FUNC_ALIAS(crend);
+    RSL_FUNC_ALIAS(size);
+    RSL_FUNC_ALIAS(ssize);
+    RSL_FUNC_ALIAS(empty);
+    RSL_FUNC_ALIAS(data);
 
   } // namespace v1
 } // namespace rsl

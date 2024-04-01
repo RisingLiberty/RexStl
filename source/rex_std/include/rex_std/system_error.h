@@ -24,28 +24,28 @@ namespace rsl
   inline namespace v1
   {
 
-    REX_STD_CLASS_ALIAS(error_category);
-    REX_STD_CLASS_ALIAS(error_condition);
-    REX_STD_CLASS_ALIAS(errc);
-    REX_STD_CLASS_ALIAS(error_code);
-    REX_STD_CLASS_ALIAS(system_error);
+    RSL_CLASS_ALIAS(error_category);
+    RSL_CLASS_ALIAS(error_condition);
+    RSL_CLASS_ALIAS(errc);
+    RSL_CLASS_ALIAS(error_code);
+    RSL_CLASS_ALIAS(system_error);
 
-    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename T>, is_error_code_enum, T);
+    RSL_TEMPLATED_CLASS_ALIAS(template <typename T>, is_error_code_enum, T);
 
-    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename T>, is_error_condition_enum, T);
+    RSL_TEMPLATED_CLASS_ALIAS(template <typename T>, is_error_condition_enum, T);
 
-    REX_STD_TEMPLATED_OBJECT_ALIAS(template <typename T>, is_error_code_enum_v, T);
+    RSL_TEMPLATED_OBJECT_ALIAS(template <typename T>, is_error_code_enum_v, T);
 
-    REX_STD_TEMPLATED_OBJECT_ALIAS(template <typename T>, is_error_condition_enum_v, T);
+    RSL_TEMPLATED_OBJECT_ALIAS(template <typename T>, is_error_condition_enum_v, T);
 
-    REX_STD_FUNC_ALIAS(generic_category);
-    REX_STD_FUNC_ALIAS(system_category);
-    REX_STD_FUNC_ALIAS(operator==);
-    REX_STD_FUNC_ALIAS(operator!=);
-    REX_STD_FUNC_ALIAS(operator<);
-    REX_STD_FUNC_ALIAS(operator<<);
-    REX_STD_FUNC_ALIAS(make_error_code);
-    REX_STD_FUNC_ALIAS(make_error_condition);
+    RSL_FUNC_ALIAS(generic_category);
+    RSL_FUNC_ALIAS(system_category);
+    RSL_FUNC_ALIAS(operator==);
+    RSL_FUNC_ALIAS(operator!=);
+    RSL_FUNC_ALIAS(operator<);
+    RSL_FUNC_ALIAS(operator<<);
+    RSL_FUNC_ALIAS(make_error_code);
+    RSL_FUNC_ALIAS(make_error_condition);
 
   } // namespace v1
 } // namespace rsl

@@ -50,6 +50,6 @@ namespace rsl
   } // namespace v1
 } // namespace rsl
 
-#ifdef REX_PLATFORM_WINDOWS
+#ifdef RSL_PLATFORM_WINDOWS
   #include "rex_std/bonus/time/win/win_timepoint.h" // IWYU pragma: keep
 #endif

@@ -5,7 +5,7 @@
 #ifndef CRC32C_CRC32C_CONFIG_H_
 #define CRC32C_CRC32C_CONFIG_H_
 
-#ifdef REX_COMPILER_CLANG
+#ifdef RSL_COMPILER_CLANG
 
   // Define to 1 if building for a big-endian platform.
   #define BYTE_ORDER_BIG_ENDIAN 0
@@ -35,7 +35,7 @@
   // Define to 1 if CRC32C tests have been built with Google Logging.
   #define CRC32C_TESTS_BUILT_WITH_GLOG 1
 
-#elif REX_COMPILER_MSVC
+#elif RSL_COMPILER_MSVC
 
   // Define to 1 if building for a big-endian platform.
   #define BYTE_ORDER_BIG_ENDIAN        0

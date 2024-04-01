@@ -25,9 +25,9 @@ namespace rsl
 
 #define NULL 0 // NOLINT
 
-#if defined(REX_PLATFORM_X86)
+#if defined(RSL_PLATFORM_X86)
     using size_t = uint32;
-#elif defined(REX_PLATFORM_X64)
+#elif defined(RSL_PLATFORM_X64)
     using size_t = uint64;
 #else
   #error "No platform specified"
@@ -415,10 +415,10 @@ namespace rsl
 //
 // namespace rsl { inline namespace v1 {
 //
-//// REX_STD_FUNC_ALIAS(strxfrm);
-//// REX_STD_FUNC_ALIAS(strcoll);
-//// REX_STD_FUNC_ALIAS(strtok);
-//// REX_STD_FUNC_ALIAS(strerror);
+//// RSL_FUNC_ALIAS(strxfrm);
+//// RSL_FUNC_ALIAS(strcoll);
+//// RSL_FUNC_ALIAS(strtok);
+//// RSL_FUNC_ALIAS(strerror);
 //
 // }}
 //

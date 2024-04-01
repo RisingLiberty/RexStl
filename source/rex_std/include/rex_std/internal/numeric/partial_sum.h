@@ -22,7 +22,7 @@ namespace rsl
   inline namespace v1
   {
 
-    REX_STD_FUNC_ALIAS(partial_sum);
+    RSL_FUNC_ALIAS(partial_sum);
 
   }
 } // namespace rsl

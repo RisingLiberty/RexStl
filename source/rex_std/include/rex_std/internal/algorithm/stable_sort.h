@@ -22,7 +22,7 @@ namespace rsl
   inline namespace v1
   {
 
-    REX_STD_FUNC_ALIAS(stable_sort);
+    RSL_FUNC_ALIAS(stable_sort);
 
   } // namespace v1
 } // namespace rsl

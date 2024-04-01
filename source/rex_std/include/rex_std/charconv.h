@@ -23,10 +23,10 @@ namespace rsl
   inline namespace v1
   {
 
-    REX_STD_CLASS_ALIAS(chars_format);
+    RSL_CLASS_ALIAS(chars_format);
 
-    REX_STD_FUNC_ALIAS(from_chars);
-    REX_STD_FUNC_ALIAS(to_chars);
+    RSL_FUNC_ALIAS(from_chars);
+    RSL_FUNC_ALIAS(to_chars);
 
   } // namespace v1
 } // namespace rsl

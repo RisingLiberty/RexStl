@@ -29,16 +29,16 @@ namespace rsl
     template <>
     struct atomic_fixed_width_type<8>
     {
-#ifdef REX_COMPILER_MSVC
+#ifdef RSL_COMPILER_MSVC
       using type = char;
-#elif REX_COMPILER_CLANG
+#elif RSL_COMPILER_CLANG
       using type = rsl::uint8;
 #endif
     };
     template <>
     struct atomic_fixed_width_type<16>
     {
-#ifdef REX_COMPILER_MSVC
+#ifdef RSL_COMPILER_MSVC
       using type = short;
 #else
       using type = rsl::uint16;
@@ -47,18 +47,18 @@ namespace rsl
     template <>
     struct atomic_fixed_width_type<32>
     {
-#ifdef REX_COMPILER_MSVC
+#ifdef RSL_COMPILER_MSVC
       using type = long;
-#elif REX_COMPILER_CLANG
+#elif RSL_COMPILER_CLANG
       using type = rsl::uint32;
 #endif
     };
     template <>
     struct atomic_fixed_width_type<64>
     {
-#ifdef REX_COMPILER_MSVC
+#ifdef RSL_COMPILER_MSVC
       using type = long long;
-#elif REX_COMPILER_CLANG
+#elif RSL_COMPILER_CLANG
       using type = rsl::uint64;
 #endif
     };

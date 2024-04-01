@@ -21,7 +21,7 @@
 
 #if HAVE_SSE42 && (defined(_M_X64) || defined(__x86_64__))
 
-  #if defined(REX_COMPILER_MSVC)
+  #if defined(RSL_COMPILER_MSVC)
     #include <intrin.h>
   #else // !defined(_MSC_VER)
     #include <nmmintrin.h>

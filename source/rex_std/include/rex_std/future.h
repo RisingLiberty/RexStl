@@ -24,21 +24,21 @@ namespace rsl
   inline namespace v1
   {
 
-    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename R>, promise, R);
+    RSL_TEMPLATED_CLASS_ALIAS(template <typename R>, promise, R);
 
-    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename R>, packaged_task, R);
+    RSL_TEMPLATED_CLASS_ALIAS(template <typename R>, packaged_task, R);
 
-    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename T>, future, T);
+    RSL_TEMPLATED_CLASS_ALIAS(template <typename T>, future, T);
 
-    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename T>, shared_future, T);
+    RSL_TEMPLATED_CLASS_ALIAS(template <typename T>, shared_future, T);
 
-    REX_STD_CLASS_ALIAS(launch);
-    REX_STD_CLASS_ALIAS(future_status);
-    REX_STD_CLASS_ALIAS(future_errc);
+    RSL_CLASS_ALIAS(launch);
+    RSL_CLASS_ALIAS(future_status);
+    RSL_CLASS_ALIAS(future_errc);
 
-    REX_STD_FUNC_ALIAS(async);
-    REX_STD_FUNC_ALIAS(future_category);
-    // REX_STD_FUNC_ALIAS(swap); // Doesn't work because rsl has its own swap // Doesn't work because rsl has its own swap
+    RSL_FUNC_ALIAS(async);
+    RSL_FUNC_ALIAS(future_category);
+    // RSL_FUNC_ALIAS(swap); // Doesn't work because rsl has its own swap // Doesn't work because rsl has its own swap
 
   } // namespace v1
 } // namespace rsl

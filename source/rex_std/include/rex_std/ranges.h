@@ -12,7 +12,7 @@
 
 #pragma once
 
-#ifdef REX_ENABLE_WITH_CPP20
+#ifdef RSL_ENABLE_WITH_CPP20
 
   #include "rex_std/disable_std_checking.h"
   #include "rex_std/std_alias_defines.h"
@@ -32,4 +32,4 @@ namespace rsl
 
   #include "rex_std/enable_std_checking.h"
 
-#endif // REX_ENABLE_WITH_CPP20
+#endif // RSL_ENABLE_WITH_CPP20

@@ -23,7 +23,7 @@ namespace rsl
   {
     namespace internal
     {
-#if defined(REX_PLATFORM_X64)
+#if defined(RSL_PLATFORM_X64)
       inline constexpr card32 g_condition_variable_size      = 72;
       inline constexpr card32 g_condition_variable_alignment = 8;
 #endif
@@ -83,7 +83,7 @@ namespace rsl
       template <typename Clock, typename Duration>
       cv_status wait_until(unique_lock<mutex>& lock, const chrono::time_point<Clock, Duration>& absTime)
       {
-#ifdef REX_ENABLE_WITH_CPP20
+#ifdef RSL_ENABLE_WITH_CPP20
         static_assert(chrono::is_clock_v<Clock>, "Clock type required");
 #endif
 
@@ -108,9 +108,9 @@ namespace rsl
       bool wait_until(unique_lock<mutex>& lock, const chrono::time_point<Clock, Duration>& absTime, Predicate pred)
       {
         // wait for signal with timeout and check predicate
-#if REX_ENABLE_WITH_CPP20
+#if RSL_ENABLE_WITH_CPP20
         static_assert(chrono::is_clock_v<Clock>, "Clock type required");
-#endif // REX_ENABLE_WITH_CPP20
+#endif // RSL_ENABLE_WITH_CPP20
 
         return wait_until_impl(lock, absTime, pred);
       }
@@ -124,7 +124,7 @@ namespace rsl
         return wait_until_impl(lock, absTime, pred);
       }
 
-      REX_NO_DISCARD native_handle_type native_handle();
+      RSL_NO_DISCARD native_handle_type native_handle();
 
       void register_at_thread_exit(unique_lock<mutex>& lock, int* ready);
 

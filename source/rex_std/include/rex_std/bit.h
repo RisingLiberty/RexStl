@@ -19,7 +19,7 @@
 #include "rex_std/internal/type_traits/is_trivially_copyable.h"
 #include "rex_std/limits.h"
 
-#if REX_COMPILER_MSVC
+#if RSL_COMPILER_MSVC
   #include <intrin.h>
 #endif
 
@@ -32,7 +32,7 @@ namespace rsl
       template <typename T>
       int32 clz32(T val)
       {
-#ifdef REX_COMPILER_MSVC
+#ifdef RSL_COMPILER_MSVC
         return _lzcnt_u32(val);
 #else
         return __builtin_clz(val);
@@ -41,7 +41,7 @@ namespace rsl
       template <typename T>
       int32 clz64(T val)
       {
-#ifdef REX_COMPILER_MSVC
+#ifdef RSL_COMPILER_MSVC
         return static_cast<int32>(_lzcnt_u64(val));
 #else
         return __builtin_clzll(val);
@@ -51,7 +51,7 @@ namespace rsl
       template <typename T>
       int32 crz32(T val)
       {
-#ifdef REX_COMPILER_MSVC
+#ifdef RSL_COMPILER_MSVC
         return _tzcnt_u32(val);
 #else
         return __builtin_ctz(val);
@@ -60,7 +60,7 @@ namespace rsl
       template <typename T>
       int32 crz64(T val)
       {
-#ifdef REX_COMPILER_MSVC
+#ifdef RSL_COMPILER_MSVC
         return static_cast<int32>(_tzcnt_u64(val));
 #else
         return __builtin_ctzll(val);
@@ -70,7 +70,7 @@ namespace rsl
       template <typename T>
       int32 popcount32(T val)
       {
-#ifdef REX_COMPILER_MSVC
+#ifdef RSL_COMPILER_MSVC
         return __popcnt(val);
 #else
         return __builtin_popcount(val);
@@ -79,7 +79,7 @@ namespace rsl
       template <typename T>
       int32 popcount64(T val)
       {
-#ifdef REX_COMPILER_MSVC
+#ifdef RSL_COMPILER_MSVC
         return static_cast<int32>(__popcnt64(val));
 #else
         return __builtin_popcountll(val);
@@ -89,7 +89,7 @@ namespace rsl
 
     enum class endian
     {
-#if defined(REX_COMPILER_MSVC) // Windows machines are always little endian
+#if defined(RSL_COMPILER_MSVC) // Windows machines are always little endian
       little = 0,
       big    = 1,
       native = little
@@ -111,7 +111,7 @@ namespace rsl
     }
 
     template <typename T>
-    REX_NO_DISCARD constexpr int32 countl_zero(const T val)
+    RSL_NO_DISCARD constexpr int32 countl_zero(const T val)
     {
       static_assert(rsl::is_unsigned_v<T>, "countl_zero requires an unsigned integer type");
       if(val == 0)
@@ -147,13 +147,13 @@ namespace rsl
     }
 
     template <typename T>
-    REX_NO_DISCARD constexpr int32 countl_one(T val)
+    RSL_NO_DISCARD constexpr int32 countl_one(T val)
     {
       return val != rsl::numeric_limits<T>::max() ? rsl::countl_zero(static_cast<T>(~val)) : rsl::numeric_limits<T>::digits;
     }
 
     template <typename T>
-    REX_NO_DISCARD constexpr int32 countr_zero(const T val)
+    RSL_NO_DISCARD constexpr int32 countr_zero(const T val)
     {
       if(val == 0)
       {
@@ -182,19 +182,19 @@ namespace rsl
     }
 
     template <typename T>
-    REX_NO_DISCARD constexpr int32 countr_one(T val)
+    RSL_NO_DISCARD constexpr int32 countr_one(T val)
     {
       return val != rsl::numeric_limits<T>::max() ? rsl::countr_zero(static_cast<T>(~val)) : rsl::numeric_limits<T>::digits;
     }
 
     template <typename T>
-    REX_NO_DISCARD constexpr bool has_single_bit(const T val)
+    RSL_NO_DISCARD constexpr bool has_single_bit(const T val)
     {
       return val != 0 && (val & (val - 1)) == 0;
     }
 
     template <typename T>
-    REX_NO_DISCARD constexpr T bit_floor(const T val)
+    RSL_NO_DISCARD constexpr T bit_floor(const T val)
     {
       if(val == 0)
       {
@@ -205,16 +205,16 @@ namespace rsl
     }
 
     template <typename T>
-    REX_NO_DISCARD constexpr int32 bit_width(const T val)
+    RSL_NO_DISCARD constexpr int32 bit_width(const T val)
     {
       return static_cast<T>(rsl::numeric_limits<T>::digits - rsl::countl_zero(val));
     }
 
     template <typename T>
-    REX_NO_DISCARD constexpr T rotr(const T val, int32 rotation);
+    RSL_NO_DISCARD constexpr T rotr(const T val, int32 rotation);
 
     template <typename T>
-    REX_NO_DISCARD constexpr T rotl(const T val, int32 rotation)
+    RSL_NO_DISCARD constexpr T rotl(const T val, int32 rotation)
     {
       constexpr auto digits = rsl::numeric_limits<T>::digits;
       const auto remainder  = rotation % digits;
@@ -233,7 +233,7 @@ namespace rsl
     }
 
     template <typename T>
-    REX_NO_DISCARD constexpr T rotr(const T val, int32 rotation)
+    RSL_NO_DISCARD constexpr T rotr(const T val, int32 rotation)
     {
       constexpr auto digits = rsl::numeric_limits<T>::digits;
       auto remainder        = rotation % digits;
@@ -252,7 +252,7 @@ namespace rsl
     }
 
     template <typename T>
-    REX_NO_DISCARD constexpr int32 popcount(T val)
+    RSL_NO_DISCARD constexpr int32 popcount(T val)
     {
       if constexpr(sizeof(val) <= sizeof(uint32))
       {
@@ -275,7 +275,7 @@ namespace rsl
     }
 
     template <typename T>
-    REX_NO_DISCARD constexpr T byteswap(T val)
+    RSL_NO_DISCARD constexpr T byteswap(T val)
     {
       if constexpr(sizeof(val) == 1)
       {
@@ -283,7 +283,7 @@ namespace rsl
       }
       else if constexpr(sizeof(val) == 2)
       {
-#if REX_COMPILER_MSVC
+#if RSL_COMPILER_MSVC
         return _byteswap_ushort(val);
 #else
         return __builtin_bswap16(val);
@@ -291,7 +291,7 @@ namespace rsl
       }
       else if constexpr(sizeof(val) == 4)
       {
-#if REX_COMPILER_MSVC
+#if RSL_COMPILER_MSVC
         return _byteswap_ulong(val);
 #else
         return __builtin_bswap32(val);
@@ -299,7 +299,7 @@ namespace rsl
       }
       else if constexpr(sizeof(val) == 8)
       {
-#if REX_COMPILER_MSVC
+#if RSL_COMPILER_MSVC
         return _byteswap_uint64(val);
 #else
         return __builtin_bswap64(val);
@@ -312,7 +312,7 @@ namespace rsl
     }
 
     template <typename T>
-    REX_NO_DISCARD constexpr T bit_ceil(const T val)
+    RSL_NO_DISCARD constexpr T bit_ceil(const T val)
     {
       static_assert(rsl::is_unsigned_v<T>, "bit_ceil can only be called with a unsigned type");
 

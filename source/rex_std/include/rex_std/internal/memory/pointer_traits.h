@@ -88,7 +88,7 @@ namespace rsl
 
       using ref_type = conditional_t<is_void_v<element_type>, char, element_type>&;
 
-      REX_NO_DISCARD static pointer pointer_to(ref_type val)
+      RSL_NO_DISCARD static pointer pointer_to(ref_type val)
       {
         return T::pointer_to(val);
       }
@@ -105,7 +105,7 @@ namespace rsl
 
       using ref_type = conditional_t<is_void_v<T>, char, T>&;
 
-      REX_NO_DISCARD constexpr pointer pointer_to(ref_type val)
+      RSL_NO_DISCARD constexpr pointer pointer_to(ref_type val)
       {
         return rsl::addressof(val);
       }

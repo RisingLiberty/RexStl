@@ -12,7 +12,7 @@
 
 #pragma once
 
-#ifdef REX_ENABLE_WITH_CPP20
+#ifdef RSL_ENABLE_WITH_CPP20
 
   #include "rex_std/disable_std_checking.h"
   #include "rex_std/std_alias_defines.h"
@@ -24,18 +24,18 @@ namespace rsl
   inline namespace v1
   {
 
-    REX_STD_CLASS_ALIAS(stop_token);
-    REX_STD_CLASS_ALIAS(stop_source);
+    RSL_CLASS_ALIAS(stop_token);
+    RSL_CLASS_ALIAS(stop_source);
 
-    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename Callback>, stop_callback, Callback);
+    RSL_TEMPLATED_CLASS_ALIAS(template <typename Callback>, stop_callback, Callback);
 
-    REX_STD_CLASS_ALIAS(nostopstate_t);
+    RSL_CLASS_ALIAS(nostopstate_t);
 
-    REX_STD_OBJECT_ALIAS(nostopstate);
+    RSL_OBJECT_ALIAS(nostopstate);
 
   } // namespace v1
 } // namespace rsl
 
   #include "rex_std/enable_std_checking.h"
 
-#endif // REX_ENABLE_WITH_CPP20
+#endif // RSL_ENABLE_WITH_CPP20

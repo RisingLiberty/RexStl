@@ -12,7 +12,7 @@
 
 #include "rex_std/internal/type_traits/integral_constant.h"
 
-#ifdef REX_ENABLE_WITH_CPP23
+#ifdef RSL_ENABLE_WITH_CPP23
 
 namespace rsl
 {

@@ -21,22 +21,22 @@ namespace rsl
 {
   inline namespace v1
   {
-#if defined(REX_PLATFORM_ARM64)
-  #if defined(REX_COMPILER_MSVC)
-    #define REX_ARM_DMB_ISH   _ARM64_BARRIER_ISH
-    #define REX_ARM_DMB_ISHST _ARM64_BARRIER_ISHST
-    #define REX_ARM_DMB_ISHLD _ARM64_BARRIER_ISHLD
-  #elif defined(REX_COMPILER_GCC) || defined(REX_COMPILED_CLANG)
-    #define REX_ARM_DMB_ISH   ish
-    #define REX_ARM_DMB_ISHST ishst
-    #define REX_ARM_DMB_ISHLD ishld
+#if defined(RSL_PLATFORM_ARM64)
+  #if defined(RSL_COMPILER_MSVC)
+    #define RSL_ARM_DMB_ISH   _ARM64_BARRIER_ISH
+    #define RSL_ARM_DMB_ISHST _ARM64_BARRIER_ISHST
+    #define RSL_ARM_DMB_ISHLD _ARM64_BARRIER_ISHLD
+  #elif defined(RSL_COMPILER_GCC) || defined(RSL_COMPILED_CLANG)
+    #define RSL_ARM_DMB_ISH   ish
+    #define RSL_ARM_DMB_ISHST ishst
+    #define RSL_ARM_DMB_ISHLD ishld
   #endif
 #endif
 
-    REX_FORCE_INLINE void memory_barrier()
+    RSL_FORCE_INLINE void memory_barrier()
     {
-#if defined(REX_COMPILER_MSVC)
-  #if defined(REX_PLATFORM_X64)
+#if defined(RSL_COMPILER_MSVC)
+  #if defined(RSL_PLATFORM_X64)
       // NOTE:
       // While it makes no sense for a hardware memory barrier to not imply a compiler barrier.
       // MSVC docs do not explicitly state that, so better to be safe than sorry chasing down
@@ -44,13 +44,13 @@ namespace rsl
 
       volatile long _;
       _InterlockedExchangeAdd(&_, 0);
-  #elif defined(REX_PLATFORM_ARM64)
+  #elif defined(RSL_PLATFORM_ARM64)
       compiler_barrier();
-      __dmb(REX_ARM_DMB_ISH);
+      __dmb(RSL_ARM_DMB_ISH);
       compiler_barrier();
   #endif
-#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
-  #if defined(REX_PLATFORM_X64)
+#elif defined(RSL_COMPILER_GCC) || defined(RSL_COMPILER_CLANG)
+  #if defined(RSL_PLATFORM_X64)
       // NOTE:
       //
       // mfence orders all loads/stores to/from all memory types.
@@ -65,27 +65,27 @@ namespace rsl
       //
       // Accounting for Red Zones or Cachelines doesn't provide extra benefit.
       __asm__ __volatile__("lock; addl $0, -8(%%rsp)" ::: "memory", "cc");    // NOLINT(hicpp-no-assembler)
-  #elif defined(REX_PLATFORM_ARM64)
-      __asm__ __volatile__("dmb " STRINGIZE(REX_ARM_DMB_ISH) ::: "memory"); // NOLINT(hicpp-no-assembler)
+  #elif defined(RSL_PLATFORM_ARM64)
+      __asm__ __volatile__("dmb " STRINGIZE(RSL_ARM_DMB_ISH) ::: "memory"); // NOLINT(hicpp-no-assembler)
   #endif
 #else
       static_assert("memory barrier not implemented");
 #endif
     }
-    REX_FORCE_INLINE void read_memory_barrier()
+    RSL_FORCE_INLINE void read_memory_barrier()
     {
-#ifdef REX_PLATFORM_X64
+#ifdef RSL_PLATFORM_X64
       compiler_barrier();
 #else
-      __asm__ __volatile__("dmb " STRINGIZE(REX_ARM_DMB_ISHLD) ::: "memory"); // NOLINT(hicpp-no-assembler)
+      __asm__ __volatile__("dmb " STRINGIZE(RSL_ARM_DMB_ISHLD) ::: "memory"); // NOLINT(hicpp-no-assembler)
 #endif
     }
-    REX_FORCE_INLINE void write_memory_barrier()
+    RSL_FORCE_INLINE void write_memory_barrier()
     {
-#ifdef REX_PLATFORM_X64
+#ifdef RSL_PLATFORM_X64
       compiler_barrier();
 #else
-      __asm__ __volatile__("dmb " STRINGIZE(REX_ARM_DMB_ISHST) ::: "memory"); // NOLINT(hicpp-no-assembler)
+      __asm__ __volatile__("dmb " STRINGIZE(RSL_ARM_DMB_ISHST) ::: "memory"); // NOLINT(hicpp-no-assembler)
 #endif
     }
   } // namespace v1

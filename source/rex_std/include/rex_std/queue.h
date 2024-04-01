@@ -31,18 +31,18 @@ namespace rsl
     template <typename T, typename Allocator>
     class vector;
 
-    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename T, typename Container = rsl::deque<T, rsl::allocator>>, queue, T, Container);
+    RSL_TEMPLATED_CLASS_ALIAS(template <typename T, typename Container = rsl::deque<T, rsl::allocator>>, queue, T, Container);
 
-    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename T, typename Container = rsl::deque<T, rsl::allocator>, typename Compare = rsl::less<typename Container::value_type>>, priority_queue, T, Container, Compare);
+    RSL_TEMPLATED_CLASS_ALIAS(template <typename T, typename Container = rsl::deque<T, rsl::allocator>, typename Compare = rsl::less<typename Container::value_type>>, priority_queue, T, Container, Compare);
 
-    REX_STD_TEMPLATED_CLASS_ALIAS(template <typename T, typename Alloc>, uses_allocator, T, Alloc);
+    RSL_TEMPLATED_CLASS_ALIAS(template <typename T, typename Alloc>, uses_allocator, T, Alloc);
 
-    REX_STD_FUNC_ALIAS(operator==);
-    REX_STD_FUNC_ALIAS(operator!=);
-    REX_STD_FUNC_ALIAS(operator<);
-    REX_STD_FUNC_ALIAS(operator<=);
-    REX_STD_FUNC_ALIAS(operator>);
-    REX_STD_FUNC_ALIAS(operator>=);
+    RSL_FUNC_ALIAS(operator==);
+    RSL_FUNC_ALIAS(operator!=);
+    RSL_FUNC_ALIAS(operator<);
+    RSL_FUNC_ALIAS(operator<=);
+    RSL_FUNC_ALIAS(operator>);
+    RSL_FUNC_ALIAS(operator>=);
 
   } // namespace v1
 } // namespace rsl

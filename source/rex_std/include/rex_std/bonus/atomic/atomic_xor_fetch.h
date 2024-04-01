@@ -18,7 +18,7 @@ namespace rsl
 {
   inline namespace v1
   {
-#if defined(REX_COMPILER_MSVC)
+#if defined(RSL_COMPILER_MSVC)
     template <typename T>
     atomic_t<T> atomic_xor_fetch(T* obj, T mask, rsl::memory_order order)
     {
@@ -48,7 +48,7 @@ namespace rsl
         return 0;
       }
     }
-#elif defined(REX_COMPILER_GCC) || defined(REX_COMPILER_CLANG)
+#elif defined(RSL_COMPILER_GCC) || defined(RSL_COMPILER_CLANG)
     template <typename T>
     atomic_t<T> atomic_xor_fetch(T* obj, T mask, rsl::memory_order order)
     {
