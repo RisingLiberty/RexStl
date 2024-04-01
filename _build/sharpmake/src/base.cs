@@ -409,7 +409,7 @@ public abstract class BasicCPPProject : Project
     {
       case Platform.win32:
       case Platform.win64:
-        conf.add_public_define("REX_PLATFORM_WINDOWS");
+        conf.add_public_define("RSL_PLATFORM_WINDOWS");
         break;
       default:
         break;
@@ -423,13 +423,13 @@ public abstract class BasicCPPProject : Project
     switch (target.Compiler)
     {
       case Compiler.MSVC:
-        conf.add_public_define("REX_COMPILER_MSVC");
+        conf.add_public_define("RSL_COMPILER_MSVC");
         break;
       case Compiler.Clang:
-        conf.add_public_define("REX_COMPILER_CLANG");
+        conf.add_public_define("RSL_COMPILER_CLANG");
         break;
       case Compiler.GCC:
-        conf.add_public_define("REX_COMPILER_GCC");
+        conf.add_public_define("RSL_COMPILER_GCC");
         break;
       default:
         break;
@@ -445,7 +445,7 @@ public abstract class BasicCPPProject : Project
       case Config.assert:
       case Config.debug:
       case Config.debug_opt:
-        conf.add_public_define("REX_ENABLE_ASSERTS");
+        conf.add_public_define("RSL_ENABLE_ASSERTS");
         break;
       case Config.release:
         break;
