@@ -95,7 +95,7 @@ public static class Main
   // This way we only need to maintain our ninja files and we get the copmiler dbs for free
   private static void GenerateCompilerDatabases()
   {
-    Console.WriteLine("Generating compiler databases");
+    Builder.Instance.LogWriteLine("Generating compiler databases");
 
     System.Diagnostics.ProcessStartInfo start_info = new System.Diagnostics.ProcessStartInfo();
     start_info.FileName = "cmd.exe";
@@ -130,7 +130,7 @@ public static class Main
 
     string testProjectsPath = Path.Combine(Globals.Root, Globals.BuildFolder, "test_projects.json");
 
-    Console.WriteLine($"Generating {testProjectsPath}");
+    Builder.Instance.LogWriteLine($"Generating {testProjectsPath}");
 
     File.WriteAllText(testProjectsPath, jsonBlob);
   }
@@ -144,9 +144,9 @@ public static class Main
 
     // It's possible Visual Studio isn't installed on this machine
     // If it's not, then we can't set the root for Visual Studio
-    if (Util.GetVisualStudioInstallationsFromQuery(DevEnv.vs2019).Count > 0)
+    if (Util.GetVisualStudioInstallationsFromQuery(ProjectGen.Settings.IDE.ToDevEnv()).Count > 0)
     {
-      KitsRootPaths.SetUseKitsRootForDevEnv(DevEnv.vs2019, KitsRootEnum.KitsRoot10, Options.Vc.General.WindowsTargetPlatformVersion.v10_0_19041_0);
+      KitsRootPaths.SetUseKitsRootForDevEnv(ProjectGen.Settings.IDE.ToDevEnv(), KitsRootEnum.KitsRoot10, Options.Vc.General.WindowsTargetPlatformVersion.v10_0_19041_0);
     }
   }
 
@@ -168,13 +168,13 @@ public static class Main
           ProjectGen.Settings.GraphicsAPI = ProjectGen.GraphicsAPI.OpenGL;
           break;
         default:
-          Console.WriteLine("[WARNING] Could not determine OS, reverting graphics API to OpenGL");
+          Builder.Instance.LogWriteLine("[WARNING] Could not determine OS, reverting graphics API to OpenGL");
           ProjectGen.Settings.GraphicsAPI = ProjectGen.GraphicsAPI.OpenGL;
           break;
       }
     }
 
-    Console.WriteLine($"Using Graphics API: {ProjectGen.Settings.GraphicsAPI}");
+    Builder.Instance.LogWriteLine($"Using Graphics API: {ProjectGen.Settings.GraphicsAPI}");
   }
 
   // Initialize the generation settings based on the config that's loaded from disk
@@ -184,15 +184,20 @@ public static class Main
 
     ProjectGen.Settings.ClangTidyRegex = config["clang-tidy-regex"].Value.GetString();
     ProjectGen.Settings.PerformAllClangTidyChecks = config["perform-all-clang-tidy-checks"].Value.GetBoolean();
-    ProjectGen.Settings.NoClangTools = config["no-clang-tools"].Value.GetBoolean();
+    ProjectGen.Settings.ClangToolsEnabled = config["enable-clang-tools"].Value.GetBoolean();
     ProjectGen.Settings.IntermediateDir = config["intermediate-dir"].Value.GetString();
     ProjectGen.Settings.UnitTestsEnabled = config["enable-unit-tests"].Value.GetBoolean();
     ProjectGen.Settings.CoverageEnabled = config["enable-code-coverage"].Value.GetBoolean();
     ProjectGen.Settings.AsanEnabled = config["enable-address-sanitizer"].Value.GetBoolean();
     ProjectGen.Settings.UbsanEnabled = config["enable-ub-sanitizer"].Value.GetBoolean();
     ProjectGen.Settings.FuzzyTestingEnabled = config["enable-fuzzy-testing"].Value.GetBoolean();
+    ProjectGen.Settings.EnableDefaultGeneration = config["disable-default-generation"].Value.GetBoolean() == false;
+    ProjectGen.Settings.EnableDefaultConfigs = config["disable-default-configs"].Value.GetBoolean() == false;
     ProjectGen.Settings.AutoTestsEnabled = config["enable-auto-tests"].Value.GetBoolean();
-    Enum.TryParse(config["IDE"].Value.GetString(), ignoreCase:true, out ProjectGen.Settings.IDE);
+    if (!Enum.TryParse(config["IDE"].Value.GetString(), ignoreCase:true, out ProjectGen.Settings.IDE))
+    {
+      Builder.Instance.LogWriteLine($"Error: Invalid IDE passed in. Passed in \"{config["IDE"].Value.GetString()}\"");
+    }
     ProjectGen.Settings.DisableClangTidyForThirdParty = config["disable-clang-tidy-for-thirdparty"].Value.GetBoolean();
     ProjectGen.Settings.UnityBuildsDisabled = config["disable-unity-builds"].Value.GetBoolean();
   }
@@ -206,6 +211,6 @@ public static class Main
 
     KitsRootPaths.SetCompilerPaths(Compiler.MSVC, paths["msvc_compiler_path"], paths["msvc_linker_path"], paths["msvc_archiver_path"], "");
     KitsRootPaths.SetCompilerPaths(Compiler.Clang, paths["clang++_compiler_path"], paths["clang_linker_path"], paths["clang_archiver_path"], paths["clang_ranlib_path"], paths["clang_compiler_path"]);
-    KitsRootPaths.SetNinjaPath(paths["ninja_path"]);
+    KitsRootPaths.SetNinjaPath(paths["ninja_path"], ProjectGen.Settings.IDE.ToDevEnv());
   }
 }

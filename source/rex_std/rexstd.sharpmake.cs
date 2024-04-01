@@ -23,6 +23,44 @@ public class RexStd : BasicCPPProject
     conf.Output = Configuration.OutputType.Lib;
   }
 
+  protected override void SetupCompilerRules(RexConfiguration conf, RexTarget target)
+  {
+    base.SetupCompilerRules(conf, target);
+
+    switch (target.Compiler)
+    {
+      case Compiler.MSVC:
+        conf.add_public_define("RSL_COMPILER_MSVC");
+        break;
+      case Compiler.Clang:
+        conf.add_public_define("RSL_COMPILER_CLANG");
+        break;
+      case Compiler.GCC:
+        conf.add_public_define("RSL_COMPILER_GCC");
+        break;
+      default:
+        break;
+    }
+  }
+
+  protected override void SetupConfigRules(RexConfiguration conf, RexTarget target)
+  {
+    base.SetupConfigRules(conf, target);
+
+    switch (target.Config)
+    {
+      case Config.debug:
+      case Config.debug_opt:
+        conf.add_public_define("RSL_ENABLE_ASSERTS");
+        break;
+      case Config.release:
+        break;
+      case Config.coverage:
+        ClangToolsEnabled = false;
+        break;
+    }
+  }
+
   protected override void SetupPlatformRules(RexConfiguration conf, RexTarget target)
   {
     base.SetupPlatformRules(conf, target);
@@ -31,9 +69,11 @@ public class RexStd : BasicCPPProject
     {
       case Platform.win32:
         conf.add_public_define("RSL_PLATFORM_X86");
+        conf.add_public_define("RSL_PLATFORM_WINDOWS");
         break;
       case Platform.win64:
         conf.add_public_define("RSL_PLATFORM_X64");
+        conf.add_public_define("RSL_PLATFORM_WINDOWS");
         break;
       default:
         break;

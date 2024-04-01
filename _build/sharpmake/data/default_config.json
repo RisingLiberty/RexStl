@@ -7,8 +7,8 @@
     "Description": "Enable this to enable the second pass of clang-tidy checks.",
     "Value": false
   },
-  "no-clang-tools": {
-    "Description": "Disable all clang tools.",
+  "enable-clang-tools": {
+    "Description": "Enable all clang tools.",
     "Value": false
   },
   "intermediate-dir": {
@@ -35,6 +35,14 @@
     "Description": "Enable generation of fuzzy test projects",
     "Value": false
   },
+  "disable-default-generation": {
+    "Description": "Disable default projects from being generation",
+    "Value": false
+  },
+  "disable-default-configs": {
+    "Description": "Disable default configs from being generation",
+    "Value": false
+  },
   "enable-auto-tests": {
     "Description": "Enable generation of auto test projects",
     "Value": false
@@ -51,7 +59,8 @@
     "Description": "Select which IDE to use. Visual Studio is the default.",
     "Value": "None",
     "Options": [
-      "VisualStudio",
+      "VisualStudio19",
+      "VisualStudio22",
       "VSCode",
       "None"
     ]

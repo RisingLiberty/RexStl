@@ -63,14 +63,14 @@ namespace rsl
           is_processing_assert        = true;
           const fmt_stack_string& str = rsl::format(rsl::forward<Args>(args)...);
           internal::log_assert(str);
-          DEBUG_BREAK();
+          RSL_DEBUG_BREAK();
           return true;
         }
         else
         {
           // if this is hit, an assert occurred while processing another one.
           // to avoid circular dependency, we break here if there's a debugger attached
-          DEBUG_BREAK();
+          RSL_DEBUG_BREAK();
         }
       }
 

@@ -195,7 +195,8 @@ namespace ProjectGen
   public enum IDE
   {
     None,
-    VisualStudio,
+    VisualStudio19,
+    VisualStudio22,
     VSCode
   }
 
@@ -226,6 +227,10 @@ namespace ProjectGen
     Undefined
   }
 
+  // This is the class representing the json file holding all the test projects
+  // They get added during configuration stage
+  // in the post generation step, the json file listing these projects gets generated
+  // and written to disk
   public class TestProjectsFile
   {
     // Custom converter that we use to write the configurations
@@ -267,12 +272,35 @@ namespace ProjectGen
       }
     }
 
+    public enum RunnableType
+    {
+      Default,
+      Coverage,
+      Asan,
+      Ubsan,
+      Sanitizer
+    }
+
+    public class Runnable
+    {
+      public string Program { get; }
+
+      [JsonConverter(typeof(JsonStringEnumConverter))]
+      public RunnableType RunnableType { get; }
+
+      public Runnable(string program, RunnableType runnableType)
+      {
+        Program = program;
+        RunnableType = runnableType;
+      }
+    }
+
     public class TestProjectSettings
     {
       public string Name { get; }
       public string Root { get; }
       public string WorkingDir { get; }
-      public List<string> TargetPaths { get; } = new List<string>();
+      public List<Runnable> TargetRunnables { get; } = new List<Runnable>();
       public List<string> CompilerDBPaths { get; } = new List<string>();
 
       public TestProjectSettings(Project project)
@@ -285,6 +313,11 @@ namespace ProjectGen
         {
           var configTasks = PlatformRegistry.Get<Project.Configuration.IConfigurationTasks>(conf.Platform);
 
+          if (conf.Compiler != DevEnv.ninja)
+          {
+            continue;
+          }
+
           // Making sure our prefix and extension are filled in or we get an error when resolving
           if (conf.TargetFilePlatformPrefix == null)
             conf.TargetFilePlatformPrefix = configTasks.GetOutputFileNamePrefix(conf.Output);
@@ -295,11 +328,31 @@ namespace ProjectGen
           resolver.SetParameter("conf", conf);
           resolver.SetParameter("project", this);
           string fullTargetPath = resolver.Resolve(System.IO.Path.Combine(conf.TargetPath, conf.TargetFileFullNameWithExtension));
+          RunnableType runnableType = RunnableTypeForConfig(conf);
 
-          TargetPaths.Add(fullTargetPath);
+          TargetRunnables.Add(new Runnable(fullTargetPath, runnableType));
           CompilerDBPaths.Add(Utils.GetCompilerDBOutputPath((RexConfiguration)conf));
         }
 
+      }
+
+      private RunnableType RunnableTypeForConfig(Project.Configuration conf)
+      {
+        RexTarget target = conf.Target as RexTarget;
+        switch (target.Config)
+        {
+          case Config.debug:
+          case Config.debug_opt:
+          case Config.release:
+            return RunnableType.Default;
+
+          case Config.sanitization:
+            return RunnableType.Sanitizer;
+          case Config.coverage:
+            return RunnableType.Coverage;
+        }
+
+        return RunnableType.Default;
       }
     }
 
@@ -326,13 +379,15 @@ namespace ProjectGen
   // 
   public class Settings
   {
-    static public bool NoClangTools = false;                      // Are clang tools enabled?
+    static public bool ClangToolsEnabled = false;                 // Are clang tools enabled?
     static public bool PerformAllClangTidyChecks = false;         // Perform all configured clang tidy checks, not just the warnings
     static public bool DisableClangTidyForThirdParty = true;      // Set to disable clang-tidy running on third party projects
     static public string IntermediateDir = "";                    // Set the directory name to be used under the build output directory for this generation
     static public string ConfigFileDir = "";                      // Filepath of the config file passed in to this instance of sharpmake
 
     // Flags for various different tests
+    static public bool EnableDefaultGeneration = false;           // Enable the default projects (eg. apps without tests)
+    static public bool EnableDefaultConfigs = false;           // Enable the default configuration (eg. debug, debug_opt, release)
     static public bool UnitTestsEnabled = false;                  // Enable generation of unit test projects
     static public bool CoverageEnabled = false;                   // Generate solution to test code coverage
     static public bool AsanEnabled = false;                       // Enable address sanitizer configuration
@@ -340,7 +395,7 @@ namespace ProjectGen
     static public bool FuzzyTestingEnabled = false;               // Generate solution for fuzzy testing
     static public bool AutoTestsEnabled = false;                  // Generate solution for auto testing
 
-    static public IDE IDE = IDE.VisualStudio;                     // Choose the IDE this sharpmake instance is generating for
+    static public IDE IDE = IDE.VisualStudio19;                     // Choose the IDE this sharpmake instance is generating for
 
     static public string ClangTidyRegex = "";                     // Regex of files to run clang-tidy on
     static public GraphicsAPI GraphicsAPI = GraphicsAPI.Unknown;  // The graphics API to be used by the engine
@@ -349,5 +404,21 @@ namespace ProjectGen
     static public List<GenerateCompilerDBCommand> GenerateCompilerDBCommands = new List<GenerateCompilerDBCommand>(); // List of command wrappers to generate compiler dbs for.
     
     static public TestProjectsFile TestProjectsFile = new TestProjectsFile();
+  }
+}
+
+public static class Extensions
+{
+  public static DevEnv ToDevEnv(this ProjectGen.IDE ide)
+  {
+    switch (ide)
+    {
+      case ProjectGen.IDE.VisualStudio19:
+        return DevEnv.vs2019;
+      case ProjectGen.IDE.VisualStudio22:
+        return DevEnv.vs2022;
+    }
+    return DevEnv.vs2019;
+
   }
 }

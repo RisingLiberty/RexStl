@@ -110,8 +110,8 @@ public class RegenerateProjects : Project
 
     // The custom build steps just perform a generation step
     conf.CustomBuildSettings = new Configuration.NMakeBuildSettings();
-    conf.CustomBuildSettings.BuildCommand = $"py {rexpyPath} generate -no_default_config -IDE VisualStudio"; // Use what's previously generated
-    conf.CustomBuildSettings.RebuildCommand = $"py {rexpyPath} generate -IDE VisualStudio"; // Perform a generation from scratch
+    conf.CustomBuildSettings.BuildCommand = $"py {rexpyPath} generate -no_default_config -IDE VisualStudio19"; // Use what's previously generated
+    conf.CustomBuildSettings.RebuildCommand = $"py {rexpyPath} generate -IDE VisualStudio19"; // Perform a generation from scratch
     conf.CustomBuildSettings.CleanCommand = "";
     conf.CustomBuildSettings.OutputFile = "";
   }
@@ -133,7 +133,7 @@ public abstract class BasicCPPProject : Project
   {
     LoadToolPaths();
 
-    ClangToolsEnabled = !ProjectGen.Settings.NoClangTools;
+    ClangToolsEnabled = ProjectGen.Settings.ClangToolsEnabled;
   }
 
   // Legacy function and should be removed
@@ -405,57 +405,21 @@ public abstract class BasicCPPProject : Project
   // This is meant to be overriden by derived projects and extended where needed
   protected virtual void SetupPlatformRules(RexConfiguration conf, RexTarget target)
   {
-    switch (target.Platform)
-    {
-      case Platform.win32:
-      case Platform.win64:
-        conf.add_public_define("RSL_PLATFORM_WINDOWS");
-        break;
-      default:
-        break;
-    }
+    // Nothing to implement
   }
   // Setup rules that need to be defined based on the compiler
   // This usually means adding or removing defines, but other options are available as well.
   // This is meant to be overriden by derived projects and extended where needed
   protected virtual void SetupCompilerRules(RexConfiguration conf, RexTarget target)
   {
-    switch (target.Compiler)
-    {
-      case Compiler.MSVC:
-        conf.add_public_define("RSL_COMPILER_MSVC");
-        break;
-      case Compiler.Clang:
-        conf.add_public_define("RSL_COMPILER_CLANG");
-        break;
-      case Compiler.GCC:
-        conf.add_public_define("RSL_COMPILER_GCC");
-        break;
-      default:
-        break;
-    }
+    // Nothing to implement
   }
   // Setup rules that need to be defined based on the config
   // This usually means adding or removing defines, but other options are available as well.
   // This is meant to be overriden by derived projects and extended where needed
   protected virtual void SetupConfigRules(RexConfiguration conf, RexTarget target)
   {
-    switch (target.Config)
-    {
-      case Config.assert:
-      case Config.debug:
-      case Config.debug_opt:
-        conf.add_public_define("RSL_ENABLE_ASSERTS");
-        break;
-      case Config.release:
-        break;
-      case Config.coverage:
-      case Config.address_sanitizer:
-      case Config.undefined_behavior_sanitizer:
-      case Config.fuzzy:
-        ClangToolsEnabled = false;
-        break;
-    }
+    // Nothing to implement
   }
   // Setup rules for events that need to get fired after a build has finished.
   // Remember that these need to be in batch format.
@@ -521,26 +485,24 @@ public abstract class BasicCPPProject : Project
   // Set testing flags based on configuration specified by the user when calling Sharpmake.
   private void SetupTestingFlags(RexConfiguration conf, RexTarget target)
   {
-    switch (target.Config)
+    if (ProjectGen.Settings.CoverageEnabled)
     {
-      case Config.coverage:
-        conf.NinjaGenerateCodeCoverage = true;
-        break;
-      case Config.address_sanitizer:
-        conf.NinjaEnableAddressSanitizer = true;
-        break;
-      case Config.undefined_behavior_sanitizer:
-        conf.NinjaEnableUndefinedBehaviorSanitizer = true;
-        break;
-      // To have the best kind of testing for fuzzy testing
-      // We enable both asan and ubsan when fuzzy config is specified
-      case Config.fuzzy:
-        conf.NinjaEnableAddressSanitizer = true;
-        conf.NinjaEnableUndefinedBehaviorSanitizer = true;
-        conf.NinjaEnableFuzzyTesting = true;
-        break;
-      default:
-        break;
+      conf.NinjaGenerateCodeCoverage = true;
+    }
+
+    if (ProjectGen.Settings.AsanEnabled)
+    {
+      conf.NinjaEnableAddressSanitizer = true;
+    }
+
+    if (ProjectGen.Settings.UbsanEnabled)
+    {
+      conf.NinjaEnableUndefinedBehaviorSanitizer = true;
+    }
+
+    if (ProjectGen.Settings.FuzzyTestingEnabled)
+    {
+      conf.NinjaEnableFuzzyTesting = true;
     }
   }
 
@@ -799,10 +761,10 @@ public class TestProject : BasicCPPProject
   {
     switch (target.Config)
     {
-      case Config.address_sanitizer:
+      case Config.coverage:
       conf.add_public_define("CATCH_CONFIG_DISABLE"); // we don't need to check catch, it massively increase link time (47min at time of writing -> 5min when disabled)
         break;
-      case Config.undefined_behavior_sanitizer:
+      case Config.sanitization:
       conf.add_public_define("CATCH_CONFIG_DISABLE"); // we don't need to check catch, it massively increase link time (47min at time of writing -> 5min when disabled)
         break;
       default:
