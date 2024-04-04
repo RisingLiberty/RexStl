@@ -44,66 +44,66 @@
 // SOFTWARE.
 
 #ifndef NEARGYE_MAGIC_ENUM_HPP
-  #define NEARGYE_MAGIC_ENUM_HPP
+#define NEARGYE_MAGIC_ENUM_HPP
 
-  #define MAGIC_ENUM_VERSION_MAJOR 0
-  #define MAGIC_ENUM_VERSION_MINOR 7
-  #define MAGIC_ENUM_VERSION_PATCH 3
+#define MAGIC_ENUM_VERSION_MAJOR 0
+#define MAGIC_ENUM_VERSION_MINOR 7
+#define MAGIC_ENUM_VERSION_PATCH 3
 
-  #include "rex_std/array.h"
-  #include "rex_std/assert.h"
-  #include "rex_std/bonus/types.h"
-  #include "rex_std/internal/math/log2.h"
-  #include "rex_std/iostream.h"
-  #include "rex_std/limits.h"
-  #include "rex_std/string.h"
-  #include "rex_std/string_view.h"
-  #include "rex_std/type_traits.h"
-  #include "rex_std/utility.h"
+#include "rex_std/array.h"
+#include "rex_std/assert.h"
+#include "rex_std/bonus/types.h"
+#include "rex_std/internal/math/log2.h"
+#include "rex_std/iostream.h"
+#include "rex_std/limits.h"
+#include "rex_std/string.h"
+#include "rex_std/string_view.h"
+#include "rex_std/type_traits.h"
+#include "rex_std/utility.h"
 
-  #if defined(MAGIC_ENUM_CONFIG_FILE)
-    #include MAGIC_ENUM_CONFIG_FILE
-  #endif
+#if defined(MAGIC_ENUM_CONFIG_FILE)
+#include MAGIC_ENUM_CONFIG_FILE
+#endif
 
-  #if !defined(MAGIC_ENUM_USING_ALIAS_OPTIONAL)
-    #include "rex_std/optional.h"
-  #endif
+#if !defined(MAGIC_ENUM_USING_ALIAS_OPTIONAL)
+#include "rex_std/optional.h"
+#endif
 
-  #if defined(__clang__)
-    #pragma clang diagnostic push
-  #elif defined(__GNUC__)
-    #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Wmaybe-uninitialized" // May be used uninitialized 'return {};'.
-  #elif defined(_MSC_VER)
-    #pragma warning(push)
-    #pragma warning(disable : 26495) // Variable 'static_string<N>::chars_' is uninitialized.
-    #pragma warning(disable : 28020) // Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value.
-    #pragma warning(disable : 26451) // The expression '0<=_Param_(1)&&_Param_(1)<=1-1' is not true at this call.
-  #endif
+#if defined(__clang__)
+#pragma clang diagnostic push
+#elif defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized" // May be used uninitialized 'return {};'.
+#elif defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable : 26495) // Variable 'static_string<N>::chars_' is uninitialized.
+#pragma warning(disable : 28020) // Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value.
+#pragma warning(disable : 26451) // The expression '0<=_Param_(1)&&_Param_(1)<=1-1' is not true at this call.
+#endif
 
-  // Checks enum_refl compiler compatibility.
-  #if defined(__clang__) && __clang_major__ >= 5 || defined(__GNUC__) && __GNUC__ >= 9 || defined(_MSC_VER) && _MSC_VER >= 1910
-    #undef MAGIC_ENUM_SUPPORTED
-    #define MAGIC_ENUM_SUPPORTED 1
-  #endif
+// Checks enum_refl compiler compatibility.
+#if defined(__clang__) && __clang_major__ >= 5 || defined(__GNUC__) && __GNUC__ >= 9 || defined(_MSC_VER) && _MSC_VER >= 1910
+#undef MAGIC_ENUM_SUPPORTED
+#define MAGIC_ENUM_SUPPORTED 1
+#endif
 
-  // Checks enum_refl compiler aliases compatibility.
-  #if defined(__clang__) && __clang_major__ >= 5 || defined(__GNUC__) && __GNUC__ >= 9 || defined(_MSC_VER) && _MSC_VER >= 1920
-    #undef MAGIC_ENUM_SUPPORTED_ALIASES
-    #define MAGIC_ENUM_SUPPORTED_ALIASES 1
-  #endif
+// Checks enum_refl compiler aliases compatibility.
+#if defined(__clang__) && __clang_major__ >= 5 || defined(__GNUC__) && __GNUC__ >= 9 || defined(_MSC_VER) && _MSC_VER >= 1920
+#undef MAGIC_ENUM_SUPPORTED_ALIASES
+#define MAGIC_ENUM_SUPPORTED_ALIASES 1
+#endif
 
-  // Enum value must be greater or equals than MAGIC_ENUM_RANGE_MIN. By default MAGIC_ENUM_RANGE_MIN = -128.
-  // If need another min range for all enum types by default, redefine the macro MAGIC_ENUM_RANGE_MIN.
-  #if !defined(MAGIC_ENUM_RANGE_MIN)
-    #define MAGIC_ENUM_RANGE_MIN -128
-  #endif
+// Enum value must be greater or equals than MAGIC_ENUM_RANGE_MIN. By default MAGIC_ENUM_RANGE_MIN = -128.
+// If need another min range for all enum types by default, redefine the macro MAGIC_ENUM_RANGE_MIN.
+#if !defined(MAGIC_ENUM_RANGE_MIN)
+#define MAGIC_ENUM_RANGE_MIN -128
+#endif
 
-  // Enum value must be less or equals than MAGIC_ENUM_RANGE_MAX. By default MAGIC_ENUM_RANGE_MAX = 128.
-  // If need another max range for all enum types by default, redefine the macro MAGIC_ENUM_RANGE_MAX.
-  #if !defined(MAGIC_ENUM_RANGE_MAX)
-    #define MAGIC_ENUM_RANGE_MAX 256
-  #endif
+// Enum value must be less or equals than MAGIC_ENUM_RANGE_MAX. By default MAGIC_ENUM_RANGE_MAX = 128.
+// If need another max range for all enum types by default, redefine the macro MAGIC_ENUM_RANGE_MAX.
+#if !defined(MAGIC_ENUM_RANGE_MAX)
+#define MAGIC_ENUM_RANGE_MAX 256
+#endif
 
 namespace rsl
 {
@@ -113,25 +113,25 @@ namespace rsl
     {
 
       // If need another optional type, define the macro MAGIC_ENUM_USING_ALIAS_OPTIONAL.
-  #if defined(MAGIC_ENUM_USING_ALIAS_OPTIONAL)
+#if defined(MAGIC_ENUM_USING_ALIAS_OPTIONAL)
       MAGIC_ENUM_USING_ALIAS_OPTIONAL
-  #else
+#else
       using rsl::optional;
-  #endif
+#endif
 
       // If need another rsl::string_view type, define the macro MAGIC_ENUM_USING_ALIAS_STRING_VIEW.
-  #if defined(MAGIC_ENUM_USING_ALIAS_STRING_VIEW)
+#if defined(MAGIC_ENUM_USING_ALIAS_STRING_VIEW)
       MAGIC_ENUM_USING_ALIAS_STRING_VIEW
-  #else
+#else
       using rsl::string_view;
-  #endif
+#endif
 
       // If need another string type, define the macro MAGIC_ENUM_USING_ALIAS_STRING.
-  #if defined(MAGIC_ENUM_USING_ALIAS_STRING)
+#if defined(MAGIC_ENUM_USING_ALIAS_STRING)
       MAGIC_ENUM_USING_ALIAS_STRING
-  #else
+#else
       using rsl::string;
-  #endif
+#endif
 
       namespace customize
       {
@@ -172,15 +172,15 @@ namespace rsl
 
         template <typename T>
         struct supported
-  #if defined(MAGIC_ENUM_SUPPORTED) && MAGIC_ENUM_SUPPORTED || defined(MAGIC_ENUM_NO_CHECK_SUPPORT)
-            : rsl::true_type
+#if defined(MAGIC_ENUM_SUPPORTED) && MAGIC_ENUM_SUPPORTED || defined(MAGIC_ENUM_NO_CHECK_SUPPORT)
+          : rsl::true_type
         {
         };
-  #else
-            : rsl::false_type
+#else
+          : rsl::false_type
         {
         };
-  #endif
+#endif
 
         struct char_equal_to
         {
@@ -195,7 +195,7 @@ namespace rsl
         {
         public:
           constexpr explicit static_string(rsl::string_view str) noexcept
-              : static_string {str, rsl::make_index_sequence<N> {}}
+            : static_string{ str, rsl::make_index_sequence<N> {} }
           {
             // RSL_ASSERT_X(str.size() == N, "invalid static_string length");
           }
@@ -212,13 +212,13 @@ namespace rsl
 
           constexpr operator rsl::string_view() const noexcept
           {
-            return {data(), size()};
+            return { data(), size() };
           }
 
         private:
           template <card32... I>
           constexpr static_string(rsl::string_view str, rsl::index_sequence<I...>) noexcept
-              : chars_ {str[I]..., '\0'}
+            : chars_{ str[I]..., '\0' }
           {
           }
 
@@ -249,24 +249,24 @@ namespace rsl
 
         constexpr rsl::string_view pretty_name(rsl::string_view name) noexcept
         {
-          for(card32 i = name.size(); i > 0; --i)
+          for (card32 i = name.size(); i > 0; --i)
           {
-            if(!((name[i - 1] >= '0' && name[i - 1] <= '9') || (name[i - 1] >= 'a' && name[i - 1] <= 'z') || (name[i - 1] >= 'A' && name[i - 1] <= 'Z') ||
-  #if defined(MAGIC_ENUM_ENABLE_NONASCII)
-                 (name[i - 1] & 0x80) ||
-  #endif
-                 (name[i - 1] == '_')))
+            if (!((name[i - 1] >= '0' && name[i - 1] <= '9') || (name[i - 1] >= 'a' && name[i - 1] <= 'z') || (name[i - 1] >= 'A' && name[i - 1] <= 'Z') ||
+#if defined(MAGIC_ENUM_ENABLE_NONASCII)
+              (name[i - 1] & 0x80) ||
+#endif
+              (name[i - 1] == '_')))
             {
               name.remove_prefix(i);
               break;
             }
           }
 
-          if(name.size() > 0 && ((name.front() >= 'a' && name.front() <= 'z') || (name.front() >= 'A' && name.front() <= 'Z') ||
-  #if defined(MAGIC_ENUM_ENABLE_NONASCII)
-                                 (name.front() & 0x80) ||
-  #endif
-                                 (name.front() == '_')))
+          if (name.size() > 0 && ((name.front() >= 'a' && name.front() <= 'z') || (name.front() >= 'A' && name.front() <= 'Z') ||
+#if defined(MAGIC_ENUM_ENABLE_NONASCII)
+            (name.front() & 0x80) ||
+#endif
+            (name.front() == '_')))
           {
             return name;
           }
@@ -276,19 +276,19 @@ namespace rsl
 
         constexpr card32 find(rsl::string_view str, char c) noexcept
         {
-  #if defined(__clang__) && __clang_major__ < 9 && defined(__GLIBCXX__) || defined(_MSC_VER) && _MSC_VER < 1920 && !defined(__clang__)
+#if defined(__clang__) && __clang_major__ < 9 && defined(__GLIBCXX__) || defined(_MSC_VER) && _MSC_VER < 1920 && !defined(__clang__)
           // https://stackoverflow.com/questions/56484834/constexpr-stdString-viewfind-last-of-doesnt-work-on-clang-8-with-libstdc
           // https://developercommunity.visualstudio.com/content/problem/360432/vs20178-regression-c-failed-in-test.html
           constexpr bool workaround = true;
-  #else
+#else
           constexpr bool workaround = false;
-  #endif
+#endif
 
-          if constexpr(workaround)
+          if constexpr (workaround)
           {
-            for(card32 i = 0; i < str.size(); ++i)
+            for (card32 i = 0; i < str.size(); ++i)
             {
-              if(str[i] == c)
+              if (str[i] == c)
               {
                 return i;
               }
@@ -303,34 +303,34 @@ namespace rsl
         }
 
         template <typename T, card32 N, card32... I>
-        constexpr rsl::array<rsl::remove_cv_t<T>, N> to_array(T (&a)[N], rsl::index_sequence<I...>)
+        constexpr rsl::array<rsl::remove_cv_t<T>, N> to_array(T(&a)[N], rsl::index_sequence<I...>)
         {
-          return {{a[I]...}};
+          return { {a[I]...} };
         }
 
         template <typename BinaryPredicate>
         constexpr bool cmp_equal(rsl::string_view lhs, rsl::string_view rhs, BinaryPredicate&& p) noexcept(rsl::is_nothrow_invocable_r_v<bool, BinaryPredicate, char, char>)
         {
-  #if defined(_MSC_VER) && _MSC_VER < 1920 && !defined(__clang__)
+#if defined(_MSC_VER) && _MSC_VER < 1920 && !defined(__clang__)
           // https://developercommunity.visualstudio.com/content/problem/360432/vs20178-regression-c-failed-in-test.html
           // https://developercommunity.visualstudio.com/content/problem/232218/c-constexpr-string-view.html
           constexpr bool workaround = true;
-  #else
+#else
           constexpr bool workaround = false;
-  #endif
+#endif
           constexpr bool custom_predicate = rsl::negation_v<rsl::is_same<rsl::decay_t<BinaryPredicate>, char_equal_to>>;
 
-          if constexpr(custom_predicate || workaround)
+          if constexpr (custom_predicate || workaround)
           {
-            if(lhs.size() != rhs.size())
+            if (lhs.size() != rhs.size())
             {
               return false;
             }
 
             const auto size = lhs.size();
-            for(card32 i = 0; i < size; ++i)
+            for (card32 i = 0; i < size; ++i)
             {
-              if(!p(lhs[i], rhs[i]))
+              if (!p(lhs[i], rhs[i]))
               {
                 return false;
               }
@@ -351,20 +351,20 @@ namespace rsl
         {
           static_assert(rsl::is_integral_v<L> && rsl::is_integral_v<R>, "enum_refl::detail::cmp_less requires integral type.");
 
-          if constexpr(rsl::is_signed_v<L> == rsl::is_signed_v<R>)
+          if constexpr (rsl::is_signed_v<L> == rsl::is_signed_v<R>)
           {
             // If same signedness (both signed or both unsigned).
             return lhs < rhs;
           }
-          else if constexpr(rsl::is_same_v<L, bool>)
+          else if constexpr (rsl::is_same_v<L, bool>)
           { // bool special case due to msvc's C4804, C4018
             return static_cast<R>(lhs) < rhs;
           }
-          else if constexpr(rsl::is_same_v<R, bool>)
+          else if constexpr (rsl::is_same_v<R, bool>)
           { // bool special case due to msvc's C4804, C4018
             return lhs < static_cast<L>(rhs);
           }
-          else if constexpr(rsl::is_signed_v<R>)
+          else if constexpr (rsl::is_signed_v<R>)
           {
             // If 'right' is negative, then result is 'false', otherwise cast & compare.
             return rhs > 0 && lhs < static_cast<rsl::make_unsigned_t<R>>(rhs);
@@ -391,18 +391,18 @@ namespace rsl
         constexpr auto n() noexcept
         {
           static_assert(is_enum_v<E>, "enum_refl::detail::n requires enum type.");
-  #if defined(MAGIC_ENUM_SUPPORTED) && MAGIC_ENUM_SUPPORTED
-    #if defined(__clang__)
-          constexpr rsl::string_view name {__PRETTY_FUNCTION__ + 34, sizeof(__PRETTY_FUNCTION__) - 36};
-    #elif defined(__GNUC__)
-          constexpr rsl::string_view name {__PRETTY_FUNCTION__ + 49, sizeof(__PRETTY_FUNCTION__) - 51};
-    #elif defined(_MSC_VER)
-          constexpr rsl::string_view name {__FUNCSIG__ + 40, sizeof(__FUNCSIG__) - 57};
-    #endif
+#if defined(MAGIC_ENUM_SUPPORTED) && MAGIC_ENUM_SUPPORTED
+#if defined(__clang__)
+          constexpr rsl::string_view name{ __PRETTY_FUNCTION__ + 34, sizeof(__PRETTY_FUNCTION__) - 36 };
+#elif defined(__GNUC__)
+          constexpr rsl::string_view name{ __PRETTY_FUNCTION__ + 49, sizeof(__PRETTY_FUNCTION__) - 51 };
+#elif defined(_MSC_VER)
+          constexpr rsl::string_view name{ __FUNCSIG__ + 40, sizeof(__FUNCSIG__) - 57 };
+#endif
           return static_string<name.size()> {name};
-  #else
-          return rsl::string_view {};   // Unsupported compiler.
-  #endif
+#else
+          return rsl::string_view{};   // Unsupported compiler.
+#endif
         }
 
         template <typename E>
@@ -414,19 +414,19 @@ namespace rsl
           static_assert(is_enum_v<E>, "enum_refl::detail::n requires enum type.");
           constexpr auto custom_name = customize::enum_name<E>(V);
 
-          if constexpr(custom_name.empty())
+          if constexpr (custom_name.empty())
           {
             static_cast<void>(custom_name);
-  #if defined(MAGIC_ENUM_SUPPORTED) && MAGIC_ENUM_SUPPORTED
-    #if defined(__clang__) || defined(__GNUC__)
-            constexpr auto name = pretty_name({__PRETTY_FUNCTION__, sizeof(__PRETTY_FUNCTION__) - 2});
-    #elif defined(_MSC_VER)
-            constexpr auto name = pretty_name({__FUNCSIG__, sizeof(__FUNCSIG__) - 17});
-    #endif
+#if defined(MAGIC_ENUM_SUPPORTED) && MAGIC_ENUM_SUPPORTED
+#if defined(__clang__) || defined(__GNUC__)
+            constexpr auto name = pretty_name({ __PRETTY_FUNCTION__, sizeof(__PRETTY_FUNCTION__) - 2 });
+#elif defined(_MSC_VER)
+            constexpr auto name = pretty_name({ __FUNCSIG__, sizeof(__FUNCSIG__) - 17 });
+#endif
             return static_string<name.size()> {name};
-  #else
-            return rsl::string_view {}; // Unsupported compiler.
-  #endif
+#else
+            return rsl::string_view{}; // Unsupported compiler.
+#endif
           }
           else
           {
@@ -450,9 +450,9 @@ namespace rsl
         {
           static_assert(is_enum_v<E>, "enum_refl::detail::value requires enum type.");
 
-          if constexpr(IsFlags)
+          if constexpr (IsFlags)
           {
-            return static_cast<E>(U {1} << static_cast<U>(static_cast<int>(i) + O));
+            return static_cast<E>(U{ 1 } << static_cast<U>(static_cast<int>(i) + O));
           }
           else
           {
@@ -465,7 +465,7 @@ namespace rsl
         {
           static_assert(is_enum_v<E>, "enum_refl::detail::reflected_min requires enum type.");
 
-          if constexpr(IsFlags)
+          if constexpr (IsFlags)
           {
             return 0;
           }
@@ -475,7 +475,7 @@ namespace rsl
             static_assert(lhs > (rsl::numeric_limits<rsl::int16>::min)(), "enum_refl::enum_range requires min must be greater than INT16_MIN.");
             constexpr auto rhs = (rsl::numeric_limits<U>::min)();
 
-            if constexpr(cmp_less(rhs, lhs))
+            if constexpr (cmp_less(rhs, lhs))
             {
               static_assert(!is_valid<E, value<E, lhs - 1, IsFlags>(0)>(), "enum_refl::enum_range detects enum value smaller than min range size.");
               return lhs;
@@ -492,7 +492,7 @@ namespace rsl
         {
           static_assert(is_enum_v<E>, "enum_refl::detail::reflected_max requires enum type.");
 
-          if constexpr(IsFlags)
+          if constexpr (IsFlags)
           {
             return rsl::numeric_limits<U>::digits - 1;
           }
@@ -502,7 +502,7 @@ namespace rsl
             static_assert(lhs < (rsl::numeric_limits<rsl::int16>::max)(), "enum_refl::enum_range requires max must be less than INT16_MAX.");
             constexpr auto rhs = (rsl::numeric_limits<U>::max)();
 
-            if constexpr(cmp_less(lhs, rhs))
+            if constexpr (cmp_less(lhs, rhs))
             {
               static_assert(!is_valid<E, value<E, lhs + 1, IsFlags>(0)>(), "enum_refl::enum_range detects enum value larger than max range size.");
               return lhs;
@@ -521,12 +521,12 @@ namespace rsl
         inline constexpr auto reflected_max_v = reflected_max<E, IsFlags>();
 
         template <card32 N>
-        constexpr card32 values_count(const bool (&valid)[N]) noexcept
+        constexpr card32 values_count(const bool(&valid)[N]) noexcept
         {
-          auto count = card32 {0};
-          for(card32 i = 0; i < N; ++i)
+          auto count = card32{ 0 };
+          for (card32 i = 0; i < N; ++i)
           {
-            if(valid[i])
+            if (valid[i])
             {
               ++count;
             }
@@ -539,15 +539,15 @@ namespace rsl
         constexpr auto values(rsl::index_sequence<I...>) noexcept
         {
           static_assert(is_enum_v<E>, "enum_refl::detail::values requires enum type.");
-          constexpr bool valid[sizeof...(I)] = {is_valid<E, value<E, Min, IsFlags>(I)>()...};
-          constexpr card32 count             = values_count(valid);
+          constexpr bool valid[sizeof...(I)] = { is_valid<E, value<E, Min, IsFlags>(I)>()... };
+          constexpr card32 count = values_count(valid);
 
-          if constexpr(count > 0)
+          if constexpr (count > 0)
           {
             E values[count] = {};
-            for(card32 i = 0, v = 0; v < count; ++i)
+            for (card32 i = 0, v = 0; v < count; ++i)
             {
-              if(valid[i])
+              if (valid[i])
               {
                 values[v++] = value<E, Min, IsFlags>(i);
               }
@@ -565,8 +565,8 @@ namespace rsl
         constexpr auto values() noexcept
         {
           static_assert(is_enum_v<E>, "enum_refl::detail::values requires enum type.");
-          constexpr auto min        = reflected_min_v<E, IsFlags>;
-          constexpr auto max        = reflected_max_v<E, IsFlags>;
+          constexpr auto min = reflected_min_v<E, IsFlags>;
+          constexpr auto max = reflected_max_v<E, IsFlags>;
           constexpr auto range_size = max - min + 1;
           static_assert(range_size > 0, "enum_refl::enum_range requires valid size.");
           static_assert(range_size < (rsl::numeric_limits<rsl::uint16>::max)(), "enum_refl::enum_range requires valid size.");
@@ -584,18 +584,18 @@ namespace rsl
         inline constexpr auto count_v = values_v<E, IsFlags>.size();
 
         template <typename E, bool IsFlags = false, typename U = rsl::underlying_type_t<E>>
-        inline constexpr auto min_v = (count_v<E, IsFlags> > 0) ? static_cast<U>(values_v<E, IsFlags>.front()) : U {0};
+        inline constexpr auto min_v = (count_v<E, IsFlags> > 0) ? static_cast<U>(values_v<E, IsFlags>.front()) : U{ 0 };
 
         template <typename E, bool IsFlags = false, typename U = rsl::underlying_type_t<E>>
-        inline constexpr auto max_v = (count_v<E, IsFlags> > 0) ? static_cast<U>(values_v<E, IsFlags>.back()) : U {0};
+        inline constexpr auto max_v = (count_v<E, IsFlags> > 0) ? static_cast<U>(values_v<E, IsFlags>.back()) : U{ 0 };
 
         template <typename E, bool IsFlags, typename U = rsl::underlying_type_t<E>>
         constexpr card32 range_size() noexcept
         {
           static_assert(is_enum_v<E>, "enum_refl::detail::range_size requires enum type.");
-          constexpr auto max        = IsFlags ? log2(max_v<E, IsFlags>) : max_v<E, IsFlags>;
-          constexpr auto min        = IsFlags ? log2(min_v<E, IsFlags>) : min_v<E, IsFlags>;
-          constexpr auto range_size = max - min + U {1};
+          constexpr auto max = IsFlags ? log2(max_v<E, IsFlags>) : max_v<E, IsFlags>;
+          constexpr auto min = IsFlags ? log2(min_v<E, IsFlags>) : min_v<E, IsFlags>;
+          constexpr auto range_size = max - min + U{ 1 };
           static_assert(range_size > 0, "enum_refl::enum_range requires valid size.");
           static_assert(range_size < (rsl::numeric_limits<rsl::uint16>::max)(), "enum_refl::enum_range requires valid size.");
 
@@ -615,10 +615,10 @@ namespace rsl
         constexpr auto indexes(rsl::index_sequence<I...>) noexcept
         {
           static_assert(is_enum_v<E>, "enum_refl::detail::indexes requires enum type.");
-          constexpr auto min      = IsFlags ? log2(min_v<E, IsFlags>) : min_v<E, IsFlags>;
-          [[maybe_unused]] auto i = index_t<E, IsFlags> {0};
+          constexpr auto min = IsFlags ? log2(min_v<E, IsFlags>) : min_v<E, IsFlags>;
+          [[maybe_unused]] auto i = index_t<E, IsFlags>{ 0 };
 
-          return rsl::array<decltype(i), sizeof...(I)> {{(is_valid<E, value<E, min, IsFlags>(I)>() ? i++ : invalid_index_v<E, IsFlags>)...}};
+          return rsl::array<decltype(i), sizeof...(I)> { {(is_valid<E, value<E, min, IsFlags>(I)>() ? i++ : invalid_index_v<E, IsFlags>)...}};
         }
 
         template <typename E, bool IsFlags = false>
@@ -629,7 +629,7 @@ namespace rsl
         {
           static_assert(is_enum_v<E>, "enum_refl::detail::names requires enum type.");
 
-          return rsl::array<rsl::string_view, sizeof...(I)> {{enum_name_v<E, values_v<E, IsFlags>[I]>...}};
+          return rsl::array<rsl::string_view, sizeof...(I)> { {enum_name_v<E, values_v<E, IsFlags>[I]>...}};
         }
 
         template <typename E, bool IsFlags = false>
@@ -643,8 +643,8 @@ namespace rsl
         {
         public:
           constexpr enum_entry(E value, rsl::string_view name)
-              : m_value(value)
-              , m_name(name)
+            : m_value(value)
+            , m_name(name)
           {
           }
 
@@ -667,7 +667,7 @@ namespace rsl
         {
           static_assert(is_enum_v<E>, "enum_refl::detail::entries requires enum type.");
 
-          return rsl::array<enum_entry<E>, sizeof...(I)> {{{values_v<E, IsFlags>[I], enum_name_v<E, values_v<E, IsFlags>[I]>}...}};
+          return rsl::array<enum_entry<E>, sizeof...(I)> { { {values_v<E, IsFlags>[I], enum_name_v<E, values_v<E, IsFlags>[I]>}...}};
         }
 
         template <typename E, bool IsFlags = false>
@@ -692,11 +692,11 @@ namespace rsl
         {
           static_assert(is_enum_v<E>, "enum_refl::detail::undex requires enum type.");
 
-          if(const auto i = static_cast<card32>(value - min_v<E>); value >= min_v<E> && value <= max_v<E>)
+          if (const auto i = static_cast<card32>(value - min_v<E>); value >= min_v<E> && value <= max_v<E>)
           {
-            if constexpr(is_sparse_v<E>)
+            if constexpr (is_sparse_v<E>)
             {
-              if(const auto idx = indexes_v<E>[i]; idx != invalid_index_v<E>)
+              if (const auto idx = indexes_v<E>[i]; idx != invalid_index_v<E>)
               {
                 return idx;
               }
@@ -723,8 +723,8 @@ namespace rsl
         {
           static_assert(is_enum_v<E>, "enum_refl::detail::endex requires enum type.");
 
-          auto value = U {0};
-          for(card32 i = 0; i < count_v<E, true>; ++i)
+          auto value = U{ 0 };
+          for (card32 i = 0; i < count_v<E, true>; ++i)
           {
             value |= static_cast<U>(values_v<E, true>[i]);
           }
@@ -741,7 +741,7 @@ namespace rsl
         struct enable_if_enum<true, T, R>
         {
           using type = R;
-          using D    = rsl::decay_t<T>;
+          using D = rsl::decay_t<T>;
           static_assert(supported<D>::value, "enum_refl unsupported compiler (https://github.com/Neargye/enum_refl#compiler-compatibility).");
         };
 
@@ -823,7 +823,7 @@ namespace rsl
       template <typename E>
       [[nodiscard]] constexpr auto enum_type_name() noexcept -> detail::enable_if_enum_t<E, rsl::string_view>
       {
-        using D                         = rsl::decay_t<E>;
+        using D = rsl::decay_t<E>;
         constexpr rsl::string_view name = detail::type_name_v<D>;
         static_assert(name.size() > 0, "Enum type does not have a name.");
 
@@ -847,13 +847,13 @@ namespace rsl
         using D = rsl::decay_t<E>;
         static_assert(detail::count_v<D> > 0, "enum_refl requires enum implementation and valid max and min.");
 
-        if constexpr(detail::is_sparse_v<D>)
+        if constexpr (detail::is_sparse_v<D>)
         {
-          return assert((index < detail::count_v<D>)), detail::values_v<D>[index];
+          return detail::values_v<D>[index];
         }
         else
         {
-          return assert((index < detail::count_v<D>)), detail::value<D, detail::min_v<D>>(index);
+          return detail::value<D, detail::min_v<D>>(index);
         }
       }
 
@@ -872,7 +872,7 @@ namespace rsl
       template <auto V>
       [[nodiscard]] constexpr auto enum_name() noexcept -> detail::enable_if_enum_t<decltype(V), rsl::string_view>
       {
-        using D                         = rsl::decay_t<decltype(V)>;
+        using D = rsl::decay_t<decltype(V)>;
         constexpr rsl::string_view name = detail::enum_name_v<D, V>;
         static_assert(name.size() > 0, "Enum value does not have a name.");
 
@@ -886,7 +886,7 @@ namespace rsl
       {
         using D = rsl::decay_t<E>;
 
-        if(const auto i = detail::endex<D>(value); i != detail::invalid_index_v<D>)
+        if (const auto i = detail::endex<D>(value); i != detail::invalid_index_v<D>)
         {
           return detail::names_v<D>[i];
         }
@@ -921,7 +921,7 @@ namespace rsl
       {
         using D = rsl::decay_t<E>;
 
-        if(detail::undex<D>(value) != detail::invalid_index_v<D>)
+        if (detail::undex<D>(value) != detail::invalid_index_v<D>)
         {
           return static_cast<D>(value);
         }
@@ -937,9 +937,9 @@ namespace rsl
         static_assert(rsl::is_invocable_r_v<bool, BinaryPredicate, char, char>, "enum_refl::enum_cast requires bool(char, char) invocable predicate.");
         using D = rsl::decay_t<E>;
 
-        for(card32 i = 0; i < detail::count_v<D>; ++i)
+        for (card32 i = 0; i < detail::count_v<D>; ++i)
         {
-          if(detail::cmp_equal(value, detail::names_v<D>[i], p))
+          if (detail::cmp_equal(value, detail::names_v<D>[i], p))
           {
             return enum_value<D>(i);
           }
@@ -955,7 +955,7 @@ namespace rsl
       {
         using D = rsl::decay_t<E>;
 
-        return enum_cast<D>(value, detail::char_equal_to {});
+        return enum_cast<D>(value, detail::char_equal_to{});
       }
 
       // Returns integer value from enum value.
@@ -972,7 +972,7 @@ namespace rsl
       {
         using D = rsl::decay_t<E>;
 
-        if(const auto i = detail::endex<D>(value); i != detail::invalid_index_v<D>)
+        if (const auto i = detail::endex<D>(value); i != detail::invalid_index_v<D>)
         {
           return i;
         }
@@ -1025,16 +1025,16 @@ namespace rsl
         {
           using D = rsl::decay_t<E>;
           using U = underlying_type_t<D>;
-  #if defined(MAGIC_ENUM_SUPPORTED) && MAGIC_ENUM_SUPPORTED
-          if(const auto name = enum_refl::enum_name<D>(value); !name.empty())
+#if defined(MAGIC_ENUM_SUPPORTED) && MAGIC_ENUM_SUPPORTED
+          if (const auto name = enum_refl::enum_name<D>(value); !name.empty())
           {
-            for(const auto c: name)
+            for (const auto c : name)
             {
               os.put(c);
             }
             return os;
           }
-  #endif
+#endif
           return (os << static_cast<U>(value));
         }
 
@@ -1116,15 +1116,15 @@ namespace rsl
           using D = rsl::decay_t<E>;
           static_assert(detail::count_v<D, true> > 0, "enum_refl::flags requires enum-flags implementation.");
 
-          if constexpr(detail::is_sparse_v<D, true>)
+          if constexpr (detail::is_sparse_v<D, true>)
           {
-            return assert((index < detail::count_v<D, true>)), detail::values_v<D, true>[index];
+            return detail::values_v<D, true>[index];
           }
           else
           {
             constexpr auto min = log2(detail::min_v<D, true>);
 
-            return assert((index < detail::count_v<D, true>)), detail::value<D, min, true>(index);
+            return detail::value<D, min, true>(index);
           }
         }
 
@@ -1147,14 +1147,14 @@ namespace rsl
           using U = underlying_type_t<D>;
 
           string name;
-          auto check_value = U {0};
-          for(card32 i = 0; i < detail::count_v<D, true>; ++i)
+          auto check_value = U{ 0 };
+          for (card32 i = 0; i < detail::count_v<D, true>; ++i)
           {
-            if(const auto v = static_cast<U>(enum_value<D>(i)); (static_cast<U>(value) & v) != 0)
+            if (const auto v = static_cast<U>(enum_value<D>(i)); (static_cast<U>(value) & v) != 0)
             {
               check_value |= v;
               const auto n = detail::names_v<D, true>[i];
-              if(!name.empty())
+              if (!name.empty())
               {
                 name.append(1, '|');
               }
@@ -1162,7 +1162,7 @@ namespace rsl
             }
           }
 
-          if(check_value != 0 && check_value == static_cast<U>(value))
+          if (check_value != 0 && check_value == static_cast<U>(value))
           {
             return name;
           }
@@ -1198,18 +1198,18 @@ namespace rsl
           using D = rsl::decay_t<E>;
           using U = underlying_type_t<D>;
 
-          if constexpr(detail::is_sparse_v<D, true>)
+          if constexpr (detail::is_sparse_v<D, true>)
           {
-            auto check_value = U {0};
-            for(card32 i = 0; i < detail::count_v<D, true>; ++i)
+            auto check_value = U{ 0 };
+            for (card32 i = 0; i < detail::count_v<D, true>; ++i)
             {
-              if(const auto v = static_cast<U>(enum_value<D>(i)); (value & v) != 0)
+              if (const auto v = static_cast<U>(enum_value<D>(i)); (value & v) != 0)
               {
                 check_value |= v;
               }
             }
 
-            if(check_value != 0 && check_value == value)
+            if (check_value != 0 && check_value == value)
             {
               return static_cast<D>(value);
             }
@@ -1219,7 +1219,7 @@ namespace rsl
             constexpr auto min = detail::min_v<D, true>;
             constexpr auto max = detail::value_ors<D>();
 
-            if(value >= min && value <= max)
+            if (value >= min && value <= max)
             {
               return static_cast<D>(value);
             }
@@ -1237,29 +1237,29 @@ namespace rsl
           using D = rsl::decay_t<E>;
           using U = underlying_type_t<D>;
 
-          auto result = U {0};
-          while(!value.empty())
+          auto result = U{ 0 };
+          while (!value.empty())
           {
             const auto d = detail::find(value, '|');
             const auto s = (d == rsl::string_view::npos()) ? value : value.substr(0, d);
-            auto f       = U {0};
-            for(card32 i = 0; i < detail::count_v<D, true>; ++i)
+            auto f = U{ 0 };
+            for (card32 i = 0; i < detail::count_v<D, true>; ++i)
             {
-              if(detail::cmp_equal(s, detail::names_v<D, true>[i], p))
+              if (detail::cmp_equal(s, detail::names_v<D, true>[i], p))
               {
                 f = static_cast<U>(enum_value<D>(i));
                 result |= f;
                 break;
               }
             }
-            if(f == U {0})
+            if (f == U{ 0 })
             {
               return {}; // Invalid value or out of range.
             }
             value.remove_prefix((d == rsl::string_view::npos()) ? value.size() : d + 1);
           }
 
-          if(result == U {0})
+          if (result == U{ 0 })
           {
             return {}; // Invalid value or out of range.
           }
@@ -1276,7 +1276,7 @@ namespace rsl
         {
           using D = rsl::decay_t<E>;
 
-          return enum_cast<D>(value, detail::char_equal_to {});
+          return enum_cast<D>(value, detail::char_equal_to{});
         }
 
         // Returns integer value from enum value.
@@ -1290,11 +1290,11 @@ namespace rsl
           using D = rsl::decay_t<E>;
           using U = underlying_type_t<D>;
 
-          if(detail::is_pow2(static_cast<U>(value)))
+          if (detail::is_pow2(static_cast<U>(value)))
           {
-            for(card32 i = 0; i < detail::count_v<D, true>; ++i)
+            for (card32 i = 0; i < detail::count_v<D, true>; ++i)
             {
-              if(enum_value<D>(i) == value)
+              if (enum_value<D>(i) == value)
               {
                 return i;
               }
@@ -1352,16 +1352,16 @@ namespace rsl
         {
           using D = rsl::decay_t<E>;
           using U = underlying_type_t<D>;
-  #if defined(MAGIC_ENUM_SUPPORTED) && MAGIC_ENUM_SUPPORTED
-          if(const auto name = enum_refl::flags::enum_name<D>(value); !name.empty())
+#if defined(MAGIC_ENUM_SUPPORTED) && MAGIC_ENUM_SUPPORTED
+          if (const auto name = enum_refl::flags::enum_name<D>(value); !name.empty())
           {
-            for(const auto c: name)
+            for (const auto c : name)
             {
               os.put(c);
             }
             return os;
           }
-  #endif
+#endif
           return (os << static_cast<U>(value));
         }
 
@@ -1383,12 +1383,12 @@ namespace rsl
     } // namespace enum_refl
   }   // namespace v1
 } // namespace rsl
-  #if defined(__clang__)
-    #pragma clang diagnostic pop
-  #elif defined(__GNUC__)
-    #pragma GCC diagnostic pop
-  #elif defined(_MSC_VER)
-    #pragma warning(pop)
-  #endif
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#elif defined(__GNUC__)
+#pragma GCC diagnostic pop
+#elif defined(_MSC_VER)
+#pragma warning(pop)
+#endif
 
 #endif // NEARGYE_MAGIC_ENUM_HPP
