@@ -71,6 +71,7 @@
 
 #if defined(__clang__)
 #pragma clang diagnostic push
+#pragma GCC diagnostic ignored "-Wenum-constexpr-conversion" // integer value 257 is outside the valid range of values [0, 7] for this enumeration type
 #elif defined(__GNUC__)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wmaybe-uninitialized" // May be used uninitialized 'return {};'.
