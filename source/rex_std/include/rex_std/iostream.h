@@ -17,6 +17,7 @@
 #include "rex_std/internal/string/char_traits.h"
 #include "rex_std/istream.h"
 #include "rex_std/ostream.h"
+#include "rex_std/assert.h"
 
 namespace rsl
 {
