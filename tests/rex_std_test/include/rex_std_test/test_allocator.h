@@ -40,7 +40,7 @@ namespace rsl::test
       test_allocator& operator=(const test_allocator&) = default;
       test_allocator& operator=(test_allocator&&);
 
-      REX_NO_DISCARD void* allocate(const size_type count);
+      RSL_NO_DISCARD void* allocate(const size_type count);
       void deallocate(void* const ptr, size_type size);
 
       size_type max_size() const;
