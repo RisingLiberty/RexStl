@@ -178,7 +178,7 @@ namespace rsl
 
       const Char lhs_lower = rsl::to_lower(*lhs);
       const Char rhs_lower = rsl::to_lower(*rhs);
-      return lhs_lower - *rhs_lower;
+      return lhs_lower - rhs_lower;
     }
     // compares at most count characters lexicographically
     template <typename Char, typename rsl::v1::enable_if_t<is_character_v<Char>, int> = 0>
