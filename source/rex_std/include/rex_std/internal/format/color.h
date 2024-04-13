@@ -638,7 +638,7 @@ namespace rsl
     {
       basic_memory_buffer<Char> buf;
       detail::vformat_to(buf, ts, detail::to_string_view(format_str), args);
-      return rsl::to_string(buf);
+      return rsl::string(buf.data());
     }
 
     /**

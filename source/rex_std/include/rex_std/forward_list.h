@@ -75,6 +75,7 @@ namespace rsl
 
       void forward_list_node_splice_after(forward_list_node_base* pNode, forward_list_node_base* pNodeBeforeFirst, forward_list_node_base* pNodeBeforeLast);
       void forward_list_node_splice_single_after(forward_list_node_base* pNode, forward_list_node_base* otherHead, forward_list_node_base* toMove);
+      forward_list_node_base* forward_list_node_base_get_previous(forward_list_node_base* nodeBase, const forward_list_node_base* node);
 
     } // namespace internal
 
@@ -108,13 +109,13 @@ namespace rsl
           : m_node(nullptr)
       {
       }
-      explicit forward_list_iterator(internal::forward_list_node_base* node)
+      forward_list_iterator(internal::forward_list_node_base* node)
           : m_node(static_cast<node_type*>(node))
       {
       }
 
       template <typename T2, typename Pointer2, typename Reference2>
-      explicit forward_list_iterator(forward_list_iterator<T2, Pointer2, Reference2> it)
+      forward_list_iterator(forward_list_iterator<T2, Pointer2, Reference2> it)
           : m_node(it.m_node)
       {
       }
@@ -571,7 +572,7 @@ namespace rsl
         {
           if(get_allocator() == other.get_allocator())
           {
-            internal::forward_list_node_splice_after(position.node(), other.before_begin().node());
+            internal::forward_list_node_splice_after(position.node(), other.before_begin().node(), internal::forward_list_node_base_get_previous(head(), nullptr));
           }
           else
           {

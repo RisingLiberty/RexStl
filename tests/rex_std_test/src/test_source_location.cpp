@@ -28,9 +28,9 @@ TEST_CASE("source location")
   rsl::string_view loc_file(loc.file_name());
   rsl::string_view loc_func(loc.function_name());
   
-  #if defined(REX_COMPILER_MSVC)
+  #if defined(RSL_COMPILER_MSVC)
   card32 column = 53;
-  #elif defined(REX_COMPILER_CLANG)
+  #elif defined(RSL_COMPILER_CLANG)
   card32 column = 31;
   #endif
   

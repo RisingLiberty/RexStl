@@ -46,5 +46,5 @@ TEST_CASE("color_test, format_to") {
   auto out = rsl::string();
   rsl::format_to(rsl::back_inserter(out), fg(rsl::rgb(255, 20, 30)), "rgb(255,20,30){}{}{}", 1, 2, 3);
 
-  REQUIRE_STR(rsl::to_string(out), "\x1b[38;2;255;020;030mrgb(255,20,30)123\x1b[0m");
+  REQUIRE_STR(out, "\x1b[38;2;255;020;030mrgb(255,20,30)123\x1b[0m");
 }
