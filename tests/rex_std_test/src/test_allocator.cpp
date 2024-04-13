@@ -46,7 +46,7 @@ namespace rsl::test
       return *this;
     }
 
-    REX_NO_DISCARD void* test_allocator::allocate(const size_type count) // NOLINT(readability-convert-member-functions-to-static)
+    RSL_NO_DISCARD void* test_allocator::allocate(const size_type count) // NOLINT(readability-convert-member-functions-to-static)
     {
       m_num_allocs++;
       m_num_bytes_allocated += static_cast<card32>(count);
