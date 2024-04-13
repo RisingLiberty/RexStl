@@ -109,9 +109,19 @@ public class RegenerateProjects : Project
     string rexpyPath = Path.Combine(Globals.Root, "_rex.py");
 
     // The custom build steps just perform a generation step
+    string IdeCommandLineOption = "VisualStudio19";
+    switch (ProjectGen.Settings.IDE)
+    {
+      case ProjectGen.IDE.VisualStudio19: IdeCommandLineOption = "VisualStudio19"; break;
+      case ProjectGen.IDE.VisualStudio22: IdeCommandLineOption = "VisualStudio22"; break;
+      case ProjectGen.IDE.VSCode: IdeCommandLineOption = "VSCode"; break;
+      default:
+        break;
+    }
+
     conf.CustomBuildSettings = new Configuration.NMakeBuildSettings();
-    conf.CustomBuildSettings.BuildCommand = $"py {rexpyPath} generate -no_default_config -IDE VisualStudio19"; // Use what's previously generated
-    conf.CustomBuildSettings.RebuildCommand = $"py {rexpyPath} generate -IDE VisualStudio19"; // Perform a generation from scratch
+    conf.CustomBuildSettings.BuildCommand = $"py {rexpyPath} generate -IDE {IdeCommandLineOption}"; // Use what's previously generated
+    conf.CustomBuildSettings.RebuildCommand = $"py {rexpyPath} generate -use_default_config -IDE {IdeCommandLineOption}"; // Perform a generation from scratch
     conf.CustomBuildSettings.CleanCommand = "";
     conf.CustomBuildSettings.OutputFile = "";
   }
@@ -205,17 +215,17 @@ public abstract class BasicCPPProject : Project
   // Library paths, library files and other sharpmake project dependencies are set here.
   protected virtual void SetupLibDependencies(RexConfiguration conf, RexTarget target)
   {
-    // To make sure we use the exact same includes, regardless of the compiler
+    // To make sure we use the exact same libs, regardless of the compiler
     // We add them here. Clang can figure them out on its own, but it can possibly
     // use updated lib files which could break compilation.
     // This would also cause inconsistency between compilers
     List<string> libPaths = new List<string>();
-      libPaths.AddRange(ToolPaths["windows_sdk_lib"].ToList());
-      libPaths.AddRange(ToolPaths["msvc_libs"].ToList());
-      foreach (var path in libPaths)
-      {
-        conf.LibraryPaths.Add(path);
-      }
+    libPaths.AddRange(ToolPaths["windows_sdk_lib"].ToList());
+    libPaths.AddRange(ToolPaths["msvc_libs"].ToList());
+    foreach (var path in libPaths)
+    {
+      conf.LibraryPaths.Add(path);
+    }
 
     // Add the dependency to the regenerate project for all C++ projects.
     if (target.DevEnv == DevEnv.vs2019)
@@ -246,15 +256,6 @@ public abstract class BasicCPPProject : Project
     bool generatingMakeFiles = true;
     if (generatingMakeFiles)
     {
-      // This would call duplicate symbols to be linked in though which is ideally avoided
-      // It's possible 1 static library depends on the other, but the best way to handle
-      // that dependency is to provide the 2 static libraries to the end executable or dll
-      // which then links them in accordingly
-
-      // This allows sharpmake to also build dependencies of the project
-      // if the current project is a static lib
-      //conf.ExportAdditionalLibrariesEvenForStaticLib = true;
-
       // rex python script at the root is the entry point and interface with the rex pipeline
       string rexpyPath = Path.Combine(Globals.Root, "_rex.py");
       
@@ -573,10 +574,7 @@ public abstract class BasicCPPProject : Project
   // and passes it over to code generation system for processing
   private void ReadCodeGenerationConfigFile()
   {
-    // the generation path always follows the same relative path from {root}/config
-    // as it does from {root} to the source code
-    string relative_source_path = Util.PathGetRelative(Path.Combine(Globals.Root), SourceRootPath);
-    string code_generation_config_path = Path.Combine(Globals.Root, "config", relative_source_path, "code_generation.json");
+    string code_generation_config_path = Path.Combine(SourceRootPath, "config", "code_generation.json");
 
     // Not every project has a code generation config file
     // if one doesn't exists, we early out here
