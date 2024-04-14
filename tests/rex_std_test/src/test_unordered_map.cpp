@@ -41,7 +41,7 @@ TEST_CASE("unordered_map construction")
     CHECK(map.load_factor() == 0.0f);
 
     CHECK(test_allocator::all_num_allocs() == num_allocs + 1);
-    CHECK(test_allocator::all_num_bytes_allocated() == num_allocated_bytes + sizeof(void*));
+    CHECK(test_allocator::all_num_bytes_allocated() == num_allocated_bytes + 2 * sizeof(void*));
     CHECK(test_allocator::all_num_frees() == num_frees);
   }
   // unordered_map(size_type bucketCount)
