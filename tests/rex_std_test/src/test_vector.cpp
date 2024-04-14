@@ -1950,4 +1950,23 @@ TEST_CASE("vector insertion")
   }
 }
 
+TEST_CASE("vector bug with inseration")
+{
+  rsl::vector<rsl::string> vec1;
+  vec1.emplace_back("some text going in to heap");
+  vec1.emplace_back("some text going in to heap");
+  vec1.emplace_back("some text going in to heap");
+  vec1.emplace_back("some text going in to heap");
+  vec1.emplace_back("some text going in to heap");
+  vec1.emplace_back("some text going in to heap");
+  vec1.emplace_back("some text going in to heap");
+  vec1.emplace_back("some text going in to heap");
 
+  rsl::vector<rsl::string> vec2;
+  vec2.emplace_back("some text going in to heap");
+  vec2.emplace_back("some text going in to heap");
+  vec2.emplace_back("some text going in to heap");
+  vec2.emplace_back("some text going in to heap");
+
+  vec1.insert(vec1.cend(), vec2.cbegin(), vec2.cend());
+}
