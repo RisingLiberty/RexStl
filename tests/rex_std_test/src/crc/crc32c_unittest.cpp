@@ -6,7 +6,7 @@
 
 #include "rex_std/bonus/functional/crc/crc32c.h"
 
-TEST_CASE("Crc32CTest") 
+TEST_CASE("Crc32CTest1") 
 {
   // From rfc3720 section B.4.
   uint8_t buf[32];
@@ -40,7 +40,7 @@ TEST_CASE("Crc32CTest")
 }
 
 
-TEST_CASE("CRC32CTest")
+TEST_CASE("CRC32CTest2")
 {
   char buf[32];
 
@@ -63,7 +63,7 @@ TEST_CASE("CRC32CTest")
     rsl::crc32c::Crc32c(buf, sizeof(buf)));
 }
 
-TEST_CASE("CRC32CTest") 
+TEST_CASE("CRC32CTest3") 
 {
   std::string buf;
   buf.resize(32);
@@ -88,7 +88,7 @@ TEST_CASE("CRC32CTest")
 #if __cplusplus > 201402L
 #if __has_include(<string_view>)
 
-TEST_CASE("CRC32CTest")
+TEST_CASE("CRC32CTest4")
 {
   uint8_t buf[32];
   std::string_view view(reinterpret_cast<const char*>(buf), sizeof(buf));

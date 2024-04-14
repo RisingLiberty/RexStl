@@ -9,7 +9,7 @@
 #include <cstddef>
 #include <cstdint>
 
-TEST_CASE("CRC32Crsl::crc32c::RoundUpTest")
+TEST_CASE("CRC32Crsl::crc32c::RoundUpTestZero")
 {
   uintptr_t zero = 0;
 
@@ -54,7 +54,7 @@ TEST_CASE("CRC32Crsl::crc32c::RoundUpTest")
   CHECK(~static_cast<uintptr_t>(7) == rsl::crc32c::RoundUp<4>(~static_cast<uintptr_t>(9)));
 }
 
-TEST_CASE("CRC32Crsl::crc32c::RoundUpTest")
+TEST_CASE("CRC32Crsl::crc32c::RoundUpTestEight")
 {
   uintptr_t zero = 0, three = 3, four = 4, seven = 7, eight = 8;
 
