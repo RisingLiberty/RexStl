@@ -14,7 +14,7 @@
 #include "rex_std/format.h"
 #include "rex_std/internal/format/color.h"
 
-#define REQUIRE_STR(x, y) REQUIRE(rsl::string(x) == rsl::string(y))
+#define REQUIRE_STR(x, y) CHECK(rsl::string(x) == rsl::string(y))
 
 TEST_CASE("color_test, format") 
 {
