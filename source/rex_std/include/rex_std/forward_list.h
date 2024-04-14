@@ -572,7 +572,7 @@ namespace rsl
         {
           if(get_allocator() == other.get_allocator())
           {
-            internal::forward_list_node_splice_after(position.node(), other.before_begin().node(), internal::forward_list_node_base_get_previous(head(), nullptr));
+            internal::forward_list_node_splice_after(position.node(), other.before_begin().node(), internal::forward_list_node_base_get_previous(other.before_begin().node(), nullptr));
           }
           else
           {
