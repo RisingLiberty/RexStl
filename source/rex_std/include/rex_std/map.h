@@ -33,12 +33,12 @@ namespace rsl
     // map
     //
 
-    template <typename Key, typename Value, typename Compare = rsl::less<Key>, typename Allocator = rsl::allocator>
-    class map : public RedBlackTree<Key, key_value<const Key, Value>, Compare, allocator, rsl::use_first<key_value<const Key, Value>>, true, true>
+    template <typename Key, typename Value, typename Compare = rsl::less<Key>, typename Alloc = rsl::allocator>
+    class map : public RedBlackTree<Key, key_value<const Key, Value>, Compare, Alloc, rsl::use_first<key_value<const Key, Value>>, true, true>
     {
     private:
-      using base_type = RedBlackTree<Key, key_value<Key, Value>, Compare, allocator, rsl::use_first<rsl::pair<const Key, Value>>, true, true>;
-      using this_type = map<Key, Value, Compare, allocator>;
+      using base_type = RedBlackTree<Key, key_value<const Key, Value>, Compare, Alloc, rsl::use_first<key_value<const Key, Value>>, true, true>;
+      using this_type = map<Key, Value, Compare, Alloc>;
 
     public:
       using key_type               = typename base_type::key_type;
@@ -57,6 +57,14 @@ namespace rsl
       using reverse_iterator       = typename base_type::reverse_iterator;
       using const_reverse_iterator = typename base_type::const_reverse_iterator;
       using node_type              = typename base_type::node_type;
+
+      using base_type::begin;
+      using base_type::end;
+      using base_type::find;
+      using base_type::lower_bound;
+      using base_type::upper_bound;
+      using base_type::insert;
+      using base_type::erase;
 
       /// RSL Comment: Different from ISO C++ Standard at time of writing (13/Aug/2022)
       // In C++17 insert_return_type was added.
@@ -164,27 +172,29 @@ namespace rsl
       // performs an insertion if such key does not already exist
       Value& operator[](const Key& key)
       {
-        iterator it_lower = base_type::lower_bound(key);
+        iterator it_lower = base_type::find(key);
 
-        if((it_lower == base_type::end()) || base_type::compare(key, (*it_lower).key))
+        if (it_lower != base_type::end())
         {
-          it_lower = base_type::insert(true_type(), it_lower, key);
+          return (*it_lower).value;
         }
 
-        return (*it_lower).value;
+        auto res = base_type::insert(key);
+        return (*res.inserted_element).value;
       }
       // returns a reference to the value that is mapped.
       // performs an insertion if such key does not already exist
       Value& operator[](Key&& key)
       {
-        iterator it_lower = base_type::lower_bound(key);
+        iterator it_lower = base_type::find(key);
 
-        if((it_lower == base_type::end()) || base_type::compare(key, (*it_lower).key))
+        if (it_lower != base_type::end())
         {
-          it_lower = base_type::insert(true_type(), it_lower, rsl::move(key));
+          return (*it_lower).value;
         }
 
-        return (*it_lower).value;
+        auto res = base_type::insert(rsl::move(key));
+        return (*res.inserted_element).value;
       }
 
       // returns a reference to the mapped value of the element.
@@ -199,7 +209,7 @@ namespace rsl
       }
       // returns a reference to the mapped value of the element.
       // if no such element exists, an assert is raised
-      const Value& at(const Key& key)
+      const Value& at(const Key& key) const
       {
         const_iterator it_lower = base_type::lower_bound(key);
 
@@ -254,7 +264,7 @@ namespace rsl
         iterator it_upper = it_lower;
         return range(it_lower, ++it_upper);
       }
-      range<const_iterator> equal_range(const Key& key)
+      range<const_iterator> equal_range(const Key& key) const
       {
         const const_iterator it_lower = base_type::lower_bound(key);
 
@@ -294,22 +304,22 @@ namespace rsl
     }
 
     template <typename InputIt, typename Comp = rsl::less<iter_key_t<InputIt>>, typename Alloc = rsl::allocator>
-    map(InputIt, InputIt, Comp = Comp(), Alloc = allocator()) -> map<iter_key_t<InputIt>, iter_val_t<InputIt>, Comp, allocator>;
+    map(InputIt, InputIt, Comp = Comp(), Alloc = Alloc()) -> map<iter_key_t<InputIt>, iter_val_t<InputIt>, Comp, Alloc>;
 
     template <typename Key, typename Value, typename Comp = rsl::less<Key>, typename Alloc = rsl::allocator>
-    map(rsl::initializer_list<key_value<Key, Value>>, Comp = Comp(), allocator = allocator()) -> map<Key, Value, Comp, allocator>;
+    map(rsl::initializer_list<key_value<Key, Value>>, Comp = Comp(), Alloc = Alloc()) -> map<Key, Value, Comp, Alloc>;
 
-    template <typename InputIt, typename Allocator>
-    map(InputIt, InputIt, allocator) -> map<iter_key_t<InputIt>, iter_val_t<InputIt>, rsl::less<iter_key_t<InputIt>>, allocator>;
+    template <typename InputIt, typename Alloc>
+    map(InputIt, InputIt, Alloc) -> map<iter_key_t<InputIt>, iter_val_t<InputIt>, rsl::less<iter_key_t<InputIt>>, Alloc>;
 
-    template <typename Key, typename Value, typename Allocator>
-    map(rsl::initializer_list<key_value<Key, Value>>, allocator) -> map<Key, Value, rsl::less<Key>, allocator>;
+    template <typename Key, typename Value, typename Alloc>
+    map(rsl::initializer_list<key_value<Key, Value>>, Alloc) -> map<Key, Value, rsl::less<Key>, Alloc>;
 
     //
     // multimap
     //
 
-    template <typename Key, typename Value, typename Compare = rsl::less<Key>, typename Allocator = rsl::allocator>
+    template <typename Key, typename Value, typename Compare = rsl::less<Key>, typename Alloc = rsl::allocator>
     class multimap : public RedBlackTree<Key, key_value<const Key, Value>, Compare, allocator, rsl::use_first<key_value<const Key, Value>>, true, false>
     {
     private:
@@ -334,6 +344,14 @@ namespace rsl
       using reverse_iterator       = typename base_type::reverse_iterator;
       using const_reverse_iterator = typename base_type::const_reverse_iterator;
       using node_type              = typename base_type::node_type;
+
+      using base_type::begin;
+      using base_type::end;
+      using base_type::find;
+      using base_type::lower_bound;
+      using base_type::upper_bound;
+      using base_type::insert;
+      using base_type::erase;
 
       /// RSL Comment: Different from ISO C++ Standard at time of writing (17/Aug/2022)
       // In C++17 insert_return_type was added.
@@ -442,15 +460,15 @@ namespace rsl
 
       range<iterator> equal_range(const Key& key)
       {
-        return range<iterator>(lower_bound(key), upper_bound(key));
+        return range<iterator>(base_type::lower_bound(key), base_type::upper_bound(key));
       }
       range<const_iterator> equal_range(const Key& key) const
       {
-        return range<const_iterator>(lower_bound(key), upper_bound(key));
+        return range<const_iterator>(base_type::lower_bound(key), base_type::upper_bound(key));
       }
     };
 
-    template <typename Key, typename Value, typename Compare, typename Allocator, typename Predicate>
+    template <typename Key, typename Value, typename Compare, typename Alloc, typename Predicate>
     typename multimap<Key, Value, Compare, allocator>::size_type erase_if(multimap<Key, Value, Compare, allocator>& c, Predicate pred)
     {
       auto old_size = c.size();
@@ -479,8 +497,8 @@ namespace rsl
     template <typename InputIt, typename Alloc>
     multimap(InputIt, InputIt, Alloc) -> multimap<iter_key_t<InputIt>, iter_val_t<InputIt>, rsl::less<iter_key_t<InputIt>>, Alloc>;
 
-    template <typename Key, typename Value, typename Allocator>
-    multimap(rsl::initializer_list<key_value<Key, Value>>, allocator) -> multimap<Key, Value, rsl::less<Key>, allocator>;
+    template <typename Key, typename Value, typename Alloc>
+    multimap(rsl::initializer_list<key_value<Key, Value>>, Alloc) -> multimap<Key, Value, rsl::less<Key>, Alloc>;
 
   } // namespace v1
 } // namespace rsl

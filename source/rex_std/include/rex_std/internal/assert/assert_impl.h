@@ -35,7 +35,7 @@ namespace rsl
   inline namespace v1
   {
     class allocator; // IWYU pragma: keep
-    template <typename CharType, typename Traits, typename Allocator>
+    template <typename CharType, typename Traits, typename Alloc>
     class basic_string; // IWYU pragma: keep
     using string = basic_string<char8, char_traits<char8>, allocator>;
 

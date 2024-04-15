@@ -22,14 +22,14 @@ namespace rsl
 {
   inline namespace v1
   {
-    template <typename T, typename Allocator = rsl::allocator>
+    template <typename T, typename Alloc = rsl::allocator>
     class circular_q
     {
       card32 m_max_items = 0;
-      typename rsl::vector<T, Allocator>::size_type m_head = 0;
-      typename rsl::vector<T, Allocator>::size_type m_tail = 0;
+      typename rsl::vector<T, Alloc>::size_type m_head = 0;
+      typename rsl::vector<T, Alloc>::size_type m_tail = 0;
       card32 m_overrun_counter = 0;
-      rsl::vector<T, Allocator> m_v;
+      rsl::vector<T, Alloc> m_v;
 
     public:
       using value_type = T;

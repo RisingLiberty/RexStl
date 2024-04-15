@@ -40,7 +40,7 @@ namespace rsl
     /// RSL Comment: Different from ISO C++ Standard at time of writing (27/Jun/2022)
     // RSL vector also has the numerator and denumerator which used to expand the vector in case of reallocation.
     // by default, the vector's capacity is doubled.
-    template <typename T, typename Allocator>
+    template <typename T, typename Alloc>
     class vector
     {
     private:
@@ -51,11 +51,11 @@ namespace rsl
       using value_type = T;
       using size_type = count_t; /// RSL Comment: Different from ISO C++ Standard at time of writing (26/Jun/2022)
       using difference_type = int32;
-      using allocator_type = Allocator;
+      using allocator_type = Alloc;
       using reference = value_type&;
       using const_reference = const value_type&;
-      using pointer = typename rsl::allocator_traits<Allocator>::template non_void_pointer_or<value_type*>;
-      using const_pointer = typename rsl::allocator_traits<Allocator>::template non_void_const_pointer_or<const value_type*>;
+      using pointer = typename rsl::allocator_traits<Alloc>::template non_void_pointer_or<value_type*>;
+      using const_pointer = typename rsl::allocator_traits<Alloc>::template non_void_const_pointer_or<const value_type*>;
       using iterator = random_access_iterator<T>;
       using const_iterator = const_random_access_iterator<T>;
       using reverse_iterator = rsl::reverse_iterator<iterator>;
@@ -997,7 +997,7 @@ namespace rsl
     private:
       pointer m_begin;
       pointer m_end;
-      rsl::compressed_pair<pointer, Allocator> m_cp_last_and_allocator;
+      rsl::compressed_pair<pointer, Alloc> m_cp_last_and_allocator;
     };
 
     // Checks if the contents of lhs and rhs are equal, that is, they have the same number of elements and each element in lhs compares equal with the element in rhs at the same position.

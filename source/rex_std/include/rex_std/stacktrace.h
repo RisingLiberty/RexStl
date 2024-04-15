@@ -93,7 +93,7 @@ namespace rsl
       }
     };
 
-    template <typename Allocator>
+    template <typename Alloc>
     class basic_stacktrace;
 
     namespace internal
@@ -102,7 +102,7 @@ namespace rsl
       __declspec(noinline) rsl::array<stacktrace_entry, g_stacktrace_stack_size> stack_trace(card32 skip, card32 maxDepth);
     } // namespace internal
 
-    template <typename Allocator>
+    template <typename Alloc>
     class basic_stacktrace
     {
     private:
@@ -118,7 +118,7 @@ namespace rsl
       using reverse_const_iterator = rsl::reverse_iterator<const_iterator>;
       using difference_type        = ptrdiff;
       using size_type              = card32;
-      using allocator_type         = Allocator;
+      using allocator_type         = Alloc;
 
       basic_stacktrace()
           : m_entries()
@@ -281,8 +281,8 @@ namespace rsl
       card32 m_size;
     };
 
-    template <typename Allocator>
-    rsl::string to_string(const basic_stacktrace<Allocator>& trace) // NOLINT(misc-no-recursion)
+    template <typename Alloc>
+    rsl::string to_string(const basic_stacktrace<Alloc>& trace) // NOLINT(misc-no-recursion)
     {
       rsl::string result;
 
@@ -295,23 +295,23 @@ namespace rsl
       return result;
     }
 
-    template <typename Allocator>
-    void swap(const basic_stacktrace<Allocator>& lhs, const basic_stacktrace<Allocator>& rhs)
+    template <typename Alloc>
+    void swap(const basic_stacktrace<Alloc>& lhs, const basic_stacktrace<Alloc>& rhs)
     {
       return lhs.swap(rhs);
     }
 
     using stacktrace = basic_stacktrace<allocator>;
 
-    template <typename Char, typename Traits, typename Allocator>
-    rsl::basic_ostream<Char, Traits>& operator<<(rsl::basic_ostream<Char, Traits>& os, const basic_stacktrace<Allocator>& trace) // NOLINT(misc-no-recursion)
+    template <typename Char, typename Traits, typename Alloc>
+    rsl::basic_ostream<Char, Traits>& operator<<(rsl::basic_ostream<Char, Traits>& os, const basic_stacktrace<Alloc>& trace) // NOLINT(misc-no-recursion)
     {
       os << to_string(trace);
       return os;
     }
 
-    template <typename Allocator>
-    struct formatter<basic_stacktrace<Allocator>>
+    template <typename Alloc>
+    struct formatter<basic_stacktrace<Alloc>>
     {
       auto parse(format_parse_context& ctx) const -> decltype(ctx.begin()) // NOLINT(readability-convert-member-functions-to-static)
       {
@@ -319,7 +319,7 @@ namespace rsl
       }
 
       template <typename FormatContext>
-      auto format(const basic_stacktrace<Allocator>& stacktrace, FormatContext& ctx) -> decltype(ctx.out())
+      auto format(const basic_stacktrace<Alloc>& stacktrace, FormatContext& ctx) -> decltype(ctx.out())
       {
         return format_to(ctx.out(), "{}", to_string(stacktrace));
       }

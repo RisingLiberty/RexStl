@@ -106,7 +106,7 @@ namespace rsl
       using iterator          = RedBlackTreeIterator<T, T*, T&>;
       using const_iterator    = RedBlackTreeIterator<T, const T*, const T&>;
       using size_type         = count_t;
-      using different_type    = ptrdiff;
+      using difference_type   = ptrdiff;
       using value_type        = T;
       using base_node_type    = internal::RedBlackTreeNodeBase;
       using node_type         = internal::RedBlackTreeNode<T>;
@@ -190,14 +190,13 @@ namespace rsl
       return lhs.node() != rhs.node();
     }
 
-    template <typename Key, typename Value, typename Compare, typename Allocator, typename ExtractKey, bool bMutableIterator, bool bUniqueKeys>
-    class RedBlackTree : public RedBlackTreeBase<Key, Value, Compare, ExtractKey, bUniqueKeys, RedBlackTree<Key, Value, Compare, Allocator, ExtractKey, bMutableIterator, bUniqueKeys>>
+    template <typename Key, typename Value, typename Compare, typename Alloc, typename ExtractKey, bool bMutableIterator, bool bUniqueKeys>
+    class RedBlackTree : public RedBlackTreeBase<Key, Value, Compare, ExtractKey, bUniqueKeys, RedBlackTree<Key, Value, Compare, Alloc, ExtractKey, bMutableIterator, bUniqueKeys>>
     {
     private:
       using has_unique_keys_type = bool_constant<bUniqueKeys>;
-      using base_type            = RedBlackTreeBase<Key, Value, Compare, ExtractKey, bUniqueKeys, RedBlackTree<Key, Value, Compare, Allocator, ExtractKey, bMutableIterator, bUniqueKeys>>;
-      using this_type            = RedBlackTree<Key, Value, Compare, Allocator, ExtractKey, bMutableIterator, bUniqueKeys>;
-      using extract_key          = ExtractKey;
+      using base_type            = RedBlackTreeBase<Key, Value, Compare, ExtractKey, bUniqueKeys, RedBlackTree<Key, Value, Compare, Alloc, ExtractKey, bMutableIterator, bUniqueKeys>>;
+      using this_type            = RedBlackTree<Key, Value, Compare, Alloc, ExtractKey, bMutableIterator, bUniqueKeys>;
 
     public:
       using key_type               = Key;
@@ -205,16 +204,17 @@ namespace rsl
       using size_type              = count_t; /// RSL Comment: Different from ISO C++ Standard at time of writing (13/Aug/2022)
       using difference_type        = int32;
       using key_compare            = Compare;
-      using allocator_type         = Allocator;
+      using allocator_type         = Alloc;
       using reference              = value_type&;
       using const_reference        = const value_type&;
-      using pointer                = typename allocator_traits<Allocator>::pointer;
-      using const_pointer          = typename allocator_traits<Allocator>::const_pointer;
+      using pointer                = typename allocator_traits<Alloc>::pointer;
+      using const_pointer          = typename allocator_traits<Alloc>::const_pointer;
       using iterator               = RedBlackTreeIterator<value_type, value_type*, value_type&>;
       using const_iterator         = RedBlackTreeIterator<value_type, const value_type*, const value_type&>;
       using reverse_iterator       = rsl::reverse_iterator<iterator>;
       using const_reverse_iterator = rsl::reverse_iterator<const_iterator>;
       using node_type              = internal::RedBlackTreeNode<value_type>;
+      using extract_key            = ExtractKey;
 
       RedBlackTree()
           : m_anchor()
@@ -428,7 +428,7 @@ namespace rsl
       // clears the contents
       void clear()
       {
-        nuke_subtree(static_Cast<node_type*>(m_anchor.parent_node));
+        nuke_subtree(static_cast<node_type*>(m_anchor.parent_node));
         reset();
       }
 
@@ -560,17 +560,17 @@ namespace rsl
       // removes the element at pos
       iterator erase(iterator pos)
       {
-        return erase(const_iterator(pos.node));
+        return erase(const_iterator(pos.node()));
       }
       // removes the element at pos
       iterator erase(const_iterator pos)
       {
-        const iterator it_erase(pos.node);
+        const iterator it_erase(pos.node());
         --m_cp_size_and_allocator.first();
         ++pos;
-        internal::red_black_tree_erase(it_erase.node, &m_anchor);
-        free_node(it_erase.node);
-        return iterator(pos.node);
+        internal::red_black_tree_erase(it_erase.node(), &m_anchor);
+        free_node(it_erase.node());
+        return iterator(pos.node());
       }
       // removes the element in range [first, last)
       iterator erase(const_iterator first, const_iterator last)
@@ -598,7 +598,7 @@ namespace rsl
         // most common case, both trees have elements allocated to them
         if(m_anchor.parent_node && other.m_anchor.parent_node)
         {
-          rsl::swap(m_anchor.right_node, other.right_node);
+          rsl::swap(m_anchor.right_node, other.m_anchor.right_node);
           rsl::swap(m_anchor.left_node, other.m_anchor.left_node);
           rsl::swap(m_anchor.parent_node, other.m_anchor.parent_node);
 
@@ -704,7 +704,7 @@ namespace rsl
       // returns an iterator pointing to the first element that is not less than key
       const_iterator lower_bound(const Key& key) const
       {
-        return const_iterator < const_cast<this_type*>(this)->lower_bound(key);
+        return const_cast<this_type*>(this)->lower_bound(key);
       }
       // returns an iterator pointing to the first element that is not less than the value x
       template <typename K>
@@ -728,12 +728,14 @@ namespace rsl
             current = static_cast<node_type*>(current->right_node);
           }
         }
+
+        return iterator(range_end);
       }
       // returns an iterator pointing to the first element that is not less than the value x
       template <typename K>
       const_iterator lower_bound(const K& x) const
       {
-        return const_iterator < const_cast<this_type*>(this)->lower_bound(x);
+        return const_cast<this_type*>(this)->lower_bound(x);
       }
 
       // returns an iterator pointing to the first element that is greater than key
@@ -757,9 +759,9 @@ namespace rsl
 
         while(current)
         {
-          if(key_comp()(x, extract_key, current->value))
+          if(key_comp()(x, extract_key(current->value)))
           {
-            RSL_ASSERT_X(!key_comp()(extract_key(current->value, x)));
+            RSL_ASSERT_X(!key_comp()(extract_key(current->value), x), "compare function doesn't give the same result when swapping the arguments");
             range_end = current;
             current   = static_cast<node_type*>(current->left_node);
           }
@@ -885,7 +887,7 @@ namespace rsl
 
         if(nodeSource->right_node)
         {
-          new_node_root->right_node = copy_subtree(static_cast<const node_type*>(nodeSource->right_node, new_node_root));
+          new_node_root->right_node = copy_subtree(static_cast<const node_type*>(nodeSource->right_node), new_node_root);
 
           node_type* new_left_node;
 
@@ -896,7 +898,7 @@ namespace rsl
             nodeDest->left_node = new_left_node;
 
             if(nodeSource->right_node)
-              new_left_node->right_node = copy_subtree(static_cast<const node_type*>(nodeSource->right_node, new_left_node));
+              new_left_node->right_node = copy_subtree(static_cast<const node_type*>(nodeSource->right_node), new_left_node);
           }
         }
 
@@ -934,14 +936,14 @@ namespace rsl
         return insert_result<iterator> {iterator(position), false};
       }
       template <typename... Args>
-      iterator insert_value(false_type, Args&&... args)
+      insert_result<iterator> insert_value(false_type, Args&&... args)
       {
         node_type* new_node = create_node(rsl::forward<Args>(args)...);
         const key_type& key = extract_key {}(new_node->value);
 
         node_type* position = get_key_insertion_position_no_unique_keys(key);
 
-        return insert_value(position, false, key, new_node);
+        return insert_result<iterator>{ insert_value(position, false, key, new_node), true};
       }
 
       template <typename... Args>

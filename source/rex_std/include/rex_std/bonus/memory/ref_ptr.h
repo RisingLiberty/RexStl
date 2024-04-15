@@ -99,7 +99,7 @@ namespace rsl
         count_t m_weak_ref_count;
       };
 
-      template <typename T, typename Allocator, typename Deleter>
+      template <typename T, typename Alloc, typename Deleter>
       class ref_count : ref_count_base
       {
       public:
@@ -136,19 +136,19 @@ namespace rsl
       private:
         T* m_ptr;
         Deleter m_deleter;
-        Allocator m_allocator;
+        Alloc m_allocator;
       };
 
       template <typename T>
       void allocate_shared_helper(shared_ptr<T>& sharedPtr, ref_count_base* refCount, T* value);
 
-      template <typename T, typename Allocator>
+      template <typename T, typename Alloc>
       class ref_count_inst : public ref_count_base
       {
       public:
         using value_type     = T;
         using pointer        = T*;
-        using allocator_type = Allocator;
+        using allocator_type = Alloc;
         using storage_type   = rsl::aligned_storage_t<T>;
 
         pointer value()
@@ -220,8 +220,8 @@ namespace rsl
           alloc_without_ptr(nullptr, d, allocator());
         }
 
-        template <typename U, typename Deleter, typename Allocator>
-        ref_ptr(U* ptr, Deleter d, Allocator& alloc)
+        template <typename U, typename Deleter, typename Alloc>
+        ref_ptr(U* ptr, Deleter d, Alloc& alloc)
             : m_ptr(nullptr)
             , m_ref_count(nullptr)
         {
@@ -229,8 +229,8 @@ namespace rsl
           alloc(ptr, d, alloc);
         }
 
-        template <typename U, typename Deleter, typename Allocator>
-        ref_ptr(nullptr_t, Deleter d, Allocator& alloc)
+        template <typename U, typename Deleter, typename Alloc>
+        ref_ptr(nullptr_t, Deleter d, Alloc& alloc)
             : m_ptr(nullptr)
             , m_ref_count(nullptr)
         {
@@ -369,35 +369,35 @@ namespace rsl
         }
 
       private:
-        template <typename U, typename Deleter, typename Allocator, enable_if_t<rsl::is_empty_v<Allocator>, bool> = true>
-        void alloc(U* ptr, Deleter deleter, const Allocator& alloc)
+        template <typename U, typename Deleter, typename Alloc, enable_if_t<rsl::is_empty_v<Alloc>, bool> = true>
+        void alloc(U* ptr, Deleter deleter, const Alloc& alloc)
         {
           void* mem = alloc.allocate(1_elem);
 
-          m_ref_count = new(mem)(internal::ref_count<T, Allocator, Deleter>)(ptr, rsl::move(deleter), rsl::move(alloc));
+          m_ref_count = new(mem)(internal::ref_count<T, Alloc, Deleter>)(ptr, rsl::move(deleter), rsl::move(alloc));
           m_ptr       = ptr;
         }
-        template <typename U, typename Deleter, typename Allocator, enable_if_t<!rsl::is_empty_v<Allocator>, bool> = true>
-        void alloc(U* ptr, Deleter deleter, Allocator& alloc)
+        template <typename U, typename Deleter, typename Alloc, enable_if_t<!rsl::is_empty_v<Alloc>, bool> = true>
+        void alloc(U* ptr, Deleter deleter, Alloc& alloc)
         {
           void* mem = alloc.allocate(1_elem);
 
-          m_ref_count = new(mem)(internal::ref_count<T, Allocator, Deleter>)(ptr, rsl::move(deleter), rsl::move(alloc));
+          m_ref_count = new(mem)(internal::ref_count<T, Alloc, Deleter>)(ptr, rsl::move(deleter), rsl::move(alloc));
           m_ptr       = ptr;
         }
-        template <typename Deleter, typename Allocator, enable_if_t<rsl::is_empty_v<Allocator>, bool> = true>
-        void alloc_without_ptr(Deleter deleter, const Allocator& alloc)
+        template <typename Deleter, typename Alloc, enable_if_t<rsl::is_empty_v<Alloc>, bool> = true>
+        void alloc_without_ptr(Deleter deleter, const Alloc& alloc)
         {
           void* mem = alloc.allocate(1_elem);
 
-          m_ref_count = new(mem)(internal::ref_count<T, Allocator, Deleter>)(nullptr, rsl::move(deleter), rsl::move(alloc));
+          m_ref_count = new(mem)(internal::ref_count<T, Alloc, Deleter>)(nullptr, rsl::move(deleter), rsl::move(alloc));
         }
-        template <typename Deleter, typename Allocator, enable_if_t<!rsl::is_empty_v<Allocator>, bool> = true>
-        void alloc_without_ptr(Deleter deleter, Allocator& alloc)
+        template <typename Deleter, typename Alloc, enable_if_t<!rsl::is_empty_v<Alloc>, bool> = true>
+        void alloc_without_ptr(Deleter deleter, Alloc& alloc)
         {
           void* mem = alloc.allocate(1_elem);
 
-          m_ref_count = new(mem)(internal::ref_count<T, Allocator, Deleter>)(nullptr, rsl::move(deleter), rsl::move(alloc));
+          m_ref_count = new(mem)(internal::ref_count<T, Alloc, Deleter>)(nullptr, rsl::move(deleter), rsl::move(alloc));
         }
 
         template <typename U>

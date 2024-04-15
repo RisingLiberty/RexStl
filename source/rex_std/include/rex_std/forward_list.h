@@ -79,7 +79,7 @@ namespace rsl
 
     } // namespace internal
 
-    template <typename T, typename Allocator>
+    template <typename T, typename Alloc>
     class forward_list;
 
     // TODO: Check if we can use the ForwardIterator for this (it's implementation should change though)
@@ -90,7 +90,7 @@ namespace rsl
       using this_type = forward_list_iterator<T, Pointer, Reference>;
 
     public:
-      template <typename U, typename Allocator>
+      template <typename U, typename Alloc>
       friend class forward_list;
 
       template <typename T2, typename Pointer2, typename Reference2>
@@ -769,14 +769,14 @@ namespace rsl
 #endif
     };
 
-    template <typename T, typename Allocator>
-    bool operator==(const forward_list<T, Allocator>& a, const forward_list<T, Allocator>& b)
+    template <typename T, typename Alloc>
+    bool operator==(const forward_list<T, Alloc>& a, const forward_list<T, Alloc>& b)
     {
-      typename forward_list<T, Allocator>::const_iterator ia   = a.begin();
-      typename forward_list<T, Allocator>::const_iterator ib   = b.begin();
-      typename forward_list<T, Allocator>::const_iterator enda = a.end();
+      typename forward_list<T, Alloc>::const_iterator ia   = a.begin();
+      typename forward_list<T, Alloc>::const_iterator ib   = b.begin();
+      typename forward_list<T, Alloc>::const_iterator enda = a.end();
 
-      typename forward_list<T, Allocator>::const_iterator endb = b.end();
+      typename forward_list<T, Alloc>::const_iterator endb = b.end();
 
       while((ia != enda) && (ib != endb) && (*ia == *ib))
       {
@@ -786,32 +786,32 @@ namespace rsl
       return (ia == enda) && (ib == endb);
     }
 
-    template <typename T, typename Allocator>
-    bool operator!=(const forward_list<T, Allocator>& a, const forward_list<T, Allocator>& b)
+    template <typename T, typename Alloc>
+    bool operator!=(const forward_list<T, Alloc>& a, const forward_list<T, Alloc>& b)
     {
       return !(a == b);
     }
 
-    template <typename T, typename Allocator>
-    inline bool operator<(const forward_list<T, Allocator>& a, const forward_list<T, Allocator>& b)
+    template <typename T, typename Alloc>
+    inline bool operator<(const forward_list<T, Alloc>& a, const forward_list<T, Alloc>& b)
     {
       return rsl::lexicographical_compare(a.begin(), a.end(), b.begin(), b.end());
     }
 
-    template <typename T, typename Allocator>
-    inline bool operator>(const forward_list<T, Allocator>& a, const forward_list<T, Allocator>& b)
+    template <typename T, typename Alloc>
+    inline bool operator>(const forward_list<T, Alloc>& a, const forward_list<T, Alloc>& b)
     {
       return b < a;
     }
 
-    template <typename T, typename Allocator>
-    inline bool operator<=(const forward_list<T, Allocator>& a, const forward_list<T, Allocator>& b)
+    template <typename T, typename Alloc>
+    inline bool operator<=(const forward_list<T, Alloc>& a, const forward_list<T, Alloc>& b)
     {
       return !(b < a);
     }
 
-    template <typename T, typename Allocator>
-    inline bool operator>=(const forward_list<T, Allocator>& a, const forward_list<T, Allocator>& b)
+    template <typename T, typename Alloc>
+    inline bool operator>=(const forward_list<T, Alloc>& a, const forward_list<T, Alloc>& b)
     {
       return !(a < b);
     }
@@ -819,15 +819,15 @@ namespace rsl
     template <typename T, typename Alloc = rsl::allocator>
     forward_list(T...) -> forward_list<T, Alloc>;
 
-    template <class T, class Allocator, class U>
-    typename forward_list<T, Allocator>::size_type erase(forward_list<T, Allocator>& c, const U& value)
+    template <class T, class Alloc, class U>
+    typename forward_list<T, Alloc>::size_type erase(forward_list<T, Alloc>& c, const U& value)
     {
       // Erases all elements that compare equal to value from the container.
       return c.remove(value);
     }
 
-    template <class T, class Allocator, class Predicate>
-    typename forward_list<T, Allocator>::size_type erase_if(forward_list<T, Allocator>& c, Predicate predicate)
+    template <class T, class Alloc, class Predicate>
+    typename forward_list<T, Alloc>::size_type erase_if(forward_list<T, Alloc>& c, Predicate predicate)
     {
       // Erases all elements that satisfy the predicate pred from the container.
       return c.remove_if(predicate);

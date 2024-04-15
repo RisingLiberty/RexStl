@@ -27,12 +27,12 @@ namespace rsl
   inline namespace v1
   {
 
-    template <typename Key, typename Value, typename Hash = rsl::hash<Key>, typename Equal = rsl::equal_to<Key>, typename Allocator = allocator>
-    class hash_map : public hashtable<Key, key_value<const Key, Value>, Allocator, use_first<key_value<const Key, Value>>, Equal, Hash, mod_range_hashing, prime_rehash_policy, true, true>
+    template <typename Key, typename Value, typename Hash = rsl::hash<Key>, typename Equal = rsl::equal_to<Key>, typename Alloc = allocator>
+    class hash_map : public hashtable<Key, key_value<const Key, Value>, Alloc, use_first<key_value<const Key, Value>>, Equal, Hash, mod_range_hashing, prime_rehash_policy, true, true>
     {
     public:
-      using base_type          = hashtable<Key, key_value<const Key, Value>, Allocator, use_first<key_value<const Key, Value>>, Equal, Hash, mod_range_hashing, prime_rehash_policy, true, true>;
-      using this_type          = hash_map<Key, Value, Hash, Equal, Allocator>;
+      using base_type          = hashtable<Key, key_value<const Key, Value>, Alloc, use_first<key_value<const Key, Value>>, Equal, Hash, mod_range_hashing, prime_rehash_policy, true, true>;
+      using this_type          = hash_map<Key, Value, Hash, Equal, Alloc>;
       using size_type          = typename base_type::size_type;
       using key_type           = typename base_type::key_type;
       using mapped_type        = Value;
@@ -156,12 +156,12 @@ namespace rsl
       }
     };
 
-    template <typename Key, typename Value, typename Hash = rsl::hash<Key>, typename Equal = rsl::equal_to<Key>, typename Allocator = allocator>
-    class hash_multimap : public hashtable<Key, key_value<const Key, Value>, Allocator, use_first<key_value<const Key, Value>>, Equal, Hash, mod_range_hashing, prime_rehash_policy, true, false>
+    template <typename Key, typename Value, typename Hash = rsl::hash<Key>, typename Equal = rsl::equal_to<Key>, typename Alloc = allocator>
+    class hash_multimap : public hashtable<Key, key_value<const Key, Value>, Alloc, use_first<key_value<const Key, Value>>, Equal, Hash, mod_range_hashing, prime_rehash_policy, true, false>
     {
     public:
-      using base_type          = hashtable<Key, key_value<const Key, Value>, Allocator, use_first<key_value<const Key, Value>>, Equal, Hash, mod_range_hashing, prime_rehash_policy, true, false>;
-      using this_type          = hash_multimap<Key, Value, Hash, Equal, Allocator>;
+      using base_type          = hashtable<Key, key_value<const Key, Value>, Alloc, use_first<key_value<const Key, Value>>, Equal, Hash, mod_range_hashing, prime_rehash_policy, true, false>;
+      using this_type          = hash_multimap<Key, Value, Hash, Equal, Alloc>;
       using size_type          = typename base_type::size_type;
       using key_type           = typename base_type::key_type;
       using mapped_type        = Value;

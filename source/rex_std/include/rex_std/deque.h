@@ -202,11 +202,11 @@ namespace rsl
       return ((difference_type)SubArraySize * first_val) + second_val + third_val;
     }
 
-    template <typename T, typename Allocator = rsl::allocator, card32 SubArraySize = static_cast<card32>(internal::deque_default_sub_array_size<T>())>
+    template <typename T, typename Alloc = rsl::allocator, card32 SubArraySize = static_cast<card32>(internal::deque_default_sub_array_size<T>())>
     class deque
     {
     private:
-      using this_type = deque<T, Allocator, SubArraySize>;
+      using this_type = deque<T, Alloc, SubArraySize>;
 
       static_assert((SubArraySize & (SubArraySize - 1)) == 0, "SubArraySize is not a multiple of 2");
 
@@ -229,7 +229,7 @@ namespace rsl
       using const_reverse_iterator = rsl::reverse_iterator<const_iterator>;
       using size_type              = card32;
       using difference_type        = int32;
-      using allocator_type         = Allocator;
+      using allocator_type         = Alloc;
 
       constexpr static card32 s_subarray_size = SubArraySize;
 
@@ -266,7 +266,7 @@ namespace rsl
         fill_default();
       }
 
-      template <rsl::enable_if_t<!rsl::is_integral_v<Allocator>, bool> = true> // make sure we don't pick this overload if there are 3 arguments provided where the third wouldn't be an allocator
+      template <rsl::enable_if_t<!rsl::is_integral_v<Alloc>, bool> = true> // make sure we don't pick this overload if there are 3 arguments provided where the third wouldn't be an allocator
       deque(size_type n, const value_type& value, const allocator_type& allocator = allocator_type())
           : m_ptr_array(nullptr)
           , m_ptr_array_size(0)
@@ -823,7 +823,7 @@ namespace rsl
         const size_type new_ptr_array_size = static_cast<size_type>((n / SubArraySize) + 1);
         const size_type min_ptr_array_size = s_min_array_size;
 
-        m_ptr_array_size = rsl::max(min_ptr_array_size, (new_ptr_array_size + 2));
+        m_ptr_array_size = (rsl::max)(min_ptr_array_size, (new_ptr_array_size + 2));
         m_ptr_array      = allocate_ptr_array(m_ptr_array_size);
 
         value_type** const ptr_array_begin = m_ptr_array + ((m_ptr_array_size - new_ptr_array_size) / 2);
@@ -1240,7 +1240,7 @@ namespace rsl
         }
         else
         {
-          const size_type new_ptr_array_size = m_ptr_array_size + rsl::max(m_ptr_array_size, additionalCapacity) + 2;
+          const size_type new_ptr_array_size = m_ptr_array_size + (rsl::max)(m_ptr_array_size, additionalCapacity) + 2;
           value_type** new_ptr_array         = allocate_ptr_array(new_ptr_array_size);
 
           ptr_array_begin = new_ptr_array + (m_begin_it.m_current_array_ptr - m_ptr_array) + ((allocationSide == Side::Front) ? additionalCapacity : 0);
@@ -1283,57 +1283,57 @@ namespace rsl
       allocator_type m_allocator; // allocator used for memory allocations
     };
 
-    template <typename T, typename Allocator, card32 SubArraySize>
-    constexpr bool operator==(const deque<T, Allocator, SubArraySize>& a, const deque<T, Allocator, SubArraySize>& b)
+    template <typename T, typename Alloc, card32 SubArraySize>
+    constexpr bool operator==(const deque<T, Alloc, SubArraySize>& a, const deque<T, Alloc, SubArraySize>& b)
     {
       return ((a.size() == b.size()) && rsl::equal(a.begin(), a.end(), b.begin()));
     }
 
-    template <typename T, typename Allocator, card32 SubArraySize>
-    constexpr bool operator!=(const deque<T, Allocator, SubArraySize>& a, const deque<T, Allocator, SubArraySize>& b)
+    template <typename T, typename Alloc, card32 SubArraySize>
+    constexpr bool operator!=(const deque<T, Alloc, SubArraySize>& a, const deque<T, Alloc, SubArraySize>& b)
     {
       return ((a.size() != b.size()) || !rsl::equal(a.begin(), a.end(), b.begin()));
     }
 
-    template <typename T, typename Allocator, card32 SubArraySize>
-    constexpr bool operator<(const deque<T, Allocator, SubArraySize>& a, const deque<T, Allocator, SubArraySize>& b)
+    template <typename T, typename Alloc, card32 SubArraySize>
+    constexpr bool operator<(const deque<T, Alloc, SubArraySize>& a, const deque<T, Alloc, SubArraySize>& b)
     {
       return rsl::lexicographical_compare(a.begin(), a.end(), b.begin(), b.end());
     }
 
-    template <typename T, typename Allocator, card32 SubArraySize>
-    constexpr bool operator>(const deque<T, Allocator, SubArraySize>& a, const deque<T, Allocator, SubArraySize>& b)
+    template <typename T, typename Alloc, card32 SubArraySize>
+    constexpr bool operator>(const deque<T, Alloc, SubArraySize>& a, const deque<T, Alloc, SubArraySize>& b)
     {
       return b < a;
     }
 
-    template <typename T, typename Allocator, card32 SubArraySize>
-    constexpr bool operator<=(const deque<T, Allocator, SubArraySize>& a, const deque<T, Allocator, SubArraySize>& b)
+    template <typename T, typename Alloc, card32 SubArraySize>
+    constexpr bool operator<=(const deque<T, Alloc, SubArraySize>& a, const deque<T, Alloc, SubArraySize>& b)
     {
       return !(b < a);
     }
 
-    template <typename T, typename Allocator, card32 SubArraySize>
-    constexpr bool operator>=(const deque<T, Allocator, SubArraySize>& a, const deque<T, Allocator, SubArraySize>& b)
+    template <typename T, typename Alloc, card32 SubArraySize>
+    constexpr bool operator>=(const deque<T, Alloc, SubArraySize>& a, const deque<T, Alloc, SubArraySize>& b)
     {
       return !(a < b);
     }
 
-    template <typename T, typename Allocator, card32 SubArraySize>
-    constexpr void swap(deque<T, Allocator, SubArraySize>& a, deque<T, Allocator, SubArraySize>& b)
+    template <typename T, typename Alloc, card32 SubArraySize>
+    constexpr void swap(deque<T, Alloc, SubArraySize>& a, deque<T, Alloc, SubArraySize>& b)
     {
       a.swap(b);
     }
 
-    template <class T, class Allocator, class U>
-    void erase(deque<T, Allocator>& c, const U& value)
+    template <class T, class Alloc, class U>
+    void erase(deque<T, Alloc>& c, const U& value)
     {
       // Erases all elements that compare equal to value from the container.
       c.erase(rsl::remove(c.begin(), c.end(), value), c.end());
     }
 
-    template <class T, class Allocator, class Predicate>
-    void erase_if(deque<T, Allocator>& c, Predicate predicate)
+    template <class T, class Alloc, class Predicate>
+    void erase_if(deque<T, Alloc>& c, Predicate predicate)
     {
       // Erases all elements that satisfy the predicate pred from the container.
       c.erase(rsl::remove_if(c.begin(), c.end(), predicate), c.end());

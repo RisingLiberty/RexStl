@@ -25,12 +25,12 @@ namespace rsl
   inline namespace v1
   {
 		template <typename Value, typename Hash = rsl::hash<Value>, typename Predicate = rsl::equal_to<Value>,
-			typename Allocator = rsl::allocator>
-			class hash_set : public hashtable<Value, Value, Allocator, rsl::use_self<Value>, Predicate, Hash, mod_range_hashing, prime_rehash_policy, false, true>
+			typename Alloc = rsl::allocator>
+			class hash_set : public hashtable<Value, Value, Alloc, rsl::use_self<Value>, Predicate, Hash, mod_range_hashing, prime_rehash_policy, false, true>
 		{
 		public:
-			using base_type = hashtable<Value, Value, Allocator, rsl::use_self<Value>, Predicate, Hash, mod_range_hashing, prime_rehash_policy, false, true>;
-			using this_type = hash_set<Value, Hash, Predicate, Allocator>;
+			using base_type = hashtable<Value, Value, Alloc, rsl::use_self<Value>, Predicate, Hash, mod_range_hashing, prime_rehash_policy, false, true>;
+			using this_type = hash_set<Value, Hash, Predicate, Alloc>;
 			using size_type = typename base_type::size_type;
 			using value_type = typename base_type::value_type;
 			using allocator_type = typename base_type::allocator_type;
@@ -129,8 +129,8 @@ namespace rsl
 		/// hash_set erase_if
 		///
 		/// https://en.cppreference.com/w/cpp/container/unordered_set/erase_if
-		template <typename Value, typename Hash, typename Predicate, typename Allocator, typename UserPredicate>
-		void erase_if(rsl::hash_set<Value, Hash, Predicate, Allocator>& c, UserPredicate predicate)
+		template <typename Value, typename Hash, typename Predicate, typename Alloc, typename UserPredicate>
+		void erase_if(rsl::hash_set<Value, Hash, Predicate, Alloc>& c, UserPredicate predicate)
 		{
 			// Erases all elements that satisfy the predicate pred from the container.
 			for (auto i = c.begin(), last = c.end(); i != last;)
@@ -154,12 +154,12 @@ namespace rsl
 		/// for hash_set for details.
 		///
 		template <typename Value, typename Hash = rsl::hash<Value>, typename Predicate = rsl::equal_to<Value>,
-			typename Allocator = rsl::allocator>
-			class hash_multiset : public hashtable<Value, Value, Allocator, rsl::use_self<Value>, Predicate, Hash, mod_range_hashing, prime_rehash_policy, false, false>
+			typename Alloc = rsl::allocator>
+			class hash_multiset : public hashtable<Value, Value, Alloc, rsl::use_self<Value>, Predicate, Hash, mod_range_hashing, prime_rehash_policy, false, false>
 		{
 		public:
-			using base_type = hashtable<Value, Value, Allocator, rsl::use_self<Value>, Predicate, Hash, mod_range_hashing, prime_rehash_policy, false, false>;
-			using this_type = hash_multiset<Value, Hash, Predicate, Allocator>;
+			using base_type = hashtable<Value, Value, Alloc, rsl::use_self<Value>, Predicate, Hash, mod_range_hashing, prime_rehash_policy, false, false>;
+			using this_type = hash_multiset<Value, Hash, Predicate, Alloc>;
 			using size_type = typename base_type::size_type;
 			using value_type = typename base_type::value_type;
 			using allocator_type = typename base_type::allocator_type;
@@ -258,8 +258,8 @@ namespace rsl
 		/// hash_multiset erase_if
 		///
 		/// https://en.cppreference.com/w/cpp/container/unordered_multiset/erase_if
-		template <typename Value, typename Hash, typename Predicate, typename Allocator, typename UserPredicate>
-		void erase_if(rsl::hash_multiset<Value, Hash, Predicate, Allocator>& c, UserPredicate predicate)
+		template <typename Value, typename Hash, typename Predicate, typename Alloc, typename UserPredicate>
+		void erase_if(rsl::hash_multiset<Value, Hash, Predicate, Alloc>& c, UserPredicate predicate)
 		{
 			// Erases all elements that satisfy the predicate pred from the container.
 			for (auto i = c.begin(), last = c.end(); i != last;)
@@ -281,11 +281,11 @@ namespace rsl
 		// global operators
 		///////////////////////////////////////////////////////////////////////
 
-		template <typename Value, typename Hash, typename Predicate, typename Allocator>
-		inline bool operator==(const hash_set<Value, Hash, Predicate, Allocator>& a,
-			const hash_set<Value, Hash, Predicate, Allocator>& b)
+		template <typename Value, typename Hash, typename Predicate, typename Alloc>
+		inline bool operator==(const hash_set<Value, Hash, Predicate, Alloc>& a,
+			const hash_set<Value, Hash, Predicate, Alloc>& b)
 		{
-			using const_iterator = typename hash_set<Value, Hash, Predicate, Allocator>::const_iterator ;
+			using const_iterator = typename hash_set<Value, Hash, Predicate, Alloc>::const_iterator ;
 
 			// We implement branching with the assumption that the return value is usually false.
 			if (a.size() != b.size())
@@ -304,19 +304,19 @@ namespace rsl
 			return true;
 		}
 
-		template <typename Value, typename Hash, typename Predicate, typename Allocator>
-		inline bool operator!=(const hash_set<Value, Hash, Predicate, Allocator>& a,
-			const hash_set<Value, Hash, Predicate, Allocator>& b)
+		template <typename Value, typename Hash, typename Predicate, typename Alloc>
+		inline bool operator!=(const hash_set<Value, Hash, Predicate, Alloc>& a,
+			const hash_set<Value, Hash, Predicate, Alloc>& b)
 		{
 			return !(a == b);
 		}
 
 
-		template <typename Value, typename Hash, typename Predicate, typename Allocator>
-		inline bool operator==(const hash_multiset<Value, Hash, Predicate, Allocator>& a,
-			const hash_multiset<Value, Hash, Predicate, Allocator>& b)
+		template <typename Value, typename Hash, typename Predicate, typename Alloc>
+		inline bool operator==(const hash_multiset<Value, Hash, Predicate, Alloc>& a,
+			const hash_multiset<Value, Hash, Predicate, Alloc>& b)
 		{
-			using const_iterator = typename hash_multiset<Value, Hash, Predicate, Allocator>::const_iterator;
+			using const_iterator = typename hash_multiset<Value, Hash, Predicate, Alloc>::const_iterator;
 			typedef typename rsl::iterator_traits<const_iterator>::difference_type difference_type;
 
 			// We implement branching with the assumption that the return value is usually false.
@@ -361,9 +361,9 @@ namespace rsl
 			return true;
 		}
 
-		template <typename Value, typename Hash, typename Predicate, typename Allocator>
-		inline bool operator!=(const hash_multiset<Value, Hash, Predicate, Allocator>& a,
-			const hash_multiset<Value, Hash, Predicate, Allocator>& b)
+		template <typename Value, typename Hash, typename Predicate, typename Alloc>
+		inline bool operator!=(const hash_multiset<Value, Hash, Predicate, Alloc>& a,
+			const hash_multiset<Value, Hash, Predicate, Alloc>& b)
 		{
 			return !(a == b);
 		}

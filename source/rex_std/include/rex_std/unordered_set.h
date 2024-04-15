@@ -19,11 +19,11 @@ namespace rsl
 {
   inline namespace v1
   {
-    template <typename Value, typename Hash = rsl::hash<Value>, typename Predicate = rsl::equal_to<Value>, typename Allocator = rsl::allocator>
-    using unordered_set = hash_set<Value, Hash, Predicate, Allocator>;
+    template <typename Value, typename Hash = rsl::hash<Value>, typename Predicate = rsl::equal_to<Value>, typename Alloc = rsl::allocator>
+    using unordered_set = hash_set<Value, Hash, Predicate, Alloc>;
 
-    template <typename Value, typename Hash = rsl::hash<Value>, typename Predicate = rsl::equal_to<Value>, typename Allocator = rsl::allocator>
-    using unordered_multiset = hash_multiset<Value, Hash, Predicate, Allocator>;
+    template <typename Value, typename Hash = rsl::hash<Value>, typename Predicate = rsl::equal_to<Value>, typename Alloc = rsl::allocator>
+    using unordered_multiset = hash_multiset<Value, Hash, Predicate, Alloc>;
 
   } // namespace v1
 } // namespace rsl

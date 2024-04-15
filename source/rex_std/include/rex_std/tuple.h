@@ -425,7 +425,7 @@ namespace rsl
       template <typename... Types, typename Tuple, count_t Start, count_t End>
       struct MakeTupleTypesImpl<tuple_types<Types...>, Tuple, Start, End>
       {
-        using TupleType = typename remove_reference_t<Tuple>::type;
+        using TupleType = remove_reference_t<Tuple>;
         using type      = typename MakeTupleTypesImpl<tuple_types<Types..., typename conditional<is_lvalue_reference<Tuple>::value,
                                                                                             // append ref if tuple is ref
                                                                                             tuple_element_t<Start, TupleType>&,
@@ -593,13 +593,13 @@ namespace rsl
       {
       };
 
-      template <typename From, typename To, bool = tuple_like<typename remove_reference_t<From>::type>::value, bool = tuple_like<typename remove_reference_t<To>::type>::value>
+      template <typename From, typename To, bool = tuple_like<remove_reference_t<From>>::value, bool = tuple_like<remove_reference_t<To>>::value>
       struct tuple_convertible : public false_type
       {
       };
 
       template <typename From, typename To>
-      struct tuple_convertible<From, To, true, true> : public tuple_convertible_impl<tuple_size<typename remove_reference_t<From>::type>::value == tuple_size<typename remove_reference_t<To>::type>::value, MakeTupleTypes_t<From>, MakeTupleTypes_t<To>>
+      struct tuple_convertible<From, To, true, true> : public tuple_convertible_impl<tuple_size<remove_reference_t<From>>::value == tuple_size<remove_reference_t<To>>::value, MakeTupleTypes_t<From>, MakeTupleTypes_t<To>>
       {
       };
 
@@ -617,14 +617,14 @@ namespace rsl
       {
       };
 
-      template <typename Target, typename From, bool = tuple_like<typename remove_reference_t<Target>::type>::value, bool = tuple_like<typename remove_reference_t<From>::type>::value>
+      template <typename Target, typename From, bool = tuple_like<remove_reference_t<Target>>::value, bool = tuple_like<remove_reference_t<From>>::value>
       struct tuple_assignable : public false_type
       {
       };
 
       template <typename Target, typename From>
       struct tuple_assignable<Target, From, true, true>
-          : public tuple_assignable_impl<tuple_size<typename remove_reference_t<Target>::type>::value == tuple_size<typename remove_reference_t<From>::type>::value, MakeTupleTypes_t<Target>, MakeTupleTypes_t<From>>
+          : public tuple_assignable_impl<tuple_size<remove_reference_t<Target>>::value == tuple_size<remove_reference_t<From>>::value, MakeTupleTypes_t<Target>, MakeTupleTypes_t<From>>
       {
       };
 

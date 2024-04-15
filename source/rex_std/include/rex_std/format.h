@@ -957,14 +957,14 @@ namespace rsl
       The output can be converted to an ``rsl::string`` with ``to_string(out)``.
       \endrst
      */
-    template <typename T, count_t SIZE = inline_buffer_size, typename Allocator = rsl::typed_allocator<T>>
+    template <typename T, count_t SIZE = inline_buffer_size, typename Alloc = rsl::typed_allocator<T>>
     class basic_memory_buffer final : public detail::buffer<T>
     {
     private:
       T m_store[SIZE]; // NOLINT(modernize-avoid-c-arrays)
 
-      // Don't inherit from Allocator avoid generating type_info for it.
-      Allocator m_alloc;
+      // Don't inherit from Alloc avoid generating type_info for it.
+      Alloc m_alloc;
 
       // Deallocate memory allocated by the buffer.
       FMT_CONSTEXPR20 void deallocate()
@@ -981,7 +981,7 @@ namespace rsl
       using value_type      = T;
       using const_reference = const T&;
 
-      FMT_CONSTEXPR20 explicit basic_memory_buffer(const Allocator& alloc = Allocator())
+      FMT_CONSTEXPR20 explicit basic_memory_buffer(const Alloc& alloc = Alloc())
           : m_alloc(alloc)
       {
         this->set(m_store, SIZE);
@@ -1045,7 +1045,7 @@ namespace rsl
       }
 
       // Returns a copy of the allocator associated with this buffer.
-      auto get_allocator() const -> Allocator
+      auto get_allocator() const -> Alloc
       {
         return m_alloc;
       }
@@ -1074,8 +1074,8 @@ namespace rsl
       }
     };
 
-    template <typename T, count_t SIZE, typename Allocator>
-    FMT_CONSTEXPR20 void basic_memory_buffer<T, SIZE, Allocator>::grow(count_t size)
+    template <typename T, count_t SIZE, typename Alloc>
+    FMT_CONSTEXPR20 void basic_memory_buffer<T, SIZE, Alloc>::grow(count_t size)
     {
       detail::abort_fuzzing_if(size > 5000);
       const count_t max_size     = m_alloc.max_size();
@@ -1103,8 +1103,8 @@ namespace rsl
 
     using memory_buffer = basic_memory_buffer<char>;
 
-    template <typename T, count_t SIZE, typename Allocator>
-    struct is_contiguous<basic_memory_buffer<T, SIZE, Allocator>> : rsl::true_type
+    template <typename T, count_t SIZE, typename Alloc>
+    struct is_contiguous<basic_memory_buffer<T, SIZE, Alloc>> : rsl::true_type
     {
     };
 

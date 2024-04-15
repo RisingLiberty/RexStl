@@ -2197,8 +2197,8 @@ namespace rsl
     using u32string = basic_string<char32_t>;
 
     // extracts characters from input and appends them to str until the delim is found or the stream's eof.
-    template <typename Char, typename Traits, typename Allocator>
-    basic_istream<Char, Traits>& getline(basic_istream<Char, Traits>& input, basic_string<Char, Traits, Allocator>& str, Char delim)
+    template <typename Char, typename Traits, typename Alloc>
+    basic_istream<Char, Traits>& getline(basic_istream<Char, Traits>& input, basic_string<Char, Traits, Alloc>& str, Char delim)
     {
       using my_is = basic_istream<Char, Traits>;
 
@@ -2252,8 +2252,8 @@ namespace rsl
     }
 
     // extracts characters from input and appends them to str until the '\n' is found or the stream's eof.
-    template <typename Char, typename Traits, typename Allocator>
-    basic_istream<Char, Traits>& getline(basic_istream<Char, Traits>& input, basic_string<Char, Traits, Allocator>& str)
+    template <typename Char, typename Traits, typename Alloc>
+    basic_istream<Char, Traits>& getline(basic_istream<Char, Traits>& input, basic_string<Char, Traits, Alloc>& str)
     {
       return getline(input, str, '\n');
     }
@@ -2372,10 +2372,10 @@ namespace rsl
 #endif
     } // namespace string_literals
 
-    template <typename CharType, typename Traits, typename Allocator>
-    struct hash<basic_string<CharType, Traits, Allocator>>
+    template <typename CharType, typename Traits, typename Alloc>
+    struct hash<basic_string<CharType, Traits, Alloc>>
     {
-      constexpr hash_result operator()(const basic_string<CharType, Traits, Allocator>& str) const
+      constexpr hash_result operator()(const basic_string<CharType, Traits, Alloc>& str) const
       {
         return rsl::internal::hash(str.data());
       }
@@ -2391,8 +2391,8 @@ namespace rsl
     explicit basic_string(rsl::basic_string_view<Char, Traits>, typename rsl::basic_string_view<Char, Traits>::size_type, typename rsl::basic_string_view<Char, Traits>::size_type, const Alloc&) -> basic_string<Char, Traits, Alloc>;
 
     // stores each characters from the resulting sequence to the output stream
-    template <typename Char, typename Traits, typename Allocator>
-    inline basic_ostream<Char, Traits>& operator<<(basic_ostream<Char, Traits>& os, const basic_string<Char, Traits, Allocator>& str)
+    template <typename Char, typename Traits, typename Alloc>
+    inline basic_ostream<Char, Traits>& operator<<(basic_ostream<Char, Traits>& os, const basic_string<Char, Traits, Alloc>& str)
     {
       os.rdbuf()->sputn(str.data(), str.length());
       return os;

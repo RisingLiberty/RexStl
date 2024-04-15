@@ -27,7 +27,7 @@ namespace rsl
 {
   inline namespace v1
   {
-    template <typename CharType, typename Traits = char_traits<CharType>, typename Allocator = allocator>
+    template <typename CharType, typename Traits = char_traits<CharType>, typename Alloc = allocator>
     class basic_stringbuf : public basic_streambuf<CharType, Traits>
     {
     private:
@@ -39,7 +39,7 @@ namespace rsl
       using int_type       = typename Traits::int_type;
       using pos_type       = typename Traits::pos_type;
       using off_type       = typename Traits::off_type;
-      using allocator_type = Allocator;
+      using allocator_type = Alloc;
 
       basic_stringbuf()
           : base()
@@ -61,7 +61,7 @@ namespace rsl
           , m_allocator()
       {
       }
-      explicit basic_stringbuf(const basic_string<CharType, Traits, Allocator>& s, io::openmode which = io::openmode::in | io::openmode::out)
+      explicit basic_stringbuf(const basic_string<CharType, Traits, Alloc>& s, io::openmode which = io::openmode::in | io::openmode::out)
           : base()
           , m_buffer(nullptr)
           , m_buffer_end(nullptr)
@@ -72,7 +72,7 @@ namespace rsl
       {
         str(s);
       }
-      explicit basic_stringbuf(const Allocator& alloc)
+      explicit basic_stringbuf(const Alloc& alloc)
           : base()
           , m_buffer(nullptr)
           , m_buffer_end(nullptr)
@@ -82,7 +82,7 @@ namespace rsl
           , m_allocator(alloc)
       {
       }
-      explicit basic_stringbuf(io::openmode which, const Allocator& alloc)
+      explicit basic_stringbuf(io::openmode which, const Alloc& alloc)
           : base()
           , m_buffer(nullptr)
           , m_buffer_end(nullptr)
@@ -92,7 +92,7 @@ namespace rsl
           , m_allocator(alloc)
       {
       }
-      basic_stringbuf(const basic_stringbuf<CharType, Traits, Allocator>& rhs) = delete;
+      basic_stringbuf(const basic_stringbuf<CharType, Traits, Alloc>& rhs) = delete;
       basic_stringbuf(basic_stringbuf&& rhs)
           : base(rsl::move(rhs))
           , m_buffer(rhs.m_buffer)
@@ -127,22 +127,22 @@ namespace rsl
         rsl::swap(m_allocator, other.m_allocator);
       }
 
-      basic_string<CharType, Traits, Allocator> str() const
+      basic_string<CharType, Traits, Alloc> str() const
       {
         if(rsl::has_flag(m_openmode, io::openmode::out))
         {
-          return rsl::basic_string<CharType, Traits, Allocator>(m_buffer, m_current_write);
+          return rsl::basic_string<CharType, Traits, Alloc>(m_buffer, m_current_write);
         }
         else if(rsl::has_flag(m_openmode, io::openmode::in))
         {
-          return rsl::basic_string<CharType, Traits, Allocator>(m_buffer, m_current_read);
+          return rsl::basic_string<CharType, Traits, Alloc>(m_buffer, m_current_read);
         }
         else
         {
-          return basic_string<CharType, Traits, Allocator> {};
+          return basic_string<CharType, Traits, Alloc> {};
         }
       }
-      void str(const basic_string<CharType, Traits, Allocator>& str)
+      void str(const basic_string<CharType, Traits, Alloc>& str)
       {
         const auto buffer_size = m_buffer_end - m_buffer;
         if(str.size() > buffer_size)
@@ -336,11 +336,11 @@ namespace rsl
       CharType* m_current_read;
       CharType* m_current_write;
       io::openmode m_openmode;
-      Allocator m_allocator;
+      Alloc m_allocator;
     };
 
-    template <typename CharType, typename Traits, typename Allocator>
-    void swap(basic_stringbuf<CharType, Traits, Allocator>& lhs, basic_stringbuf<CharType, Traits, Allocator>& rhs)
+    template <typename CharType, typename Traits, typename Alloc>
+    void swap(basic_stringbuf<CharType, Traits, Alloc>& lhs, basic_stringbuf<CharType, Traits, Alloc>& rhs)
     {
       lhs.swap(rhs);
     }

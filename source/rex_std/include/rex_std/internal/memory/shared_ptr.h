@@ -248,7 +248,7 @@ namespace rsl
       }
       // "releases" ownership and takes ownership of the passed in pointer
       // the word "release" is not to be confused with unique_ptr's release function
-      template <typename U, typename Deleter, typename Allocator>
+      template <typename U, typename Deleter, typename Alloc>
       void reset(U* ptr, Deleter deleter, allocator& alloc)
       {
         shared_ptr(ptr, deleter, alloc).swap(*this);
@@ -321,10 +321,10 @@ namespace rsl
       }
     } // namespace internal
 
-    template <typename T, typename Allocator, typename... Args>
-    shared_ptr<T> allocate_shared(Allocator& allocator, Args&&... args)
+    template <typename T, typename Alloc, typename... Args>
+    shared_ptr<T> allocate_shared(Alloc& allocator, Args&&... args)
     {
-      using ref_count_type = internal::ref_count_inst<T, Allocator>;
+      using ref_count_type = internal::ref_count_inst<T, Alloc>;
       shared_ptr<T> ret;
       void* const mem           = allocator.allocate(sizeof(ref_count_type));
       ref_count_type* ref_count = new(mem) ref_count_type(allocator, rsl::forward<Args>(args)...);

@@ -25,7 +25,7 @@ namespace rsl
     using wstring_view = basic_string_view<tchar, char_traits<tchar>>;
 
     class allocator;
-    template <typename CharType, typename Traits, typename Allocator>
+    template <typename CharType, typename Traits, typename Alloc>
     class basic_string;
 
     using string = basic_string<char8, char_traits<char8>, allocator>;

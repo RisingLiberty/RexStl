@@ -19,7 +19,7 @@ namespace rsl
     {
         class allocator;
 
-        template <typename T, typename Allocator = allocator>
+        template <typename T, typename Alloc = allocator>
         class vector;
     } // namespace v1
 } // namespace rsl

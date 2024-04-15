@@ -100,7 +100,7 @@ namespace rsl
       T value;
     };
 
-    template <typename T, typename Allocator>
+    template <typename T, typename Alloc>
     class list;
 
     template <typename T>
@@ -117,7 +117,7 @@ namespace rsl
       using iterator_category = rsl::bidirectional_iterator_tag;
       using difference_type   = int32;
 
-      template <typename U, typename Allocator>
+      template <typename U, typename Alloc>
       friend class list;
 
       list_iterator()
@@ -211,7 +211,7 @@ namespace rsl
       using iterator_category = rsl::bidirectional_iterator_tag;
       using difference_type   = int32;
 
-      template <typename U, typename Allocator>
+      template <typename U, typename Alloc>
       friend class list;
 
       const_list_iterator()
@@ -1118,12 +1118,12 @@ namespace rsl
 #endif
     };
 
-    template <typename T, typename Allocator>
-    bool operator==(const list<T, Allocator>& a, const list<T, Allocator>& b)
+    template <typename T, typename Alloc>
+    bool operator==(const list<T, Alloc>& a, const list<T, Alloc>& b)
     {
-      typename list<T, Allocator>::const_iterator ia   = a.begin();
-      typename list<T, Allocator>::const_iterator ib   = b.begin();
-      typename list<T, Allocator>::const_iterator enda = a.end();
+      typename list<T, Alloc>::const_iterator ia   = a.begin();
+      typename list<T, Alloc>::const_iterator ib   = b.begin();
+      typename list<T, Alloc>::const_iterator enda = a.end();
 
 #if EASTL_LIST_SIZE_CACHE
       if(a.size() == b.size())
@@ -1137,7 +1137,7 @@ namespace rsl
       }
       return false;
 #else
-      typename list<T, Allocator>::const_iterator endb = b.end();
+      typename list<T, Alloc>::const_iterator endb = b.end();
 
       while((ia != enda) && (ib != endb) && (*ia == *ib))
       {
@@ -1148,8 +1148,8 @@ namespace rsl
 #endif
     }
 
-    template <typename T, typename Allocator>
-    bool operator!=(const list<T, Allocator>& a, const list<T, Allocator>& b)
+    template <typename T, typename Alloc>
+    bool operator!=(const list<T, Alloc>& a, const list<T, Alloc>& b)
     {
       return !(a == b);
     }

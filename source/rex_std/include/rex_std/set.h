@@ -14,6 +14,7 @@
 
 #include "rex_std/bonus/binary_tree/red_black_tree.h"
 #include "rex_std/bonus/utility/use_self.h"
+#include "rex_std/bonus/utility/range.h"
 #include "rex_std/initializer_list.h"
 #include "rex_std/internal/functional/less.h"
 #include "rex_std/internal/iterator/iterator_traits.h"
@@ -24,7 +25,7 @@ namespace rsl
   inline namespace v1
   {
 
-    template <typename Key, typename Compare = rsl::less<Key>, typename Allocator = rsl::allocator>
+    template <typename Key, typename Compare = rsl::less<Key>, typename Alloc = rsl::allocator>
     class set : public RedBlackTree<Key, Key, Compare, allocator, rsl::use_self<Key>, false, true>
     {
     private:
@@ -61,12 +62,12 @@ namespace rsl
       {
       }
       template <typename InputIt>
-      set(InputIt first, InputIt last, const Compare& comp = Compare(), const Allocator& alloc = Allocator())
+      set(InputIt first, InputIt last, const Compare& comp = Compare(), const Alloc& alloc = Alloc())
           : base_type(first, last, comp, alloc)
       {
       }
       template <typename InputIt>
-      set(InputIt first, InputIt last, const Allocator& alloc)
+      set(InputIt first, InputIt last, const Alloc& alloc)
           : base_type(first, last, alloc)
       {
       }
@@ -74,7 +75,7 @@ namespace rsl
           : base_type(other)
       {
       }
-      set(const set& other, const Allocator& alloc)
+      set(const set& other, const Alloc& alloc)
           : base_type(other, alloc)
       {
       }
@@ -82,15 +83,15 @@ namespace rsl
           : base_type(rsl::move(other))
       {
       }
-      set(set&& other, const Allocator& alloc)
+      set(set&& other, const Alloc& alloc)
           : base_type(rsl::move(other), alloc)
       {
       }
-      set(rsl::initializer_list<value_type> ilist, const Compare& comp = Compare(), const Allocator& alloc = Allocator())
+      set(rsl::initializer_list<value_type> ilist, const Compare& comp = Compare(), const Alloc& alloc = Alloc())
           : base_type(ilist, comp, alloc)
       {
       }
-      set(rsl::initializer_list<value_type> ilist, const Allocator& alloc)
+      set(rsl::initializer_list<value_type> ilist, const Alloc& alloc)
           : base_type(ilist, alloc)
       {
       }
@@ -174,7 +175,7 @@ namespace rsl
       }
     };
 
-    template <typename Key, typename Compare, typename Allocator, typename Predicate>
+    template <typename Key, typename Compare, typename Alloc, typename Predicate>
     typename set<Key, Compare, allocator>::size_type erase_if(set<Key, Compare, allocator>& c, Predicate predicate)
     {
       typename set<Key, Compare, allocator>::size_type old_size = c.size();

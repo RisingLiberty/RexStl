@@ -38,14 +38,14 @@ namespace rsl
   inline namespace v1
   {
 
-    template <typename Key, typename Value, typename Allocator, typename ExtractKey, typename Equal, typename KeyHash, typename BucketIndexFinder, typename RehashPolicy, bool UsesMutableIterators, bool UsesUniqueKeys>
-    class hashtable : public rehash_base<RehashPolicy, hashtable<Key, Value, Allocator, ExtractKey, Equal, KeyHash, BucketIndexFinder, RehashPolicy, UsesMutableIterators, UsesUniqueKeys>>
+    template <typename Key, typename Value, typename Alloc, typename ExtractKey, typename Equal, typename KeyHash, typename BucketIndexFinder, typename RehashPolicy, bool UsesMutableIterators, bool UsesUniqueKeys>
+    class hashtable : public rehash_base<RehashPolicy, hashtable<Key, Value, Alloc, ExtractKey, Equal, KeyHash, BucketIndexFinder, RehashPolicy, UsesMutableIterators, UsesUniqueKeys>>
     {
     public:
       using key_type                 = Key;
       using value_type               = Value;
       using mapped_type              = typename ExtractKey::result_type;
-      using allocator_type           = Allocator;
+      using allocator_type           = Alloc;
       using key_equal                = Equal;
       using difference_type          = ptrdiff;
       using size_type                = count_t;
@@ -57,7 +57,7 @@ namespace rsl
       using const_iterator           = const_hashtable_iterator<value_type>;
       using node_type                = hash_node<value_type>;
       using insert_return_type       = typename type_select<UsesUniqueKeys, insert_result<iterator>, iterator>::type;
-      using this_type                = hashtable<Key, Value, Allocator, ExtractKey, Equal, KeyHash, BucketIndexFinder, RehashPolicy, UsesMutableIterators, UsesUniqueKeys>;
+      using this_type                = hashtable<Key, Value, Alloc, ExtractKey, Equal, KeyHash, BucketIndexFinder, RehashPolicy, UsesMutableIterators, UsesUniqueKeys>;
       using rehash_policy_type       = RehashPolicy;
       using extract_key_type         = ExtractKey;
       using key_hash_type            = KeyHash;

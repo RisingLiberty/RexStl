@@ -21,7 +21,7 @@ namespace rsl
 {
   inline namespace v1
   {
-    template <typename CharType, typename Traits = char_traits<CharType>, typename Allocator = rsl::allocator>
+    template <typename CharType, typename Traits = char_traits<CharType>, typename Alloc = rsl::allocator>
     class basic_istringstream : public basic_istream<CharType, Traits>
     {
     private:
@@ -33,7 +33,7 @@ namespace rsl
       using int_type       = typename Traits::int_type;
       using pos_type       = typename Traits::pos_type;
       using off_type       = typename Traits::off_type;
-      using allocator_type = Allocator;
+      using allocator_type = Alloc;
 
       basic_istringstream()
           : base(&m_str_buff)
@@ -45,12 +45,12 @@ namespace rsl
           , m_str_buff(mode)
       {
       }
-      basic_istringstream(const basic_istringstream<CharType, Traits, Allocator>& str)
+      basic_istringstream(const basic_istringstream<CharType, Traits, Alloc>& str)
           : basic_istringstream(str.str(), io::openmode::in | io::openmode::out)
       {
       }
 
-      explicit basic_istringstream(const basic_string<CharType, Traits, Allocator>& str, io::openmode mode = io::openmode::in | io::openmode::out)
+      explicit basic_istringstream(const basic_string<CharType, Traits, Alloc>& str, io::openmode mode = io::openmode::in | io::openmode::out)
           : base(&m_str_buff)
           , m_str_buff(str, mode)
       {
@@ -60,7 +60,7 @@ namespace rsl
           , m_str_buff(rsl::move(other.m_str_buff))
       {
       }
-      basic_istringstream(io::openmode mode, const Allocator& alloc)
+      basic_istringstream(io::openmode mode, const Alloc& alloc)
           : base(&m_str_buff)
           , m_str_buff(mode, alloc)
       {
@@ -80,16 +80,16 @@ namespace rsl
         base::swap(other);
         rsl::swap(m_str_buff, other.m_str_buff);
       }
-      basic_stringbuf<CharType, Traits, Allocator>* rdbuf()
+      basic_stringbuf<CharType, Traits, Alloc>* rdbuf()
       {
         return &m_str_buff;
       }
 
-      basic_string<CharType, Traits, Allocator> str() const
+      basic_string<CharType, Traits, Alloc> str() const
       {
         return m_str_buff.str();
       }
-      void str(const basic_string<CharType, Traits, Allocator>& str)
+      void str(const basic_string<CharType, Traits, Alloc>& str)
       {
         m_str_buff.str(str);
       }
@@ -99,7 +99,7 @@ namespace rsl
       }
 
     private:
-      basic_stringbuf<CharType, Traits, Allocator> m_str_buff;
+      basic_stringbuf<CharType, Traits, Alloc> m_str_buff;
     };
 
     template <typename CharType, typename Traits>
