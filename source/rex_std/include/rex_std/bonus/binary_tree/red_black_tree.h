@@ -356,7 +356,7 @@ namespace rsl
         return const_iterator(static_cast<node_type*>(const_cast<internal::RedBlackTreeNodeBase*>(m_anchor.left_node)));
       }
       // returns an iterator to the first element of the map
-      const_iterator cbegin()
+      const_iterator cbegin() const
       {
         return const_iterator(static_cast<node_type*>(const_cast<internal::RedBlackTreeNodeBase*>(m_anchor.left_node)));
       }

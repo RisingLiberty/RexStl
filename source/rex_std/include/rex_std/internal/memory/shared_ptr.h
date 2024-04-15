@@ -209,7 +209,7 @@ namespace rsl
       template <typename U>
       shared_ptr& operator=(shared_ptr<U>&& other)
       {
-        if(!equivalent_onwership(other))
+        if(!equivalent_ownership(other))
         {
           shared_ptr(rsl::move(other)).swap(*this);
         }

@@ -12,6 +12,9 @@
 
 #pragma once
 
+#include "rex_std/internal/type_traits/remove_const.h"
+#include "rex_std/internal/iterator/iterator_traits.h"
+
 namespace rsl
 {
   inline namespace v1

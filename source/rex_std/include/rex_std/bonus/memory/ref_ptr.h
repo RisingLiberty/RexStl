@@ -368,6 +368,15 @@ namespace rsl
           rsl::swap(m_ref_count, other.m_ref_count);
         }
 
+        // Returns true if the given shared_ptr ows the same T pointer that we do.
+        template <typename U>
+        bool equivalent_ownership(const shared_ptr<U>& sharedPtr) const
+        {
+          // We compare mpRefCount instead of mpValue, because it's feasible that there are two sets of shared_ptr 
+          // objects that are unconnected to each other but happen to own the same value pointer. 
+          return (m_ref_count == sharedPtr.m_ref_count);
+        }
+
       private:
         template <typename U, typename Deleter, typename Alloc, enable_if_t<rsl::is_empty_v<Alloc>, bool> = true>
         void alloc(U* ptr, Deleter deleter, const Alloc& alloc)
