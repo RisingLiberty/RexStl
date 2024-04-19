@@ -58,6 +58,16 @@ namespace rsl
       return *this;
     }
 
+    thread::id thread::get_id() const
+    {
+      return m_id;
+    }
+
+    thread::native_handle_type thread::native_handle()
+    {
+      return m_handle;
+    }
+
     bool thread::joinable() const
     {
       return m_handle != INVALID_HANDLE_VALUE;

@@ -353,6 +353,12 @@ namespace rsl
     };
 
     template <typename T, typename U>
+    shared_ptr<T> static_pointer_cast(shared_ptr<U>& other)
+    {
+      auto ptr = static_cast<typename shared_ptr<T>::element_type*>(other.get());
+      return shared_ptr<T>(other, ptr);
+    }
+    template <typename T, typename U>
     shared_ptr<T> static_pointer_cast(const shared_ptr<U>& other)
     {
       const auto ptr = static_cast<typename shared_ptr<T>::element_type*>(other.get());
