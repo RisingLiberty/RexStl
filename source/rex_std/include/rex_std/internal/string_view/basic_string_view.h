@@ -714,6 +714,10 @@ namespace rsl
     {
       return rsl::stoi(view.data(), view.length());
     }
+    constexpr rsl::optional<float32> stof(string_view view)
+    {
+      return rsl::stof(view.data(), view.length());
+    }
 
   } // namespace v1
 } // namespace rsl
