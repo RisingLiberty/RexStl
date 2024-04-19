@@ -137,7 +137,7 @@ namespace rsl
       // returns the id of the thread
       id get_id() const;
       // returns the underlying implementation-defined thread handle
-      native_handle_type native_handle();
+      native_handle_type native_handle() { return m_handle; }
       // returns the number of concurrent threads supported by the implementation
       static card32 hardware_concurrency();
 
