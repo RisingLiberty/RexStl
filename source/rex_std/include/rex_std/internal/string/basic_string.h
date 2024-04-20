@@ -1212,7 +1212,7 @@ namespace rsl
       basic_string& replace(rsl::basic_string_view<CharType, Traits> from, rsl::basic_string_view<CharType, Traits> to)
       {
         size_type pos = 0;
-        while((pos = find(from, pos)) != npos())
+        while(pos < size() && (pos = find(from, pos)) != npos())
         {
           replace(pos, from.length(), to);
         }
