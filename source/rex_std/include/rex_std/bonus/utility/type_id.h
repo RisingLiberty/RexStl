@@ -205,6 +205,14 @@ namespace rsl
       rsl::string_view m_name;
       hash_result m_hash_code;
     };
+    constexpr bool operator==(type_id_t lhs, type_id_t rhs)
+    {
+      return lhs.hash_code() == rhs.hash_code();
+    }
+    constexpr bool operator!=(type_id_t lhs, type_id_t rhs)
+    {
+      return !(lhs == rhs);
+    }
 
     template <typename T>
     constexpr type_id_t type_id()
@@ -213,5 +221,13 @@ namespace rsl
       return type_id;
     }
 
+    template<>
+    struct hash<type_id_t>
+    {
+      constexpr hash_result operator()(type_id_t typeId) const
+      {
+        return typeId.hash_code();
+      }
+    };
   } // namespace v1
 } // namespace rsl
