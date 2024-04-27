@@ -31,14 +31,12 @@ namespace rsl
     {
     public:
       constexpr memory_size()
-          : m_size_in_bytes(0)
+        : m_size_in_bytes(0)
       {
       }
-
-      constexpr memory_size(card64 size_in_bytes)
-          : m_size_in_bytes(size_in_bytes)
-      {
-      }
+      constexpr explicit memory_size(card64 sizeInBytes)
+        : m_size_in_bytes(sizeInBytes)
+      {}
 
       constexpr operator card64() const
       {
@@ -51,7 +49,8 @@ namespace rsl
 
       constexpr memory_size operator+(card64 bytes) const
       {
-        return memory_size(m_size_in_bytes + bytes);
+        card64 res = m_size_in_bytes + bytes;
+        return memory_size(res);
       }
       constexpr memory_size& operator+=(card64 bytes)
       {
@@ -61,7 +60,8 @@ namespace rsl
 
       constexpr memory_size operator-(card64 bytes) const
       {
-        return memory_size(m_size_in_bytes - bytes);
+        card64 res = m_size_in_bytes - bytes;
+        return memory_size(res);
       }
       constexpr memory_size operator-=(card64 bytes)
       {
@@ -94,6 +94,42 @@ namespace rsl
         return size_in_bytes() / GibiByteMultiple;
       }
 
+      static constexpr memory_size from_bytes(card64 bytes)
+      {
+        return memory_size(bytes);
+      }
+      static constexpr memory_size from_kb(card64 kb)
+      {
+        card64 size = static_cast<card64>(kb * rsl::KiloByteMultiple);
+        return memory_size(size);
+      }
+      static constexpr memory_size from_mb(card64 mb)
+      {
+        card64 size = static_cast<card64>(mb * rsl::MegaByteMultiple);
+        return memory_size(size);
+      }
+      static constexpr memory_size from_gb(card64 gb)
+      {
+        card64 size = static_cast<card64>(gb * rsl::GigaByteMultiple);
+        return memory_size(size);
+      }
+
+      static constexpr memory_size from_kib(card64 kib)
+      {
+        card64 size = static_cast<card64>(kib * rsl::KibiByteMultiple);
+        return memory_size(size);
+      }
+      static constexpr memory_size from_mib(card64 mib)
+      {
+        card64 size = static_cast<card64>(mib * rsl::MibiByteMultiple);
+        return memory_size(size);
+      }
+      static constexpr memory_size from_gib(card64 gib)
+      {
+        card64 size = static_cast<card64>(gib * rsl::GibiByteMultiple);
+        return memory_size(size);
+      }
+
     private:
       card64 m_size_in_bytes;
     };
@@ -103,30 +139,30 @@ namespace rsl
 
 constexpr rsl::memory_size operator"" _bytes(unsigned long long bytes)
 {
-  return rsl::memory_size((card64)bytes);
+  return rsl::memory_size::from_bytes(bytes);
 }
 constexpr rsl::memory_size operator"" _kb(unsigned long long bytes)
 {
-  return rsl::memory_size((card64)bytes * rsl::KiloByteMultiple);
+  return rsl::memory_size::from_kb(bytes);
 }
 constexpr rsl::memory_size operator"" _mb(unsigned long long bytes)
 {
-  return rsl::memory_size((card64)bytes * rsl::MegaByteMultiple);
+  return rsl::memory_size::from_mb(bytes);
 }
 constexpr rsl::memory_size operator"" _gb(unsigned long long bytes)
 {
-  return rsl::memory_size((card64)bytes * rsl::GigaByteMultiple);
+  return rsl::memory_size::from_gb(bytes);
 }
 
 constexpr rsl::memory_size operator"" _kib(unsigned long long bytes)
 {
-  return rsl::memory_size((card64)bytes * rsl::KibiByteMultiple);
+  return rsl::memory_size::from_kib(bytes);
 }
 constexpr rsl::memory_size operator"" _mib(unsigned long long bytes)
 {
-  return rsl::memory_size((card64)bytes * rsl::MibiByteMultiple);
+  return rsl::memory_size::from_mib(bytes);
 }
 constexpr rsl::memory_size operator"" _gib(unsigned long long bytes)
 {
-  return rsl::memory_size((card64)bytes * rsl::GibiByteMultiple);
+  return rsl::memory_size::from_gib(bytes);
 }
