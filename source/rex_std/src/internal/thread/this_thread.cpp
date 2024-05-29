@@ -29,7 +29,10 @@ namespace rsl
           do
           {
             auto diff = sleeptime.diff_in_ms(now);
-            Sleep(diff);
+            if (diff > 0)
+            {
+              Sleep(diff);
+            }
             now = rsl::internal::xtime::get();
           } while((now.sec < sleeptime.sec || now.sec == sleeptime.sec) && now.nsec < sleeptime.nsec);
         }
