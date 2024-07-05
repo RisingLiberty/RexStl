@@ -26,12 +26,22 @@ namespace rsl
     namespace crc32c
     {
 
+#ifdef CRC32_SSE42_RUNTIME_CHECK
       inline bool CanUseSse42()
       {
         int cpu_info[4];
         __cpuid(cpu_info, 1);
         return (cpu_info[2] & (1 << 20)) != 0;
       }
+#else
+      // Intel introduced Sse support in 2008, AMD introduced it in 2011
+      // https://support.schrodinger.com/s/article/243079?#:~:text=2.-,SSE4.,)%20%2F%202011%20(AMD).
+      // We can safely assume all target hardware supports it
+      constexpr bool CanUseSse42()
+      {
+        return true;
+      }
+#endif
 
     } // namespace crc32c
   }   // namespace v1
