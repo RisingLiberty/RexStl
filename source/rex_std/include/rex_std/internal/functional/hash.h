@@ -40,9 +40,8 @@ namespace rsl
       template <typename CharType>
       constexpr hash_result hash(const CharType* key, count_t count)
       {
-        const uint8_t* data = reinterpret_cast<const uint8_t*>(key);
         count = count * sizeof(CharType);
-        return static_cast<hash_result>(crc32c::Crc32c(data, count));
+        return static_cast<hash_result>(crc32c::Crc32c(key, count));
       }
 
       template <typename CharType>
