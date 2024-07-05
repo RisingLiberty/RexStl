@@ -82,7 +82,6 @@ namespace rsl
     template <typename T, typename Alloc>
     class forward_list;
 
-    // TODO: Check if we can use the ForwardIterator for this (it's implementation should change though)
     template <typename T, typename Pointer, typename Reference>
     class forward_list_iterator
     {
