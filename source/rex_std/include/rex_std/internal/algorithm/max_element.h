@@ -21,10 +21,10 @@ namespace rsl
     InputIterator max_element(InputIterator first, InputIterator last)
     {
       auto largest = first++;
-      auto it      = first;
-      while(it != last)
+      auto it = first;
+      while (it != last)
       {
-        if(*it > *largest)
+        if (*largest < *it)
         {
           largest = it;
         }
@@ -38,10 +38,11 @@ namespace rsl
     InputIterator max_element(InputIterator first, InputIterator last, Compare comp)
     {
       auto largest = first++;
-      auto it      = first;
-      while(it != last)
+      auto it = first;
+      while (it != last)
       {
-        if(comp(*it, *largest) == false)
+        // the comparison should return true if lhs is less than rhs
+        if (comp(*largest, *it))
         {
           largest = it;
         }
