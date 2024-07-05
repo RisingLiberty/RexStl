@@ -22,9 +22,9 @@ namespace rsl
 {
   inline namespace v1
   {
-
-    RSL_TEMPLATED_CLASS_ALIAS(template <typename T>, valarray, T);
-
+    template <typename T>
+    using valarray = std::valarray<T>;
+  
     RSL_CLASS_ALIAS(slice);
 
     RSL_TEMPLATED_CLASS_ALIAS(template <typename T>, slice_array, T);
