@@ -138,4 +138,106 @@
       </ArrayItems>
     </Expand>
   </Type>
+
+<Type Name="rsl::v1::key_value&lt;*&gt;">
+	<DisplayString>({key}, {value})</DisplayString>
+    <Expand>
+        <Item Name="key">key</Item>
+        <Item Name="value">value</Item>
+    </Expand>
+</Type>
+
+	<Type Name="rsl::v1::set&lt;*&gt;">
+		<AlternativeType Name="rsl::v1::multiset&lt;*&gt;" />
+		<DisplayString Condition="mnSize == 0">
+			[0] {{}}
+		</DisplayString>
+		<DisplayString Condition="mnSize == 1">
+			[1]
+			{{
+			{((rsl::internal::RedBlackTreeNode&lt;$T1&gt;*)m_anchor.left_node)-&gt;m_value}
+			}}
+		</DisplayString>
+		<DisplayString Condition="mnSize &gt; 1">
+			[{mnSize}]
+			{{
+			{((rsl::internal::RedBlackTreeNode&lt;$T1&gt;*)m_anchor.left_node)-&gt;m_value},
+			...
+			}}
+		</DisplayString>
+		<Expand>
+			<Item Name="[size]">mnSize</Item>
+			<TreeItems>
+				<Size>mnSize</Size>
+				<HeadPointer>m_anchor.parent_node</HeadPointer>
+				<LeftPointer>left_node</LeftPointer>
+				<RightPointer>right_node</RightPointer>
+				<ValueNode>((rsl::internal::RedBlackTreeNode&lt;$T1&gt;*)this)-&gt;m_value</ValueNode>
+			</TreeItems>
+		</Expand>
+	</Type>
+
+	<Type Name="rsl::v1::RedBlackTree&lt;*,*&gt;">
+	<Intrinsic Name="size" Expression="m_cp_size_and_allocator.m_first" />
+		<DisplayString Condition="m_cp_size_and_allocator.m_first &lt; 0">
+			Uninitialized
+		</DisplayString>
+		<DisplayString Condition="m_cp_size_and_allocator.m_first == 0">
+			[0] {{}}
+		</DisplayString>
+		<DisplayString Condition="m_cp_size_and_allocator.m_first == 1">
+			[1]
+			{{
+			{((rsl::v1::internal::RedBlackTreeNode&lt;$T2&gt;*)m_anchor.left_node)-&gt;value}
+			}}
+		</DisplayString>
+		<DisplayString Condition="m_cp_size_and_allocator.m_first &gt; 1">
+			[{size()}]
+			{{
+			{((rsl::v1::internal::RedBlackTreeNode&lt;$T2&gt;*)m_anchor.left_node)-&gt;value},
+			...
+			}}
+		</DisplayString>
+		<Expand>
+			<Item Name="[size]">size()</Item>
+			<TreeItems>
+				<Size>size()</Size>
+				<HeadPointer>m_anchor.parent_node</HeadPointer>
+				<LeftPointer>left_node</LeftPointer>
+				<RightPointer>right_node</RightPointer>
+				<ValueNode>((rsl::v1::internal::RedBlackTreeNode&lt;$T2&gt;*)this)-&gt;value</ValueNode>
+			</TreeItems>
+		</Expand>
+	</Type>
+
+	<Type Name="rsl::v1::internal::RedBlackTreeNode&lt;*&gt;">
+		<DisplayString>{value}</DisplayString>
+		<Expand>
+			<Item Name="Value">value</Item>
+			<Synthetic Name="NOTE!">
+				<DisplayString>It is possible to expand parents that do not exist.</DisplayString>
+			</Synthetic>
+			<!-- <Item Name="Parent">*(rsl::v1::internal::RedBlackTreeNode&lt;$T1&gt;*)(parent_node.value &amp; (~uintptr(1)))</Item> -->
+			<Item Name="Left">*(rsl::v1::internal::RedBlackTreeNode&lt;$T1&gt;*)left_node</Item>
+			<Item Name="Right">*(rsl::v1::internal::RedBlackTreeNode&lt;$T1&gt;*)right_node</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="rsl::RedBlackTreeIterator&lt;*&gt;">
+		<DisplayString>{*m_node}</DisplayString>
+		<Expand>
+			<ExpandedItem>m_node</ExpandedItem>
+		</Expand>
+	</Type>
+
+	<Type Name="rsl::v1::hashtable_iterator_base&lt;*&gt;">
+		<DisplayString>{m_node-&gt;m_value}</DisplayString>
+		<Expand>
+			<ExpandedItem>m_node-&gt;m_value</ExpandedItem>
+		</Expand>
+	</Type>
+
+
+
+
 </AutoVisualizer>
