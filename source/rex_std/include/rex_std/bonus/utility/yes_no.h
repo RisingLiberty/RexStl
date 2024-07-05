@@ -22,7 +22,7 @@ namespace rsl
     public:
       enum eyes_no
       {
-        no  = 0,
+        no = 0,
         yes = 1
       };
 
@@ -46,8 +46,10 @@ namespace rsl
     {                                                                                                                                                                                                                                                    \
     }                                                                                                                                                                                                                                                    \
                                                                                                                                                                                                                                                          \
-    explicit ClassName(bool value)                                                                                                                                                                                                                       \
+    ClassName(const bool& value)                                                                                                                                                                                                                         \
         : rsl::yes_no(value ? eyes_no::yes : eyes_no::no)                                                                                                                                                                                                \
     {                                                                                                                                                                                                                                                    \
     }                                                                                                                                                                                                                                                    \
+                                                                                                                                                                                                                                                         \
+    ClassName(bool&& value) = delete;                                                                                                                                                                                                                    \
   }
