@@ -244,7 +244,7 @@ namespace rsl
 
         if(other.m_anchor.parent_node)
         {
-          m_anchor.parent_node = copy_subtree(static_cast<const node_type*>(other.anchor.parent_node), static_cast<node_type*>(&m_anchor));
+          m_anchor.parent_node = copy_subtree(static_cast<const node_type*>(other.m_anchor.parent_node), static_cast<node_type*>(&m_anchor));
           m_anchor.right_node  = red_black_tree_max_child(m_anchor.parent_node);
           m_anchor.left_node   = red_black_tree_min_child(m_anchor.parent_node);
         }
@@ -258,7 +258,7 @@ namespace rsl
 
         if(other.m_anchor.parent_node)
         {
-          m_anchor.parent_node = copy_subtree(static_cast<const node_type*>(other.anchor.parent_node), static_cast<node_type*>(&m_anchor));
+          m_anchor.parent_node = copy_subtree(static_cast<const node_type*>(other.m_anchor.parent_node), static_cast<node_type*>(&m_anchor));
           m_anchor.right_node  = red_black_tree_max_child(m_anchor.parent_node);
           m_anchor.left_node   = red_black_tree_min_child(m_anchor.parent_node);
         }

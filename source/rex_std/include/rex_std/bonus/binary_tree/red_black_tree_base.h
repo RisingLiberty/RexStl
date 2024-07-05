@@ -20,7 +20,7 @@ namespace rsl
   inline namespace v1
   {
 
-    template <typename Compare, bool /*bIsEmpty*/ = is_empty_v<Compare>>
+    template <typename Compare, bool bIsEmpty = is_empty_v<Compare>>
     class RedBlackCompareEmptyBaseOpt
     {
     protected:
