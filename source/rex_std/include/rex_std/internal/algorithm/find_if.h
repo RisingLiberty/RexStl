@@ -18,12 +18,12 @@ namespace rsl
   {
 
     template <typename InputIterator, typename Predicate>
-    InputIterator find_if(InputIterator first, InputIterator last, Predicate pred)
+    InputIterator find_if(InputIterator first, InputIterator last, const Predicate& pred)
     {
       auto it = first;
-      while(it != last)
+      while (it != last)
       {
-        if(pred(*it))
+        if (pred(*it))
         {
           return it;
         }
