@@ -60,7 +60,7 @@ namespace rsl
       // deallocates the storage reference by the pointer p.
       // the pointer must be obtained by an earlier call to allocate
       // performed by this allocator or an allocator that's equal to this.
-      void deallocate(T* const ptr, const size_type count)
+      void deallocate(T* ptr, const size_type count)
       {
         operator delete(ptr, sizeof(T) * count);
       }
