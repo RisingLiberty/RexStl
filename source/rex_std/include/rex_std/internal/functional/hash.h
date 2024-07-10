@@ -41,7 +41,7 @@ namespace rsl
       constexpr hash_result hash(const CharType* key, count_t count)
       {
         count = count * sizeof(CharType);
-        return static_cast<hash_result>(crc32c::Crc32c(key, count));
+        return static_cast<hash_result>(crc32::compute(key, count));
       }
 
       template <typename CharType>
@@ -251,6 +251,12 @@ namespace rsl
         return static_cast<hash_result>(reinterpret_cast<uintptr>(p)); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
       }
     };
+
+    template <typename T>
+    constexpr rsl::hash_result comp_hash(const T& obj)
+    {
+      return rsl::hash<T>{}(obj);
+    }
 
   } // namespace v1
 } // namespace rsl
