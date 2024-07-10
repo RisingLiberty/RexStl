@@ -12,6 +12,8 @@
 
 #pragma once
 
+#include "rex_std/internal/type_traits/integral_constant.h"
+
 namespace rsl
 {
   inline namespace v1
@@ -20,6 +22,8 @@ namespace rsl
     template <typename TypeToCompare = void>
     struct equal_to
     {
+      using is_transparent = rsl::true_type;
+
       constexpr bool operator()(const TypeToCompare& lhs, const TypeToCompare& rhs) const
       {
         return lhs == rhs;

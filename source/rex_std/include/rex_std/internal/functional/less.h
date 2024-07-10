@@ -12,6 +12,8 @@
 
 #pragma once
 
+#include "rex_std/internal/type_traits/integral_constant.h"
+
 namespace rsl
 {
   inline namespace v1
@@ -20,12 +22,24 @@ namespace rsl
     template <typename T = void>
     struct less
     {
+      using is_transparent = rsl::true_type;
+
       /// RSL Comment: Different from ISO C++ Standard at time of writing (22/Aug/2022)
       // the standard doesn't template the second argument.
       // we do so we can, for example, compare a string with a const char*
       // without the second getting promoted to a string
       template <typename U = T>
       constexpr bool operator()(const T& lhs, const U& rhs) const
+      {
+        return lhs < rhs;
+      }
+
+      /// RSL Comment: Different from ISO C++ Standard at time of writing (06/Jul/2024)
+      // the standard doesn't template the second argument.
+      // we do so we can, for example, compare a string with a const char*
+      // without the second getting promoted to a string
+      template <typename U = T>
+      constexpr bool operator()(const U& lhs, const T& rhs) const
       {
         return lhs < rhs;
       }
