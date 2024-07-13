@@ -24,6 +24,14 @@ namespace rsl
     {
       using is_transparent = rsl::true_type;
 
+      // Perform the less operator on the type
+      // This function is provided to avoid compiler errors where the below 2 functions
+      // turn out to be ambiguous if T == U
+      constexpr bool operator()(const T& lhs, const T& rhs) const
+      {
+        return lhs < rhs;
+      }
+
       /// RSL Comment: Different from ISO C++ Standard at time of writing (22/Aug/2022)
       // the standard doesn't template the second argument.
       // we do so we can, for example, compare a string with a const char*
