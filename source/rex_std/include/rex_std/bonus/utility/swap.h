@@ -25,11 +25,5 @@ namespace rsl
       rhs   = std::move(tmp);
     }
 
-    template <typename It>
-    constexpr void iter_swap(It& lhs, It& rhs)
-    {
-      swap_adl(*lhs, *rhs);
-    }
-
   } // namespace v1
 } // namespace rsl
