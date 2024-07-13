@@ -126,13 +126,15 @@
 
 #pragma once
 
+#include "rex_std/bonus/types.h"
+
 namespace rsl
 {
 	inline namespace v1
 	{
 		namespace crc32
 		{
-      static constexpr const uint32_t table[256] =
+      static constexpr const uint32 table[256] =
       {
           0x00000000U, 0x77073096U, 0xEE0E612CU, 0x990951BAU, 0x076DC419U,
           0x706AF48FU, 0xE963A535U, 0x9E6495A3U, 0x0EDB8832U, 0x79DCB8A4U,
@@ -188,10 +190,10 @@ namespace rsl
           0x2D02EF8DU
       };
 
-      constexpr uint32_t compute(const char* data, uint32_t len, uint32_t crc = 0)
+      constexpr uint32 compute(const char* data, uint32 len, uint32 crc = 0)
       {
         crc = crc ^ 0xFFFFFFFFU;
-        for (uint32_t i = 0; i < len; i++)
+        for (uint32 i = 0; i < len; i++)
         {
           crc = table[*data ^ (crc & 0xFF)] ^ (crc >> 8);
           data++;
