@@ -83,6 +83,9 @@ namespace rsl
               }
 
               RSL_ASSERT_X(node->parent_node != nullptr, "inserting a node without a parent");
+              node->parent_node->color = RedBlackTreeColor::Black;
+              node_parent_parent->color = RedBlackTreeColor::Red;
+              node_root_ref = red_black_tree_rotate_right(node_parent_parent, node_root_ref);
             }
           }
           else
@@ -112,9 +115,10 @@ namespace rsl
             }
           }
 
-          RSL_ASSERT_X(node_root_ref != nullptr, "invalid node root");
-          node_root_ref->color = internal::RedBlackTreeColor::Black;
         }
+
+        RSL_ASSERT_X(node_root_ref != nullptr, "invalid node root");
+				node_root_ref->color = internal::RedBlackTreeColor::Black;
       }
 
       // returns the next item in a sorted red-black tree
