@@ -738,6 +738,7 @@ namespace rsl
 
         if(value_set)
         {
+          *strEnd = (rsl::iterator_traits<decltype(str)>::value_type*)str;
           return optional<T>(value * sign);
         }
         else
@@ -758,7 +759,7 @@ namespace rsl
       // - istreambuf_iterator
       // - random_access_iterator
       template <typename T, typename Iterator, typename IteratorPointer>
-      constexpr optional<T> str_to_unsigned(Iterator str, IteratorPointer /*str_end*/, int32 base)
+      constexpr optional<T> str_to_unsigned(Iterator str, IteratorPointer strEnd, int32 base)
       {
         static_assert(rsl::is_unsigned_v<T>, "T must be a unsigned type");
 
@@ -820,6 +821,7 @@ namespace rsl
         //}
         if(value_set)
         {
+          *strEnd = (rsl::iterator_traits<decltype(str)>::value_type*)str;
           return optional<T>(value);
         }
         else
@@ -839,7 +841,7 @@ namespace rsl
       // - istreambuf_iterator
       // - random_access_iterator
       template <typename T, typename Iterator, typename IteratorPointer>
-      constexpr optional<T> str_to_floating_point(Iterator str, IteratorPointer /*str_end*/)
+      constexpr optional<T> str_to_floating_point(Iterator str, IteratorPointer strEnd)
       {
         static_assert(rsl::is_floating_point_v<T>, "T must be a signed type");
 
@@ -888,10 +890,7 @@ namespace rsl
           ++c;
         }
 
-        // if (str_end)
-        //{
-        //   *str_end = const_cast<Iterator>(str);
-        // }
+        *strEnd = (rsl::iterator_traits<decltype(c)>::value_type*)c;
         return optional<T>(sign * before_radix_value + (after_radix_value / ((rsl::max)(1.0f, pow(10.0f, num_digits_after_radix)))));
       }
 
