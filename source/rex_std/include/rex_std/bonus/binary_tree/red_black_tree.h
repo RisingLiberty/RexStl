@@ -891,7 +891,9 @@ namespace rsl
 
           node_type* new_left_node;
 
-          for(nodeSource = static_cast<node_type*>(nodeSource->left_node), nodeDest = new_node_root; nodeSource; nodeSource = static_cast<node_type*>(nodeSource->left_node, nodeDest = new_left_node))
+          for(nodeSource = static_cast<node_type*>(nodeSource->left_node), nodeDest = new_node_root; 
+            nodeSource; 
+            nodeSource = static_cast<node_type*>(nodeSource->left_node), nodeDest = new_left_node)
           {
             new_left_node = create_node(nodeSource, nodeDest);
 
