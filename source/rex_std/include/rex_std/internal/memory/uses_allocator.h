@@ -19,6 +19,7 @@
 #pragma once
 
 #include "rex_std/internal/type_traits/is_convertible.h"
+#include "rex_std/internal/type_traits/void.h"
 
 namespace rsl
 {
