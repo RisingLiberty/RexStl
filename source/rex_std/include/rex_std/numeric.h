@@ -13,6 +13,7 @@
 #pragma once
 
 #include "rex_std/bonus/defines.h"
+#include "rex_std/internal/numeric/accumulate.h"
 #include "rex_std/disable_std_checking.h"
 #include "rex_std/std_alias_defines.h"
 
@@ -24,7 +25,6 @@ namespace rsl
   {
 
     RSL_FUNC_ALIAS(iota);
-    RSL_FUNC_ALIAS(accumulate);
     RSL_FUNC_ALIAS(reduce);
     RSL_FUNC_ALIAS(transform_reduce);
     RSL_FUNC_ALIAS(inner_product);

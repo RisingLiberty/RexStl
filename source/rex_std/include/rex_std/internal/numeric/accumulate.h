@@ -12,19 +12,28 @@
 
 #pragma once
 
-#include "rex_std/disable_std_checking.h"
-#include "rex_std/std_alias_defines.h"
-
-#include <numeric>
+#include "rex_std/iterator.h"
+#include "rex_std/functional.h"
 
 namespace rsl
 {
   inline namespace v1
   {
+    template <typename It, typename T, typename Func>
+    constexpr T accumulate(const It first, const It last, T val, Func op) 
+    {
+      for (; first != last; ++first)
+      {
+        val = op(val, *first);
+      }
+      return val;
+    }
 
-    RSL_FUNC_ALIAS(accumulate);
-
+    template <typename It, typename T>
+    constexpr T accumulate(const It first, const It last, T val) 
+    {
+      return accumulate(first, last, val, rsl::plus<>{});
+    }
   }
 } // namespace rsl
 
-#include "rex_std/enable_std_checking.h"
