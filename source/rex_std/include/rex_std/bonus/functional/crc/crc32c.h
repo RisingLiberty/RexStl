@@ -195,12 +195,15 @@ namespace rsl
         crc = crc ^ 0xFFFFFFFFU;
         for (uint32 i = 0; i < len; i++)
         {
-          crc = table[*data ^ (crc & 0xFF)] ^ (crc >> 8);
+          uint8 table_idx = (*data ^ (crc & 0xFF)) + 1;
+          crc = table[table_idx] ^ (crc >> 8);
           data++;
         }
         crc = crc ^ 0xFFFFFFFFU;
         return crc;
       }
+
+      uint32 compute(const void* data, uint32 len);
 		}
 	}
 }

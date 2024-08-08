@@ -738,7 +738,8 @@ namespace rsl
 
         if(value_set)
         {
-          *strEnd = (rsl::iterator_traits<decltype(str)>::value_type*)str;
+          using underlying_pointer_type = typename rsl::iterator_traits<decltype(str)>::value_type;
+          *strEnd = (underlying_pointer_type*)str;
           return optional<T>(value * sign);
         }
         else
@@ -814,14 +815,10 @@ namespace rsl
           ++str;
         }
 
-        // return result
-        // if (str_end)
-        //{
-        //  *str_end = const_cast<Iterator>(str);
-        //}
         if(value_set)
         {
-          *strEnd = (rsl::iterator_traits<decltype(str)>::value_type*)str;
+          using underlying_pointer_type = typename rsl::iterator_traits<decltype(str)>::value_type;
+          *strEnd = (underlying_pointer_type*)str;
           return optional<T>(value);
         }
         else
@@ -890,7 +887,8 @@ namespace rsl
           ++c;
         }
 
-        *strEnd = (rsl::iterator_traits<decltype(c)>::value_type*)c;
+        using underlying_pointer_type = typename rsl::iterator_traits<decltype(str)>::value_type;
+        *strEnd = (underlying_pointer_type*)c;
         return optional<T>(sign * before_radix_value + (after_radix_value / ((rsl::max)(1.0f, pow(10.0f, num_digits_after_radix)))));
       }
 

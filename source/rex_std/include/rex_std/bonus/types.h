@@ -181,6 +181,3 @@ using rsl::size_t;  // NOLINT
 using rsl::uintptr; // NOLINT
 
 using rsl::count_t; // NOLINT
-
-RSL_CREATE_LITERAL_FOR_STRONG_TYPE(rsl::Capacity, _cap);
-RSL_CREATE_LITERAL_FOR_STRONG_TYPE(rsl::Size, _size);

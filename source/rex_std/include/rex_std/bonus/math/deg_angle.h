@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "rex_std/bonus/math/constants.h"
+#include "rex_std/numbers.h"
 
 namespace rsl
 {
@@ -73,7 +73,7 @@ namespace rsl
       }
       constexpr float32 to_rad() const
       {
-        return m_angle * (Pi / 180.0f);
+        return m_angle * (pi / 180.0f);
       }
 
       constexpr bool operator<(const DegAngle angle) const

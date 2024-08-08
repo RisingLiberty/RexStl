@@ -15,7 +15,7 @@ namespace rsl
 {
   inline namespace v1
   {
-    namespace crc32c
+    namespace crc32
     {
 
 //      uint32_t Extend(uint32_t crc, const uint8_t* data, size_t count)
@@ -42,6 +42,11 @@ namespace rsl
 //      {
 //        return crc32c::Crc32c(data, count);
 //      }
+
+      uint32 compute(const void* data, uint32 len)
+      {
+        return compute(static_cast<const char*>(data), len);
+      }
 
     } // namespace crc32c
   }   // namespace v1
