@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include "rex_std/bonus/defines.h"
+
 namespace rsl
 {
   inline namespace v1
@@ -80,5 +82,10 @@ namespace rsl
       typename Container::iterator m_it;
     };
 
+    template <class Container>
+    RSL_NO_DISCARD insert_iterator<Container> inserter(Container& cont, typename Container::iterator where) 
+    {
+      return insert_iterator<Container>(cont, where);
+    }
   } // namespace v1
 } // namespace rsl

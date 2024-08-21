@@ -16,6 +16,7 @@
 #include "rex_std/internal/iterator/bidirectional_iterator.h"
 #include "rex_std/internal/iterator/distance.h"
 #include "rex_std/internal/iterator/forward_iterator.h"
+#include "rex_std/internal/iterator/insert_iterator.h"
 #include "rex_std/internal/iterator/iterator_tags.h"
 #include "rex_std/internal/iterator/iterator_traits.h"
 #include "rex_std/internal/iterator/next.h"
