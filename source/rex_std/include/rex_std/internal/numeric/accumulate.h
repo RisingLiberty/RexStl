@@ -32,7 +32,7 @@ namespace rsl
     template <typename It, typename T>
     constexpr T accumulate(const It first, const It last, T val) 
     {
-      return accumulate(first, last, val, rsl::plus<>{});
+      return accumulate(first, last, val, rsl::plus<T>{});
     }
   }
 } // namespace rsl
