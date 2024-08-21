@@ -327,8 +327,8 @@ namespace rsl
 			// two elements in a has those same two elements in b but in different order (which should 
 			// still result in equality). Also it's possible that one bucket in a has two elements which 
 			// both match a solitary element in the equivalent bucket in b (which shouldn't result in equality).
-			rsl::pair<const_iterator, const_iterator> aRange;
-			rsl::pair<const_iterator, const_iterator> bRange;
+			rsl::range<const_iterator> aRange;
+			rsl::range<const_iterator> bRange;
 
 			for (const_iterator ai = a.begin(), aiEnd = a.end(); ai != aiEnd; ai = aRange.second) // For each element in a...
 			{
