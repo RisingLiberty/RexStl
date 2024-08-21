@@ -144,6 +144,13 @@ namespace rsl
       }
       void str(const basic_string<CharType, Traits, Alloc>& str)
       {
+        if (str.empty())
+        {
+          m_current_read = m_buffer;
+          m_current_write = m_buffer;
+          return;
+        }
+
         const auto buffer_size = m_buffer_end - m_buffer;
         if(str.size() > buffer_size)
         {
