@@ -19,49 +19,49 @@ namespace rsl
   inline namespace v1
   {
 
-    class DegAngle
+    class deg_angle
     {
     public:
-      constexpr explicit DegAngle(float32 angle)
+      constexpr explicit deg_angle(float32 angle)
           : m_angle(angle)
       {
       }
 
-      constexpr DegAngle operator+(const DegAngle angle) const
+      constexpr deg_angle operator+(const deg_angle angle) const
       {
-        return DegAngle(m_angle + angle.m_angle);
+        return deg_angle(m_angle + angle.m_angle);
       }
-      constexpr DegAngle& operator+=(const DegAngle angle)
+      constexpr deg_angle& operator+=(const deg_angle angle)
       {
         m_angle += angle.m_angle;
         return *this;
       }
 
-      constexpr DegAngle operator-(const DegAngle angle) const
+      constexpr deg_angle operator-(const deg_angle angle) const
       {
-        return DegAngle(m_angle - angle.m_angle);
+        return deg_angle(m_angle - angle.m_angle);
       }
-      constexpr DegAngle& operator-=(const DegAngle angle)
+      constexpr deg_angle& operator-=(const deg_angle angle)
       {
         m_angle -= angle.m_angle;
         return *this;
       }
 
-      constexpr DegAngle operator*(const DegAngle angle) const
+      constexpr deg_angle operator*(const deg_angle angle) const
       {
-        return DegAngle(m_angle * angle.m_angle);
+        return deg_angle(m_angle * angle.m_angle);
       }
-      constexpr DegAngle& operator*=(const DegAngle angle)
+      constexpr deg_angle& operator*=(const deg_angle angle)
       {
         m_angle *= angle.m_angle;
         return *this;
       }
 
-      constexpr DegAngle operator/(const DegAngle angle) const
+      constexpr deg_angle operator/(const deg_angle angle) const
       {
-        return DegAngle(m_angle / angle.m_angle);
+        return deg_angle(m_angle / angle.m_angle);
       }
-      constexpr DegAngle& operator/=(const DegAngle angle)
+      constexpr deg_angle& operator/=(const deg_angle angle)
       {
         m_angle /= angle.m_angle;
         return *this;
@@ -71,33 +71,37 @@ namespace rsl
       {
         return m_angle;
       }
+      constexpr void set(float32 angle)
+      {
+        m_angle = angle;
+      }
       constexpr float32 to_rad() const
       {
         return m_angle * (pi / 180.0f);
       }
 
-      constexpr bool operator<(const DegAngle angle) const
+      constexpr bool operator<(const deg_angle angle) const
       {
         return m_angle < angle.m_angle;
       }
-      constexpr bool operator<=(const DegAngle angle) const
+      constexpr bool operator<=(const deg_angle angle) const
       {
         return m_angle <= angle.m_angle;
       }
-      constexpr bool operator>(const DegAngle angle) const
+      constexpr bool operator>(const deg_angle angle) const
       {
         return m_angle > angle.m_angle;
       }
-      constexpr bool operator>=(const DegAngle angle) const
+      constexpr bool operator>=(const deg_angle angle) const
       {
         return m_angle >= angle.m_angle;
       }
 
-      constexpr bool operator==(const DegAngle angle) const
+      constexpr bool operator==(const deg_angle angle) const
       {
         return m_angle == angle.m_angle;
       }
-      constexpr bool operator!=(const DegAngle angle) const
+      constexpr bool operator!=(const deg_angle angle) const
       {
         return m_angle != angle.m_angle;
       }

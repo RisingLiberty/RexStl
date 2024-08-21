@@ -72,6 +72,10 @@ namespace rsl
       {
         return m_angle;
       }
+      constexpr void set(float32 angle)
+      {
+        m_angle = angle;
+      }
       constexpr float32 to_deg() const
       {
         return m_angle * (180 / pi);
