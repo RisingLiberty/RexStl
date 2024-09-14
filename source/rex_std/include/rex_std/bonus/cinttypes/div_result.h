@@ -18,16 +18,16 @@ namespace rsl
   {
 
     template <typename T>
-    struct DivResult
+    struct div_result
     {
       T quot;
       T rem;
     };
 
     template <typename T>
-    constexpr DivResult<T> div(T x, T y)
+    constexpr div_result<T> div(T x, T y)
     {
-      DivResult<T> res {};
+      div_result<T> res {};
       res.quot = x / y;
       res.rem  = x % y;
       return res;
