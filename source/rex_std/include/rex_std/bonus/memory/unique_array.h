@@ -133,6 +133,31 @@ namespace rsl
         m_count = count;
       }
 
+      pointer begin()
+      {
+        return m_ptr;
+      }
+      const_pointer begin() const
+      {
+        return m_ptr;
+      }
+      const_pointer cbegin() const
+      {
+        return m_ptr;
+      }
+      pointer end()
+      {
+        return m_ptr + m_count;
+      }
+      const_pointer end() const
+      {
+        return m_ptr + m_count;
+      }
+      const_pointer cend() const
+      {
+        return m_ptr + m_count;
+      }
+
     private:
       rsl::remove_extent_t<T>* m_ptr;
       card32 m_count;
