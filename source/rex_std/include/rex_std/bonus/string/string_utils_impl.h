@@ -260,8 +260,8 @@ namespace rsl
       return string_compare(letters, length, is_upper);
     }
 
-    template <typename Iterator>
-    constexpr void to_lower(const Iterator* str, Iterator* buf, card32 length)
+    template <typename ConstIterator, typename Iterator>
+    constexpr void to_lower(const ConstIterator str, Iterator buf, card32 length)
     {
       for(card32 i = 0; i < length; ++i)
       {
@@ -270,12 +270,12 @@ namespace rsl
     }
 
     template <typename Iterator, card32 Size>
-    constexpr void to_lower(const Iterator* str, Iterator (&buf)[Size]) // NOLINT(modernize-avoid-c-arrays)
+    constexpr void to_lower(const Iterator str, Iterator (&buf)[Size]) // NOLINT(modernize-avoid-c-arrays)
     {
       to_lower(str, buf, Size - 1);
     }
-    template <typename Iterator>
-    constexpr void to_upper(const Iterator* str, Iterator* buf, card32 length)
+    template <typename ConstIterator, typename Iterator>
+    constexpr void to_upper(const ConstIterator str, Iterator buf, card32 length)
     {
       for(card32 i = 0; i < length; ++i)
       {

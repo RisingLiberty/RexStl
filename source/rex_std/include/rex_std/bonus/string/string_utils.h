@@ -123,13 +123,13 @@ namespace rsl
     template <typename Iterator>
     RSL_NO_DISCARD constexpr bool is_upper(const Iterator* letters);
 
-    template <typename Iterator>
-    constexpr void to_lower(const Iterator* str, Iterator* buf, card32 length);
+    template <typename ConstIterator, typename Iterator>
+    constexpr void to_lower(const ConstIterator str, Iterator buf, card32 length);
 
     template <typename Iterator, card32 Size>
     constexpr void to_lower(const Iterator* str, Iterator (&buf)[Size]); // NOLINT(modernize-avoid-c-arrays)
-    template <typename Iterator>
-    constexpr void to_upper(const Iterator* str, Iterator* buf, card32 length);
+    template <typename ConstIterator, typename Iterator>
+    constexpr void to_upper(const ConstIterator str, Iterator buf, card32 length);
 
     template <typename Iterator, card32 Size>
     constexpr void to_upper(const Iterator* str, Iterator (&buf)[Size]); // NOLINT(modernize-avoid-c-arrays)
