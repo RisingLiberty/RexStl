@@ -21,7 +21,7 @@ namespace rsl
       template <typename T>
       constexpr T abs(T value)
       {
-        return (value > 0) ? value : -value;
+        return (value > 0) ? value : -value; // this has a bug when used with INT_MIN
       }
     } // namespace internal
 
