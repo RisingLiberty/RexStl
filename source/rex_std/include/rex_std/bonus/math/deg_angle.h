@@ -13,6 +13,7 @@
 #pragma once
 
 #include "rex_std/numbers.h"
+#include "rex_std/bonus/types.h"
 
 namespace rsl
 {
@@ -112,3 +113,8 @@ namespace rsl
 
   } // namespace v1
 } // namespace rsl
+
+constexpr rsl::deg_angle operator""_deg(unsigned long long value)
+{
+  return rsl::deg_angle(static_cast<float32>(value));
+}

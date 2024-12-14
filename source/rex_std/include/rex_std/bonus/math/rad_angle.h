@@ -113,3 +113,8 @@ namespace rsl
 
   } // namespace v1
 } // namespace rsl
+
+constexpr rsl::rad_angle operator""_rad(unsigned long long value)
+{
+  return rsl::rad_angle(static_cast<float32>(value));
+}
