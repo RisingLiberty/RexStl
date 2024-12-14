@@ -4477,9 +4477,9 @@ namespace rsl
       Sentinel end;
       basic_string_view<Char> sep;
 
-      join_view(Iter b, Sentinel e, basic_string_view<Char> s)
+      join_view(Iter b, Sentinel sentinel, basic_string_view<Char> s)
           : begin(b)
-          , end(e)
+          , end(sentinel)
           , sep(s)
       {
       }
