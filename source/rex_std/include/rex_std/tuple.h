@@ -255,7 +255,7 @@ namespace rsl
       template <count_t I, typename ValueType, bool IsEmptyV>
       void swap(tuple_leaf<I, ValueType, IsEmptyV>& a, tuple_leaf<I, ValueType, IsEmptyV>& b)
       {
-        ::rsl::swap(a.getInternal(), b.getInternal());
+        ::rsl::swap(a.get_internal(), b.get_internal());
       }
 
       template <count_t I, typename ValueType, bool IsEmptyV>
@@ -285,7 +285,7 @@ namespace rsl
 
         template <typename T>
         explicit tuple_leaf(const tuple_leaf<I, T>& t)
-            : m_value(t.getInternal())
+            : m_value(t.get_internal())
         {
         }
 
@@ -336,7 +336,7 @@ namespace rsl
 
         template <typename T>
         explicit tuple_leaf(const tuple_leaf<I, T>& t)
-            : m_value(t.getInternal())
+            : m_value(t.get_internal())
         {
         }
 
@@ -385,7 +385,7 @@ namespace rsl
 
         template <typename T>
         explicit tuple_leaf(const tuple_leaf<I, T>& t)
-            : ValueType(t.getInternal())
+            : ValueType(t.get_internal())
         {
         }
 
@@ -496,7 +496,7 @@ namespace rsl
 
         TupleImpl& operator=(const TupleImpl& t)
         {
-          swallow(tuple_leaf<Indices, Ts>::operator=(static_cast<const tuple_leaf<Indices, Ts>&>(t).getInternal())...);
+          swallow(tuple_leaf<Indices, Ts>::operator=(static_cast<const tuple_leaf<Indices, Ts>&>(t).get_internal())...);
           return *this;
         }
 
@@ -510,42 +510,42 @@ namespace rsl
       tuple_element_t<I, TupleImpl<Indices, Ts...>>& get(TupleImpl<Indices, Ts...>& t)
       {
         using Type = tuple_element_t<I, TupleImpl<Indices, Ts...>>;
-        return static_cast<internal::tuple_leaf<I, Type>&>(t).getInternal();
+        return static_cast<internal::tuple_leaf<I, Type>&>(t).get_internal();
       }
 
       template <count_t I, typename Indices, typename... Ts>
       const_tuple_element_t<I, TupleImpl<Indices, Ts...>>& get(const TupleImpl<Indices, Ts...>& t)
       {
         using Type = tuple_element_t<I, TupleImpl<Indices, Ts...>>;
-        return static_cast<const internal::tuple_leaf<I, Type>&>(t).getInternal();
+        return static_cast<const internal::tuple_leaf<I, Type>&>(t).get_internal();
       }
 
       template <count_t I, typename Indices, typename... Ts>
       tuple_element_t<I, TupleImpl<Indices, Ts...>>&& get(TupleImpl<Indices, Ts...>&& t)
       {
         using Type = tuple_element_t<I, TupleImpl<Indices, Ts...>>;
-        return static_cast<Type&&>(static_cast<internal::tuple_leaf<I, Type>&>(t).getInternal());
+        return static_cast<Type&&>(static_cast<internal::tuple_leaf<I, Type>&>(t).get_internal());
       }
 
       template <typename T, typename Indices, typename... Ts>
       T& get(TupleImpl<Indices, Ts...>& t)
       {
         using Index = tuple_index<T, TupleImpl<Indices, Ts...>>;
-        return static_cast<internal::tuple_leaf<Index::index, T>&>(t).getInternal();
+        return static_cast<internal::tuple_leaf<Index::index, T>&>(t).get_internal();
       }
 
       template <typename T, typename Indices, typename... Ts>
       const T& get(const TupleImpl<Indices, Ts...>& t)
       {
         using Index = tuple_index<T, TupleImpl<Indices, Ts...>>;
-        return static_cast<const internal::tuple_leaf<Index::index, T>&>(t).getInternal();
+        return static_cast<const internal::tuple_leaf<Index::index, T>&>(t).get_internal();
       }
 
       template <typename T, typename Indices, typename... Ts>
       T&& get(TupleImpl<Indices, Ts...>&& t)
       {
         using Index = tuple_index<T, TupleImpl<Indices, Ts...>>;
-        return static_cast<T&&>(static_cast<internal::tuple_leaf<Index::index, T>&>(t).getInternal());
+        return static_cast<T&&>(static_cast<internal::tuple_leaf<Index::index, T>&>(t).get_internal());
       }
 
       // TupleLike
@@ -870,7 +870,7 @@ namespace rsl
       Impl m_impl;
 
       template <count_t I, typename... Us>
-      friend tuple_element_t<I, tuple<Ts...>>& get(tuple<Us...>& t);
+      friend tuple_element_t<I, tuple<Us...>>& get(tuple<Us...>& t);
 
       template <count_t I, typename... Us>
       friend const_tuple_element_t<I, tuple<Us...>>& get(const tuple<Us...>& t);
