@@ -31,6 +31,47 @@ namespace rsl
 {
   inline namespace v1
   {
+    namespace internal
+    {
+      constexpr uint32 parse_digit(char const c)
+      {
+        if (c >= '0' && c <= '9')
+        {
+          return static_cast<uint32>(c - '0');
+        }
+
+        if (c >= 'a' && c <= 'z')
+        {
+          return static_cast<uint32>(c - 'a' + 10);
+        }
+
+        if (c >= 'A' && c <= 'Z')
+        {
+          return static_cast<uint32>(c - 'A' + 10);
+        }
+
+        return static_cast<uint32>(-1);
+      }
+
+      // A lot of this code is inspired by MSVC's implementation
+      // See the following files for more details
+      // - <windows sdk>/ucrt/inc/corecrt_internal_big_integer.h
+      // - <windows sdk>/ucrt/inc/corecrt_internal_fltintrn.h
+      // - <windows sdk>/ucrt/inc/corecrt_internal_strtox.h
+
+      struct big_int
+      {
+        // 1074 bits are required to represent 2^1074. the smallest representable double value is 2^-1074
+        // 2552 bits are required for parsing. this number comes from 10^768, 
+        // which is needed for the decimal representation of the smallest denormalized value
+        // 2^-1074 uses 752 decimal digits after trimming zeroes, so we have a bit of slack space
+        static constexpr uint32 s_element_count = 1074 + 2552 + 54;
+        
+        uint32 used;
+        uint32 data[s_element_count];
+      };
+    }
+
     RSL_NO_DISCARD constexpr tchar to_wide_char(char8 chr)
     {
       return static_cast<tchar>(chr);
@@ -382,11 +423,11 @@ namespace rsl
       constexpr Iterator true_str[]  = "true";  // NOLINT(modernize-avoid-c-arrays)
       constexpr Iterator false_str[] = "false"; // NOLINT(modernize-avoid-c-arrays)
 
-      if(string_equals(str, length, true_str, size(true_str)))
+      if(string_equals(str, length, true_str, size(true_str) - 1))
       {
         return true;
       }
-      else if(string_equals(str, length, false_str, size(false_str)))
+      else if(string_equals(str, length, false_str, size(false_str) - 1))
       {
         return false;
       }
@@ -840,11 +881,34 @@ namespace rsl
       template <typename T, typename Iterator, typename IteratorPointer>
       constexpr optional<T> str_to_floating_point(Iterator str, IteratorPointer strEnd)
       {
+        // a 32 bit floating point is stored in memory as followed
+        // 1 bit for the sign
+        // 8 bits for the exponent, the actual exponent is this value - 127
+        // 23 bits for the mantissa
+        // to calculate the fractional part that the mantissa represents
+        // each N'th bit stands for 1/2^N, starting from N = 1
+        // meaning, the first bit represents 1/2^1 == 1/2
+        // the second bit represents 1/2^2 == 1/4
+        // and so on
+
+
+
+
+
         static_assert(rsl::is_floating_point_v<T>, "T must be a signed type");
 
         int32 sign = 1;
-
         auto c = str;
+
+        if (*c == '\0')
+        {
+          return nullopt;
+        }
+
+        while (is_space(*c))
+        {
+          c++;
+        }
 
         if(*c == '-')
         {
@@ -856,40 +920,237 @@ namespace rsl
           ++c;
         }
 
-        T before_radix_value          = 0.0f;
-        T after_radix_value           = 0.0f;
-        card32 num_digits_after_radix = 0;
-        bool assigning_before_radix   = true;
-
-        while(*c != '\0')
+        // detect if string is in hexadecimal
+        bool is_hex = false;
+        if (*c == '0')
         {
-          if(!is_digitf(*c))
+          if (c[1] == 'x' || c[1] == 'X')
+          {
+            c += 2;
+            is_hex = true;
+          }
+        }
+
+        // Skip any leading zeroes
+        while (*c == '0')
+        {
+          ++c;
+        }
+
+        uint32 before_radix_value          = 0;
+        uint32 after_radix_value           = 0;
+        card32 exponent_adjustment = 0;
+        card32 num_digits_after_radix = 0;
+        uint32 base = is_hex ? 16 : 10;
+        bool has_found_digits = false;
+        // Get the mantissa out of the string
+        while (*c != '\0')
+        {
+          uint32 digit_val = parse_digit(*c);
+          if (digit_val > base - 1)
+          {
+            break;
+          }
+          has_found_digits = true;
+          before_radix_value = digit_val + before_radix_value * base;
+          ++exponent_adjustment;
+          ++c;
+        }
+
+        // After the mantissa is parsed we have a few options
+        // encountering a radix point
+        // encountering the exponent token
+        // encounter nothing as the float is written as an int
+        char radix_point = '.';
+        if (*c == radix_point)
+        {
+          // If we haven't scanned any digits yet
+          // continue skipping over leading zeroes
+          if (has_found_digits == false)
+          {
+            while (*c == '0')
+            {
+              ++c;
+              ++num_digits_after_radix;
+              --exponent_adjustment;
+              has_found_digits = true;
+            }
+          }
+
+          ++c;
+        }
+        while (*c != '\0')
+        {
+          uint32 digit_val = parse_digit(*c);
+          if (digit_val > base - 1)
           {
             break;
           }
 
-          if(*c == '.')
-          {
-            assigning_before_radix = false;
-            ++c;
-            continue;
-          }
-
-          if(assigning_before_radix)
-          {
-            before_radix_value = ctoi(*c) + before_radix_value * 10.0f;
-          }
-          else
-          {
-            after_radix_value = ctoi(*c) + after_radix_value * 10.0f;
-            ++num_digits_after_radix;
-          }
+          has_found_digits = true;
+          after_radix_value = digit_val + after_radix_value * base;
+          ++num_digits_after_radix;
           ++c;
         }
 
+        // If we still haven't parsed a single digit, there's probably something wrong
+        // in which case we need to return
         using underlying_pointer_type = typename rsl::iterator_traits<decltype(str)>::value_type;
-        *strEnd = (underlying_pointer_type*)c;
-        return optional<T>(sign * before_radix_value + (after_radix_value / ((rsl::max)(1.0f, pow(10.0f, num_digits_after_radix)))));
+        if (!has_found_digits)
+        {
+          // It's possible that we read the hexadecimal prefix
+          // but didn't find any other digits
+          // In which case the return value is also 0, but the pointer should be incremented
+          // as we did successfully convert a string
+          if (strEnd)
+          {
+            *strEnd = (underlying_pointer_type*)str;
+            if (is_hex)
+            {
+              *strEnd++;
+            }
+          }
+
+          return static_cast<T>(0);
+        }
+
+        bool has_exponent = false;
+        switch (*c)
+        {
+        case 'e':
+        case 'E':
+          has_exponent = !is_hex;
+          break;
+        case 'p':
+        case 'P':
+          has_exponent = is_hex;
+          break;
+        }
+
+        if (has_exponent)
+        {
+          ++c;
+
+          const is_exponent_negative = *c == '-';
+          if (*c == '+' || *c == '-')
+          {
+            ++c;
+          }
+
+          bool has_exponent_digits = false;
+          while (*c == '0')
+          {
+            has_exponent_digits = true;
+            ++c;
+          }
+
+          constexpr int32 max_exponent = 5200;
+          constexpr int32 min_exponent = -5200;
+
+          int32 exponent = 0;
+          while (*c != '\0')
+          {
+            uint32 digit_value = parse_digit(*c);
+            if (digit_value >= 10) // should always be of base 10
+            {
+              break;
+            }
+
+            has_exponent_digits = true;
+            exponent = exponent * 10 + digit_value;
+            
+            if (exponent > max_exponent)
+            {
+              exponent = max_exponent + 1;
+              break;
+            }
+          }
+
+          // skip any characters if the exponent was too big
+          while (parse_digit(*c) < 10)
+          {
+            ++c;
+          }
+
+          if (is_exponent_negative)
+          {
+            exponent = -exponent;
+          }
+
+          if (!has_exponent_digits)
+          {
+            // restoring to default state
+            c = str;
+          }
+
+          // if we have no value at all, the result is 0, regardless of the exponent
+          if (before_radix_value == 0 && after_radix_value == 0)
+          {
+            return 0;
+          }
+
+          if (exponent > max_exponent)
+          {
+            return INFINITY;
+          }
+          if (exponent < min_exponent)
+          {
+            return -INFINITY;
+          }
+
+          int32 exponent_adjustment_multiplier = is_hex
+            ? 4
+            : 1;
+
+          exponent += exponent_adjustment * exponent_adjustment_multiplier;
+
+          if (exponent > max_exponent)
+          {
+            return 0;
+          }
+          if (exponent < min_exponent)
+          {
+            return -0;
+          }
+
+
+
+          underlying_pointer_type* c2 = c;
+          uint32 exponent = strtoi(c, &c2, 10).value_or(0);
+
+					if (strEnd)
+					{
+						*strEnd = (underlying_pointer_type*)c2;
+					}
+
+          // before radix point - leave untouched
+          // after radix point - divide by 1.6
+          // exponent - apply to a base 2
+          if (is_hex)
+          {
+            T divider = static_cast<T>(1.6f);
+            T radix_value = after_radix_value / divider;
+            exponent = pow(2, exponent);
+
+            return optional<T>(sign * static_cast<T>(before_radix_value) + (static_cast<T>(after_radix_value) / ((rsl::max)(1.0f, pow(10.0f, num_digits_after_radix)))));
+          }
+          // before radix point - leave untouched
+          // after radix point - leave untouched
+          // exponent - apply to a base 10
+          else
+          {
+            return optional<T>(sign * static_cast<T>(before_radix_value) + (static_cast<T>(after_radix_value) / ((rsl::max)(1.0f, pow(10.0f, num_digits_after_radix)))));
+          }
+        }
+        else
+        {
+          if (strEnd)
+          {
+            *strEnd = (underlying_pointer_type*)c;
+          }
+					return optional<T>(sign * static_cast<T>(before_radix_value) + (static_cast<T>(after_radix_value) / ((rsl::max)(1.0f, pow(10.0f, num_digits_after_radix)))));
+        }
+
       }
 
       template <typename T, typename Iterator>
