@@ -181,7 +181,7 @@ namespace rsl
         // Converts a value of char_type to int_type
         constexpr static int_type to_int_type(char_type c)
         {
-          return static_cast<int_type>(c);
+          return static_cast<rsl::make_unsigned_t<char_type>>(c);
         }
 
         // Checks whether two values of type int_type are equal.
