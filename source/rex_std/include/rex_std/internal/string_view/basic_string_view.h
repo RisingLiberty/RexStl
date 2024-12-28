@@ -718,6 +718,9 @@ namespace rsl
     {
       return rsl::stof(view.data(), view.length());
     }
-
+    constexpr rsl::optional<bool> stob(string_view view)
+    {
+      return rsl::stob(view.data(), view.length());
+    }
   } // namespace v1
 } // namespace rsl
