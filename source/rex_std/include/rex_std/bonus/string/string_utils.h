@@ -313,7 +313,7 @@ namespace rsl
     /// RSL Comment: Different from ISO C++ Standard at time of writing (27/Aug/2022)
     // this returns an optional instead of a basic type
     // converts a byte string to an floating point value
-    RSL_NO_DISCARD constexpr optional<float32> strtof(const char8* str, char8** strEnd);
+    RSL_NO_DISCARD constexpr optional<float32> strtof(const char8* str, char8** strEnd = nullptr);
     /// RSL Comment: Different from ISO C++ Standard at time of writing (27/Aug/2022)
     // this returns an optional instead of a basic type
     // converts a byte string to an floating point value

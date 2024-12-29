@@ -16,6 +16,7 @@
 #include "rex_std/bonus/string/string_utils.h"
 #include "rex_std/bonus/types.h"
 #include "rex_std/internal/algorithm/reverse.h"
+#include "rex_std/internal/string/big_int.h"
 #include "rex_std/internal/iterator/distance.h"
 #include "rex_std/internal/iterator/end.h"
 #include "rex_std/internal/iterator/random_access_iterator.h"
@@ -26,6 +27,7 @@
 #include "rex_std/internal/type_traits/is_unsigned.h"
 #include "rex_std/internal/type_traits/make_unsigned.h"
 #include "rex_std/iterator.h"
+#include "rex_std/limits.h"
 
 namespace rsl
 {
@@ -52,24 +54,6 @@ namespace rsl
 
         return static_cast<uint32>(-1);
       }
-
-      // A lot of this code is inspired by MSVC's implementation
-      // See the following files for more details
-      // - <windows sdk>/ucrt/inc/corecrt_internal_big_integer.h
-      // - <windows sdk>/ucrt/inc/corecrt_internal_fltintrn.h
-      // - <windows sdk>/ucrt/inc/corecrt_internal_strtox.h
-
-      struct big_int
-      {
-        // 1074 bits are required to represent 2^1074. the smallest representable double value is 2^-1074
-        // 2552 bits are required for parsing. this number comes from 10^768, 
-        // which is needed for the decimal representation of the smallest denormalized value
-        // 2^-1074 uses 752 decimal digits after trimming zeroes, so we have a bit of slack space
-        static constexpr uint32 s_element_count = 1074 + 2552 + 54;
-        
-        uint32 used;
-        uint32 data[s_element_count];
-      };
     }
 
     RSL_NO_DISCARD constexpr tchar to_wide_char(char8 chr)
@@ -881,6 +865,14 @@ namespace rsl
       template <typename T, typename Iterator, typename IteratorPointer>
       constexpr optional<T> str_to_floating_point(Iterator str, IteratorPointer strEnd)
       {
+        static_assert(rsl::is_floating_point_v<T>, "T must be a signed type");
+
+        // A lot of this code is inspired by MSVC's implementation
+        // See the following files for more details
+        // - <windows sdk>/ucrt/inc/corecrt_internal_big_integer.h
+        // - <windows sdk>/ucrt/inc/corecrt_internal_fltintrn.h
+        // - <windows sdk>/ucrt/inc/corecrt_internal_strtox.h
+
         // a 32 bit floating point is stored in memory as followed
         // 1 bit for the sign
         // 8 bits for the exponent, the actual exponent is this value - 127
@@ -892,264 +884,437 @@ namespace rsl
         // and so on
 
 
+        // To generate a mantissa with N bits precission, we need N + 1 bits.
+        // The extra bit is used to correctly round the mantissa. If there are fewer bits
+        // than this available, then that's okay as in that case we use what we have and
+        // we don't need to round
+        const uint32 required_bits_of_precision = rsl::numeric_limits<T>::digits;
 
+        // The input is of the form 0.mantissa x 10^exponent, where 'mantissa' are
+        // the decimal digits of the mantissa and 'exponent' is the decimal exponent.
+        // We decompose the mantissa into 2 parts, an integer part and a fractional part.
+        // If the exponent is positive, then the integer part consists of the first 'exponent' digits
+        // or all the present digits if there are fewer digits.
+        // If the exponent is 0 or negative, then the integer part is empty.
+        // In either case, the remaining digits form the fractional part of the mantissa.
+        const uint32 positive_exponent = (rsl::max)(0, data.exponent);
+        const uint32 integer_digits_present = (rsl::min)(positive_exponent, data.mantissa_count);
+        const uint32 integer_digits_missing = positive_exponent - integer_digits_present;
+        const char8* first_integer = data.mantissa;
+        const char8* last_integer = data.mantissa + integer_digits_present;
 
+        const char8* first_fractional = last_integer;
+        const char8* last_fractional = data.mantissa + data.mantissa_count;
+        const uint32 fractional_digits_present = static_cast<uint32>(last_fractional - first_fractional);
 
-        static_assert(rsl::is_floating_point_v<T>, "T must be a signed type");
+        rsl::internal::big_int integer_value{};
+        rsl::internal::accumulate_decimal_digits_into_big_integer(first_integer, last_integer, integer_value);
 
-        int32 sign = 1;
-        auto c = str;
-
-        if (*c == '\0')
+        // If we have more digits than allowed in our mantissa
+        // create a float representing infinite as we're overflowing
+        if (integer_digits_missing > 0)
         {
-          return nullopt;
-        }
-
-        while (is_space(*c))
-        {
-          c++;
-        }
-
-        if(*c == '-')
-        {
-          sign = -1;
-          ++c;
-        }
-        else if(*c == '+')
-        {
-          ++c;
-        }
-
-        // detect if string is in hexadecimal
-        bool is_hex = false;
-        if (*c == '0')
-        {
-          if (c[1] == 'x' || c[1] == 'X')
+          if (!rsl::internal::multiply_by_power_of_ten(integer_value, integer_digits_missing))
           {
-            c += 2;
-            is_hex = true;
+            return assemble_floating_point_infinity(data.is_negative);
           }
         }
 
-        // Skip any leading zeroes
-        while (*c == '0')
+        // At this point, the integer value is stored in the big int.
+        // If either (1) the number has more than the required of bits of precision
+        // or (2) the mantissa has no fractional part,
+        // then we can assemble the result immediately
+        // eg 1: 1235678901234567912345.6789
+        // eg 2: 123
+        const uint32 integer_bits_of_precision = bit_scan_reverse(integer_value);
+        if (integer_bits_of_precision >= required_bits_of_precision || fractional_digits_present == 0)
         {
-          ++c;
+          return assemble_floating_point_value_from_big_integer(
+            integer_value,
+            integer_bits_of_precision,
+            data.is_negative,
+            fractional_digits_present != 0);
         }
 
-        uint32 before_radix_value          = 0;
-        uint32 after_radix_value           = 0;
-        card32 exponent_adjustment = 0;
-        card32 num_digits_after_radix = 0;
-        uint32 base = is_hex ? 16 : 10;
-        bool has_found_digits = false;
-        // Get the mantissa out of the string
-        while (*c != '\0')
+        // Otherwise, we did nogt get enough bits of precision from the integer part.
+        // and the mantissa has a fractional part.
+        // We parse the fractional part of the mantisssa to obtain more bits of precision
+        // To do this, we convert the fractional part into an actual fraction N/M, 
+        // where the numerator N is computed from the digits of the fractional part,
+        // and the denominator M is computed as the power of 10 such that N/M is equal to
+        // the value of the fractional part of the mantissa
+        rsl::internal::big_int fractional_numerator{};
+        rsl::internal::accumualte_decimal_digits_into_big_integer(first_fractional, last_fractional, fractional_numerator);
+
+        // Make sure that if we have leading zeroes in the fraction
+        // that these are included in the denominator exponent
+        const uint32 fractional_denominator_exponent = data.exponent < 0
+          ? fractional_digits_present + static_cast<uint32>(-data.exponent)
+          : fractional_digits_present;
+
+        rsl::internal::big_int fractional_denominator = rsl::internal::make_big_int(1);
+        if (!multiply_by_power_of_ten(fractional_denominator, fractional_denominator_exponent))
         {
-          uint32 digit_val = parse_digit(*c);
-          if (digit_val > base - 1)
-          {
-            break;
-          }
-          has_found_digits = true;
-          before_radix_value = digit_val + before_radix_value * base;
-          ++exponent_adjustment;
-          ++c;
+          // IF there were any digits in the integer part, it is impossible to underflow.
+          // This is because the exponent cannot possible be small enough.
+          // So if we underflow here, it is a true underflow and we return 0
+          return assemble_floating_point_zero(data.is_negative);
         }
 
-        // After the mantissa is parsed we have a few options
-        // encountering a radix point
-        // encountering the exponent token
-        // encounter nothing as the float is written as an int
-        char radix_point = '.';
-        if (*c == radix_point)
+        // Because we are using only the fractional part of the mantissa here,
+        // the numerator is guaranteed to be smaller than the denominator
+        // We normalize the fraction such that the most significant bit of the numerator
+        // is in the same position as the most significant bit in the denominiator.
+        // This ensures that when we later shift the numerator N bits to the left,
+        // we will produce N bits of precission
+        // 
+        // The goal here is to reduce the leading zeroes as much as posisble
+        // Let's say you have the following fraction: 0.0625
+        // A fraction is converted to binary by multiplying it by 2 over and over again
+        // if the result is bigger than 1, you store a 1, otherwise you store a 0
+        // for the example fractoin this would be the result
+        // 0.0625 * 2 = 0.125 = 0b0
+        // 0.125 * 2 = 0.25 = 0b0
+        // 0.25 * 2 = 0.5 = 0b0
+        // 0.5 * 2 = 1.0 = 0b1
+        // Result: 0b0001
+        // By shifting the most significant bit, those leading zeroes go away
+        // Leaving more room for precision, as long as we update our exponent
+        const uint32 fractional_numerator_bits = bit_scan_reverse(fractional_numerator);
+        const uint32 fractional_denominator_bits = bit_scan_reverse(fractional_denominator);
+
+        const uint32 fractional_shift = fractional_denominator_bits > fractional_numerator_bits
+          ? fractional_denominator_bits - fractional_numerator_bits
+          : 0;
+
+        if (fractional_shift > 0)
         {
-          // If we haven't scanned any digits yet
-          // continue skipping over leading zeroes
-          if (has_found_digits == false)
+          shift_left(fractional_numerator, fractional_shift);
+        }
+        const uint32 required_fractional_bits_of_precision = required_bits_of_precision - integer_bits_of_precision;
+
+        uint32 remaining_bits_of_precision_required = required_fractional_bits_of_precision;
+        if (integer_bits_of_precision > 0)
+        {
+          // If the fractional part of the mantissa provides no bits of precision
+          // and cannot affect rounding, we can just take whatever bits we got from
+          // the integer part of the mantissa. This is the case for numbers with a lot
+          // of leading zeroes like 5.0000000000000000000001, where the significant
+          // digits of the fractional part start so far to the right that they do not affect 
+          // the floating point representation
+          // 
+          // IF the fractional shift is exactly equal to the number of bits of precision that
+          // we require, then no fractional bits will be part of the result, but the result may affect rounding
+          // This is e.g. the case for large, odd integers with a fractional part greater than or wqual to 0.5.
+          // Thus we need to do the division to correctly round the result.
+          if (fractional_shift > remaining_bits_of_precision_required)
           {
-            while (*c == '0')
-            {
-              ++c;
-              ++num_digits_after_radix;
-              --exponent_adjustment;
-              has_found_digits = true;
-            }
+            return assemble_floating_point_value_from_big_integer(
+              integer_value,
+              integer_bits_of_precision,
+              data.is_negative,
+              fractional_digits_present != 0);
           }
 
-          ++c;
-        }
-        while (*c != '\0')
-        {
-          uint32 digit_val = parse_digit(*c);
-          if (digit_val > base - 1)
-          {
-            break;
-          }
-
-          has_found_digits = true;
-          after_radix_value = digit_val + after_radix_value * base;
-          ++num_digits_after_radix;
-          ++c;
-        }
-
-        // If we still haven't parsed a single digit, there's probably something wrong
-        // in which case we need to return
-        using underlying_pointer_type = typename rsl::iterator_traits<decltype(str)>::value_type;
-        if (!has_found_digits)
-        {
-          // It's possible that we read the hexadecimal prefix
-          // but didn't find any other digits
-          // In which case the return value is also 0, but the pointer should be incremented
-          // as we did successfully convert a string
-          if (strEnd)
-          {
-            *strEnd = (underlying_pointer_type*)str;
-            if (is_hex)
-            {
-              *strEnd++;
-            }
-          }
-
-          return static_cast<T>(0);
-        }
-
-        bool has_exponent = false;
-        switch (*c)
-        {
-        case 'e':
-        case 'E':
-          has_exponent = !is_hex;
-          break;
-        case 'p':
-        case 'P':
-          has_exponent = is_hex;
-          break;
+          remaining_bits_of_precision_required -= fractional_shift;
         }
 
-        if (has_exponent)
+        // If there was no integer part of the mantissa, we will need to compute
+        // the exponent from the fractional part. The fractonal exponent is the power
+        // of two by which we must multiply the fractional part to move it into the 
+        // range [1.0, 2.0). This will either be the same as the shift we computed
+        // earlier, or one greater than that shift
+        const uint32 fractional_exponent = fractional_numerator < fractional_denominator
+          ? fractional_shift + 1
+          : fractional_shift;
+
+        shift_left(fractional_numerator, remaining_bits_of_precision_required);
+        uint64 fractional_mantissa = divie(fractional_numerator, fractional_denominator);
+
+        bool has_zero_tail = fractional_numerator.used == 0;
+
+        // We may have produced more bits of precisoin than were required.
+        // Check and remove any extra bits:
+        const uint32 fractional_mantissa_bits = bit_scan_reverse(fractional_mantissa);
+        if (fractional_mantissa_bits > required_fractional_bits_of_precision)
         {
-          ++c;
-
-          const is_exponent_negative = *c == '-';
-          if (*c == '+' || *c == '-')
-          {
-            ++c;
-          }
-
-          bool has_exponent_digits = false;
-          while (*c == '0')
-          {
-            has_exponent_digits = true;
-            ++c;
-          }
-
-          constexpr int32 max_exponent = 5200;
-          constexpr int32 min_exponent = -5200;
-
-          int32 exponent = 0;
-          while (*c != '\0')
-          {
-            uint32 digit_value = parse_digit(*c);
-            if (digit_value >= 10) // should always be of base 10
-            {
-              break;
-            }
-
-            has_exponent_digits = true;
-            exponent = exponent * 10 + digit_value;
-            
-            if (exponent > max_exponent)
-            {
-              exponent = max_exponent + 1;
-              break;
-            }
-          }
-
-          // skip any characters if the exponent was too big
-          while (parse_digit(*c) < 10)
-          {
-            ++c;
-          }
-
-          if (is_exponent_negative)
-          {
-            exponent = -exponent;
-          }
-
-          if (!has_exponent_digits)
-          {
-            // restoring to default state
-            c = str;
-          }
-
-          // if we have no value at all, the result is 0, regardless of the exponent
-          if (before_radix_value == 0 && after_radix_value == 0)
-          {
-            return 0;
-          }
-
-          if (exponent > max_exponent)
-          {
-            return INFINITY;
-          }
-          if (exponent < min_exponent)
-          {
-            return -INFINITY;
-          }
-
-          int32 exponent_adjustment_multiplier = is_hex
-            ? 4
-            : 1;
-
-          exponent += exponent_adjustment * exponent_adjustment_multiplier;
-
-          if (exponent > max_exponent)
-          {
-            return 0;
-          }
-          if (exponent < min_exponent)
-          {
-            return -0;
-          }
-
-
-
-          underlying_pointer_type* c2 = c;
-          uint32 exponent = strtoi(c, &c2, 10).value_or(0);
-
-					if (strEnd)
-					{
-						*strEnd = (underlying_pointer_type*)c2;
-					}
-
-          // before radix point - leave untouched
-          // after radix point - divide by 1.6
-          // exponent - apply to a base 2
-          if (is_hex)
-          {
-            T divider = static_cast<T>(1.6f);
-            T radix_value = after_radix_value / divider;
-            exponent = pow(2, exponent);
-
-            return optional<T>(sign * static_cast<T>(before_radix_value) + (static_cast<T>(after_radix_value) / ((rsl::max)(1.0f, pow(10.0f, num_digits_after_radix)))));
-          }
-          // before radix point - leave untouched
-          // after radix point - leave untouched
-          // exponent - apply to a base 10
-          else
-          {
-            return optional<T>(sign * static_cast<T>(before_radix_value) + (static_cast<T>(after_radix_value) / ((rsl::max)(1.0f, pow(10.0f, num_digits_after_radix)))));
-          }
+          const uint32 shift = fractional_mantissa_bits - required_fractional_bits_of_precision;
+          has_zero_tail = has_zero_tail && (fractional_mantissa & ((1ui64 << shift) -1)) == 0;
+          fractional_mantissa >>= shift;
         }
-        else
-        {
-          if (strEnd)
-          {
-            *strEnd = (underlying_pointer_type*)c;
-          }
-					return optional<T>(sign * static_cast<T>(before_radix_value) + (static_cast<T>(after_radix_value) / ((rsl::max)(1.0f, pow(10.0f, num_digits_after_radix)))));
-        }
+
+        const uint32 integer_mantissa_low = integer_value.used > 0 ? integer_value.data[0] : 0;
+        const uint32 integer_mantissa_high = integer_value.used > 1 ? integer_value.data[1] : 0;
+        const uint64 integer_mantissa = integer_mantissa_low + (static_cast<uint64>(integer_mantissa_high) << sizoef(integer_mantissa_low * rsl::limits_byte::num_bits_per_byte));
+
+        const uint64 complete_mantissa = (integer_mantissa << required_fractional_bits_of_precision) + fractional_mantissa;
+
+        // Compute the final exponent:
+        // * If the mantissa had an integer part, then the exponent is one less than the number
+        // of bits we obtained from the integer part. IT's one less because we are converting
+        // to the form 1.11111 with one 1 to the left of the decimal point.
+        // * If the mantissa had no integer part, then the exponent is the fractional exponent that we computed
+        // Then, in both cases, we subtract an additional one from the exponent,
+        // to account for the fact that we've generated an extra bit of precision, for use in rounding
+        const int32 final_exponent = integer_bits_of_precision > 0
+          ? integer_bits_of_precision - 2
+					: -static_cast<int32>(fractional_exponent) - 1;
+
+        return assemble_floating_point_value(complete_mantissa, final_exponent, data.is_negative, has_zero_tail);
+
+     //   int32 sign = 1;
+     //   auto c = str;
+
+     //   if (*c == '\0')
+     //   {
+     //     return nullopt;
+     //   }
+
+     //   while (is_space(*c))
+     //   {
+     //     c++;
+     //   }
+
+     //   if(*c == '-')
+     //   {
+     //     sign = -1;
+     //     ++c;
+     //   }
+     //   else if(*c == '+')
+     //   {
+     //     ++c;
+     //   }
+
+     //   // detect if string is in hexadecimal
+     //   bool is_hex = false;
+     //   if (*c == '0')
+     //   {
+     //     if (c[1] == 'x' || c[1] == 'X')
+     //     {
+     //       c += 2;
+     //       is_hex = true;
+     //     }
+     //   }
+
+     //   // Skip any leading zeroes
+     //   while (*c == '0')
+     //   {
+     //     ++c;
+     //   }
+
+     //   uint32 before_radix_value          = 0;
+     //   uint32 after_radix_value           = 0;
+     //   card32 exponent_adjustment = 0;
+     //   card32 num_digits_after_radix = 0;
+     //   uint32 base = is_hex ? 16 : 10;
+     //   bool has_found_digits = false;
+     //   // Get the mantissa out of the string
+     //   while (*c != '\0')
+     //   {
+     //     uint32 digit_val = parse_digit(*c);
+     //     if (digit_val > base - 1)
+     //     {
+     //       break;
+     //     }
+     //     has_found_digits = true;
+     //     before_radix_value = digit_val + before_radix_value * base;
+     //     ++exponent_adjustment;
+     //     ++c;
+     //   }
+
+     //   // After the mantissa is parsed we have a few options
+     //   // encountering a radix point
+     //   // encountering the exponent token
+     //   // encounter nothing as the float is written as an int
+     //   char radix_point = '.';
+     //   if (*c == radix_point)
+     //   {
+     //     // If we haven't scanned any digits yet
+     //     // continue skipping over leading zeroes
+     //     if (has_found_digits == false)
+     //     {
+     //       while (*c == '0')
+     //       {
+     //         ++c;
+     //         ++num_digits_after_radix;
+     //         --exponent_adjustment;
+     //         has_found_digits = true;
+     //       }
+     //     }
+
+     //     ++c;
+     //   }
+     //   while (*c != '\0')
+     //   {
+     //     uint32 digit_val = parse_digit(*c);
+     //     if (digit_val > base - 1)
+     //     {
+     //       break;
+     //     }
+
+     //     has_found_digits = true;
+     //     after_radix_value = digit_val + after_radix_value * base;
+     //     ++num_digits_after_radix;
+     //     ++c;
+     //   }
+
+     //   // If we still haven't parsed a single digit, there's probably something wrong
+     //   // in which case we need to return
+     //   using underlying_pointer_type = typename rsl::iterator_traits<decltype(str)>::value_type;
+     //   if (!has_found_digits)
+     //   {
+     //     // It's possible that we read the hexadecimal prefix
+     //     // but didn't find any other digits
+     //     // In which case the return value is also 0, but the pointer should be incremented
+     //     // as we did successfully convert a string
+     //     if (strEnd)
+     //     {
+     //       *strEnd = (underlying_pointer_type*)str;
+     //       if (is_hex)
+     //       {
+     //         *strEnd++;
+     //       }
+     //     }
+
+     //     return static_cast<T>(0);
+     //   }
+
+     //   bool has_exponent = false;
+     //   switch (*c)
+     //   {
+     //   case 'e':
+     //   case 'E':
+     //     has_exponent = !is_hex;
+     //     break;
+     //   case 'p':
+     //   case 'P':
+     //     has_exponent = is_hex;
+     //     break;
+     //   }
+
+     //   if (has_exponent)
+     //   {
+     //     ++c;
+
+     //     const bool is_exponent_negative = *c == '-';
+     //     if (*c == '+' || *c == '-')
+     //     {
+     //       ++c;
+     //     }
+
+     //     bool has_exponent_digits = false;
+     //     while (*c == '0')
+     //     {
+     //       has_exponent_digits = true;
+     //       ++c;
+     //     }
+
+     //     constexpr int32 max_exponent = 5200;
+     //     constexpr int32 min_exponent = -5200;
+
+     //     int32 exponent = 0;
+     //     while (*c != '\0')
+     //     {
+     //       uint32 digit_value = parse_digit(*c);
+     //       if (digit_value >= 10) // should always be of base 10
+     //       {
+     //         break;
+     //       }
+
+     //       has_exponent_digits = true;
+     //       exponent = exponent * 10 + digit_value;
+     //       
+     //       if (exponent > max_exponent)
+     //       {
+     //         exponent = max_exponent + 1;
+     //         break;
+     //       }
+     //     }
+
+     //     // skip any characters if the exponent was too big
+     //     while (parse_digit(*c) < 10)
+     //     {
+     //       ++c;
+     //     }
+
+     //     if (is_exponent_negative)
+     //     {
+     //       exponent = -exponent;
+     //     }
+
+     //     if (!has_exponent_digits)
+     //     {
+     //       // restoring to default state
+     //       c = str;
+     //     }
+
+     //     // if we have no value at all, the result is 0, regardless of the exponent
+     //     if (before_radix_value == 0 && after_radix_value == 0)
+     //     {
+     //       return 0;
+     //     }
+
+     //     if (exponent > max_exponent)
+     //     {
+     //       return INFINITY;
+     //     }
+     //     if (exponent < min_exponent)
+     //     {
+     //       return -INFINITY;
+     //     }
+
+     //     int32 exponent_adjustment_multiplier = is_hex
+     //       ? 4
+     //       : 1;
+
+     //     exponent += exponent_adjustment * exponent_adjustment_multiplier;
+
+     //     if (exponent > max_exponent)
+     //     {
+     //       return 0;
+     //     }
+     //     if (exponent < min_exponent)
+     //     {
+     //       return -0;
+     //     }
+
+
+
+     //     underlying_pointer_type* c2 = c;
+     //     uint32 exponent = strtoi(c, &c2, 10).value_or(0);
+
+					//if (strEnd)
+					//{
+					//	*strEnd = (underlying_pointer_type*)c2;
+					//}
+
+     //     // before radix point - leave untouched
+     //     // after radix point - divide by 1.6
+     //     // exponent - apply to a base 2
+     //     if (is_hex)
+     //     {
+     //       T divider = static_cast<T>(1.6f);
+     //       T radix_value = after_radix_value / divider;
+     //       exponent = pow(2, exponent);
+
+     //       return optional<T>(sign * static_cast<T>(before_radix_value) + (static_cast<T>(after_radix_value) / ((rsl::max)(1.0f, pow(10.0f, num_digits_after_radix)))));
+     //     }
+     //     // before radix point - leave untouched
+     //     // after radix point - leave untouched
+     //     // exponent - apply to a base 10
+     //     else
+     //     {
+     //       return optional<T>(sign * static_cast<T>(before_radix_value) + (static_cast<T>(after_radix_value) / ((rsl::max)(1.0f, pow(10.0f, num_digits_after_radix)))));
+     //     }
+     //   }
+     //   else
+     //   {
+     //     if (strEnd)
+     //     {
+     //       *strEnd = (underlying_pointer_type*)c;
+     //     }
+					//return optional<T>(sign * static_cast<T>(before_radix_value) + (static_cast<T>(after_radix_value) / ((rsl::max)(1.0f, pow(10.0f, num_digits_after_radix)))));
+     //   }
 
       }
 
