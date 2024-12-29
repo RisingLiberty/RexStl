@@ -19,7 +19,8 @@ namespace rsl
     template <typename T>
     constexpr bool is_nan(const T x)
     {
-      return x != x; // NOLINT(misc-redundant-expression)
+      // see https://github.com/fmtlib/fmt/issues/3948
+      return !(x >= x); // NOLINT(misc-redundant-expression)
     }
   } // namespace v1
 } // namespace rsl

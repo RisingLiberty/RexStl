@@ -13,6 +13,7 @@
 // NOLINTBEGIN
 
 #define CATCH_CONFIG_MAIN
+#define CATCH_CONFIG_DISABLE_EXCEPTIONS
 #include "rex_std_test/catch2/catch.hpp"
 
 #define RSL_CATCH_REGISTER_REPORTER(name, reporterType)                                                                                                                                                                                                \

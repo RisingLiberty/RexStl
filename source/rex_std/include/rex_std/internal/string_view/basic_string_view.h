@@ -707,6 +707,14 @@ namespace rsl
       }
     };
 
+    namespace crc32
+    {
+      constexpr uint32 compute(rsl::string_view view, uint32 crc = 0)
+      {
+        return crc32::compute(view.data(), view.length(), crc);
+      }
+    }
+
     template <typename It>
     basic_string_view(It, It) -> basic_string_view<typename rsl::iterator_traits<It>::value_type, rsl::char_traits<typename rsl::iterator_traits<It>::value_type>>;
 

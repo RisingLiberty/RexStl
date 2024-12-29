@@ -664,9 +664,7 @@ namespace rsl
       // Framework sources.  It computes both quotient and remainder:  the remainder
       // is stored in the numerator argument, and the least significant 32 bits of the
       // quotient are returned from the function.
-      inline uint64 __cdecl divide(
-        big_int& numerator,
-        const big_int& denominator
+      uint64 divide(big_int& numerator, const big_int& denominator
       )
       {
         // If the numerator is zero, then both the quotient and remainder are zero:

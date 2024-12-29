@@ -28,50 +28,50 @@ namespace rsl
         uint32 data[s_element_count];
       };
 
-      bool __cdecl operator==(const big_int& lhs, const big_int& rhs);
+      bool operator==(const big_int& lhs, const big_int& rhs);
 
-      bool __cdecl operator!=(const big_int& lhs, const big_int& rhs);
+      bool operator!=(const big_int& lhs, const big_int& rhs);
 
-      bool __cdecl operator<(const big_int& lhs, const big_int& rhs);
+      bool operator<(const big_int& lhs, const big_int& rhs);
 
-      bool __cdecl operator>=(const big_int& lhs, const big_int& rhs);
+      bool operator>=(const big_int& lhs, const big_int& rhs);
 
-      big_int __cdecl make_big_int(uint64 value);
+      big_int make_big_int(uint64 value);
 
-      big_int __cdecl make_big_int_power_of_two(uint32 power);
+      big_int make_big_int_power_of_two(uint32 power);
 
-      bool __cdecl is_zero(const big_int& value);
+      bool is_zero(const big_int& value);
 
-      uint32 __cdecl bit_scan_reverse(uint32 value);
+      uint32 bit_scan_reverse(uint32 value);
 
-      uint32 __cdecl bit_scan_reverse(uint64 value);
+      uint32 bit_scan_reverse(uint64 value);
 
-      uint32 __cdecl bit_scan_reverse(const big_int& x);
+      uint32 bit_scan_reverse(const big_int& x);
 
       // Shifts the high precision integer x by n bits to the left.  Returns true if
       // the left shift was successful; false if it overflowed.  When overflow occurs,
       // the high precision integer is reset to zero.
-      bool __cdecl shift_left(big_int& x, uint32 n);
+      bool shift_left(big_int& x, uint32 n);
 
       // Adds a 32-bit value to the high-precision integer x.  Returns true if the
       // addition was successful; false if it overflowed.  When overflow occurs, the
       // high precision integer is reset to zero.
-      bool __cdecl add(big_int& x, const uint32 value);
+      bool add(big_int& x, const uint32 value);
 
-      uint32 __cdecl add_carry(
+      uint32 add_carry(
         uint32& u1,
         const uint32 u2,
         const uint32 u_carry
       );
 
-      uint32 __cdecl add_multiply_carry(
+      uint32 add_multiply_carry(
         uint32& u_add,
         const uint32 u_mul_1,
         const uint32 u_mul_2,
         const uint32 u_carry
       );
 
-      uint32 __cdecl multiply_core(
+      uint32 multiply_core(
         _Inout_updates_all_(multiplicand_count) uint32* const multiplicand,
         uint32    const multiplicand_count,
         uint32    const multiplier
@@ -81,16 +81,16 @@ namespace rsl
       // Multiplies the high precision multiplicand by a 32-bit multiplier.  Returns
       // true if the multiplication was successful; false if it overflowed.  When
       // overflow occurs, the multiplicand is reset to zero.
-      bool __cdecl multiply(big_int& multiplicand, const uint32 multiplier);
+      bool multiply(big_int& multiplicand, const uint32 multiplier);
 
       // This high precision integer division implementation was translated from the
       // implementation of System.Numerics.BigIntegerBuilder.Mul in the .NET Framework
       // sources.  It multiplies the multiplicand by the multiplier and returns true
       // if the multiplication was successful; false if it overflowed.  When overflow
       // occurs, the multiplicand is reset to zero.
-      bool __cdecl multiply(big_int& multiplicand, const big_int& multiplier);
+      bool multiply(big_int& multiplicand, const big_int& multiplier);
 
-      bool __cdecl multiply_by_power_of_ten(big_int& x, const uint32 power);
+      bool multiply_by_power_of_ten(big_int& x, const uint32 power);
 
       // The following non-compiled functions are the generators for the big powers of
       // ten table found in multiply_by_power_of_ten().  This code is provided for
@@ -153,7 +153,7 @@ namespace rsl
       */
 
       // Computes the number of zeroes higher than the most significant set bit in 'u'
-      uint32 __cdecl count_sequential_high_zeroes(const uint32 u);
+      uint32 count_sequential_high_zeroes(const uint32 u);
 
       // PERFORMANCE NOTE:  On x86, for multiplication of a 64-bit unsigned integer by
       // a 32-bit unsigned integer, the compiler will generate a call to _allmul.  For
@@ -163,7 +163,7 @@ namespace rsl
       // for general 64-bit x 64-bit multiplication, and [2] is inlineable, allowing the
       // compile to elide the extreme overhead of calling the _allmul function.
 #if defined(_M_IX86) && !defined(_M_HYBRID_X86_ARM64)
-      uint64 __cdecl multiply_64_32(
+      uint64 multiply_64_32(
         uint64 const multiplicand,
         const uint32 multiplier
       ) 
@@ -182,9 +182,7 @@ namespace rsl
         }
       }
 #else
-      uint64 __cdecl multiply_64_32(
-        uint64 const multiplicand,
-        const uint32 multiplier
+      uint64 multiply_64_32(uint64 const multiplicand, const uint32 multiplier
       );
 #endif
 
@@ -193,9 +191,7 @@ namespace rsl
       // Framework sources.  It computes both quotient and remainder:  the remainder
       // is stored in the numerator argument, and the least significant 32 bits of the
       // quotient are returned from the function.
-      inline uint64 __cdecl divide(
-        big_int& numerator,
-        const big_int& denominator
+      uint64 divide(big_int& numerator, const big_int& denominator
       );
 
 		}
