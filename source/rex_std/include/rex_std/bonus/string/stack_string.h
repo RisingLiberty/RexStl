@@ -539,12 +539,12 @@ namespace rsl
       bool ends_with(const value_type* suffix) const
       {
         basic_string_view<CharType, char_traits<CharType>> view = to_view();
-        return view.ends_width(suffix);
+        return view.ends_with(suffix);
       }
       bool ends_width(const basic_string_view<CharType, char_traits<CharType>> suffix) const
       {
         basic_string_view<CharType, char_traits<CharType>> view = to_view();
-        return view.ends_width(suffix);
+        return view.ends_with(suffix);
       }
 
       stack_string<CharType, StrMaxSize> to_lower() const
