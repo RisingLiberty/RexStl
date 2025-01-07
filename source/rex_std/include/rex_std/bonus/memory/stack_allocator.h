@@ -34,12 +34,18 @@ namespace rsl
 
       explicit stack_allocator(size_type size);
 
+      // Allocate size bytes from the underlying buffer and return a pointer to it
       RSL_NO_DISCARD pointer allocate(size_type size);
+      // This does nothing internally but is only provided to follow basic allocator interface
       void deallocate(pointer ptr, size_type size);
 
+      // Reset the current stack pointer to the beginning
+      // New allocations will starts from the fron again
       void reset();
 
+      // Return the offset from the beginning of the buffer allocations will be made from
       StackMarker current_marker() const;
+      // Set the offset within the buffer allocations should start from
       void set_marker(StackMarker marker);
 
     private:
