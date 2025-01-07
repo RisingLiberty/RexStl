@@ -101,7 +101,7 @@ bool rsl::time::operator!=(const time& time) const
   return !(*this == time);
 }
 
-rsl::ostream& rsl::operator<<(ostream& os, const time& time)
+rsl::ostream& rsl::operator<<(ostream& os, const rsl::time& time)
 {
   os << rsl::time_digits(time.hours()) << ':' << rsl::time_digits(time.minutes()) << ':' << rsl::time_digits(time.seconds());
   return os;
