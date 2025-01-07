@@ -441,7 +441,7 @@ namespace rsl
       };
 
       template <typename Tuple>
-      using MakeTupleTypes_t = typename MakeTupleTypesImpl<tuple_types<>, Tuple, 0, tuple_size<typename remove_reference_t<Tuple>::type>::value>::type;
+      using MakeTupleTypes_t = typename MakeTupleTypesImpl<tuple_types<>, Tuple, 0, tuple_size<typename remove_reference_t<Tuple>>::value>::type;
 
       // TupleImpl
       //
