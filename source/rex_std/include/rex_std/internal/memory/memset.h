@@ -13,13 +13,22 @@
 #pragma once
 
 #include "rex_std/bonus/types.h"
+#include "rex_std/internal/memory/byte.h"
 
 namespace rsl
 {
   inline namespace v1
   {
 
-    void* memset(void* dest, char val, card64 len);
+    constexpr void* memset(void* dest, char val, card64 len)
+    {
+      rsl::byte* dest_b = static_cast<byte*>(dest);
+      while (len-- > 0)
+      {
+        *dest_b++ = static_cast<byte>(val);
+      }
+      return dest;
+    }
 
   } // namespace v1
 } // namespace rsl

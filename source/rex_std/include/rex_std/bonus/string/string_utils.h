@@ -224,16 +224,16 @@ namespace rsl
       // - istreambuf_iterator
       // - random_access_iterator
       template <typename T, typename Iterator, typename IteratorPointer>
-      optional<T> str_to_floating_point(Iterator str, IteratorPointer /*str_end*/);
+      constexpr optional<T> str_to_floating_point(Iterator str, IteratorPointer /*str_end*/);
 
       template <typename T, typename Iterator>
-      optional<T> str_to_floating_point(Iterator str);
+      constexpr optional<T> str_to_floating_point(Iterator str);
 
       template <typename Iterator, typename IteratorPointer>
-      optional<bool> str_to_bool(Iterator str, IteratorPointer strEnd);
+      constexpr optional<bool> str_to_bool(Iterator str, IteratorPointer strEnd);
 
       template <typename T, typename Iterator>
-      optional<T> str_to_bool(Iterator str);
+      constexpr optional<T> str_to_bool(Iterator str);
 
       // iterator can be of type:
       // - char8*
