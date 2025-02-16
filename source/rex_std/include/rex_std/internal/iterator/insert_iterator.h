@@ -19,6 +19,7 @@
 #pragma once
 
 #include "rex_std/bonus/defines.h"
+#include "rex_std/internal/utility/move.h"
 
 namespace rsl
 {

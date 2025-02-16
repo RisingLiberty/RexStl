@@ -510,7 +510,7 @@ namespace rsl
       }
 
       template <typename T>
-      constexpr T convert_decimal_to_float(const floating_point_string& data)
+      T convert_decimal_to_float(const floating_point_string& data)
       {
         static_assert(rsl::is_floating_point_v<T>, "T must be a floating point type");
 
@@ -2112,7 +2112,7 @@ namespace rsl
       // - istreambuf_iterator
       // - random_access_iterator
       template <typename T, typename Iterator, typename IteratorPointer>
-      constexpr optional<T> str_to_floating_point(Iterator str, IteratorPointer strEnd)
+      optional<T> str_to_floating_point(Iterator str, IteratorPointer strEnd)
       {
         static_assert(rsl::is_floating_point_v<T>, "T must be a floating point type");
 
@@ -2138,13 +2138,13 @@ namespace rsl
       }
 
       template <typename T, typename Iterator>
-      constexpr optional<T> str_to_floating_point(Iterator str)
+      optional<T> str_to_floating_point(Iterator str)
       {
         return str_to_floating_point<T>(str, static_cast<Iterator*>(nullptr));
       }
 
       template <typename Iterator, typename IteratorPointer>
-      constexpr optional<bool> str_to_bool(Iterator str, IteratorPointer strEnd)
+      optional<bool> str_to_bool(Iterator str, IteratorPointer strEnd)
       {
         constexpr Iterator true_str[]  = "true";  // NOLINT(modernize-avoid-c-arrays)
         constexpr Iterator false_str[] = "false"; // NOLINT(modernize-avoid-c-arrays)
@@ -2170,7 +2170,7 @@ namespace rsl
       }
 
       template <typename T, typename Iterator>
-      constexpr optional<T> str_to_bool(const Iterator str)
+      optional<T> str_to_bool(const Iterator str)
       {
         return str_to_bool<T>(str, static_cast<Iterator*>(nullptr));
       }

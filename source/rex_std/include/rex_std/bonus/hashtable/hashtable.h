@@ -561,7 +561,7 @@ namespace rsl
           // advantage of the fact that the count will always be zero or one in that case.
           for(; node; node = node->next)
           {
-            if(!compare_key(x, m_cp_extract_key_and_rehash_policy.first()((*bucket_array)->value)))
+            if(!compare_key(x, m_cp_extract_key_and_rehash_policy.first()((*bucket_array())->value)))
             {
               ++result;
             }
