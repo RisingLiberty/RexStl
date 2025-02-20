@@ -10,7 +10,7 @@ namespace rsl
 		template <typename T>
 		constexpr T bit_width(T value)
 		{
-			return numeric_limits<T>::digits - countl_zero(value);
+			return static_cast<T>(numeric_limits<T>::digits - countl_zero(value));
 		}
 	}
 }
