@@ -627,8 +627,8 @@ namespace rsl
       // Computes the number of zeroes higher than the most significant set bit in 'u'
       constexpr uint32 count_sequential_high_zeroes(const uint32 u)
       {
-        unsigned long result = 0;
-        return _BitScanReverse(&result, u) ? 31 - result : 32;
+        uint32 result = rsl::bit_width(u);
+        return result ? 31 - result : 32;
       }
 
       // PERFORMANCE NOTE:  On x86, for multiplication of a 64-bit unsigned integer by
