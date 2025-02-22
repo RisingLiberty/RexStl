@@ -28,8 +28,10 @@ rsl::version::version(const string_view version)
   const card32 first_dot_pos  = version.find_first_of('.');
   const card32 second_dot_pos = version.find_first_of('.', first_dot_pos + 1);
 
+  const card32 minor_length = second_dot_pos - first_dot_pos - 1;
+
   m_major = numeric_cast<card8>(rsl::stoi(version.substr(0, first_dot_pos)).value());
-  m_minor = numeric_cast<card8>(rsl::stoi(version.substr(first_dot_pos + 1, second_dot_pos - first_dot_pos)).value());
+  m_minor = numeric_cast<card8>(rsl::stoi(version.substr(first_dot_pos + 1, minor_length)).value());
   m_patch = second_dot_pos != string_view::npos() ? numeric_cast<card32>(rsl::stoi(version.substr(second_dot_pos + 1)).value()) : 0;
 }
 
@@ -53,6 +55,19 @@ bool rsl::version::operator==(const version& rhs) const
 bool rsl::version::operator!=(const version& rhs) const
 {
   return !(*this == rhs);
+}
+
+rsl::string rsl::to_string(const rsl::version& version)
+{
+  rsl::string version_str;
+
+  version_str += rsl::to_string(version.major());
+  version_str += ".";
+  version_str += rsl::to_string(version.minor());
+  version_str += ".";
+  version_str += rsl::to_string(version.patch());
+
+  return version_str;
 }
 
 rsl::ostream& rsl::operator<<(ostream& os, const version& version)

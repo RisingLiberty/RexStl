@@ -45,7 +45,24 @@ namespace rsl
       rsl::date m_date;
     };
 
+    rsl::string to_string(const time_point& timepoint);
+
     ostream& operator<<(ostream& os, const time_point& timepoint);
+
+    template <>
+    struct formatter<time_point>
+    {
+      auto parse(format_parse_context& ctx) const -> decltype(ctx.begin()) // NOLINT(readability-convert-member-functions-to-static)
+      {
+        return ctx.begin();
+      }
+
+      template <typename FormatContext>
+      auto format(const time_point& timepoint, FormatContext& ctx) -> decltype(ctx.out())
+      {
+        return format_to(ctx.out(), "{}", to_string(timepoint));
+      }
+    };
 
   } // namespace v1
 } // namespace rsl

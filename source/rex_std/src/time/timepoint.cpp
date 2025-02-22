@@ -62,6 +62,17 @@ float32 rsl::time_point::operator-(const time_point& /*other*/) const
   return 0.0f;
 }
 
+rsl::string rsl::to_string(const time_point& timepoint)
+{
+  rsl::string res;
+
+  res += timepoint.date().to_string();
+  res += ' ';
+  res += timepoint.time().to_string();
+
+  return res;
+}
+
 rsl::ostream& rsl::operator<<(ostream& os, const time_point& timepoint)
 {
   os << timepoint.date() << ' ' << timepoint.time();

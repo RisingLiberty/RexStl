@@ -20,7 +20,6 @@ namespace rsl
 {
   inline namespace v1
   {
-
     class version
     {
     public:
@@ -40,7 +39,24 @@ namespace rsl
       card32 m_patch;
     };
 
+    rsl::string to_string(const version& version);
+
     ostream& operator<<(ostream& os, const version& version);
+
+    template <>
+    struct formatter<version>
+    {
+      auto parse(format_parse_context& ctx) const -> decltype(ctx.begin()) // NOLINT(readability-convert-member-functions-to-static)
+      {
+        return ctx.begin();
+      }
+
+      template <typename FormatContext>
+      auto format(const version& version, FormatContext& ctx) -> decltype(ctx.out())
+      {
+        return format_to(ctx.out(), "{}.{}.{}", version.major(), version.minor(), version.patch());
+      }
+    };
 
   } // namespace v1
 } // namespace rsl

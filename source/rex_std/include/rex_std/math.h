@@ -23,6 +23,7 @@
 #include "rex_std/internal/math/exp.h"
 #include "rex_std/internal/math/factorial.h"
 #include "rex_std/internal/math/floor.h"
+#include "rex_std/internal/math/is_finite.h"
 #include "rex_std/internal/math/is_nan.h"
 #include "rex_std/internal/math/pow.h"
 #include "rex_std/internal/math/round.h"
