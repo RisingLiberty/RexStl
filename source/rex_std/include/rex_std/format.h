@@ -4484,9 +4484,10 @@ namespace rsl
       {
       }
 
+      template <typename StringType = rsl::basic_string<Char>>
       auto as_string()
       {
-        rsl::basic_string<Char> res;
+        StringType res;
         for(auto it = begin; it != end; ++it)
         {
           res += *it;
