@@ -50,12 +50,14 @@ namespace rsl
       template <typename Deleter2 = Deleter, internal::UniquePtrEnableDefault<Deleter2> = 0>
       constexpr unique_array()
         : m_cp_ptr_and_deleter(nullptr)
+        , m_count(0)
       {
       }
       // constructs a unique_array that owns nothing
       template <typename Deleter2 = Deleter, internal::UniquePtrEnableDefault<Deleter2> = 0>
       constexpr unique_array(rsl::nullptr_t) // NOLINT(google-explicit-constructor): this needs to be explicit
         : m_cp_ptr_and_deleter(nullptr)
+        , m_count(0)
       {
       }
       // construct a unique_array that owns ptr and copy constructs the deleter

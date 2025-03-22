@@ -18,6 +18,7 @@
 #include "rex_std/bonus/string/string_fwd.h"
 #include "rex_std/bonus/string/string_utils.h"
 #include "rex_std/bonus/string/string_utils_impl.h"
+#include "rex_std/internal/algorithm/count.h"
 #include "rex_std/string.h"
 #include "rex_std/string_view.h"
 #include "rex_std/vector.h"

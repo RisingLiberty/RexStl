@@ -524,6 +524,11 @@ namespace rsl
         basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.starts_with(prefix);
       }
+      bool starts_with(value_type c) const
+      {
+        basic_string_view<CharType, char_traits<CharType>> view = to_view();
+        return view.starts_with(c);
+      }
       bool starts_with(const basic_string_view<CharType, char_traits<CharType>> prefix) const
       {
         basic_string_view<CharType, char_traits<CharType>> view = to_view();
@@ -540,6 +545,11 @@ namespace rsl
       {
         basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.ends_with(suffix);
+      }
+      bool ends_with(value_type c) const
+      {
+        basic_string_view<CharType, char_traits<CharType>> view = to_view();
+        return view.ends_with(c);
       }
       bool ends_width(const basic_string_view<CharType, char_traits<CharType>> suffix) const
       {
