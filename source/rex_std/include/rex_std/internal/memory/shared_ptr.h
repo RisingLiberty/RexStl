@@ -322,7 +322,7 @@ namespace rsl
     } // namespace internal
 
     template <typename T, typename Alloc, typename... Args>
-    shared_ptr<T> allocate_shared(Alloc& allocator, Args&&... args)
+    shared_ptr<T> allocate_shared(Alloc allocator, Args&&... args)
     {
       using ref_count_type = internal::ref_count_inst<T, Alloc>;
       shared_ptr<T> ret;
