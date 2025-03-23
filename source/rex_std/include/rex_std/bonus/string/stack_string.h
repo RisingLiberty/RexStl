@@ -143,9 +143,8 @@ namespace rsl
         // limit the number of characters to copy as we cannot copy beyond our buffer
         const card32 copy_size = clamp_max(length, StrMaxSize - pos - 1);
         rsl::memmove(data() + pos, newData, copy_size * sizeof(value_type));
-        m_null_terminator_offset = copy_size;
+        m_null_terminator_offset = pos + copy_size;
         m_data[m_null_terminator_offset] = value_type();
-
       }
 
       card32 length() const
@@ -293,6 +292,7 @@ namespace rsl
         }
 
         m_null_terminator_offset = new_size;
+        m_data[m_null_terminator_offset] = CharType();
       }
       // usually called after a memcpy call
       // can be solved be calling resize before the memcpy call
@@ -576,7 +576,7 @@ namespace rsl
         basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.find_first_of(v, pos);
       }
-      card32 find_first_of(value_type c, card32 pos) const
+      card32 find_first_of(value_type c, card32 pos = 0) const
       {
         basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.find_first_of(c, pos);
@@ -586,7 +586,7 @@ namespace rsl
         basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.find_first_of(s, pos, count);
       }
-      card32 find_first_of(const value_type* s, card32 pos = npos()) const
+      card32 find_first_of(const value_type* s, card32 pos = 0) const
       {
         basic_string_view<CharType, char_traits<CharType>> view = to_view();
         return view.find_first_of(s, pos);
@@ -832,7 +832,8 @@ namespace rsl
         }
 
         const value_type* src = data() + idx;
-        assign(src, dst_idx, count);
+        s32 count_to_copy = length() - idx;
+        assign(src, dst_idx, count_to_copy);
       }
       // moves every element starting at 'pos' 'count' space(s) to the right
       void prepare_for_new_insert(const_iterator pos, size_type count = 1)
