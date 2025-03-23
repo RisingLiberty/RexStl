@@ -32,7 +32,7 @@ namespace rsl
   inline namespace v1
   {
 
-    RSL_STATIC_WARNING("using rsl::pair - this is deprecated, please use a named struct");
+    //RSL_STATIC_WARNING("using rsl::pair - this is deprecated, please use a named struct");
 
     template <typename T1, typename T2>
     struct pair
