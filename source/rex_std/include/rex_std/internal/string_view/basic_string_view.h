@@ -238,14 +238,16 @@ namespace rsl
       // copies the substring [pos, pos + count) to the character array pointed to by dest
       constexpr size_type copy(pointer dst, size_type count, size_type pos = 0) const
       {
-        count = count == s_npos ? m_length - pos : count;
+        count = obj_length_or_count(*this, count, pos);
+
         rsl::memcpy(dst, m_data + pos, sizeof(CharType) * count);
         return count;
       }
       // returns a view of the substring [pos, pos + count)
       RSL_NO_DISCARD constexpr basic_string_view substr(size_type pos = 0, size_type count = s_npos) const
       {
-        count = count == s_npos ? m_length - pos : count;
+        count = obj_length_or_count(*this, count, pos);
+
         return basic_string_view(m_data + pos, count);
       }
       // compares 2 character sequences
@@ -500,6 +502,11 @@ namespace rsl
       }
 
     private:
+      // returns the minimum between either the length of sv or count
+      size_type obj_length_or_count(const basic_string_view<value_type, traits_type>& sv, size_type count, size_type startPos = 0) const
+      {
+        return (count == s_npos || count > sv.length()) ? (rsl::max)(0, sv.length() - startPos) : count;
+      }
       // compares 2 strings lexicographically
       int32 compare(pointer lhs, pointer rhs, size_type lhsLength, size_type rhsLength) const
       {

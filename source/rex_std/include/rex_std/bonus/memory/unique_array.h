@@ -16,6 +16,7 @@
 #include "rex_std/bonus/attributes.h"
 #include "rex_std/bonus/types.h"
 #include "rex_std/internal/memory/nullptr.h"
+#include "rex_std/internal/memory/default_delete.h"
 #include "rex_std/internal/type_traits/enable_if.h"
 #include "rex_std/internal/type_traits/conjunction.h"
 #include "rex_std/internal/type_traits/is_array.h"
@@ -47,14 +48,14 @@ namespace rsl
       using deleter_type       = Deleter;
 
       // constructs a unique_array that owns nothing
-      template <typename Deleter2 = Deleter, internal::UniquePtrEnableDefault<Deleter2> = 0>
+      template <typename Deleter2 = Deleter, internal::UniqueArrayEnableDefault<Deleter2> = 0>
       constexpr unique_array()
         : m_cp_ptr_and_deleter(nullptr)
         , m_count(0)
       {
       }
       // constructs a unique_array that owns nothing
-      template <typename Deleter2 = Deleter, internal::UniquePtrEnableDefault<Deleter2> = 0>
+      template <typename Deleter2 = Deleter, internal::UniqueArrayEnableDefault<Deleter2> = 0>
       constexpr unique_array(rsl::nullptr_t) // NOLINT(google-explicit-constructor): this needs to be explicit
         : m_cp_ptr_and_deleter(nullptr)
         , m_count(0)
@@ -62,14 +63,14 @@ namespace rsl
       }
       // construct a unique_array that owns ptr and copy constructs the deleter
       template <typename Deleter2 = Deleter, enable_if_t<is_constructible_v<Deleter, const Deleter2&>, bool> = true>
-      unique_array(pointer ptr, card32 count, const Deleter2& deleter = Deleter2())
+      unique_array(pointer ptr, card64 count, const Deleter2& deleter = Deleter2())
         : m_cp_ptr_and_deleter(ptr, deleter)
         , m_count(count)
       {
       }
       // construct a unique_array that owns ptr and copy constructs the deleter
       template <typename Deleter2, enable_if_t<conjunction_v<negation<is_reference<Deleter2>>, is_constructible<Deleter2, Deleter2>>, bool> = true>
-      unique_array(pointer ptr, card32 count, Deleter2&& deleter)
+      unique_array(pointer ptr, card64 count, Deleter2&& deleter)
         : m_cp_ptr_and_deleter(ptr, rsl::move(deleter))
         , m_count(count)
       {
@@ -103,7 +104,7 @@ namespace rsl
       unique_array& operator=(const unique_array&) = delete;
       unique_array& operator=(unique_array&& other) noexcept
       {
-        card32 other_count = other.m_count;
+        card64 other_count = other.m_count;
         reset(other.release());
         m_count = other_count;
         return *this;
@@ -112,7 +113,7 @@ namespace rsl
       void swap(unique_array& other)
       {
         T* tmp_ptr       = m_cp_ptr_and_deleter.first();
-        card32 tmp_count = m_count;
+        card64 tmp_count = m_count;
 
         m_cp_ptr_and_deleter.first()   = other.m_cp_ptr_and_deleter.first();
         m_count = other.m_count;
@@ -145,24 +146,24 @@ namespace rsl
         return rsl::exchange(m_cp_ptr_and_deleter.first(), pointer());
       }
 
-      card32 elem_size() const
+      card64 elem_size() const
       {
         return sizeof(T);
       }
-      card32 byte_size() const
+      card64 byte_size() const
       {
         return count() * elem_size();
       }
-      card32 count() const
+      card64 count() const
       {
         return m_count;
       }
 
-      element_type& operator[](card32 idx)
+      element_type& operator[](card64 idx)
       {
         return m_cp_ptr_and_deleter.first()[idx];
       }
-      const_element_type& operator[](card32 idx) const
+      const_element_type& operator[](card64 idx) const
       {
         return m_cp_ptr_and_deleter.first()[idx];
       }
@@ -172,9 +173,9 @@ namespace rsl
         return m_cp_ptr_and_deleter.first() != nullptr;
       }
 
-      void reset(pointer ptr = pointer(), card32 count = 0)
+      void reset(pointer ptr = pointer(), card64 count = 0)
       {
-        m_cp_ptr_and_deleter.second()(m_cp_ptr_and_deleter.first(), sizeof(element_type) * m_count);
+        m_cp_ptr_and_deleter.second()(m_cp_ptr_and_deleter.first(), static_cast<card32>(sizeof(element_type)) * m_count);
         m_cp_ptr_and_deleter.first()   = ptr;
         m_count = count;
       }
@@ -206,11 +207,11 @@ namespace rsl
 
     private:
       compressed_pair<pointer, deleter_type> m_cp_ptr_and_deleter {};
-      card32 m_count;
+      card64 m_count;
     };
 
     template <typename T, rsl::enable_if_t<rsl::is_array_v<T>, bool> = true>
-    RSL_NO_DISCARD unique_array<rsl::remove_extent_t<T>> make_unique(card32 size)
+    RSL_NO_DISCARD unique_array<rsl::remove_extent_t<T>> make_unique(card64 size)
     {
       using Elem = rsl::remove_extent_t<T>;
       return unique_array<Elem>(new Elem[size](), size);

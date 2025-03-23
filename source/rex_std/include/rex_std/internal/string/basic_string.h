@@ -71,6 +71,11 @@ namespace rsl
 {
   inline namespace v1
   {
+    template <typename Allocator>
+    struct string_allocator_traits
+    {
+      constexpr static count_t sso_buff_size = 16;
+    };
 
     template <typename CharType, typename Traits = char_traits<CharType>, typename Alloc = allocator>
     class basic_string
@@ -91,7 +96,7 @@ namespace rsl
       using reverse_iterator       = rsl::reverse_iterator<iterator>;
       using const_reverse_iterator = rsl::reverse_iterator<const_iterator>;
 
-      static constexpr size_type s_sso_buff_size = 16;
+      static constexpr size_type s_sso_buff_size = string_allocator_traits<Alloc>::sso_buff_size;
       static constexpr size_type s_npos          = static_cast<size_type>(-1);
 
       // Default constructor. Constructs empty string
@@ -328,6 +333,11 @@ namespace rsl
       // Replaces the contents with the content of str till str + count.
       basic_string& assign(const_pointer str, size_type count)
       {
+        if (count == 0)
+        {
+          return *this;
+        }
+
         if(is_using_sso_string() && count < s_sso_buff_size)
         {
           sso_assign(str, count);
@@ -607,6 +617,12 @@ namespace rsl
         traits_type::assign(offset_loc, count, ch);
 
         return *this;
+      }
+      /// RSL Comment: Not in ISO C++ Standard at time of writing (23/March/2025)
+      // inserts a single character at a certain position
+      iterator insert(size_type pos, value_type ch)
+      {
+        return insert(pos, &ch, 1);
       }
       /// RSL Comment: Not in ISO C++ Standard at time of writing (30/Jun/2022)
       // the standard doesn't provide an overload for a string literal
@@ -1751,7 +1767,7 @@ namespace rsl
       // checks if the string is using heap memory
       bool is_using_big_string() const
       {
-        return m_begin != m_sso_buffer.data();
+        return m_begin != m_sso_buffer.data() || m_sso_buffer.max_size() == 0;
       }
       // checks if the string is using the sso
       bool is_using_sso_string() const
