@@ -17,6 +17,9 @@
 			</ArrayItems>
 		</Expand>
 	</Type>
+	<Type Name="rsl::v1::stack_string&lt;*,0,*&gt;">
+		<DisplayString>null stack string</DisplayString>
+	</Type>
   <Type Name="rsl::v1::internal::compressed_pair_impl&lt;*&gt;">
     <DisplayString Condition="($T3) == 0" Optional="true">first = {m_first} | second = {m_second}</DisplayString>
     <DisplayString Condition="($T3) == 1" Optional="true">first = empty | second = {m_second}</DisplayString>
@@ -51,7 +54,8 @@
       <Item Name="[length]">length()</Item>
       <Item Name="[capacity]">capacity()</Item>
       <Item Name="[data]">data()</Item>
-      <Item Name="[sso active]">m_begin == m_sso_buffer.m_data.m_data</Item>
+			<Item Condition="s_sso_buff_size > 0" Optional="true" Name="[sso active]">first = {m_first} | second = {m_second}</Item>
+			<Item Condition="s_sso_buff_size == 0" Optional="true" Name="[sso active]">m_begin == m_sso_buffer.m_data.m_data</Item>
       <ArrayItems>
         <Size>length()</Size>
         <ValuePointer>m_begin</ValuePointer>
