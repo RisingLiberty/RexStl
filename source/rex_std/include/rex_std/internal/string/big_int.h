@@ -126,7 +126,7 @@ namespace rsl
 
         if (value > UINT32_MAX)
         {
-          return rsl::bit_width(ui32_buff[1]);
+          return rsl::bit_width(ui32_buff[1]) + 32;
         }
         else
         {
