@@ -127,6 +127,7 @@
 #pragma once
 
 #include "rex_std/bonus/types.h"
+#include "rex_std/ctype.h"
 
 namespace rsl
 {
@@ -196,6 +197,19 @@ namespace rsl
         for (uint32 i = 0; i < len; i++)
         {
           uint8 table_idx = (*data ^ (crc & 0xFF)) + 1;
+          crc = table[table_idx] ^ (crc >> 8);
+          data++;
+        }
+        crc = crc ^ 0xFFFFFFFFU;
+        return crc;
+      }
+      // computes a hash of a string as if all characters in the string were lower case
+      constexpr uint32 compute_as_lower(const char* data, uint32 len, uint32 crc = 0)
+      {
+        crc = crc ^ 0xFFFFFFFFU;
+        for (uint32 i = 0; i < len; i++)
+        {
+          uint8 table_idx = (rsl::to_lower(*data) ^ (crc & 0xFF)) + 1;
           crc = table[table_idx] ^ (crc >> 8);
           data++;
         }
