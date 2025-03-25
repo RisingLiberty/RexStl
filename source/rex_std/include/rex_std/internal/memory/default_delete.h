@@ -50,7 +50,7 @@ namespace rsl
       {
       }
 
-      constexpr void operator()(T* ptr, card32 size) const
+      constexpr void operator()(T* ptr, card64 size) const
       {
         static_assert(sizeof(T) > 0, "can't delete an incomplete type"); // NOLINT(bugprone-sizeof-expression)
         operator delete[](ptr, size);
