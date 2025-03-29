@@ -16,6 +16,8 @@
 #include "rex_std/bonus/string/character_lookup.h"
 #include "rex_std/bonus/string/stack_string.h"
 #include "rex_std/bonus/string/string_fwd.h"
+#include "rex_std/bonus/string/istring.h"
+#include "rex_std/bonus/string/istring_view.h"
 #include "rex_std/bonus/string/string_utils.h"
 #include "rex_std/bonus/string/string_utils_impl.h"
 #include "rex_std/internal/algorithm/count.h"
