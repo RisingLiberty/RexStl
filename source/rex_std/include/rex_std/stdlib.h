@@ -120,13 +120,13 @@ namespace rsl
     }
 
     // type returned by rsl::div
-    using div_t = DivResult<int32>;
+    using div_t = div_result<int32>;
     // type returns by rsl::ldiv
-    using ldiv_t = DivResult<long>;
+    using ldiv_t = div_result<long>;
     // type returned by rsl::lldiv
-    using lldiv_t = DivResult<int64>;
+    using lldiv_t = div_result<int64>;
     // type returned by rsl::imaxdiv
-    using imaxdiv_t = DivResult<intmax>;
+    using imaxdiv_t = div_result<intmax>;
 
     // computes quotient and remainder of integer division
     div_t div(int32 x, int32 y)
