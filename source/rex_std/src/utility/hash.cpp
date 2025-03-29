@@ -21,7 +21,7 @@ rsl::hash_val rsl::hash_val::new_hash()
   static card64 new_hash = rand.new_rand();
   card64 seed            = 0;
 
-  seed     = internal::hash_combine(seed, new_hash);
+  seed     = hash_combine(seed, static_cast<rsl::hash_result>(new_hash));
   new_hash = seed;
   return rsl::hash_val(new_hash);
 }

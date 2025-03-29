@@ -31,12 +31,6 @@ namespace rsl
     // which makes it easy to configure should we want to change it to be 64 bit.
     namespace internal
     {
-      constexpr hash_result hash_combine(uint64 seed, uint64 hash)
-      {
-        hash += 0X9E3779B9 + (seed << 6) + (seed >> 2); // NOLINT(hicpp-signed-bitwise)
-        return static_cast<hash_result>(seed ^ hash);   // NOLINT(hicpp-signed-bitwise)
-      }
-
       template <typename CharType>
       constexpr hash_result hash(const CharType* key, count_t count)
       {
@@ -51,6 +45,22 @@ namespace rsl
 
         return hash(key, len);
       }
+
+      template <typename CharType>
+      constexpr hash_result hash_as_lower(const CharType* key, count_t count)
+      {
+        count = count * sizeof(CharType);
+        return static_cast<hash_result>(crc32::compute_as_lower(key, count));
+      }
+
+      template <typename CharType>
+      constexpr hash_result hash_as_lower(const CharType* key)
+      {
+        count_t len = rsl::strlen(key);
+
+        return hash_as_lower(key, len);
+      }
+
     } // namespace internal
 
     template <typename T>
@@ -251,6 +261,12 @@ namespace rsl
         return static_cast<hash_result>(reinterpret_cast<uintptr>(p)); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
       }
     };
+
+    constexpr hash_result hash_combine(uint64 seed, hash_result hash)
+    {
+      hash += static_cast<hash_result>(0X9E3779B9 + (seed << 6) + (seed >> 2)); // NOLINT(hicpp-signed-bitwise)
+      return static_cast<hash_result>(seed ^ hash);   // NOLINT(hicpp-signed-bitwise)
+    }
 
     template <typename T>
     constexpr rsl::hash_result comp_hash(const T& obj)

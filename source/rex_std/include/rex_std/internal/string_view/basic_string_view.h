@@ -725,15 +725,18 @@ namespace rsl
     template <typename It>
     basic_string_view(It, It) -> basic_string_view<typename rsl::iterator_traits<It>::value_type, rsl::char_traits<typename rsl::iterator_traits<It>::value_type>>;
 
-    constexpr rsl::optional<int32> stoi(string_view view)
+    template <typename CharType, typename Traits>
+    constexpr rsl::optional<int32> stoi(basic_string_view<CharType, Traits> view)
     {
       return rsl::stoi(view.data(), view.length());
     }
-    constexpr rsl::optional<float32> stof(string_view view)
+    template <typename CharType, typename Traits>
+    constexpr rsl::optional<float32> stof(basic_string_view<CharType, Traits> view)
     {
       return rsl::stof(view.data(), view.length());
     }
-    constexpr rsl::optional<bool> stob(string_view view)
+    template <typename CharType, typename Traits>
+    constexpr rsl::optional<bool> stob(basic_string_view<CharType, Traits> view)
     {
       return rsl::stob(view.data(), view.length());
     }

@@ -2393,7 +2393,7 @@ namespace rsl
     {
       constexpr hash_result operator()(const basic_string<CharType, Traits, Alloc>& str) const
       {
-        return rsl::internal::hash(str.data());
+        return rsl::internal::hash(str.data(), str.length());
       }
     };
 

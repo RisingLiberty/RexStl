@@ -13,3 +13,4 @@
 #pragma once
 
 #include "rex_std/bonus/functional/hash_result.h"
+#include "rex_std/bonus/functional/hash_lower.h"

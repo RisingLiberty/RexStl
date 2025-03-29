@@ -17,6 +17,7 @@
 #include "rex_std/bonus/type_traits/is_character.h"
 #include "rex_std/bonus/types.h"
 #include "rex_std/ctype.h"
+#include "rex_std/cstring.h"
 #include "rex_std/internal/algorithm/max.h"
 #include "rex_std/internal/algorithm/memcmp.h"
 #include "rex_std/internal/algorithm/min.h"
@@ -34,6 +35,48 @@ namespace rsl
 {
   inline namespace v1
   {
+    // Compares 2 string like types in a case insensitive matter
+    template <typename TypeToCompare = void>
+    struct equal_to_case_insensitive
+    {
+      using is_transparent = rsl::true_type;
+
+      constexpr bool operator()(const TypeToCompare& lhs, const TypeToCompare& rhs) const
+      {
+        if (lhs.length() != rhs.length())
+        {
+          return false;
+        }
+
+        return rsl::strincmp(lhs.data(), rhs.data(), lhs.length()) == 0;
+      }
+
+      /// RSL Comment: Different from ISO C++ Standard at time of writing (22/Aug/2022)
+      // the standard doesn't template the second argument.
+      // we do so we can, for example, compare a string with a const char*
+      // without the second getting promoted to a string
+      template <typename TypeToCompare2>
+      constexpr bool operator()(const TypeToCompare& lhs, const TypeToCompare2& rhs) const
+      {
+        if (lhs.length() != rhs.length())
+        {
+          return false;
+        }
+
+        return rsl::strincmp(lhs.data(), rhs.data(), lhs.length()) == 0;
+      }
+
+      template <typename TypeToCompare2>
+      constexpr bool operator()(const TypeToCompare2& lhs, const TypeToCompare& rhs) const
+      {
+        if (lhs.length() != rhs.length())
+        {
+          return false;
+        }
+
+        return rsl::strincmp(lhs.data(), rhs.data(), lhs.length()) == 0;
+      }
+    };
 
     //
     // Character Classification (cctype.h)

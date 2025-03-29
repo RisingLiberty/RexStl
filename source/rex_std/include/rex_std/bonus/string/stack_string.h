@@ -15,6 +15,8 @@
 #include "rex_std/bonus/algorithm/clamp_max.h"
 #include "rex_std/bonus/functional/hash_result.h"
 #include "rex_std/bonus/string/string_utils_impl.h"
+#include "rex_std/bonus/string/char_traits_case_insensitive.h"
+#include "rex_std/bonus/string/istring_view.h"
 #include "rex_std/bonus/types.h"
 #include "rex_std/initializer_list.h"
 #include "rex_std/internal/algorithm/clamp.h"
@@ -906,6 +908,16 @@ namespace rsl
     using wmedium_stack_string = stack_string<tchar, 128>; // NOLINT(readability-magic-numbers)
     using wbig_stack_string    = stack_string<tchar, 256>; // NOLINT(readability-magic-numbers)
 
+    using itiny_stack_string = stack_string<char8, 32, ichar_traits<char8>>;  // NOLINT(readability-magic-numbers)
+    using ismall_stack_string = stack_string<char8, 64, ichar_traits<char8>>;  // NOLINT(readability-magic-numbers)
+    using imedium_stack_string = stack_string<char8, 128, ichar_traits<char8>>; // NOLINT(readability-magic-numbers)
+    using ibig_stack_string = stack_string<char8, 256, ichar_traits<char8>>; // NOLINT(readability-magic-numbers)
+
+    using iwtiny_stack_string = stack_string<tchar, 32, ichar_traits<tchar>>;  // NOLINT(readability-magic-numbers)
+    using iwsmall_stack_string = stack_string<tchar, 64, ichar_traits<tchar>>;  // NOLINT(readability-magic-numbers)
+    using iwmedium_stack_string = stack_string<tchar, 128, ichar_traits<tchar>>; // NOLINT(readability-magic-numbers)
+    using iwbig_stack_string = stack_string<tchar, 256, ichar_traits<tchar>>; // NOLINT(readability-magic-numbers)
+
     tiny_stack_string to_stack_string(uint32 value);
     tiny_stack_string to_stack_string(int32 value);
     tiny_stack_string to_stack_string(uint64 value);
@@ -939,6 +951,15 @@ namespace rsl
       constexpr hash_result operator()(const rsl::stack_string<CharType, Size>& str) const
       {
         return rsl::hash<rsl::string_view> {}(str.to_view());
+      }
+    };
+
+    template <typename CharType, card32 Size>
+    struct hash<rsl::stack_string<CharType, Size, ichar_traits<CharType>>>
+    {
+      constexpr hash_result operator()(const rsl::stack_string<CharType, Size>& str) const
+      {
+        return rsl::hash<rsl::istring_view> {}(str.to_view());
       }
     };
 

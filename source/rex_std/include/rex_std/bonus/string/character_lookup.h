@@ -23,11 +23,12 @@ namespace rsl
   inline namespace v1
   {
 
-    template <typename CharType>
+    template <typename Traits>
     class character_lookup
     {
     public:
-      using value_type             = CharType;
+      using traits_type            = Traits;
+      using value_type             = typename Traits::char_type;
       using pointer                = value_type*;
       using const_pointer          = const value_type*;
       using reference              = value_type&;
@@ -44,19 +45,19 @@ namespace rsl
       {
         for(size_type i = 0; i < length; ++i)
         {
-          const value_type c = str[i];
+          auto c = traits_type::to_int_type(str[i]);
           m_table[c]         = true;
         }
       }
 
       bool exists(value_type c) const
       {
-        const rsl::make_unsigned_t<value_type> idx = static_cast<rsl::make_unsigned_t<value_type>>(c);
+        auto idx = traits_type::to_int_type(c);
         return m_table[idx];
       }
 
     private:
-      rsl::array<bool, (numeric_limits<rsl::make_unsigned_t<CharType>>::max)() + 1> m_table {}; // NOLINT
+      rsl::array<bool, (numeric_limits<rsl::make_unsigned_t<value_type>>::max)() + 1> m_table {}; // NOLINT
     };
 
   } // namespace v1
