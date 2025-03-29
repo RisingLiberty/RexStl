@@ -2297,7 +2297,7 @@ namespace rsl
       {
         const character_lookup<Traits> lookup(rhsStr, rhsLength);
 
-        for(SizeType i = lhsLength; i > pos; --i)
+        for(SizeType i = lhsLength - 1; i > pos; --i)
         {
           auto c = lhsStr[i];
           if(lookup.exists(c))
@@ -2331,7 +2331,7 @@ namespace rsl
       {
         const character_lookup<Traits> lookup(rhsStr, rhsLength);
 
-        for(SizeType i = lhsLength; i > pos; --i)
+        for(SizeType i = lhsLength - 1; i > pos; --i)
         {
           auto c = lhsStr[i];
           if(!lookup.exists(c))

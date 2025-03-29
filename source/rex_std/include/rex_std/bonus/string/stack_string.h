@@ -148,6 +148,11 @@ namespace rsl
         m_null_terminator_offset = pos + copy_size;
         m_data[m_null_terminator_offset] = value_type();
       }
+      template <typename Traits>
+      void assign(rsl::basic_string_view<char8, Traits> view)
+      {
+        assign(view.data(), view.length());
+      }
 
       card32 length() const
       {
@@ -272,6 +277,7 @@ namespace rsl
       void clear()
       {
         m_null_terminator_offset = 0;
+        m_data[m_null_terminator_offset] = CharType();
       }
       void push_back(value_type c)
       {
