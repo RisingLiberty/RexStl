@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "rex_std/internal/type_traits/declval.h"
+#include "rex_std/internal/utility/declval.h"
 #include "rex_std/internal/type_traits/void.h"
 
 namespace rsl
@@ -20,13 +20,13 @@ namespace rsl
   inline namespace v1
   {
 
-    template <typename T, template <typename> typename expression, typename = rsl::Void<>>
-    struct implements : rsl::FalseType
+    template <typename T, template <typename> typename expression, typename = rsl::void_t<>>
+    struct implements : rsl::false_type
     {
     };
 
     template <typename T, template <typename> typename expression>
-    struct implements<T, expression, rsl::Void<expression<T>>> : rsl::TrueType
+    struct implements<T, expression, rsl::void_t<expression<T>>> : rsl::true_type
     {
     };
 
