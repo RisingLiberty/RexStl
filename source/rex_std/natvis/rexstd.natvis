@@ -246,8 +246,8 @@
 
 	<Type Name="rsl::v1::memory_size">
 		<DisplayString Condition="m_size_in_bytes > 1024 * 1024 * 1024">{m_size_in_bytes / (1024 * 1024 * 1024.0f)} GiB</DisplayString>
-		<DisplayString Condition="m_size_in_bytes > 1024 * 1024">m_size_in_bytes / (1024 * 1024.0f) MiB</DisplayString>
-		<DisplayString Condition="m_size_in_bytes > 1024">m_size_in_bytes / (1024.0f) KiB</DisplayString>
+		<DisplayString Condition="m_size_in_bytes > 1024 * 1024">{m_size_in_bytes / (1024 * 1024.0f)} MiB</DisplayString>
+		<DisplayString Condition="m_size_in_bytes > 1024">{m_size_in_bytes / (1024.0f)} KiB</DisplayString>
 		<DisplayString>{m_size_in_bytes} B</DisplayString>
 		<Expand>
 			<Item Name="[Bytes]">m_size_in_bytes</Item>

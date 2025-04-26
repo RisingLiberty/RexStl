@@ -28,12 +28,6 @@ namespace rsl
       const T* first;
       const T* last;
 
-      // Constructs the container with the contents of the initializer list init.
-      range(rsl::initializer_list<value_type> ilist)
-      {
-        first = ilist.begin();
-        last = ilist.end();
-      }
       template <typename InputIt>
       range(InputIt firstIt, InputIt lastIt)
       {
