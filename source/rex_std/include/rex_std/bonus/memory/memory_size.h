@@ -69,29 +69,29 @@ namespace rsl
         return *this;
       }
 
-      constexpr card64 size_in_kb() const
+      constexpr float32 size_in_kb() const
       {
-        return size_in_bytes() / KiloByteMultiple;
+        return size_in_bytes() / float32(KiloByteMultiple);
       }
-      constexpr card64 size_in_mb() const
+      constexpr float32 size_in_mb() const
       {
-        return size_in_bytes() / MegaByteMultiple;
+        return size_in_bytes() / float32(MegaByteMultiple);
       }
-      constexpr card64 size_in_gb() const
+      constexpr float32 size_in_gb() const
       {
-        return size_in_bytes() / GigaByteMultiple;
+        return size_in_bytes() / float32(GigaByteMultiple);
       }
-      constexpr card64 size_in_kib() const
+      constexpr float32 size_in_kib() const
       {
-        return size_in_bytes() / KibiByteMultiple;
+        return size_in_bytes() / float32(KibiByteMultiple);
       }
-      constexpr card64 size_in_mib() const
+      constexpr float32 size_in_mib() const
       {
-        return size_in_bytes() / MibiByteMultiple;
+        return size_in_bytes() / float32(MibiByteMultiple);
       }
-      constexpr card64 size_in_gib() const
+      constexpr float32 size_in_gib() const
       {
-        return size_in_bytes() / GibiByteMultiple;
+        return size_in_bytes() / float32(GibiByteMultiple);
       }
 
       static constexpr memory_size from_bytes(card64 bytes)

@@ -14,6 +14,7 @@
 
 #include "rex_std/internal/utility/declval.h"
 #include "rex_std/internal/type_traits/void.h"
+#include "rex_std/internal/type_traits/is_convertible.h"
 
 namespace rsl
 {
@@ -83,19 +84,19 @@ namespace rsl
     } // namespace concepts
 
     template <typename Iter>
-    using IteratoryCategory = typename Iter::iterator_category;
+    using IteratorCategory = typename Iter::iterator_category;
 
     template <typename T>
-    constexpr bool is_input_iterator = rsl::IsConvertible<IteratoryCategory<T>, rsl::input_iterator_tag>;
+    constexpr bool is_input_iterator = rsl::is_convertible_v<IteratorCategory<T>, rsl::input_iterator_tag>;
 
     template <typename T>
-    constexpr bool is_random_iterator = rsl::IsConvertible<IteratoryCategory<T>, rsl::random_access_iterator_tag>;
+    constexpr bool is_random_iterator = rsl::is_convertible_v<IteratorCategory<T>, rsl::random_access_iterator_tag>;
 
     template <typename T>
-    constexpr bool is_bidirection_iterator = rsl::IsConvertible<IteratorCategory<T>, rsl::bidirectional_iterator_tag>;
+    constexpr bool is_bidirection_iterator = rsl::is_convertible_v<IteratorCategory<T>, rsl::bidirectional_iterator_tag>;
 
     template <typename T>
-    constexpr bool is_forwward_iterator = rsl::IsConvertible<IteratoryCategory<T>, rsl::forward_iterator_tag>;
+    constexpr bool is_forwward_iterator = rsl::is_convertible_v<IteratorCategory<T>, rsl::forward_iterator_tag>;
 
   } // namespace v1
 } // namespace rsl

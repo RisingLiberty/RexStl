@@ -23,6 +23,9 @@ namespace rsl
     class deg_angle
     {
     public:
+      constexpr deg_angle()
+        : deg_angle(0)
+      {}
       constexpr explicit deg_angle(float32 angle)
           : m_angle(angle)
       {

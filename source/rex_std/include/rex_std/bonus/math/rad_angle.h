@@ -23,7 +23,10 @@ namespace rsl
     class rad_angle
     {
     public:
-      constexpr explicit rad_angle(float32 angle)
+      constexpr rad_angle()
+        : rad_angle(0)
+      {}
+      constexpr explicit rad_angle(float32 angle = 0)
           : m_angle(angle)
       {
       }

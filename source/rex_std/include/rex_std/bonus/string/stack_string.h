@@ -148,8 +148,8 @@ namespace rsl
         m_null_terminator_offset = pos + copy_size;
         m_data[m_null_terminator_offset] = value_type();
       }
-      template <typename Traits>
-      void assign(rsl::basic_string_view<char8, Traits> view)
+      template <typename Traits2>
+      void assign(rsl::basic_string_view<char8, Traits2> view)
       {
         assign(view.data(), view.length());
       }

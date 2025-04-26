@@ -1781,7 +1781,7 @@ namespace rsl
     template <typename SizeType, typename Iterator, rsl::enable_if_t<rsl::is_integral_v<SizeType>, bool>>
     constexpr SizeType find_first_not_of(Iterator srcBegin, SizeType numCharsToCheck, Iterator toFindBegin, SizeType toFindLength, SizeType defaultValue)
     {
-      character_lookup<char_traits<typename rsl::iterator_traits<Iterator2>::value_type>> lookup(iterator_to_pointer(toFindBegin), toFindLength);
+      character_lookup<char_traits<typename rsl::iterator_traits<Iterator>::value_type>> lookup(iterator_to_pointer(toFindBegin), toFindLength);
 
       for(SizeType i = 0; i < numCharsToCheck; ++i)
       {
@@ -1803,7 +1803,7 @@ namespace rsl
     template <typename SizeType, typename Iterator, rsl::enable_if_t<rsl::is_integral_v<SizeType>, bool>>
     constexpr SizeType find_last_of(Iterator srcBegin, SizeType numCharsToCheck, Iterator toFindBegin, SizeType toFindLength, SizeType defaultValue)
     {
-      character_lookup<char_traits<typename rsl::iterator_traits<Iterator2>::value_type>> lookup(iterator_to_pointer(toFindBegin), toFindLength);
+      character_lookup<char_traits<typename rsl::iterator_traits<Iterator>::value_type>> lookup(iterator_to_pointer(toFindBegin), toFindLength);
 
       for(SizeType i = numCharsToCheck; i >= 0; --i)
       {
@@ -1825,7 +1825,7 @@ namespace rsl
     template <typename SizeType, typename Iterator, rsl::enable_if_t<rsl::is_integral_v<SizeType>, bool>>
     constexpr SizeType find_last_not_of(Iterator srcBegin, SizeType numCharsToCheck, Iterator toFindBegin, SizeType toFindLength, SizeType defaultValue)
     {
-      character_lookup<char_traits<typename rsl::iterator_traits<Iterator2>::value_type>> lookup(iterator_to_pointer(toFindBegin), toFindLength);
+      character_lookup<char_traits<typename rsl::iterator_traits<Iterator>::value_type>> lookup(iterator_to_pointer(toFindBegin), toFindLength);
 
       for(SizeType i = numCharsToCheck; i >= 0; --i)
       {
