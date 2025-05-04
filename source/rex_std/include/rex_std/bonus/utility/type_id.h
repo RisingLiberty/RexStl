@@ -43,7 +43,11 @@ namespace rsl
 
         name.remove_prefix(prefix.size());
         name.remove_suffix(suffix.size());
-        return name;
+
+        // Return the most inner scope
+        // eg rex::MyClass -> MyClass
+        auto idx = name.find(':');
+        return name.substr(name.find_first_not_of(':', idx));
       }
 
       template <typename T>
@@ -61,7 +65,11 @@ namespace rsl
 
         name.remove_prefix(prefix.size());
         name.remove_suffix(suffix.size());
-        return name;
+
+        // Return the most inner scope
+        // eg rex::MyClass -> MyClass
+        auto idx = name.find(':');
+        return name.substr(name.find_first_not_of(':', idx));
       }
       template <typename T>
       constexpr rsl::string_view msvc_structless_type_name()
@@ -78,7 +86,11 @@ namespace rsl
 
         name.remove_prefix(prefix.size());
         name.remove_suffix(suffix.size());
-        return name;
+
+        // Return the most inner scope
+        // eg rex::MyClass -> MyClass
+        auto idx = name.find(':');
+        return name.substr(name.find_first_not_of(':', idx));
       }
 
 #endif
@@ -99,7 +111,12 @@ namespace rsl
 
         name.remove_prefix(prefix.size());
         name.remove_suffix(suffix.size());
-        return name;
+
+        // Return the most inner scope
+        // eg rex::MyClass -> MyClass
+        auto idx = name.find(':');
+        return name.substr(name.find_first_not_of(':', idx));
+
 #elif defined(RSL_COMPILER_GCC)
         rsl::string_view name                = __PRETTY_FUNCTION__;
         constexpr rsl::string_view func_name = __PRETTY_FUNCTION__;
@@ -113,7 +130,12 @@ namespace rsl
 
         name.remove_prefix(prefix.size());
         name.remove_suffix(suffix.size());
-        return name;
+
+        // Return the most inner scope
+        // eg rex::MyClass -> MyClass
+        auto idx = name.find(':');
+        return name.substr(name.find_first_not_of(':', idx));
+
 #elif defined(RSL_COMPILER_MSVC)
         constexpr rsl::string_view func_name = __FUNCSIG__;
   #ifndef RSL_ENABLE_ASSERTS // "contains" has an internal assert
