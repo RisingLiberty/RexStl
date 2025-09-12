@@ -1619,7 +1619,7 @@ namespace rsl
       // length doesn't include the null termination char
       void heap_assign(const_pointer str, size_type length)
       {
-        if(length > capacity())
+        if(length >= capacity())
         {
           // we shouldn't call reserve here as that'll copy the current data over to the new buffer
           // this is pointless as we want to overwrite the data anyway.
