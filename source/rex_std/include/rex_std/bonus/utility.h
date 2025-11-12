@@ -13,6 +13,7 @@
 #pragma once
 
 #include "rex_std/bonus/utility/always_false.h"
+#include "rex_std/bonus/utility/add_flag.h"
 #include "rex_std/bonus/utility/break.h"
 #include "rex_std/bonus/utility/casting.h"
 #include "rex_std/bonus/utility/compressed_pair.h"
