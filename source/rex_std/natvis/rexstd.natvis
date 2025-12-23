@@ -259,6 +259,13 @@
 			<Item Name="[GiB]">m_size_in_bytes / (1024 * 1024 * 1024.0f)</Item>
 		</Expand>
 	</Type>
+	<Type Name="rsl::v1::point&lt;*&gt;">
+		<DisplayString>x = {x} y = {y}</DisplayString>
+		<Expand>
+			<Item Name="x">x</Item>
+			<Item Name="y">y</Item>
+		</Expand>
+	</Type>
 
 
 </AutoVisualizer>
