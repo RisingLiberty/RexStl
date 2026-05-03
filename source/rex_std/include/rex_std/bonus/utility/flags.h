@@ -47,7 +47,7 @@ namespace rsl
       uint64& val_int = static_cast<uint64&>(val);
       const uint64 flag_int = static_cast<uint64>(flag);
 
-      val_int &= flag_int;
+      val_int |= flag_int;
 
       return static_cast<T>(val_int);
     }

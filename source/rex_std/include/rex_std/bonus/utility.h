@@ -13,7 +13,6 @@
 #pragma once
 
 #include "rex_std/bonus/utility/always_false.h"
-#include "rex_std/bonus/utility/add_flag.h"
 #include "rex_std/bonus/utility/break.h"
 #include "rex_std/bonus/utility/casting.h"
 #include "rex_std/bonus/utility/compressed_pair.h"
@@ -21,7 +20,6 @@
 #include "rex_std/bonus/utility/emplace_result.h"
 #include "rex_std/bonus/utility/enum_reflection.h"
 #include "rex_std/bonus/utility/flags.h"
-#include "rex_std/bonus/utility/has_flag.h"
 #include "rex_std/bonus/utility/hash.h"
 #include "rex_std/bonus/utility/high_water_mark.h"
 #include "rex_std/bonus/utility/id_generator.h"
