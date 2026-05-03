@@ -567,8 +567,6 @@ TEST_CASE("Deque")
   using EDODeque32768 = rsl::deque<rsl::test::deque_object, rsl::allocator, 32768>;
 
 	{   // Test construction
-    constexpr auto x = rsl::internal::deque_default_sub_array_size<int>();
-
 		rsl::test::test_deque_construction<SIntDeque, EIntDeque>();
 		rsl::test::test_deque_construction<SIntDeque, EIntDeque1>();
 		rsl::test::test_deque_construction<SIntDeque, EIntDeque32768>();

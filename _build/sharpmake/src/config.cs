@@ -32,7 +32,7 @@ public enum Optimization
 public class RexConfiguration : Sharpmake.Project.Configuration
 {
   // Enables exceptions for this configuration
-  public void enable_exceptions()
+  public void EnableExceptions()
   {
     Options.Remove(Sharpmake.Options.Vc.Compiler.Exceptions.Disable);
     Options.Add(Sharpmake.Options.Vc.Compiler.Exceptions.Enable);
@@ -43,7 +43,7 @@ public class RexConfiguration : Sharpmake.Project.Configuration
   }
 
   // Disables exceptions for this configuration
-  public void disable_exceptions()
+  public void DisableExceptions()
   {
     Options.Remove(Sharpmake.Options.Vc.Compiler.Exceptions.Enable);
     Options.Add(Sharpmake.Options.Vc.Compiler.Exceptions.Disable);
@@ -56,7 +56,7 @@ public class RexConfiguration : Sharpmake.Project.Configuration
   // Adds a define to this configuration which is propagated
   // to other projects that have a dependency on this project
   // and use this configuration for it as well.
-  public void add_public_define(string define)
+  public void AddPublicDefine(string define)
   {
     Defines.Add(define);
     ExportDefines.Add(define);

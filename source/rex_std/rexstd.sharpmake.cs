@@ -30,13 +30,13 @@ public class RexStd : BasicCPPProject
     switch (target.Compiler)
     {
       case Compiler.MSVC:
-        conf.add_public_define("RSL_COMPILER_MSVC");
+        conf.AddPublicDefine("RSL_COMPILER_MSVC");
         break;
       case Compiler.Clang:
-        conf.add_public_define("RSL_COMPILER_CLANG");
+        conf.AddPublicDefine("RSL_COMPILER_CLANG");
         break;
       case Compiler.GCC:
-        conf.add_public_define("RSL_COMPILER_GCC");
+        conf.AddPublicDefine("RSL_COMPILER_GCC");
         break;
       default:
         break;
@@ -51,7 +51,7 @@ public class RexStd : BasicCPPProject
     {
       case Config.debug:
       case Config.debug_opt:
-        conf.add_public_define("RSL_ENABLE_ASSERTS");
+        conf.AddPublicDefine("RSL_ENABLE_ASSERTS");
         break;
       case Config.release:
         break;
@@ -68,12 +68,12 @@ public class RexStd : BasicCPPProject
     switch (conf.Platform)
     {
       case Platform.win32:
-        conf.add_public_define("RSL_PLATFORM_X86");
-        conf.add_public_define("RSL_PLATFORM_WINDOWS");
+        conf.AddPublicDefine("RSL_PLATFORM_X86");
+        conf.AddPublicDefine("RSL_PLATFORM_WINDOWS");
         break;
       case Platform.win64:
-        conf.add_public_define("RSL_PLATFORM_X64");
-        conf.add_public_define("RSL_PLATFORM_WINDOWS");
+        conf.AddPublicDefine("RSL_PLATFORM_X64");
+        conf.AddPublicDefine("RSL_PLATFORM_WINDOWS");
         break;
       default:
         break;
