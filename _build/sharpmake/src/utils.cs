@@ -1,5 +1,8 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Sharpmake;
+using static Sharpmake.Options.CSharp;
 
 public class Utils
 {
@@ -26,26 +29,34 @@ public class Utils
     return current_directory;
   }
 
-  // Simple helper function to create a directory name that's unique per configuration
-  public static string PerConfigFolderFormat(RexConfiguration conf)
+  // Returns true if the given path falls under the root
+  public static bool IsPartOfRoot(string root, string path)
   {
-    return Path.Combine(conf.Target.GetFragment<Sharpmake.Compiler>().ToString(), conf.Target.ProjectConfigurationName);
-  }
-  // Simple helper function to get the path of the compiler db
-  public static string GetCompilerDBOutputPath(RexConfiguration config)
-  {
-    return Path.Combine(GetCompilerDBOutputFolder(config), "compile_commands.json");
+    string relativePath = Util.PathGetRelative(root, path);
+    string[] pathTokens = relativePath.Split(Path.DirectorySeparatorChar);
+    return pathTokens.Length == 0 || pathTokens[0] != "..";
   }
 
-  // Simple helper function to get the directory the compiler db will go to.
-  public static string GetCompilerDBOutputFolder(RexConfiguration config)
+  // Always creates the file and writes the provided content to it
+  // If the directory where the file is located doesn't exist, this directory is created first
+  public static void SafeWriteFile(string filepath, string text)
   {
-    return Path.Combine(GetClangToolsOutputFolder(config), PerConfigFolderFormat(config));
-  }
+    if (!Directory.Exists(filepath))
+    {
+      Directory.CreateDirectory(Path.GetDirectoryName(filepath));
+    }
 
-  // Simple helper function to get the directory clang tools intermediate files get stored
-  public static string GetClangToolsOutputFolder(RexConfiguration config)
+    File.WriteAllText(filepath, text);
+  }
+}
+
+public static class DictionaryExtensionMethods
+{
+  public static void AddRange<TKey, TValue>(this Dictionary<TKey, TValue> me, Dictionary<TKey, TValue> merge)
   {
-    return Path.Combine(config.ProjectPath, "clang_tools");
+    foreach (var item in merge)
+    {
+      me[item.Key] = item.Value;
+    }
   }
 }

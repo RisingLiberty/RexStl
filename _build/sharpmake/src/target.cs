@@ -8,7 +8,7 @@ public class RexTarget : ITarget
   public Platform Platform;
   public Config Config;
   public Compiler Compiler;
-  public DotNetFramework DotNetFramework = DotNetFramework.v4_8;
+  public DotNetFramework DotNetFramework = DotNetFramework.net8_0;
   public RexTarget()
   { }
   public RexTarget(Platform platform, DevEnv devEnv, Config config, Compiler compiler = Compiler.MSVC)
@@ -25,9 +25,8 @@ public class RexTarget : ITarget
     get
     {
       string config = string.Concat(Config.ToString().Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x.ToString() : x.ToString()));
-      string comp = Compiler.ToString();
 
-      string name = string.Concat(config, " - ", comp);
+      string name = string.Concat(config);
       return name;
     }
   }
@@ -66,9 +65,10 @@ public class RexTarget : ITarget
 
     switch (ProjectGen.Settings.IDE)
     {
+      case ProjectGen.IDE.VisualStudio:
       case ProjectGen.IDE.VisualStudio19:
       case ProjectGen.IDE.VisualStudio22:
-        DevEnv devenv = IdeToEnv(ProjectGen.Settings.IDE);
+        DevEnv devenv = ProjectGen.Settings.IDE.ToDevEnv();
         if (Util.GetVisualStudioInstallationsFromQuery(devenv).Count > 0)
         { 
           targets.AddRange(CreateTargetsForDevEnv(devenv));
@@ -96,7 +96,7 @@ public class RexTarget : ITarget
     // Thse checks do not work with Visual Studio and are only supported through the rex pipeline.
     if (ProjectGen.Settings.CoverageEnabled)
     {
-      targets.Add(new RexTarget(Platform.win64, devEnv, Config.sanitization, Compiler.Clang));
+      targets.Add(new RexTarget(Platform.win64, devEnv, Config.coverage, Compiler.Clang));
     }
     if (ProjectGen.Settings.AsanEnabled)
     {
@@ -113,21 +113,10 @@ public class RexTarget : ITarget
 
     if (ProjectGen.Settings.EnableDefaultConfigs)
     {
-      targets.Add(new RexTarget(Platform.win64, devEnv, Config.debug | Config.debug_opt | Config.release, Compiler.MSVC | Compiler.Clang));
+      targets.Add(new RexTarget(Platform.win64, devEnv, Config.debug | Config.debug_opt | Config.release, ProjectGen.Settings.CppCompiler));
     }
     return targets;
   }
 
-  private static DevEnv IdeToEnv(ProjectGen.IDE ide)
-  {
-    switch (ide)
-    {
-      case ProjectGen.IDE.VisualStudio19: return DevEnv.vs2019;
-      case ProjectGen.IDE.VisualStudio22: return DevEnv.vs2022;
-      case ProjectGen.IDE.VSCode: return DevEnv.vscode;
-      default:
-        return DevEnv.ninja;
-    }
-  }
 }
 

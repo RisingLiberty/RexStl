@@ -143,6 +143,9 @@ public static class Main
 
     // Initialize Platform Settings.
 
+    // Setting vs2019 is required as sharpmake will use this as the default environment
+    KitsRootPaths.SetUseKitsRootForDevEnv(DevEnv.vs2019, KitsRootEnum.KitsRoot10, Options.Vc.General.WindowsTargetPlatformVersion.v10_0_19041_0);
+
     // It's possible Visual Studio isn't installed on this machine
     // If it's not, then we can't set the root for Visual Studio
     if (Util.GetVisualStudioInstallationsFromQuery(ProjectGen.Settings.IDE.ToDevEnv()).Count > 0)

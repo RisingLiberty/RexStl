@@ -15,16 +15,23 @@
   },
   "msvc_includes" : {
     "archive_name": "MSVC",
-    "num_zip_files": 4,
-    "paths": ["MSVC/14.29.30133/include", "MSVC/14.29.30133/atlmfc/include"],
+    "num_zip_files": 14,
+    "paths": ["MSVC/14.38.33130/include", "MSVC/14.38.33130/atlmfc/include"],
     "config_name": "msvc_includes",
-    "version" : "msvc-14.29.30133" 
+    "version" : "MSVC-14.38.33130" 
   },
   "msvc_libs" : {
     "archive_name": "MSVC",
-    "num_zip_files": 4,
-    "paths": ["MSVC/14.29.30133/lib/x64", "MSVC/14.29.30133/atlmfc/lib/x64"],
+    "num_zip_files": 14,
+    "paths": ["MSVC/14.38.33130/lib/x64", "MSVC/14.38.33130/atlmfc/lib/x64"],
     "config_name": "msvc_libs",
-    "version" : "msvc-14.29.30133"
+    "version" : "MSVC-14.38.33130"
+  },
+  "clang_sanitizers" : {
+    "archive_name": "LLVM",
+    "num_zip_files": 9,
+    "paths": ["LLVM/lib/clang/18/lib/windows"],
+    "config_name": "clang_sanitizers",
+    "version": "llvm-18.1.8"
   }
 }

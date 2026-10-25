@@ -24,10 +24,15 @@ def __change_commit_msg(msg):
 	f.close()
 
 def main():
+	regis.diagnostics.log_info(f"running prepare-commit-msg hook")
+
 	commit_msg = __get_commit_msg()
 	repo = Repo(regis.util.find_root())
 
-	new_msg = f"[{repo.active_branch}] {commit_msg}"
+	try:
+		new_msg = f"[{repo.active_branch}] {commit_msg}"
+	except:
+		new_msg = f'[REBASE] {commit_msg}'
 	__change_commit_msg(new_msg)
 
 	__pass_commit()

@@ -42,13 +42,7 @@ if __name__ == "__main__":
   parser.add_argument("-dont_build_dependencies", default=False, help="build only the project specified and not its dependencies", action="store_true")
   parser.add_argument("-verbose", default=False, action="store_true", help="enable verbose output")
 
-  args, unknown = parser.parse_known_args()
-
-  if args.compiler == "unknown":
-    if regis.util.is_windows():
-      args.compiler = "msvc"
-    else:
-      args.compiler = "clang"
+  args = parser.parse_args()
 
   task = regis.task_raii_printing.TaskRaiiPrint("Building")
 

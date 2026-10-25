@@ -3,6 +3,12 @@ using System.Linq;
 using Sharpmake;
 using System.Collections.Generic;
 using System.Text.Json;
+using System;
+using System.Diagnostics;
+using System.Text;
+using System.Reflection;
+using rex;
+using System.Runtime.CompilerServices;
 
 // This file defines the base class for all different kind of projects supported for rex.
 // The BaseProject is cross-language and defines things like config name, intermediate directory, ...
@@ -29,7 +35,7 @@ public class BaseConfiguration
   // This is called by configure functions of top level project types
   public void Configure(RexConfiguration conf, RexTarget target)
   {
-    conf.Name = string.Concat(target.Config.ToString().ToLower(), target.Compiler.ToString().ToLower());
+    conf.Name = target.Config.ToString().ToLower();
     conf.DumpDependencyGraph = true;
 
     // These are private and are not virtualized to be configurable derived projects
@@ -44,14 +50,19 @@ public class BaseConfiguration
   private void SetupProjectPaths(RexConfiguration conf, RexTarget target)
   {
     conf.ProjectPath = Path.Combine(Globals.BuildFolder, ProjectGen.Settings.IntermediateDir, target.DevEnv.ToString(), Project.Name);
-    conf.TargetFileName = $"{conf.TargetFileName}_{target.ProjectConfigurationName}_{target.Compiler}";
+    conf.TargetFileName = $"{conf.TargetFileName}_{target.ProjectConfigurationName}";
   }
   // Setup default configuration settings.
   private void SetupDefaultConfigurationSettings(RexConfiguration conf, RexTarget target)
   {
     // General options
     conf.Options.Add(Options.Vc.General.CharacterSet.MultiByte);
-    conf.Options.Add(Options.Vc.General.PlatformToolset.v142);
+    Options.Vc.General.PlatformToolset platformToolSet = Options.Vc.General.PlatformToolset.v142;
+    if (Sharpmake.ExtensionMethods.IsVisualStudio(target.DevEnv))
+    {
+      Enum.TryParse(Sharpmake.ExtensionMethods.GetDefaultPlatformToolset(target.DevEnv), out platformToolSet);
+    }
+    conf.Options.Add(platformToolSet);
     conf.Options.Add(Options.Vc.General.WarningLevel.Level4);
 
     // Disable warning as errors in debug so that we can add debug code
@@ -80,53 +91,6 @@ public class BaseConfiguration
   }
 }
 
-// This is a very dirty hack but here's how it works
-// Because Visual Studio will start the dependencies on the same node all at once
-// We need to find a way to run a generation before any of the dependencies
-// get run, but only do it once (not per project build)
-// So what we do is, we create a dummy project that every project depends on
-// which does nothing except rerunning sharpmake
-// Because every project depends on this, this project will be put on the top node
-// with no other projects at the same level, so this project gets "build" before any other
-// and only once, resulting in the rerunning sharpmake only once
-[Generate]
-public class RegenerateProjects : Project
-{
-  public RegenerateProjects() : base(typeof(RexTarget), typeof(RexConfiguration))
-  {
-    // We need to mimic the targets generated, but only for visual studio IDE
-    AddTargets(RexTarget.CreateTargetsForDevEnv(DevEnv.vs2019).ToArray());
-  }
-
-  [Configure]
-  public void Configure(RexConfiguration conf, RexTarget target)
-  {
-    // We need give the configuration a proper name or sharpmake fails to generate
-    conf.Name = string.Concat(target.Config.ToString().ToLower(), target.Compiler.ToString().ToLower());
-    conf.ProjectPath = Path.Combine(Globals.BuildFolder, ProjectGen.Settings.IntermediateDir, target.DevEnv.ToString(), Name);
-    conf.SolutionFolder = "_Generation";
-
-    string rexpyPath = Path.Combine(Globals.Root, "_rex.py");
-
-    // The custom build steps just perform a generation step
-    string IdeCommandLineOption = "VisualStudio19";
-    switch (ProjectGen.Settings.IDE)
-    {
-      case ProjectGen.IDE.VisualStudio19: IdeCommandLineOption = "VisualStudio19"; break;
-      case ProjectGen.IDE.VisualStudio22: IdeCommandLineOption = "VisualStudio22"; break;
-      case ProjectGen.IDE.VSCode: IdeCommandLineOption = "VSCode"; break;
-      default:
-        break;
-    }
-
-    conf.CustomBuildSettings = new Configuration.NMakeBuildSettings();
-    conf.CustomBuildSettings.BuildCommand = $"py {rexpyPath} generate -IDE {IdeCommandLineOption}"; // Use what's previously generated
-    conf.CustomBuildSettings.RebuildCommand = $"py {rexpyPath} generate -use_default_config -IDE {IdeCommandLineOption}"; // Perform a generation from scratch
-    conf.CustomBuildSettings.CleanCommand = "";
-    conf.CustomBuildSettings.OutputFile = "";
-  }
-}
-
 // This is the base class for every C++ project used in the rex solution
 // Some of its functionality is sharedwith BasicCSProject through BaseConfiguration
 public abstract class BasicCPPProject : Project
@@ -139,17 +103,47 @@ public abstract class BasicCPPProject : Project
   // indicates if the project creates a compiler DB for itself
   protected bool ClangToolsEnabled = true;
 
+  // The path where you can find the data for this project, if there is any
+  public string DataPath { get; protected set; }
+
   public BasicCPPProject() : base(typeof(RexTarget), typeof(RexConfiguration))
   {
     LoadToolPaths();
 
     ClangToolsEnabled = ProjectGen.Settings.ClangToolsEnabled;
+
+    ResourceFilesExtensions.Add(".json");
+    ResourceFilesExtensions.Add(".ini");
+    ResourceFilesExtensions.Add(".hlsl");
   }
 
   // Legacy function and should be removed
   public string GenerateName(string name)
   {
     return name;
+  }
+
+  // This gets called by Sharpmake to resolve filters for files
+  public override bool ResolveFilterPathForFile(string relativeFilePath, out string filterPath)
+  {
+    filterPath = "";
+
+    if (!string.IsNullOrEmpty(DataPath))
+    {
+      string fileExtension = Path.GetExtension(relativeFilePath);
+      if (ResourceFilesExtensions.Contains(fileExtension))
+      {
+        // If the file does not exist under the source root path, we assume it's a data file
+        // the relative path is from the source root directory, so if it starts with the double dots, it means it's not under there
+        if (relativeFilePath.StartsWith("..") || !File.Exists(Path.Combine(SourceRootPath, relativeFilePath)))
+        {
+          filterPath = PathGeneration.DataFilterPath(SourceRootPath, DataPath, relativeFilePath);
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
 
   // This gets called before any configuration gets performed
@@ -164,9 +158,18 @@ public abstract class BasicCPPProject : Project
       ClangToolsEnabled = false;
     }
 
+    // If the DataPath was not set in the constructor, we're using the default datapath
+    if (string.IsNullOrEmpty(DataPath))
+    {
+      DataPath = Path.Combine(Globals.DataRoot, Name);
+    }
+
     // We read the code generation file in the pre config step
     // so it's only done once (Configure is called for every target)
     ReadCodeGenerationConfigFile();
+
+    // Setup the data paths so they're added to the project, if there are any
+    SetupDataPaths();
   }
 
   // This is called by Sharpmake and acts as the configure entry point.
@@ -228,15 +231,33 @@ public abstract class BasicCPPProject : Project
     }
 
     // Add the dependency to the regenerate project for all C++ projects.
-    if (target.DevEnv == DevEnv.vs2019)
+    if (target.DevEnv.IsVisualStudio())
     {
       conf.AddPublicDependency<RegenerateProjects>(target, DependencySetting.OnlyBuildOrder);
+    }
+
+    // Clang adds default library paths from the toolchain
+    // It gets the Visual Studio toolchain from the setup configuration
+    // This will point to the last installed Visual Studio
+    // These are added to an internal search list where to look for library files
+    // The tool chain's paths are added first, meaning our own paths are not searched first
+    // As Visual Studio adds its own clang libraries, which do not always work without our compiler version
+    // We provide the full path to clang libraries that'd otherwise confuse the linker
+    // Absolute paths to library files are looked at before a path is constructed with search paths
+    // Which means it'll solve our issue
+    if (ProjectGen.Settings.UbsanEnabled)
+    {
+      string sanitizersPath = ToolPaths["clang_sanitizers"].ToList()[0];
+      string ubsanStandalonePath = Path.Combine(sanitizersPath, "clang_rt.ubsan_standalone_cxx-x86_64.lib");
+      string ubsanStandaloneCxxPath = Path.Combine(sanitizersPath, "clang_rt.ubsan_standalone-x86_64.lib");
+      conf.LibraryFiles.Add(ubsanStandalonePath);
+      conf.LibraryFiles.Add(ubsanStandaloneCxxPath);
     }
   }
 
   protected virtual void SetupConfigSettings(RexConfiguration conf, RexTarget target)
   {
-    conf.disable_exceptions();
+    conf.DisableExceptions();
 
     // Keep in mind, visual studio takes care of its dependencies
     // If project A depends on project B, visual studio will
@@ -263,9 +284,9 @@ public abstract class BasicCPPProject : Project
       // We need to somehow configure the paths so that the visual studio projects are pointing correctly
       // but we still use the ninja files that are located elsewhere.
       conf.CustomBuildSettings = new Configuration.NMakeBuildSettings();
-      conf.CustomBuildSettings.BuildCommand = $"py {rexpyPath} build -project={Name} -config={target.Config} -compiler={target.Compiler} -dont_build_dependencies";
-      conf.CustomBuildSettings.RebuildCommand = $"py {rexpyPath} build -clean -project={Name} -config={target.Config} -compiler={target.Compiler} -dont_build_dependencies";
-      conf.CustomBuildSettings.CleanCommand = $"py {rexpyPath} build -nobuild -clean -project={Name} -config={target.Config} -compiler={target.Compiler} -dont_build_dependencies";
+      conf.CustomBuildSettings.BuildCommand = $"py {rexpyPath} build -project={Name} -config={target.Config} -dont_build_dependencies";
+      conf.CustomBuildSettings.RebuildCommand = $"py {rexpyPath} build -clean -project={Name} -config={target.Config} -dont_build_dependencies";
+      conf.CustomBuildSettings.CleanCommand = $"py {rexpyPath} build -nobuild -clean -project={Name} -config={target.Config} -dont_build_dependencies";
       conf.CustomBuildSettings.OutputFile = Path.Combine(conf.TargetPath, conf.TargetFileFullNameWithExtension);
     }
 
@@ -281,10 +302,11 @@ public abstract class BasicCPPProject : Project
     conf.Options.Add(Options.Vc.Compiler.FunctionLevelLinking.Disable);
     conf.Options.Add(Options.Vc.Compiler.FloatingPointExceptions.Disable);
     conf.Options.Add(Options.Vc.Compiler.OpenMP.Disable);
+    conf.Options.Add(Options.Vc.Compiler.BigObj.Enable);
 
     if (!ProjectGen.Settings.UnityBuildsDisabled)
     {
-      conf.Options.Add(Options.Vc.Compiler.JumboBuild.Enable);
+      conf.Options.Add(Options.Vc.Compiler.JumboBuild.EnableWithAdaptive);
     }
 
     // Linker options
@@ -297,6 +319,12 @@ public abstract class BasicCPPProject : Project
     if (target.Compiler == Compiler.Clang)
     {
       conf.AdditionalCompilerOptions.Add("-msse4.2");
+      conf.AdditionalCompilerOptions.Add("-Wno-nonportable-include-path"); // We really don't care about this..
+    }
+
+    if (conf.Output == Configuration.OutputType.Exe)
+    {
+      conf.Options.Add(Options.Vc.Linker.GenerateManifest.Enable);
     }
   }
 
@@ -309,8 +337,10 @@ public abstract class BasicCPPProject : Project
   // This is meant to be overriden by derived projects and extended where needed
   protected virtual void SetupIncludePaths(RexConfiguration conf, RexTarget target)
   {
-    // Clang can figure out these includes on its own, but we need to give MSVC a hand
-    // in finding them, that's why we provide them here
+    // To make sure we use the exact same includes, regardless of the compiler
+    // We add them here. Clang can figure them out on its own, but it can possibly
+    // use updated include files which could break compilation.
+    // This would also cause inconsistency between compilers
     if (target.Compiler == Compiler.MSVC)
     {
       List<string> includePaths = new List<string>();
@@ -323,7 +353,14 @@ public abstract class BasicCPPProject : Project
     }
 
     // We always add the include folder of the project to its include paths
-    conf.IncludePaths.Add($@"{SourceRootPath}\include");
+    if (AddPublicIncludeIfExists(conf, $@"{SourceRootPath}\include\public"))
+    {
+      AddPrivateIncludeIfExists(conf, $@"{SourceRootPath}\include\private");
+    }
+    else
+    {
+      AddPublicIncludeIfExists(conf, $@"{SourceRootPath}\include");
+    }
   }
   // Setup rules that need to be defined based on optimization settings
   // This usually means adding or removing defines, but other options are available as well.
@@ -355,8 +392,6 @@ public abstract class BasicCPPProject : Project
         break;
       case Optimization.FullOptWithPdb:
       case Optimization.FullOpt:
-        conf.Options.Add(Options.Vc.General.WholeProgramOptimization.LinkTime);
-
         conf.Options.Add(Options.Vc.Compiler.Optimization.MaximizeSpeed);
         conf.Options.Add(Options.Vc.Compiler.Intrinsic.Enable);
         conf.Options.Add(Options.Vc.Compiler.RuntimeLibrary.MultiThreaded);
@@ -406,21 +441,65 @@ public abstract class BasicCPPProject : Project
   // This is meant to be overriden by derived projects and extended where needed
   protected virtual void SetupPlatformRules(RexConfiguration conf, RexTarget target)
   {
-    // Nothing to implement
+    switch (target.Platform)
+    {
+      case Platform.win32:
+      case Platform.win64:
+        conf.AddPublicDefine("REX_PLATFORM_WINDOWS");
+
+        // This manifest enables utf8 for win API -A functions
+        // Please see this link for more details
+        // https://learn.microsoft.com/en-us/windows/apps/design/globalizing/use-utf8-code-page
+        // Enabling utf8 for Window's ANSI functions allows us to use utf8 strings directly
+        // without converting them to UCS-2 (Window's default code page)
+        if (conf.Output == Configuration.OutputType.Exe)
+        {
+          conf.AdditionalManifestFiles.Add(Path.Combine(Globals.Root, "_build", "config", "win", "utf8.manifest"));
+        }
+        break;
+      default:
+        break;
+    }
   }
   // Setup rules that need to be defined based on the compiler
   // This usually means adding or removing defines, but other options are available as well.
   // This is meant to be overriden by derived projects and extended where needed
   protected virtual void SetupCompilerRules(RexConfiguration conf, RexTarget target)
   {
-    // Nothing to implement
+    switch (target.Compiler)
+    {
+      case Compiler.MSVC:
+        conf.AddPublicDefine("REX_COMPILER_MSVC");
+        break;
+      case Compiler.Clang:
+        conf.AddPublicDefine("REX_COMPILER_CLANG");
+        break;
+      case Compiler.GCC:
+        conf.AddPublicDefine("REX_COMPILER_GCC");
+        break;
+      default:
+        break;
+    }
   }
   // Setup rules that need to be defined based on the config
   // This usually means adding or removing defines, but other options are available as well.
   // This is meant to be overriden by derived projects and extended where needed
   protected virtual void SetupConfigRules(RexConfiguration conf, RexTarget target)
   {
-    // Nothing to implement
+    switch (target.Config)
+    {
+      case Config.debug:
+      case Config.debug_opt:
+        conf.AddPublicDefine("REX_ENABLE_ASSERTS");
+        break;
+      case Config.release:
+        conf.AddPublicDefine("REX_NO_LOGGING");
+        break;
+      case Config.coverage:
+      case Config.sanitization:
+        ClangToolsEnabled = false;
+        break;
+    }
   }
   // Setup rules for events that need to get fired after a build has finished.
   // Remember that these need to be in batch format.
@@ -444,6 +523,14 @@ public abstract class BasicCPPProject : Project
   {
     // Nothing to implement
   }
+  protected void AddPrivateIncludeIfExists(RexConfiguration conf, string path)
+  {
+    if (Directory.Exists(path))
+    {
+      conf.IncludePrivatePaths.Add(path);
+    }
+  }
+
   #endregion
 
   // Sets up the project to use clang tools when enabled.
@@ -466,21 +553,16 @@ public abstract class BasicCPPProject : Project
     }
 
     // Prepare to generate the compiler db and copy the config files over
-    string compilerDBPath = Utils.GetCompilerDBOutputFolder(conf);
+    string compilerDBPath = PathGeneration.GetCompilerDBOutputFolder(conf);
     QueueCompilerDatabaseGeneration(conf);
     CopyClangToolConfigFiles(compilerDBPath);
 
-    // create the extra arguments to be passed in to post_build.py
-    string post_build_command = "";
-    post_build_command += $" -compdb={compilerDBPath}";
-    post_build_command += $" -use_clang_tools";
-    post_build_command += $" -clang_tidy_regex=\"{ProjectGen.Settings.ClangTidyRegex}\"";
-    if (ProjectGen.Settings.PerformAllClangTidyChecks)
-    {
-      post_build_command += $" -perform_all_checks";
-    }
-
-    return post_build_command;
+    // create and return the extra arguments to be passed in to post_build.py
+    // Note: the clang-tools-config is not generated yet at this point
+    // it gets generated at sharpmake link time (as the configuration fills in ClangToolHeaderFilterList)
+    // but we do know the filepath where it'll be created at
+    // so we can create the post build commandline
+    return $" -clang-tools-config={PathGeneration.ClangToolsConfigFilePath(conf)}";
   }
 
   // Set testing flags based on configuration specified by the user when calling Sharpmake.
@@ -510,12 +592,13 @@ public abstract class BasicCPPProject : Project
   // Delete the clang tools output folder if there is one.
   private void DeleteClangToolsFolder(RexConfiguration conf)
   {
-    string clangToolsPath = Utils.GetClangToolsOutputFolder(conf);
+    string clangToolsPath = PathGeneration.GetClangToolsOutputFolder(conf);
     if (Directory.Exists(clangToolsPath))
     {
       Directory.Delete(clangToolsPath, recursive: true);
     }
   }
+
 
   // This is called by Sharpmake itself after all the projects are created
   public override void PostLink()
@@ -528,6 +611,8 @@ public abstract class BasicCPPProject : Project
       RexTarget rexTarget = config.Target as RexTarget;
 
       GenerateClangToolProjectFile(rexConfig, rexTarget);
+
+      RexModule.WriteModuleFile(DataPath, rexConfig);
     }
   }
 
@@ -547,12 +632,17 @@ public abstract class BasicCPPProject : Project
       return;
     }
 
-    string clangToolsProjectPath = Utils.GetCompilerDBOutputFolder(conf);
-
     // The header filter is a list of regexes we care about when using clang-tidy
     // This is useful for ignoring headers of thirdparty libraries we don't want to run clang-tools on.
-    ClangToolsProject project = new ClangToolsProject(Name, clangToolsProjectPath);
-    project.HeaderFilters = conf.ClangToolHeaderFilterList.ToList();
+    ClangToolsConfig clangToolsConfig = new ClangToolsConfig()
+    {
+      Name = Name,
+      SrcRoot = SourceRootPath,
+      CompilerDBDirectory = PathGeneration.GetCompilerDBOutputFolder(conf),
+      PerformAllChecks = ProjectGen.Settings.PerformAllClangTidyChecks,
+      ClangTidyRegex = $"\"{ProjectGen.Settings.ClangTidyRegex}\"",
+      HeaderFilters = conf.ClangToolHeaderFilterList.ToList()
+    };
 
     var options = new JsonSerializerOptions
     {
@@ -560,14 +650,9 @@ public abstract class BasicCPPProject : Project
     };
 
     // Write the text to disk in json format
-    string jsonBlob = JsonSerializer.Serialize(project, options);
+    string jsonBlob = JsonSerializer.Serialize(clangToolsConfig, options);
 
-    if (!Directory.Exists(clangToolsProjectPath))
-    {
-      Directory.CreateDirectory(clangToolsProjectPath);
-    }
-
-    File.WriteAllText(project.ProjectPath, jsonBlob);
+    Utils.SafeWriteFile(PathGeneration.ClangToolsConfigFilePath(conf), jsonBlob);
   }
 
   // Reads the code generation config file from disk
@@ -603,7 +688,7 @@ public abstract class BasicCPPProject : Project
   {
     string ninja_file_path = GetNinjaFilePath(config);
     string build_step_name = $"compdb_{Name.ToLower()}_{config.Name}_clang";
-    string outputPath = Utils.GetCompilerDBOutputPath(config);
+    string outputPath = PathGeneration.GetCompilerDBOutputPath(config);
 
     lock (LockToCompilerDBGenerationQueue)
     {
@@ -670,10 +755,30 @@ public abstract class BasicCPPProject : Project
     // we hardcode "ninja" as that's the name of the devenv when ninja is selected
     string ninja_files_path = Path.Combine(Globals.BuildFolder, ProjectGen.Settings.IntermediateDir, "ninja", Name);
     conf.TargetPath = Path.Combine(ninja_files_path, "bin", target.ProjectConfigurationName);
-    conf.IntermediatePath = Path.Combine(conf.ProjectPath, "intermediate", target.ProjectConfigurationName, target.Compiler.ToString());
+    conf.IntermediatePath = Path.Combine(conf.ProjectPath, "intermediate", target.ProjectConfigurationName);
     conf.UseRelativePdbPath = false;
-    conf.LinkerPdbFilePath = Path.Combine(conf.TargetPath, $"{Name}_{target.ProjectConfigurationName}_{target.Compiler}{conf.LinkerPdbSuffix}.pdb");
-    conf.CompilerPdbFilePath = Path.Combine(conf.TargetPath, $"{Name}_{target.ProjectConfigurationName}_{target.Compiler}{conf.CompilerPdbSuffix}.pdb");
+    conf.LinkerPdbFilePath = Path.Combine(conf.TargetPath, $"{Name}_{target.ProjectConfigurationName}{conf.LinkerPdbSuffix}.pdb");
+    conf.CompilerPdbFilePath = Path.Combine(conf.TargetPath, $"{Name}_{target.ProjectConfigurationName}{conf.CompilerPdbSuffix}.pdb");
+  }
+
+  // Add the include path to the configuration, if the path exists
+  private bool AddPublicIncludeIfExists(RexConfiguration conf, string path)
+  {
+    if (Directory.Exists(path))
+    {
+      conf.IncludePaths.Add(path);
+      return true;
+    }
+
+    return false;
+  }
+  // Make sharpmake aware of the shader paths
+  private void SetupDataPaths()
+  {
+    if (!string.IsNullOrEmpty(DataPath))
+    {
+      AdditionalSourceRootPaths.Add(DataPath);
+    }
   }
 }
 
@@ -681,9 +786,23 @@ public abstract class BasicCPPProject : Project
 // Some of its functionality is sharedwith BasicCPPProject through BaseConfiguration
 public abstract class BasicCSProject : CSharpProject
 {
+  public string DataPath { get; protected set; }
+
   public BasicCSProject() : base(typeof(RexTarget), typeof(RexConfiguration))
   {
     // Nothing to implement
+  }
+
+  // This gets called before any configuration gets performed
+  public override void PreConfigure()
+  {
+    base.PreConfigure();
+
+    // If the DataPath was not set in the constructor, we're using the default datapath
+    if (string.IsNullOrEmpty(DataPath))
+    {
+      DataPath = Path.Combine(Globals.DataRoot, Name);
+    }
   }
 
   [Configure]
@@ -698,10 +817,24 @@ public abstract class BasicCSProject : CSharpProject
     // These are protected and optionally extended by derived projects
     SetupOutputType(conf, target);
     SetupLibDependencies(conf, target);
-    SetupConfigRules(conf, target);
+    SetupOptimizationRules(conf, target);
     SetupConfigRules(conf, target);
     SetupPostBuildEvents(conf, target);
     SetupSolutionFolder(conf, target);
+  }
+
+  // This is called by Sharpmake itself after all the projects are created
+  public override void PostLink()
+  {
+    base.PostLink();
+
+    foreach (Configuration config in Configurations)
+    {
+      RexConfiguration rexConfig = config as RexConfiguration;
+      RexTarget rexTarget = config.Target as RexTarget;
+
+      RexModule.WriteModuleFile(DataPath, rexConfig);
+    }
   }
 
   protected abstract void SetupOutputType(RexConfiguration conf, RexTarget target);
@@ -723,7 +856,8 @@ public abstract class BasicCSProject : CSharpProject
   // This is meant to be overriden by derived projects and extended where needed
   protected virtual void SetupConfigRules(RexConfiguration conf, RexTarget target)
   {
-    // Nothing to implement
+    conf.Options.Add(Options.CSharp.Nullable.Enabled);
+    conf.Options.Add(Options.CSharp.AllowUnsafeBlocks.Enabled);
   }
   // Setup rules for events that need to get fired after a build has finished.
   // Remember that these need to be in batch format.
@@ -736,14 +870,177 @@ public abstract class BasicCSProject : CSharpProject
   {
     // Nothing to implement
   }
+  protected virtual void SetupOptimizationRules(RexConfiguration conf, RexTarget target)
+  {
+    switch (target.Optimization)
+    {
+      case Optimization.FullOpt:
+        conf.Options.Add(Options.CSharp.Optimize.Enabled);
+        conf.Options.Add(Options.CSharp.DebugSymbols.Disabled);
+        conf.Options.Add(Options.CSharp.DebugType.None);
+        break;
+      case Optimization.FullOptWithPdb:
+        conf.Options.Add(Options.CSharp.Optimize.Enabled);
+        conf.Options.Add(Options.CSharp.DebugSymbols.Enabled);
+        conf.Options.Add(Options.CSharp.DebugType.Pdbonly);
+        break;
+      case Optimization.NoOpt:
+        conf.Options.Add(Options.CSharp.Optimize.Disabled);
+        conf.Options.Add(Options.CSharp.DebugSymbols.Enabled);
+        conf.Options.Add(Options.CSharp.DebugType.Full);
+        break;
+    }
+
+  }
   // Setup the target path and pdb locations
   private void SetupProjectPaths(RexConfiguration conf, RexTarget target)
   {
-    conf.TargetPath = Path.Combine(conf.ProjectPath, "bin", conf.Name);
-    conf.IntermediatePath = Path.Combine(conf.ProjectPath, "intermediate", conf.Name, target.Compiler.ToString());
+    DevEnv devEnv = target.DevEnv;
+    if (devEnv == DevEnv.ninja)
+    {
+      devEnv = KitsRootPaths.VsVersionForNinja();
+    }
+
+    string startOutputPath = conf.ProjectPath.Replace(target.DevEnv.ToString(), devEnv.ToString());
+
+    conf.TargetPath = Path.Combine(startOutputPath, "bin", conf.Name);
+    conf.IntermediatePath = Path.Combine(startOutputPath, "intermediate", conf.Name);
     conf.UseRelativePdbPath = false;
     conf.LinkerPdbFilePath = Path.Combine(conf.TargetPath, $"{Name}_{conf.Name}_{target.Compiler}{conf.LinkerPdbSuffix}.pdb");
     conf.CompilerPdbFilePath = Path.Combine(conf.TargetPath, $"{Name}_{conf.Name}_{target.Compiler}{conf.CompilerPdbSuffix}.pdb");
+  }
+}
+
+// All projects sitting in 0_thirdparty folder should inherit from this
+public class ThirdPartyProject : BasicCPPProject
+{
+  public ThirdPartyProject() : base()
+  {
+    // By default we don't enable clang tools for any of our thirdparty projects
+    ClangToolsEnabled = false;
+  }
+
+  protected override void SetupSolutionFolder(RexConfiguration conf, RexTarget target)
+  {
+    conf.SolutionFolder = "0_thirdparty";
+  }
+
+  protected override void SetupOutputType(RexConfiguration conf, RexTarget target)
+  {
+    conf.Output = Configuration.OutputType.Lib;
+  }
+}
+
+// All projects sitting in 1_engine folder should inherit from this
+public class EngineProject : BasicCPPProject
+{
+  public EngineProject() : base()
+  { }
+
+  protected override void SetupSolutionFolder(RexConfiguration conf, RexTarget target)
+  {
+    conf.SolutionFolder = "1_engine";
+  }
+
+  protected override void SetupOutputType(RexConfiguration conf, RexTarget target)
+  {
+    conf.Output = Configuration.OutputType.Lib;
+  }
+}
+
+// All projects sitting in 2_platform folder should inherit from this
+public class PlatformProject : BasicCPPProject
+{
+  public PlatformProject() : base()
+  { }
+
+  protected override void SetupSolutionFolder(RexConfiguration conf, RexTarget target)
+  {
+    conf.SolutionFolder = "2_platform";
+  }
+
+  protected override void SetupOutputType(RexConfiguration conf, RexTarget target)
+  {
+    conf.Output = Configuration.OutputType.Lib;
+  }
+}
+
+// All projects sitting in 3_app_libs folder should inherit from this
+public class GameProject : BasicCPPProject
+{
+  // This is the project name that'll be defined
+  // The root project directory will have a folder name 
+  // that matches this name
+  private string ProjectName = "";
+
+  public GameProject() : base()
+  { }
+
+  public override void PreConfigure()
+  {
+    base.PreConfigure();
+
+    // By default, we use the Visual Studio project (or its equivalent) as the project name
+    ProjectName = Name;
+  }
+
+  protected override void SetupSolutionFolder(RexConfiguration conf, RexTarget target)
+  {
+    conf.SolutionFolder = "3_games";
+  }
+
+  protected override void SetupConfigSettings(RexConfiguration conf, RexTarget target)
+  {
+    base.SetupConfigSettings(conf, target);
+
+    // Setup the working directory of this project
+    conf.VcxprojUserFile = new Configuration.VcxprojUserFileSettings();
+    conf.VcxprojUserFile.LocalDebuggerWorkingDirectory = Globals.DataRoot;
+
+    if (!Directory.Exists(conf.VcxprojUserFile.LocalDebuggerWorkingDirectory))
+    {
+      Directory.CreateDirectory(conf.VcxprojUserFile.LocalDebuggerWorkingDirectory);
+    }
+  }
+
+  protected override void SetupOutputType(RexConfiguration conf, RexTarget target)
+  {
+    conf.Output = Configuration.OutputType.Lib;
+  }
+
+  protected void SetProjectName(string projectName)
+  {
+    ProjectName = projectName;
+  }
+}
+
+// All projects sitting in 4_tools folder should inherit from this
+public class ToolsProject : BasicCPPProject
+{
+  public ToolsProject() : base()
+  { }
+
+  protected override void SetupSolutionFolder(RexConfiguration conf, RexTarget target)
+  {
+    conf.SolutionFolder = "4_tools";
+  }
+
+  protected override void SetupConfigSettings(RexConfiguration conf, RexTarget target)
+  {
+    base.SetupConfigSettings(conf, target);
+
+    conf.VcxprojUserFile = new Configuration.VcxprojUserFileSettings();
+    conf.VcxprojUserFile.LocalDebuggerWorkingDirectory = Path.Combine(Globals.Root, "data");
+
+    if (!Directory.Exists(conf.VcxprojUserFile.LocalDebuggerWorkingDirectory))
+    {
+      Directory.CreateDirectory(conf.VcxprojUserFile.LocalDebuggerWorkingDirectory);
+    }
+  }
+
+  protected override void SetupOutputType(RexConfiguration conf, RexTarget target)
+  {
+    conf.Output = Configuration.OutputType.Lib;
   }
 }
 
@@ -755,19 +1052,14 @@ public class TestProject : BasicCPPProject
   // Sharpmake runs multithreaded, so for thread safety, we need to put a lock around accessing the project settings array
   static private object LockToTestProjectSettings = new object();
 
-  protected override void SetupConfigRules(RexConfiguration conf, RexTarget target)
+  public TestProject() : base()
   {
-    switch (target.Config)
-    {
-      case Config.coverage:
-      conf.add_public_define("CATCH_CONFIG_DISABLE"); // we don't need to check catch, it massively increase link time (47min at time of writing -> 5min when disabled)
-        break;
-      case Config.sanitization:
-      conf.add_public_define("CATCH_CONFIG_DISABLE"); // we don't need to check catch, it massively increase link time (47min at time of writing -> 5min when disabled)
-        break;
-      default:
-        break;
-    }
+    ProjectType = ProjectGen.TestProjectType.Undefined;
+  }
+
+  protected override void SetupSolutionFolder(RexConfiguration conf, RexTarget target)
+  {
+    conf.SolutionFolder = "5_tests";
   }
 
   protected override void SetupConfigSettings(RexConfiguration conf, RexTarget target)
@@ -775,11 +1067,21 @@ public class TestProject : BasicCPPProject
     base.SetupConfigSettings(conf, target);
 
     conf.VcxprojUserFile = new Configuration.VcxprojUserFileSettings();
-    conf.VcxprojUserFile.LocalDebuggerWorkingDirectory = Path.Combine(Globals.Root, "data", Name);
+    conf.VcxprojUserFile.LocalDebuggerWorkingDirectory = Path.Combine(Globals.Root, "data");
+  }
 
-    if (!Directory.Exists(conf.VcxprojUserFile.LocalDebuggerWorkingDirectory))
+  protected override void SetupConfigRules(RexConfiguration conf, RexTarget target)
+  {
+    switch (target.Config)
     {
-      Directory.CreateDirectory(conf.VcxprojUserFile.LocalDebuggerWorkingDirectory);
+      case Config.coverage:
+        conf.AddPublicDefine("REX_DISABLE_CATCH"); // we don't need to check catch.
+        break;
+      case Config.sanitization:
+        conf.AddPublicDefine("REX_DISABLE_CATCH"); // we don't need to check catch, it massively increase link time (47min at time of writing -> 5min when disabled)
+        break;
+      default:
+        break;
     }
   }
 

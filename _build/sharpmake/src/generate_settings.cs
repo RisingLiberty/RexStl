@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using rex;
 
 // These are the classes used for automatic code generation
 namespace CodeGen
@@ -107,7 +108,14 @@ namespace CodeGen
       sb.AppendLine($"  enum class {ClassName}");
       sb.AppendLine("  {");
 
-      foreach (var project_vals in ProjectToContent)
+      // Sort the content so we're not affected by threading
+      List<KeyValuePair<string, List<string>>> projectToContentAsList = ProjectToContent.ToList();
+      projectToContentAsList.Sort(delegate (KeyValuePair<string, List<string>> lhs, KeyValuePair<string, List<string>> rhs)
+      {
+        return lhs.Key.CompareTo(rhs.Key);
+      });
+      
+      foreach (var project_vals in projectToContentAsList)
       {
         sb.AppendLine($"    // {ClassName} values for {project_vals.Key}");
 
@@ -161,7 +169,14 @@ namespace CodeGen
       sb.AppendLine($"  inline rsl::array {Name} = ");
       sb.AppendLine("  {");
 
-      foreach (var project_vals in ProjectToContent)
+      // Sort the content so we're not affected by threading
+      List<KeyValuePair<string, List<string>>> projectToContentAsList = ProjectToContent.ToList();
+      projectToContentAsList.Sort(delegate (KeyValuePair<string, List<string>> lhs, KeyValuePair<string, List<string>> rhs)
+      {
+        return lhs.Key.CompareTo(rhs.Key);
+      });
+
+      foreach (var project_vals in projectToContentAsList)
       {
         sb.AppendLine($"    // {ElementType} values for {project_vals.Key} - using code generation key: '{key}'");
 
@@ -195,6 +210,7 @@ namespace ProjectGen
   public enum IDE
   {
     None,
+    VisualStudio, // Latest visual studio version
     VisualStudio19,
     VisualStudio22,
     VSCode
@@ -331,7 +347,7 @@ namespace ProjectGen
           RunnableType runnableType = RunnableTypeForConfig(conf);
 
           TargetRunnables.Add(new Runnable(fullTargetPath, runnableType));
-          CompilerDBPaths.Add(Utils.GetCompilerDBOutputPath((RexConfiguration)conf));
+          CompilerDBPaths.Add(PathGeneration.GetCompilerDBOutputPath((RexConfiguration)conf));
         }
 
       }
@@ -396,6 +412,7 @@ namespace ProjectGen
     static public bool AutoTestsEnabled = false;                  // Generate solution for auto testing
 
     static public IDE IDE = IDE.VisualStudio19;                     // Choose the IDE this sharpmake instance is generating for
+    static public Compiler CppCompiler = Compiler.MSVC;           // The compiler to use to compile C++ projects
 
     static public string ClangTidyRegex = "";                     // Regex of files to run clang-tidy on
     static public GraphicsAPI GraphicsAPI = GraphicsAPI.Unknown;  // The graphics API to be used by the engine
@@ -411,12 +428,27 @@ public static class Extensions
 {
   public static DevEnv ToDevEnv(this ProjectGen.IDE ide)
   {
+    if (ide == ProjectGen.IDE.VisualStudio)
+    {
+      if (Util.GetVisualStudioInstallationsFromQuery(DevEnv.vs2019).Count > 0)
+      {
+        return DevEnv.vs2019;
+      }
+
+      if (Util.GetVisualStudioInstallationsFromQuery(DevEnv.vs2022).Count > 0)
+      {
+        return DevEnv.vs2022;
+      }
+    }
+
     switch (ide)
     {
       case ProjectGen.IDE.VisualStudio19:
         return DevEnv.vs2019;
       case ProjectGen.IDE.VisualStudio22:
         return DevEnv.vs2022;
+      case ProjectGen.IDE.VSCode: 
+        return DevEnv.vscode;
     }
     return DevEnv.vs2019;
 

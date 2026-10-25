@@ -2385,4 +2385,474 @@ TEST_CASE("TestSort")
   rsl::test::test_object::reset();
 }
 
+TEST_CASE("TestMinMaxResult")
+{
+  // minmax(a, b)
+  {
+    const int a = 1;
+    const int b = 2;
+    auto res    = rsl::minmax(a, b);
+    CHECK(res.min == 1);
+    CHECK(res.max == 2);
+    CHECK(&res.min == &a);
+    CHECK(&res.max == &b);
+
+    auto res2 = rsl::minmax(b, a);
+    CHECK(res2.min == 1);
+    CHECK(res2.max == 2);
+    CHECK(&res2.min == &a);
+    CHECK(&res2.max == &b);
+  }
+
+  // minmax(a, b, compare)
+  {
+    const int a = 1;
+    const int b = 2;
+    auto res    = rsl::minmax(a, b, rsl::greater<int>());
+    CHECK(res.min == 2);
+    CHECK(res.max == 1);
+  }
+
+  // minmax(ilist)
+  {
+    auto res = rsl::minmax({3, 1, 4, 1, 5, 9, 2, 6});
+    CHECK(res.min == 1);
+    CHECK(res.max == 9);
+
+    auto res2 = rsl::minmax({42});
+    CHECK(res2.min == 42);
+    CHECK(res2.max == 42);
+  }
+
+  // minmax(ilist, compare)
+  {
+    auto res = rsl::minmax({3, 1, 4, 1, 5, 9, 2, 6}, rsl::greater<int>());
+    CHECK(res.min == 9);
+    CHECK(res.max == 1);
+  }
+}
+
+TEST_CASE("TestMinMaxElement")
+{
+  // rsl::minmax_element returns pointers instead of iterators, so we use raw arrays here
+
+  // empty range returns first for both
+  {
+    int arr[] = {0};
+    auto res  = rsl::minmax_element(arr, arr);
+    CHECK(res.min == arr);
+    CHECK(res.max == arr);
+  }
+
+  // single element
+  {
+    int arr[] = {5};
+    auto res  = rsl::minmax_element(arr, arr + 1);
+    CHECK(*res.min == 5);
+    CHECK(*res.max == 5);
+  }
+
+  // odd amount of elements
+  {
+    int arr[] = {3, 9, 1, 4, 7};
+    auto res  = rsl::minmax_element(arr, arr + 5);
+    CHECK(*res.min == 1);
+    CHECK(*res.max == 9);
+    CHECK(res.min == arr + 2);
+    CHECK(res.max == arr + 1);
+  }
+
+  // even amount of elements
+  {
+    int arr[] = {3, 9, 1, 4, 7, 0};
+    auto res  = rsl::minmax_element(arr, arr + 6);
+    CHECK(*res.min == 0);
+    CHECK(*res.max == 9);
+  }
+
+  // with duplicates, min returns the first smallest element, max returns the last largest element
+  {
+    int arr[] = {2, 1, 3, 1, 3, 2};
+    auto res  = rsl::minmax_element(arr, arr + 6);
+    CHECK(res.min == arr + 1);
+    CHECK(res.max == arr + 4);
+  }
+
+  // custom comparison
+  {
+    int arr[] = {3, 9, 1, 4, 7};
+    auto res  = rsl::minmax_element(arr, arr + 5, rsl::greater<int>());
+    CHECK(*res.min == 9);
+    CHECK(*res.max == 1);
+  }
+}
+
+TEST_CASE("TestCopyReturnValue")
+{
+  // trivially copyable types copied between raw pointers take the memmove path
+  {
+    int src[4] = {1, 2, 3, 4};
+    int dst[4] = {};
+    int* end   = rsl::copy(src, src + 4, dst);
+    CHECK(end == dst + 4);
+    CHECK(dst[0] == 1);
+    CHECK(dst[3] == 4);
+  }
+  {
+    char src[3] = {'a', 'b', 'c'};
+    char dst[3] = {};
+    char* end   = rsl::copy(src, src + 3, dst);
+    CHECK(end == dst + 3);
+    CHECK(dst[2] == 'c');
+  }
+  {
+    double src[2] = {1.0, 2.0};
+    double dst[2] = {};
+    double* end   = rsl::copy(src, src + 2, dst);
+    CHECK(end == dst + 2);
+    CHECK(dst[1] == 2.0);
+  }
+
+  // empty range
+  {
+    int src[1] = {1};
+    int dst[1] = {0};
+    int* end   = rsl::copy(src, src, dst);
+    CHECK(end == dst);
+    CHECK(dst[0] == 0);
+  }
+
+  // non trivial types
+  {
+    rsl::test::test_object src[2] = {rsl::test::test_object(1), rsl::test::test_object(2)};
+    rsl::test::test_object dst[2];
+    auto end = rsl::copy(src, src + 2, dst);
+    CHECK(end == dst + 2);
+    CHECK(dst[0] == 1);
+    CHECK(dst[1] == 2);
+  }
+  rsl::test::test_object::reset();
+}
+
+TEST_CASE("TestCopyIf")
+{
+  rsl::vector<int> src = {1, 2, 3, 4, 5, 6, 7, 8};
+  rsl::vector<int> dst(8_size, 0);
+
+  auto it = rsl::copy_if(src.begin(), src.end(), dst.begin(), [](int x) { return x % 2 == 0; });
+  CHECK(it == dst.begin() + 4);
+  CHECK(dst[0] == 2);
+  CHECK(dst[1] == 4);
+  CHECK(dst[2] == 6);
+  CHECK(dst[3] == 8);
+  CHECK(dst[4] == 0);
+
+  // nothing matches
+  it = rsl::copy_if(src.begin(), src.end(), dst.begin(), [](int x) { return x > 100; });
+  CHECK(it == dst.begin());
+
+  // empty source range
+  it = rsl::copy_if(src.begin(), src.begin(), dst.begin(), [](int) { return true; });
+  CHECK(it == dst.begin());
+}
+
+TEST_CASE("TestCopyN")
+{
+  rsl::vector<int> src = {1, 2, 3, 4, 5};
+  rsl::vector<int> dst(5_size, 0);
+
+  auto it = rsl::copy_n(src.begin(), 3, dst.begin());
+  CHECK(it == dst.begin() + 3);
+  CHECK(dst[0] == 1);
+  CHECK(dst[1] == 2);
+  CHECK(dst[2] == 3);
+  CHECK(dst[3] == 0);
+  CHECK(dst[4] == 0);
+
+  it = rsl::copy_n(src.begin(), 0, dst.begin());
+  CHECK(it == dst.begin());
+}
+
+TEST_CASE("TestFillN")
+{
+  rsl::vector<int> vec(5_size, 0);
+
+  auto it = rsl::fill_n(vec.begin(), 3, 7);
+  CHECK(it == vec.begin() + 3);
+  CHECK(vec[0] == 7);
+  CHECK(vec[1] == 7);
+  CHECK(vec[2] == 7);
+  CHECK(vec[3] == 0);
+  CHECK(vec[4] == 0);
+
+  it = rsl::fill_n(vec.begin(), 0, 1);
+  CHECK(it == vec.begin());
+  CHECK(vec[0] == 7);
+}
+
+TEST_CASE("TestForEachN")
+{
+  rsl::vector<int> vec = {1, 2, 3, 4, 5};
+
+  auto it = rsl::for_each_n(vec.begin(), 3, [](int& x) { x *= 10; });
+  CHECK(it == vec.begin() + 3);
+  CHECK(vec[0] == 10);
+  CHECK(vec[1] == 20);
+  CHECK(vec[2] == 30);
+  CHECK(vec[3] == 4);
+  CHECK(vec[4] == 5);
+
+  int sum = 0;
+  it      = rsl::for_each_n(vec.begin(), 0, [&sum](int x) { sum += x; });
+  CHECK(it == vec.begin());
+  CHECK(sum == 0);
+}
+
+TEST_CASE("TestRotateCopy")
+{
+  rsl::vector<int> src = {1, 2, 3, 4, 5};
+  rsl::vector<int> dst(5_size, 0);
+
+  auto it = rsl::rotate_copy(src.begin(), src.begin() + 2, src.end(), dst.begin());
+  CHECK(it == dst.end());
+  CHECK(dst[0] == 3);
+  CHECK(dst[1] == 4);
+  CHECK(dst[2] == 5);
+  CHECK(dst[3] == 1);
+  CHECK(dst[4] == 2);
+
+  // rotating around the first element is a plain copy
+  it = rsl::rotate_copy(src.begin(), src.begin(), src.end(), dst.begin());
+  CHECK(it == dst.end());
+  CHECK(dst[0] == 1);
+  CHECK(dst[4] == 5);
+
+  // source is untouched
+  CHECK(src[0] == 1);
+  CHECK(src[1] == 2);
+  CHECK(src[2] == 3);
+  CHECK(src[3] == 4);
+  CHECK(src[4] == 5);
+}
+
+TEST_CASE("TestReverseCopy")
+{
+  rsl::vector<int> src = {1, 2, 3, 4, 5};
+  rsl::vector<int> dst(5_size, 0);
+
+  auto it = rsl::reverse_copy(src.begin(), src.end(), dst.begin());
+  CHECK(it == dst.end());
+  CHECK(dst[0] == 5);
+  CHECK(dst[1] == 4);
+  CHECK(dst[2] == 3);
+  CHECK(dst[3] == 2);
+  CHECK(dst[4] == 1);
+
+  // source is untouched
+  CHECK(src[0] == 1);
+  CHECK(src[4] == 5);
+
+  // empty range
+  it = rsl::reverse_copy(src.begin(), src.begin(), dst.begin());
+  CHECK(it == dst.begin());
+}
+
+TEST_CASE("TestIncludes")
+{
+  rsl::vector<int> vec = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+
+  rsl::vector<int> sub = {2, 4, 6};
+  CHECK(rsl::includes(vec.begin(), vec.end(), sub.begin(), sub.end()));
+
+  rsl::vector<int> not_sub = {2, 4, 10};
+  CHECK(!rsl::includes(vec.begin(), vec.end(), not_sub.begin(), not_sub.end()));
+
+  rsl::vector<int> empty;
+  CHECK(rsl::includes(vec.begin(), vec.end(), empty.begin(), empty.end()));
+  CHECK(rsl::includes(empty.begin(), empty.end(), empty.begin(), empty.end()));
+  CHECK(!rsl::includes(empty.begin(), empty.end(), sub.begin(), sub.end()));
+
+  // a range always includes itself
+  CHECK(rsl::includes(vec.begin(), vec.end(), vec.begin(), vec.end()));
+
+  // multiplicity matters
+  rsl::vector<int> dupes      = {1, 1, 2};
+  rsl::vector<int> more_dupes = {1, 1, 1};
+  CHECK(!rsl::includes(dupes.begin(), dupes.end(), more_dupes.begin(), more_dupes.end()));
+
+  // custom comparison for descending ranges
+  rsl::vector<int> desc     = {9, 7, 5, 3, 1};
+  rsl::vector<int> desc_sub = {7, 3};
+  CHECK(rsl::includes(desc.begin(), desc.end(), desc_sub.begin(), desc_sub.end(), rsl::greater<int>()));
+  rsl::vector<int> desc_not_sub = {8, 3};
+  CHECK(!rsl::includes(desc.begin(), desc.end(), desc_not_sub.begin(), desc_not_sub.end(), rsl::greater<int>()));
+}
+
+TEST_CASE("TestCountIf")
+{
+  rsl::vector<int> vec = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+  CHECK(rsl::count_if(vec.begin(), vec.end(), [](int x) { return x % 2 == 0; }) == 5);
+  CHECK(rsl::count_if(vec.begin(), vec.end(), [](int x) { return x > 7; }) == 3);
+  CHECK(rsl::count_if(vec.begin(), vec.end(), [](int x) { return x > 100; }) == 0);
+  CHECK(rsl::count_if(vec.begin(), vec.end(), [](int) { return true; }) == 10);
+  CHECK(rsl::count_if(vec.begin(), vec.begin(), [](int) { return true; }) == 0);
+}
+
+TEST_CASE("TestRemoveCopyIf")
+{
+  rsl::vector<int> src = {1, 2, 3, 4, 5, 6};
+  rsl::vector<int> dst(6_size, 0);
+
+  auto it = rsl::remove_copy_if(src.begin(), src.end(), dst.begin(), [](int x) { return x % 2 == 0; });
+  CHECK(it == dst.begin() + 3);
+  CHECK(dst[0] == 1);
+  CHECK(dst[1] == 3);
+  CHECK(dst[2] == 5);
+  CHECK(dst[3] == 0);
+
+  // source is untouched
+  CHECK(src.size() == 6);
+  CHECK(src[1] == 2);
+}
+
+TEST_CASE("TestFindLastNotOfPredicate")
+{
+  auto eq = [](int lhs, int rhs) { return lhs == rhs; };
+
+  rsl::vector<int> vec    = {1, 2, 3, 2, 1};
+  rsl::vector<int> values = {1, 2};
+
+  // the last element that is not in values is 3
+  CHECK(rsl::find_last_not_of(vec.begin(), vec.end(), values.begin(), values.end(), eq) == vec.begin() + 2);
+  CHECK(rsl::find_last_not_of(vec.begin(), vec.end(), values.begin(), values.end()) == vec.begin() + 2);
+
+  // the first element is the only one not in values
+  rsl::vector<int> vec2 = {3, 1, 1};
+  CHECK(rsl::find_last_not_of(vec2.begin(), vec2.end(), values.begin(), values.end(), eq) == vec2.begin());
+  CHECK(rsl::find_last_not_of(vec2.begin(), vec2.end(), values.begin(), values.end()) == vec2.begin());
+
+  // all elements are in values
+  rsl::vector<int> vec3 = {1, 2, 1};
+  CHECK(rsl::find_last_not_of(vec3.begin(), vec3.end(), values.begin(), values.end(), eq) == vec3.end());
+  CHECK(rsl::find_last_not_of(vec3.begin(), vec3.end(), values.begin(), values.end()) == vec3.end());
+}
+
+TEST_CASE("TestFindLastOfPredicate")
+{
+  auto eq = [](int lhs, int rhs) { return lhs == rhs; };
+
+  rsl::vector<int> vec    = {1, 2, 3, 2, 1};
+  rsl::vector<int> values = {3};
+
+  CHECK(rsl::find_last_of(vec.begin(), vec.end(), values.begin(), values.end(), eq) == vec.begin() + 2);
+  CHECK(rsl::find_last_of(vec.begin(), vec.end(), values.begin(), values.end()) == vec.begin() + 2);
+
+  // only the first element matches
+  rsl::vector<int> vec2 = {3, 1, 1};
+  CHECK(rsl::find_last_of(vec2.begin(), vec2.end(), values.begin(), values.end(), eq) == vec2.begin());
+  CHECK(rsl::find_last_of(vec2.begin(), vec2.end(), values.begin(), values.end()) == vec2.begin());
+
+  // nothing matches
+  rsl::vector<int> vec3 = {1, 2, 1};
+  CHECK(rsl::find_last_of(vec3.begin(), vec3.end(), values.begin(), values.end(), eq) == vec3.end());
+  CHECK(rsl::find_last_of(vec3.begin(), vec3.end(), values.begin(), values.end()) == vec3.end());
+}
+
+TEST_CASE("TestSearchNPredicate")
+{
+  rsl::vector<int> vec = {1, 2, 2, 3, 3, 3, 4};
+
+  CHECK(rsl::search_n(vec.begin(), vec.end(), 3, 3) == vec.begin() + 3);
+  CHECK(rsl::search_n(vec.begin(), vec.end(), 2, 2) == vec.begin() + 1);
+  CHECK(rsl::search_n(vec.begin(), vec.end(), 4, 3) == vec.end());
+  CHECK(rsl::search_n(vec.begin(), vec.end(), 0, 3) == vec.begin());
+
+  // with a predicate: find 3 consecutive elements greater than 1
+  auto greater = [](int lhs, int rhs) { return lhs > rhs; };
+  CHECK(rsl::search_n(vec.begin(), vec.end(), 3, 1, greater) == vec.begin() + 1);
+  CHECK(rsl::search_n(vec.begin(), vec.end(), 7, 0, greater) == vec.begin());
+  CHECK(rsl::search_n(vec.begin(), vec.end(), 8, 0, greater) == vec.end());
+}
+
+TEST_CASE("TestBonusClamp")
+{
+  CHECK(rsl::clamp_min(5, 10) == 10);
+  CHECK(rsl::clamp_min(15, 10) == 15);
+  CHECK(rsl::clamp_min(10, 10) == 10);
+  CHECK(rsl::clamp_min(-5, 0) == 0);
+
+  CHECK(rsl::clamp_max(5, 10) == 5);
+  CHECK(rsl::clamp_max(15, 10) == 10);
+  CHECK(rsl::clamp_max(10, 10) == 10);
+  CHECK(rsl::clamp_max(-5, 0) == -5);
+
+  CHECK(rsl::clamp_max(2.5f, 1.0f) == 1.0f);
+  CHECK(rsl::clamp_min(0.5f, 1.0f) == 1.0f);
+}
+
+TEST_CASE("TestBonusInRange")
+{
+  CHECK(rsl::in_range(5, 0, 10));
+  CHECK(rsl::in_range(0, 0, 10));
+  CHECK(rsl::in_range(10, 0, 10));
+  CHECK(!rsl::in_range(-1, 0, 10));
+  CHECK(!rsl::in_range(11, 0, 10));
+  CHECK(rsl::in_range(-5, -10, -1));
+}
+
+TEST_CASE("TestBonusCountPredicate")
+{
+  rsl::vector<int> vec = {1, 5, 10, 15, 20};
+
+  // counts all elements greater than the given value
+  CHECK(rsl::count(vec.begin(), vec.end(), 9, rsl::greater<int>()) == 3);
+  CHECK(rsl::count(vec.begin(), vec.end(), 100, rsl::greater<int>()) == 0);
+  CHECK(rsl::count(vec.begin(), vec.end(), 10, rsl::equal_to<int>()) == 1);
+}
+
+TEST_CASE("TestBonusEqualRange")
+{
+  rsl::vector<int> vec1 = {1, 2, 3};
+  rsl::vector<int> vec2 = {1, 2, 3};
+  rsl::vector<int> vec3 = {1, 2, 4};
+  rsl::vector<int> vec4 = {1, 2};
+
+  CHECK(rsl::equal_range(vec1.begin(), vec1.end(), vec2.begin(), vec2.end()));
+  CHECK(!rsl::equal_range(vec1.begin(), vec1.end(), vec3.begin(), vec3.end()));
+  CHECK(!rsl::equal_range(vec1.begin(), vec1.end(), vec4.begin(), vec4.end()));
+  CHECK(!rsl::equal_range(vec4.begin(), vec4.end(), vec1.begin(), vec1.end()));
+  CHECK(rsl::equal_range(vec1.begin(), vec1.begin(), vec2.begin(), vec2.begin()));
+
+  auto less_than_5 = [](int lhs, int rhs) { return lhs < 5 && rhs < 5; };
+  CHECK(rsl::equal_range(vec1.begin(), vec1.end(), vec3.begin(), vec3.end(), less_than_5));
+}
+
+TEST_CASE("TestBonusTransformIf")
+{
+  // only elements satisfying the predicate get transformed
+  {
+    rsl::vector<int> src = {1, 2, 3, 4, 5, 6};
+    rsl::vector<int> dst(6_size, -1);
+
+    auto it = rsl::transform_if(src.begin(), src.end(), dst.begin(), [](int x) { return x * 10; }, [](int x) { return x % 2 == 0; });
+    CHECK(it == dst.begin() + 3);
+    CHECK(dst[0] == 20);
+    CHECK(dst[1] == 40);
+    CHECK(dst[2] == 60);
+    CHECK(dst[3] == -1);
+  }
+
+  // elements equal to 0 that satisfy the predicate should get transformed as well
+  {
+    rsl::vector<int> src = {0, 1, 2};
+    rsl::vector<int> dst(3_size, -1);
+
+    auto it = rsl::transform_if(src.begin(), src.end(), dst.begin(), [](int x) { return x + 100; }, [](int x) { return x % 2 == 0; });
+    CHECK(it == dst.begin() + 2);
+    CHECK(dst[0] == 100);
+    CHECK(dst[1] == 102);
+  }
+}
+
 // NOLINTEND

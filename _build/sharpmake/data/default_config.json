@@ -1,5 +1,5 @@
 {
-  "version" : "0.0.1",
+  "version" : "0.0.2",
 
   "settings": {
   "clang-tidy-regex": {
@@ -20,7 +20,7 @@
   },
   "enable-unit-tests": {
     "Description": "Enable generation of unit test projects",
-    "Value": false
+    "Value": true
   },
   "enable-code-coverage": {
     "Description": "Enable code coverage when the code gets build. This is only supported for Clang compiler",
@@ -51,7 +51,7 @@
     "Value": false
   },
   "graphics-api": {
-    "Description": "Specify the graphics API to use. DX12 is the default.",
+    "Description": "Specify the graphics API to use.",
     "Value": "DX12",
     "Options": [
       "DX12",
@@ -59,13 +59,22 @@
     ]
   },
   "IDE": {
-    "Description": "Select which IDE to use. Visual Studio is the default.",
+    "Description": "Select which IDE to use.",
     "Value": "None",
     "Options": [
+      "VisualStudio",
       "VisualStudio19",
       "VisualStudio22",
       "VSCode",
       "None"
+    ]
+  },
+  "CppCompiler": {
+    "Description": "Compiler to use to compile C++ projects",
+    "Value": "MSVC",
+    "Options": [
+      "MSVC",
+      "Clang"
     ]
   },
   "disable-clang-tidy-for-thirdparty": {
@@ -74,7 +83,7 @@
   },
   "disable-unity-builds": {
     "Description": "Disable unity builds (aka jumbo builds, combi builds)",
-    "Value": true
+    "Value": false
   }
 }
 }

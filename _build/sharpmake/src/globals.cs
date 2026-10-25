@@ -41,6 +41,13 @@ public class Globals
       return root;
     }
   }
+  static public string DataRoot
+  {
+    get
+    {
+      return Path.Combine(Root, "data");
+    }
+  }
   static public string SourceRoot
   {
     get
