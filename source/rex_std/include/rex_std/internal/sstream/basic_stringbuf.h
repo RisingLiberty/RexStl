@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "rex_std/bonus/utility/has_flag.h"
+#include "rex_std/bonus/utility/flags.h"
 #include "rex_std/internal/assert/assert_fwd.h"
 #include "rex_std/internal/ios/ios_base.h"
 #include "rex_std/internal/memory/allocator.h"
